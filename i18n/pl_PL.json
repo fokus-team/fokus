@@ -1,3 +1,6 @@
 {
-  "title": "Cześć!"
+  "title": "Cześć!",
+  "mainPage": {
+    "text": "Jakiś tekst"
+  }
 }

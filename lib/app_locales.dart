@@ -33,20 +33,20 @@ class AppLocales {
 
   static const LocalizationsDelegate<AppLocales> delegate = AppLocalesDelegate();
 
-  Map<String, String> _localizedStrings;
+  Map<String, dynamic> _jsonMap;
 
   Future<bool> load() async {
-    String jsonString =
-    await rootBundle.loadString('i18n/${locale.languageCode}_${locale.countryCode}.json');
-    Map<String, dynamic> jsonMap = json.decode(jsonString);
-
-    _localizedStrings = jsonMap.map((key, value) {
-      return MapEntry(key, value.toString());
-    });
+    String jsonString = await rootBundle.loadString('i18n/${locale.languageCode}_${locale.countryCode}.json');
+    _jsonMap = json.decode(jsonString);
     return true;
   }
 
-  String translate(String key) {
-    return _localizedStrings[key];
+  String translate(String keyPath) {
+    try {
+      return keyPath.split('.').fold(_jsonMap, (object, key) => object[key]) as String;
+    } on Error catch(_) {
+      print('Key $keyPath has no localized string in language ${locale.languageCode}');
+      return '';
+    }
   }
 }

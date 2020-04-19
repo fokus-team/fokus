@@ -18,7 +18,12 @@ class _MainPageState extends State<MainPage> {
         title: Text(widget.title),
       ),
       body: Center(
-        child: Text(AppLocales.of(context).translate("title"))
+        child: Column(
+          children: [
+            Text(AppLocales.of(context).translate("mainPage.text")),
+            Text(AppLocales.of(context).translate("title")),
+          ],
+        )
       ),
     );
   }

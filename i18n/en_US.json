@@ -1,6 +1,6 @@
 {
-  "title": "Hello!",
-  "mainPage": {
-    "text": "Some text"
-  }
+	"title": "Hello!",
+	"mainPage": {
+		"text": "Some text"
+	}
 }

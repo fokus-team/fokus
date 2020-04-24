@@ -1,0 +1,21 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+indent_size = 4
+indent_style = tab
+insert_final_newline = true
+max_line_length = 100
+tab_width = 4
+
+
+[{*.dart, *.json, *.yaml}]
+tab_width = 2
+indent_size = 2
+
+[*.dart]
+max_line_length = 160
+
+[{*.kt, *.kts}]
+max_line_length = 160

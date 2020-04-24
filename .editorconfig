@@ -9,13 +9,15 @@ insert_final_newline = true
 max_line_length = 100
 tab_width = 4
 
-
-[{*.dart, *.json, *.yaml}]
+[{*.dart, *.json}]
 tab_width = 2
 indent_size = 2
 
 [*.dart]
 max_line_length = 160
+
+[*.yaml]
+indent_style = space
 
 [{*.kt, *.kts}]
 max_line_length = 160

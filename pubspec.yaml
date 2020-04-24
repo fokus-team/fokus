@@ -4,30 +4,30 @@ description: Mobile application that helps kids with completing tasks while also
 version: 1.0.0+1
 
 environment:
-	sdk: ">=2.2.0 <3.0.0"
+    sdk: ">=2.2.0 <3.0.0"
 
 dependencies:
-	flutter:
-		sdk: flutter
-	flutter_localizations:
-		sdk: flutter
+    flutter:
+        sdk: flutter
+    flutter_localizations:
+        sdk: flutter
 
-	bloc: ^4.0.0
-	flutter_bloc: ^4.0.0
+    bloc: ^4.0.0
+    flutter_bloc: ^4.0.0
 
-	equatable: ^1.1.0
-	meta: ^1.1.6
+    equatable: ^1.1.0
+    meta: ^1.1.6
 
-	cupertino_icons: ^0.1.2
+    cupertino_icons: ^0.1.2
 
 dev_dependencies:
-	flutter_test:
-		sdk: flutter
+    flutter_test:
+        sdk: flutter
 
 
 flutter:
-	assets:
-		- i18n/pl_PL.json
-		- i18n/en_US.json
+    assets:
+        - i18n/pl_PL.json
+        - i18n/en_US.json
 
-	uses-material-design: true
+    uses-material-design: true

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:fokus/data/repository/database/db_data_provider.dart';
+import 'package:fokus/data/repository/remote_config_provider.dart';
 import 'package:fokus/utils/app_locales.dart';
 
 class MainPage extends StatefulWidget {
@@ -11,6 +13,14 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+	@override
+	void initState() {
+		var config = RemoteConfigProvider();
+		config.initialize().then((_) {
+			DbProvider(config.dbAccessConfig).testConnection();
+		});
+	}
+
 	@override
 	Widget build(BuildContext context) {
 		return Scaffold(

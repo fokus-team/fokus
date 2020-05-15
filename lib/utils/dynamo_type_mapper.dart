@@ -3,7 +3,7 @@
 
 import 'dart:typed_data';
 
-import 'package:fokus/data/bd/dynamo_driver.dart';
+import 'package:fokus/data/repository/database/dynamo_driver.dart';
 
 AttributeValue toAttributeValue(dynamic value) {
   if (value == null) {

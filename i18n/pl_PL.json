@@ -1,6 +1,13 @@
 {
-	"title": "Cześć!",
 	"mainPage": {
-		"text": "Jakiś tekst"
+		"text": "Strona główna"
+	},
+	"alert": {
+		"error": "Wystąpił błąd",
+		"noConnection": "Brak połączenia"
+	},
+	"button": {
+		"exit": "Wyjdź",
+		"retry": "Spróbuj ponownie"
 	}
 }

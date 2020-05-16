@@ -1,39 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:fokus/data/repository/database/db_data_provider.dart';
-import 'package:fokus/data/repository/remote_config_provider.dart';
 import 'package:fokus/utils/app_locales.dart';
 
 class MainPage extends StatefulWidget {
-	MainPage({Key key, this.title}) : super(key: key);
-
-	final String title;
-
 	@override
 	_MainPageState createState() => new _MainPageState();
 }
 
 class _MainPageState extends State<MainPage> {
 	@override
-	void initState() {
-		var config = RemoteConfigProvider();
-		config.initialize().then((_) {
-			DbProvider(config.dbAccessConfig).testConnection();
-		});
-	}
-
-	@override
 	Widget build(BuildContext context) {
 		return Scaffold(
 			appBar: AppBar(
-				title: Text(widget.title),
+				title: Text('Fokus'),
 			),
-			body: Center(
-					child: Column(
-				children: [
-					Text(AppLocales.of(context).translate("mainPage.text")),
-					Text(AppLocales.of(context).translate("title")),
-				],
-			)),
+			body: Center(child: Text(AppLocales.of(context).translate("mainPage.text"))),
 		);
 	}
 }

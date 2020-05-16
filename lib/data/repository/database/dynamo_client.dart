@@ -1,43 +1,39 @@
-/// Adapted from aws_client project
-/// Copyright aws_client contributors
-/// https://github.com/agilord/aws_client/
+import 'dart:collection';
 
+import 'package:fokus/exception/db_limit_exceeded_exception.dart';
 import 'package:fokus/utils/dynamo_type_mapper.dart';
 import 'dynamo_driver.dart';
 
 class DynamoClient {
-  final DynamoDB _dynamoDB;
+	final DynamoDB _dynamoDB;
 
-  DynamoClient({@required String region, DynamoDB dynamoDB, AwsClientCredentials credentials, String endpointUrl, Client client})
-      : _dynamoDB = dynamoDB ?? DynamoDB(region: region, credentials: credentials, endpointUrl: endpointUrl, client: client);
+	DynamoClient({@required String region, AwsClientCredentials credentials, String endpointUrl, Client client})
+			: _dynamoDB = DynamoDB(region: region, credentials: credentials, endpointUrl: endpointUrl, client: client);
 
-  Future<GetResponse> get({
-    @required String tableName,
-    @required Map<String, dynamic> key,
-    List<String> attributesToGet,
-    bool consistentRead,
-    Map<String, String> expressionAttributeNames,
-    String projectionExpression,
-    ReturnConsumedCapacity returnConsumedCapacity,
-  }) async {
-    final getItemOutput = await _dynamoDB.getItem(
-        key: key.fromJsonToAttributeValue(),
-        tableName: tableName,
-        attributesToGet: attributesToGet,
-        consistentRead: consistentRead,
-        expressionAttributeNames: expressionAttributeNames,
-        projectionExpression: projectionExpression,
-        returnConsumedCapacity: returnConsumedCapacity);
-    return GetResponse(
-      getItemOutput.consumedCapacity,
-      getItemOutput.item.toJson(),
-    );
-  }
-}
+	Future<LinkedHashMap<String, dynamic>> get({@required String tableName, @required Map<String, dynamic> key, List<String> attributesSubset}) async {
+		final GetItemOutput getItemOutput = await _executeQuery(() => _dynamoDB.getItem(
+			key: key.asAttributeValue(),
+			tableName: tableName,
+			projectionExpression: attributesSubset != null ? attributesSubset.join(', ') : null)
+		);
+		return getItemOutput.item.asJson();
+	}
 
-class GetResponse {
-  final ConsumedCapacity consumedCapacity;
-  final Map<String, dynamic> item;
+	Future put({@required String tableName, @required Map<String, dynamic> item, String condition}) async {
+		await _executeQuery(() => _dynamoDB.putItem(
+			item: item.asAttributeValue(),
+			tableName: tableName,
+			conditionExpression: condition)
+		);
+	}
 
-  GetResponse(this.consumedCapacity, this.item);
+	dynamic _executeQuery(Future<dynamic> Function() query) async {
+		try {
+			return await query();
+		} catch(e) {
+			if (e is RequestLimitExceeded || e is ProvisionedThroughputExceededException)
+				throw DbLimitsExceededException(e);
+			throw e;
+		}
+	}
 }

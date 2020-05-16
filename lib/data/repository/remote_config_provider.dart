@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:fokus/data/model/db_access_params.dart';
+import 'package:fokus/exception/config_fetch_failed_exception.dart';
 
 class RemoteConfigProvider {
 	RemoteConfig _remoteConfig;
@@ -19,7 +20,7 @@ class RemoteConfigProvider {
 		var dbConfig = _remoteConfig.getString(_DB_CONFIG_KEY);
 		if (dbConfig == '') {
 			debugPrint('Could not retrieve the database configuration');
-			return;
+			throw ConfigFetchFailedException();
 		}
 		_dbAccessConfig = DbAccessConfig.fromJson(json.decode(dbConfig));
 	}

@@ -1,6 +1,13 @@
 {
-	"title": "Hello!",
 	"mainPage": {
-		"text": "Some text"
+		"text": "Main page"
+	},
+	"alert": {
+		"error": "Error occurred",
+		"noConnection": "No connection"
+	},
+	"button": {
+		"exit": "Exit",
+		"retry": "Retry"
 	}
 }

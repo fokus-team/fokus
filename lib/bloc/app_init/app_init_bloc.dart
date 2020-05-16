@@ -27,6 +27,7 @@ class AppInitBloc extends Bloc<AppInitEvent, AppInitState> {
 
   @override
 	void onError(Object error, StackTrace stackTrace) {
-		add(AppInitEvent.INITIALIZATION_FAILED);
+  	super.onError(error, stackTrace);
+		add(AppInitEvent.INITIALIZATION_FAILED); // TODO Differentiate between no internet connection and db access error
 	}
 }

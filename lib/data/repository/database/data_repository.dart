@@ -12,9 +12,7 @@ class DataRepository {
 			);
 
 	Future testConnection() async {
-		await client.get(tableName: "Test", key: {"key": "test-key"}).then((response) {
-			print(response);
-		});
+		await client.get(tableName: "Test", key: {"key": "test-key"}).then((response) => print(response));
 		await client.put(tableName: 'Test', item: {"key": "other-key", 'item': 'xd', 'value': 3.1415});
 	}
 }

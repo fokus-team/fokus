@@ -13,7 +13,7 @@ class _MainPageState extends State<MainPage> {
 			appBar: AppBar(
 				title: Text('Fokus'),
 			),
-			body: Center(child: Text(AppLocales.of(context).translate("mainPage.text"))),
+			body: Center(child: Text(AppLocales.of(context).translate("mainPage"), style: TextStyle(fontSize: 30))),
 		);
 	}
 }

@@ -1,7 +1,6 @@
 {
-	"mainPage": {
-		"text": "Main page"
-	},
+	"loading": "Loading",
+	"mainPage": "Main page",
 	"alert": {
 		"error": "Error occurred",
 		"noConnection": "No connection"

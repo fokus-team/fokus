@@ -1,7 +1,6 @@
 {
-	"mainPage": {
-		"text": "Strona główna"
-	},
+	"loading": "Ładowanie",
+	"mainPage": "Strona główna",
 	"alert": {
 		"error": "Wystąpił błąd",
 		"noConnection": "Brak połączenia"

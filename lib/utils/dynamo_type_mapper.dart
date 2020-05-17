@@ -61,3 +61,7 @@ extension AttributeTranslator on Map<String, AttributeValue> {
 extension DynamicTranslator on Map<String, dynamic> {
 	Map<String, AttributeValue> asAttributeValue() => map((key, value) => MapEntry(key, toAttributeValue(value)));
 }
+
+extension KeyTranslator on int {
+	Map<String, AttributeValue> asAttributeKey() => {'ID': toAttributeValue(this)};
+}

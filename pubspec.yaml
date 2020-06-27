@@ -12,7 +12,8 @@ dependencies:
     flutter_localizations:
         sdk: flutter
 
-    aws_dynamodb_api: ^0.0.1
+    mongo_dart:
+        git: https://github.com/fokus-team/mongo_dart.git
 
     firebase_core: ^0.4.0+9
     firebase_analytics: ^5.0.11
@@ -26,10 +27,11 @@ dependencies:
 
     cupertino_icons: ^0.1.2
 
-# needed to resolve aws_dynamodb_api conflicts
 dependency_overrides:
-    intl: ^0.16.0
-    xml: ^3.5.0
+    bson:
+        git: https://github.com/fokus-team/bson.git
+    mongo_dart_query:
+        git: https://github.com/fokus-team/mongo_dart_query.git
 
 dev_dependencies:
     flutter_test:

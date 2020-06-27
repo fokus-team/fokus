@@ -1,16 +1,9 @@
-import 'package:fokus/data/model/db_access_params.dart';
-import 'package:fokus/data/repository/database/dynamo_client.dart';
-import 'package:fokus/data/repository/database/dynamo_driver.dart';
+import 'package:fokus/data/repository/database/mongo_client.dart';
 
 class DataRepository {
-	final DynamoClient client;
+	final MongoClient client = MongoClient();
 
-	DataRepository(DbAccessConfig config) :
-			client = DynamoClient(
-				region: config.region,
-				credentials: AwsClientCredentials(accessKey: config.accessKey, secretKey: config.secretKey)
-			);
-
-	Future testConnection() async {
+	void initialize(String config) async {
+		await client.initialize(config);
 	}
 }

@@ -7,7 +7,7 @@ import 'package:fokus/data/repository/remote_config_provider.dart';
 
 class AppInitBloc extends Bloc<AppInitEvent, AppInitState> {
 	RemoteConfigProvider remoteConfig = RemoteConfigProvider();
-	DataRepository dbProvider;
+	DataRepository dbProvider = DataRepository();
 
 	@override
 	AppInitState get initialState => AppInitState.APP_UNINITIALIZED;
@@ -17,8 +17,7 @@ class AppInitBloc extends Bloc<AppInitEvent, AppInitState> {
 		if (event == AppInitEvent.INITIALIZATION_STARTED) {
 			yield AppInitState.APP_INIT_STARTED;
 			await remoteConfig.initialize(); // TODO split into init and fetch
-			dbProvider = DataRepository(remoteConfig.dbAccessConfig);
-			await dbProvider.testConnection();
+			await dbProvider.initialize(remoteConfig.dbAccessString);
 			yield AppInitState.APP_INITIALIZED;
 		}
 		else if (event == AppInitEvent.INITIALIZATION_FAILED)

@@ -1,5 +1,11 @@
 name: fokus
 description: Mobile application that helps kids with completing tasks while also offering parental control
+authors:
+    - Stanisław Góra <contact@sgora.dev>
+    - Mikołaj Mirko
+    - Mateusz Janicki
+    - Jan Czubiak
+repository: https://github.com/fokus-team/fokus
 
 version: 1.0.0+1
 
@@ -42,7 +48,10 @@ dev_dependencies:
 flutter_icons:
     android: true
     ios: false
-    image_path: "assets/icon.png"
+    image_path: "assets/icon/logo.png"
+
+    adaptive_icon_foreground: "assets/icon/logo_adaptive.png"
+    adaptive_icon_background: "assets/icon/bg_adaptive.png"
 
 flutter:
     assets:

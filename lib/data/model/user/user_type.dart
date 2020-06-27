@@ -1,0 +1,1 @@
+enum UserType { CAREGIVER, CHILD }

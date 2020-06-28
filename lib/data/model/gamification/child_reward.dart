@@ -1,6 +1,8 @@
+import 'package:fokus/data/model/date/time_date.dart';
+
 class ChildReward {
   int cost;
-  int date;
+  TimeDate date;
   String ID;
   int quantity;
 
@@ -9,7 +11,7 @@ class ChildReward {
   factory ChildReward.fromJson(Map<String, dynamic> json) {
     return ChildReward(
       cost: json['cost'],
-      date: json['date'],
+      date: TimeDate.parseDBString(json['date']),
       ID: json['ID'],
       quantity: json['quantity'],
     );
@@ -18,7 +20,7 @@ class ChildReward {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['cost'] = this.cost;
-    data['date'] = this.date;
+    data['date'] = this.date.toDBString();
     data['ID'] = this.ID;
     data['quantity'] = this.quantity;
     return data;

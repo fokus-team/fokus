@@ -1,6 +1,6 @@
+import 'package:fokus/data/model/gamification/badge.dart';
 import 'package:fokus/data/model/user/user_type.dart';
 
-import 'badge.dart';
 import 'user.dart';
 
 class Caregiver extends User {

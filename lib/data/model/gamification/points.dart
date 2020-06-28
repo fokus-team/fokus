@@ -1,11 +1,11 @@
-class ChildCurrency {
+class Points {
   String ID;
   int quantity;
 
-  ChildCurrency({this.ID, this.quantity});
+  Points({this.ID, this.quantity});
 
-  factory ChildCurrency.fromJson(Map<String, dynamic> json) {
-    return ChildCurrency(
+  factory Points.fromJson(Map<String, dynamic> json) {
+    return Points(
       ID: json['ID'],
       quantity: json['quantity'],
     );

@@ -12,7 +12,7 @@ class ChildReward {
     return ChildReward(
       cost: json['cost'],
       date: TimeDate.parseDBString(json['date']),
-      ID: json['ID'],
+      ID: json['_id'],
       quantity: json['quantity'],
     );
   }
@@ -21,7 +21,7 @@ class ChildReward {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['cost'] = this.cost;
     data['date'] = this.date.toDBString();
-    data['ID'] = this.ID;
+    data['_id'] = this.ID;
     data['quantity'] = this.quantity;
     return data;
   }

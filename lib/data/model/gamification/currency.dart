@@ -9,7 +9,7 @@ class Currency {
   factory Currency.fromJson(Map<String, dynamic> json) {
     return Currency(
       createdBy: json['createdBy'],
-      ID: json['ID'],
+      ID: json['_id'],
       icon: json['icon'],
       name: json['name'],
     );
@@ -18,7 +18,7 @@ class Currency {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['createdBy'] = this.createdBy;
-    data['ID'] = this.ID;
+    data['_id'] = this.ID;
     data['icon'] = this.icon;
     data['name'] = this.name;
     return data;

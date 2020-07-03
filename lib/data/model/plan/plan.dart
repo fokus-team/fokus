@@ -33,7 +33,7 @@ class Plan {
       changedInstances: json['changedInstances'] != null ? (json['changedInstances'] as List).map((date) => Date.parseDBString(date)) : null,
       createdAt: TimeDate.parseDBString(json['createdAt']),
       createdBy: json['createdBy'],
-      ID: json['ID'],
+      ID: json['_id'],
       instances: json['instances'] != null ? new List<String>.from(json['instances']) : null,
       name: json['name'],
       repeatability: PlanRepeatability.fromJson(json['repeatability']),
@@ -46,7 +46,7 @@ class Plan {
     data['active'] = this.active;
     data['createdAt'] = this.createdAt.toDBString();
     data['createdBy'] = this.createdBy;
-    data['ID'] = this.ID;
+    data['_id'] = this.ID;
     data['name'] = this.name;
     data['repeatability'] = this.repeatability.toJson();
     if (this.assignedTo != null) {

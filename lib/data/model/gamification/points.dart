@@ -6,14 +6,14 @@ class Points {
 
   factory Points.fromJson(Map<String, dynamic> json) {
     return Points(
-      ID: json['ID'],
+      ID: json['_id'],
       quantity: json['quantity'],
     );
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['ID'] = this.ID;
+    data['_id'] = this.ID;
     data['quantity'] = this.quantity;
     return data;
   }

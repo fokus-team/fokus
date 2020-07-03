@@ -20,7 +20,7 @@ class TaskInstance {
     return TaskInstance(
       breaks: json['breaks'] != null ? (json['breaks'] as List).map((i) => Duration.fromJson(i)).toList() : null,
       duration: json['duration'] != null ? (json['duration'] as List).map((i) => Duration.fromJson(i)).toList() : null,
-      ID: json['ID'],
+      ID: json['_id'],
       planInstanceID: json['planInstanceID'],
       status: json['status'] != null ? TaskStatus.fromJson(json['status']) : null,
       subtasks: json['subtasks'] != null ? new List<String>.from(json['subtasks']) : null,
@@ -31,7 +31,7 @@ class TaskInstance {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['ID'] = this.ID;
+    data['_id'] = this.ID;
     data['planInstanceID'] = this.planInstanceID;
     data['taskID'] = this.taskID;
     data['timer'] = this.timer;

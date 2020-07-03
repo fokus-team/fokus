@@ -18,7 +18,7 @@ class PlanInstance {
       assignedTo: json['assignedTo'],
       date: Date.parseDBString(json['date']),
       duration: json['duration'] != null ? Duration.fromJson(json['duration']) : null,
-      ID: json['ID'],
+      ID: json['_id'],
       instances: json['instances'] != null ? new List<String>.from(json['instances']) : null,
       planID: json['planID'],
       tasks: json['tasks'] != null ? (json['tasks'] as List).map((i) => InstanceTask.fromJson(i)).toList() : null,
@@ -29,7 +29,7 @@ class PlanInstance {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['assignedTo'] = this.assignedTo;
     data['date'] = this.date.toDBString();
-    data['ID'] = this.ID;
+    data['_id'] = this.ID;
     data['planID'] = this.planID;
     if (this.duration != null) {
       data['duration'] = this.duration.toJson();

@@ -13,7 +13,7 @@ class Reward {
   factory Reward.fromJson(Map<String, dynamic> json) {
     return Reward(
       createdBy: json['createdBy'],
-      ID: json['ID'],
+      ID: json['_id'],
       icon: json['icon'],
       limit: json['limit'],
       name: json['name'],
@@ -24,7 +24,7 @@ class Reward {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['createdBy'] = this.createdBy;
-    data['ID'] = this.ID;
+    data['_id'] = this.ID;
     data['icon'] = this.icon;
     data['limit'] = this.limit;
     data['name'] = this.name;

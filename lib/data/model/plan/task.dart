@@ -15,7 +15,7 @@ class Task {
   factory Task.fromJson(Map<String, dynamic> json) {
     return Task(
       description: json['description'],
-      ID: json['ID'],
+      ID: json['_id'],
       name: json['name'],
       optional: json['optional'],
       planID: json['planID'],
@@ -28,7 +28,7 @@ class Task {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['description'] = this.description;
-    data['ID'] = this.ID;
+    data['_id'] = this.ID;
     data['name'] = this.name;
     data['optional'] = this.optional;
     data['planID'] = this.planID;

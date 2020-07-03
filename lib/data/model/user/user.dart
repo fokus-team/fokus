@@ -24,7 +24,7 @@ class User {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['avatar'] = this.avatar;
-    data['ID'] = this.ID;
+    data['_id'] = this.ID;
     data['name'] = this.name;
     data['type'] = this.type.index;
     if (this.accessCode != null) {

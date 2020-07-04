@@ -1,6 +1,19 @@
 {
-	"title": "Cześć!",
-	"mainPage": {
-		"text": "Jakiś tekst"
+	"loading": "Ładowanie",
+	"page": {
+		"caregiverPanel": {
+			"header": {
+				"title": "Witaj, {name}"
+			},
+			"content": "Panel Opiekuna"
+		}
+	},
+	"alert": {
+		"error": "Wystąpił błąd",
+		"noConnection": "Brak połączenia"
+	},
+	"button": {
+		"exit": "Wyjdź",
+		"retry": "Spróbuj ponownie"
 	}
 }

@@ -1,6 +1,19 @@
 {
-	"title": "Hello!",
-	"mainPage": {
-		"text": "Some text"
+	"loading": "Loading",
+	"page": {
+		"caregiverPanel": {
+			"header": {
+				"title": "Hello, {name}"
+			},
+			"content": "Caregiver Panel"
+		}
+	},
+	"alert": {
+		"error": "Error occurred",
+		"noConnection": "No connection"
+	},
+	"button": {
+		"exit": "Exit",
+		"retry": "Retry"
 	}
 }

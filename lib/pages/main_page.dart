@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:fokus/data/model/user/caregiver.dart';
 import 'package:fokus/utils/app_locales.dart';
 
 class MainPage extends StatefulWidget {
-	MainPage({Key key, this.title}) : super(key: key);
-
-	final String title;
-
 	@override
 	_MainPageState createState() => new _MainPageState();
 }
@@ -13,17 +10,13 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
 	@override
 	Widget build(BuildContext context) {
+		var user = ModalRoute.of(context).settings.arguments as Caregiver;
+
 		return Scaffold(
 			appBar: AppBar(
-				title: Text(widget.title),
+				title: Text(AppLocales.of(context).translate('page.caregiverPanel.header.title', {'name': user.name})),
 			),
-			body: Center(
-					child: Column(
-				children: [
-					Text(AppLocales.of(context).translate("mainPage.text")),
-					Text(AppLocales.of(context).translate("title")),
-				],
-			)),
+			body: Center(child: Text(AppLocales.of(context).translate('page.caregiverPanel.content'), style: TextStyle(fontSize: 30))),
 		);
 	}
 }

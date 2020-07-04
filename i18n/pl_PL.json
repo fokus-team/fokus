@@ -1,6 +1,13 @@
 {
 	"loading": "Ładowanie",
-	"mainPage": "Strona główna",
+	"page": {
+		"caregiverPanel": {
+			"header": {
+				"title": "Witaj, {name}"
+			},
+			"content": "Panel Opiekuna"
+		}
+	},
 	"alert": {
 		"error": "Wystąpił błąd",
 		"noConnection": "Brak połączenia"

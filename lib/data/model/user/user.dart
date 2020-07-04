@@ -1,9 +1,10 @@
 import 'package:fokus/data/model/user/user_type.dart';
 import 'package:meta/meta.dart';
+import 'package:mongo_dart/mongo_dart.dart';
 
 class User {
 // ignore: non_constant_identifier_names
-  final String ID;
+  final ObjectId id;
   final UserType type;
   String name;
 
@@ -11,7 +12,7 @@ class User {
   int avatar;
   List<String> connections;
 
-  User({this.ID, this.type});
+  User({this.id, this.type});
 
   @protected
   void fromJson(Map<String, dynamic> json) {
@@ -24,7 +25,7 @@ class User {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['avatar'] = this.avatar;
-    data['_id'] = this.ID;
+    data['_id'] = this.id;
     data['name'] = this.name;
     data['type'] = this.type.index;
     if (this.accessCode != null) {

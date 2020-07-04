@@ -1,10 +1,11 @@
 import 'package:fokus/data/model/date/time_date.dart';
 import 'package:fokus/data/model/duration.dart';
+import 'package:mongo_dart/mongo_dart.dart';
 
 import 'task_status.dart';
 
 class TaskInstance {
-	String ID;
+	ObjectId id;
 	String taskID;
 	String planInstanceID;
 
@@ -14,13 +15,13 @@ class TaskInstance {
   List<String> subtasks;
   int timer;
 
-  TaskInstance({this.ID, this.taskID, this.planInstanceID, this.breaks, this.duration, this.status, this.subtasks, this.timer});
+  TaskInstance({this.id, this.taskID, this.planInstanceID, this.breaks, this.duration, this.status, this.subtasks, this.timer});
 
   factory TaskInstance.fromJson(Map<String, dynamic> json) {
     return TaskInstance(
       breaks: json['breaks'] != null ? (json['breaks'] as List).map((i) => Duration.fromJson(i)).toList() : null,
       duration: json['duration'] != null ? (json['duration'] as List).map((i) => Duration.fromJson(i)).toList() : null,
-      ID: json['_id'],
+	    id: json['_id'],
       planInstanceID: json['planInstanceID'],
       status: json['status'] != null ? TaskStatus.fromJson(json['status']) : null,
       subtasks: json['subtasks'] != null ? new List<String>.from(json['subtasks']) : null,
@@ -31,7 +32,7 @@ class TaskInstance {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['_id'] = this.ID;
+    data['_id'] = this.id;
     data['planInstanceID'] = this.planInstanceID;
     data['taskID'] = this.taskID;
     data['timer'] = this.timer;

@@ -1,6 +1,7 @@
 import 'package:fokus/data/model/date/date.dart';
 import 'package:fokus/data/model/date/time_date.dart';
 import 'package:fokus/data/model/plan/plan_repeatability.dart';
+import 'package:mongo_dart/mongo_dart.dart';
 
 class Plan {
   bool active;
@@ -8,7 +9,7 @@ class Plan {
   List<Date> changedInstances;
   TimeDate createdAt;
   String createdBy;
-  String ID;
+  ObjectId id;
   List<String> instances;
   String name;
   PlanRepeatability repeatability;
@@ -20,7 +21,7 @@ class Plan {
       this.changedInstances,
       this.createdAt,
       this.createdBy,
-      this.ID,
+      this.id,
       this.instances,
       this.name,
       this.repeatability,
@@ -33,7 +34,7 @@ class Plan {
       changedInstances: json['changedInstances'] != null ? (json['changedInstances'] as List).map((date) => Date.parseDBString(date)) : null,
       createdAt: TimeDate.parseDBString(json['createdAt']),
       createdBy: json['createdBy'],
-      ID: json['_id'],
+      id: json['_id'],
       instances: json['instances'] != null ? new List<String>.from(json['instances']) : null,
       name: json['name'],
       repeatability: PlanRepeatability.fromJson(json['repeatability']),
@@ -46,7 +47,7 @@ class Plan {
     data['active'] = this.active;
     data['createdAt'] = this.createdAt.toDBString();
     data['createdBy'] = this.createdBy;
-    data['_id'] = this.ID;
+    data['_id'] = this.id;
     data['name'] = this.name;
     data['repeatability'] = this.repeatability.toJson();
     if (this.assignedTo != null) {

@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:fokus/pages/main_page.dart';
 
+import 'package:fokus/pages/main_page.dart';
 import 'package:fokus/utils/app_locales.dart';
 import 'package:fokus/pages/loading_page.dart';
 
-void main() => runApp(FokusApp());
+import 'data/repository/database/data_repository.dart';
+
+void main() => runApp(
+	RepositoryProvider(
+		create: (context) => DataRepository(),
+		child: FokusApp(),
+	)
+);
 
 class FokusApp extends StatelessWidget {
 	@override

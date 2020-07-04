@@ -1,6 +1,13 @@
 {
 	"loading": "Loading",
-	"mainPage": "Main page",
+	"page": {
+		"caregiverPanel": {
+			"header": {
+				"title": "Hello, {name}"
+			},
+			"content": "Caregiver Panel"
+		}
+	},
 	"alert": {
 		"error": "Error occurred",
 		"noConnection": "No connection"

@@ -1,8 +1,4 @@
-import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
-import 'dart:typed_data';
-import 'package:crypto/crypto.dart' as crypto;
+import 'package:fokus/data/model/collection.dart';
 
 import 'package:mongo_dart/mongo_dart.dart';
 
@@ -12,9 +8,13 @@ class MongoClient {
 
 	Db _db;
 
-	initialize(String config) async {
+	Future initialize(String config) async {
 		_db = new Db(_useLocalhost ? _localhostConfig : config);
-		await _db.open(secure: !_useLocalhost);
+		return _db.open(secure: !_useLocalhost);
+	}
+
+	Future<Map<String, dynamic>> query(Collection collection) async {
+		return _db.collection(collection.name).findOne();
 	}
 
 	// TODO call

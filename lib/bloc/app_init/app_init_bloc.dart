@@ -6,27 +6,30 @@ import 'package:fokus/data/repository/database/data_repository.dart';
 import 'package:fokus/data/repository/remote_config_provider.dart';
 
 class AppInitBloc extends Bloc<AppInitEvent, AppInitState> {
-	RemoteConfigProvider remoteConfig = RemoteConfigProvider();
-	DataRepository dbProvider = DataRepository();
+	final RemoteConfigProvider remoteConfig = RemoteConfigProvider();
+	final DataRepository dbProvider;
 
-	@override
-	AppInitState get initialState => AppInitState.APP_UNINITIALIZED;
+	AppInitBloc(this.dbProvider);
+
+  @override
+	AppInitState get initialState => InitialAppInitState();
 
   @override
 	Stream<AppInitState> mapEventToState(AppInitEvent event) async* {
-		if (event == AppInitEvent.INITIALIZATION_STARTED) {
-			yield AppInitState.APP_INIT_STARTED;
+		if (event is AppInitStartedEvent) {
+			yield AppInitInProgressState();
 			await remoteConfig.initialize(); // TODO split into init and fetch
 			await dbProvider.initialize(remoteConfig.dbAccessString);
-			yield AppInitState.APP_INITIALIZED;
+
+			var user = await dbProvider.fetchUser();
+			yield AppInitSuccessState(user);
 		}
-		else if (event == AppInitEvent.INITIALIZATION_FAILED)
-			yield AppInitState.APP_DISCONNECTED;
+		else if (event is AppInitFailedEvent)
+			yield AppInitFailureState(event.error);
 	}
 
   @override
 	void onError(Object error, StackTrace stackTrace) {
-  	super.onError(error, stackTrace);
-		add(AppInitEvent.INITIALIZATION_FAILED); // TODO Differentiate between no internet connection and db access error
+		add(AppInitFailedEvent(error)); // TODO Differentiate between no internet connection and db access error
 	}
 }

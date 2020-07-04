@@ -1,6 +1,7 @@
 import 'package:fokus/data/model/gamification/child_badge.dart';
 import 'package:fokus/data/model/user/user.dart';
 import 'package:fokus/data/model/user/child_permission.dart';
+import 'package:mongo_dart/mongo_dart.dart';
 
 import '../gamification/points.dart';
 import '../gamification/child_reward.dart';
@@ -12,7 +13,7 @@ class Child extends User {
   List<Points> points;
   List<ChildReward> rewards;
 
-  Child({String ID, this.badges, this.permissions, this.points, this.rewards}) : super(ID: ID, type: UserType.CHILD);
+  Child({ObjectId id, this.badges, this.permissions, this.points, this.rewards}) : super(id: id, type: UserType.CHILD);
 
   factory Child.fromJson(Map<String, dynamic> json) {
     return Child(

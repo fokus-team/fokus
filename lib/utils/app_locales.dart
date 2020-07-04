@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:ui';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:intl/message_format.dart';
 
 class AppLocalesDelegate extends LocalizationsDelegate<AppLocales> {
 	const AppLocalesDelegate();
@@ -41,9 +42,12 @@ class AppLocales {
 		return true;
 	}
 
-	String translate(String keyPath) {
+	String translate(String keyPath, [Map<String, Object> args]) {
 		try {
-			return keyPath.split('.').fold(_jsonMap, (object, key) => object[key]) as String;
+			var string = keyPath.split('.').fold(_jsonMap, (object, key) => object[key]) as String;
+			if (args == null)
+				return string;
+			return MessageFormat(string, locale: locale.toString()).format(args);
 		} on Error catch (_) {
 			debugPrint('Key $keyPath has no localized string in language ${locale.languageCode}');
 			return '';

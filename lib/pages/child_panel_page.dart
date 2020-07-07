@@ -12,7 +12,7 @@ class _ChildPanelPageState extends State<ChildPanelPage> {
 	Widget build(BuildContext context) {
     
     return Scaffold(
-			body: Center(child: Text("Child panel")),
+			body: Center(child: Text('Child panel')),
 		);
 
 	}

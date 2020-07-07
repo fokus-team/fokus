@@ -20,19 +20,21 @@ class LoadingPage extends StatelessWidget {
 					if (state is AppInitFailureState)
 				    showAlertDialog(context, 'alert.error', 'alert.noConnection', ButtonType.RETRY, () => _retryInitialization(context));
 					else if (state is AppInitSuccessState)
-						Navigator.of(context).pushReplacementNamed('/main-page', arguments: state.user);
+						Navigator.of(context).pushReplacementNamed('/roles-page', arguments: state.user);
 				},
 				child: Scaffold(
-          backgroundColor: ThemeConfig.mainBackgroundColor,
-					body: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              // TODO Change Circular Indicator to our sunflower animation
-              Center(child: Padding(padding: EdgeInsets.only(bottom: 20.0), child: CircularProgressIndicator(backgroundColor: Colors.white))),
-              Center(child: Text('${AppLocales.of(context).translate("loading")}...', style: Theme.of(context).textTheme.bodyText2))
-            ]
-          ),
+          backgroundColor: AppColors.mainBackgroundColor,
+					body: Center(
+						child: Column(
+							mainAxisAlignment: MainAxisAlignment.center,
+							crossAxisAlignment: CrossAxisAlignment.center,
+							children: <Widget>[
+								// TODO Change Circular Indicator to our sunflower animation
+								Padding(padding: EdgeInsets.only(bottom: 20.0), child: CircularProgressIndicator(backgroundColor: Colors.white)),
+								Text('${AppLocales.of(context).translate("loading")}...', style: Theme.of(context).textTheme.bodyText2)
+							]
+						),
+					)
 				),
 			)
 		);

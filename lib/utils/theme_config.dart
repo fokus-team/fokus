@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class ThemeConfig {
+class AppColors {
   // Main app colors
   static final Color lightTextColor = Colors.white;
   static final Color mediumTextColor = Colors.grey[600];
@@ -21,4 +21,9 @@ class ThemeConfig {
   static final Color amethystColor = Color.fromARGB(255, 145, 49, 255);
   static final Color rubyColor = Color.fromARGB(255, 220, 0, 89);
 
+}
+
+class AppBoxProperties {
+	// Paddings, margins, borders and box shadows goes here
+	static final double buttonIconPadding = 4.0;
 }

@@ -1,8 +1,7 @@
 {
 	"loading": "Ładowanie",
-	"close": "Zamknij",
 	"page": {
-		"main": {
+		"roles": {
 			"introduction": "Jestem",
 			"caregiver": "Opiekunem",
 			"child": "Dzieckiem",
@@ -19,9 +18,10 @@
 		"error": "Wystąpił błąd",
 		"noConnection": "Brak połączenia"
 	},
-	"button": {
+	"actions": {
 		"exit": "Wyjdź",
-		"retry": "Spróbuj ponownie"
+		"retry": "Spróbuj ponownie",
+		"close": "Zamknij"
 	},
 	"help": {
 		"first_steps": "Pierwsze kroki"

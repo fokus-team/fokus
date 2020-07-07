@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
+import 'package:fokus/data/model/button_type.dart';
 import 'package:fokus/utils/app_locales.dart';
 
 class HelpDialog extends StatelessWidget {
@@ -39,13 +40,13 @@ class HelpDialog extends StatelessWidget {
                 padding: EdgeInsets.only(left: 8.0, right: 10.0, top: 2.0),
                 child: Icon(Icons.help_outline)
               ),
-              Text('${AppLocales.of(context).translate("help." + helpPage)}', style: Theme.of(context).textTheme.headline2)
+              Text(AppLocales.of(context).translate('help.' + helpPage), style: Theme.of(context).textTheme.headline2)
             ],
           ),
           SizedBox(height: 6.0),
           Divider(),
           FutureBuilder(
-            future: rootBundle.loadString("assets/help/" + AppLocales.of(context).locale.languageCode + "/" + helpPage + ".md"),
+            future: rootBundle.loadString('assets/help/' + AppLocales.of(context).locale.languageCode + '/' + helpPage + '.md'),
             builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
               if (snapshot.hasData) {
                 return Markdown(
@@ -66,7 +67,7 @@ class HelpDialog extends StatelessWidget {
             alignment: Alignment.bottomRight,
             child: FlatButton(
               onPressed: () => { Navigator.of(context).pop() },
-              child: Text('${AppLocales.of(context).translate("close")}')
+              child: Text(AppLocales.of(context).translate(ButtonType.CLOSE.key))
             )
           )
         ]

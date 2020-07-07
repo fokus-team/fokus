@@ -1,6 +1,13 @@
 {
 	"loading": "Ładowanie",
+	"close": "Zamknij",
 	"page": {
+		"main": {
+			"introduction": "Jestem",
+			"caregiver": "Opiekunem",
+			"child": "Dzieckiem",
+			"help": "Potrzebuję pomocy"
+		},
 		"caregiverPanel": {
 			"header": {
 				"title": "Witaj, {name}"
@@ -15,5 +22,8 @@
 	"button": {
 		"exit": "Wyjdź",
 		"retry": "Spróbuj ponownie"
+	},
+	"help": {
+		"first_steps": "Pierwsze kroki"
 	}
 }

@@ -1,0 +1,1 @@
+# Co by tu powiedzieć (PL)

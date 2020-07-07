@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fokus/utils/theme_config.dart';
 
 import 'package:fokus/bloc/app_init/bloc.dart';
 import 'package:fokus/data/model/button_type.dart';
@@ -22,7 +23,16 @@ class LoadingPage extends StatelessWidget {
 						Navigator.of(context).pushReplacementNamed('/main-page', arguments: state.user);
 				},
 				child: Scaffold(
-					body: Center(child: Text('${AppLocales.of(context).translate("loading")}...', style: TextStyle(fontSize: 30))),
+          backgroundColor: ThemeConfig.mainBackgroundColor,
+					body: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              // TODO Change Circular Indicator to our sunflower animation
+              Center(child: Padding(padding: EdgeInsets.only(bottom: 10.0), child: CircularProgressIndicator(backgroundColor: Colors.white))),
+              Center(child: Text('${AppLocales.of(context).translate("loading")}...', style: Theme.of(context).textTheme.bodyText2))
+            ]
+          ),
 				),
 			)
 		);

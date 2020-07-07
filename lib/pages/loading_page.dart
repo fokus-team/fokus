@@ -29,7 +29,7 @@ class LoadingPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               // TODO Change Circular Indicator to our sunflower animation
-              Center(child: Padding(padding: EdgeInsets.only(bottom: 10.0), child: CircularProgressIndicator(backgroundColor: Colors.white))),
+              Center(child: Padding(padding: EdgeInsets.only(bottom: 20.0), child: CircularProgressIndicator(backgroundColor: Colors.white))),
               Center(child: Text('${AppLocales.of(context).translate("loading")}...', style: Theme.of(context).textTheme.bodyText2))
             ]
           ),

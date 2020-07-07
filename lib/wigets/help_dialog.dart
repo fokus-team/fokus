@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:fokus/utils/app_locales.dart';
 
@@ -38,9 +37,9 @@ class HelpDialog extends StatelessWidget {
             children: <Widget>[
               Padding(
                 padding: EdgeInsets.only(left: 8.0, right: 10.0, top: 2.0),
-                child: Icon(Icons.help_outline),
+                child: Icon(Icons.help_outline)
               ),
-              Text('${AppLocales.of(context).translate("help." + helpPage)}', style: Theme.of(context).textTheme.headline2),
+              Text('${AppLocales.of(context).translate("help." + helpPage)}', style: Theme.of(context).textTheme.headline2)
             ],
           ),
           SizedBox(height: 6.0),
@@ -59,9 +58,7 @@ class HelpDialog extends StatelessWidget {
                   data: snapshot.data
                 );
               }
-              return Center(
-                child: CircularProgressIndicator(),
-              );
+              return Center(child: Padding(padding: EdgeInsets.all(10.0), child: CircularProgressIndicator()));
             }
           ),
           SizedBox(height: 4.0),

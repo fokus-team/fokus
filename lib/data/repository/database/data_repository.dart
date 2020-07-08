@@ -10,6 +10,6 @@ class DataRepository {
 	}
 
 	Future<Caregiver> fetchUser() async {
-		return client.query(Collection.USER).then((response) => Caregiver.fromJson(response));
+		return client.query(Collection.user).then((response) => Caregiver.fromJson(response));
 	}
 }

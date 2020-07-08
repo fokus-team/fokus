@@ -20,7 +20,7 @@ class LoadingPage extends StatelessWidget {
 			child: BlocListener<AppInitBloc, AppInitState>(
 				listener: (BuildContext context, AppInitState state) {
 					if (state is AppInitFailureState)
-				    showAlertDialog(context, 'alert.error', 'alert.noConnection', ButtonType.RETRY, () => _retryInitialization(context));
+				    showAlertDialog(context, 'alert.error', 'alert.noConnection', ButtonType.retry, () => _retryInitialization(context));
 					else if (state is AppInitSuccessState)
 						Navigator.of(context).pushReplacementNamed('/roles-page', arguments: state.user);
 				},

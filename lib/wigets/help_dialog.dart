@@ -68,7 +68,7 @@ class HelpDialog extends StatelessWidget {
             alignment: Alignment.bottomRight,
             child: FlatButton(
               onPressed: () => { Navigator.of(context).pop() },
-              child: Text(AppLocales.of(context).translate(ButtonType.CLOSE.key))
+              child: Text(AppLocales.of(context).translate(ButtonType.close.key))
             )
           )
         ]

@@ -1,14 +1,14 @@
-enum Collection { USER, PLAN, TASK, PLAN_INSTANCE, TASK_INSTANCE, CURRENCY, REWARD, BADGE }
+enum Collection { user, plan, task, planInstance, taskInstance, currency, reward, badge }
 
 extension CollectionName on Collection {
   String get name => const {
-        Collection.USER: 'User',
-        Collection.PLAN: 'Plan',
-        Collection.TASK: 'Task',
-        Collection.PLAN_INSTANCE: 'PlanInstance',
-        Collection.TASK_INSTANCE: 'TaskInstance',
-        Collection.CURRENCY: 'Currency',
-        Collection.REWARD: 'Reward',
-        Collection.BADGE: 'Badge'
+        Collection.user: 'User',
+        Collection.plan: 'Plan',
+        Collection.task: 'Task',
+        Collection.planInstance: 'PlanInstance',
+        Collection.taskInstance: 'TaskInstance',
+        Collection.currency: 'Currency',
+        Collection.reward: 'Reward',
+        Collection.badge: 'Badge'
       }[this];
 }

@@ -1,9 +1,9 @@
-enum ButtonType { EXIT, RETRY, CLOSE }
+enum ButtonType { exit, retry, close }
 
 extension TextButtonType on ButtonType {
   String get key => const {
-		ButtonType.EXIT: 'actions.exit', 
-		ButtonType.RETRY: 'actions.retry',
-		ButtonType.CLOSE: 'actions.close'
+		ButtonType.exit: 'actions.exit',
+		ButtonType.retry: 'actions.retry',
+		ButtonType.close: 'actions.close'
 		}[this];
 }

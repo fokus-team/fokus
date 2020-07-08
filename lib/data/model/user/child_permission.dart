@@ -1,1 +1,1 @@
-enum ChildPermission { PLAN_CREATION, TASK_CREATION, TASK_ORDER_MODIFICATION, TASK_BREAKS }
+enum ChildPermission { planCreation, taskCreation, taskOrderModification, taskBreaks }

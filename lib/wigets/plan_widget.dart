@@ -8,15 +8,16 @@ class PlanWidget extends StatelessWidget {
   final String planName;
   final bool isActive;
   final int tasksCount;
-  // styling vars
-	final double playButtonSize = 40.0;
-	final double tasksIconSize = 26.0;
-	final TextStyle blueTextStyle = new TextStyle(fontSize: 16, color: Colors.blue);
-	final double futurePlansButtonWidth = 80.0;
-	final int titleMaxLines = 3;
-	final Color activeButtonColor = Colors.teal;
-	final Color disabledButtonColor = Colors.grey;
 
+  // styling vars
+  final double playButtonSize = 40.0;
+  final double tasksIconSize = 26.0;
+  final TextStyle blueTextStyle =
+      new TextStyle(fontSize: 16, color: Colors.blue);
+  final double futurePlansButtonWidth = 80.0;
+  final int titleMaxLines = 3;
+  final Color activeButtonColor = Colors.teal;
+  final Color disabledButtonColor = Colors.grey;
 
   PlanWidget(this.planName, this.isActive, this.tasksCount);
 
@@ -61,9 +62,11 @@ class PlanWidget extends StatelessWidget {
                               child: Icon(
                                 Icons.speaker_notes,
                                 color: Colors.blue,
-																size: tasksIconSize,
+                                size: tasksIconSize,
                               )),
-                          Text(this.tasksCount.toString() + ' ${AppLocales.of(context).translate("page.child.childPanel.tasks")} ',
+                          Text(
+                              this.tasksCount.toString() +
+                                  ' ${AppLocales.of(context).translate("page.child.childPanel.tasks")} ',
                               style: blueTextStyle)
                         ],
                       )

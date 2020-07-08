@@ -55,7 +55,7 @@ class HelpDialog extends StatelessWidget {
                   padding: EdgeInsets.all(8.0),
                   styleSheet: MarkdownStyleSheet(
                     h1: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
-                    p: Theme.of(context).textTheme.bodyText1
+                    p: Theme.of(context).textTheme.bodyText2
                   ),
                   data: snapshot.data
                 );
@@ -68,7 +68,7 @@ class HelpDialog extends StatelessWidget {
             alignment: Alignment.bottomRight,
             child: FlatButton(
               onPressed: () => { Navigator.of(context).pop() },
-              child: Text(AppLocales.of(context).translate(ButtonType.CLOSE.key))
+              child: Text(AppLocales.of(context).translate(ButtonType.close.key))
             )
           )
         ]

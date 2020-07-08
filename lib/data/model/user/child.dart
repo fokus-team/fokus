@@ -13,7 +13,7 @@ class Child extends User {
   List<Points> points;
   List<ChildReward> rewards;
 
-  Child({ObjectId id, this.badges, this.permissions, this.points, this.rewards}) : super(id: id, type: UserType.CHILD);
+  Child({ObjectId id, this.badges, this.permissions, this.points, this.rewards}) : super(id: id, type: UserType.child);
 
   factory Child.fromJson(Map<String, dynamic> json) {
     return Child(

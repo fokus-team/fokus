@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:fokus/data/repository/settings/app_shared_preferences_provider.dart';
 
 import 'package:fokus/utils/app_locales.dart';
 import 'package:fokus/utils/theme_config.dart';
@@ -11,13 +12,21 @@ import 'package:fokus/pages/caregiver_panel_page.dart';
 import 'package:fokus/pages/child_panel_page.dart';
 
 import 'data/repository/database/data_repository.dart';
+import 'data/repository/settings/app_config_repository.dart';
 
 void main() => runApp(
-	RepositoryProvider(
-		create: (context) => DataRepository(),
+	MultiRepositoryProvider(
+		providers: _createGlobalRepositories(),
 		child: FokusApp(),
 	)
 );
+
+List<RepositoryProvider> _createGlobalRepositories() {
+	return [
+		RepositoryProvider<DataRepository>(create: (context) => DataRepository()),
+		RepositoryProvider<AppConfigRepository>(create: (context) => AppConfigRepository(AppSharedPreferencesProvider()))
+	];
+}
 
 class FokusApp extends StatelessWidget {
 	@override

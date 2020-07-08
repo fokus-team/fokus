@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fokus/data/repository/settings/app_config_repository.dart';
 import 'package:fokus/utils/theme_config.dart';
 
 import 'package:fokus/bloc/app_init/bloc.dart';
@@ -14,7 +15,8 @@ class LoadingPage extends StatelessWidget {
 	@override
 	Widget build(BuildContext context) {
 		return BlocProvider(
-			create: (BuildContext context) => AppInitBloc(RepositoryProvider.of<DataRepository>(context))..add(AppInitStartedEvent()),
+			create: (BuildContext context) => AppInitBloc(RepositoryProvider.of<DataRepository>(context),
+					RepositoryProvider.of<AppConfigRepository>(context))..add(AppInitStartedEvent()),
 			child: BlocListener<AppInitBloc, AppInitState>(
 				listener: (BuildContext context, AppInitState state) {
 					if (state is AppInitFailureState)

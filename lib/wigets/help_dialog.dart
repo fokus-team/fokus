@@ -4,6 +4,7 @@ import 'package:flutter/services.dart' show rootBundle;
 
 import 'package:fokus/data/model/button_type.dart';
 import 'package:fokus/utils/app_locales.dart';
+import 'package:fokus/utils/app_paths.dart';
 
 class HelpDialog extends StatelessWidget {
   final String helpPage;
@@ -46,7 +47,7 @@ class HelpDialog extends StatelessWidget {
           SizedBox(height: 6.0),
           Divider(),
           FutureBuilder(
-            future: rootBundle.loadString('assets/help/' + AppLocales.of(context).locale.languageCode + '/' + helpPage + '.md'),
+            future: rootBundle.loadString(helpPagePath(context, helpPage)),
             builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
               if (snapshot.hasData) {
                 return Markdown(

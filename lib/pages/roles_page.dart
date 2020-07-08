@@ -15,6 +15,10 @@ class _RolesPageState extends State<RolesPage> {
   @override
   Widget build(BuildContext context) {
     var user = ModalRoute.of(context).settings.arguments as Caregiver;
+		TextStyle roleButtonsStyle = TextStyle(
+			fontSize: 18,
+			color: AppColors.lightTextColor
+		);
     return Scaffold(
       backgroundColor: AppColors.mainBackgroundColor,
       body: Center(
@@ -35,19 +39,11 @@ class _RolesPageState extends State<RolesPage> {
 									children: <Widget>[
 										Text(
 											'${AppLocales.of(context).translate("page.roles.introduction")} ',
-											style: TextStyle(
-												fontSize: 18,
-												fontWeight: FontWeight.normal,
-												color: AppColors.lightTextColor
-											)
+											style: roleButtonsStyle.copyWith(fontWeight: FontWeight.normal)
 										),
 										Text(
 											'${AppLocales.of(context).translate("page.roles.caregiver")} ',
-											style: TextStyle(
-												fontSize: 18,
-												fontWeight: FontWeight.bold,
-												color: AppColors.lightTextColor
-											)
+											style: roleButtonsStyle.copyWith(fontWeight: FontWeight.bold)
 										),
 										Padding(
 											padding: EdgeInsets.only(left: AppBoxProperties.buttonIconPadding),
@@ -73,19 +69,11 @@ class _RolesPageState extends State<RolesPage> {
 									children: <Widget>[
 										Text(
 											'${AppLocales.of(context).translate("page.roles.introduction")} ',
-											style: TextStyle(
-												fontSize: 18,
-												fontWeight: FontWeight.normal,
-												color: AppColors.lightTextColor
-											)
+											style: roleButtonsStyle.copyWith(fontWeight: FontWeight.normal)
 										),
 										Text(
 											'${AppLocales.of(context).translate("page.roles.child")} ',
-											style: TextStyle(
-												fontSize: 18,
-												fontWeight: FontWeight.bold,
-												color: AppColors.lightTextColor
-											)
+											style: roleButtonsStyle.copyWith(fontWeight: FontWeight.bold)
 										),
 										Padding(
 											padding: EdgeInsets.only(left: AppBoxProperties.buttonIconPadding),
@@ -116,7 +104,7 @@ class _RolesPageState extends State<RolesPage> {
 											),
 											Text(
 												AppLocales.of(context).translate('page.roles.help'),
-												style: Theme.of(context).textTheme.bodyText2,
+												style: Theme.of(context).textTheme.button,
 											)
 										]
 									)

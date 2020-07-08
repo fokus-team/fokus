@@ -1,6 +1,12 @@
 {
 	"loading": "Loading",
 	"page": {
+		"roles": {
+			"introduction": "I am a",
+			"caregiver": "Caregiver",
+			"child": "Child",
+			"help": "I need help"
+		},
 		"caregiverPanel": {
 			"header": {
 				"title": "Hello, {name}"
@@ -12,8 +18,12 @@
 		"error": "Error occurred",
 		"noConnection": "No connection"
 	},
-	"button": {
+	"actions": {
 		"exit": "Exit",
-		"retry": "Retry"
+		"retry": "Retry",
+		"close": "Close"
+	},
+	"help": {
+		"first_steps": "First steps"
 	}
 }

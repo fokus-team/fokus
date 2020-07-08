@@ -33,6 +33,9 @@ dependencies:
     intl: ^0.16.1
 
     cupertino_icons: ^0.1.2
+    lottie: ^0.4.0+1
+    flutter_svg: ^0.17.1
+    flutter_markdown: ^0.3.4
 
 dependency_overrides:
     bson:
@@ -58,5 +61,33 @@ flutter:
     assets:
         - i18n/pl_PL.json
         - i18n/en_US.json
+        - assets/animation/sunflower_with_title.json
+        - assets/animation/sunflower_with_title_rotate_only.json
+        - assets/image/sunflower_logo.svg
+        - assets/image/sunflower_logo.png
+        - assets/help/en/first_steps.md
+        - assets/help/pl/first_steps.md
+
+    fonts:
+        - family: Lato
+          fonts:
+            - asset: assets/font/lato/Lato-Bold.ttf
+              style: normal
+              weight: 700
+            - asset: assets/font/lato/Lato-BoldItalic.ttf
+              style: italic
+              weight: 700
+            - asset: assets/font/lato/Lato-Regular.ttf
+              style: normal
+              weight: 400
+            - asset: assets/font/lato/Lato-Italic.ttf
+              style: italic
+              weight: 400
+            - asset: assets/font/lato/Lato-Light.ttf
+              style: normal
+              weight: 300
+            - asset: assets/font/lato/Lato-LightItalic.ttf
+              style: italic
+              weight: 300
 
     uses-material-design: true

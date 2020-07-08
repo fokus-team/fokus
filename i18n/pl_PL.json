@@ -1,6 +1,12 @@
 {
 	"loading": "Ładowanie",
 	"page": {
+		"roles": {
+			"introduction": "Jestem",
+			"caregiver": "Opiekunem",
+			"child": "Dzieckiem",
+			"help": "Potrzebuję pomocy"
+		},
 		"caregiverPanel": {
 			"header": {
 				"title": "Witaj, {name}"
@@ -12,8 +18,12 @@
 		"error": "Wystąpił błąd",
 		"noConnection": "Brak połączenia"
 	},
-	"button": {
+	"actions": {
 		"exit": "Wyjdź",
-		"retry": "Spróbuj ponownie"
+		"retry": "Spróbuj ponownie",
+		"close": "Zamknij"
+	},
+	"help": {
+		"first_steps": "Pierwsze kroki"
 	}
 }

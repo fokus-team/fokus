@@ -58,8 +58,8 @@ class FokusApp extends StatelessWidget {
           headline1: TextStyle(fontSize: 28.0, fontWeight: FontWeight.bold, color: AppColors.darkTextColor), // Main headline before lists
           headline2: TextStyle(fontSize: 22.0, fontWeight: FontWeight.normal, color: AppColors.darkTextColor), // For headers inside list elements
           subtitle2: TextStyle(fontSize: 12.0, fontWeight: FontWeight.normal, color: AppColors.mediumTextColor), // Little subtitle for headline2
-          bodyText1: TextStyle(fontSize: 14.0, fontWeight: FontWeight.normal, color: AppColors.darkTextColor), // Classic body text on light background
-          bodyText2: TextStyle(fontSize: 14.0, fontWeight: FontWeight.normal, color: AppColors.lightTextColor), // Classic body text on color
+          bodyText1: TextStyle(fontSize: 14.0, fontWeight: FontWeight.normal, color: AppColors.lightTextColor), // Classic body text on light background
+          bodyText2: TextStyle(fontSize: 14.0, fontWeight: FontWeight.normal, color: AppColors.darkTextColor), // Classic body text on color
           button: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold, color: AppColors.lightTextColor) // (Almost always white) button text
         ),
 			),

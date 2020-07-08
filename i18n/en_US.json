@@ -12,6 +12,18 @@
 				"title": "Hello, {name}"
 			},
 			"content": "Caregiver Panel"
+		},
+		"child": {
+			"bottomNavBar": {
+				"plans": "Plans",
+				"rewards": "Rewards",
+				"achievements": "Achievements"
+			},
+			"childPanel": {
+				"todaysPlans": "Today's plans",
+				"futurePlans": "Check future plans",
+				"tasks": "tasks"
+			}
 		}
 	},
 	"alert": {

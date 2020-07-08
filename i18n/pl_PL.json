@@ -12,6 +12,18 @@
 				"title": "Witaj, {name}"
 			},
 			"content": "Panel Opiekuna"
+		},
+		"child": {
+			"bottomNavBar": {
+				"plans": "Plany",
+				"rewards": "Nagrody",
+				"achievements": "Osiągnięcia"
+			},
+			"childPanel": {
+				"todaysPlans": "Dzisiejsze plany",
+				"futurePlans": "Zobacz przyszłe plany",
+				"tasks": "zadania"
+			}
 		}
 	},
 	"alert": {

@@ -6,6 +6,7 @@ class AppColors {
   static final Color mediumTextColor = Colors.grey[600];
   static final Color darkTextColor = Colors.black87;
   static final Color mainBackgroundColor = Color.fromARGB(255, 30, 121, 233);
+  static final Color mainGray = Colors.grey;
 
   // Caregiver colors
   static final Color caregiverBackgroundColor = Color.fromARGB(255, 30, 121, 233);
@@ -26,4 +27,10 @@ class AppColors {
 class AppBoxProperties {
 	// Paddings, margins, borders and box shadows goes here
 	static final double buttonIconPadding = 4.0;
+	static final double roundedCornersRadius = 5.0;
+	static final double screenEdgePadding = 20.0;
+	static final double cardListPadding = 5.0;
+	static final double containerPadding = 10.0;
+	static final double columnChildrenPadding = 5.0;
+	static final double sectionPadding = 10.0;
 }

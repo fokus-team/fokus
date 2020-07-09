@@ -10,21 +10,21 @@ abstract class AppInitState extends Equatable {
 
 class InitialAppInitState extends AppInitState {}
 
-class AppInitInProgressState extends AppInitState {}
+class AppInitInProgress extends AppInitState {}
 
-class AppInitSuccessState extends AppInitState {
+class AppInitSuccess extends AppInitState {
 	final Caregiver user;
 
-	AppInitSuccessState(this.user);
+	AppInitSuccess(this.user);
 
 	@override
 	List<Object> get props => [user];
 }
 
-class AppInitFailureState extends AppInitState {
+class AppInitFailure extends AppInitState {
 	final Object error;
 
-	AppInitFailureState(this.error);
+	AppInitFailure(this.error);
 
 	@override
   List<Object> get props => [error];

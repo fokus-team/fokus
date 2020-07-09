@@ -7,14 +7,14 @@ abstract class AppInitEvent extends Equatable {
 	List<Object> get props => [];
 }
 
-class AppInitStartedEvent extends AppInitEvent {}
+class AppInitStarted extends AppInitEvent {}
 
-class AppInitCompletedEvent extends AppInitEvent {}
+class AppInitCompleted extends AppInitEvent {}
 
-class AppInitFailedEvent extends AppInitEvent {
+class AppInitFailed extends AppInitEvent {
 	final Object error;
 
-	AppInitFailedEvent(this.error);
+	AppInitFailed(this.error);
 
 	@override
 	List<Object> get props => [error];

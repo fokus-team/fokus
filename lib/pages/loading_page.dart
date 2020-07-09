@@ -16,12 +16,12 @@ class LoadingPage extends StatelessWidget {
 	Widget build(BuildContext context) {
 		return BlocProvider(
 			create: (BuildContext context) => AppInitBloc(RepositoryProvider.of<DataRepository>(context),
-					RepositoryProvider.of<AppConfigRepository>(context))..add(AppInitStartedEvent()),
+					RepositoryProvider.of<AppConfigRepository>(context))..add(AppInitStarted()),
 			child: BlocListener<AppInitBloc, AppInitState>(
 				listener: (BuildContext context, AppInitState state) {
-					if (state is AppInitFailureState)
+					if (state is AppInitFailure)
 				    showAlertDialog(context, 'alert.error', 'alert.noConnection', ButtonType.retry, () => _retryInitialization(context));
-					else if (state is AppInitSuccessState)
+					else if (state is AppInitSuccess)
 						Navigator.of(context).pushReplacementNamed('/roles-page', arguments: state.user);
 				},
 				child: Scaffold(
@@ -43,7 +43,7 @@ class LoadingPage extends StatelessWidget {
 	}
 
 	void _retryInitialization(BuildContext context) {
-		BlocProvider.of<AppInitBloc>(context).add(AppInitStartedEvent());
+		BlocProvider.of<AppInitBloc>(context).add(AppInitStarted());
 		Navigator.of(context).pop();
 	}
 }

@@ -19,8 +19,8 @@ class AppInitBloc extends Bloc<AppInitEvent, AppInitState> {
 
   @override
 	Stream<AppInitState> mapEventToState(AppInitEvent event) async* {
-		if (event is AppInitStartedEvent) {
-			yield AppInitInProgressState();
+		if (event is AppInitStarted) {
+			yield AppInitInProgress();
 			await Future.wait([
 				_remoteConfig.initialize(), // TODO split into init and fetch
 				_appConfig.initialize()
@@ -29,14 +29,14 @@ class AppInitBloc extends Bloc<AppInitEvent, AppInitState> {
 
 			var user = await _dbProvider.fetchUser();
 			_appConfig.setLastUser(user.id);
-			yield AppInitSuccessState(user);
+			yield AppInitSuccess(user);
 		}
-		else if (event is AppInitFailedEvent)
-			yield AppInitFailureState(event.error);
+		else if (event is AppInitFailed)
+			yield AppInitFailure(event.error);
 	}
 
   @override
 	void onError(Object error, StackTrace stackTrace) {
-		add(AppInitFailedEvent(error)); // TODO Differentiate between no internet connection and db access error
+		add(AppInitFailed(error)); // TODO Differentiate between no internet connection and db access error
 	}
 }

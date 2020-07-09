@@ -1,5 +1,5 @@
 import 'package:fokus/data/model/gamification/badge.dart';
-import 'package:fokus/data/model/user/user_type.dart';
+import 'package:fokus/data/model/user/user_role.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
 import 'user.dart';
@@ -11,7 +11,7 @@ class Caregiver extends User {
   List<Badge> badges;
   List<String> friends;
 
-  Caregiver({ObjectId id, this.badges, this.email, this.friends, this.password}) : super(id: id, type: UserType.caregiver);
+  Caregiver({ObjectId id, this.badges, this.email, this.friends, this.password}) : super(id: id, role: UserRole.caregiver);
 
   factory Caregiver.fromJson(Map<String, dynamic> json) {
     return Caregiver(

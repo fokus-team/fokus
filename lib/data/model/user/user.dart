@@ -1,18 +1,18 @@
-import 'package:fokus/data/model/user/user_type.dart';
+import 'package:fokus/data/model/user/user_role.dart';
 import 'package:meta/meta.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
 class User {
 // ignore: non_constant_identifier_names
   final ObjectId id;
-  final UserType type;
+  final UserRole role;
   String name;
 
   List<int> accessCode;
   int avatar;
   List<String> connections;
 
-  User({this.id, this.type});
+  User({this.id, this.role});
 
   @protected
   void fromJson(Map<String, dynamic> json) {
@@ -27,7 +27,7 @@ class User {
     data['avatar'] = this.avatar;
     data['_id'] = this.id;
     data['name'] = this.name;
-    data['type'] = this.type.index;
+    data['role'] = this.role.index;
     if (this.accessCode != null) {
       data['accessCode'] = this.accessCode;
     }

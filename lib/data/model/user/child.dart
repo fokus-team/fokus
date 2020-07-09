@@ -5,7 +5,7 @@ import 'package:mongo_dart/mongo_dart.dart';
 
 import '../gamification/points.dart';
 import '../gamification/child_reward.dart';
-import 'user_type.dart';
+import 'user_role.dart';
 
 class Child extends User {
   List<ChildBadge> badges;
@@ -13,7 +13,7 @@ class Child extends User {
   List<Points> points;
   List<ChildReward> rewards;
 
-  Child({ObjectId id, this.badges, this.permissions, this.points, this.rewards}) : super(id: id, type: UserType.child);
+  Child({ObjectId id, this.badges, this.permissions, this.points, this.rewards}) : super(id: id, role: UserRole.child);
 
   factory Child.fromJson(Map<String, dynamic> json) {
     return Child(

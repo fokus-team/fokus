@@ -9,8 +9,6 @@ abstract class AppInitEvent extends Equatable {
 
 class AppInitStarted extends AppInitEvent {}
 
-class AppInitCompleted extends AppInitEvent {}
-
 class AppInitFailed extends AppInitEvent {
 	final Object error;
 

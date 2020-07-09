@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:fokus/utils/theme_config.dart';
 import 'package:lottie/lottie.dart';
 
 import 'package:fokus/data/model/user/caregiver.dart';
 import 'package:fokus/utils/app_locales.dart';
 import 'package:fokus/utils/dialog_utils.dart';
+import 'package:fokus/data/model/app_page.dart';
+import 'package:fokus/utils/theme_config.dart';
 
 class RolesPage extends StatefulWidget {
   @override
@@ -31,7 +32,7 @@ class _RolesPageState extends State<RolesPage> {
 							width: 240,
 							padding: EdgeInsets.all(4.0),
 							child: FlatButton(
-								onPressed: () => { Navigator.of(context).pushNamed('/caregiver-panel-page', arguments: user) },
+								onPressed: () => { Navigator.of(context).pushNamed(AppPage.caregiverPanel.name, arguments: user) },
 								color: AppColors.caregiverButtonColor,
 								padding: EdgeInsets.all(20.0),
 								child: Row(
@@ -61,7 +62,7 @@ class _RolesPageState extends State<RolesPage> {
 							width: 240,
 							padding: EdgeInsets.all(4.0),
 							child: FlatButton(
-								onPressed: () => { Navigator.of(context).pushNamed('/child-panel-page') },
+								onPressed: () => { Navigator.of(context).pushNamed(AppPage.childPanel.name) },
 								color: AppColors.childButtonColor,
 								padding: EdgeInsets.all(20.0),
 								child: Row(

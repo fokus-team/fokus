@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fokus/data/repository/settings/app_config_repository.dart';
-import 'package:fokus/utils/theme_config.dart';
 
+import 'package:fokus/bloc/user_restore/bloc.dart';
+import 'package:fokus/data/model/app_page.dart';
+import 'package:fokus/data/model/user/child.dart';
+import 'package:fokus/utils/theme_config.dart';
 import 'package:fokus/bloc/app_init/bloc.dart';
 import 'package:fokus/data/model/button_type.dart';
-import 'package:fokus/data/repository/database/data_repository.dart';
 import 'package:fokus/utils/app_locales.dart';
 import 'package:fokus/utils/dialog_utils.dart';
 
@@ -14,29 +15,49 @@ class LoadingPage extends StatelessWidget {
 
 	@override
 	Widget build(BuildContext context) {
-		return BlocProvider(
-			create: (BuildContext context) => AppInitBloc(RepositoryProvider.of<DataRepository>(context),
-					RepositoryProvider.of<AppConfigRepository>(context))..add(AppInitStarted()),
-			child: BlocListener<AppInitBloc, AppInitState>(
-				listener: (BuildContext context, AppInitState state) {
-					if (state is AppInitFailure)
-				    showAlertDialog(context, 'alert.error', 'alert.noConnection', ButtonType.retry, () => _retryInitialization(context));
-					else if (state is AppInitSuccess)
-						Navigator.of(context).pushReplacementNamed('/roles-page', arguments: state.user);
-				},
-				child: Scaffold(
-          backgroundColor: AppColors.mainBackgroundColor,
-					body: Center(
-						child: Column(
-							mainAxisAlignment: MainAxisAlignment.center,
-							crossAxisAlignment: CrossAxisAlignment.center,
-							children: <Widget>[
-								// TODO Change Circular Indicator to our sunflower animation
-								Padding(padding: EdgeInsets.only(bottom: 20.0), child: CircularProgressIndicator(backgroundColor: Colors.white)),
-								Text('${AppLocales.of(context).translate("loading")}...', style: Theme.of(context).textTheme.bodyText1)
-							]
-						),
-					)
+		return MultiBlocProvider(
+			providers: [
+				BlocProvider<AppInitBloc>(create: (BuildContext context) => AppInitBloc()..add(AppInitStarted())),
+				BlocProvider<UserRestoreBloc>(create: (BuildContext context) => UserRestoreBloc()),
+			],
+			child: MultiBlocListener(
+				listeners: [
+					BlocListener<AppInitBloc, AppInitState>(
+						listener: (BuildContext context, AppInitState state) {
+							if (state is AppInitFailure)
+								showAlertDialog(context, 'alert.error', 'alert.noConnection', ButtonType.retry, () => _retryInitialization(context));
+							else if (state is AppInitSuccess)
+								BlocProvider.of<UserRestoreBloc>(context).add(UserRestoreStarted());
+						},
+					),
+					BlocListener<UserRestoreBloc, UserRestoreState>(
+						listener: (BuildContext context, UserRestoreState state) {
+							if (state is UserRestoreFailure)
+								Navigator.of(context).pushReplacementNamed(AppPage.rolesPage.name);
+							else if (state is UserRestoreSuccess) {
+								var userRoute = state.user is Child ? AppPage.childPanel : AppPage.caregiverPanel;
+								Navigator.of(context).pushReplacementNamed(userRoute.name, arguments: state.user);
+							}
+						},
+					),
+				],
+				child: _buildPage(context)
+			)
+		);
+	}
+
+	Widget _buildPage(BuildContext context) {
+		return Scaffold(
+			backgroundColor: AppColors.mainBackgroundColor,
+			body: Center(
+				child: Column(
+					mainAxisAlignment: MainAxisAlignment.center,
+					crossAxisAlignment: CrossAxisAlignment.center,
+					children: <Widget>[
+						// TODO Change Circular Indicator to our sunflower animation
+						Padding(padding: EdgeInsets.only(bottom: 20.0), child: CircularProgressIndicator(backgroundColor: Colors.white)),
+						Text('${AppLocales.of(context).translate("loading")}...', style: Theme.of(context).textTheme.bodyText1)
+					]
 				),
 			)
 		);

@@ -1,15 +1,17 @@
 import 'package:fokus/data/model/collection.dart';
 import 'package:fokus/data/model/user/caregiver.dart';
 import 'package:fokus/data/repository/database/mongo_client.dart';
+import 'package:mongo_dart/mongo_dart.dart';
 
 class DataRepository {
 	final MongoClient client = MongoClient();
 
-	Future initialize(String config) async {
-		return client.initialize(config);
+	Future<DataRepository> initialize(String config) async {
+		await client.initialize(config);
+		return this;
 	}
 
-	Future<Caregiver> fetchUser() async {
-		return client.query(Collection.user).then((response) => Caregiver.fromJson(response));
+	Future<Caregiver> fetchUser(ObjectId id) async {
+		return client.query(Collection.user, where.eq('_id', id)).then((response) => Caregiver.fromJson(response));
 	}
 }

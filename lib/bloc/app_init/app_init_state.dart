@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:fokus/data/model/user/caregiver.dart';
 
 abstract class AppInitState extends Equatable {
 	const AppInitState();
@@ -12,14 +11,7 @@ class InitialAppInitState extends AppInitState {}
 
 class AppInitInProgress extends AppInitState {}
 
-class AppInitSuccess extends AppInitState {
-	final Caregiver user;
-
-	AppInitSuccess(this.user);
-
-	@override
-	List<Object> get props => [user];
-}
+class AppInitSuccess extends AppInitState {}
 
 class AppInitFailure extends AppInitState {
 	final Object error;

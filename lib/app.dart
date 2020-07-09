@@ -1,32 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:fokus/data/repository/settings/app_shared_preferences_provider.dart';
 
 import 'package:fokus/utils/app_locales.dart';
 import 'package:fokus/utils/theme_config.dart';
-
 import 'package:fokus/pages/loading_page.dart';
 import 'package:fokus/pages/roles_page.dart';
 import 'package:fokus/pages/caregiver_panel_page.dart';
 import 'package:fokus/pages/child_panel_page.dart';
 
-import 'data/repository/database/data_repository.dart';
-import 'data/repository/settings/app_config_repository.dart';
+import 'data/model/app_page.dart';
 
-void main() => runApp(
-	MultiRepositoryProvider(
-		providers: _createGlobalRepositories(),
-		child: FokusApp(),
-	)
-);
-
-List<RepositoryProvider> _createGlobalRepositories() {
-	return [
-		RepositoryProvider<DataRepository>(create: (context) => DataRepository()),
-		RepositoryProvider<AppConfigRepository>(create: (context) => AppConfigRepository(AppSharedPreferencesProvider()))
-	];
-}
+void main() => runApp(FokusApp());
 
 class FokusApp extends StatelessWidget {
 	@override
@@ -43,12 +27,12 @@ class FokusApp extends StatelessWidget {
 				const Locale('en', 'US'),
 				const Locale('pl', 'PL'),
 			],
-			initialRoute: '/loading-screen',
+			initialRoute: AppPage.loadingPage.name,
 			routes: {
-				'/loading-screen': (context) => LoadingPage(),
-				'/roles-page': (context) => RolesPage(),
-				'/caregiver-panel-page': (context) => CaregiverPanelPage(),
-				'/child-panel-page': (context) => ChildPanelPage(),
+				AppPage.loadingPage.name: (context) => LoadingPage(),
+				AppPage.rolesPage.name: (context) => RolesPage(),
+				AppPage.caregiverPanel.name: (context) => CaregiverPanelPage(),
+				AppPage.childPanel.name: (context) => ChildPanelPage(),
 			},
 			theme: ThemeData(
 				primaryColor: AppColors.mainBackgroundColor,

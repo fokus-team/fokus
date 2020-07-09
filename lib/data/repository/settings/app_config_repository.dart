@@ -7,7 +7,10 @@ class AppConfigRepository {
 
 	AppConfigRepository(this._settingsProvider);
 
-	Future initialize() async => _settingsProvider.initialize();
+	Future<AppConfigRepository> initialize() async {
+		await _settingsProvider.initialize();
+		return this;
+	}
 
 	ObjectId getLastUser() => _settingsProvider.containsEntry(AppConfigEntry.lastUser) ? ObjectId.parse(_settingsProvider.getString(AppConfigEntry.lastUser)) : null;
 

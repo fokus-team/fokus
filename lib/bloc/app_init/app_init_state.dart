@@ -7,7 +7,7 @@ abstract class AppInitState extends Equatable {
 	List<Object> get props => [];
 }
 
-class InitialAppInitState extends AppInitState {}
+class AppInitInProgress extends AppInitState {}
 
 class AppInitSuccess extends AppInitState {}
 

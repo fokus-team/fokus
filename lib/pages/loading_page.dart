@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_cubit/flutter_cubit.dart';
+import 'package:fokus/bloc/app_init/app_init_state.dart';
 
 import 'package:fokus/data/model/app_page.dart';
 import 'package:fokus/data/model/user/child.dart';
 import 'package:fokus/utils/theme_config.dart';
-import 'package:fokus/bloc/app_init/bloc.dart';
+import 'package:fokus/bloc/app_init/app_init_cubit.dart';
 import 'package:fokus/data/model/button_type.dart';
 import 'package:fokus/utils/app_locales.dart';
 import 'package:fokus/utils/dialog_utils.dart';
@@ -17,14 +18,14 @@ class LoadingPage extends StatelessWidget {
 
 	@override
 	Widget build(BuildContext context) {
-		return MultiBlocProvider(
+		return MultiCubitProvider(
 			providers: [
-				BlocProvider<AppInitBloc>(create: (BuildContext context) => AppInitBloc()..add(AppInitStarted())),
+				CubitProvider<AppInitCubit>(create: (BuildContext context) => AppInitCubit()),
 				CubitProvider<UserRestoreCubit>(create: (BuildContext context) => UserRestoreCubit()),
 			],
 			child: MultiBlocListener(
 				listeners: [
-					BlocListener<AppInitBloc, AppInitState>(
+					CubitListener<AppInitCubit, AppInitState>(
 						listener: (BuildContext context, AppInitState state) {
 							if (state is AppInitFailure)
 								showAlertDialog(context, 'alert.error', 'alert.noConnection', ButtonType.retry, () => _retryInitialization(context));
@@ -66,7 +67,7 @@ class LoadingPage extends StatelessWidget {
 	}
 
 	void _retryInitialization(BuildContext context) {
-		BlocProvider.of<AppInitBloc>(context).add(AppInitStarted());
+		CubitProvider.of<AppInitCubit>(context).initializeApp();
 		Navigator.of(context).pop();
 	}
 }

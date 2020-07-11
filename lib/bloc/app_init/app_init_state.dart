@@ -9,8 +9,6 @@ abstract class AppInitState extends Equatable {
 
 class InitialAppInitState extends AppInitState {}
 
-class AppInitInProgress extends AppInitState {}
-
 class AppInitSuccess extends AppInitState {}
 
 class AppInitFailure extends AppInitState {

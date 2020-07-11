@@ -17,6 +17,7 @@ class Child extends User {
 
   factory Child.fromJson(Map<String, dynamic> json) {
     return Child(
+	    id: json['_id'],
       badges: json['badges'] != null ? (json['badges'] as List).map((i) => ChildBadge.fromJson(i)).toList() : null,
       permissions: json['permissions'] != null ? (json['badges'] as List).map((i) => ChildPermission.values[i]).toList() : null,
       points: json['points'] != null ? (json['points'] as List).map((i) => Points.fromJson(i)).toList() : null,

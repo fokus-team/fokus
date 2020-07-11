@@ -26,7 +26,7 @@ class UserRestoreBloc extends Bloc<UserRestoreEvent, UserRestoreState> {
 	    if (lastUser == null)
 	    	yield UserRestoreFailure();
 	    else {
-		    var user = await dbProvider.fetchUser(lastUser);
+		    var user = await dbProvider.fetchUserById(lastUser);
 		    yield UserRestoreSuccess(user);
 	    }
     }

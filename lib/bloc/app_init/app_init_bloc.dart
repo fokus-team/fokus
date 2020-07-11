@@ -17,7 +17,6 @@ class AppInitBloc extends Bloc<AppInitEvent, AppInitState> {
   @override
 	Stream<AppInitState> mapEventToState(AppInitEvent event) async* {
 		if (event is AppInitStarted) {
-			yield AppInitInProgress();
 			await _initializeServices();
 			yield AppInitSuccess();
 		}

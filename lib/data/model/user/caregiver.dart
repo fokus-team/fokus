@@ -15,7 +15,7 @@ class Caregiver extends User {
 
   factory Caregiver.fromJson(Map<String, dynamic> json) {
     return Caregiver(
-      id: json['_id'],
+	    id: json['_id'],
       badges: json['badges'] != null ? (json['badges'] as List).map((i) => Badge.fromJson(i)).toList() : null,
       email: json['email'],
       friends: json['friends'] != null ? new List<String>.from(json['friends']) : null,

@@ -1,5 +1,6 @@
 import 'package:fokus/data/model/collection.dart';
-import 'package:fokus/data/model/user/caregiver.dart';
+import 'package:fokus/data/model/user/user.dart';
+import 'package:fokus/data/model/user/user_role.dart';
 import 'package:fokus/data/repository/database/mongo_client.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
@@ -11,7 +12,11 @@ class DataRepository {
 		return this;
 	}
 
-	Future<Caregiver> fetchUser(ObjectId id) async {
-		return client.query(Collection.user, where.eq('_id', id)).then((response) => Caregiver.fromJson(response));
+	Future<User> fetchUser([SelectorBuilder selector]) async {
+		return client.query(Collection.user, selector).then((response) => User.typedFromJson(response));
 	}
+
+	Future<User> fetchUserById(ObjectId id) async => fetchUser(where.eq('_id', id));
+
+	Future<User> fetchUserByRole(UserRole role) async => fetchUser(where.eq('role', role.index));
 }

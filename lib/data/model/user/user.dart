@@ -1,9 +1,10 @@
+import 'package:fokus/data/model/user/caregiver.dart';
+import 'package:fokus/data/model/user/child.dart';
 import 'package:fokus/data/model/user/user_role.dart';
 import 'package:meta/meta.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
 class User {
-// ignore: non_constant_identifier_names
   final ObjectId id;
   final UserRole role;
   String name;
@@ -35,5 +36,12 @@ class User {
       data['connections'] = this.connections;
     }
     return data;
+  }
+
+  static User typedFromJson(Map<String, dynamic> json) {
+  	var rawRole = json['role'];
+  	if (rawRole == null)
+  		return null;
+  	return rawRole == UserRole.caregiver.index ? Caregiver.fromJson(json) : Child.fromJson(json);
   }
 }

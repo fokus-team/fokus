@@ -16,7 +16,7 @@ class DataRepository {
 		return client.query(Collection.user, selector).then((response) => User.typedFromJson(response));
 	}
 
+	// Temporary until we have a login page
 	Future<User> fetchUserById(ObjectId id) async => fetchUser(where.eq('_id', id));
-
 	Future<User> fetchUserByRole(UserRole role) async => fetchUser(where.eq('role', role.index));
 }

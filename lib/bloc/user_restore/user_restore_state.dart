@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:fokus/data/model/user/user.dart';
+
+import 'package:fokus/data/model/user/user_role.dart';
 
 abstract class UserRestoreState extends Equatable {
   const UserRestoreState();
@@ -11,12 +12,12 @@ abstract class UserRestoreState extends Equatable {
 class UserRestoreInitialState extends UserRestoreState {}
 
 class UserRestoreSuccess extends UserRestoreState {
-	final User user;
+	final UserRole userRole;
 
-	UserRestoreSuccess(this.user);
+	UserRestoreSuccess(this.userRole);
 
 	@override
-	List<Object> get props => [user];
+	List<Object> get props => [userRole];
 }
 
 class UserRestoreFailure extends UserRestoreState {}

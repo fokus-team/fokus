@@ -1,27 +1,22 @@
 import 'package:cubit/cubit.dart';
 import 'package:get_it/get_it.dart';
 
-import 'package:fokus/data/repository/database/data_repository.dart';
+import 'package:fokus/bloc/active_user/active_user_cubit.dart';
 import 'package:fokus/data/repository/settings/app_config_repository.dart';
 
 import 'user_restore_state.dart';
 
 class UserRestoreCubit extends Cubit<UserRestoreState> {
-	final DataRepository dbProvider;
+	final ActiveUserCubit _activeUserCubit;
 	final AppConfigRepository appConfig;
 
-	UserRestoreCubit({this.dbProvider, this.appConfig}) : super(UserRestoreInitialState());
+	UserRestoreCubit(this._activeUserCubit, {this.appConfig}) : super(UserRestoreInitialState()) {
+		_activeUserCubit.listen((state) => state is ActiveUserPresent ? emit(UserRestoreSuccess(state.role)) : {});
+	}
 
-	void initiateUserRestore() async {
-		var dbProvider = this.dbProvider ?? GetIt.I<DataRepository>();
+	void restoreUser() async {
 		var appConfig = this.appConfig ?? GetIt.I<AppConfigRepository>();
-
 		var lastUser = appConfig.getLastUser();
-		if (lastUser == null)
-			emit(UserRestoreFailure());
-		else {
-		var user = await dbProvider.fetchUserById(lastUser);
-			emit(UserRestoreSuccess(user));
-		}
+		lastUser == null ? emit(UserRestoreFailure()) : _activeUserCubit.loginUserById(lastUser);
 	}
 }

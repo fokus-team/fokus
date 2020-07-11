@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_cubit/flutter_cubit.dart';
+import 'package:fokus/bloc/active_user/active_user_cubit.dart';
 import 'package:fokus/bloc/app_init/app_init_state.dart';
 
 import 'package:fokus/data/model/app_page.dart';
-import 'package:fokus/data/model/user/child.dart';
+import 'package:fokus/data/model/user/user_role.dart';
 import 'package:fokus/utils/theme_config.dart';
 import 'package:fokus/bloc/app_init/app_init_cubit.dart';
 import 'package:fokus/data/model/button_type.dart';
@@ -14,14 +15,12 @@ import 'package:fokus/bloc/user_restore/user_restore_cubit.dart';
 import 'package:fokus/bloc/user_restore/user_restore_state.dart';
 
 class LoadingPage extends StatelessWidget {
-	LoadingPage();
-
 	@override
 	Widget build(BuildContext context) {
 		return MultiCubitProvider(
 			providers: [
 				CubitProvider<AppInitCubit>(create: (BuildContext context) => AppInitCubit()),
-				CubitProvider<UserRestoreCubit>(create: (BuildContext context) => UserRestoreCubit()),
+				CubitProvider<UserRestoreCubit>(create: (BuildContext context) => UserRestoreCubit(CubitProvider.of<ActiveUserCubit>(context))),
 			],
 			child: MultiBlocListener(
 				listeners: [
@@ -30,7 +29,7 @@ class LoadingPage extends StatelessWidget {
 							if (state is AppInitFailure)
 								showAlertDialog(context, 'alert.error', 'alert.noConnection', ButtonType.retry, () => _retryInitialization(context));
 							else if (state is AppInitSuccess)
-								CubitProvider.of<UserRestoreCubit>(context).initiateUserRestore();
+								CubitProvider.of<UserRestoreCubit>(context).restoreUser();
 						},
 					),
 					CubitListener<UserRestoreCubit, UserRestoreState>(
@@ -38,8 +37,8 @@ class LoadingPage extends StatelessWidget {
 							if (state is UserRestoreFailure)
 								Navigator.of(context).pushReplacementNamed(AppPage.rolesPage.name);
 							else if (state is UserRestoreSuccess) {
-								var userRoute = state.user is Child ? AppPage.childPanel : AppPage.caregiverPanel;
-								Navigator.of(context).pushReplacementNamed(userRoute.name, arguments: state.user);
+								var userRoute = state.userRole == UserRole.child ? AppPage.childPanel : AppPage.caregiverPanel;
+								Navigator.of(context).pushReplacementNamed(userRoute.name);
 							}
 						},
 					),

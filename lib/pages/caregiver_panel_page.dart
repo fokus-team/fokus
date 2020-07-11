@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
+import 'package:flutter_cubit/flutter_cubit.dart';
 
-import 'package:fokus/data/model/app_page.dart';
-import 'package:fokus/data/model/user/caregiver.dart';
 import 'package:fokus/utils/app_locales.dart';
+import 'package:fokus/data/model/app_page.dart';
 import 'package:fokus/utils/theme_config.dart';
-import 'package:fokus/data/repository/settings/app_config_repository.dart';
+import 'package:fokus/bloc/active_user/active_user_cubit.dart';
 
 class CaregiverPanelPage extends StatefulWidget {
 	@override
@@ -15,29 +14,28 @@ class CaregiverPanelPage extends StatefulWidget {
 class _CaregiverPanelPageState extends State<CaregiverPanelPage> {
 	@override
 	Widget build(BuildContext context) {
-		var user = ModalRoute.of(context).settings.arguments as Caregiver;
+		var activeUserCubit = CubitProvider.of<ActiveUserCubit>(context);
+		var userName = (activeUserCubit.state as ActiveUserPresent).name;
 
-    return Scaffold(
-			body: Center(
-				child: Column(
-					crossAxisAlignment: CrossAxisAlignment.center,
-					mainAxisAlignment: MainAxisAlignment.center,
-				  children: <Widget>[
-				    Text(AppLocales.of(context).translate('page.caregiverPanel.header.title', {'name': user.name})),
-					  FlatButton(
-						  onPressed: () => _logoutUserTest(context),
-						  child: Text('Log out'),
-						  textColor: AppColors.lightTextColor,
-						  color: AppColors.caregiverButtonColor,
-					  )
-				  ],
+    return CubitListener<ActiveUserCubit, ActiveUserState>(
+	    listener: (context, state) => state is NoActiveUser ? Navigator.of(context).pushNamed(AppPage.rolesPage.name) : {},
+      child: Scaffold(
+				body: Center(
+					child: Column(
+						crossAxisAlignment: CrossAxisAlignment.center,
+						mainAxisAlignment: MainAxisAlignment.center,
+					  children: <Widget>[
+					    Text(AppLocales.of(context).translate('page.caregiverPanel.header.title', {'name': userName})),
+						  FlatButton(
+							  onPressed: () => activeUserCubit.logoutUser(),
+							  child: Text('Log out'),
+							  textColor: AppColors.lightTextColor,
+							  color: AppColors.caregiverButtonColor,
+						  )
+					  ],
+					),
 				),
 			),
-		);
-	}
-
-	void _logoutUserTest(BuildContext context) {
-		GetIt.I<AppConfigRepository>().removeLastUser();
-		Navigator.of(context).pushReplacementNamed(AppPage.rolesPage.name);
+    );
 	}
 }

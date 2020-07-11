@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_cubit/flutter_cubit.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
+import 'package:fokus/bloc/active_user/active_user_cubit.dart';
 import 'package:fokus/utils/app_locales.dart';
 import 'package:fokus/utils/theme_config.dart';
 import 'package:fokus/pages/loading_page.dart';
@@ -10,7 +12,12 @@ import 'package:fokus/pages/child_panel_page.dart';
 
 import 'data/model/app_page.dart';
 
-void main() => runApp(FokusApp());
+void main() => runApp(
+	CubitProvider<ActiveUserCubit>(
+		create: (context) => ActiveUserCubit(),
+		child: FokusApp(),
+	)
+);
 
 class FokusApp extends StatelessWidget {
 	@override

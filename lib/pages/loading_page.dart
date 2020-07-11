@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_cubit/flutter_cubit.dart';
 
-import 'package:fokus/bloc/user_restore/bloc.dart';
 import 'package:fokus/data/model/app_page.dart';
 import 'package:fokus/data/model/user/child.dart';
 import 'package:fokus/utils/theme_config.dart';
@@ -9,6 +9,8 @@ import 'package:fokus/bloc/app_init/bloc.dart';
 import 'package:fokus/data/model/button_type.dart';
 import 'package:fokus/utils/app_locales.dart';
 import 'package:fokus/utils/dialog_utils.dart';
+import 'package:fokus/bloc/user_restore/user_restore_cubit.dart';
+import 'package:fokus/bloc/user_restore/user_restore_state.dart';
 
 class LoadingPage extends StatelessWidget {
 	LoadingPage();
@@ -18,7 +20,7 @@ class LoadingPage extends StatelessWidget {
 		return MultiBlocProvider(
 			providers: [
 				BlocProvider<AppInitBloc>(create: (BuildContext context) => AppInitBloc()..add(AppInitStarted())),
-				BlocProvider<UserRestoreBloc>(create: (BuildContext context) => UserRestoreBloc()),
+				CubitProvider<UserRestoreCubit>(create: (BuildContext context) => UserRestoreCubit()),
 			],
 			child: MultiBlocListener(
 				listeners: [
@@ -27,10 +29,10 @@ class LoadingPage extends StatelessWidget {
 							if (state is AppInitFailure)
 								showAlertDialog(context, 'alert.error', 'alert.noConnection', ButtonType.retry, () => _retryInitialization(context));
 							else if (state is AppInitSuccess)
-								BlocProvider.of<UserRestoreBloc>(context).add(UserRestoreStarted());
+								CubitProvider.of<UserRestoreCubit>(context).initiateUserRestore();
 						},
 					),
-					BlocListener<UserRestoreBloc, UserRestoreState>(
+					CubitListener<UserRestoreCubit, UserRestoreState>(
 						listener: (BuildContext context, UserRestoreState state) {
 							if (state is UserRestoreFailure)
 								Navigator.of(context).pushReplacementNamed(AppPage.rolesPage.name);

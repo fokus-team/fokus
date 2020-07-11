@@ -26,8 +26,10 @@ dependencies:
     firebase_remote_config: ^0.3.0+3
 
     get_it: ^4.0.2
-    bloc: ^4.0.0
-    flutter_bloc: ^4.0.0
+    cubit: ^0.1.2
+    flutter_cubit: ^0.1.1
+    bloc: ^5.0.1
+    flutter_bloc: ^5.0.1
 
     equatable: ^1.1.0
     meta: ^1.1.6

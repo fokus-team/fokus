@@ -11,8 +11,8 @@ import 'package:fokus/data/repository/settings/app_config_repository.dart';
 import 'package:fokus/data/repository/settings/app_shared_preferences_provider.dart';
 
 class AppInitBloc extends Bloc<AppInitEvent, AppInitState> {
-  @override
-	AppInitState get initialState => InitialAppInitState();
+
+	AppInitBloc() : super(InitialAppInitState());
 
   @override
 	Stream<AppInitState> mapEventToState(AppInitEvent event) async* {

@@ -6,7 +6,6 @@ import 'package:fokus/data/repository/settings/app_config_repository.dart';
 import 'package:get_it/get_it.dart';
 import 'package:lottie/lottie.dart';
 
-import 'package:fokus/data/model/user/caregiver.dart';
 import 'package:fokus/utils/app_locales.dart';
 import 'package:fokus/utils/dialog_utils.dart';
 import 'package:fokus/data/model/app_page.dart';

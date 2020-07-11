@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_cubit/flutter_cubit.dart';
 
 import 'package:fokus/utils/app_locales.dart';
+import 'package:fokus/utils/cubit_utils.dart';
 import 'package:fokus/data/model/app_page.dart';
 import 'package:fokus/utils/theme_config.dart';
 import 'package:fokus/bloc/active_user/active_user_cubit.dart';
@@ -17,8 +18,8 @@ class _CaregiverPanelPageState extends State<CaregiverPanelPage> {
 		var activeUserCubit = CubitProvider.of<ActiveUserCubit>(context);
 		var userName = (activeUserCubit.state as ActiveUserPresent).name;
 
-    return CubitListener<ActiveUserCubit, ActiveUserState>(
-	    listener: (context, state) => state is NoActiveUser ? Navigator.of(context).pushNamed(AppPage.rolesPage.name) : {},
+    return CubitUtils.navigateOnState<ActiveUserCubit, ActiveUserState, NoActiveUser>(
+	    navigation: (navigator) => navigator.pushReplacementNamed(AppPage.rolesPage.name),
       child: Scaffold(
 				body: Center(
 					child: Column(

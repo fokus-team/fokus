@@ -12,9 +12,10 @@ import 'package:fokus/bloc/active_user/active_user_cubit.dart';
 class RolesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.mainBackgroundColor,
-      body: Center(
+    return _directLogin(
+	    child: Scaffold(
+        backgroundColor: AppColors.mainBackgroundColor,
+        body: Center(
 				child: Column(
 			    mainAxisAlignment: MainAxisAlignment.center,
 			    crossAxisAlignment: CrossAxisAlignment.center,
@@ -46,6 +47,7 @@ class RolesPage extends StatelessWidget {
 			    ]
 			  ),
 			),
+      ),
     );
   }
 
@@ -58,43 +60,43 @@ class RolesPage extends StatelessWidget {
 	  return Container(
 		  width: 240,
 		  padding: EdgeInsets.all(4.0),
-		  child: _directLogin(
-			  role: role,
-		    child: FlatButton(
-				  onPressed: () => CubitProvider.of<ActiveUserCubit>(context).loginUserByRole(role),
-				  color: role == UserRole.caregiver ? AppColors.caregiverButtonColor : AppColors.childButtonColor,
-				  padding: EdgeInsets.all(20.0),
-				  child: Row(
-					  mainAxisAlignment: MainAxisAlignment.center,
-					  children: <Widget>[
-						  Text(
-							  '${AppLocales.of(context).translate("page.roles.introduction")} ',
-							  style: roleButtonsStyle
-						  ),
-						  Text(
-							  '${AppLocales.of(context).translate("page.roles.${role.name}")} ',
-							  style: roleButtonsStyle.copyWith(fontWeight: FontWeight.bold)
-						  ),
-						  Padding(
-							  padding: EdgeInsets.only(left: AppBoxProperties.buttonIconPadding),
-							  child: Icon(
-								  Icons.arrow_forward,
-								  color: AppColors.lightTextColor,
-								  size: 26
-							  )
+		  child: FlatButton(
+			  onPressed: () => CubitProvider.of<ActiveUserCubit>(context).loginUserByRole(role),
+			  color: role == UserRole.caregiver ? AppColors.caregiverButtonColor : AppColors.childButtonColor,
+			  padding: EdgeInsets.all(20.0),
+			  child: Row(
+				  mainAxisAlignment: MainAxisAlignment.center,
+				  children: <Widget>[
+					  Text(
+						  '${AppLocales.of(context).translate("page.roles.introduction")} ',
+						  style: roleButtonsStyle
+					  ),
+					  Text(
+						  '${AppLocales.of(context).translate("page.roles.${role.name}")} ',
+						  style: roleButtonsStyle.copyWith(fontWeight: FontWeight.bold)
+					  ),
+					  Padding(
+						  padding: EdgeInsets.only(left: AppBoxProperties.buttonIconPadding),
+						  child: Icon(
+							  Icons.arrow_forward,
+							  color: AppColors.lightTextColor,
+							  size: 26
 						  )
-					  ],
-				  )
+					  )
+				  ],
 			  )
 	    ),
 	  );
   }
 
-  Widget _directLogin({UserRole role, Widget child}) {
-	  var rolePage = role == UserRole.caregiver ? AppPage.caregiverPanel : AppPage.childPanel;
+  // Temporary until we have a login page
+  Widget _directLogin({Widget child}) {
   	return CubitListener<ActiveUserCubit, ActiveUserState>(
 		  child: child,
-		  listener: (context, state) => state is ActiveUserPresent ? Navigator.of(context).pushNamed(rolePage.name) : {}
+		  listener: (context, state) {
+		    if (state is ActiveUserPresent)
+		      Navigator.of(context).pushReplacementNamed((state.role == UserRole.caregiver ? AppPage.caregiverPanel : AppPage.childPanel).name);
+		  }
 	  );
   }
 }

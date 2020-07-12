@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fokus/utils/theme_config.dart';
+import 'package:fokus/wigets/page_theme.dart';
 import 'package:lottie/lottie.dart';
 
 import 'package:fokus/data/model/user/caregiver.dart';
@@ -19,9 +20,9 @@ class _RolesPageState extends State<RolesPage> {
 			fontSize: 18,
 			color: AppColors.lightTextColor
 		);
-    return Scaffold(
-      backgroundColor: AppColors.mainBackgroundColor,
-      body: Center(
+    return PageTheme.loginSection(
+      child: Scaffold(
+        body: Center(
 				child: Column(
 					mainAxisAlignment: MainAxisAlignment.center,
 					crossAxisAlignment: CrossAxisAlignment.center,
@@ -114,6 +115,7 @@ class _RolesPageState extends State<RolesPage> {
 					]
 				),
 			)
+      ),
     );
   }
 }

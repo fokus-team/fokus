@@ -8,6 +8,7 @@ import 'package:fokus/pages/caregiver/statistics_page.dart';
 
 import 'package:fokus/utils/app_locales.dart';
 import 'package:fokus/utils/theme_config.dart';
+import 'package:fokus/wigets/page_theme.dart';
 
 class CaregiverMainPage extends StatefulWidget {
 	@override
@@ -42,35 +43,37 @@ class _CaregiverMainPageState extends State<CaregiverMainPage> {
 	
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: IndexedStack(
-        index: _currentIndex,
-        children: [
-          for (final navigationItem in navigation) navigationItem.page,
-        ],
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
+    return PageTheme.caregiverSection(
+      child: Scaffold(
+        body: IndexedStack(
+          index: _currentIndex,
+          children: [
+            for (final navigationItem in navigation) navigationItem.page,
+          ],
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          currentIndex: _currentIndex,
 				type: BottomNavigationBarType.fixed,
 				showUnselectedLabels: true,
 				unselectedFontSize: 14,
 				selectedFontSize: 14,
 				unselectedItemColor: Colors.grey[600],
 				selectedItemColor: AppColors.mainBackgroundColor,
-        onTap: (int index) => setState(() => _currentIndex = index),
-        items: [
-          for (final navigationItem in navigation)
-            BottomNavigationBarItem(
+          onTap: (int index) => setState(() => _currentIndex = index),
+          items: [
+            for (final navigationItem in navigation)
+              BottomNavigationBarItem(
 							icon: Padding(
 								padding: EdgeInsets.only(top: 4.0, bottom: 2.0),
 								child: navigationItem.icon
-							), 
+							),
 							title: Padding(
 								padding: EdgeInsets.only(bottom: 2.0),
 								child: Text(AppLocales.of(context).translate(navigationItem.title))
 							)
-            )
-        ],
+              )
+          ],
+        ),
       ),
     );
   }

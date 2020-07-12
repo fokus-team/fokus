@@ -2,7 +2,10 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:fokus/data/model/user/caregiver.dart';
+import 'package:fokus/utils/theme_config.dart';
+import 'package:fokus/wigets/app_bottom_navigation_bar.dart';
 import 'package:fokus/wigets/app_header.dart';
+import 'package:fokus/wigets/page_theme.dart';
 
 class CaregiverPlansPage extends StatefulWidget {
 	@override
@@ -14,19 +17,27 @@ class _CaregiverPlansPageState extends State<CaregiverPlansPage> {
 	Widget build(BuildContext context) {
 		var user = ModalRoute.of(context).settings.arguments as Caregiver;
 
-    return Column(
-			crossAxisAlignment: CrossAxisAlignment.start,
-			children: [
-				AppHeader.normal(user, 'page.caregiverPlans.header.title', 'page.caregiverPlans.header.pageHint', [
-					HeaderActionButton.normal(Icons.add, 'page.caregiverPlans.header.addPlan', () => { log("Dodaj plan") }),
-					HeaderActionButton.normal(Icons.add, 'page.caregiverPlans.header.calendar', () => { log("Kalendarz") }, Colors.amber)
-				]),
-				Container(
-					padding: EdgeInsets.all(8.0),
-					child: Text('Stworzone plany', textAlign: TextAlign.left, style: Theme.of(context).textTheme.headline2)
+    return PageTheme.caregiverSection(
+			child: Scaffold(
+	      body: Column(
+					crossAxisAlignment: CrossAxisAlignment.start,
+					children: [
+						AppHeader.normal(user, 'page.caregiverPlans.header.title', 'page.caregiverPlans.header.pageHint', [
+							HeaderActionButton.normal(Icons.add, 'page.caregiverPlans.header.addPlan', () => { log("Dodaj plan") }),
+							HeaderActionButton.normal(Icons.add, 'page.caregiverPlans.header.calendar', () => { log("Kalendarz") }, Colors.amber)
+						]),
+						Container(
+							padding: EdgeInsets.all(8.0),
+							child: Text('Stworzone plany', textAlign: TextAlign.left, style: Theme.of(context).textTheme.headline2)
+						)
+					]
+				),
+				bottomNavigationBar: AppBottomNavigationBar.caregiverPage(
+					selectedItemColor: AppColors.mainBackgroundColor,
+					currentIndex: 1,
+					user: user,
 				)
-			]
-		);
-    
+	    ),
+    );
 	}
 }

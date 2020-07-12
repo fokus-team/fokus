@@ -2,15 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:fokus/data/repository/settings/app_shared_preferences_provider.dart';
+import 'package:fokus/pages/caregiver/awards_page.dart';
 import 'package:fokus/pages/caregiver/panel_page.dart';
 import 'package:fokus/pages/caregiver/plans_page.dart';
+import 'package:fokus/pages/caregiver/statistics_page.dart';
 
 import 'package:fokus/utils/app_locales.dart';
 import 'package:fokus/utils/theme_config.dart';
 
 import 'package:fokus/pages/loading_page.dart';
 import 'package:fokus/pages/roles_page.dart';
-import 'package:fokus/pages/caregiver/main_page.dart';
 import 'package:fokus/pages/child/main_page.dart';
 
 import 'data/repository/database/data_repository.dart';
@@ -49,7 +50,10 @@ class FokusApp extends StatelessWidget {
 			routes: {
 				'/loading-screen': (context) => LoadingPage(),
 				'/roles-page': (context) => RolesPage(),
-				'/caregiver/main-page': (context) => CaregiverMainPage(),
+				'/caregiver/panel-page': (context) => CaregiverPanelPage(),
+				'/caregiver/plans-page': (context) => CaregiverPlansPage(),
+				'/caregiver/awards-page': (context) => CaregiverAwardsPage(),
+				'/caregiver/statistics-page': (context) => CaregiverStatisticsPage(),
 				'/child/main-page': (context) => ChildMainPage(),
 			},
 			theme: ThemeData(

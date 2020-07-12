@@ -27,7 +27,7 @@ class AppHeader extends StatelessWidget {
 	final String title;
 	final String text;
 	final List<HeaderActionButton> headerActionButtons;
-	AppHeaderType headerType;
+	final AppHeaderType headerType;
 
 	AppHeader(this.user, this.title, this.text, this.headerActionButtons, this.headerType);
 	AppHeader.greetings(User user, String text, List<HeaderActionButton> headerActionButtons) 

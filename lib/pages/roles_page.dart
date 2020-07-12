@@ -32,7 +32,7 @@ class _RolesPageState extends State<RolesPage> {
 							width: 240,
 							padding: EdgeInsets.all(4.0),
 							child: FlatButton(
-								onPressed: () => { Navigator.of(context).pushNamed('/caregiver/main-page', arguments: user) },
+								onPressed: () => { Navigator.of(context).pushNamed('/caregiver/panel-page', arguments: user) },
 								color: AppColors.caregiverButtonColor,
 								padding: EdgeInsets.all(20.0),
 								child: Row(

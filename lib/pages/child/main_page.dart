@@ -18,17 +18,14 @@ class _ChildMainPageState extends State<ChildMainPage> {
 	
 	List<AppBottomNavigationItem> navigation = [
 		AppBottomNavigationItem(
-			page: ChildPlansPage(),
 			icon: Icon(Icons.description),
 			title: 'navigation.child.plans',
 		),
 		AppBottomNavigationItem(
-			page: ChildAwardsPage(),
 			icon: Icon(Icons.stars),
 			title: 'navigation.child.awards',
 		),
 		AppBottomNavigationItem(
-			page: ChildAchievementsPage(),
 			icon: Icon(Icons.assistant),
 			title: 'navigation.child.achievements',
 		),
@@ -40,7 +37,7 @@ class _ChildMainPageState extends State<ChildMainPage> {
       body: IndexedStack(
         index: _currentIndex,
         children: [
-          for (final navigationItem in navigation) navigationItem.page,
+
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(

@@ -2,7 +2,10 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:fokus/data/model/user/caregiver.dart';
+import 'package:fokus/utils/theme_config.dart';
+import 'package:fokus/wigets/app_bottom_navigation_bar.dart';
 import 'package:fokus/wigets/app_header.dart';
+import 'package:fokus/wigets/page_theme.dart';
 
 class CaregiverStatisticsPage extends StatefulWidget {
 	@override
@@ -14,18 +17,26 @@ class _CaregiverStatisticsPageState extends State<CaregiverStatisticsPage> {
 	Widget build(BuildContext context) {
 		var user = ModalRoute.of(context).settings.arguments as Caregiver;
 
-    return Column(
-			crossAxisAlignment: CrossAxisAlignment.start,
-			children: [
-				AppHeader.normal(user, 'page.caregiverStatistics.header.title', 'page.caregiverStatistics.header.pageHint', [
-					HeaderActionButton.normal(Icons.archive, 'page.caregiverStatistics.header.history', () => { log("Historia") }, Colors.amber),
-				]),
-				Container(
-					padding: EdgeInsets.all(8.0),
-					child: Text('Podstawowe wykresy', textAlign: TextAlign.left, style: Theme.of(context).textTheme.headline2)
+    return PageTheme.caregiverSection(
+			child: Scaffold(
+	      body: Column(
+					crossAxisAlignment: CrossAxisAlignment.start,
+					children: [
+						AppHeader.normal(user, 'page.caregiverStatistics.header.title', 'page.caregiverStatistics.header.pageHint', [
+							HeaderActionButton.normal(Icons.archive, 'page.caregiverStatistics.header.history', () => { log("Historia") }, Colors.amber),
+						]),
+						Container(
+							padding: EdgeInsets.all(8.0),
+							child: Text('Podstawowe wykresy', textAlign: TextAlign.left, style: Theme.of(context).textTheme.headline2)
+						)
+					]
+				),
+				bottomNavigationBar: AppBottomNavigationBar.caregiverPage(
+					selectedItemColor: AppColors.mainBackgroundColor,
+					currentIndex: 3,
+					user: user,
 				)
-			]
-		);
-    
+	    )
+    );
 	}
 }

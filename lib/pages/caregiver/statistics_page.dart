@@ -2,10 +2,9 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:fokus/data/model/user/caregiver.dart';
-import 'package:fokus/utils/theme_config.dart';
+
 import 'package:fokus/wigets/app_bottom_navigation_bar.dart';
 import 'package:fokus/wigets/app_header.dart';
-import 'package:fokus/wigets/page_theme.dart';
 
 class CaregiverStatisticsPage extends StatefulWidget {
 	@override
@@ -21,7 +20,7 @@ class _CaregiverStatisticsPageState extends State<CaregiverStatisticsPage> {
 			body: Column(
 				crossAxisAlignment: CrossAxisAlignment.start,
 				children: [
-					AppHeader.normal(user, 'page.caregiverSection.statistics.header.title', 'page.caregiverSection.statistics.header.pageHint', [
+					AppHeader.normal(user: user, title: 'page.caregiverSection.statistics.header.title', text: 'page.caregiverSection.statistics.header.pageHint', headerActionButtons: [
 						HeaderActionButton.normal(Icons.archive, 'page.caregiverSection.statistics.header.history', () => { log("Historia") }, Colors.amber),
 					]),
 					Container(

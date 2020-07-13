@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:fokus/utils/theme_config.dart';
 import 'package:fokus/wigets/page_theme.dart';
 import 'package:lottie/lottie.dart';
 
 import 'package:fokus/data/model/user/caregiver.dart';
 import 'package:fokus/utils/app_locales.dart';
 import 'package:fokus/utils/dialog_utils.dart';
+import 'package:fokus/utils/theme_config.dart';
 
 class RolesPage extends StatefulWidget {
   @override

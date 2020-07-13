@@ -46,7 +46,7 @@ class ChildCustomHeader extends StatelessWidget {
 
 	@override
 	Widget build(BuildContext context) {
-		return AppHeader.greetings(user, 'page.childSection.panel.header.pageHint', [
+		return AppHeader.greetings(user: user, text: 'page.childSection.panel.header.pageHint', headerActionButtons: [
 			HeaderActionButton.custom(
 				Row(
 					children: <Widget>[

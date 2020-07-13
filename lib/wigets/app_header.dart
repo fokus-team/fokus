@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:fokus/data/model/user/user_type.dart';
 import 'package:fokus/data/model/user/user.dart';
+
 import 'package:fokus/utils/app_locales.dart';
 import 'package:fokus/utils/theme_config.dart';
 
@@ -29,11 +30,21 @@ class AppHeader extends StatelessWidget {
 	final List<HeaderActionButton> headerActionButtons;
 	final AppHeaderType headerType;
 
-	AppHeader(this.user, this.title, this.text, this.headerActionButtons, this.headerType);
-	AppHeader.greetings(User user, String text, List<HeaderActionButton> headerActionButtons) 
-		: this(user, user.name, text, headerActionButtons, AppHeaderType.greetings);
-	AppHeader.normal(User user, String title, String text, List<HeaderActionButton> headerActionButtons) 
-		: this(user, title, text, headerActionButtons, AppHeaderType.normal);
+	AppHeader({this.user, this.title, this.text, this.headerActionButtons, this.headerType});
+	AppHeader.greetings({User user, String text, List<HeaderActionButton> headerActionButtons}) : this(
+		user: user,
+		title: user.name,
+		text: text, 
+		headerActionButtons: headerActionButtons,
+		headerType: AppHeaderType.greetings
+	);
+	AppHeader.normal({User user, String title, String text, List<HeaderActionButton> headerActionButtons}) : this(
+		user: user,
+		title: title,
+		text: text, 
+		headerActionButtons: headerActionButtons,
+		headerType: AppHeaderType.normal
+	);
 
   @override
   Widget build(BuildContext context) {
@@ -132,6 +143,7 @@ class AppHeader extends StatelessWidget {
 	}
 
 	Widget buildGreetings(BuildContext context) {
+		String greetingsTranslation = (user.type == UserType.caregiver) ? 'caregiverSection' : 'childSection';
 		return buildHederContainer(context, 
 			Row(
 				mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -148,7 +160,7 @@ class AppHeader extends StatelessWidget {
 								children: <Widget>[
 									RichText(
 										text: TextSpan(
-											text: '${AppLocales.of(context).translate('page.' + ((user.type == UserType.caregiver) ? 'caregiverSection' : 'childSection') + '.panel.header.greetings')},\n',
+											text: '${AppLocales.of(context).translate('page.' + greetingsTranslation + '.panel.header.greetings')},\n',
 											style: TextStyle(color: Colors.white, fontSize: 20),
 											children: <TextSpan>[
 												TextSpan(

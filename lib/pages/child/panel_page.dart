@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 
 import 'package:fokus/data/model/user/user.dart';
 import 'package:fokus/data/model/user/user_type.dart';
-import 'package:fokus/utils/theme_config.dart';
 
 import 'package:fokus/wigets/app_bottom_navigation_bar.dart';
 import 'package:fokus/wigets/child_wallet.dart';
-import 'package:fokus/wigets/page_theme.dart';
 
 class ChildPanelPage extends StatefulWidget {
 	@override

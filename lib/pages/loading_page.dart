@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/data/repository/settings/app_config_repository.dart';
-import 'package:fokus/utils/theme_config.dart';
 
 import 'package:fokus/bloc/app_init/bloc.dart';
 import 'package:fokus/data/model/button_type.dart';
 import 'package:fokus/data/repository/database/data_repository.dart';
+
 import 'package:fokus/utils/app_locales.dart';
 import 'package:fokus/utils/dialog_utils.dart';
 import 'package:fokus/wigets/page_theme.dart';

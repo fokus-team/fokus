@@ -2,11 +2,9 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:fokus/data/model/user/caregiver.dart';
-import 'package:fokus/utils/theme_config.dart';
 
 import 'package:fokus/wigets/app_bottom_navigation_bar.dart';
 import 'package:fokus/wigets/app_header.dart';
-import 'package:fokus/wigets/page_theme.dart';
 
 class CaregiverPanelPage extends StatefulWidget {
 	@override
@@ -22,7 +20,7 @@ class _CaregiverPanelPageState extends State<CaregiverPanelPage> {
 			body: Column(
 				crossAxisAlignment: CrossAxisAlignment.start,
 				children: [
-					AppHeader.greetings(user, 'page.caregiverSection.panel.header.pageHint', [
+					AppHeader.greetings(user: user, text: 'page.caregiverSection.panel.header.pageHint', headerActionButtons: [
 						HeaderActionButton.normal(Icons.add, 'page.caregiverSection.panel.header.addChild', () => { log("Dodaj dziecko") }),
 						HeaderActionButton.normal(Icons.add, 'page.caregiverSection.panel.header.addCaregiver', () => { log("Dodaj opiekuna") })
 					]),

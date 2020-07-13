@@ -2,10 +2,9 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:fokus/data/model/user/caregiver.dart';
-import 'package:fokus/utils/theme_config.dart';
+
 import 'package:fokus/wigets/app_bottom_navigation_bar.dart';
 import 'package:fokus/wigets/app_header.dart';
-import 'package:fokus/wigets/page_theme.dart';
 
 class CaregiverAwardsPage extends StatefulWidget {
 	@override
@@ -21,7 +20,7 @@ class _CaregiverAwardsPageState extends State<CaregiverAwardsPage> {
 			body: Column(
 				crossAxisAlignment: CrossAxisAlignment.start,
 				children: [
-					AppHeader.normal(user, 'page.caregiverSection.awards.header.title', 'page.caregiverSection.awards.header.pageHint', [
+					AppHeader.normal(user: user, title: 'page.caregiverSection.awards.header.title', text: 'page.caregiverSection.awards.header.pageHint', headerActionButtons: [
 						HeaderActionButton.normal(Icons.add, 'page.caregiverSection.awards.header.addAward', () => { log("Dodaj nagrodę") }),
 						HeaderActionButton.normal(Icons.add, 'page.caregiverSection.awards.header.addBadge', () => { log("Dodaj odznakę") })
 					]),

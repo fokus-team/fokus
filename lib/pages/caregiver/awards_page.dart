@@ -22,9 +22,9 @@ class _CaregiverAwardsPageState extends State<CaregiverAwardsPage> {
 	      body: Column(
 					crossAxisAlignment: CrossAxisAlignment.start,
 					children: [
-						AppHeader.normal(user, 'page.caregiverAwards.header.title', 'page.caregiverAwards.header.pageHint', [
-							HeaderActionButton.normal(Icons.add, 'page.caregiverAwards.header.addAward', () => { log("Dodaj nagrodę") }),
-							HeaderActionButton.normal(Icons.add, 'page.caregiverAwards.header.addBadge', () => { log("Dodaj odznakę") })
+						AppHeader.normal(user, 'page.caregiverSection.awards.header.title', 'page.caregiverSection.awards.header.pageHint', [
+							HeaderActionButton.normal(Icons.add, 'page.caregiverSection.awards.header.addAward', () => { log("Dodaj nagrodę") }),
+							HeaderActionButton.normal(Icons.add, 'page.caregiverSection.awards.header.addBadge', () => { log("Dodaj odznakę") })
 						]),
 						Container(
 							padding: EdgeInsets.all(8.0),

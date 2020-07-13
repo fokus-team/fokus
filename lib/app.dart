@@ -2,20 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:fokus/data/repository/settings/app_shared_preferences_provider.dart';
+import 'data/repository/database/data_repository.dart';
+import 'data/repository/settings/app_config_repository.dart';
+
+import 'package:fokus/pages/loading_page.dart';
+import 'package:fokus/pages/roles_page.dart';
 import 'package:fokus/pages/caregiver/awards_page.dart';
 import 'package:fokus/pages/caregiver/panel_page.dart';
 import 'package:fokus/pages/caregiver/plans_page.dart';
 import 'package:fokus/pages/caregiver/statistics_page.dart';
+import 'package:fokus/pages/child/panel_page.dart';
+import 'package:fokus/pages/child/awards_page.dart';
+import 'package:fokus/pages/child/achievements_page.dart';
 
 import 'package:fokus/utils/app_locales.dart';
 import 'package:fokus/utils/theme_config.dart';
-
-import 'package:fokus/pages/loading_page.dart';
-import 'package:fokus/pages/roles_page.dart';
-import 'package:fokus/pages/child/main_page.dart';
-
-import 'data/repository/database/data_repository.dart';
-import 'data/repository/settings/app_config_repository.dart';
 
 void main() => runApp(
 	MultiRepositoryProvider(
@@ -54,7 +55,9 @@ class FokusApp extends StatelessWidget {
 				'/caregiver/plans-page': (context) => CaregiverPlansPage(),
 				'/caregiver/awards-page': (context) => CaregiverAwardsPage(),
 				'/caregiver/statistics-page': (context) => CaregiverStatisticsPage(),
-				'/child/main-page': (context) => ChildMainPage(),
+				'/child/panel-page': (context) => ChildPanelPage(),
+				'/child/awards-page': (context) => ChildAwardsPage(),
+				'/child/achievements-page': (context) => ChildAchievementsPage(),
 			},
 			theme: ThemeData(
 				primaryColor: AppColors.mainBackgroundColor,

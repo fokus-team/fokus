@@ -8,6 +8,7 @@ import 'package:fokus/data/model/button_type.dart';
 import 'package:fokus/data/repository/database/data_repository.dart';
 import 'package:fokus/utils/app_locales.dart';
 import 'package:fokus/utils/dialog_utils.dart';
+import 'package:fokus/wigets/page_theme.dart';
 
 class LoadingPage extends StatelessWidget {
 	LoadingPage();
@@ -24,20 +25,21 @@ class LoadingPage extends StatelessWidget {
 					else if (state is AppInitSuccessState)
 						Navigator.of(context).pushReplacementNamed('/roles-page', arguments: state.user);
 				},
-				child: Scaffold(
-          backgroundColor: AppColors.mainBackgroundColor,
-					body: Center(
-						child: Column(
-							mainAxisAlignment: MainAxisAlignment.center,
-							crossAxisAlignment: CrossAxisAlignment.center,
-							children: <Widget>[
-								// TODO Change Circular Indicator to our sunflower animation
-								Padding(padding: EdgeInsets.only(bottom: 20.0), child: CircularProgressIndicator(backgroundColor: Colors.white)),
-								Text('${AppLocales.of(context).translate("loading")}...', style: Theme.of(context).textTheme.bodyText1)
-							]
-						),
-					)
-				),
+				child: PageTheme.loginSection(
+					child: Scaffold(
+						body: Center(
+							child: Column(
+								mainAxisAlignment: MainAxisAlignment.center,
+								crossAxisAlignment: CrossAxisAlignment.center,
+								children: <Widget>[
+									// TODO Change Circular Indicator to our sunflower animation
+									Padding(padding: EdgeInsets.only(bottom: 20.0), child: CircularProgressIndicator(backgroundColor: Colors.white)),
+									Text('${AppLocales.of(context).translate("loading")}...', style: Theme.of(context).textTheme.bodyText1)
+								]
+							),
+						)
+					),
+				)
 			)
 		);
 	}

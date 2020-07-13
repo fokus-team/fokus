@@ -23,98 +23,98 @@ class _RolesPageState extends State<RolesPage> {
     return PageTheme.loginSection(
       child: Scaffold(
         body: Center(
-				child: Column(
-					mainAxisAlignment: MainAxisAlignment.center,
-					crossAxisAlignment: CrossAxisAlignment.center,
-					children: <Widget>[
-						Lottie.asset('assets/animation/sunflower_with_title_rotate_only.json', width: 280),
-						Container(
-							width: 240,
-							padding: EdgeInsets.all(4.0),
-							child: FlatButton(
-								onPressed: () => { Navigator.of(context).pushNamed('/caregiver/panel-page', arguments: user) },
-								color: AppColors.caregiverButtonColor,
-								padding: EdgeInsets.all(20.0),
-								child: Row(
-									mainAxisAlignment: MainAxisAlignment.center,
-									children: <Widget>[
-										Text(
-											'${AppLocales.of(context).translate("page.roles.introduction")} ',
-											style: roleButtonsStyle.copyWith(fontWeight: FontWeight.normal)
-										),
-										Text(
-											'${AppLocales.of(context).translate("page.roles.caregiver")} ',
-											style: roleButtonsStyle.copyWith(fontWeight: FontWeight.bold)
-										),
-										Padding(
-											padding: EdgeInsets.only(left: AppBoxProperties.buttonIconPadding),
-											child: Icon(
-												Icons.arrow_forward,
-												color: AppColors.lightTextColor,
-												size: 26
-											)
-										)
-									],
-								)
-							)
-						),
-						Container(
-							width: 240,
-							padding: EdgeInsets.all(4.0),
-							child: FlatButton(
-								onPressed: () => { Navigator.of(context).pushNamed('/child/main-page') },
-								color: AppColors.childButtonColor,
-								padding: EdgeInsets.all(20.0),
-								child: Row(
-									mainAxisAlignment: MainAxisAlignment.center,
-									children: <Widget>[
-										Text(
-											'${AppLocales.of(context).translate("page.roles.introduction")} ',
-											style: roleButtonsStyle.copyWith(fontWeight: FontWeight.normal)
-										),
-										Text(
-											'${AppLocales.of(context).translate("page.roles.child")} ',
-											style: roleButtonsStyle.copyWith(fontWeight: FontWeight.bold)
-										),
-										Padding(
-											padding: EdgeInsets.only(left: AppBoxProperties.buttonIconPadding),
-											child: Icon(
-												Icons.arrow_forward,
-												color: AppColors.lightTextColor,
-												size: 26
-											)
-										)
-									],
-								)
-							)
-						),
-						Container(
-							width: 232,
-							child: RawMaterialButton(
-								onPressed: () => {
-									showHelpDialog(context, 'first_steps')
-								},
-								child: Center(
+					child: Column(
+						mainAxisAlignment: MainAxisAlignment.center,
+						crossAxisAlignment: CrossAxisAlignment.center,
+						children: <Widget>[
+							Lottie.asset('assets/animation/sunflower_with_title_rotate_only.json', width: 280),
+							Container(
+								width: 240,
+								padding: EdgeInsets.all(4.0),
+								child: FlatButton(
+									onPressed: () => { Navigator.of(context).pushNamed('/caregiver/panel-page', arguments: user) },
+									color: AppColors.caregiverButtonColor,
+									padding: EdgeInsets.all(20.0),
 									child: Row(
-										crossAxisAlignment: CrossAxisAlignment.center,
 										mainAxisAlignment: MainAxisAlignment.center,
 										children: <Widget>[
-											Padding(
-												padding: EdgeInsets.only(right: AppBoxProperties.buttonIconPadding),
-												child: Icon(Icons.help_outline, color: AppColors.lightTextColor)
+											Text(
+												'${AppLocales.of(context).translate("page.loginSection.roles.introduction")} ',
+												style: roleButtonsStyle.copyWith(fontWeight: FontWeight.normal)
 											),
 											Text(
-												AppLocales.of(context).translate('page.roles.help'),
-												style: Theme.of(context).textTheme.button,
+												'${AppLocales.of(context).translate("page.loginSection.roles.caregiver")} ',
+												style: roleButtonsStyle.copyWith(fontWeight: FontWeight.bold)
+											),
+											Padding(
+												padding: EdgeInsets.only(left: AppBoxProperties.buttonIconPadding),
+												child: Icon(
+													Icons.arrow_forward,
+													color: AppColors.lightTextColor,
+													size: 26
+												)
 											)
-										]
+										],
+									)
+								)
+							),
+							Container(
+								width: 240,
+								padding: EdgeInsets.all(4.0),
+								child: FlatButton(
+									onPressed: () => { Navigator.of(context).pushNamed('/child/panel-page') },
+									color: AppColors.childButtonColor,
+									padding: EdgeInsets.all(20.0),
+									child: Row(
+										mainAxisAlignment: MainAxisAlignment.center,
+										children: <Widget>[
+											Text(
+												'${AppLocales.of(context).translate("page.loginSection.roles.introduction")} ',
+												style: roleButtonsStyle.copyWith(fontWeight: FontWeight.normal)
+											),
+											Text(
+												'${AppLocales.of(context).translate("page.loginSection.roles.child")} ',
+												style: roleButtonsStyle.copyWith(fontWeight: FontWeight.bold)
+											),
+											Padding(
+												padding: EdgeInsets.only(left: AppBoxProperties.buttonIconPadding),
+												child: Icon(
+													Icons.arrow_forward,
+													color: AppColors.lightTextColor,
+													size: 26
+												)
+											)
+										],
+									)
+								)
+							),
+							Container(
+								width: 232,
+								child: RawMaterialButton(
+									onPressed: () => {
+										showHelpDialog(context, 'first_steps')
+									},
+									child: Center(
+										child: Row(
+											crossAxisAlignment: CrossAxisAlignment.center,
+											mainAxisAlignment: MainAxisAlignment.center,
+											children: <Widget>[
+												Padding(
+													padding: EdgeInsets.only(right: AppBoxProperties.buttonIconPadding),
+													child: Icon(Icons.help_outline, color: AppColors.lightTextColor)
+												),
+												Text(
+													AppLocales.of(context).translate('page.loginSection.roles.help'),
+													style: Theme.of(context).textTheme.button,
+												)
+											]
+										)
 									)
 								)
 							)
-						)
-					]
-				),
-			)
+						]
+					),
+				)
       ),
     );
   }

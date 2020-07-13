@@ -14,49 +14,55 @@
 		}
 	},
 	"page": {
-		"roles": {
-			"introduction": "I am a",
-			"caregiver": "Caregiver",
-			"child": "Child",
-			"help": "I need help"
-		},
-		"caregiverPanel": {
-			"header": {
-				"greetings": "Welcome",
-				"addChild": "Add child",
-				"addCaregiver": "Add caregiver",
-				"pageHint": "Manage child profiles and connected caregiver accounts."
+		"loginSection": {
+			"roles": {
+				"introduction": "I am a",
+				"caregiver": "Caregiver",
+				"child": "Child",
+				"help": "I need help"
 			}
 		},
-		"caregiverPlans": {
-			"header": {
-				"title": "Plans",
-				"addPlan": "Add plan",
-				"calendar": "Calendar",
-				"pageHint": "Create, assign and manage plans with tasks."
+		"caregiverSection": {
+			"panel": {
+				"header": {
+					"greetings": "Welcome",
+					"addChild": "Add child",
+					"addCaregiver": "Add caregiver",
+					"pageHint": "Manage child profiles and connected caregiver accounts."
+				}
+			},
+			"plans": {
+				"header": {
+					"title": "Plans",
+					"addPlan": "Add plan",
+					"calendar": "Calendar",
+					"pageHint": "Create, assign and manage plans with tasks."
+				}
+			},
+			"awards": {
+				"header": {
+					"title": "Awards",
+					"addAward": "Add award",
+					"addBadge": "Add badge",
+					"pageHint": "Increase work motivation by using points, awards and badges."
+				}
+			},
+			"statistics": {
+				"header": {
+					"title": "Statistics",
+					"history": "Event history",
+					"pageHint": "View and analyze the work done by children."
+				}
 			}
 		},
-		"caregiverAwards": {
-			"header": {
-				"title": "Awards",
-				"addAward": "Add award",
-				"addBadge": "Add badge",
-				"pageHint": "Increase work motivation by using points, awards and badges."
-			}
-		},
-		"caregiverStatistics": {
-			"header": {
-				"title": "Statistics",
-				"history": "Event history",
-				"pageHint": "View and analyze the work done by children."
-			}
-		},
-		"childPanel": {
-			"header": {
-				"greetings": "Hello",
-				"myPoints": "My points",
-				"pageHint": "Complete tasks and earn points.",
-				"garden": "Garden"
+		"childSection": {
+			"panel": {
+				"header": {
+					"greetings": "Hello",
+					"myPoints": "My points",
+					"pageHint": "Complete tasks and earn points.",
+					"garden": "Garden"
+				}
 			}
 		}
 	},

@@ -46,12 +46,12 @@ class ChildCustomHeader extends StatelessWidget {
 
 	@override
 	Widget build(BuildContext context) {
-		return AppHeader.greetings(user, 'page.childPanel.header.pageHint', [
+		return AppHeader.greetings(user, 'page.childSection.panel.header.pageHint', [
 			HeaderActionButton.custom(
 				Row(
 					children: <Widget>[
 						// TODO Universal way of showing points
-						Text('${AppLocales.of(context).translate('page.childPanel.header.myPoints')}: '),
+						Text('${AppLocales.of(context).translate('page.childSection.panel.header.myPoints')}: '),
 						SizedBox(width: 6.0),
 						Padding(
 							padding: EdgeInsets.only(right: 2.0),
@@ -71,7 +71,7 @@ class ChildCustomHeader extends StatelessWidget {
 				 },
 				Colors.white
 			),
-			HeaderActionButton.normal(Icons.local_florist, 'page.childPanel.header.garden', () => { log("Ogród") }, Colors.orange) // Just for visual test
+			HeaderActionButton.normal(Icons.local_florist, 'page.childSection.panel.header.garden', () => { log("Ogród") }, Colors.orange) // Just for visual test
 		]);
 	}
 	

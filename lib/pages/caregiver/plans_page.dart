@@ -22,9 +22,9 @@ class _CaregiverPlansPageState extends State<CaregiverPlansPage> {
 	      body: Column(
 					crossAxisAlignment: CrossAxisAlignment.start,
 					children: [
-						AppHeader.normal(user, 'page.caregiverPlans.header.title', 'page.caregiverPlans.header.pageHint', [
-							HeaderActionButton.normal(Icons.add, 'page.caregiverPlans.header.addPlan', () => { log("Dodaj plan") }),
-							HeaderActionButton.normal(Icons.add, 'page.caregiverPlans.header.calendar', () => { log("Kalendarz") }, Colors.amber)
+						AppHeader.normal(user, 'page.caregiverSection.plans.header.title', 'page.caregiverSection.plans.header.pageHint', [
+							HeaderActionButton.normal(Icons.add, 'page.caregiverSection.plans.header.addPlan', () => { log("Dodaj plan") }),
+							HeaderActionButton.normal(Icons.calendar_today, 'page.caregiverSection.plans.header.calendar', () => { log("Kalendarz") }, Colors.amber)
 						]),
 						Container(
 							padding: EdgeInsets.all(8.0),

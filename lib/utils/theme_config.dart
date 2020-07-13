@@ -26,6 +26,7 @@ class AppColors {
 class AppBoxProperties {
 	// Paddings, margins, borders and box shadows goes here
 	static final double buttonIconPadding = 4.0;
+	
 }
 
 class AppSectionStyle {

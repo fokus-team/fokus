@@ -22,8 +22,8 @@ class _CaregiverStatisticsPageState extends State<CaregiverStatisticsPage> {
 	      body: Column(
 					crossAxisAlignment: CrossAxisAlignment.start,
 					children: [
-						AppHeader.normal(user, 'page.caregiverStatistics.header.title', 'page.caregiverStatistics.header.pageHint', [
-							HeaderActionButton.normal(Icons.archive, 'page.caregiverStatistics.header.history', () => { log("Historia") }, Colors.amber),
+						AppHeader.normal(user, 'page.caregiverSection.statistics.header.title', 'page.caregiverSection.statistics.header.pageHint', [
+							HeaderActionButton.normal(Icons.archive, 'page.caregiverSection.statistics.header.history', () => { log("Historia") }, Colors.amber),
 						]),
 						Container(
 							padding: EdgeInsets.all(8.0),

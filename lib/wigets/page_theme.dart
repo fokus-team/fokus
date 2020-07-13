@@ -22,6 +22,7 @@ class PageTheme extends StatelessWidget {
 	PageTheme({this.style, this.child});
 	PageTheme.loginSection({Widget child}) : this(style: loginSectionStyle, child: child);
 	PageTheme.caregiverSection({Widget child}) : this(style: caregiverSectionStyle, child: child);
+	PageTheme.childSection({Widget child}) : this(style: childSectionStyle, child: child);
 
 	@override
 	Widget build(BuildContext context) {

@@ -150,7 +150,7 @@ class AppHeader extends StatelessWidget {
 								children: <Widget>[
 									RichText(
 										text: TextSpan(
-											text: '${AppLocales.of(context).translate('page.' + ((user.type == UserType.caregiver) ? 'caregiverPanel' : 'childPanel') + '.header.greetings')},\n',
+											text: '${AppLocales.of(context).translate('page.' + ((user.type == UserType.caregiver) ? 'caregiverSection' : 'childSection') + '.panel.header.greetings')},\n',
 											style: TextStyle(color: Colors.white, fontSize: 20),
 											children: <TextSpan>[
 												TextSpan(

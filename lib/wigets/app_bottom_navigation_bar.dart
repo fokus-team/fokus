@@ -9,7 +9,7 @@ class AppBottomNavigationBar extends StatefulWidget {
 	final List<AppBottomNavigationItem> items;
 	final User user;
 
-	static final	List<AppBottomNavigationItem> caregiverNavigationItems = [
+	static final List<AppBottomNavigationItem> caregiverNavigationItems = [
 		AppBottomNavigationItem(
 			navigationRoute: '/caregiver/panel-page',
 			icon: Icon(Icons.assignment_ind),
@@ -32,6 +32,24 @@ class AppBottomNavigationBar extends StatefulWidget {
 		),
 	];
 
+	static final List<AppBottomNavigationItem> childNavigationItems = [
+		AppBottomNavigationItem(
+			navigationRoute: '/child/panel-page',
+			icon: Icon(Icons.description),
+			title: 'navigation.child.plans',
+		),
+		AppBottomNavigationItem(
+			navigationRoute: '/child/awards-page',
+			icon: Icon(Icons.stars),
+			title: 'navigation.child.awards',
+		),
+		AppBottomNavigationItem(
+			navigationRoute: '/child/achievements-page',
+			icon: Icon(Icons.assistant),
+			title: 'navigation.child.achievements',
+		),
+	];
+	
 	AppBottomNavigationBar({this.currentIndex, this.selectedItemColor, this.items, this.user});
 	AppBottomNavigationBar.caregiverPage({int currentIndex, Color selectedItemColor, User user}) : this(
 		currentIndex: currentIndex,
@@ -39,9 +57,17 @@ class AppBottomNavigationBar extends StatefulWidget {
 		items: caregiverNavigationItems,
 		user: user
 	);
+	
+	AppBottomNavigationBar.childPage({int currentIndex, Color selectedItemColor, User user}) : this(
+		currentIndex: currentIndex,
+		selectedItemColor: selectedItemColor,
+		items: childNavigationItems,
+		user: user
+	);
 
   @override
   _AppBottomNavigationBarState createState() => _AppBottomNavigationBarState();
+
 }
 
 class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
@@ -59,14 +85,14 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
 			items: [
 				for (final navigationItem in widget.items)
 					BottomNavigationBarItem(
-							icon: Padding(
-									padding: EdgeInsets.only(top: 4.0, bottom: 2.0),
-									child: navigationItem.icon
-							),
-							title: Padding(
-									padding: EdgeInsets.only(bottom: 2.0),
-									child: Text(AppLocales.of(context).translate(navigationItem.title))
-							)
+						icon: Padding(
+							padding: EdgeInsets.only(top: 4.0, bottom: 2.0),
+							child: navigationItem.icon
+						),
+						title: Padding(
+							padding: EdgeInsets.only(bottom: 2.0),
+							child: Text(AppLocales.of(context).translate(navigationItem.title))
+						)
 					)
 			],
 		);

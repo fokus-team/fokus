@@ -17,26 +17,23 @@ class _CaregiverStatisticsPageState extends State<CaregiverStatisticsPage> {
 	Widget build(BuildContext context) {
 		var user = ModalRoute.of(context).settings.arguments as Caregiver;
 
-    return PageTheme.caregiverSection(
-			child: Scaffold(
-	      body: Column(
-					crossAxisAlignment: CrossAxisAlignment.start,
-					children: [
-						AppHeader.normal(user, 'page.caregiverSection.statistics.header.title', 'page.caregiverSection.statistics.header.pageHint', [
-							HeaderActionButton.normal(Icons.archive, 'page.caregiverSection.statistics.header.history', () => { log("Historia") }, Colors.amber),
-						]),
-						Container(
-							padding: EdgeInsets.all(8.0),
-							child: Text('Podstawowe wykresy', textAlign: TextAlign.left, style: Theme.of(context).textTheme.headline2)
-						)
-					]
-				),
-				bottomNavigationBar: AppBottomNavigationBar.caregiverPage(
-					selectedItemColor: AppColors.mainBackgroundColor,
-					currentIndex: 3,
-					user: user,
-				)
-	    )
+    return Scaffold(
+			body: Column(
+				crossAxisAlignment: CrossAxisAlignment.start,
+				children: [
+					AppHeader.normal(user, 'page.caregiverSection.statistics.header.title', 'page.caregiverSection.statistics.header.pageHint', [
+						HeaderActionButton.normal(Icons.archive, 'page.caregiverSection.statistics.header.history', () => { log("Historia") }, Colors.amber),
+					]),
+					Container(
+						padding: EdgeInsets.all(8.0),
+						child: Text('Podstawowe wykresy', textAlign: TextAlign.left, style: Theme.of(context).textTheme.headline2)
+					)
+				]
+			),
+			bottomNavigationBar: AppBottomNavigationBar.caregiverPage(
+				currentIndex: 3,
+				user: user,
+			)
     );
 	}
 }

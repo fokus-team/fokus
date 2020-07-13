@@ -5,7 +5,6 @@ import 'package:fokus/utils/app_locales.dart';
 
 class AppBottomNavigationBar extends StatefulWidget {
 	final int currentIndex;
-	final Color selectedItemColor;
 	final List<AppBottomNavigationItem> items;
 	final User user;
 
@@ -50,17 +49,15 @@ class AppBottomNavigationBar extends StatefulWidget {
 		),
 	];
 	
-	AppBottomNavigationBar({this.currentIndex, this.selectedItemColor, this.items, this.user});
-	AppBottomNavigationBar.caregiverPage({int currentIndex, Color selectedItemColor, User user}) : this(
+	AppBottomNavigationBar({this.currentIndex, this.items, this.user});
+	AppBottomNavigationBar.caregiverPage({int currentIndex, User user}) : this(
 		currentIndex: currentIndex,
-		selectedItemColor: selectedItemColor,
 		items: caregiverNavigationItems,
 		user: user
 	);
 	
-	AppBottomNavigationBar.childPage({int currentIndex, Color selectedItemColor, User user}) : this(
+	AppBottomNavigationBar.childPage({int currentIndex, User user}) : this(
 		currentIndex: currentIndex,
-		selectedItemColor: selectedItemColor,
 		items: childNavigationItems,
 		user: user
 	);
@@ -80,7 +77,7 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
 			unselectedFontSize: 14,
 			selectedFontSize: 14,
 			unselectedItemColor: Colors.grey[600],
-			selectedItemColor: widget.selectedItemColor,
+			selectedItemColor: Theme.of(context).appBarTheme.color,
 			onTap: (int index) => index != widget.currentIndex ? Navigator.of(context).pushNamed(widget.items[index].navigationRoute, arguments: widget.user) : {},
 			items: [
 				for (final navigationItem in widget.items)

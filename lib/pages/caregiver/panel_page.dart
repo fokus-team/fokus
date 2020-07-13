@@ -18,27 +18,24 @@ class _CaregiverPanelPageState extends State<CaregiverPanelPage> {
 	Widget build(BuildContext context) {
 		var user = ModalRoute.of(context).settings.arguments as Caregiver;
 
-    return PageTheme.caregiverSection(
-	    child: Scaffold(
-		    body: Column(
-			    crossAxisAlignment: CrossAxisAlignment.start,
-			    children: [
-				    AppHeader.greetings(user, 'page.caregiverSection.panel.header.pageHint', [
-					    HeaderActionButton.normal(Icons.add, 'page.caregiverSection.panel.header.addChild', () => { log("Dodaj dziecko") }),
-					    HeaderActionButton.normal(Icons.add, 'page.caregiverSection.panel.header.addCaregiver', () => { log("Dodaj opiekuna") })
-				    ]),
-				    Container(
-						    padding: EdgeInsets.all(8.0),
-						    child: Text('Profile dzieci', textAlign: TextAlign.left, style: Theme.of(context).textTheme.headline2)
-				    )
-			    ]
-		    ),
-		    bottomNavigationBar: AppBottomNavigationBar.caregiverPage(
-			    selectedItemColor: AppColors.mainBackgroundColor,
-			    currentIndex: 0,
-			    user: user,
-		    )
-	    ),
+    return Scaffold(
+			body: Column(
+				crossAxisAlignment: CrossAxisAlignment.start,
+				children: [
+					AppHeader.greetings(user, 'page.caregiverSection.panel.header.pageHint', [
+						HeaderActionButton.normal(Icons.add, 'page.caregiverSection.panel.header.addChild', () => { log("Dodaj dziecko") }),
+						HeaderActionButton.normal(Icons.add, 'page.caregiverSection.panel.header.addCaregiver', () => { log("Dodaj opiekuna") })
+					]),
+					Container(
+							padding: EdgeInsets.all(8.0),
+							child: Text('Profile dzieci', textAlign: TextAlign.left, style: Theme.of(context).textTheme.headline2)
+					)
+				]
+			),
+			bottomNavigationBar: AppBottomNavigationBar.caregiverPage(
+				currentIndex: 0,
+				user: user,
+			)
     );
 	}
 }

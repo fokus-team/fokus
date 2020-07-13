@@ -11,7 +11,7 @@ class PageTheme extends StatelessWidget {
 
 	static final AppSectionStyle caregiverSectionStyle = AppSectionStyle(
 		buttonColor: AppColors.caregiverButtonColor,
-		appHeaderColor: AppColors.mainBackgroundColor
+		appHeaderColor: AppColors.caregiverBackgroundColor
 	);
 
 	static final AppSectionStyle childSectionStyle = AppSectionStyle(
@@ -29,6 +29,7 @@ class PageTheme extends StatelessWidget {
 		return Theme(
 			data: Theme.of(context).copyWith(
 				scaffoldBackgroundColor: style.pageBackgroundColor,
+				buttonColor: style.buttonColor,
 				buttonTheme: Theme.of(context).buttonTheme.copyWith(
 					buttonColor: style.buttonColor
 				),

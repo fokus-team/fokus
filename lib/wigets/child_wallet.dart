@@ -71,7 +71,7 @@ class ChildCustomHeader extends StatelessWidget {
 				 },
 				Colors.white
 			),
-			HeaderActionButton.normal(Icons.local_florist, 'page.childSection.panel.header.garden', () => { log("Ogród") }, Colors.orange) // Just for visual test
+			HeaderActionButton.normal(Icons.local_florist, 'page.childSection.panel.header.garden', () => { log("Ogród") }) // Just for visual test
 		]);
 	}
 	

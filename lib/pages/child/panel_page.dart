@@ -19,23 +19,20 @@ class _ChildPanelPageState extends State<ChildPanelPage> {
     var user = User(id: null, type: UserType.child);
 		user.name = 'Alex';
 
-		return PageTheme.childSection(
-	    child: Scaffold(
-				body: Column(
-					crossAxisAlignment: CrossAxisAlignment.start,
-					children: [
-						ChildCustomHeader(user),
-						Container(
-							padding: EdgeInsets.all(8.0),
-							child: Text('Dzisiejsze plany', textAlign: TextAlign.left, style: Theme.of(context).textTheme.headline2)
-						)
-					]
-				),
-		    bottomNavigationBar: AppBottomNavigationBar.childPage(
-			    selectedItemColor: AppColors.childBackgroundColor,
-			    currentIndex: 0,
-			    user: user,
-		    )
+		return Scaffold(
+			body: Column(
+				crossAxisAlignment: CrossAxisAlignment.start,
+				children: [
+					ChildCustomHeader(user),
+					Container(
+						padding: EdgeInsets.all(8.0),
+						child: Text('Dzisiejsze plany', textAlign: TextAlign.left, style: Theme.of(context).textTheme.headline2)
+					)
+				]
+			),
+			bottomNavigationBar: AppBottomNavigationBar.childPage(
+				currentIndex: 0,
+				user: user,
 			)
 		);
 	}

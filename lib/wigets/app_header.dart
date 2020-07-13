@@ -70,9 +70,7 @@ class AppHeader extends StatelessWidget {
 			padding: EdgeInsets.all(4.0),
 			child: FlatButton(
 				onPressed: button.action,
-				color: 
-					(button.backgroundColor != null) ? button.backgroundColor :
-					(user.type == UserType.caregiver) ? AppColors.caregiverButtonColor : AppColors.childButtonColor,
+				color: (button.backgroundColor != null) ? button.backgroundColor : Theme.of(context).buttonColor,
 				padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
 				child: (button.customContent != null) ? button.customContent : Row(
 					mainAxisAlignment: MainAxisAlignment.center,
@@ -94,7 +92,7 @@ class AppHeader extends StatelessWidget {
 	Widget headerTextField(BuildContext context, String text) {
 		return Container(
 			alignment: Alignment.centerLeft,
-			padding: EdgeInsets.only(left: 4.0, right: 4.0, top: 8.0, bottom: 4.0),
+			padding: EdgeInsets.only(left: 4.0, right: 4.0, top: 8.0, bottom: 8.0),
 			child: Text(
 				AppLocales.of(context).translate(text),
 				textAlign: TextAlign.left,
@@ -106,7 +104,7 @@ class AppHeader extends StatelessWidget {
 	Widget buildHederContainer(BuildContext context, Widget innerContent) {
 		return Material(
 			elevation: 4.0,
-			color: (this.user.type == UserType.caregiver) ? AppColors.caregiverBackgroundColor : AppColors.childBackgroundColor,
+			color: Theme.of(context).appBarTheme.color,
 			child: Container(
 				padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 8.0),
 				child: SafeArea(
@@ -155,7 +153,7 @@ class AppHeader extends StatelessWidget {
 											children: <TextSpan>[
 												TextSpan(
 													text: user.name,
-													style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold, fontSize: 26)
+													style: Theme.of(context).textTheme.headline1.copyWith(color: Colors.white)
 												)
 											]
 										),
@@ -185,7 +183,7 @@ class AppHeader extends StatelessWidget {
 						padding: EdgeInsets.only(left: 4.0, top: 5.0),
 						child: Text(
 							AppLocales.of(context).translate(title),
-							style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold, fontSize: 26)
+							style: Theme.of(context).textTheme.headline1.copyWith(color: Colors.white)
 						)
 					),
 					Row(

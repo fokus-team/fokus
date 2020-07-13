@@ -17,27 +17,24 @@ class _CaregiverAwardsPageState extends State<CaregiverAwardsPage> {
 	Widget build(BuildContext context) {
 		var user = ModalRoute.of(context).settings.arguments as Caregiver;
 
-    return PageTheme.caregiverSection(
-			child: Scaffold(
-	      body: Column(
-					crossAxisAlignment: CrossAxisAlignment.start,
-					children: [
-						AppHeader.normal(user, 'page.caregiverSection.awards.header.title', 'page.caregiverSection.awards.header.pageHint', [
-							HeaderActionButton.normal(Icons.add, 'page.caregiverSection.awards.header.addAward', () => { log("Dodaj nagrodę") }),
-							HeaderActionButton.normal(Icons.add, 'page.caregiverSection.awards.header.addBadge', () => { log("Dodaj odznakę") })
-						]),
-						Container(
-							padding: EdgeInsets.all(8.0),
-							child: Text('Stworzone nagrody', textAlign: TextAlign.left, style: Theme.of(context).textTheme.headline2)
-						)
-					]
-				),
-				bottomNavigationBar: AppBottomNavigationBar.caregiverPage(
-					selectedItemColor: AppColors.mainBackgroundColor,
-					currentIndex: 2,
-					user: user,
-				)
-	    )
+    return Scaffold(
+			body: Column(
+				crossAxisAlignment: CrossAxisAlignment.start,
+				children: [
+					AppHeader.normal(user, 'page.caregiverSection.awards.header.title', 'page.caregiverSection.awards.header.pageHint', [
+						HeaderActionButton.normal(Icons.add, 'page.caregiverSection.awards.header.addAward', () => { log("Dodaj nagrodę") }),
+						HeaderActionButton.normal(Icons.add, 'page.caregiverSection.awards.header.addBadge', () => { log("Dodaj odznakę") })
+					]),
+					Container(
+						padding: EdgeInsets.all(8.0),
+						child: Text('Stworzone nagrody', textAlign: TextAlign.left, style: Theme.of(context).textTheme.headline2)
+					)
+				]
+			),
+			bottomNavigationBar: AppBottomNavigationBar.caregiverPage(
+				currentIndex: 2,
+				user: user,
+			)
     );
 	}
 }

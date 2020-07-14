@@ -34,12 +34,7 @@ class LoadingPage extends StatelessWidget {
 					),
 					CubitListener<UserRestoreCubit, UserRestoreState>(
 						listener: (BuildContext context, UserRestoreState state) {
-							if (state is UserRestoreFailure)
-								Navigator.of(context).pushReplacementNamed(AppPage.rolesPage.name);
-							else if (state is UserRestoreSuccess) {
-								var userRoute = state.userRole == UserRole.child ? AppPage.childPanel : AppPage.caregiverPanel;
-								Navigator.of(context).pushReplacementNamed(userRoute.name);
-							}
+							Navigator.of(context).pushReplacementNamed((state is UserRestoreSuccess ? state.userRole.panelPage : AppPage.rolesPage).name);
 						},
 					),
 				],

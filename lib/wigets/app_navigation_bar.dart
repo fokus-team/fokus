@@ -1,31 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:fokus/data/model/app_page.dart';
 import 'package:fokus/data/model/navigation_item.dart';
 import 'package:fokus/data/model/user/user.dart';
 import 'package:fokus/utils/app_locales.dart';
 
-class AppBottomNavigationBar extends StatefulWidget {
+class AppNavigationBar extends StatefulWidget {
 	final int currentIndex;
 	final List<AppBottomNavigationItem> items;
 	final User user;
 
 	static final List<AppBottomNavigationItem> caregiverNavigationItems = [
 		AppBottomNavigationItem(
-			navigationRoute: '/caregiver/panel-page',
+			navigationRoute: AppPage.caregiverPanel,
 			icon: Icon(Icons.assignment_ind),
 			title: 'navigation.caregiver.panel',
 		),
 		AppBottomNavigationItem(
-			navigationRoute: '/caregiver/plans-page',
+			navigationRoute: AppPage.caregiverPlans,
 			icon: Icon(Icons.description),
 			title: 'navigation.caregiver.plans',
 		),
 		AppBottomNavigationItem(
-			navigationRoute: '/caregiver/awards-page',
+			navigationRoute: AppPage.caregiverAwards,
 			icon: Icon(Icons.stars),
 			title: 'navigation.caregiver.awards',
 		),
 		AppBottomNavigationItem(
-			navigationRoute: '/caregiver/statistics-page',
+			navigationRoute: AppPage.caregiverStatistics,
 			icon: Icon(Icons.insert_chart),
 			title: 'navigation.caregiver.statistics',
 		),
@@ -33,41 +34,41 @@ class AppBottomNavigationBar extends StatefulWidget {
 
 	static final List<AppBottomNavigationItem> childNavigationItems = [
 		AppBottomNavigationItem(
-			navigationRoute: '/child/panel-page',
+			navigationRoute: AppPage.childPanel,
 			icon: Icon(Icons.description),
 			title: 'navigation.child.plans',
 		),
 		AppBottomNavigationItem(
-			navigationRoute: '/child/awards-page',
+			navigationRoute: AppPage.childAwards,
 			icon: Icon(Icons.stars),
 			title: 'navigation.child.awards',
 		),
 		AppBottomNavigationItem(
-			navigationRoute: '/child/achievements-page',
+			navigationRoute: AppPage.childAchievements,
 			icon: Icon(Icons.assistant),
 			title: 'navigation.child.achievements',
 		),
 	];
 	
-	AppBottomNavigationBar({this.currentIndex, this.items, this.user});
-	AppBottomNavigationBar.caregiverPage({int currentIndex, User user}) : this(
+	AppNavigationBar({this.currentIndex, this.items, this.user});
+	AppNavigationBar.caregiverPage({int currentIndex, User user}) : this(
 		currentIndex: currentIndex,
 		items: caregiverNavigationItems,
 		user: user
 	);
 	
-	AppBottomNavigationBar.childPage({int currentIndex, User user}) : this(
+	AppNavigationBar.childPage({int currentIndex, User user}) : this(
 		currentIndex: currentIndex,
 		items: childNavigationItems,
 		user: user
 	);
 
   @override
-  _AppBottomNavigationBarState createState() => _AppBottomNavigationBarState();
+  _AppNavigationBarState createState() => _AppNavigationBarState();
 
 }
 
-class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
+class _AppNavigationBarState extends State<AppNavigationBar> {
 	@override
 	Widget build(BuildContext context) {
 		return BottomNavigationBar(
@@ -78,7 +79,7 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
 			selectedFontSize: 14,
 			unselectedItemColor: Colors.grey[600],
 			selectedItemColor: Theme.of(context).appBarTheme.color,
-			onTap: (int index) => index != widget.currentIndex ? Navigator.of(context).pushNamed(widget.items[index].navigationRoute, arguments: widget.user) : {},
+			onTap: (int index) => index != widget.currentIndex ? Navigator.of(context).pushNamed(widget.items[index].navigationRoute.name, arguments: widget.user) : {},
 			items: [
 				for (final navigationItem in widget.items)
 					BottomNavigationBarItem(

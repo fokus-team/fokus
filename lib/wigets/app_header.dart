@@ -1,9 +1,8 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:fokus/data/model/user/user_type.dart';
+import 'package:fokus/data/model/user/user_role.dart';
 import 'package:fokus/data/model/user/user.dart';
-
 import 'package:fokus/utils/app_locales.dart';
 import 'package:fokus/utils/theme_config.dart';
 
@@ -143,7 +142,7 @@ class AppHeader extends StatelessWidget {
 	}
 
 	Widget buildGreetings(BuildContext context) {
-		String greetingsTranslation = (user.type == UserType.caregiver) ? 'caregiverSection' : 'childSection';
+		String greetingsTranslation = (user.role == UserRole.caregiver) ? 'caregiverSection' : 'childSection';
 		return buildHederContainer(context, 
 			Row(
 				mainAxisAlignment: MainAxisAlignment.spaceBetween,

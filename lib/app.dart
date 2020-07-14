@@ -3,12 +3,18 @@ import 'package:flutter_cubit/flutter_cubit.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'package:fokus/bloc/active_user/active_user_cubit.dart';
+import 'package:fokus/pages/caregiver/awards_page.dart';
+import 'package:fokus/pages/caregiver/panel_page.dart';
+import 'package:fokus/pages/caregiver/plans_page.dart';
+import 'package:fokus/pages/caregiver/statistics_page.dart';
+import 'package:fokus/pages/child/achievements_page.dart';
+import 'package:fokus/pages/child/awards_page.dart';
+import 'package:fokus/pages/child/panel_page.dart';
 import 'package:fokus/utils/app_locales.dart';
 import 'package:fokus/utils/theme_config.dart';
 import 'package:fokus/pages/loading_page.dart';
 import 'package:fokus/pages/roles_page.dart';
-import 'package:fokus/pages/caregiver_panel_page.dart';
-import 'package:fokus/pages/child_panel_page.dart';
+import 'package:fokus/wigets/page_theme.dart';
 
 import 'data/model/app_page.dart';
 
@@ -38,13 +44,13 @@ class FokusApp extends StatelessWidget {
 			routes: {
 				AppPage.loadingPage.name: (context) => PageTheme.loginSection(child: LoadingPage()),
 				AppPage.rolesPage.name: (context) => PageTheme.loginSection(child: RolesPage()),
-				'/caregiver/panel-page': (context) => PageTheme.caregiverSection(child: CaregiverPanelPage()),
-				'/caregiver/plans-page': (context) => PageTheme.caregiverSection(child: CaregiverPlansPage()),
-				'/caregiver/awards-page': (context) => PageTheme.caregiverSection(child: CaregiverAwardsPage()),
-				'/caregiver/statistics-page': (context) => PageTheme.caregiverSection(child: CaregiverStatisticsPage()),
-				'/child/panel-page': (context) => PageTheme.childSection(child: ChildPanelPage()),
-				'/child/awards-page': (context) => PageTheme.childSection(child: ChildAwardsPage()),
-				'/child/achievements-page': (context) => PageTheme.childSection(child: ChildAchievementsPage()),
+				AppPage.caregiverPanel.name: (context) => PageTheme.caregiverSection(child: CaregiverPanelPage()),
+				AppPage.caregiverPlans.name: (context) => PageTheme.caregiverSection(child: CaregiverPlansPage()),
+				AppPage.caregiverAwards.name: (context) => PageTheme.caregiverSection(child: CaregiverAwardsPage()),
+				AppPage.caregiverStatistics.name: (context) => PageTheme.caregiverSection(child: CaregiverStatisticsPage()),
+				AppPage.childPanel.name: (context) => PageTheme.childSection(child: ChildPanelPage()),
+				AppPage.childAwards.name: (context) => PageTheme.childSection(child: ChildAwardsPage()),
+				AppPage.childAchievements.name: (context) => PageTheme.childSection(child: ChildAchievementsPage()),
 			},
 			theme: ThemeData(
 				primaryColor: AppColors.mainBackgroundColor,

@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:fokus/data/model/user/caregiver.dart';
 
-import 'package:fokus/wigets/app_bottom_navigation_bar.dart';
+import 'package:fokus/wigets/app_navigation_bar.dart';
 import 'package:fokus/wigets/app_header.dart';
 
 class CaregiverAwardsPage extends StatefulWidget {
@@ -30,7 +30,7 @@ class _CaregiverAwardsPageState extends State<CaregiverAwardsPage> {
 					)
 				]
 			),
-			bottomNavigationBar: AppBottomNavigationBar.caregiverPage(
+			bottomNavigationBar: AppNavigationBar.caregiverPage(
 				currentIndex: 2,
 				user: user,
 			)

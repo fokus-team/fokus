@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
+import 'app_page.dart';
+
 class AppBottomNavigationItem {
-  final String navigationRoute;
+  final AppPage navigationRoute;
   final String title;
   final Icon icon;
 

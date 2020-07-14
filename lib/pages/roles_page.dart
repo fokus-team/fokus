@@ -12,11 +12,10 @@ import 'package:fokus/bloc/active_user/active_user_cubit.dart';
 class RolesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return PageTheme.loginSection(
-		  child: _directLogin(
-		    child: Scaffold(
-	        backgroundColor: AppColors.mainBackgroundColor,
-	        body: Center(
+    return _directLogin(
+	    child: Scaffold(
+        backgroundColor: AppColors.mainBackgroundColor,
+        body: Center(
 					child: Column(
 				    mainAxisAlignment: MainAxisAlignment.center,
 				    crossAxisAlignment: CrossAxisAlignment.center,
@@ -48,8 +47,7 @@ class RolesPage extends StatelessWidget {
 				    ]
 				  ),
 				),
-      ),
-    )
+	    ),
     );
   }
 

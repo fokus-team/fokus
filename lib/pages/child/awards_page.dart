@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:fokus/data/model/user/user.dart';
-import 'package:fokus/data/model/user/user_type.dart';
-
-import 'package:fokus/wigets/app_bottom_navigation_bar.dart';
+import 'package:fokus/data/model/user/user_role.dart';
+import 'package:fokus/wigets/app_navigation_bar.dart';
 import 'package:fokus/wigets/child_wallet.dart';
 
 class ChildAwardsPage extends StatefulWidget {
@@ -14,7 +13,7 @@ class ChildAwardsPage extends StatefulWidget {
 class _ChildAwardsPageState extends State<ChildAwardsPage> {
 	@override
 	Widget build(BuildContext context) {
-    var user = User(id: null, type: UserType.child);
+    var user = User(id: null, role: UserRole.child);
 		user.name = 'Alex';
 
 		return Scaffold(
@@ -28,7 +27,7 @@ class _ChildAwardsPageState extends State<ChildAwardsPage> {
 					)
 				]
 			),
-			bottomNavigationBar: AppBottomNavigationBar.childPage(
+			bottomNavigationBar: AppNavigationBar.childPage(
 				currentIndex: 1,
 				user: user,
 			)

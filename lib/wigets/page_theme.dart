@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fokus/data/model/user/user_role.dart';
 import 'package:fokus/utils/theme_config.dart';
 
 class PageTheme extends StatelessWidget {
@@ -19,10 +20,14 @@ class PageTheme extends StatelessWidget {
 		appHeaderColor: AppColors.childBackgroundColor
 	);
 
-	PageTheme({this.style, this.child});
+	PageTheme({@required this.style, this.child});
 	PageTheme.loginSection({Widget child}) : this(style: loginSectionStyle, child: child);
 	PageTheme.caregiverSection({Widget child}) : this(style: caregiverSectionStyle, child: child);
 	PageTheme.childSection({Widget child}) : this(style: childSectionStyle, child: child);
+
+	factory PageTheme.parametrizedRoleSection({@required UserRole userRole, Widget child}) {
+		return userRole == UserRole.caregiver ? PageTheme.caregiverSection(child: child) : PageTheme.childSection(child: child);
+	}
 
 	@override
 	Widget build(BuildContext context) {

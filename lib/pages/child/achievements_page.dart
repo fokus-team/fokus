@@ -13,24 +13,18 @@ class ChildAchievementsPage extends StatefulWidget {
 class _ChildAchievementsPageState extends State<ChildAchievementsPage> {
 	@override
 	Widget build(BuildContext context) {
-    var user = User(id: null, role: UserRole.child);
-		user.name = 'Alex';
-
 		return Scaffold(
 			body: Column(
 				crossAxisAlignment: CrossAxisAlignment.start,
 				children: [
-					ChildCustomHeader(user),
+					ChildCustomHeader(),
 					Container(
 						padding: EdgeInsets.all(8.0),
 						child: Text('Moje osiągnięcia', textAlign: TextAlign.left, style: Theme.of(context).textTheme.headline2)
 					)
 				]
 			),
-			bottomNavigationBar: AppNavigationBar.childPage(
-				currentIndex: 2,
-				user: user,
-			)
+			bottomNavigationBar: AppNavigationBar.childPage(currentIndex: 2)
 		);
 	}
 }

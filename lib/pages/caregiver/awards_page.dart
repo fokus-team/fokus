@@ -14,13 +14,11 @@ class CaregiverAwardsPage extends StatefulWidget {
 class _CaregiverAwardsPageState extends State<CaregiverAwardsPage> {
 	@override
 	Widget build(BuildContext context) {
-		var user = ModalRoute.of(context).settings.arguments as Caregiver;
-
     return Scaffold(
 			body: Column(
 				crossAxisAlignment: CrossAxisAlignment.start,
 				children: [
-					AppHeader.normal(user: user, title: 'page.caregiverSection.awards.header.title', text: 'page.caregiverSection.awards.header.pageHint', headerActionButtons: [
+					AppHeader.normal(title: 'page.caregiverSection.awards.header.title', text: 'page.caregiverSection.awards.header.pageHint', headerActionButtons: [
 						HeaderActionButton.normal(Icons.add, 'page.caregiverSection.awards.header.addAward', () => { log("Dodaj nagrodę") }),
 						HeaderActionButton.normal(Icons.add, 'page.caregiverSection.awards.header.addBadge', () => { log("Dodaj odznakę") })
 					]),
@@ -30,10 +28,7 @@ class _CaregiverAwardsPageState extends State<CaregiverAwardsPage> {
 					)
 				]
 			),
-			bottomNavigationBar: AppNavigationBar.caregiverPage(
-				currentIndex: 2,
-				user: user,
-			)
+			bottomNavigationBar: AppNavigationBar.caregiverPage(currentIndex: 2)
     );
 	}
 }

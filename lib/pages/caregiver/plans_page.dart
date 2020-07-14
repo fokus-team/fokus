@@ -14,13 +14,11 @@ class CaregiverPlansPage extends StatefulWidget {
 class _CaregiverPlansPageState extends State<CaregiverPlansPage> {
 	@override
 	Widget build(BuildContext context) {
-		var user = ModalRoute.of(context).settings.arguments as Caregiver;
-
     return Scaffold(
 			body: Column(
 				crossAxisAlignment: CrossAxisAlignment.start,
 				children: [
-					AppHeader.normal(user: user, title: 'page.caregiverSection.plans.header.title', text: 'page.caregiverSection.plans.header.pageHint', headerActionButtons: [
+					AppHeader.normal(title: 'page.caregiverSection.plans.header.title', text: 'page.caregiverSection.plans.header.pageHint', headerActionButtons: [
 						HeaderActionButton.normal(Icons.add, 'page.caregiverSection.plans.header.addPlan', () => { log("Dodaj plan") }),
 						HeaderActionButton.normal(Icons.calendar_today, 'page.caregiverSection.plans.header.calendar', () => { log("Kalendarz") }, Colors.amber)
 					]),
@@ -30,10 +28,7 @@ class _CaregiverPlansPageState extends State<CaregiverPlansPage> {
 					)
 				]
 			),
-			bottomNavigationBar: AppNavigationBar.caregiverPage(
-				currentIndex: 1,
-				user: user,
-			)
+			bottomNavigationBar: AppNavigationBar.caregiverPage(currentIndex: 1)
     );
 	}
 }

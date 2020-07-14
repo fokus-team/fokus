@@ -1,6 +1,9 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_cubit/flutter_cubit.dart';
+
+import 'package:fokus/bloc/active_user/active_user_cubit.dart';
 import 'package:fokus/data/model/user/user_role.dart';
 import 'package:fokus/data/model/user/user.dart';
 import 'package:fokus/utils/app_locales.dart';
@@ -23,22 +26,18 @@ class HeaderActionButton {
 }
 
 class AppHeader extends StatelessWidget {
-	final User user;
 	final String title;
 	final String text;
 	final List<HeaderActionButton> headerActionButtons;
 	final AppHeaderType headerType;
 
-	AppHeader({this.user, this.title, this.text, this.headerActionButtons, this.headerType});
-	AppHeader.greetings({User user, String text, List<HeaderActionButton> headerActionButtons}) : this(
-		user: user,
-		title: user.name,
+	AppHeader({this.title, this.text, this.headerActionButtons, this.headerType});
+	AppHeader.greetings({String text, List<HeaderActionButton> headerActionButtons}) : this(
 		text: text, 
 		headerActionButtons: headerActionButtons,
 		headerType: AppHeaderType.greetings
 	);
-	AppHeader.normal({User user, String title, String text, List<HeaderActionButton> headerActionButtons}) : this(
-		user: user,
+	AppHeader.normal({String title, String text, List<HeaderActionButton> headerActionButtons}) : this(
 		title: title,
 		text: text, 
 		headerActionButtons: headerActionButtons,
@@ -55,7 +54,7 @@ class AppHeader extends StatelessWidget {
 		}
 	}
 
-	Image headerImage(User user) {
+	Image headerImage(ActiveUserPresent user) {
 		// TODO Handling the avatars (based on type and avatar parameters), returning sunflower for now
 		return Image.asset('assets/image/sunflower_logo.png', height: 64);
 	}
@@ -142,7 +141,8 @@ class AppHeader extends StatelessWidget {
 	}
 
 	Widget buildGreetings(BuildContext context) {
-		String greetingsTranslation = (user.role == UserRole.caregiver) ? 'caregiverSection' : 'childSection';
+		var currentUser = CubitProvider.of<ActiveUserCubit>(context).state as ActiveUserPresent;
+
 		return buildHederContainer(context, 
 			Row(
 				mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -152,18 +152,18 @@ class AppHeader extends StatelessWidget {
 						children: <Widget>[
 							Padding(
 								padding: EdgeInsets.only(left: 4.0, right: 8.0),
-								child: headerImage(user)
+								child: headerImage(currentUser)
 							),
 							Column(
 								crossAxisAlignment: CrossAxisAlignment.start,
 								children: <Widget>[
 									RichText(
 										text: TextSpan(
-											text: '${AppLocales.of(context).translate('page.' + greetingsTranslation + '.panel.header.greetings')},\n',
+											text: '${AppLocales.of(context).translate('page.${currentUser.role.name}Section.panel.header.greetings')},\n',
 											style: TextStyle(color: Colors.white, fontSize: 20),
 											children: <TextSpan>[
 												TextSpan(
-													text: user.name,
+													text: currentUser.name,
 													style: Theme.of(context).textTheme.headline1.copyWith(color: Colors.white)
 												)
 											]
@@ -176,7 +176,10 @@ class AppHeader extends StatelessWidget {
 					Row(
 						children: <Widget>[
 							headerIconButton(Icons.notifications, () => { log("Powiadomienia") }),
-							headerIconButton(Icons.more_vert, () => { log("Opcje") }),
+							headerIconButton(
+								Icons.more_vert,
+								() => CubitProvider.of<ActiveUserCubit>(context).logoutUser()
+							),
 						],
 					)
 				]

@@ -37,7 +37,7 @@ class RolesPage extends StatelessWidget {
 				                child: Icon(Icons.help_outline, color: AppColors.lightTextColor)
 				              ),
 				              Text(
-				                AppLocales.of(context).translate('page.roles.help'),
+				                AppLocales.of(context).translate('page.loginSection.roles.help'),
 				                style: Theme.of(context).textTheme.button,
 				              )
 				            ]
@@ -68,11 +68,11 @@ class RolesPage extends StatelessWidget {
 				  mainAxisAlignment: MainAxisAlignment.center,
 				  children: <Widget>[
 					  Text(
-						  '${AppLocales.of(context).translate("page.roles.introduction")} ',
+						  '${AppLocales.of(context).translate("page.loginSection.roles.introduction")} ',
 						  style: roleButtonsStyle
 					  ),
 					  Text(
-						  '${AppLocales.of(context).translate("page.roles.${role.name}")} ',
+						  '${AppLocales.of(context).translate("page.loginSection.roles.${role.name}")} ',
 						  style: roleButtonsStyle.copyWith(fontWeight: FontWeight.bold)
 					  ),
 					  Padding(

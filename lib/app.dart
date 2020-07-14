@@ -3,6 +3,7 @@ import 'package:flutter_cubit/flutter_cubit.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'package:fokus/bloc/active_user/active_user_cubit.dart';
+import 'package:fokus/data/model/user/user_role.dart';
 import 'package:fokus/pages/caregiver/awards_page.dart';
 import 'package:fokus/pages/caregiver/panel_page.dart';
 import 'package:fokus/pages/caregiver/plans_page.dart';
@@ -11,6 +12,7 @@ import 'package:fokus/pages/child/achievements_page.dart';
 import 'package:fokus/pages/child/awards_page.dart';
 import 'package:fokus/pages/child/panel_page.dart';
 import 'package:fokus/utils/app_locales.dart';
+import 'package:fokus/utils/cubit_utils.dart';
 import 'package:fokus/utils/theme_config.dart';
 import 'package:fokus/pages/loading_page.dart';
 import 'package:fokus/pages/roles_page.dart';
@@ -41,29 +43,47 @@ class FokusApp extends StatelessWidget {
 				const Locale('pl', 'PL'),
 			],
 			initialRoute: AppPage.loadingPage.name,
-			routes: {
-				AppPage.loadingPage.name: (context) => PageTheme.loginSection(child: LoadingPage()),
-				AppPage.rolesPage.name: (context) => PageTheme.loginSection(child: RolesPage()),
-				AppPage.caregiverPanel.name: (context) => PageTheme.caregiverSection(child: CaregiverPanelPage()),
-				AppPage.caregiverPlans.name: (context) => PageTheme.caregiverSection(child: CaregiverPlansPage()),
-				AppPage.caregiverAwards.name: (context) => PageTheme.caregiverSection(child: CaregiverAwardsPage()),
-				AppPage.caregiverStatistics.name: (context) => PageTheme.caregiverSection(child: CaregiverStatisticsPage()),
-				AppPage.childPanel.name: (context) => PageTheme.childSection(child: ChildPanelPage()),
-				AppPage.childAwards.name: (context) => PageTheme.childSection(child: ChildAwardsPage()),
-				AppPage.childAchievements.name: (context) => PageTheme.childSection(child: ChildAchievementsPage()),
-			},
-			theme: ThemeData(
-				primaryColor: AppColors.mainBackgroundColor,
-        fontFamily: 'Lato',
-        textTheme: TextTheme(
-          // Will probably change over time
-          headline1: TextStyle(fontSize: 26.0, fontWeight: FontWeight.bold, color: AppColors.darkTextColor), // Main headline before lists
-          headline2: TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold, color: AppColors.darkTextColor), // For headers inside list elements
-          subtitle2: TextStyle(fontSize: 12.0, fontWeight: FontWeight.normal, color: AppColors.mediumTextColor), // Little subtitle for headline2
-          bodyText1: TextStyle(fontSize: 15.0, fontWeight: FontWeight.normal, color: AppColors.lightTextColor), // Classic body text on light background
-          bodyText2: TextStyle(fontSize: 15.0, fontWeight: FontWeight.normal, color: AppColors.darkTextColor), // Classic body text on color
-          button: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold, color: AppColors.lightTextColor) // (Almost always white) button text
-        ),
+			routes: _createRoutes(),
+			theme: _createAppTheme(),
+		);
+	}
+
+	Map<String, WidgetBuilder> _createRoutes() {
+		return {
+			AppPage.loadingPage.name: (context) => PageTheme.loginSection(child: LoadingPage()),
+			AppPage.rolesPage.name: (context) => PageTheme.loginSection(child: RolesPage()),
+			AppPage.caregiverPanel.name: (context) => _wrapAppPage(UserRole.caregiver, CaregiverPanelPage()),
+			AppPage.caregiverPlans.name: (context) => _wrapAppPage(UserRole.caregiver, CaregiverPlansPage()),
+			AppPage.caregiverAwards.name: (context) => _wrapAppPage(UserRole.caregiver, CaregiverAwardsPage()),
+			AppPage.caregiverStatistics.name: (context) => _wrapAppPage(UserRole.caregiver, CaregiverStatisticsPage()),
+			AppPage.childPanel.name: (context) => _wrapAppPage(UserRole.child, ChildPanelPage()),
+			AppPage.childAwards.name: (context) => _wrapAppPage(UserRole.child, ChildAwardsPage()),
+			AppPage.childAchievements.name: (context) => _wrapAppPage(UserRole.child, ChildAchievementsPage()),
+		};
+	}
+
+	Widget _wrapAppPage(UserRole userRole, Widget page) {
+		return CubitUtils.navigateOnState<ActiveUserCubit, ActiveUserState, NoActiveUser>(
+			navigation: (navigator) => navigator.pushReplacementNamed(AppPage.rolesPage.name),
+			child: PageTheme.parametrizedRoleSection(
+				userRole: userRole,
+				child: page
+			)
+		);
+	}
+
+	ThemeData _createAppTheme() {
+		return ThemeData(
+			primaryColor: AppColors.mainBackgroundColor,
+			fontFamily: 'Lato',
+			textTheme: TextTheme(
+				// Will probably change over time
+					headline1: TextStyle(fontSize: 26.0, fontWeight: FontWeight.bold, color: AppColors.darkTextColor), // Main headline before lists
+					headline2: TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold, color: AppColors.darkTextColor), // For headers inside list elements
+					subtitle2: TextStyle(fontSize: 12.0, fontWeight: FontWeight.normal, color: AppColors.mediumTextColor), // Little subtitle for headline2
+					bodyText1: TextStyle(fontSize: 15.0, fontWeight: FontWeight.normal, color: AppColors.lightTextColor), // Classic body text on light background
+					bodyText2: TextStyle(fontSize: 15.0, fontWeight: FontWeight.normal, color: AppColors.darkTextColor), // Classic body text on color
+					button: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold, color: AppColors.lightTextColor) // (Almost always white) button text
 			),
 		);
 	}

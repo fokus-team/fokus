@@ -40,13 +40,9 @@ class ChildWallet extends StatelessWidget {
 }
 
 class ChildCustomHeader extends StatelessWidget {
-	final User user;
-
-	ChildCustomHeader(this.user);
-
 	@override
 	Widget build(BuildContext context) {
-		return AppHeader.greetings(user: user, text: 'page.childSection.panel.header.pageHint', headerActionButtons: [
+		return AppHeader.greetings(text: 'page.childSection.panel.header.pageHint', headerActionButtons: [
 			HeaderActionButton.custom(
 				Row(
 					children: <Widget>[

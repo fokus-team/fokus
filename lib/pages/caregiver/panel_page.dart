@@ -1,14 +1,11 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_cubit/flutter_cubit.dart';
-import 'package:fokus/bloc/active_user/active_user_cubit.dart';
-import 'package:fokus/data/model/app_page.dart';
-import 'package:fokus/data/model/user/caregiver.dart';
+import 'package:fokus/model/app_page.dart';
+import 'package:fokus/logic/active_user/active_user_cubit.dart';
 import 'package:fokus/utils/cubit_utils.dart';
-
-import 'package:fokus/wigets/app_navigation_bar.dart';
-import 'package:fokus/wigets/app_header.dart';
+import 'package:fokus/widgets/app_header.dart';
+import 'package:fokus/widgets/app_navigation_bar.dart';
 
 class CaregiverPanelPage extends StatefulWidget {
 	@override

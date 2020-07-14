@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-
-import 'package:fokus/data/model/user/user.dart';
-import 'package:fokus/data/model/user/user_role.dart';
-import 'package:fokus/wigets/app_navigation_bar.dart';
-import 'package:fokus/wigets/child_wallet.dart';
+import 'package:fokus/widgets/app_navigation_bar.dart';
+import 'package:fokus/widgets/child_wallet.dart';
 
 class ChildAchievementsPage extends StatefulWidget {
 	@override

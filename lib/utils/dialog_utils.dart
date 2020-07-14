@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:fokus/data/model/button_type.dart';
+import 'package:fokus/model/button_type.dart';
 
-import 'package:fokus/wigets/dialog.dart';
-import 'package:fokus/wigets/help_dialog.dart';
+import 'package:fokus/widgets/dialog.dart';
+import 'package:fokus/widgets/help_dialog.dart';
 
 void showAlertDialog(BuildContext context, String titleKey, String textKey, ButtonType button, void Function() action) {
 	showDialog(

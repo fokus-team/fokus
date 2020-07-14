@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_cubit/flutter_cubit.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-import 'package:fokus/bloc/active_user/active_user_cubit.dart';
-import 'package:fokus/data/model/user/user_role.dart';
+import 'package:fokus/logic/active_user/active_user_cubit.dart';
+import 'package:fokus/model/db/user/user_role.dart';
 import 'package:fokus/pages/caregiver/awards_page.dart';
 import 'package:fokus/pages/caregiver/panel_page.dart';
 import 'package:fokus/pages/caregiver/plans_page.dart';
@@ -16,9 +16,8 @@ import 'package:fokus/utils/cubit_utils.dart';
 import 'package:fokus/utils/theme_config.dart';
 import 'package:fokus/pages/loading_page.dart';
 import 'package:fokus/pages/roles_page.dart';
-import 'package:fokus/wigets/page_theme.dart';
-
-import 'data/model/app_page.dart';
+import 'package:fokus/widgets/page_theme.dart';
+import 'package:fokus/model/app_page.dart';
 
 void main() => runApp(
 	CubitProvider<ActiveUserCubit>(

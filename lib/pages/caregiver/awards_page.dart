@@ -1,10 +1,8 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:fokus/data/model/user/caregiver.dart';
-
-import 'package:fokus/wigets/app_navigation_bar.dart';
-import 'package:fokus/wigets/app_header.dart';
+import 'package:fokus/widgets/app_header.dart';
+import 'package:fokus/widgets/app_navigation_bar.dart';
 
 class CaregiverAwardsPage extends StatefulWidget {
 	@override

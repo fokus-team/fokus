@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_cubit/flutter_cubit.dart';
-
-import 'package:fokus/bloc/active_user/active_user_cubit.dart';
-import 'package:fokus/bloc/app_init/app_init_state.dart';
-import 'package:fokus/data/model/app_page.dart';
-import 'package:fokus/data/model/user/user_role.dart';
-import 'package:fokus/utils/theme_config.dart';
-import 'package:fokus/bloc/app_init/app_init_cubit.dart';
-import 'package:fokus/data/model/button_type.dart';
+import 'package:fokus/model/app_page.dart';
+import 'package:fokus/model/button_type.dart';
+import 'package:fokus/model/db/user/user_role.dart';
+import 'package:fokus/logic/active_user/active_user_cubit.dart';
+import 'package:fokus/logic/app_init/app_init_cubit.dart';
+import 'package:fokus/logic/app_init/app_init_state.dart';
+import 'package:fokus/logic/user_restore/user_restore_cubit.dart';
+import 'package:fokus/logic/user_restore/user_restore_state.dart';
 import 'package:fokus/utils/app_locales.dart';
 import 'package:fokus/utils/dialog_utils.dart';
-import 'package:fokus/bloc/user_restore/user_restore_cubit.dart';
-import 'package:fokus/bloc/user_restore/user_restore_state.dart';
+import 'package:fokus/utils/theme_config.dart';
 
 class LoadingPage extends StatelessWidget {
 	@override

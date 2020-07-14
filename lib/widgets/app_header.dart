@@ -195,7 +195,10 @@ class AppHeader extends StatelessWidget {
 					Row(
 						children: <Widget>[
 							headerIconButton(Icons.notifications, () => { log("Powiadomienia") }),
-							headerIconButton(Icons.more_vert, () => { log("Opcje") }),
+							headerIconButton(
+								Icons.more_vert,
+								() => CubitProvider.of<ActiveUserCubit>(context).logoutUser()
+							),
 						],
 					)
 				]

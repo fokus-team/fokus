@@ -8,14 +8,14 @@ import 'user_restore_state.dart';
 
 class UserRestoreCubit extends Cubit<UserRestoreState> {
 	final ActiveUserCubit _activeUserCubit;
-	final AppConfigRepository appConfig;
+	final AppConfigRepository _appConfig = GetIt.I<AppConfigRepository>();
 
-	UserRestoreCubit(this._activeUserCubit, {this.appConfig}) : super(UserRestoreInitialState()) {
+	UserRestoreCubit(this._activeUserCubit) : super(UserRestoreInitialState()) {
 		_activeUserCubit.listen((state) => state is ActiveUserPresent ? emit(UserRestoreSuccess(state.role)) : {});
 	}
 
 	void restoreUser() async {
-		var appConfig = this.appConfig ?? GetIt.I<AppConfigRepository>();
+		var appConfig = _appConfig ?? GetIt.I<AppConfigRepository>();
 		var lastUser = appConfig.getLastUser();
 		lastUser == null ? emit(UserRestoreFailure()) : _activeUserCubit.loginUserById(lastUser);
 	}

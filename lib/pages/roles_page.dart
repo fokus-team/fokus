@@ -52,7 +52,7 @@ class RolesPage extends StatelessWidget {
 
   Widget _roleButton(BuildContext context, UserRole role) {
 	  TextStyle roleButtonsStyle = TextStyle(
-			fontSize: 18,
+			fontSize: 20,
 			color: AppColors.lightTextColor,
 		  fontWeight: FontWeight.normal
 	  );

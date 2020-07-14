@@ -11,13 +11,10 @@ import 'package:mongo_dart/mongo_dart.dart';
 part 'active_user_state.dart';
 
 class ActiveUserCubit extends Cubit<ActiveUserState> {
-	final DataRepository _dbProvider;
-	final AppConfigRepository _appConfig;
+	final DataRepository _dbProvider = GetIt.I<DataRepository>();
+	final AppConfigRepository _appConfig = GetIt.I<AppConfigRepository>();
 
-  ActiveUserCubit({DataRepository dbProvider, AppConfigRepository appConfig}) :
-			  _dbProvider = dbProvider ?? GetIt.I<DataRepository>(),
-        _appConfig = appConfig ?? GetIt.I<AppConfigRepository>(),
-			  super(NoActiveUser());
+  ActiveUserCubit() : super(NoActiveUser());
 
 	void loginUser(User user) async {
 		_appConfig.setLastUser(user.id);

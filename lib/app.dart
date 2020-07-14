@@ -36,21 +36,26 @@ class FokusApp extends StatelessWidget {
 			],
 			initialRoute: AppPage.loadingPage.name,
 			routes: {
-				AppPage.loadingPage.name: (context) => LoadingPage(),
-				AppPage.rolesPage.name: (context) => RolesPage(),
-				AppPage.caregiverPanel.name: (context) => CaregiverPanelPage(),
-				AppPage.childPanel.name: (context) => ChildPanelPage(),
+				AppPage.loadingPage.name: (context) => PageTheme.loginSection(child: LoadingPage()),
+				AppPage.rolesPage.name: (context) => PageTheme.loginSection(child: RolesPage()),
+				'/caregiver/panel-page': (context) => PageTheme.caregiverSection(child: CaregiverPanelPage()),
+				'/caregiver/plans-page': (context) => PageTheme.caregiverSection(child: CaregiverPlansPage()),
+				'/caregiver/awards-page': (context) => PageTheme.caregiverSection(child: CaregiverAwardsPage()),
+				'/caregiver/statistics-page': (context) => PageTheme.caregiverSection(child: CaregiverStatisticsPage()),
+				'/child/panel-page': (context) => PageTheme.childSection(child: ChildPanelPage()),
+				'/child/awards-page': (context) => PageTheme.childSection(child: ChildAwardsPage()),
+				'/child/achievements-page': (context) => PageTheme.childSection(child: ChildAchievementsPage()),
 			},
 			theme: ThemeData(
 				primaryColor: AppColors.mainBackgroundColor,
         fontFamily: 'Lato',
         textTheme: TextTheme(
           // Will probably change over time
-          headline1: TextStyle(fontSize: 28.0, fontWeight: FontWeight.bold, color: AppColors.darkTextColor), // Main headline before lists
-          headline2: TextStyle(fontSize: 22.0, fontWeight: FontWeight.normal, color: AppColors.darkTextColor), // For headers inside list elements
+          headline1: TextStyle(fontSize: 26.0, fontWeight: FontWeight.bold, color: AppColors.darkTextColor), // Main headline before lists
+          headline2: TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold, color: AppColors.darkTextColor), // For headers inside list elements
           subtitle2: TextStyle(fontSize: 12.0, fontWeight: FontWeight.normal, color: AppColors.mediumTextColor), // Little subtitle for headline2
-          bodyText1: TextStyle(fontSize: 14.0, fontWeight: FontWeight.normal, color: AppColors.lightTextColor), // Classic body text on light background
-          bodyText2: TextStyle(fontSize: 14.0, fontWeight: FontWeight.normal, color: AppColors.darkTextColor), // Classic body text on color
+          bodyText1: TextStyle(fontSize: 15.0, fontWeight: FontWeight.normal, color: AppColors.lightTextColor), // Classic body text on light background
+          bodyText2: TextStyle(fontSize: 15.0, fontWeight: FontWeight.normal, color: AppColors.darkTextColor), // Classic body text on color
           button: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold, color: AppColors.lightTextColor) // (Almost always white) button text
         ),
 			),

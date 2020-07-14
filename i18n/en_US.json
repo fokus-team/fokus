@@ -1,17 +1,69 @@
 {
 	"loading": "Loading",
-	"page": {
-		"roles": {
-			"introduction": "I am a",
-			"caregiver": "Caregiver",
-			"child": "Child",
-			"help": "I need help"
+	"navigation": {
+		"caregiver": {
+			"panel": "Dashboard",
+			"plans": "Plans",
+			"awards": "Awards",
+			"statistics": "Statistics"
 		},
-		"caregiverPanel": {
-			"header": {
-				"title": "Hello, {name}"
+		"child": {
+			"plans": "Plans",
+			"awards": "Awards",
+			"achievements": "Achievements"
+		}
+	},
+	"page": {
+		"loginSection": {
+			"roles": {
+				"introduction": "I am a",
+				"caregiver": "Caregiver",
+				"child": "Child",
+				"help": "I need help"
+			}
+		},
+		"caregiverSection": {
+			"panel": {
+				"header": {
+					"greetings": "Welcome",
+					"addChild": "Add child",
+					"addCaregiver": "Add caregiver",
+					"pageHint": "Manage child profiles and connected caregiver accounts."
+				}
 			},
-			"content": "Caregiver Panel"
+			"plans": {
+				"header": {
+					"title": "Plans",
+					"addPlan": "Add plan",
+					"calendar": "Calendar",
+					"pageHint": "Create, assign and manage plans with tasks."
+				}
+			},
+			"awards": {
+				"header": {
+					"title": "Awards",
+					"addAward": "Add award",
+					"addBadge": "Add badge",
+					"pageHint": "Increase work motivation by using points, awards and badges."
+				}
+			},
+			"statistics": {
+				"header": {
+					"title": "Statistics",
+					"history": "Event history",
+					"pageHint": "View and analyze the work done by children."
+				}
+			}
+		},
+		"childSection": {
+			"panel": {
+				"header": {
+					"greetings": "Hello",
+					"myPoints": "My points",
+					"pageHint": "Complete tasks and earn points.",
+					"garden": "Garden"
+				}
+			}
 		}
 	},
 	"alert": {

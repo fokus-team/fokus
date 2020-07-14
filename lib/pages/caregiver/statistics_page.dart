@@ -1,10 +1,8 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:fokus/data/model/user/caregiver.dart';
-
-import 'package:fokus/wigets/app_bottom_navigation_bar.dart';
-import 'package:fokus/wigets/app_header.dart';
+import 'package:fokus/widgets/app_header.dart';
+import 'package:fokus/widgets/app_navigation_bar.dart';
 
 class CaregiverStatisticsPage extends StatefulWidget {
 	@override
@@ -14,13 +12,11 @@ class CaregiverStatisticsPage extends StatefulWidget {
 class _CaregiverStatisticsPageState extends State<CaregiverStatisticsPage> {
 	@override
 	Widget build(BuildContext context) {
-		var user = ModalRoute.of(context).settings.arguments as Caregiver;
-
     return Scaffold(
 			body: Column(
 				crossAxisAlignment: CrossAxisAlignment.start,
 				children: [
-					AppHeader.normal(user: user, title: 'page.caregiverSection.statistics.header.title', text: 'page.caregiverSection.statistics.header.pageHint', headerActionButtons: [
+					AppHeader.normal(title: 'page.caregiverSection.statistics.header.title', text: 'page.caregiverSection.statistics.header.pageHint', headerActionButtons: [
 						HeaderActionButton.normal(Icons.archive, 'page.caregiverSection.statistics.header.history', () => { log("Historia") }, Colors.amber),
 					]),
 					Container(
@@ -29,10 +25,7 @@ class _CaregiverStatisticsPageState extends State<CaregiverStatisticsPage> {
 					)
 				]
 			),
-			bottomNavigationBar: AppBottomNavigationBar.caregiverPage(
-				currentIndex: 3,
-				user: user,
-			)
+			bottomNavigationBar: AppNavigationBar.caregiverPage(currentIndex: 3)
     );
 	}
 }

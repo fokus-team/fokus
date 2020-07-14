@@ -63,7 +63,7 @@ class FokusApp extends StatelessWidget {
 
 	Widget _wrapAppPage(UserRole userRole, Widget page) {
 		return CubitUtils.navigateOnState<ActiveUserCubit, ActiveUserState, NoActiveUser>(
-			navigation: (navigator) => navigator.pushReplacementNamed(AppPage.rolesPage.name),
+			navigation: (navigator) => navigator.pushNamedAndRemoveUntil(AppPage.rolesPage.name, (_) => false),
 			child: PageTheme.parametrizedRoleSection(
 				userRole: userRole,
 				child: page

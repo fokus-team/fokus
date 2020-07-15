@@ -1,4 +1,5 @@
 import 'package:fokus/model/db/collection.dart';
+import 'package:fokus/model/db/user/child.dart';
 import 'package:fokus/model/db/user/user.dart';
 import 'package:fokus/model/db/user/user_role.dart';
 import 'package:fokus/services/database/mongo_client.dart';
@@ -12,11 +13,16 @@ class DataRepository {
 		return this;
 	}
 
-	Future<User> fetchUser([SelectorBuilder selector]) async {
-		return client.query(Collection.user, selector).then((response) => User.typedFromJson(response));
+	Future<User> getUser([SelectorBuilder selector]) async {
+		return client.queryOne(Collection.user, selector).then((response) => User.typedFromJson(response));
+	}
+
+	Future<List<Child>> getCaregiverChildren(ObjectId caregiverId) {
+		var query = where.eq('role', UserRole.child.index).and(where.eq('connections', caregiverId));
+		return client.query(Collection.user, query).then((children) => children.map((child) => Child.fromJson(child)).toList());
 	}
 
 	// Temporary until we have a login page
-	Future<User> fetchUserById(ObjectId id) async => fetchUser(where.eq('_id', id));
-	Future<User> fetchUserByRole(UserRole role) async => fetchUser(where.eq('role', role.index));
+	Future<User> getUserById(ObjectId id) async => getUser(where.eq('_id', id));
+	Future<User> getUserByRole(UserRole role) async => getUser(where.eq('role', role.index));
 }

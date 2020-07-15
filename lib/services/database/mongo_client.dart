@@ -13,8 +13,12 @@ class MongoClient {
 		return _db.open(secure: !_useLocalhost);
 	}
 
-	Future<Map<String, dynamic>> query(Collection collection, [SelectorBuilder selector]) async {
+	Future<Map<String, dynamic>> queryOne(Collection collection, [SelectorBuilder selector]) async {
 		return _db.collection(collection.name).findOne(selector);
+	}
+
+	Future<Stream<Map<String, dynamic>>> query(Collection collection, [SelectorBuilder selector]) async {
+		return _db.collection(collection.name).find(selector);
 	}
 
 	// TODO call

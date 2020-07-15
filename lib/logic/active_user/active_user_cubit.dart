@@ -19,7 +19,7 @@ class ActiveUserCubit extends Cubit<ActiveUserState> {
 
 	void loginUser(User user) async {
 		_appConfig.setLastUser(user.id);
-		emit(ActiveUserPresent(UIUser(user.id, user.name, role: user.role)));
+		emit(ActiveUserPresent(UIUser.fromDBModel(user)));
 	}
 
   void logoutUser() {
@@ -28,6 +28,6 @@ class ActiveUserCubit extends Cubit<ActiveUserState> {
   }
 
 	// Temporary until we have a login page
-	void loginUserByRole(UserRole role) async => loginUser(await _dbProvider.fetchUserByRole(role));
-	void loginUserById(ObjectId id) async => loginUser(await _dbProvider.fetchUserById(id));
+	void loginUserByRole(UserRole role) async => loginUser(await _dbProvider.getUserByRole(role));
+	void loginUserById(ObjectId id) async => loginUser(await _dbProvider.getUserById(id));
 }

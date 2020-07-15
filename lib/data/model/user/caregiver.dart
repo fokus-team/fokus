@@ -11,7 +11,7 @@ class Caregiver extends User {
   List<Badge> badges;
   List<String> friends;
 
-  Caregiver({ObjectId id, this.badges, this.email, this.friends, this.password}) : super(id: id, type: UserType.CAREGIVER);
+  Caregiver({ObjectId id, this.badges, this.email, this.friends, this.password}) : super(id: id, type: UserType.caregiver);
 
   factory Caregiver.fromJson(Map<String, dynamic> json) {
     return Caregiver(

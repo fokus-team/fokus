@@ -26,5 +26,5 @@ class TaskStatus {
 }
 
 enum TaskState {
-	NOT_EVALUATED, EVALUATED, REJECTED
+	notEvaluated, evaluated, rejected
 }

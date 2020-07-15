@@ -1,1 +1,1 @@
-enum UserType { CAREGIVER, CHILD }
+enum UserType { caregiver, child }

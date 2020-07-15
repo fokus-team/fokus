@@ -62,6 +62,12 @@
 					"myPoints": "Moje punkty",
 					"pageHint": "Wykonuj zadania i zdobywaj punkty.",
 					"garden": "Ogród"
+				},
+				"content": {
+					"todaysPlans": "Dzisiejsze plany",
+					"inProgress": "W trakcie",
+					"futurePlans": "Zobacz przyszłe plany",
+					"tasks": "zadania"
 				}
 			}
 		}

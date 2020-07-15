@@ -18,6 +18,7 @@ class PlanWidget extends StatelessWidget {
   final double futurePlansButtonWidth = 80.0;
   final int titleMaxLines = 3;
   final Color activeButtonColor = Colors.teal;
+  // TODO: lighter grey in styles
   final Color disabledButtonColor = Colors.grey;
   final Color inProgressButtonColor = Colors.amber;
   final Icon notInProgressIcon = new Icon(Icons.play_arrow);
@@ -75,7 +76,7 @@ class PlanWidget extends StatelessWidget {
                                     )),
                                 Text(
                                     this.tasksCount.toString() +
-                                        ' ${AppLocales.of(context).translate("page.child.childPanel.tasks")} ',
+                                        ' ${AppLocales.of(context).translate("page.childSection.panel.content.tasks")} ',
                                     style: blueTextStyle)
                               ],
                             )

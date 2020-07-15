@@ -62,6 +62,12 @@
 					"myPoints": "My points",
 					"pageHint": "Complete tasks and earn points.",
 					"garden": "Garden"
+				},
+				"content": {
+					"todaysPlans": "Today's plans",
+					"inProgress": "In progress",
+					"futurePlans": "Future plans",
+					"tasks": "tasks"
 				}
 			}
 		}

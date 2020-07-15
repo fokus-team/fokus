@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:fokus/data/model/date/time_date.dart';
-import 'package:fokus/wigets/parent_plan_widget.dart';
+import 'package:fokus/model/db/date/time_date.dart';
+import 'package:fokus/wigets/caregiver_plan_widget.dart';
 import 'package:fokus/wigets/task_widget.dart';
 
-class ParentsPlanDetailsPage extends StatefulWidget {
+class CaregiverPlanDetailsPage extends StatefulWidget {
   @override
-  _ParentsPlanDetailsPageState createState() =>
-      new _ParentsPlanDetailsPageState();
+  _CaregiverPlanDetailsPageState createState() =>
+      new _CaregiverPlanDetailsPageState();
 }
 
-class _ParentsPlanDetailsPageState extends State<ParentsPlanDetailsPage> {
+class _CaregiverPlanDetailsPageState extends State<CaregiverPlanDetailsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

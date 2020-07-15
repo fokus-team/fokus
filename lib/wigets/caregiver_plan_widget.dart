@@ -32,7 +32,7 @@ class ParentPlanWidget extends StatelessWidget {
                   Flexible(
                     child: Text(
                       this.recurrence,
-                      style: Theme.of(context).textTheme.bodyText1,
+                      style: Theme.of(context).textTheme.bodyText2,
                       maxLines: 3,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -44,7 +44,7 @@ class ParentPlanWidget extends StatelessWidget {
                   Flexible(
                     child: Text(
                       "Przypisane dzieci:",
-                      style: Theme.of(context).textTheme.bodyText1,
+                      style: Theme.of(context).textTheme.bodyText2,
                       maxLines: 3,
                       overflow: TextOverflow.ellipsis,
                     ),

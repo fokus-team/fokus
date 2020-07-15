@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fokus/data/model/date/time_date.dart';
+
+import 'package:fokus/model/db/date/time_date.dart';
 
 class TaskWidget extends StatelessWidget {
   final String name;
@@ -29,7 +30,7 @@ class TaskWidget extends StatelessWidget {
           Padding(padding: EdgeInsets.only(top: 5), child: Row(
 						children: <Widget>[
 							Flexible(
-								child: Text(this.timeDate.minute.toString() + " minut", style: Theme.of(context).textTheme.bodyText1),
+								child: Text(this.timeDate.minute.toString() + " minut", style: Theme.of(context).textTheme.bodyText2),
 							),
 
 						],

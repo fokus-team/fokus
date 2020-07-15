@@ -14,8 +14,7 @@ class PlanWidget extends StatelessWidget {
   // styling vars
   final double playButtonSize = 40.0;
   final double tasksIconSize = 26.0;
-  final TextStyle blueTextStyle =
-      new TextStyle(fontSize: 16, color: Colors.blue);
+  final double progressIndicatorHeight = 15.0;
   final double futurePlansButtonWidth = 80.0;
   final int titleMaxLines = 3;
   final Color activeButtonColor = Colors.teal;
@@ -25,6 +24,8 @@ class PlanWidget extends StatelessWidget {
   final Color inProgressButtonColor = Colors.amber;
   final Icon notInProgressIcon = new Icon(Icons.play_arrow);
   final Icon inProgressIcon = new Icon(Icons.launch);
+  final TextStyle blueTextStyle =
+      new TextStyle(fontSize: 16, color: Colors.blue);
 
   PlanWidget(
       {@required this.planName,
@@ -147,7 +148,7 @@ class PlanWidget extends StatelessWidget {
       return ClipRRect(
           borderRadius: BorderRadius.only(bottomLeft: Radius.circular(5)),
           child: Container(
-            height: 15,
+            height: progressIndicatorHeight,
             child: LinearProgressIndicator(
                 value: this.progressPercentage,
                 backgroundColor: this.inactiveProgressBar,

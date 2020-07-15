@@ -34,3 +34,11 @@ class AppBoxProperties {
   static final double columnChildrenPadding = 5.0;
   static final double sectionPadding = 10.0;
 }
+
+class AppSectionStyle {
+	final Color pageBackgroundColor;
+	final Color buttonColor;
+	final Color appHeaderColor;
+
+  AppSectionStyle({this.pageBackgroundColor, this.appHeaderColor, this.buttonColor});
+}

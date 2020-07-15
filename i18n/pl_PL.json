@@ -1,29 +1,68 @@
 {
 	"loading": "Ładowanie",
-	"page": {
-		"roles": {
-			"introduction": "Jestem",
-			"caregiver": "Opiekunem",
-			"child": "Dzieckiem",
-			"help": "Potrzebuję pomocy"
-		},
-		"caregiverPanel": {
-			"header": {
-				"title": "Witaj, {name}"
-			},
-			"content": "Panel Opiekuna"
+	"navigation": {
+		"caregiver": {
+			"panel": "Panel",
+			"plans": "Plany",
+			"awards": "Nagrody",
+			"statistics": "Statystyki"
 		},
 		"child": {
-			"bottomNavBar": {
-				"plans": "Plany",
-				"rewards": "Nagrody",
-				"achievements": "Osiągnięcia"
+			"plans": "Plany",
+			"awards": "Nagrody",
+			"achievements": "Osiągnięcia"
+		}
+	},
+	"page": {
+		"loginSection": {
+			"roles": {
+				"introduction": "Jestem",
+				"caregiver": "Opiekunem",
+				"child": "Dzieckiem",
+				"help": "Potrzebuję pomocy"
+			}
+		},
+		"caregiverSection": {
+			"panel": {
+				"header": {
+					"greetings": "Witaj",
+					"addChild": "Dodaj dziecko",
+					"addCaregiver": "Dodaj opiekuna",
+					"pageHint": "Zarządzaj profilami dzieci i powiązanymi kontami opiekunów."
+				}
 			},
-			"childPanel": {
-				"todaysPlans": "Dzisiejsze plany",
-				"futurePlans": "Zobacz przyszłe plany",
-				"tasks": "zadania",
-				"inProgress": "Aktualnie wykonujesz"
+			"plans": {
+				"header": {
+					"title": "Plany",
+					"addPlan": "Dodaj plan",
+					"calendar": "Kalendarz",
+					"pageHint": "Twórz, przypisuj i zarządzaj planami oraz zadaniami."
+				}
+			},
+			"awards": {
+				"header": {
+					"title": "Nagrody",
+					"addAward": "Dodaj nagrodę",
+					"addBadge": "Dodaj odznakę",
+					"pageHint": "Zwiększ motywację do wykonywania planów używając punktów, nagród i odznak."
+				}
+			},
+			"statistics": {
+				"header": {
+					"title": "Statystyki",
+					"history": "Historia wydarzeń",
+					"pageHint": "Przeglądaj i analizuj wykonaną przez dzieci pracę."
+				}
+			}
+		},
+		"childSection": {
+			"panel": {
+				"header": {
+					"greetings": "Cześć",
+					"myPoints": "Moje punkty",
+					"pageHint": "Wykonuj zadania i zdobywaj punkty.",
+					"garden": "Ogród"
+				}
 			}
 		}
 	},

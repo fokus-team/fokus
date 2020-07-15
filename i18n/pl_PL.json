@@ -67,7 +67,7 @@
 					"todaysPlans": "Dzisiejsze plany",
 					"inProgress": "W trakcie",
 					"futurePlans": "Zobacz przyszłe plany",
-					"tasks": "zadania"
+					"tasks": "{NUM_TASKS, plural, offset:0  zero {# zadań} one {# zadanie} two {# zadania} few {# zadania} other {# zadań}}"
 				}
 			}
 		}

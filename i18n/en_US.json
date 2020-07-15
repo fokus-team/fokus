@@ -66,8 +66,8 @@
 				"content": {
 					"todaysPlans": "Today's plans",
 					"inProgress": "In progress",
-					"futurePlans": "Future plans",
-					"tasks": "tasks"
+					"futurePlans": "Check future plans",
+					"tasks": "{NUM_TASKS, plural, offset:0  =1 {# task} other {# tasks}}"
 				}
 			}
 		}

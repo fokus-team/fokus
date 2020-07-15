@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:fokus/utils/app_locales.dart';
 import 'package:fokus/utils/theme_config.dart';
@@ -33,8 +34,19 @@ class _ChildPanelPageState extends State<ChildPanelPage> {
                   child: Text(
                       '${AppLocales.of(context).translate("page.childSection.panel.content.inProgress")} ',
                       style: Theme.of(context).textTheme.headline1)),
-              PlanWidget("Nauka angielskiego", true, 6, true, 0.2,
-                  "Pozostało: 20 minut"),
+              PlanWidget(
+                planName: "Nauka angielskiego",
+                isActive: true,
+                isInProgress: true,
+                tasksCount: 6,
+                progressPercentage: 0.2,
+                details: "Pozostało: 20 minut",
+                buttonAction: () {
+                  log(
+                    "Button Pressed",
+                  );
+                },
+              ),
               Padding(
                   padding: EdgeInsets.symmetric(
                       vertical: AppBoxProperties.sectionPadding,
@@ -43,49 +55,24 @@ class _ChildPanelPageState extends State<ChildPanelPage> {
                       '${AppLocales.of(context).translate("page.childSection.panel.content.todaysPlans")} ',
                       style: Theme.of(context).textTheme.headline1)),
               PlanWidget(
-                  "Gra w piłkę nożną pośrodku ulicy skąpanej w promieniach błogiego słońca wyróżniającego się słodkim zapachem nieba",
-                  false,
-                  2,
-                  false,
-                  0,
-                  "Codziennie"),
-              PlanWidget("Gra w piłkę nożną", true, 4, false, 0,
-                  "Co każdy wtorek, piątek"),
+                  planName: "Rozpoczęty plan, ale niedokończony",
+                  isActive: false,
+                  isInProgress: true,
+                  tasksCount: 2,
+                  details: "Pozostało: 30 minut",
+                  progressPercentage: 0.67),
               PlanWidget(
-                  "Gra w piłkę nożną pośrodku ulicy skąpanej w promieniach błogiego słońca wyróżniającego się słodkim zapachem nieba",
-                  false,
-                  2,
-                  false,
-                  0,
-                  "Codziennie"),
+                  planName: "Gra w piłkę nożną",
+                  isActive: false,
+                  isInProgress: false,
+                  tasksCount: 5,
+                  details: "Co każdy wtorek, piątek"),
               PlanWidget(
-                  "Gra w piłkę nożną pośrodku ulicy skąpanej w promieniach błogiego słońca wyróżniającego się słodkim zapachem nieba",
-                  false,
-                  2,
-                  false,
-                  0,
-                  "Codziennie"),
-              PlanWidget(
-                  "Gra w piłkę nożną pośrodku ulicy skąpanej w promieniach błogiego słońca wyróżniającego się słodkim zapachem nieba",
-                  false,
-                  2,
-                  false,
-                  0,
-                  "Codziennie"),
-              PlanWidget(
-                  "Gra w piłkę nożną pośrodku ulicy skąpanej w promieniach błogiego słońca wyróżniającego się słodkim zapachem nieba",
-                  false,
-                  2,
-                  false,
-                  0,
-                  "Codziennie"),
-              PlanWidget(
-                  "Gra w piłkę nożną pośrodku ulicy skąpanej w promieniach błogiego słońca wyróżniającego się słodkim zapachem nieba",
-                  false,
-                  2,
-                  false,
-                  0,
-                  "Codziennie"),
+                  planName: "Gra w piłkę nożną",
+                  isActive: false,
+                  isInProgress: false,
+                  tasksCount: 4,
+                  details: "Co każdy wtorek, piątek"),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
@@ -94,24 +81,28 @@ class _ChildPanelPageState extends State<ChildPanelPage> {
                       padding: EdgeInsets.symmetric(
                           vertical: AppBoxProperties.cardListPadding,
                           horizontal: AppBoxProperties.screenEdgePadding),
-                      child: Container(
-                          padding: EdgeInsets.all(
-                              AppBoxProperties.buttonIconPadding),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(
-                                AppBoxProperties.roundedCornersRadius)),
-                            color: futurePlansColor,
-                          ),
-                          child: ButtonBar(children: <Widget>[
-                            Icon(
-                              Icons.calendar_today,
-                              color: Colors.white,
-                            ),
-                            Text(
-                              '${AppLocales.of(context).translate("page.childSection.panel.content.futurePlans")} ',
-                              style: Theme.of(context).textTheme.button,
-                            )
-                          ])))
+                      child: ClipRRect(
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(AppBoxProperties.roundedCornersRadius)),
+                          child: FlatButton(
+                              padding: EdgeInsets.all(
+                                  AppBoxProperties.containerPadding),
+                              color: futurePlansColor,
+                              onPressed: () {
+                                log("Pressed future plans");
+                              },
+                              child: Row(
+                                children: <Widget>[
+                                  Padding(padding: EdgeInsets.only(right: AppBoxProperties.buttonIconPadding), child:Icon(
+                                    Icons.calendar_today,
+                                    color: Colors.white,
+                                  )),
+                                  Text(
+                                    '${AppLocales.of(context).translate("page.childSection.panel.content.futurePlans")} ',
+                                    style: Theme.of(context).textTheme.button,
+                                  )
+                                ],
+                              ))))
                 ],
               )
             ],

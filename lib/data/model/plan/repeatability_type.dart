@@ -1,1 +1,1 @@
-enum RepeatabilityType { ONCE, WEEKLY, MONTHLY }
+enum RepeatabilityType { once, weekly, monthly }

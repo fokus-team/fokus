@@ -1,5 +1,6 @@
 import 'package:cubit/cubit.dart';
 import 'package:equatable/equatable.dart';
+import 'package:fokus/model/ui/ui_user.dart';
 import 'package:get_it/get_it.dart';
 
 import 'package:fokus/model/db/user/user.dart';
@@ -18,7 +19,7 @@ class ActiveUserCubit extends Cubit<ActiveUserState> {
 
 	void loginUser(User user) async {
 		_appConfig.setLastUser(user.id);
-		emit(ActiveUserPresent(user.name, user.role));
+		emit(ActiveUserPresent(UIUser(user.id, user.name, role: user.role)));
 	}
 
   void logoutUser() {

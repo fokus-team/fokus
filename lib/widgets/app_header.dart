@@ -5,6 +5,7 @@ import 'package:flutter_cubit/flutter_cubit.dart';
 
 import 'package:fokus/logic/active_user/active_user_cubit.dart';
 import 'package:fokus/model/db/user/user_role.dart';
+import 'package:fokus/model/ui/ui_user.dart';
 import 'package:fokus/utils/app_locales.dart';
 import 'package:fokus/utils/theme_config.dart';
 
@@ -46,7 +47,7 @@ class AppHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) => headerType == AppHeaderType.greetings ? buildGreetings(context) : buildNormal(context);
 
-	Image headerImage(ActiveUserPresent user) {
+	Image headerImage(UIUser user) {
 		// TODO Handling the avatars (based on type and avatar parameters), returning sunflower for now
 		return Image.asset('assets/image/sunflower_logo.png', height: 64);
 	}
@@ -133,7 +134,7 @@ class AppHeader extends StatelessWidget {
 	}
 
 	Widget buildGreetings(BuildContext context) {
-		var currentUser = CubitProvider.of<ActiveUserCubit>(context).state as ActiveUserPresent;
+		var currentUser = (CubitProvider.of<ActiveUserCubit>(context).state as ActiveUserPresent).user;
 
 		return buildHederContainer(context, 
 			Row(

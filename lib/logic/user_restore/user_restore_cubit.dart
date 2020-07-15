@@ -11,7 +11,7 @@ class UserRestoreCubit extends Cubit<UserRestoreState> {
 	final AppConfigRepository _appConfig = GetIt.I<AppConfigRepository>();
 
 	UserRestoreCubit(this._activeUserCubit) : super(UserRestoreInitialState()) {
-		_activeUserCubit.listen((state) => state is ActiveUserPresent ? emit(UserRestoreSuccess(state.role)) : {});
+		_activeUserCubit.listen((state) => state is ActiveUserPresent ? emit(UserRestoreSuccess(state.user.role)) : {});
 	}
 
 	void restoreUser() async {

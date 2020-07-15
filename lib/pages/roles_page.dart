@@ -94,7 +94,7 @@ class RolesPage extends StatelessWidget {
 		  child: child,
 		  listener: (context, state) {
 		    if (state is ActiveUserPresent)
-		      Navigator.of(context).pushReplacementNamed(state.role.panelPage.name);
+		      Navigator.of(context).pushReplacementNamed(state.user.role.panelPage.name);
 		  }
 	  );
   }

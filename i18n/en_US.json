@@ -22,7 +22,8 @@
 			"childPanel": {
 				"todaysPlans": "Today's plans",
 				"futurePlans": "Check future plans",
-				"tasks": "tasks"
+				"tasks": "tasks",
+				"inProgress": "In progress"
 			}
 		}
 	},

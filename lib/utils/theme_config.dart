@@ -25,8 +25,14 @@ class AppColors {
 
 class AppBoxProperties {
 	// Paddings, margins, borders and box shadows goes here
-	static final double buttonIconPadding = 4.0;
-	
+  static final double buttonIconPadding = 4.0;
+  static final double roundedCornersRadius = 5.0;
+  static final double screenEdgePadding = 20.0;
+  static final double cardListPadding = 5.0;
+  static final double containerPadding = 10.0;
+  static final double columnChildrenPadding = 5.0;
+  static final double sectionPadding = 10.0;
+
 }
 
 class AppSectionStyle {

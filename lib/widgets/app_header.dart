@@ -102,7 +102,7 @@ class AppHeader extends StatelessWidget {
 		);
 	}
 
-	Widget buildHederContainer(BuildContext context, Widget innerContent) {
+	Widget buildHeaderContainer(BuildContext context, Widget innerContent) {
 		return Material(
 			elevation: 4.0,
 			color: Theme.of(context).appBarTheme.color,
@@ -135,7 +135,7 @@ class AppHeader extends StatelessWidget {
 	Widget buildGreetings(BuildContext context) {
 		var currentUser = CubitProvider.of<ActiveUserCubit>(context).state as ActiveUserPresent;
 
-		return buildHederContainer(context, 
+		return buildHeaderContainer(context, 
 			Row(
 				mainAxisAlignment: MainAxisAlignment.spaceBetween,
 				crossAxisAlignment: CrossAxisAlignment.start,
@@ -180,7 +180,7 @@ class AppHeader extends StatelessWidget {
 	}
 
 	Widget buildNormal(BuildContext context) {
-		return buildHederContainer(context, 
+		return buildHeaderContainer(context, 
 			Row(
 				mainAxisAlignment: MainAxisAlignment.spaceBetween,
 				crossAxisAlignment: CrossAxisAlignment.start,

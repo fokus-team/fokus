@@ -7,6 +7,7 @@ import 'package:fokus/widgets/app_header.dart';
 
 import 'package:fokus/utils/app_locales.dart';
 import 'package:fokus/utils/theme_config.dart';
+import 'package:fokus/utils/color_utils.dart';
 
 class ChildWallet extends StatelessWidget {
 	// TODO Upgrade dialog for different currencies and what not
@@ -34,6 +35,26 @@ class ChildWallet extends StatelessWidget {
 				)
 			)
     );
+	}
+
+}
+
+class ChildPointsChip extends StatelessWidget {
+	// TODO Passing currency and using it's icon & color
+	final int quantity;
+
+	ChildPointsChip({
+		@required this.quantity
+	});
+
+	@override
+	Widget build(BuildContext context) {
+		return Chip(
+			backgroundColor: lighten(AppColors.diamondColor, 0.48), 
+			avatar: SvgPicture.asset('assets/image/currency/diamond.svg', width: 24, fit: BoxFit.cover),
+			label: Text((quantity ?? 0).toString(), style: TextStyle(color: AppColors.diamondColor, fontWeight: FontWeight.bold)),
+			visualDensity: VisualDensity.compact
+		);
 	}
 
 }

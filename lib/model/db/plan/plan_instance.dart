@@ -21,9 +21,9 @@ class PlanInstance {
       date: Date.parseDBString(json['date']),
       duration: json['duration'] != null ? Duration.fromJson(json['duration']) : null,
 	    id: json['_id'],
-      instances: json['instances'] != null ? new List<ObjectId>.from(json['instances']) : null,
+      instances: json['instances'] != null ? new List<ObjectId>.from(json['instances']) : [],
       planID: json['planID'],
-      tasks: json['tasks'] != null ? (json['tasks'] as List).map((i) => PlanInstanceTask.fromJson(i)).toList() : null,
+      tasks: json['tasks'] != null ? (json['tasks'] as List).map((i) => PlanInstanceTask.fromJson(i)).toList() : [],
     );
   }
 

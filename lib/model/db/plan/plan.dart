@@ -32,15 +32,15 @@ class Plan {
   factory Plan.fromJson(Map<String, dynamic> json) {
     return Plan(
       active: json['active'],
-      assignedTo: json['assignedTo'] != null ? new List<ObjectId>.from(json['assignedTo']) : null,
-      changedInstances: json['changedInstances'] != null ? (json['changedInstances'] as List).map((date) => Date.parseDBString(date)) : null,
+      assignedTo: json['assignedTo'] != null ? new List<ObjectId>.from(json['assignedTo']) : [],
+      changedInstances: json['changedInstances'] != null ? (json['changedInstances'] as List).map((date) => Date.parseDBString(date)) : [],
       createdAt: TimeDate.parseDBString(json['createdAt']),
       createdBy: json['createdBy'],
       id: json['_id'],
-      instances: json['instances'] != null ? new List<ObjectId>.from(json['instances']) : null,
+      instances: json['instances'] != null ? new List<ObjectId>.from(json['instances']) : [],
       name: json['name'],
       repeatability: PlanRepeatability.fromJson(json['repeatability']),
-      tasks: json['tasks'] != null ? new List<ObjectId>.from(json['tasks']) : null,
+      tasks: json['tasks'] != null ? new List<ObjectId>.from(json['tasks']) : [],
     );
   }
 

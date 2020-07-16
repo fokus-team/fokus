@@ -19,12 +19,12 @@ class TaskInstance {
 
   factory TaskInstance.fromJson(Map<String, dynamic> json) {
     return TaskInstance(
-      breaks: json['breaks'] != null ? (json['breaks'] as List).map((i) => Duration.fromJson(i)).toList() : null,
-      duration: json['duration'] != null ? (json['duration'] as List).map((i) => Duration.fromJson(i)).toList() : null,
+      breaks: json['breaks'] != null ? (json['breaks'] as List).map((i) => Duration.fromJson(i)).toList() : [],
+      duration: json['duration'] != null ? (json['duration'] as List).map((i) => Duration.fromJson(i)).toList() : [],
 	    id: json['_id'],
       planInstanceID: json['planInstanceID'],
       status: json['status'] != null ? TaskStatus.fromJson(json['status']) : null,
-      subtasks: json['subtasks'] != null ? new List<ObjectId>.from(json['subtasks']) : null,
+      subtasks: json['subtasks'] != null ? new List<ObjectId>.from(json['subtasks']) : [],
       taskID: json['taskID'],
       timer: json['timer'],
     );

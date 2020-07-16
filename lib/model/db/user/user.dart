@@ -18,9 +18,9 @@ class User {
   @protected
   void fromJson(Map<String, dynamic> json) {
     name = json['name'];
-    accessCode = json['accessCode'] != null ? new List<int>.from(json['accessCode']) : null;
+    accessCode = json['accessCode'] != null ? new List<int>.from(json['accessCode']) : [];
     avatar = json['avatar'];
-    connections = json['connections'] != null ? new List<ObjectId>.from(json['connections']) : null;
+    connections = json['connections'] != null ? new List<ObjectId>.from(json['connections']) : [];
   }
 
   Map<String, dynamic> toJson() {

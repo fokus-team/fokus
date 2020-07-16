@@ -32,7 +32,7 @@
 				},
 				"content": {
 					"childProfiles": "Profile dzieci",
-					"caregiverProfiles": "Zaprzyjaźnieni opiekuni",
+					"caregiverProfiles": "Zaprzyjaźnieni opiekunowie",
 					"plansToday": "na dziś",
 					"plansTodayCount": "{NUM_PLANS, plural, offset:0 zero {Brak planów} one {# plan} two {# plany} few {# plany} other {# planów}}"
 				}

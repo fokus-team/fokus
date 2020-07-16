@@ -3,12 +3,12 @@ import 'package:mongo_dart/mongo_dart.dart';
 import 'points.dart';
 
 class Reward {
-  int createdBy;
   ObjectId id;
   int icon;
   int limit;
   String name;
   Points points;
+  ObjectId createdBy;
 
   Reward({this.createdBy, this.id, this.icon, this.limit, this.name, this.points});
 

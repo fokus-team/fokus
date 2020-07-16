@@ -2,18 +2,19 @@ import 'package:fokus/model/db/gamification/points.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
 class Task {
+	String name;
   String description;
   ObjectId id;
-  String name;
+  ObjectId planID;
+	List<ObjectId> subtasks;
+
   bool optional;
-  String planID;
   Points points;
-  List<String> subtasks;
   int timer;
 
   Task({this.description, this.id, this.name, this.optional, this.planID, this.points, this.subtasks, this.timer});
 
-  factory Task.fromJson(Map<String, dynamic> json) {
+  factory Task.fromJson(Map<ObjectId, dynamic> json) {
     return Task(
       description: json['description'],
 	    id: json['_id'],
@@ -21,7 +22,7 @@ class Task {
       optional: json['optional'],
       planID: json['planID'],
       points: json['points'] != null ? Points.fromJson(json['points']) : null,
-      subtasks: json['subtasks'] != null ? new List<String>.from(json['subtasks']) : null,
+      subtasks: json['subtasks'] != null ? new List<ObjectId>.from(json['subtasks']) : null,
       timer: json['timer'],
     );
   }

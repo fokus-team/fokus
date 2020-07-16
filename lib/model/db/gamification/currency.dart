@@ -1,10 +1,10 @@
 import 'package:mongo_dart/mongo_dart.dart';
 
 class Currency {
-  String createdBy;
   ObjectId id;
-  int icon;
   String name;
+  int icon;
+  ObjectId createdBy;
 
   Currency({this.createdBy, this.id, this.icon, this.name});
 

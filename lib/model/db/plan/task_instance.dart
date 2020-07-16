@@ -6,14 +6,14 @@ import 'task_status.dart';
 
 class TaskInstance {
 	ObjectId id;
-	String taskID;
-	String planInstanceID;
+	ObjectId taskID;
+	ObjectId planInstanceID;
+	List<ObjectId> subtasks;
 
+	int timer;
+	TaskStatus status;
   List<Duration<TimeDate>> breaks;
   List<Duration<TimeDate>> duration;
-	TaskStatus status;
-  List<String> subtasks;
-  int timer;
 
   TaskInstance({this.id, this.taskID, this.planInstanceID, this.breaks, this.duration, this.status, this.subtasks, this.timer});
 
@@ -24,7 +24,7 @@ class TaskInstance {
 	    id: json['_id'],
       planInstanceID: json['planInstanceID'],
       status: json['status'] != null ? TaskStatus.fromJson(json['status']) : null,
-      subtasks: json['subtasks'] != null ? new List<String>.from(json['subtasks']) : null,
+      subtasks: json['subtasks'] != null ? new List<ObjectId>.from(json['subtasks']) : null,
       taskID: json['taskID'],
       timer: json['timer'],
     );

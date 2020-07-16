@@ -4,13 +4,14 @@ import 'package:fokus/model/db/duration.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
 class PlanInstance {
-  String assignedTo;
+	ObjectId id;
+	ObjectId planID;
+	ObjectId assignedTo;
+
   Date date;
   Duration<TimeDate> duration;
-  ObjectId id;
-  List<String> instances;
-  String planID;
-  List<InstanceTask> tasks;
+  List<ObjectId> instances;
+  List<PlanInstanceTask> tasks;
 
   PlanInstance({this.assignedTo, this.date, this.duration, this.id, this.instances, this.planID, this.tasks});
 
@@ -20,9 +21,9 @@ class PlanInstance {
       date: Date.parseDBString(json['date']),
       duration: json['duration'] != null ? Duration.fromJson(json['duration']) : null,
 	    id: json['_id'],
-      instances: json['instances'] != null ? new List<String>.from(json['instances']) : null,
+      instances: json['instances'] != null ? new List<ObjectId>.from(json['instances']) : null,
       planID: json['planID'],
-      tasks: json['tasks'] != null ? (json['tasks'] as List).map((i) => InstanceTask.fromJson(i)).toList() : null,
+      tasks: json['tasks'] != null ? (json['tasks'] as List).map((i) => PlanInstanceTask.fromJson(i)).toList() : null,
     );
   }
 
@@ -45,23 +46,23 @@ class PlanInstance {
   }
 }
 
-class InstanceTask {
-  String createdBy;
-  String taskID;
+class PlanInstanceTask {
+	ObjectId createdBy;
+  ObjectId taskInstanceID;
 
-  InstanceTask({this.createdBy, this.taskID});
+  PlanInstanceTask({this.createdBy, this.taskInstanceID});
 
-  factory InstanceTask.fromJson(Map<String, dynamic> json) {
-    return InstanceTask(
+  factory PlanInstanceTask.fromJson(Map<String, dynamic> json) {
+    return PlanInstanceTask(
       createdBy: json['createdBy'],
-      taskID: json['taskID'],
+      taskInstanceID: json['taskID'],
     );
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['createdBy'] = this.createdBy;
-    data['taskID'] = this.taskID;
+    data['taskID'] = this.taskInstanceID;
     return data;
   }
 }

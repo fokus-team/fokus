@@ -9,30 +9,33 @@ class PlanInstance {
 	ObjectId assignedTo;
 
   Date date;
+  bool active;
   Duration<TimeDate> duration;
   List<ObjectId> instances;
   List<PlanInstanceTask> tasks;
 
-  PlanInstance({this.assignedTo, this.date, this.duration, this.id, this.instances, this.planID, this.tasks});
+  PlanInstance({this.id, this.instances, this.planID, this.assignedTo, this.date, this.active, this.duration, this.tasks});
 
   factory PlanInstance.fromJson(Map<String, dynamic> json) {
     return PlanInstance(
+	    id: json['_id'],
+	    active: json['active'],
+	    planID: json['planID'],
       assignedTo: json['assignedTo'],
       date: Date.parseDBString(json['date']),
       duration: json['duration'] != null ? Duration.fromJson(json['duration']) : null,
-	    id: json['_id'],
       instances: json['instances'] != null ? new List<ObjectId>.from(json['instances']) : [],
-      planID: json['planID'],
       tasks: json['tasks'] != null ? (json['tasks'] as List).map((i) => PlanInstanceTask.fromJson(i)).toList() : [],
     );
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['assignedTo'] = this.assignedTo;
-    data['date'] = this.date.toDBString();
     data['_id'] = this.id;
     data['planID'] = this.planID;
+    data['active'] = this.active;
+    data['assignedTo'] = this.assignedTo;
+    data['date'] = this.date.toDBString();
     if (this.duration != null) {
       data['duration'] = this.duration.toJson();
     }

@@ -19,7 +19,7 @@ class Reward {
       icon: json['icon'],
       limit: json['limit'],
       name: json['name'],
-      cost: json['points'] != null ? Points.fromJson(json['points']) : null,
+      cost: json['cost'] != null ? Points.fromJson(json['points']) : null,
     );
   }
 
@@ -31,7 +31,7 @@ class Reward {
     data['limit'] = this.limit;
     data['name'] = this.name;
     if (this.cost != null) {
-      data['points'] = this.cost.toJson();
+      data['cost'] = this.cost.toJson();
     }
     return data;
   }

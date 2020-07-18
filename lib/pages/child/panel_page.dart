@@ -24,7 +24,7 @@ class _ChildPanelPageState extends State<ChildPanelPage> {
 							if (state is ChildPlansLoadSuccess)
 								return Flexible(
 									child: ListView(
-										children: state.plans.map((plan) => Text(plan.toString())).toList(),
+										children: state.plans.map((plan) => Text(plan.print(context))).toList(),
 									),
 								);
 							return Container();

@@ -66,6 +66,14 @@
 			}
 		}
 	},
+	"repeatability": {
+		"once": "On {day}",
+		"weekly": "Every",
+		"monthly": "Every {days} day of the month",
+		"weekday": "{weekday, select, 1 {monday} 2 {tuesday} 3 {wednesday} 4 {thursday} 5 {friday} 6 {saturday} 7 {sunday} other {}}",
+		"untilCompleted": "until completed",
+		"range": "from {from} to {to}"
+	},
 	"alert": {
 		"error": "Error occurred",
 		"noConnection": "No connection"
@@ -77,5 +85,6 @@
 	},
 	"help": {
 		"first_steps": "First steps"
-	}
+	},
+	"and": "and"
 }

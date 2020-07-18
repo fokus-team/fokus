@@ -66,6 +66,14 @@
 			}
 		}
 	},
+	"repeatability": {
+		"once": "Dnia {day}",
+		"weekly": "Co {weekday, select, 1 {każdy} 2 {każdy} 3 {każdą} 4 {każdy} 5 {każdy} 6 {każdą} 7 {każdą} other {}}",
+		"monthly": "Każdego {days} dnia miesiąca",
+		"weekday": "{weekday, select, 1 {poniedziałek} 2 {wtorek} 3 {środę} 4 {czwartek} 5 {piątek} 6 {sobotę} 7 {niedzielę} other {}}",
+		"untilCompleted": "dopóki niezakończony",
+		"range": "od {from} do {to}"
+	},
 	"alert": {
 		"error": "Wystąpił błąd",
 		"noConnection": "Brak połączenia"
@@ -77,5 +85,6 @@
 	},
 	"help": {
 		"first_steps": "Pierwsze kroki"
-	}
+	},
+	"and": "i"
 }

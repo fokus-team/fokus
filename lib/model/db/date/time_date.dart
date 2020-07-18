@@ -10,7 +10,7 @@ class TimeDate extends DateBase {
 
   TimeDate.now() : this.fromDate(DateTime.now());
 
-  factory TimeDate.parseDBString(String date) => dbFormat.parseUtc(date);
+  factory TimeDate.parseDBString(String date) => TimeDate.fromDate(dbFormat.parseUtc(date));
 
   @override
   String toDBString() => dbFormat.format(this.toUtc());

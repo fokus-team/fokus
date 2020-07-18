@@ -13,4 +13,9 @@ class UIPlan extends Equatable {
 
   @override
   List<Object> get props => [id, name, taskCount, repeatabilityDescription];
+
+	@override
+  String toString() {
+    return 'UIPlan{name: $name, repeatabilityDescription: $repeatabilityDescription, taskCount: $taskCount}';
+  }
 }

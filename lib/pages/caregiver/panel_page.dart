@@ -1,6 +1,8 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_cubit/flutter_cubit.dart';
+
+import 'package:fokus/logic/children_list/children_list_cubit.dart';
 import 'package:fokus/model/app_page.dart';
 import 'package:fokus/logic/active_user/active_user_cubit.dart';
 import 'package:fokus/utils/cubit_utils.dart';
@@ -25,9 +27,17 @@ class _CaregiverPanelPageState extends State<CaregiverPanelPage> {
 							HeaderActionButton.normal(Icons.add, 'page.caregiverSection.panel.header.addChild', () => { log("Dodaj dziecko") }),
 							HeaderActionButton.normal(Icons.add, 'page.caregiverSection.panel.header.addCaregiver', () => { log("Dodaj opiekuna") })
 						]),
-						Container(
-								padding: EdgeInsets.all(8.0),
-								child: Text('Profile dzieci', textAlign: TextAlign.left, style: Theme.of(context).textTheme.headline2)
+						CubitBuilder<ChildrenListCubit, ChildrenListState>(
+							cubit: CubitProvider.of<ChildrenListCubit>(context),
+							builder: (context, state) {
+								if (state is ChildrenListLoadSuccess)
+									return Flexible(
+										child: ListView(
+											children: state.children.map((child) => Text(child.toString())).toList(),
+										),
+									);
+								return Container();
+							},
 						)
 					]
 				),

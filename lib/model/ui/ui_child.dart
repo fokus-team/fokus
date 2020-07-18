@@ -16,4 +16,7 @@ class UIChild extends UIUser {
 
 	@override
 	List<Object> get props => [id, todayPlanCount, hasActivePlan, points];
+
+	@override
+  String toString() => 'UIChild{name: $name, todayPlanCount: $todayPlanCount, hasActivePlan: $hasActivePlan, points: $points}';
 }

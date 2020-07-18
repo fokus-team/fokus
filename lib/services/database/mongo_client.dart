@@ -13,13 +13,16 @@ class MongoClient {
 		return _db.open(secure: !_useLocalhost);
 	}
 
-	Future<Map<String, dynamic>> queryOne(Collection collection, [SelectorBuilder selector]) async {
+	Future<Map<String, dynamic>> queryOne(Collection collection, [SelectorBuilder selector]) {
 		return _db.collection(collection.name).findOne(selector);
 	}
 
 	Future<Stream<Map<String, dynamic>>> query(Collection collection, [SelectorBuilder selector]) async {
 		return _db.collection(collection.name).find(selector);
 	}
+
+	Future<int> count(Collection collection, [SelectorBuilder selector]) async => _db.collection(collection.name).count(selector);
+	Future<bool> exists(Collection collection, [SelectorBuilder selector]) async => await count(collection, selector) > 0;
 
 	// TODO call
 	void close() async => await _db.close();

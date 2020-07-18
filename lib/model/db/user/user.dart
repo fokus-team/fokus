@@ -11,7 +11,7 @@ class User {
 
   List<int> accessCode;
   int avatar;
-  List<String> connections;
+  List<ObjectId> connections;
 
   User({this.id, this.role});
 
@@ -20,7 +20,7 @@ class User {
     name = json['name'];
     accessCode = json['accessCode'] != null ? new List<int>.from(json['accessCode']) : null;
     avatar = json['avatar'];
-    connections = json['connections'] != null ? new List<String>.from(json['connections']) : null;
+    connections = json['connections'] != null ? new List<ObjectId>.from(json['connections']) : null;
   }
 
   Map<String, dynamic> toJson() {

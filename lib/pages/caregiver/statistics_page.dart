@@ -1,8 +1,10 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+
 import 'package:fokus/widgets/app_header.dart';
 import 'package:fokus/widgets/app_navigation_bar.dart';
+import 'package:fokus/widgets/segment.dart';
 
 class CaregiverStatisticsPage extends StatefulWidget {
 	@override
@@ -15,13 +17,14 @@ class _CaregiverStatisticsPageState extends State<CaregiverStatisticsPage> {
     return Scaffold(
 			body: Column(
 				crossAxisAlignment: CrossAxisAlignment.start,
-				children: [
+				children: <Widget>[
 					AppHeader.normal(title: 'page.caregiverSection.statistics.header.title', text: 'page.caregiverSection.statistics.header.pageHint', headerActionButtons: [
 						HeaderActionButton.normal(Icons.archive, 'page.caregiverSection.statistics.header.history', () => { log("Historia") }, Colors.amber),
 					]),
-					Container(
-						padding: EdgeInsets.all(8.0),
-						child: Text('Podstawowe wykresy', textAlign: TextAlign.left, style: Theme.of(context).textTheme.headline2)
+					Segment(
+						title: 'page.caregiverSection.statistics.content.basicStatisticsTitle',
+						subtitle: 'page.caregiverSection.statistics.content.basicStatisticsSubtitle',
+						elements: []
 					)
 				]
 			),

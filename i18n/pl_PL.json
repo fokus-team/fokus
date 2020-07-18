@@ -31,8 +31,10 @@
 					"pageHint": "Zarządzaj profilami dzieci i powiązanymi kontami opiekunów."
 				},
 				"content": {
-					"childProfiles": "Profile dzieci",
-					"caregiverProfiles": "Zaprzyjaźnieni opiekunowie",
+					"childProfilesTitle": "Profile dzieci",
+					"noChildProfilesAdded": "Brak przypisanych dzieci",
+					"caregiverProfilesTitle": "Zaprzyjaźnieni opiekunowie",
+					"noCaregiverProfilesAdded": "Brak zaprzyjaźnionych opiekunów",
 					"plansToday": "na dziś",
 					"plansTodayCount": "{NUM_PLANS, plural, offset:0 zero {Brak planów} one {# plan} two {# plany} few {# plany} other {# planów}}"
 				}
@@ -43,6 +45,11 @@
 					"addPlan": "Dodaj plan",
 					"calendar": "Kalendarz",
 					"pageHint": "Twórz, przypisuj i zarządzaj planami oraz zadaniami."
+				},
+				"content": {
+					"addedPlansTitle": "Zdefiniowane plany",
+					"noPlansAdded": "Brak zdefiniowanych planów, dodaj pierwszy teraz",
+					"tasksCount": "{NUM_TASKS, plural, offset:0  zero {# zadań} one {# zadanie} two {# zadania} few {# zadania} other {# zadań}}"
 				}
 			},
 			"awards": {
@@ -51,6 +58,13 @@
 					"addAward": "Dodaj nagrodę",
 					"addBadge": "Dodaj odznakę",
 					"pageHint": "Zwiększ motywację do wykonywania planów używając punktów, nagród i odznak."
+				},
+				"content": {
+					"addedAwardsTitle": "Zdefiniowane nagrody",
+					"noAwardsAdded": "Brak zdefiniowanych nagród, dodaj pierwszą teraz",
+					"addedBadgesTitle": "Zdefiniowane odznaki",
+					"noBadgesAdded": "Brak zdefiniowanych odznak, dodaj pierwszą teraz",
+					"pointCost": "Koszt punktowy nagrody"
 				}
 			},
 			"statistics": {
@@ -58,6 +72,10 @@
 					"title": "Statystyki",
 					"history": "Historia wydarzeń",
 					"pageHint": "Przeglądaj i analizuj wykonaną przez dzieci pracę."
+				},
+				"content": {
+					"basicStatisticsTitle": "Podstawowe statystyki",
+					"basicStatisticsSubtitle": "Ekran statystyk nie jest dostępny w tej wersji aplikacji"
 				}
 			}
 		},
@@ -82,7 +100,8 @@
 		"close": "Zamknij",
 		"edit": "Edytuj",
 		"delete": "Usuń",
-		"details": "Pokaż szczegóły"
+		"details": "Pokaż szczegóły",
+		"help": "Pokaż pomoc"
 	},
 	"help": {
 		"first_steps": "Pierwsze kroki"

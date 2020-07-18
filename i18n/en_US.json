@@ -31,10 +31,12 @@
 					"pageHint": "Manage child profiles and connected caregiver accounts."
 				},
 				"content": {
-					"childProfiles": "Child profiles",
-					"caregiverProfiles": "Befriended caregivers",
+					"childProfilesTitle": "Child profiles",
+					"noChildProfilesAdded": "No added childs found",
+					"caregiverProfilesTitle": "Befriended caregivers",
+					"noCaregiverProfilesAdded": "No befriended caregivers found",
 					"plansToday": "for today",
-					"plansTodayCount": "{NUM_PLANS, plural, offset:0 zero {No plan} one {# plan} two {# plans} few {# plans} other {# plans}}"
+					"plansTodayCount": "{NUM_PLANS, plural, offset:0 zero {No plan} one {# plan} other {# plans}}"
 				}
 			},
 			"plans": {
@@ -43,6 +45,11 @@
 					"addPlan": "Add plan",
 					"calendar": "Calendar",
 					"pageHint": "Create, assign and manage plans with tasks."
+				},
+				"content": {
+					"addedPlansTitle": "Added plans",
+					"noPlansAdded": "No plans to display, add the first one now",
+					"tasksCount": "{NUM_TASKS, plural, offset:0  =1 {# task} other {# tasks}}"
 				}
 			},
 			"awards": {
@@ -51,6 +58,13 @@
 					"addAward": "Add award",
 					"addBadge": "Add badge",
 					"pageHint": "Increase work motivation by using points, awards and badges."
+				},
+				"content": {
+					"addedAwardsTitle": "Added awards",
+					"noAwardsAdded": "No awards to display, add the first one now",
+					"addedBadgesTitle": "Added badges",
+					"noBadgesAdded": "No badges to display, add the first one now",
+					"pointCost": "Award's point cost"
 				}
 			},
 			"statistics": {
@@ -58,6 +72,10 @@
 					"title": "Statistics",
 					"history": "Event history",
 					"pageHint": "View and analyze the work done by children."
+				},
+				"content": {
+					"basicStatisticsTitle": "Basic statistics",
+					"basicStatisticsSubtitle": "This screen is not available in this version of the application"
 				}
 			}
 		},
@@ -82,7 +100,8 @@
 		"close": "Close",
 		"edit": "Edit",
 		"delete": "Delete",
-		"details": "Show details"
+		"details": "Show details",
+		"help": "Show help"
 	},
 	"help": {
 		"first_steps": "First steps"

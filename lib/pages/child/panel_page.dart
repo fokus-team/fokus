@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fokus/widgets/app_navigation_bar.dart';
-import 'package:fokus/widgets/child_wallet.dart';
+import 'package:fokus/widgets/app_header.dart';
 
 class ChildPanelPage extends StatefulWidget {
 	@override

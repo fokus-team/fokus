@@ -9,7 +9,7 @@ class Caregiver extends User {
   String password;
 
   List<Badge> badges;
-  List<String> friends;
+  List<ObjectId> friends;
 
   Caregiver({ObjectId id, this.badges, this.email, this.friends, this.password}) : super(id: id, role: UserRole.caregiver);
 
@@ -18,7 +18,7 @@ class Caregiver extends User {
 	    id: json['_id'],
       badges: json['badges'] != null ? (json['badges'] as List).map((i) => Badge.fromJson(i)).toList() : null,
       email: json['email'],
-      friends: json['friends'] != null ? new List<String>.from(json['friends']) : null,
+      friends: json['friends'] != null ? new List<ObjectId>.from(json['friends']) : null,
       password: json['password'],
     )..fromJson(json);
   }

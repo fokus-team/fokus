@@ -21,6 +21,7 @@ class User {
     accessCode = json['accessCode'] != null ? new List<int>.from(json['accessCode']) : [];
     avatar = json['avatar'];
     connections = json['connections'] != null ? new List<ObjectId>.from(json['connections']) : [];
+    connections = json['connections'] != null ? new List<ObjectId>.from(json['connections']) : null;
   }
 
   Map<String, dynamic> toJson() {

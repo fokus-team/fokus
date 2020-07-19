@@ -18,6 +18,6 @@ class ChildPlansCubit extends Cubit<ChildPlansState> {
   void loadChildPlansForToday() async {
 	  emit(ChildPlansLoadInProgress());
 		var plans = await _repeatabilityService.getChildPlansByDate((_activeUserCubit.state as ActiveUserPresent).user.id, Date.now());
-		emit(ChildPlansLoadSuccess(plans.map((plan) => UIPlan.fromDBModel(plan, _repeatabilityService.buildPlanRepeatabilityDescription(plan.repeatability))).toList()));
+		emit(ChildPlansLoadSuccess(plans.map((plan) => UIPlan.fromDBModel(plan, _repeatabilityService.buildPlanDescription(plan.repeatability))).toList()));
   }
 }

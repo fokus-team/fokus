@@ -8,16 +8,16 @@ import 'package:fokus/utils/app_locales.dart';
 class UIPlan extends Equatable {
 	final ObjectId id;
 	final String name;
-	final TranslateFunc repeatabilityDescription;
+	final TranslateFunc description;
 	final int taskCount;
 
-  UIPlan(this.id, this.name, this.taskCount, [this.repeatabilityDescription]);
-	UIPlan.fromDBModel(Plan plan, [TranslateFunc repeatabilityDescription]) : this(plan.id, plan.name, plan.tasks.length, repeatabilityDescription);
+  UIPlan(this.id, this.name, this.taskCount, [this.description]);
+	UIPlan.fromDBModel(Plan plan, [TranslateFunc description]) : this(plan.id, plan.name, plan.tasks.length, description);
 
   @override
-  List<Object> get props => [id, name, taskCount, repeatabilityDescription];
+  List<Object> get props => [id, name, taskCount, description];
 
   String print(BuildContext context) {
-    return 'UIPlan{name: $name, repeatabilityDescription: ${repeatabilityDescription(context)}, taskCount: $taskCount}';
+    return 'UIPlan{name: $name, repeatabilityDescription: ${description(context)}, taskCount: $taskCount}';
   }
 }

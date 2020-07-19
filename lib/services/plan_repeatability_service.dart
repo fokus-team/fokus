@@ -32,7 +32,7 @@ class PlanRepeatabilityService {
 	  return false;
   }
 
-	TranslateFunc buildPlanRepeatabilityDescription(PlanRepeatability rules) {
+	TranslateFunc buildPlanDescription(PlanRepeatability rules, {bool detailed = false}) {
   	var formatDate = (date) => DateFormat.yMd().format(date);
   	return (context) {
   		String description = '';
@@ -50,6 +50,8 @@ class PlanRepeatabilityService {
 				  description += AppLocales.of(context).translate('repeatability.monthly', {'days': dayString});
 			  }
 		  }
+			if (!detailed)
+				return description;
 			if (rules.range.to != null)
 		    description += ', ${AppLocales.of(context).translate('repeatability.range', {'from': formatDate(rules.range.from), 'to': formatDate(rules.range.to)})}';
 			if (rules.untilCompleted)

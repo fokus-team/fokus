@@ -18,8 +18,9 @@ class User {
   @protected
   void fromJson(Map<String, dynamic> json) {
     name = json['name'];
-    accessCode = json['accessCode'] != null ? new List<int>.from(json['accessCode']) : null;
+    accessCode = json['accessCode'] != null ? new List<int>.from(json['accessCode']) : [];
     avatar = json['avatar'];
+    connections = json['connections'] != null ? new List<ObjectId>.from(json['connections']) : [];
     connections = json['connections'] != null ? new List<ObjectId>.from(json['connections']) : null;
   }
 
@@ -38,7 +39,7 @@ class User {
     return data;
   }
 
-  static User typedFromJson(Map<String, dynamic> json) {
+  factory User.typedFromJson(Map<String, dynamic> json) {
   	var rawRole = json['role'];
   	if (rawRole == null)
   		return null;

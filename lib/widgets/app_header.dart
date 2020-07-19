@@ -6,6 +6,8 @@ import 'package:flutter_cubit/flutter_cubit.dart';
 import 'package:fokus/logic/active_user/active_user_cubit.dart';
 import 'package:fokus/model/currency_type.dart';
 import 'package:fokus/model/db/user/user_role.dart';
+import 'package:fokus/model/ui/ui_child.dart';
+import 'package:fokus/model/ui/ui_user.dart';
 import 'package:fokus/utils/app_locales.dart';
 import 'package:fokus/utils/theme_config.dart';
 import 'package:fokus/widgets/attribute_chip.dart';
@@ -48,7 +50,7 @@ class AppHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) => headerType == AppHeaderType.greetings ? buildGreetings(context) : buildNormal(context);
 
-	Image headerImage(ActiveUserPresent user) {
+	Image headerImage(UIUser user) {
 		// TODO Handling the avatars (based on type and avatar parameters), returning sunflower for now
 		return Image.asset('assets/image/sunflower_logo.png', height: 64);
 	}
@@ -149,7 +151,8 @@ class AppHeader extends StatelessWidget {
 	}
 
 	Widget buildGreetings(BuildContext context) {
-		var currentUser = CubitProvider.of<ActiveUserCubit>(context).state as ActiveUserPresent;
+		var cubit = CubitProvider.of<ActiveUserCubit>(context);
+		var currentUser = (cubit.state as ActiveUserPresent).user;
 
 		return buildHeaderContainer(context, 
 			Row(
@@ -186,7 +189,7 @@ class AppHeader extends StatelessWidget {
 							headerIconButton(Icons.notifications, () => { log("Powiadomienia") }),
 							headerIconButton(
 								Icons.more_vert,
-								() => CubitProvider.of<ActiveUserCubit>(context).logoutUser()
+								() => cubit.logoutUser()
 							),
 						],
 					)
@@ -227,31 +230,25 @@ class AppHeader extends StatelessWidget {
 class ChildCustomHeader extends StatelessWidget {
 	@override
 	Widget build(BuildContext context) {
+		var user = (CubitProvider.of<ActiveUserCubit>(context).state as ActiveUserPresent).user;
+
 		return AppHeader.greetings(text: 'page.childSection.panel.header.pageHint', headerActionButtons: [
 			HeaderActionButton.custom(
-				
-						Container(
-							child: Row(
-								children: <Widget>[
-									Text(
-										'${AppLocales.of(context).translate('page.childSection.panel.header.myPoints')}: ',
-										style: Theme.of(context).textTheme.button.copyWith(color: AppColors.darkTextColor)
-									),
-									Padding(
-										padding: EdgeInsets.only(left: 2.0),
-										child: AttributeChip.withCurrency(content: '1520', currencyType: CurrencyType.diamond)
-									),
-									Padding(
-										padding: EdgeInsets.only(left: 2.0),
-										child: AttributeChip.withCurrency(content: '320', currencyType: CurrencyType.emerald)
-									),
-									Padding(
-										padding: EdgeInsets.only(left: 2.0),
-										child: AttributeChip.withCurrency(content: '1', currencyType: CurrencyType.ruby)
-									),
-								]
-							)
-						),
+				Container(
+					child: Row(
+						children: <Widget>[
+							Text(
+								'${AppLocales.of(context).translate('page.childSection.panel.header.myPoints')}: ',
+								style: Theme.of(context).textTheme.button.copyWith(color: AppColors.darkTextColor)
+							),
+							for (var currency in (user as UIChild).points.entries)
+								Padding(
+									padding: EdgeInsets.only(left: 2.0),
+									child: AttributeChip.withCurrency(content: '${currency.value}', currencyType: currency.key)
+								),
+						]
+					)
+				),
 				() => { log('Child detailed wallet popup') },
 				Colors.white
 			),

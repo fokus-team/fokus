@@ -55,11 +55,11 @@ class FokusApp extends StatelessWidget {
 		return {
 			AppPage.loadingPage.name: (context) => PageTheme.loginSection(child: LoadingPage()),
 			AppPage.rolesPage.name: (context) => PageTheme.loginSection(child: RolesPage()),
-			AppPage.caregiverPanel.name: (context) => _wrapAppPage(UserRole.caregiver, CaregiverPanelPage(), CaregiverPanelCubit(activeUser(context))..loadData()),
+			AppPage.caregiverPanel.name: (context) => _wrapAppPage(UserRole.caregiver, CaregiverPanelPage(), CaregiverPanelCubit(activeUser(context))),
 			AppPage.caregiverPlans.name: (context) => _wrapAppPage(UserRole.caregiver, CaregiverPlansPage()),
 			AppPage.caregiverAwards.name: (context) => _wrapAppPage(UserRole.caregiver, CaregiverAwardsPage()),
 			AppPage.caregiverStatistics.name: (context) => _wrapAppPage(UserRole.caregiver, CaregiverStatisticsPage()),
-			AppPage.childPanel.name: (context) => _wrapAppPage(UserRole.child, ChildPanelPage(), ChildPlansCubit(activeUser(context))..loadChildPlansForToday()),
+			AppPage.childPanel.name: (context) => _wrapAppPage(UserRole.child, ChildPanelPage(), ChildPlansCubit(activeUser(context))),
 			AppPage.childAwards.name: (context) => _wrapAppPage(UserRole.child, ChildAwardsPage()),
 			AppPage.childAchievements.name: (context) => _wrapAppPage(UserRole.child, ChildAchievementsPage()),
 		};

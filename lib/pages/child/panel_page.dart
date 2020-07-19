@@ -21,7 +21,9 @@ class _ChildPanelPageState extends State<ChildPanelPage> {
 					CubitBuilder<ChildPlansCubit, ChildPlansState>(
 						cubit: CubitProvider.of<ChildPlansCubit>(context),
 						builder: (context, state) {
-							if (state is ChildPlansLoadSuccess)
+							if (state is ChildPlansInitial)
+								CubitProvider.of<ChildPlansCubit>(context).loadChildPlansForToday();
+							else if (state is ChildPlansLoadSuccess)
 								return Flexible(
 									child: ListView(
 										children: state.plans.map((plan) => Text(plan.print(context))).toList(),

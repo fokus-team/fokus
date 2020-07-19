@@ -19,7 +19,7 @@ class CaregiverPanelCubit extends Cubit<CaregiverPanelState> {
 
   CaregiverPanelCubit(this._activeUserCubit) : super(CaregiverPanelInitial());
 
-  void loadData() async {
+  void loadPanelData() async {
   	if (!(state is CaregiverPanelInitial))
   		return;
 	  emit(CaregiverPanelLoadInProgress());

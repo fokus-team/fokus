@@ -38,7 +38,9 @@ class _CaregiverPanelPageState extends State<CaregiverPanelPage> {
 						CubitBuilder<CaregiverPanelCubit, CaregiverPanelState>(
 							cubit: CubitProvider.of<CaregiverPanelCubit>(context),
 							builder: (context, state) {
-								if (state is CaregiverPanelLoadSuccess)
+								if (state is CaregiverPanelInitial)
+									CubitProvider.of<CaregiverPanelCubit>(context).loadPanelData();
+								else if (state is CaregiverPanelLoadSuccess)
 									return AppSegments(segments: _buildPanelSegments(state));
 								return Expanded(child: Center(child: CircularProgressIndicator())); // TODO Decide what to show when loading (globally)
 							},

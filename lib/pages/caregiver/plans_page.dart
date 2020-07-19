@@ -15,24 +15,26 @@ class CaregiverPlansPage extends StatefulWidget {
 }
 
 class _CaregiverPlansPageState extends State<CaregiverPlansPage> {
+	static const String _commonKey = 'page.caregiverSection.plans';
+	
 	@override
 	Widget build(BuildContext context) {
     return Scaffold(
 			body: Column(
 				crossAxisAlignment: CrossAxisAlignment.start,
 				children: <Widget>[
-					AppHeader.normal(title: 'page.caregiverSection.plans.header.title', text: 'page.caregiverSection.plans.header.pageHint', headerActionButtons: [
-						HeaderActionButton.normal(Icons.add, 'page.caregiverSection.plans.header.addPlan', () => { log("Dodaj plan") }),
-						HeaderActionButton.normal(Icons.calendar_today, 'page.caregiverSection.plans.header.calendar', () => { log("Kalendarz") }, Colors.amber)
+					AppHeader.normal(title: '$_commonKey.header.title', text: '$_commonKey.header.pageHint', headerActionButtons: [
+						HeaderActionButton.normal(Icons.add, '$_commonKey.header.addPlan', () => { log("Dodaj plan") }),
+						HeaderActionButton.normal(Icons.calendar_today, '$_commonKey.header.calendar', () => { log("Kalendarz") }, Colors.amber)
 					]),
 					AppSegments(
 						segments: [
 							Segment(
-								title: 'page.caregiverSection.plans.content.addedPlansTitle',
-								noElementsMessage: 'page.caregiverSection.plans.content.noPlansAdded',
+								title: '$_commonKey.content.addedPlansTitle',
+								noElementsMessage: '$_commonKey.content.noPlansAdded',
 								noElementsAction: RaisedButton(
 									child: Text(
-										AppLocales.of(context).translate('page.caregiverSection.plans.header.addPlan'),
+										AppLocales.of(context).translate('$_commonKey.header.addPlan'),
 										style: Theme.of(context).textTheme.button
 									),
 									onPressed: () => {},
@@ -47,7 +49,7 @@ class _CaregiverPlansPageState extends State<CaregiverPlansPage> {
 										],
 									)
 								]
-						)
+							)
 						]
 					)
 				]

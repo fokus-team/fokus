@@ -27,7 +27,7 @@ class _ChildPanelPageState extends State<ChildPanelPage> {
 										children: state.plans.map((plan) => Text(plan.print(context))).toList(),
 									),
 								);
-							return Container();
+							return Container(); // TODO Decide what to show when loading (globally)
 						},
 					)
 				]

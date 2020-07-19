@@ -21,10 +21,14 @@ class _CaregiverStatisticsPageState extends State<CaregiverStatisticsPage> {
 					AppHeader.normal(title: 'page.caregiverSection.statistics.header.title', text: 'page.caregiverSection.statistics.header.pageHint', headerActionButtons: [
 						HeaderActionButton.normal(Icons.archive, 'page.caregiverSection.statistics.header.history', () => { log("Historia") }, Colors.amber),
 					]),
-					Segment(
-						title: 'page.caregiverSection.statistics.content.basicStatisticsTitle',
-						subtitle: 'page.caregiverSection.statistics.content.basicStatisticsSubtitle',
-						elements: []
+					AppSegments(
+						segments: [
+							Segment(
+								title: 'page.caregiverSection.statistics.content.basicStatisticsTitle',
+								subtitle: 'page.caregiverSection.statistics.content.basicStatisticsSubtitle',
+								elements: []
+							)
+						]
 					)
 				]
 			),

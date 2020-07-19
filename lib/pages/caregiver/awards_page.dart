@@ -26,42 +26,46 @@ class _CaregiverAwardsPageState extends State<CaregiverAwardsPage> {
 						HeaderActionButton.normal(Icons.add, 'page.caregiverSection.awards.header.addAward', () => { log("Dodaj nagrodę") }),
 						HeaderActionButton.normal(Icons.add, 'page.caregiverSection.awards.header.addBadge', () => { log("Dodaj odznakę") })
 					]),
-					Segment(
-						title: 'page.caregiverSection.awards.content.addedAwardsTitle',
-						noElementsMessage: 'page.caregiverSection.awards.content.noAwardsAdded',
-						noElementsAction: RaisedButton(
-							child: Text(
-								AppLocales.of(context).translate('page.caregiverSection.awards.header.addAward'),
-								style: Theme.of(context).textTheme.button
+					AppSegments(
+						segments: [
+							Segment(
+								title: 'page.caregiverSection.awards.content.addedAwardsTitle',
+								noElementsMessage: 'page.caregiverSection.awards.content.noAwardsAdded',
+								noElementsAction: RaisedButton(
+									child: Text(
+										AppLocales.of(context).translate('page.caregiverSection.awards.header.addAward'),
+										style: Theme.of(context).textTheme.button
+									),
+									onPressed: () => {},
+								),
+								elements: <Widget>[
+									ItemCard(
+										title: "Wycieczka do Zoo", 
+										subtitle: "Limit 2 na dziecko",
+										menuItems: [
+											ItemCardMenuItem(text: "actions.edit", onTapped: () => {log("edit")}),
+											ItemCardMenuItem(text: "actions.delete", onTapped: () => {log("delete")})
+										],
+										image: true,
+										chips: <Widget>[
+											AttributeChip.withCurrency(content: "30", currencyType: CurrencyType.diamond, tooltip: 'page.caregiverSection.awards.content.pointCost')
+										],
+									)
+								]
 							),
-							onPressed: () => {},
-						),
-						elements: <Widget>[
-							ItemCard(
-								title: "Wycieczka do Zoo", 
-								subtitle: "Limit 2 na dziecko",
-								menuItems: [
-									ItemCardMenuItem(text: "actions.edit", onTapped: () => {log("edit")}),
-									ItemCardMenuItem(text: "actions.delete", onTapped: () => {log("delete")})
-								],
-								image: true,
-								chips: <Widget>[
-									AttributeChip.withCurrency(content: "30", currencyType: CurrencyType.diamond, tooltip: 'page.caregiverSection.awards.content.pointCost')
-								],
+							Segment(
+								title: 'page.caregiverSection.awards.content.addedBadgesTitle',
+								noElementsMessage: 'page.caregiverSection.awards.content.noBadgesAdded',
+								noElementsAction: RaisedButton(
+									child: Text(
+										AppLocales.of(context).translate('page.caregiverSection.awards.header.addBadge'),
+										style: Theme.of(context).textTheme.button
+									),
+									onPressed: () => {},
+								),
+								elements: <Widget>[]
 							)
 						]
-					),
-					Segment(
-						title: 'page.caregiverSection.awards.content.addedBadgesTitle',
-						noElementsMessage: 'page.caregiverSection.awards.content.noBadgesAdded',
-						noElementsAction: RaisedButton(
-							child: Text(
-								AppLocales.of(context).translate('page.caregiverSection.awards.header.addBadge'),
-								style: Theme.of(context).textTheme.button
-							),
-							onPressed: () => {},
-						),
-						elements: <Widget>[]
 					)
 				]
 			),

@@ -90,18 +90,38 @@ class Segment extends StatelessWidget {
 
 	@override
 	Widget build(BuildContext context) {
+		return ListView(
+				shrinkWrap: true,
+				padding: EdgeInsets.only(top: AppBoxProperties.sectionPadding),
+					physics: BouncingScrollPhysics(),
+				children: <Widget>[
+					buildSectionHeader(context),
+					if(elements.length > 0)
+						...elements
+					else if(noElementsMessage != null)
+						buildNoElementsInfo(context)
+				]
+			
+		);
+	}
+
+}
+
+class AppSegments extends StatelessWidget {
+	final List<Widget> segments;
+
+	AppSegments({@required this.segments});
+	
+	@override
+	Widget build(BuildContext context) {
 		return Container(
-			child: Flexible(
+			child: Expanded(
 				child: ListView(
-					shrinkWrap: true,
-					padding: EdgeInsets.only(top: AppBoxProperties.sectionPadding),
+					padding: EdgeInsets.zero,
 					physics: BouncingScrollPhysics(),
 					children: <Widget>[
-						buildSectionHeader(context),
-						if(elements.length > 0)
-							...elements
-						else if(noElementsMessage != null)
-							buildNoElementsInfo(context)
+						...segments,
+						SizedBox(height: 30.0)
 					]
 				)
 			)

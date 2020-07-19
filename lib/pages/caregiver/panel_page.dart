@@ -31,35 +31,39 @@ class _CaregiverPanelPageState extends State<CaregiverPanelPage> {
 							HeaderActionButton.normal(Icons.add, 'page.caregiverSection.panel.header.addChild', () => { log("Dodaj dziecko") }),
 							HeaderActionButton.normal(Icons.add, 'page.caregiverSection.panel.header.addCaregiver', () => { log("Dodaj opiekuna") })
 						]),
-						Segment(
-							title: 'page.caregiverSection.panel.content.childProfilesTitle',
-							noElementsMessage: 'page.caregiverSection.panel.content.noChildProfilesAdded',
-							elements: <Widget>[
-								ItemCard(
-									title: "Gosia", 
-									subtitle: AppLocales.of(context).translate('page.caregiverSection.panel.content.plansTodayCount', {'NUM_PLANS': (2).toString()}) + ' ' +
-										AppLocales.of(context).translate('page.caregiverSection.panel.content.plansToday'),
-									menuItems: [
-										ItemCardMenuItem(text: "actions.details", onTapped: () => {log("details")}),
-										ItemCardMenuItem(text: "actions.edit", onTapped: () => {log("edit")}),
-										ItemCardMenuItem(text: "actions.delete", onTapped: () => {log("delete")})
-									],
-									image: true,
-									chips: <Widget>[
-										AttributeChip.withCurrency(content: "120", currencyType: CurrencyType.diamond)
+						AppSegments(
+							segments: [
+								Segment(
+									title: 'page.caregiverSection.panel.content.childProfilesTitle',
+									noElementsMessage: 'page.caregiverSection.panel.content.noChildProfilesAdded',
+									elements: <Widget>[
+										ItemCard(
+											title: "Gosia", 
+											subtitle: AppLocales.of(context).translate('page.caregiverSection.panel.content.plansTodayCount', {'NUM_PLANS': (2).toString()}) + ' ' +
+												AppLocales.of(context).translate('page.caregiverSection.panel.content.plansToday'),
+											menuItems: [
+												ItemCardMenuItem(text: "actions.details", onTapped: () => {log("details")}),
+												ItemCardMenuItem(text: "actions.edit", onTapped: () => {log("edit")}),
+												ItemCardMenuItem(text: "actions.delete", onTapped: () => {log("delete")})
+											],
+											image: true,
+											chips: <Widget>[
+												AttributeChip.withCurrency(content: "120", currencyType: CurrencyType.diamond)
+											]
+										)
 									]
-								)
-							]
-						),
-						Segment(
-							title: 'page.caregiverSection.panel.content.caregiverProfilesTitle',
-							noElementsMessage: 'page.caregiverSection.panel.content.noCaregiverProfilesAdded',
-							elements: <Widget>[
-								ItemCard(
-									title: "Katarzyna",
-									menuItems: [
-										ItemCardMenuItem(text: "actions.delete", onTapped: () => {log("delete")})
-									],
+								),
+								Segment(
+									title: 'page.caregiverSection.panel.content.caregiverProfilesTitle',
+									noElementsMessage: 'page.caregiverSection.panel.content.noCaregiverProfilesAdded',
+									elements: <Widget>[
+										ItemCard(
+											title: "Katarzyna",
+											menuItems: [
+												ItemCardMenuItem(text: "actions.delete", onTapped: () => {log("delete")})
+											],
+										)
+									]
 								)
 							]
 						)

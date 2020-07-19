@@ -39,7 +39,6 @@ class ItemCard extends StatelessWidget {
 	final bool isActive;
 
 	// Element's visual params
-	BuildContext buildContext;
 	final int titleMaxLines = 3;
 	final double imageHeight = 80.0;
 	final double progressIndicatorHeight = 10.0;
@@ -67,7 +66,6 @@ class ItemCard extends StatelessWidget {
 	// Card's shape and interaction
 	@override
 	Widget build(BuildContext context) {
-		buildContext = context;
 		return IntrinsicHeight(
 			child: Card(
 				elevation: isActive ? 1.2 : 0.2,
@@ -79,20 +77,20 @@ class ItemCard extends StatelessWidget {
 				),
 				child: (onTapped != null) ? InkWell(
 					onTap: onTapped, 
-					child:  buildStructure(),
+					child:  buildStructure(context),
 					borderRadius: BorderRadius.circular(AppBoxProperties.roundedCornersRadius)
-				) : buildStructure()
+				) : buildStructure(context)
 			)
 		);
 	}
 
 	// Layout: MainSection | ActionSection
-	Widget buildbaseLayout() {
+	Widget buildbaseLayout(BuildContext context) {
 		return Row(
 			mainAxisAlignment: MainAxisAlignment.spaceBetween,
 			crossAxisAlignment: CrossAxisAlignment.start,
 			children: <Widget>[
-				buildMainSection(),
+				buildMainSection(context),
 				if((menuItems != null && menuItems.isNotEmpty) || actionButton != null)
 					buildActionSection()
 			]
@@ -100,26 +98,26 @@ class ItemCard extends StatelessWidget {
 	}
 
 	// Structure change depending on big action button (progress bar goes under ActionSection)
-	Widget buildStructure() {
+	Widget buildStructure(BuildContext context) {
 		if(progressPercentage != null && actionButton == null) 
 			return Column(
 				mainAxisAlignment: MainAxisAlignment.spaceBetween,
 				children: [
-					buildbaseLayout(),
+					buildbaseLayout(context),
 					buildProgressBar()
 				]
 			);
-		return buildbaseLayout();
+		return buildbaseLayout(context);
 	}
 
 	// Inner structure of MainSection (content + sometimes progress bar)
-	Widget buildMainSection() {
+	Widget buildMainSection(BuildContext context) {
 		return Flexible(
 			child: Column(
 				crossAxisAlignment: CrossAxisAlignment.start,
 				mainAxisAlignment: MainAxisAlignment.center,
 				children: <Widget>[
-					buildContentSection(),
+					buildContentSection(context),
 					if(progressPercentage != null && actionButton != null)
 						buildProgressBar()
 				]
@@ -128,7 +126,7 @@ class ItemCard extends StatelessWidget {
 	}
 
 	// Image, title, subtitle and chips
-	Widget buildContentSection() {
+	Widget buildContentSection(BuildContext context) {
 		return Row(
 			mainAxisAlignment: MainAxisAlignment.start,
 			crossAxisAlignment: CrossAxisAlignment.start,
@@ -147,14 +145,14 @@ class ItemCard extends StatelessWidget {
 							children: <Widget>[
 								Text(
 									title, 
-									style: Theme.of(buildContext).textTheme.headline3,
+									style: Theme.of(context).textTheme.headline3,
 									overflow: TextOverflow.ellipsis,
 									maxLines: titleMaxLines
 								),
 								if(subtitle != null)
 									Text(
 										subtitle, 
-										style: Theme.of(buildContext).textTheme.subtitle2,
+										style: Theme.of(context).textTheme.subtitle2,
 										overflow: TextOverflow.fade,
 										softWrap: false,
 									),

@@ -1,7 +1,7 @@
 import 'package:cubit/cubit.dart';
 import 'package:get_it/get_it.dart';
 
-import 'package:fokus/services/data/db_data_repository.dart';
+import 'package:fokus/services/data/db/db_data_repository.dart';
 import 'package:fokus/services/remote_config_provider.dart';
 import 'package:fokus/services/app_config/app_config_repository.dart';
 import 'package:fokus/services/app_config/app_shared_preferences_provider.dart';

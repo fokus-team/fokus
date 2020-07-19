@@ -32,11 +32,11 @@
 				},
 				"content": {
 					"childProfilesTitle": "Child profiles",
-					"noChildProfilesAdded": "No added childs found",
+					"noChildProfilesAdded": "No children assigned",
 					"caregiverProfilesTitle": "Befriended caregivers",
 					"noCaregiverProfilesAdded": "No befriended caregivers found",
-					"plansToday": "for today",
-					"plansTodayCount": "{NUM_PLANS, plural, offset:0 zero {No plan} one {# plan} other {# plans}}"
+					"todayPlans": "{NUM_PLANS, plural, offset:0 zero {No plans} one {# plan} other {# plans}} for today",
+					"activePlan": "1 plan currently in progress"
 				}
 			},
 			"plans": {
@@ -91,12 +91,12 @@
 		}
 	},
 	"repeatability": {
-		"once": "On {day}",
+		"once": "On {DAY}",
 		"weekly": "Every",
-		"monthly": "Every {days} day of the month",
-		"weekday": "{weekday, select, 1 {monday} 2 {tuesday} 3 {wednesday} 4 {thursday} 5 {friday} 6 {saturday} 7 {sunday} other {}}",
+		"monthly": "Every {DAYS} day of the month",
+		"weekday": "{WEEKDAY, select, 1 {monday} 2 {tuesday} 3 {wednesday} 4 {thursday} 5 {friday} 6 {saturday} 7 {sunday} other {}}",
 		"untilCompleted": "until completed",
-		"range": "from {from} to {to}"
+		"range": "from {FROM} to {TO}"
 	},
 	"alert": {
 		"error": "Error occurred",

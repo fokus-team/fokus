@@ -27,7 +27,7 @@ class _ChildPanelPageState extends State<ChildPanelPage> {
 										children: state.plans.map((plan) => Text(plan.print(context))).toList(),
 									),
 								);
-							return Container();
+							return Expanded(child: Center(child: CircularProgressIndicator()));
 						},
 					)
 				]

@@ -35,8 +35,8 @@
 					"noChildProfilesAdded": "Brak przypisanych dzieci",
 					"caregiverProfilesTitle": "Zaprzyjaźnieni opiekunowie",
 					"noCaregiverProfilesAdded": "Brak zaprzyjaźnionych opiekunów",
-					"plansToday": "na dziś",
-					"plansTodayCount": "{NUM_PLANS, plural, offset:0 zero {Brak planów} one {# plan} two {# plany} few {# plany} other {# planów}}"
+					"todayPlans": "{NUM_PLANS, plural, offset:0 zero {Brak planów} one {# plan} two {# plany} few {# plany} other {# planów}} na dziś",
+					"activePlan": "1 plan w trakcie wykonywania"
 				}
 			},
 			"plans": {
@@ -91,12 +91,12 @@
 		}
 	},
 	"repeatability": {
-		"once": "Dnia {day}",
-		"weekly": "Co {weekday, select, 1 {każdy} 2 {każdy} 3 {każdą} 4 {każdy} 5 {każdy} 6 {każdą} 7 {każdą} other {}}",
-		"monthly": "Każdego {days} dnia miesiąca",
-		"weekday": "{weekday, select, 1 {poniedziałek} 2 {wtorek} 3 {środę} 4 {czwartek} 5 {piątek} 6 {sobotę} 7 {niedzielę} other {}}",
+		"once": "Dnia {DAY}",
+		"weekly": "Co {WEEKDAY, select, 1 {każdy} 2 {każdy} 3 {każdą} 4 {każdy} 5 {każdy} 6 {każdą} 7 {każdą} other {}}",
+		"monthly": "Każdego {DAYS} dnia miesiąca",
+		"weekday": "{WEEKDAY, select, 1 {poniedziałek} 2 {wtorek} 3 {środę} 4 {czwartek} 5 {piątek} 6 {sobotę} 7 {niedzielę} other {}}",
 		"untilCompleted": "dopóki niezakończony",
-		"range": "od {from} do {to}"
+		"range": "od {FROM} do {TO}"
 	},
 	"alert": {
 		"error": "Wystąpił błąd",

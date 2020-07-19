@@ -37,23 +37,23 @@ class PlanRepeatabilityService {
   	return (context) {
   		String description = '';
 		  if (rules.type == RepeatabilityType.once)
-		  	description += AppLocales.of(context).translate('repeatability.once', {'day': formatDate(rules.range.from)});
+		  	description += AppLocales.of(context).translate('repeatability.once', {'DAY': formatDate(rules.range.from)});
 			else {
 				String andWord = AppLocales.of(context).translate('and');
 			  if (rules.type == RepeatabilityType.weekly) {
-					List<String> weekdays = rules.days.map((day) => AppLocales.of(context).translate('repeatability.weekday', {'weekday': '$day'})).toList();
+					List<String> weekdays = rules.days.map((day) => AppLocales.of(context).translate('repeatability.weekday', {'WEEKDAY': '$day'})).toList();
 					String weekdayString = StringUtils.displayJoin(weekdays, andWord);
-				  description += '${AppLocales.of(context).translate('repeatability.weekly', {'weekday': '${rules.days[0]}'})} $weekdayString';
+				  description += '${AppLocales.of(context).translate('repeatability.weekly', {'WEEKDAY': '${rules.days[0]}'})} $weekdayString';
 			  }
 			  else if (rules.type == RepeatabilityType.monthly) {
 				  String dayString = StringUtils.displayJoin(rules.days.map((day) => '$day').toList(), andWord);
-				  description += AppLocales.of(context).translate('repeatability.monthly', {'days': dayString});
+				  description += AppLocales.of(context).translate('repeatability.monthly', {'DAYS': dayString});
 			  }
 		  }
 			if (!detailed)
 				return description;
 			if (rules.range.to != null)
-		    description += ', ${AppLocales.of(context).translate('repeatability.range', {'from': formatDate(rules.range.from), 'to': formatDate(rules.range.to)})}';
+		    description += ', ${AppLocales.of(context).translate('repeatability.range', {'FROM': formatDate(rules.range.from), 'TO': formatDate(rules.range.to)})}';
 			if (rules.untilCompleted)
 		  description += ', ${AppLocales.of(context).translate('repeatability.untilCompleted')}';
 		  return description;

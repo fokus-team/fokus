@@ -9,7 +9,7 @@ import 'package:fokus/model/db/plan/plan_repeatability.dart';
 import 'package:fokus/utils/app_locales.dart';
 import 'package:fokus/utils/string_utils.dart';
 
-import 'database/data_repository.dart';
+import 'data/data_repository.dart';
 
 class PlanRepeatabilityService {
 	final DataRepository _dbProvider = GetIt.I<DataRepository>();

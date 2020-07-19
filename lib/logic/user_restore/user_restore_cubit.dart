@@ -2,7 +2,7 @@ import 'package:cubit/cubit.dart';
 import 'package:get_it/get_it.dart';
 
 import 'package:fokus/logic/active_user/active_user_cubit.dart';
-import 'package:fokus/services/settings/app_config_repository.dart';
+import 'package:fokus/services/app_config/app_config_repository.dart';
 
 import 'user_restore_state.dart';
 

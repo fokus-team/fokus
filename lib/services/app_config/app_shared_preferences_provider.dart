@@ -1,5 +1,5 @@
 import 'package:fokus/model/app_config_entry.dart';
-import 'package:fokus/services/settings/app_config_provider.dart';
+import 'package:fokus/services/app_config/app_config_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AppSharedPreferencesProvider implements AppConfigProvider {

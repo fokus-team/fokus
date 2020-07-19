@@ -15,4 +15,7 @@ class ChildPlansLoadSuccess extends ChildPlansState {
 	final List<UIPlan> plans;
 
   ChildPlansLoadSuccess(this.plans);
+
+	@override
+	List<Object> get props => [plans];
 }

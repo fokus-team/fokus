@@ -24,6 +24,15 @@ class MongoClient {
 	Future<int> count(Collection collection, [SelectorBuilder selector]) async => _db.collection(collection.name).count(selector);
 	Future<bool> exists(Collection collection, [SelectorBuilder selector]) async => await count(collection, selector) > 0;
 
+
+	Future<List<T>> queryTyped<T>(Collection collection, SelectorBuilder query, T Function(Map<String, dynamic>) constructElement) {
+		return this.query(collection, query).then((response) => response.map((element) => constructElement(element)).toList());
+	}
+
+	Future<Map<ObjectId, T>> queryTypedMap<T>(Collection collection, SelectorBuilder query, MapEntry<ObjectId, T> Function(Map<String, dynamic>) constructEntry) {
+		return this.query(collection, query).then((response) async => Map.fromEntries(await response.map((element) => constructEntry(element)).toList()));
+	}
+
 	// TODO call
 	void close() async => await _db.close();
 }

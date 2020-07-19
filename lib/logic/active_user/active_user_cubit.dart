@@ -1,13 +1,13 @@
 import 'package:cubit/cubit.dart';
 import 'package:equatable/equatable.dart';
-import 'package:fokus/model/ui/ui_user.dart';
 import 'package:get_it/get_it.dart';
+import 'package:mongo_dart/mongo_dart.dart';
 
 import 'package:fokus/model/db/user/user.dart';
 import 'package:fokus/model/db/user/user_role.dart';
+import 'package:fokus/model/ui/ui_user.dart';
 import 'package:fokus/services/database/data_repository.dart';
 import 'package:fokus/services/settings/app_config_repository.dart';
-import 'package:mongo_dart/mongo_dart.dart';
 
 part 'active_user_state.dart';
 
@@ -19,7 +19,7 @@ class ActiveUserCubit extends Cubit<ActiveUserState> {
 
 	void loginUser(User user) async {
 		_appConfig.setLastUser(user.id);
-		emit(ActiveUserPresent(UIUser.fromDBModel(user)));
+		emit(ActiveUserPresent(UIUser.typedFromDBModel(user)));
 	}
 
   void logoutUser() {

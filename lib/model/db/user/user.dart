@@ -38,7 +38,7 @@ class User {
     return data;
   }
 
-  static User typedFromJson(Map<String, dynamic> json) {
+  factory User.typedFromJson(Map<String, dynamic> json) {
   	var rawRole = json['role'];
   	if (rawRole == null)
   		return null;

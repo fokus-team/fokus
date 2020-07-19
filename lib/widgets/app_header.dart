@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_cubit/flutter_cubit.dart';
 
 import 'package:fokus/logic/active_user/active_user_cubit.dart';
+import 'package:fokus/model/currency_type.dart';
 import 'package:fokus/model/db/user/user_role.dart';
 import 'package:fokus/model/ui/ui_user.dart';
 import 'package:fokus/utils/app_locales.dart';
 import 'package:fokus/utils/theme_config.dart';
+import 'package:fokus/widgets/attribute_chip.dart';
 
 enum AppHeaderType { greetings, normal }
 
@@ -68,13 +70,27 @@ class AppHeader extends StatelessWidget {
 	}
 	
 	Widget headerActionButton(BuildContext context, HeaderActionButton button) {
+		if(button.customContent != null) {
+			return GestureDetector(
+				onTap: button.action,
+				child: Container(
+					margin: EdgeInsets.all(4.0),
+					decoration: ShapeDecoration(
+						shape: Theme.of(context).buttonTheme.shape,
+						color: button.backgroundColor ?? Colors.transparent
+					),
+					padding: EdgeInsets.symmetric(vertical: 6.0, horizontal: 10.0),
+					child: button.customContent
+				)
+			);
+		}
 		return Container(
 			padding: EdgeInsets.all(4.0),
 			child: FlatButton(
 				onPressed: button.action,
 				color: (button.backgroundColor != null) ? button.backgroundColor : Theme.of(context).buttonColor,
 				padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
-				child: (button.customContent != null) ? button.customContent : Row(
+				child: Row(
 					mainAxisAlignment: MainAxisAlignment.center,
 					children: <Widget>[
 						Padding(
@@ -103,7 +119,7 @@ class AppHeader extends StatelessWidget {
 		);
 	}
 
-	Widget buildHederContainer(BuildContext context, Widget innerContent) {
+	Widget buildHeaderContainer(BuildContext context, Widget innerContent) {
 		return Material(
 			elevation: 4.0,
 			color: Theme.of(context).appBarTheme.color,
@@ -136,7 +152,7 @@ class AppHeader extends StatelessWidget {
 	Widget buildGreetings(BuildContext context) {
 		var currentUser = (CubitProvider.of<ActiveUserCubit>(context).state as ActiveUserPresent).user;
 
-		return buildHederContainer(context, 
+		return buildHeaderContainer(context, 
 			Row(
 				mainAxisAlignment: MainAxisAlignment.spaceBetween,
 				crossAxisAlignment: CrossAxisAlignment.start,
@@ -181,7 +197,7 @@ class AppHeader extends StatelessWidget {
 	}
 
 	Widget buildNormal(BuildContext context) {
-		return buildHederContainer(context, 
+		return buildHeaderContainer(context, 
 			Row(
 				mainAxisAlignment: MainAxisAlignment.spaceBetween,
 				crossAxisAlignment: CrossAxisAlignment.start,
@@ -207,4 +223,41 @@ class AppHeader extends StatelessWidget {
 		);
 	}
 
+}
+
+class ChildCustomHeader extends StatelessWidget {
+	@override
+	Widget build(BuildContext context) {
+		return AppHeader.greetings(text: 'page.childSection.panel.header.pageHint', headerActionButtons: [
+			HeaderActionButton.custom(
+				
+						Container(
+							child: Row(
+								children: <Widget>[
+									Text(
+										'${AppLocales.of(context).translate('page.childSection.panel.header.myPoints')}: ',
+										style: Theme.of(context).textTheme.button.copyWith(color: AppColors.darkTextColor)
+									),
+									Padding(
+										padding: EdgeInsets.only(left: 2.0),
+										child: AttributeChip.withCurrency(content: '1520', currencyType: CurrencyType.diamond)
+									),
+									Padding(
+										padding: EdgeInsets.only(left: 2.0),
+										child: AttributeChip.withCurrency(content: '320', currencyType: CurrencyType.emerald)
+									),
+									Padding(
+										padding: EdgeInsets.only(left: 2.0),
+										child: AttributeChip.withCurrency(content: '1', currencyType: CurrencyType.ruby)
+									),
+								]
+							)
+						),
+				() => { log('Child detailed wallet popup') },
+				Colors.white
+			),
+			//HeaderActionButton.normal(Icons.local_florist, 'page.childSection.panel.header.garden', () => { log("Ogród") })
+		]);
+	}
+	
 }

@@ -69,6 +69,7 @@ class _AppNavigationBarState extends State<AppNavigationBar> {
 	@override
 	Widget build(BuildContext context) {
 		return BottomNavigationBar(
+			backgroundColor: Colors.white,
 			currentIndex: widget.currentIndex,
 			type: BottomNavigationBarType.fixed,
 			showUnselectedLabels: true,

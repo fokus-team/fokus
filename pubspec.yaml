@@ -72,6 +72,9 @@ flutter:
         - assets/help/en/first_steps.md
         - assets/help/pl/first_steps.md
         - assets/image/currency/diamond.svg
+        - assets/image/currency/emerald.svg
+        - assets/image/currency/amethyst.svg
+        - assets/image/currency/ruby.svg
 
     fonts:
         - family: Lato

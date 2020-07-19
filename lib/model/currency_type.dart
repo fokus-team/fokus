@@ -1,3 +1,1 @@
-enum CurrencyType {
-	diamond, emerald, amethyst, ruby
-}
+enum CurrencyType { diamond, emerald, ruby, amethyst }

@@ -7,7 +7,6 @@ class AppColors {
   static final Color mediumTextColor = Colors.grey[600];
   static final Color darkTextColor = Colors.black87;
   static final Color mainBackgroundColor = Color.fromARGB(255, 30, 121, 233);
-  static final Color mainGray = Colors.grey;
 
   // Caregiver colors
   static final Color caregiverBackgroundColor =
@@ -17,6 +16,10 @@ class AppColors {
   // Child colors
   static final Color childBackgroundColor = Colors.lightGreen;
   static final Color childButtonColor = Colors.orange;
+  static final Color childFuturePlansButton = Colors.amber;
+	static final Color childOpenNewPlanColor = Colors.teal;
+	static final Color childOpenActivePlanColor = Colors.amber;
+	static final Color childPlanTaskCountChipColor = Colors.blue;
 
   // Currency colors
 	static final Map<CurrencyType, Color> currencyColor = {

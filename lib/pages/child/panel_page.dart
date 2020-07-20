@@ -23,6 +23,7 @@ class ChildPanelPage extends StatefulWidget {
 }
 
 class _ChildPanelPageState extends State<ChildPanelPage> {
+
   static const String _pageKey = 'page.childSection.panel';
 
   @override
@@ -104,4 +105,5 @@ class _ChildPanelPageState extends State<ChildPanelPage> {
           ]),
     ];
   }
+
 }

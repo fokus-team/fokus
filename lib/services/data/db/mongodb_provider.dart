@@ -20,6 +20,11 @@ class MongoDbProvider {
 	Future<bool> exists(Collection collection, [SelectorBuilder selector]) async => await count(collection, selector) > 0;
 
 
+	Future<T> queryOneTyped<T>(Collection collection, SelectorBuilder query, T Function(Map<String, dynamic>) constructElement) {
+		return this.queryOne(collection, query).then((response) => constructElement(response));
+	}
+
+
 	Future<List<T>> queryTyped<T>(Collection collection, SelectorBuilder query, T Function(Map<String, dynamic>) constructElement) {
 		return this.query(collection, query).then((response) => response.map((element) => constructElement(element)).toList());
 	}

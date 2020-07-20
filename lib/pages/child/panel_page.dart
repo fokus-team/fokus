@@ -80,7 +80,7 @@ class _ChildPanelPageState extends State<ChildPanelPage> {
         ]),
       Segment(
           title: state.activePlan == null ? '$_pageKey.content.todaysPlans' : '$_pageKey.content.remainingTodaysPlans',
-          noElementsMessage: '$_pageKey.content.noPlans',
+          noElementsMessage: state.activePlan == null ? '$_pageKey.content.noPlans' : '$_pageKey.content.allPlansCompleted',
           elements: <Widget>[
             for (var plan in state.plans)
             	if(plan.id != state.activePlan.id)

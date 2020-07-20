@@ -3,14 +3,14 @@ import 'package:mongo_dart/mongo_dart.dart';
 import 'points.dart';
 
 class Reward {
-  int createdBy;
   ObjectId id;
   int icon;
   int limit;
   String name;
-  Points points;
+  Points cost;
+  ObjectId createdBy;
 
-  Reward({this.createdBy, this.id, this.icon, this.limit, this.name, this.points});
+  Reward({this.createdBy, this.id, this.icon, this.limit, this.name, this.cost});
 
   factory Reward.fromJson(Map<String, dynamic> json) {
     return Reward(
@@ -19,7 +19,7 @@ class Reward {
       icon: json['icon'],
       limit: json['limit'],
       name: json['name'],
-      points: json['points'] != null ? Points.fromJson(json['points']) : null,
+      cost: json['cost'] != null ? Points.fromJson(json['points']) : null,
     );
   }
 
@@ -30,8 +30,8 @@ class Reward {
     data['icon'] = this.icon;
     data['limit'] = this.limit;
     data['name'] = this.name;
-    if (this.points != null) {
-      data['points'] = this.points.toJson();
+    if (this.cost != null) {
+      data['cost'] = this.cost.toJson();
     }
     return data;
   }

@@ -4,6 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/message_format.dart';
 
+typedef TranslateFunc = String Function(BuildContext);
+
 class AppLocalesDelegate extends LocalizationsDelegate<AppLocales> {
 	const AppLocalesDelegate();
 
@@ -48,8 +50,11 @@ class AppLocales {
 			if (args == null)
 				return string;
 			return MessageFormat(string, locale: locale.toString()).format(args);
-		} on Error catch (_) {
+		}  on NoSuchMethodError {
 			debugPrint('Key $keyPath has no localized string in language ${locale.languageCode}');
+			return '';
+		} on Error catch (e) {
+			debugPrint('$e');
 			return '';
 		}
 	}

@@ -4,16 +4,18 @@ import 'package:fokus/model/db/plan/plan_repeatability.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
 class Plan {
+  ObjectId id;
+  String name;
   bool active;
-  List<String> assignedTo;
+
+  PlanRepeatability repeatability;
   List<Date> changedInstances;
   TimeDate createdAt;
-  String createdBy;
-  ObjectId id;
-  List<String> instances;
-  String name;
-  PlanRepeatability repeatability;
-  List<String> tasks;
+  ObjectId createdBy;
+
+  List<ObjectId> tasks;
+  List<ObjectId> instances;
+  List<ObjectId> assignedTo;
 
   Plan(
       {this.active,
@@ -30,15 +32,15 @@ class Plan {
   factory Plan.fromJson(Map<String, dynamic> json) {
     return Plan(
       active: json['active'],
-      assignedTo: json['assignedTo'] != null ? new List<String>.from(json['assignedTo']) : null,
-      changedInstances: json['changedInstances'] != null ? (json['changedInstances'] as List).map((date) => Date.parseDBString(date)) : null,
+      assignedTo: json['assignedTo'] != null ? new List<ObjectId>.from(json['assignedTo']) : [],
+      changedInstances: json['changedInstances'] != null ? (json['changedInstances'] as List).map((date) => Date.parseDBString(date)) : [],
       createdAt: TimeDate.parseDBString(json['createdAt']),
       createdBy: json['createdBy'],
       id: json['_id'],
-      instances: json['instances'] != null ? new List<String>.from(json['instances']) : null,
+      instances: json['instances'] != null ? new List<ObjectId>.from(json['instances']) : [],
       name: json['name'],
       repeatability: PlanRepeatability.fromJson(json['repeatability']),
-      tasks: json['tasks'] != null ? new List<String>.from(json['tasks']) : null,
+      tasks: json['tasks'] != null ? new List<ObjectId>.from(json['tasks']) : [],
     );
   }
 

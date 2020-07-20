@@ -29,6 +29,14 @@
 					"addChild": "Dodaj dziecko",
 					"addCaregiver": "Dodaj opiekuna",
 					"pageHint": "Zarządzaj profilami dzieci i powiązanymi kontami opiekunów."
+				},
+				"content": {
+					"childProfilesTitle": "Profile dzieci",
+					"noChildProfilesAdded": "Brak przypisanych dzieci",
+					"caregiverProfilesTitle": "Zaprzyjaźnieni opiekunowie",
+					"noCaregiverProfilesAdded": "Brak zaprzyjaźnionych opiekunów",
+					"todayPlans": "{NUM_PLANS, plural, offset:0 zero {Brak planów} one {# plan} two {# plany} few {# plany} other {# planów}} na dziś",
+					"activePlan": "1 plan w trakcie wykonywania"
 				}
 			},
 			"plans": {
@@ -37,6 +45,11 @@
 					"addPlan": "Dodaj plan",
 					"calendar": "Kalendarz",
 					"pageHint": "Twórz, przypisuj i zarządzaj planami oraz zadaniami."
+				},
+				"content": {
+					"addedPlansTitle": "Zdefiniowane plany",
+					"noPlansAdded": "Brak zdefiniowanych planów, dodaj pierwszy teraz",
+					"tasksCount": "{NUM_TASKS, plural, offset:0  zero {# zadań} one {# zadanie} two {# zadania} few {# zadania} other {# zadań}}"
 				}
 			},
 			"awards": {
@@ -45,6 +58,13 @@
 					"addAward": "Dodaj nagrodę",
 					"addBadge": "Dodaj odznakę",
 					"pageHint": "Zwiększ motywację do wykonywania planów używając punktów, nagród i odznak."
+				},
+				"content": {
+					"addedAwardsTitle": "Zdefiniowane nagrody",
+					"noAwardsAdded": "Brak zdefiniowanych nagród, dodaj pierwszą teraz",
+					"addedBadgesTitle": "Zdefiniowane odznaki",
+					"noBadgesAdded": "Brak zdefiniowanych odznak, dodaj pierwszą teraz",
+					"pointCost": "Koszt punktowy nagrody"
 				}
 			},
 			"statistics": {
@@ -52,6 +72,10 @@
 					"title": "Statystyki",
 					"history": "Historia wydarzeń",
 					"pageHint": "Przeglądaj i analizuj wykonaną przez dzieci pracę."
+				},
+				"content": {
+					"basicStatisticsTitle": "Podstawowe statystyki",
+					"basicStatisticsSubtitle": "Ekran statystyk nie jest dostępny w tej wersji aplikacji"
 				}
 			}
 		},
@@ -72,6 +96,14 @@
 			}
 		}
 	},
+	"repeatability": {
+		"once": "Dnia {DAY}",
+		"weekly": "Co {WEEKDAY, select, 1 {każdy} 2 {każdy} 3 {każdą} 4 {każdy} 5 {każdy} 6 {każdą} 7 {każdą} other {}}",
+		"monthly": "Każdego {DAYS} dnia miesiąca",
+		"weekday": "{WEEKDAY, select, 1 {poniedziałek} 2 {wtorek} 3 {środę} 4 {czwartek} 5 {piątek} 6 {sobotę} 7 {niedzielę} other {}}",
+		"untilCompleted": "dopóki niezakończony",
+		"range": "od {FROM} do {TO}"
+	},
 	"alert": {
 		"error": "Wystąpił błąd",
 		"noConnection": "Brak połączenia"
@@ -79,9 +111,14 @@
 	"actions": {
 		"exit": "Wyjdź",
 		"retry": "Spróbuj ponownie",
-		"close": "Zamknij"
+		"close": "Zamknij",
+		"edit": "Edytuj",
+		"delete": "Usuń",
+		"details": "Pokaż szczegóły",
+		"help": "Pokaż pomoc"
 	},
 	"help": {
 		"first_steps": "Pierwsze kroki"
-	}
+	},
+	"and": "i"
 }

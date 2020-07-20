@@ -11,7 +11,7 @@ class Date extends DateBase {
 
   Date.now() : this.fromDate(DateTime.now());
 
-  factory Date.parseDBString(String date) => dbFormat.parseUtc(date);
+  factory Date.parseDBString(String date) => Date.fromDate(dbFormat.parseUtc(date));
 
   @override
   String toDBString() => dbFormat.format(this.toUtc());

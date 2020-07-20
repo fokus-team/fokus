@@ -4,9 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_cubit/flutter_cubit.dart';
 
 import 'package:fokus/logic/active_user/active_user_cubit.dart';
+import 'package:fokus/model/currency_type.dart';
 import 'package:fokus/model/db/user/user_role.dart';
+import 'package:fokus/model/ui/ui_child.dart';
+import 'package:fokus/model/ui/ui_user.dart';
 import 'package:fokus/utils/app_locales.dart';
 import 'package:fokus/utils/theme_config.dart';
+import 'package:fokus/widgets/attribute_chip.dart';
 
 enum AppHeaderType { greetings, normal }
 
@@ -53,153 +57,213 @@ class AppHeader extends StatelessWidget {
             headerType: AppHeaderType.normal);
 
   @override
-  Widget build(BuildContext context) => headerType == AppHeaderType.greetings
-      ? buildGreetings(context)
-      : buildNormal(context);
 
-  Image headerImage(ActiveUserPresent user) {
-    // TODO Handling the avatars (based on type and avatar parameters), returning sunflower for now
-    return Image.asset('assets/image/sunflower_logo.png', height: 64);
-  }
+  Widget build(BuildContext context) => headerType == AppHeaderType.greetings ? buildGreetings(context) : buildNormal(context);
 
-  Widget headerIconButton(IconData icon, Function action) {
-    return InkWell(
-        customBorder: new CircleBorder(),
-        onTap: action,
-        child: Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Icon(icon, size: 26.0, color: Colors.white)));
-  }
+	Image headerImage(UIUser user) {
+		// TODO Handling the avatars (based on type and avatar parameters), returning sunflower for now
+		return Image.asset('assets/image/sunflower_logo.png', height: 64);
+	}
 
-  Widget headerActionButton(BuildContext context, HeaderActionButton button) {
-    return Container(
-        padding: EdgeInsets.all(4.0),
-        child: FlatButton(
-            onPressed: button.action,
-            color: (button.backgroundColor != null)
-                ? button.backgroundColor
-                : Theme.of(context).buttonColor,
-            padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
-            child: (button.customContent != null)
-                ? button.customContent
-                : Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Padding(
-                          child:
-                              Icon(button.icon, color: Colors.white, size: 20),
-                          padding: EdgeInsets.only(
-                              right: AppBoxProperties.buttonIconPadding)),
-                      Text(AppLocales.of(context).translate(button.text),
-                          style: Theme.of(context).textTheme.button)
-                    ],
-                  )));
-  }
+	Widget headerIconButton(IconData icon, Function action) {
+		return InkWell(
+			customBorder: new CircleBorder(),
+			onTap: action,
+			child: Padding(
+				padding: EdgeInsets.all(8.0),
+				child:Icon(
+					icon,
+					size: 26.0,
+					color: Colors.white
+				)
+			)
+		);
+	}
+	
+	Widget headerActionButton(BuildContext context, HeaderActionButton button) {
+		if(button.customContent != null) {
+			return GestureDetector(
+				onTap: button.action,
+				child: Container(
+					margin: EdgeInsets.all(4.0),
+					decoration: ShapeDecoration(
+						shape: Theme.of(context).buttonTheme.shape,
+						color: button.backgroundColor ?? Colors.transparent
+					),
+					padding: EdgeInsets.symmetric(vertical: 6.0, horizontal: 10.0),
+					child: button.customContent
+				)
+			);
+		}
+		return Container(
+			padding: EdgeInsets.all(4.0),
+			child: FlatButton(
+				onPressed: button.action,
+				color: (button.backgroundColor != null) ? button.backgroundColor : Theme.of(context).buttonColor,
+				padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
+				child: Row(
+					mainAxisAlignment: MainAxisAlignment.center,
+					children: <Widget>[
+						Padding(
+							child: Icon(button.icon, color: Colors.white, size: 20),
+							padding: EdgeInsets.only(right: AppBoxProperties.buttonIconPadding)
+						),
+						Text(
+							AppLocales.of(context).translate(button.text),
+							style: Theme.of(context).textTheme.button
+						)
+					],
+				)
+			)
+		);
+	}
 
-  Widget headerTextField(BuildContext context, String text) {
-    return Container(
-        alignment: Alignment.centerLeft,
-        padding: EdgeInsets.only(left: 4.0, right: 4.0, top: 8.0, bottom: 8.0),
-        child: Text(AppLocales.of(context).translate(text),
-            textAlign: TextAlign.left,
-            style: Theme.of(context).textTheme.bodyText1));
-  }
+	Widget headerTextField(BuildContext context, String text) {
+		return Container(
+			alignment: Alignment.centerLeft,
+			padding: EdgeInsets.only(left: 4.0, right: 4.0, top: 8.0, bottom: 8.0),
+			child: Text(
+				AppLocales.of(context).translate(text),
+				textAlign: TextAlign.left,
+				style: Theme.of(context).textTheme.bodyText1
+			)
+		);
+	}
 
-  Widget buildHederContainer(BuildContext context, Widget innerContent) {
-    return Material(
-        elevation: 4.0,
-        color: Theme.of(context).appBarTheme.color,
-        child: Container(
-            padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 8.0),
-            child: SafeArea(
-                child: Column(children: <Widget>[
-              innerContent,
-              if (text != null) headerTextField(context, text),
-              Container(
-                  height: 48,
-                  alignment: Alignment.centerLeft,
-                  child: ListView(
-                      physics: BouncingScrollPhysics(),
-                      shrinkWrap: true,
-                      scrollDirection: Axis.horizontal,
-                      children: headerActionButtons
-                          .map(
-                              (element) => headerActionButton(context, element))
-                          .toList()))
-            ]))));
-  }
+	Widget buildHeaderContainer(BuildContext context, Widget innerContent) {
+		return Material(
+			elevation: 4.0,
+			color: Theme.of(context).appBarTheme.color,
+			child: Container(
+				padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 8.0),
+				child: SafeArea(
+					child: Column(
+						children: <Widget>[
+							innerContent,
+							if (text != null)
+								headerTextField(context, text),
+							Container(
+								height: 48,
+								alignment: Alignment.centerLeft,
+								child: ListView(
+									physics: BouncingScrollPhysics(),
+									shrinkWrap: true,
+									scrollDirection: Axis.horizontal,
+									children: headerActionButtons.map((element) => 
+										headerActionButton(context, element)).toList()
+								)
+							)
+						]
+					)
+				)
+			)
+		);
+	}
 
-  Widget buildGreetings(BuildContext context) {
-    var currentUser =
-        CubitProvider.of<ActiveUserCubit>(context).state as ActiveUserPresent;
+	Widget buildGreetings(BuildContext context) {
+		var cubit = CubitProvider.of<ActiveUserCubit>(context);
+		var currentUser = (cubit.state as ActiveUserPresent).user;
 
-    return buildHederContainer(
-        context,
-        Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Row(children: <Widget>[
-                Padding(
-                    padding: EdgeInsets.only(left: 4.0, right: 8.0),
-                    child: headerImage(currentUser)),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    RichText(
-                      text: TextSpan(
-                          text:
-                              '${AppLocales.of(context).translate('page.${currentUser.role.name}Section.panel.header.greetings')},\n',
-                          style: TextStyle(color: Colors.white, fontSize: 20),
-                          children: <TextSpan>[
-                            TextSpan(
-                                text: currentUser.name,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .headline1
-                                    .copyWith(color: Colors.white))
-                          ]),
-                    )
-                  ],
-                ),
-              ]),
-              Row(
-                children: <Widget>[
-                  headerIconButton(
-                      Icons.notifications, () => {log("Powiadomienia")}),
-                  headerIconButton(
-                      Icons.more_vert,
-                      () => CubitProvider.of<ActiveUserCubit>(context)
-                          .logoutUser()),
-                ],
-              )
-            ]));
-  }
+		return buildHeaderContainer(context, 
+			Row(
+				mainAxisAlignment: MainAxisAlignment.spaceBetween,
+				crossAxisAlignment: CrossAxisAlignment.start,
+				children: <Widget>[
+					Row(
+						children: <Widget>[
+							Padding(
+								padding: EdgeInsets.only(left: 4.0, right: 8.0),
+								child: headerImage(currentUser)
+							),
+							Column(
+								crossAxisAlignment: CrossAxisAlignment.start,
+								children: <Widget>[
+									RichText(
+										text: TextSpan(
+											text: '${AppLocales.of(context).translate('page.${currentUser.role.name}Section.panel.header.greetings')},\n',
+											style: TextStyle(color: Colors.white, fontSize: 20),
+											children: <TextSpan>[
+												TextSpan(
+													text: currentUser.name,
+													style: Theme.of(context).textTheme.headline1.copyWith(color: Colors.white)
+												)
+											]
+										),
+									)
+								],
+							),
+						]
+					),
+					Row(
+						children: <Widget>[
+							headerIconButton(Icons.notifications, () => { log("Powiadomienia") }),
+							headerIconButton(
+								Icons.more_vert,
+								() => cubit.logoutUser()
+							),
+						],
+					)
+				]
+			)
+		);
+	}
 
-  Widget buildNormal(BuildContext context) {
-    return buildHederContainer(
-        context,
-        Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Padding(
-                  padding: EdgeInsets.only(left: 4.0, top: 5.0),
-                  child: Text(AppLocales.of(context).translate(title),
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline1
-                          .copyWith(color: Colors.white))),
-              Row(
-                children: <Widget>[
-                  headerIconButton(
-                      Icons.notifications, () => {log("Powiadomienia")}),
-                  headerIconButton(
-                      Icons.more_vert,
-                      () => CubitProvider.of<ActiveUserCubit>(context)
-                          .logoutUser()),
-                ],
-              )
-            ]));
-  }
+	Widget buildNormal(BuildContext context) {
+		return buildHeaderContainer(context, 
+			Row(
+				mainAxisAlignment: MainAxisAlignment.spaceBetween,
+				crossAxisAlignment: CrossAxisAlignment.start,
+				children: <Widget>[
+					Padding(
+						padding: EdgeInsets.only(left: 4.0, top: 5.0),
+						child: Text(
+							AppLocales.of(context).translate(title),
+							style: Theme.of(context).textTheme.headline1.copyWith(color: Colors.white)
+						)
+					),
+					Row(
+						children: <Widget>[
+							headerIconButton(Icons.notifications, () => { log("Powiadomienia") }),
+							headerIconButton(
+								Icons.more_vert,
+								() => CubitProvider.of<ActiveUserCubit>(context).logoutUser()
+							),
+						],
+					)
+				]
+			)
+		);
+	}
+
+}
+
+class ChildCustomHeader extends StatelessWidget {
+	@override
+	Widget build(BuildContext context) {
+		var user = (CubitProvider.of<ActiveUserCubit>(context).state as ActiveUserPresent).user;
+
+		return AppHeader.greetings(text: 'page.childSection.panel.header.pageHint', headerActionButtons: [
+			HeaderActionButton.custom(
+				Container(
+					child: Row(
+						children: <Widget>[
+							Text(
+								'${AppLocales.of(context).translate('page.childSection.panel.header.myPoints')}: ',
+								style: Theme.of(context).textTheme.button.copyWith(color: AppColors.darkTextColor)
+							),
+							for (var currency in (user as UIChild).points.entries)
+								Padding(
+									padding: EdgeInsets.only(left: 2.0),
+									child: AttributeChip.withCurrency(content: '${currency.value}', currencyType: currency.key)
+								),
+						]
+					)
+				),
+				() => { log('Child detailed wallet popup') },
+				Colors.white
+			),
+			//HeaderActionButton.normal(Icons.local_florist, 'page.childSection.panel.header.garden', () => { log("Ogród") })
+		]);
+	}
+	
 }

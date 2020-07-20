@@ -10,8 +10,16 @@ class TimeDate extends DateBase {
 
   TimeDate.now() : this.fromDate(DateTime.now());
 
-  factory TimeDate.parseDBString(String date) => dbFormat.parseUtc(date);
+  factory TimeDate.parseDBString(String date) => TimeDate.fromDate(dbFormat.parseUtc(date));
 
   @override
   String toDBString() => dbFormat.format(this.toUtc());
+
+  @override
+  bool operator ==(dynamic other) => super==(other) && hour == other.hour && minute == other.minute && second == other.second;
+  @override
+  int get hashCode => combine(combine(combine(super.hashCode, hour.hashCode), minute.hashCode), second.hashCode);
+
+  bool operator >=(DateBase other) => super>=(other) && hour >= other.hour && minute >= other.minute && second >= other.second;
+  bool operator <=(DateBase other) => super>=(other) && hour <= other.hour && minute <= other.minute && second <= other.second;
 }

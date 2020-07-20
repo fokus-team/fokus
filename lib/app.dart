@@ -1,8 +1,11 @@
+import 'package:cubit/cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cubit/flutter_cubit.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'package:fokus/logic/active_user/active_user_cubit.dart';
+import 'package:fokus/logic/caregiver_panel/caregiver_panel_cubit.dart';
+import 'package:fokus/logic/child_plans/child_plans_cubit.dart';
 import 'package:fokus/model/db/user/user_role.dart';
 import 'package:fokus/pages/caregiver/awards_page.dart';
 import 'package:fokus/pages/caregiver/panel_page.dart';
@@ -48,20 +51,26 @@ class FokusApp extends StatelessWidget {
 	}
 
 	Map<String, WidgetBuilder> _createRoutes() {
+		var activeUser = (context) => CubitProvider.of<ActiveUserCubit>(context);
 		return {
 			AppPage.loadingPage.name: (context) => PageTheme.loginSection(child: LoadingPage()),
 			AppPage.rolesPage.name: (context) => PageTheme.loginSection(child: RolesPage()),
-			AppPage.caregiverPanel.name: (context) => _wrapAppPage(UserRole.caregiver, CaregiverPanelPage()),
+			AppPage.caregiverPanel.name: (context) => _wrapAppPage(UserRole.caregiver, CaregiverPanelPage(), CaregiverPanelCubit(activeUser(context))),
 			AppPage.caregiverPlans.name: (context) => _wrapAppPage(UserRole.caregiver, CaregiverPlansPage()),
 			AppPage.caregiverAwards.name: (context) => _wrapAppPage(UserRole.caregiver, CaregiverAwardsPage()),
 			AppPage.caregiverStatistics.name: (context) => _wrapAppPage(UserRole.caregiver, CaregiverStatisticsPage()),
-			AppPage.childPanel.name: (context) => _wrapAppPage(UserRole.child, ChildPanelPage()),
+			AppPage.childPanel.name: (context) => _wrapAppPage(UserRole.child, ChildPanelPage(), ChildPlansCubit(activeUser(context))),
 			AppPage.childAwards.name: (context) => _wrapAppPage(UserRole.child, ChildAwardsPage()),
 			AppPage.childAchievements.name: (context) => _wrapAppPage(UserRole.child, ChildAchievementsPage()),
 		};
 	}
 
-	Widget _wrapAppPage(UserRole userRole, Widget page) {
+	Widget _wrapAppPage<Cubit extends CubitStream<Object>>(UserRole userRole, Widget page, [Cubit pageCubit]) {
+		if (pageCubit != null)
+			page = CubitProvider<Cubit>(
+				create: (context) => pageCubit,
+				child: page,
+			);
 		return CubitUtils.navigateOnState<ActiveUserCubit, ActiveUserState, NoActiveUser>(
 			navigation: (navigator) => navigator.pushNamedAndRemoveUntil(AppPage.rolesPage.name, (_) => false),
 			child: PageTheme.parametrizedRoleSection(
@@ -77,9 +86,10 @@ class FokusApp extends StatelessWidget {
 			fontFamily: 'Lato',
 			textTheme: TextTheme(
 				// Will probably change over time
-				headline1: TextStyle(fontSize: 26.0, fontWeight: FontWeight.bold, color: AppColors.darkTextColor), // Main headline before lists
-				headline2: TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold, color: AppColors.darkTextColor), // For headers inside list elements
-				subtitle2: TextStyle(fontSize: 12.0, fontWeight: FontWeight.normal, color: AppColors.mediumTextColor), // Little subtitle for headline2
+				headline1: TextStyle(fontSize: 26.0, fontWeight: FontWeight.bold, color: AppColors.darkTextColor), // Scaffold/appbar headline
+				headline2: TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold, color: AppColors.darkTextColor), // Main headline before lists
+				headline3: TextStyle(fontSize: 21.0, fontWeight: FontWeight.normal, color: AppColors.darkTextColor), //For headers inside list elements
+				subtitle2: TextStyle(fontSize: 13.0, fontWeight: FontWeight.normal, color: AppColors.mediumTextColor), // Little subtitle for headline2
 				bodyText1: TextStyle(fontSize: 15.0, fontWeight: FontWeight.normal, color: AppColors.lightTextColor), // Classic body text on light background
 				bodyText2: TextStyle(fontSize: 15.0, fontWeight: FontWeight.normal, color: AppColors.darkTextColor), // Classic body text on color
 				button: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold, color: AppColors.lightTextColor) // (Almost always white) button text

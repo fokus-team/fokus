@@ -29,6 +29,14 @@
 					"addChild": "Add child",
 					"addCaregiver": "Add caregiver",
 					"pageHint": "Manage child profiles and connected caregiver accounts."
+				},
+				"content": {
+					"childProfilesTitle": "Child profiles",
+					"noChildProfilesAdded": "No children assigned",
+					"caregiverProfilesTitle": "Befriended caregivers",
+					"noCaregiverProfilesAdded": "No befriended caregivers found",
+					"todayPlans": "{NUM_PLANS, plural, offset:0 zero {No plans} one {# plan} other {# plans}} for today",
+					"activePlan": "1 plan currently in progress"
 				}
 			},
 			"plans": {
@@ -37,6 +45,11 @@
 					"addPlan": "Add plan",
 					"calendar": "Calendar",
 					"pageHint": "Create, assign and manage plans with tasks."
+				},
+				"content": {
+					"addedPlansTitle": "Added plans",
+					"noPlansAdded": "No plans to display, add the first one now",
+					"tasksCount": "{NUM_TASKS, plural, offset:0  =1 {# task} other {# tasks}}"
 				}
 			},
 			"awards": {
@@ -45,6 +58,13 @@
 					"addAward": "Add award",
 					"addBadge": "Add badge",
 					"pageHint": "Increase work motivation by using points, awards and badges."
+				},
+				"content": {
+					"addedAwardsTitle": "Added awards",
+					"noAwardsAdded": "No awards to display, add the first one now",
+					"addedBadgesTitle": "Added badges",
+					"noBadgesAdded": "No badges to display, add the first one now",
+					"pointCost": "Award's point cost"
 				}
 			},
 			"statistics": {
@@ -52,6 +72,10 @@
 					"title": "Statistics",
 					"history": "Event history",
 					"pageHint": "View and analyze the work done by children."
+				},
+				"content": {
+					"basicStatisticsTitle": "Basic statistics",
+					"basicStatisticsSubtitle": "This screen is not available in this version of the application"
 				}
 			}
 		},
@@ -72,6 +96,14 @@
 			}
 		}
 	},
+	"repeatability": {
+		"once": "On {DAY}",
+		"weekly": "Every",
+		"monthly": "Every {DAYS} day of the month",
+		"weekday": "{WEEKDAY, select, 1 {monday} 2 {tuesday} 3 {wednesday} 4 {thursday} 5 {friday} 6 {saturday} 7 {sunday} other {}}",
+		"untilCompleted": "until completed",
+		"range": "from {FROM} to {TO}"
+	},
 	"alert": {
 		"error": "Error occurred",
 		"noConnection": "No connection"
@@ -79,9 +111,14 @@
 	"actions": {
 		"exit": "Exit",
 		"retry": "Retry",
-		"close": "Close"
+		"close": "Close",
+		"edit": "Edit",
+		"delete": "Delete",
+		"details": "Show details",
+		"help": "Show help"
 	},
 	"help": {
 		"first_steps": "First steps"
-	}
+	},
+	"and": "and"
 }

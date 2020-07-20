@@ -1,8 +1,10 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+
 import 'package:fokus/widgets/app_header.dart';
 import 'package:fokus/widgets/app_navigation_bar.dart';
+import 'package:fokus/widgets/segment.dart';
 
 class CaregiverStatisticsPage extends StatefulWidget {
 	@override
@@ -10,18 +12,25 @@ class CaregiverStatisticsPage extends StatefulWidget {
 }
 
 class _CaregiverStatisticsPageState extends State<CaregiverStatisticsPage> {
+	static const String _pageKey = 'page.caregiverSection.statistics';
+	
 	@override
 	Widget build(BuildContext context) {
     return Scaffold(
 			body: Column(
 				crossAxisAlignment: CrossAxisAlignment.start,
-				children: [
-					AppHeader.normal(title: 'page.caregiverSection.statistics.header.title', text: 'page.caregiverSection.statistics.header.pageHint', headerActionButtons: [
-						HeaderActionButton.normal(Icons.archive, 'page.caregiverSection.statistics.header.history', () => { log("Historia") }, Colors.amber),
+				children: <Widget>[
+					AppHeader.normal(title: '$_pageKey.header.title', text: '$_pageKey.header.pageHint', headerActionButtons: [
+						HeaderActionButton.normal(Icons.archive, '$_pageKey.header.history', () => { log("Historia") }, Colors.amber),
 					]),
-					Container(
-						padding: EdgeInsets.all(8.0),
-						child: Text('Podstawowe wykresy', textAlign: TextAlign.left, style: Theme.of(context).textTheme.headline2)
+					AppSegments(
+						segments: [
+							Segment(
+								title: '$_pageKey.content.basicStatisticsTitle',
+								subtitle: '$_pageKey.content.basicStatisticsSubtitle',
+								elements: []
+							)
+						]
 					)
 				]
 			),

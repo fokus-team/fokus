@@ -6,6 +6,7 @@ import 'package:fokus/model/currency_type.dart';
 import 'package:fokus/logic/active_user/active_user_cubit.dart';
 import 'package:fokus/utils/app_locales.dart';
 import 'package:fokus/utils/cubit_utils.dart';
+import 'package:fokus/utils/icon_sets.dart';
 
 import 'package:fokus/widgets/app_header.dart';
 import 'package:fokus/widgets/app_navigation_bar.dart';
@@ -46,8 +47,10 @@ class _CaregiverPanelPageState extends State<CaregiverPanelPage> {
 												ItemCardMenuItem(text: "actions.edit", onTapped: () => {log("edit")}),
 												ItemCardMenuItem(text: "actions.delete", onTapped: () => {log("delete")})
 											],
-											image: true,
+											graphicType: GraphicAssetType.childAvatars,
+											graphic: 22,
 											chips: <Widget>[
+												AttributeChip.withIcon(content: "2 nieocenione zadania", icon: Icons.star, color: Colors.pink),
 												AttributeChip.withCurrency(content: "120", currencyType: CurrencyType.diamond)
 											]
 										)

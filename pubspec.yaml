@@ -40,6 +40,7 @@ dependencies:
     lottie: ^0.4.0+1
     flutter_svg: ^0.17.1
     flutter_markdown: ^0.3.4
+    badges: ^1.1.1
 
 dependency_overrides:
     bson:
@@ -71,10 +72,12 @@ flutter:
         - assets/image/sunflower_logo.png
         - assets/help/en/first_steps.md
         - assets/help/pl/first_steps.md
-        - assets/image/currency/diamond.svg
-        - assets/image/currency/emerald.svg
-        - assets/image/currency/amethyst.svg
-        - assets/image/currency/ruby.svg
+        - assets/image/avatar/
+        - assets/image/avatar/child/
+        - assets/image/award/
+        - assets/image/award_level/
+        - assets/image/badge/
+        - assets/image/currency/
 
     fonts:
         - family: Lato

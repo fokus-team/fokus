@@ -12,6 +12,7 @@ class NoActiveUser extends ActiveUserState {
 class ActiveUserPresent extends ActiveUserState {
 	final UserRole role;
 	final String name;
+	final int avatar = 14; // For testing
 
 	ActiveUserPresent(this.name, this.role);
 

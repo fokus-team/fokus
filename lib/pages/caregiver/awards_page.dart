@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:fokus/model/currency_type.dart';
 import 'package:fokus/utils/app_locales.dart';
+import 'package:fokus/utils/icon_sets.dart';
 
 import 'package:fokus/widgets/app_header.dart';
 import 'package:fokus/widgets/app_navigation_bar.dart';
@@ -46,7 +47,8 @@ class _CaregiverAwardsPageState extends State<CaregiverAwardsPage> {
 											ItemCardMenuItem(text: "actions.edit", onTapped: () => {log("edit")}),
 											ItemCardMenuItem(text: "actions.delete", onTapped: () => {log("delete")})
 										],
-										image: true,
+										graphicType: GraphicAssetType.awardsIcons,
+										graphic: 16,
 										chips: <Widget>[
 											AttributeChip.withCurrency(content: "30", currencyType: CurrencyType.diamond, tooltip: 'page.caregiverSection.awards.content.pointCost')
 										],
@@ -63,7 +65,18 @@ class _CaregiverAwardsPageState extends State<CaregiverAwardsPage> {
 									),
 									onPressed: () => {},
 								),
-								elements: <Widget>[]
+								elements: <Widget>[
+									ItemCard(
+										title: "Super planista", 
+										subtitle: "3 poziomy",
+										menuItems: [
+											ItemCardMenuItem(text: "actions.edit", onTapped: () => {log("edit")}),
+											ItemCardMenuItem(text: "actions.delete", onTapped: () => {log("delete")})
+										],
+										graphicType: GraphicAssetType.badgeIcons,
+										graphic: 3,
+									)
+								]
 							)
 						]
 					)

@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:fokus/utils/app_locales.dart';
+import 'package:fokus/utils/app_paths.dart';
+import 'package:fokus/utils/icon_sets.dart';
 import 'package:fokus/utils/theme_config.dart';
+import 'package:fokus/widgets/app_avatar.dart';
 
 class ItemCardActionButton {
 	final IconData icon;
@@ -30,7 +34,8 @@ class ItemCard extends StatelessWidget {
 	// Element's content
 	final String title;
 	final String subtitle;
-	final bool image; // TEMP: show/hide image, later custom Image class?
+	final GraphicAssetType graphicType;
+	final int graphic;
 	final double progressPercentage;
 	final List<Widget> chips;
 	final List<ItemCardMenuItem> menuItems;
@@ -40,7 +45,8 @@ class ItemCard extends StatelessWidget {
 
 	// Element's visual params
 	final int titleMaxLines = 3;
-	final double imageHeight = 80.0;
+	final double imageHeight = 76.0;
+	final double badgeImageHeight = 44.0;
 	final double progressIndicatorHeight = 10.0;
 	final Color disabledButtonColor = Colors.grey[200];
   final Color inactiveProgressBar = Colors.grey[300];
@@ -49,18 +55,31 @@ class ItemCard extends StatelessWidget {
 	ItemCard({
 		@required this.title, 
 		this.subtitle,
-		this.image = false,
+		this.graphicType,
+		this.graphic,
 		this.progressPercentage,
 		this.chips,
 		this.menuItems,
 		this.actionButton,
 		this.onTapped,
 		this.isActive = true
-	});
+	}) : assert(graphic != null ? graphicType != null : true);
 	
-	Image headerImage() {
-		// TODO Handling the avatars (based on type and avatar parameters), returning sunflower for now
-		return Image.asset('assets/image/sunflower_logo.png', height: imageHeight);
+	Widget headerImage() {
+		switch(graphicType) {
+			case GraphicAssetType.childAvatars:
+				return AppAvatar(graphic, size: imageHeight, color: childAvatars[graphic].color);
+			break;
+			case GraphicAssetType.awardsIcons:
+				return SvgPicture.asset(awardIconSvgPath(graphic), height: imageHeight);
+			break;
+			case GraphicAssetType.badgeIcons:
+				return SvgPicture.asset(badgeIconSvgPath(graphic), height: badgeImageHeight);
+			break;
+			default:
+				return Image.asset('assets/image/sunflower_logo.png', height: imageHeight);
+			break;
+		}
 	}
 
 	// Card's shape and interaction
@@ -131,15 +150,15 @@ class ItemCard extends StatelessWidget {
 			mainAxisAlignment: MainAxisAlignment.start,
 			crossAxisAlignment: CrossAxisAlignment.start,
 			children: <Widget>[
-				if(image)
+				if(graphic != null)
 					Padding(
-						padding: EdgeInsets.all(4.0),
+						padding: EdgeInsets.all(6.0),
 						child: headerImage()
 					),
 				Expanded(
 					flex: 1, 
 					child: Padding(
-						padding: image ? EdgeInsets.all(6.0) : EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+						padding: (graphic != null) ? EdgeInsets.all(6.0) : EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
 						child: Column(
 							crossAxisAlignment: CrossAxisAlignment.start,
 							children: <Widget>[

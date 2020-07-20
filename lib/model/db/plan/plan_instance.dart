@@ -3,23 +3,25 @@ import 'package:fokus/model/db/date/time_date.dart';
 import 'package:fokus/model/db/duration.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
+import 'plan_instance_state.dart';
+
 class PlanInstance {
 	ObjectId id;
 	ObjectId planID;
 	ObjectId assignedTo;
 
   Date date;
-  bool active;
+	PlanInstanceState state;
   Duration<TimeDate> duration;
   List<ObjectId> instances;
   List<PlanInstanceTask> tasks;
 
-  PlanInstance({this.id, this.instances, this.planID, this.assignedTo, this.date, this.active, this.duration, this.tasks});
+  PlanInstance({this.id, this.instances, this.planID, this.assignedTo, this.date, this.state, this.duration, this.tasks});
 
   factory PlanInstance.fromJson(Map<String, dynamic> json) {
     return PlanInstance(
 	    id: json['_id'],
-	    active: json['active'],
+	    state: PlanInstanceState.values[json['state']],
 	    planID: json['planID'],
       assignedTo: json['assignedTo'],
       date: Date.parseDBString(json['date']),
@@ -33,7 +35,7 @@ class PlanInstance {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['_id'] = this.id;
     data['planID'] = this.planID;
-    data['active'] = this.active;
+    data['state'] = this.state.index;
     data['assignedTo'] = this.assignedTo;
     data['date'] = this.date.toDBString();
     if (this.duration != null) {

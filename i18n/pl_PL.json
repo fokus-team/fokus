@@ -92,7 +92,8 @@
 					"inProgress": "W trakcie",
 					"futurePlans": "Zobacz przyszłe plany",
 					"tasks": "{NUM_TASKS, plural, offset:0  zero {# zadań} one {# zadanie} two {# zadania} few {# zadania} other {# zadań}}",
-					"noPlans": "Brak planów :( Poproś opiekuna o dodanie planów!"
+					"noPlans": "Brak planów",
+					"remainingTodaysPlans": "Pozostałe dzisiejsze plany"
 				}
 			}
 		}

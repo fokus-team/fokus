@@ -92,7 +92,8 @@
 					"inProgress": "In progress",
 					"futurePlans": "Check future plans",
 					"tasks": "{NUM_TASKS, plural, offset:0  one {# task} other {# tasks}}",
-					"noPlans": "No plans :( Ask your caregiver for some plans!"
+					"noPlans": "No plans",
+					"remainingTodaysPlans": "Remaining today's plans"
 				}
 			}
 		}

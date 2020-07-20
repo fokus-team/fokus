@@ -1,3 +1,4 @@
+import 'package:fokus/model/db/plan/plan_instance.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
 import 'package:fokus/model/db/collection.dart';
@@ -16,7 +17,9 @@ mixin PlanDbRepository implements DbRepository {
 		return client.queryTyped(Collection.planInstance, query, (json) => Plan.fromJson(json));
 	}
 
-	Future<bool> childActivePlanInstanceExists(ObjectId childId) => client.exists(Collection.planInstance, _buildPlanQuery(childId, activeOnly: true));
+	Future<PlanInstance> getActiveChildPlanInstance(ObjectId childId) {
+	  return client.queryOneTyped(Collection.planInstance, _buildPlanQuery(childId, activeOnly: true), (json) => PlanInstance.fromJson(json));
+	}
 
 	SelectorBuilder _buildPlanQuery(ObjectId childId, {ObjectId planId, Date date, bool activeOnly = false}) {
 		var query = where.eq('assignedTo', childId);

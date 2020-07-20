@@ -12,20 +12,19 @@ class PlanWidget extends StatelessWidget {
   final Function buttonAction;
 
   // styling vars
-  final double playButtonSize = 40.0;
-  final double tasksIconSize = 26.0;
-  final double progressIndicatorHeight = 15.0;
-  final double futurePlansButtonWidth = 80.0;
-  final int titleMaxLines = 3;
-  final Color activeButtonColor = Colors.teal;
-  final Color buttonIconColor = Colors.white;
-  final Color disabledButtonColor = Color.fromARGB(255, 200, 200, 200);
-  final Color inactiveProgressBar = Color.fromARGB(255, 240, 240, 240);
-  final Color inProgressButtonColor = Colors.amber;
-  final Icon notInProgressIcon = new Icon(Icons.play_arrow);
-  final Icon inProgressIcon = new Icon(Icons.launch);
-  final TextStyle blueTextStyle =
-      new TextStyle(fontSize: 16, color: Colors.blue);
+  static const double playButtonSize = 40.0;
+	static const double tasksIconSize = 26.0;
+	static const double progressIndicatorHeight = 15.0;
+	static const double futurePlansButtonWidth = 80.0;
+	static const int titleMaxLines = 3;
+	static const Color activeButtonColor = Colors.teal;
+	static const Color buttonIconColor = Colors.white;
+	static const Color disabledButtonColor = Color.fromARGB(255, 200, 200, 200);
+	static const Color inactiveProgressBar = Color.fromARGB(255, 240, 240, 240);
+	static const Color inProgressButtonColor = Colors.amber;
+	static const Icon notInProgressIcon = Icon(Icons.play_arrow);
+	static const Icon inProgressIcon = Icon(Icons.launch);
+	static const TextStyle blueTextStyle = TextStyle(fontSize: 16, color: Colors.blue);
 
   PlanWidget(
       {@required this.planName,
@@ -151,7 +150,7 @@ class PlanWidget extends StatelessWidget {
             height: progressIndicatorHeight,
             child: LinearProgressIndicator(
                 value: this.progressPercentage,
-                backgroundColor: this.inactiveProgressBar,
+                backgroundColor: inactiveProgressBar,
                 valueColor:
                     new AlwaysStoppedAnimation<Color>(Colors.lightGreen)),
           ));

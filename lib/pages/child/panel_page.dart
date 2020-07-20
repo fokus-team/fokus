@@ -82,8 +82,8 @@ class _ChildPanelPageState extends State<ChildPanelPage> {
                           vertical: AppBoxProperties.cardListPadding,
                           horizontal: AppBoxProperties.screenEdgePadding),
                       child: ClipRRect(
-                          borderRadius:
-                              BorderRadius.all(Radius.circular(AppBoxProperties.roundedCornersRadius)),
+                          borderRadius: BorderRadius.all(Radius.circular(
+                              AppBoxProperties.roundedCornersRadius)),
                           child: FlatButton(
                               padding: EdgeInsets.all(
                                   AppBoxProperties.containerPadding),
@@ -93,10 +93,14 @@ class _ChildPanelPageState extends State<ChildPanelPage> {
                               },
                               child: Row(
                                 children: <Widget>[
-                                  Padding(padding: EdgeInsets.only(right: AppBoxProperties.buttonIconPadding), child:Icon(
-                                    Icons.calendar_today,
-                                    color: Colors.white,
-                                  )),
+                                  Padding(
+                                      padding: EdgeInsets.only(
+                                          right: AppBoxProperties
+                                              .buttonIconPadding),
+                                      child: Icon(
+                                        Icons.calendar_today,
+                                        color: Colors.white,
+                                      )),
                                   Text(
                                     '${AppLocales.of(context).translate("page.childSection.panel.content.futurePlans")} ',
                                     style: Theme.of(context).textTheme.button,

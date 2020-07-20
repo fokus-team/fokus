@@ -11,7 +11,7 @@ class RemoteConfigProvider {
 
 	static const String _dbConfigKey = "db_access_string";
 
-	Future<RemoteConfigProvider> initialize() async {
+	Future initialize() async {
 		_remoteConfig = await RemoteConfig.instance;
 		await _remoteConfig.fetch();
 		await _remoteConfig.activateFetched();
@@ -22,6 +22,5 @@ class RemoteConfigProvider {
 			throw ConfigFetchFailedException();
 		}
 		_dbAccessString = dbConfig;
-		return this;
 	}
 }

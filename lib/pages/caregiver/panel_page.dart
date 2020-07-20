@@ -1,9 +1,11 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_cubit/flutter_cubit.dart';
+
+import 'package:fokus/logic/caregiver_panel/caregiver_panel_cubit.dart';
 import 'package:fokus/model/app_page.dart';
-import 'package:fokus/model/currency_type.dart';
 import 'package:fokus/logic/active_user/active_user_cubit.dart';
+import 'package:fokus/model/ui/ui_child.dart';
 import 'package:fokus/utils/app_locales.dart';
 import 'package:fokus/utils/cubit_utils.dart';
 import 'package:fokus/utils/icon_sets.dart';
@@ -20,6 +22,8 @@ class CaregiverPanelPage extends StatefulWidget {
 }
 
 class _CaregiverPanelPageState extends State<CaregiverPanelPage> {
+	static const String _pageKey = 'page.caregiverSection.panel';
+	
 	@override
 	Widget build(BuildContext context) {
     return CubitUtils.navigateOnState<ActiveUserCubit, ActiveUserState, NoActiveUser>(
@@ -28,52 +32,71 @@ class _CaregiverPanelPageState extends State<CaregiverPanelPage> {
 				body: Column(
 					mainAxisAlignment: MainAxisAlignment.start,
 					children: <Widget>[
-						AppHeader.greetings(text: 'page.caregiverSection.panel.header.pageHint', headerActionButtons: [
-							HeaderActionButton.normal(Icons.add, 'page.caregiverSection.panel.header.addChild', () => { log("Dodaj dziecko") }),
-							HeaderActionButton.normal(Icons.add, 'page.caregiverSection.panel.header.addCaregiver', () => { log("Dodaj opiekuna") })
+						AppHeader.greetings(text: '$_pageKey.header.pageHint', headerActionButtons: [
+							HeaderActionButton.normal(Icons.add, '$_pageKey.header.addChild', () => { log("Dodaj dziecko") }),
+							HeaderActionButton.normal(Icons.add, '$_pageKey.header.addCaregiver', () => { log("Dodaj opiekuna") })
 						]),
-						AppSegments(
-							segments: [
-								Segment(
-									title: 'page.caregiverSection.panel.content.childProfilesTitle',
-									noElementsMessage: 'page.caregiverSection.panel.content.noChildProfilesAdded',
-									elements: <Widget>[
-										ItemCard(
-											title: "Gosia", 
-											subtitle: AppLocales.of(context).translate('page.caregiverSection.panel.content.plansTodayCount', {'NUM_PLANS': (2).toString()}) + ' ' +
-												AppLocales.of(context).translate('page.caregiverSection.panel.content.plansToday'),
-											menuItems: [
-												ItemCardMenuItem(text: "actions.details", onTapped: () => {log("details")}),
-												ItemCardMenuItem(text: "actions.edit", onTapped: () => {log("edit")}),
-												ItemCardMenuItem(text: "actions.delete", onTapped: () => {log("delete")})
-											],
-											graphicType: GraphicAssetType.childAvatars,
-											graphic: 22,
-											chips: <Widget>[
-												AttributeChip.withIcon(content: "2 nieocenione zadania", icon: Icons.star, color: Colors.pink),
-												AttributeChip.withCurrency(content: "120", currencyType: CurrencyType.diamond)
-											]
-										)
-									]
-								),
-								Segment(
-									title: 'page.caregiverSection.panel.content.caregiverProfilesTitle',
-									noElementsMessage: 'page.caregiverSection.panel.content.noCaregiverProfilesAdded',
-									elements: <Widget>[
-										ItemCard(
-											title: "Katarzyna",
-											menuItems: [
-												ItemCardMenuItem(text: "actions.delete", onTapped: () => {log("delete")})
-											],
-										)
-									]
-								)
-							]
+						CubitBuilder<CaregiverPanelCubit, CaregiverPanelState>(
+							cubit: CubitProvider.of<CaregiverPanelCubit>(context),
+							builder: (context, state) {
+								if (state is CaregiverPanelInitial)
+									CubitProvider.of<CaregiverPanelCubit>(context).loadPanelData();
+								else if (state is CaregiverPanelLoadSuccess)
+									return AppSegments(segments: _buildPanelSegments(state));
+								return Expanded(child: Center(child: CircularProgressIndicator())); // TODO Decide what to show when loading (globally)
+							},
 						)
 					]
 				),
 				bottomNavigationBar: AppNavigationBar.caregiverPage(currentIndex: 0)
 	    )
     );
+	}
+
+	List<Segment> _buildPanelSegments(CaregiverPanelLoadSuccess state) {
+		return [
+			Segment(
+				title: '$_pageKey.content.childProfilesTitle',
+				noElementsMessage: '$_pageKey.content.noChildProfilesAdded',
+				elements: <Widget>[
+					for (var child in state.children)
+						ItemCard(
+							title: child.name,
+							subtitle: getChildCardSubtitle(context, child),
+							menuItems: [
+								ItemCardMenuItem(text: "actions.details", onTapped: () => {log("details")}),
+								ItemCardMenuItem(text: "actions.edit", onTapped: () => {log("edit")}),
+								ItemCardMenuItem(text: "actions.delete", onTapped: () => {log("delete")})
+							],
+							graphicType: GraphicAssetType.childAvatars,
+							graphic: child.avatar,
+							chips: <Widget>[
+								for (var currency in child.points.entries)
+									AttributeChip.withCurrency(content: '${currency.value}', currencyType: currency.key)
+							]
+						)
+				]
+			),
+			Segment(
+				title: '$_pageKey.content.caregiverProfilesTitle',
+				noElementsMessage: '$_pageKey.content.noCaregiverProfilesAdded',
+				elements: <Widget>[
+					for (var friend in state.friends.values)
+						ItemCard(
+							title: friend,
+							menuItems: [
+								ItemCardMenuItem(text: "actions.delete", onTapped: () => {log("delete")})
+							],
+						)
+				]
+			)
+		];
+	}
+
+	String getChildCardSubtitle(BuildContext context, UIChild child) {
+		String key = '$_pageKey.content';
+		if (child.hasActivePlan)
+			return AppLocales.of(context).translate('$key.activePlan');
+		return AppLocales.of(context).translate('$key.todayPlans', {'NUM_PLANS': '${child.todayPlanCount}'});
 	}
 }

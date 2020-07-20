@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_cubit/flutter_cubit.dart';
+
+import 'package:fokus/logic/child_plans/child_plans_cubit.dart';
 import 'package:fokus/widgets/app_navigation_bar.dart';
 import 'package:fokus/widgets/app_header.dart';
 
@@ -15,9 +18,19 @@ class _ChildPanelPageState extends State<ChildPanelPage> {
 				crossAxisAlignment: CrossAxisAlignment.start,
 				children: [
 					ChildCustomHeader(),
-					Container(
-						padding: EdgeInsets.all(8.0),
-						child: Text('Dzisiejsze plany', textAlign: TextAlign.left, style: Theme.of(context).textTheme.headline2)
+					CubitBuilder<ChildPlansCubit, ChildPlansState>(
+						cubit: CubitProvider.of<ChildPlansCubit>(context),
+						builder: (context, state) {
+							if (state is ChildPlansInitial)
+								CubitProvider.of<ChildPlansCubit>(context).loadChildPlansForToday();
+							else if (state is ChildPlansLoadSuccess)
+								return Flexible(
+									child: ListView(
+										children: state.plans.map((plan) => Text(plan.print(context))).toList(),
+									),
+								);
+							return Expanded(child: Center(child: CircularProgressIndicator()));
+						},
 					)
 				]
 			),

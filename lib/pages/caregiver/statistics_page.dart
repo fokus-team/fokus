@@ -12,20 +12,22 @@ class CaregiverStatisticsPage extends StatefulWidget {
 }
 
 class _CaregiverStatisticsPageState extends State<CaregiverStatisticsPage> {
+	static const String _pageKey = 'page.caregiverSection.statistics';
+	
 	@override
 	Widget build(BuildContext context) {
     return Scaffold(
 			body: Column(
 				crossAxisAlignment: CrossAxisAlignment.start,
 				children: <Widget>[
-					AppHeader.normal(title: 'page.caregiverSection.statistics.header.title', text: 'page.caregiverSection.statistics.header.pageHint', headerActionButtons: [
-						HeaderActionButton.normal(Icons.archive, 'page.caregiverSection.statistics.header.history', () => { log("Historia") }, Colors.amber),
+					AppHeader.normal(title: '$_pageKey.header.title', text: '$_pageKey.header.pageHint', headerActionButtons: [
+						HeaderActionButton.normal(Icons.archive, '$_pageKey.header.history', () => { log("Historia") }, Colors.amber),
 					]),
 					AppSegments(
 						segments: [
 							Segment(
-								title: 'page.caregiverSection.statistics.content.basicStatisticsTitle',
-								subtitle: 'page.caregiverSection.statistics.content.basicStatisticsSubtitle',
+								title: '$_pageKey.content.basicStatisticsTitle',
+								subtitle: '$_pageKey.content.basicStatisticsSubtitle',
 								elements: []
 							)
 						]

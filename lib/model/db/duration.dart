@@ -8,8 +8,8 @@ class Duration<D extends DateBase> {
 
   factory Duration.fromJson(Map<String, dynamic> json) {
     return Duration(
-      from: DateBase.parseDBString(json['from']),
-      to: DateBase.parseDBString(json['to']),
+      from: json['from'] != null ? DateBase.parseDBString(json['from']) : null,
+      to: json['to'] != null ? DateBase.parseDBString(json['to']) : null,
     );
   }
 

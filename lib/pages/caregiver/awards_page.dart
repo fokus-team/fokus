@@ -17,24 +17,26 @@ class CaregiverAwardsPage extends StatefulWidget {
 }
 
 class _CaregiverAwardsPageState extends State<CaregiverAwardsPage> {
+	static const String _pageKey = 'page.caregiverSection.awards';
+	
 	@override
 	Widget build(BuildContext context) {
     return Scaffold(
 			body: Column(
 				crossAxisAlignment: CrossAxisAlignment.start,
 				children: <Widget>[
-					AppHeader.normal(title: 'page.caregiverSection.awards.header.title', text: 'page.caregiverSection.awards.header.pageHint', headerActionButtons: [
-						HeaderActionButton.normal(Icons.add, 'page.caregiverSection.awards.header.addAward', () => { log("Dodaj nagrodę") }),
-						HeaderActionButton.normal(Icons.add, 'page.caregiverSection.awards.header.addBadge', () => { log("Dodaj odznakę") })
+					AppHeader.normal(title: '$_pageKey.header.title', text: '$_pageKey.header.pageHint', headerActionButtons: [
+						HeaderActionButton.normal(Icons.add, '$_pageKey.header.addAward', () => { log("Dodaj nagrodę") }),
+						HeaderActionButton.normal(Icons.add, '$_pageKey.header.addBadge', () => { log("Dodaj odznakę") })
 					]),
 					AppSegments(
 						segments: [
 							Segment(
-								title: 'page.caregiverSection.awards.content.addedAwardsTitle',
-								noElementsMessage: 'page.caregiverSection.awards.content.noAwardsAdded',
+								title: '$_pageKey.content.addedAwardsTitle',
+								noElementsMessage: '$_pageKey.content.noAwardsAdded',
 								noElementsAction: RaisedButton(
 									child: Text(
-										AppLocales.of(context).translate('page.caregiverSection.awards.header.addAward'),
+										AppLocales.of(context).translate('$_pageKey.header.addAward'),
 										style: Theme.of(context).textTheme.button
 									),
 									onPressed: () => {},
@@ -50,17 +52,17 @@ class _CaregiverAwardsPageState extends State<CaregiverAwardsPage> {
 										graphicType: GraphicAssetType.awardsIcons,
 										graphic: 16,
 										chips: <Widget>[
-											AttributeChip.withCurrency(content: "30", currencyType: CurrencyType.diamond, tooltip: 'page.caregiverSection.awards.content.pointCost')
+											AttributeChip.withCurrency(content: "30", currencyType: CurrencyType.diamond, tooltip: '$_pageKey.content.pointCost')
 										],
 									)
 								]
 							),
 							Segment(
-								title: 'page.caregiverSection.awards.content.addedBadgesTitle',
-								noElementsMessage: 'page.caregiverSection.awards.content.noBadgesAdded',
+								title: '$_pageKey.content.addedBadgesTitle',
+								noElementsMessage: '$_pageKey.content.noBadgesAdded',
 								noElementsAction: RaisedButton(
 									child: Text(
-										AppLocales.of(context).translate('page.caregiverSection.awards.header.addBadge'),
+										AppLocales.of(context).translate('$_pageKey.header.addBadge'),
 										style: Theme.of(context).textTheme.button
 									),
 									onPressed: () => {},

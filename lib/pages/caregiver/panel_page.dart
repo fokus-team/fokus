@@ -6,7 +6,7 @@ import 'package:fokus/logic/caregiver_panel/caregiver_panel_cubit.dart';
 import 'package:fokus/model/app_page.dart';
 import 'package:fokus/model/currency_type.dart';
 import 'package:fokus/logic/active_user/active_user_cubit.dart';
-import 'package:fokus/model/ui/ui_child.dart';
+import 'package:fokus/model/ui/user/ui_child.dart';
 import 'package:fokus/utils/app_locales.dart';
 import 'package:fokus/utils/cubit_utils.dart';
 import 'package:fokus/widgets/app_header.dart';

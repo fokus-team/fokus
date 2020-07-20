@@ -6,7 +6,7 @@ import 'package:get_it/get_it.dart';
 
 import 'package:fokus/logic/active_user/active_user_cubit.dart';
 import 'package:fokus/model/db/date/date.dart';
-import 'package:fokus/model/ui/ui_plan.dart';
+import 'package:fokus/model/ui/plan/ui_plan.dart';
 import 'package:fokus/services/plan_repeatability_service.dart';
 
 part 'child_plans_state.dart';

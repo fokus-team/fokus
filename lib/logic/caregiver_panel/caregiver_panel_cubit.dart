@@ -6,9 +6,9 @@ import 'package:mongo_dart/mongo_dart.dart';
 import 'package:fokus/logic/active_user/active_user_cubit.dart';
 import 'package:fokus/services/plan_repeatability_service.dart';
 import 'package:fokus/services/data/data_repository.dart';
-import 'package:fokus/model/ui/ui_child.dart';
+import 'package:fokus/model/ui/user/ui_child.dart';
 import 'package:fokus/model/db/date/date.dart';
-import 'package:fokus/model/ui/ui_caregiver.dart';
+import 'package:fokus/model/ui/user/ui_caregiver.dart';
 
 part 'caregiver_panel_state.dart';
 

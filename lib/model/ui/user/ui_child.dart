@@ -2,7 +2,7 @@ import 'package:bson/bson.dart';
 import 'package:fokus/model/currency_type.dart';
 import 'package:fokus/model/db/user/child.dart';
 import 'package:fokus/model/db/user/user_role.dart';
-import 'package:fokus/model/ui/ui_user.dart';
+import 'package:fokus/model/ui/user/ui_user.dart';
 
 class UIChild extends UIUser {
 	final int todayPlanCount;
@@ -11,8 +11,8 @@ class UIChild extends UIUser {
 
   UIChild(ObjectId id, String name, {this.todayPlanCount = 0, this.hasActivePlan = false, this.points = const {}, int avatar = -1}) :
 			  super(id, name, role: UserRole.child, avatar: avatar);
-  UIChild.fromDBModel(Child child, {int todayPlanCount = 0, bool hasActivePlan = false}): this(child.id, child.name, avatar: child.avatar,
-		  points: Map.fromEntries(child.points.map((type) => MapEntry(type.icon, type.quantity))), todayPlanCount: todayPlanCount, hasActivePlan: hasActivePlan);
+  UIChild.fromDBModel(Child child, {this.todayPlanCount = 0, this.hasActivePlan = false}):
+			  points = Map.fromEntries(child.points.map((type) => MapEntry(type.icon, type.quantity))), super.fromDBModel(child);
 
 	@override
 	List<Object> get props => super.props..addAll([id, todayPlanCount, hasActivePlan, points]);

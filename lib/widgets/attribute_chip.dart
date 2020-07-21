@@ -14,7 +14,7 @@ class AttributeChip extends StatelessWidget {
 
 	final Color defaultColor = Colors.grey[200];
 
-	AttributeChip({@required this.content, this.color, this.icon, this.tooltip});
+	AttributeChip({this.content, this.color, this.icon, this.tooltip});
 
 	AttributeChip.withIcon({
 		String content,
@@ -42,17 +42,18 @@ class AttributeChip extends StatelessWidget {
 	@override
 	Widget build(BuildContext context) {
 		return Tooltip(
-			message: (tooltip != null) ? AppLocales.of(context).translate(tooltip) : content,
+			message: (tooltip != null) ? AppLocales.of(context).translate(tooltip) : 
+				(content != null) ? content : AppLocales.of(context).translate('alert.noHint'),
 			child: Chip(
 				avatar: icon,
 				materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
 				backgroundColor: (color != null) ? color.withAlpha(30) : defaultColor, 
-				labelPadding: EdgeInsets.only(left: (icon != null) ? 3.0 : 6.0, right: 6.0),
-				label: Text(
+				labelPadding: (content != null) ? EdgeInsets.only(left: (icon != null) ? 3.0 : 6.0, right: 6.0) : EdgeInsets.zero,
+				label: (content != null) ? Text(
 					content, 
 					style: TextStyle(color: color, fontWeight: FontWeight.bold),
 					overflow: TextOverflow.fade,
-				),
+				) : SizedBox(width: 0),
 				visualDensity: VisualDensity.compact
 			)
 		);

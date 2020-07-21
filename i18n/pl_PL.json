@@ -49,7 +49,9 @@
 				"content": {
 					"addedPlansTitle": "Zdefiniowane plany",
 					"noPlansAdded": "Brak zdefiniowanych planów, dodaj pierwszy teraz",
-					"tasksCount": "{NUM_TASKS, plural, offset:0  zero {# zadań} one {# zadanie} two {# zadania} few {# zadania} other {# zadań}}"
+					"tasksCount": "{NUM_TASKS, plural, offset:0 zero {# zadań} one {# zadanie} two {# zadania} few {# zadania} other {# zadań}}",
+					"activePlan": "Plan aktywny",
+					"inactivePlan": "Plan nieaktywny"
 				}
 			},
 			"awards": {
@@ -64,7 +66,12 @@
 					"noAwardsAdded": "Brak zdefiniowanych nagród, dodaj pierwszą teraz",
 					"addedBadgesTitle": "Zdefiniowane odznaki",
 					"noBadgesAdded": "Brak zdefiniowanych odznak, dodaj pierwszą teraz",
-					"pointCost": "Koszt punktowy nagrody"
+					"pointCost": "Koszt punktowy nagrody",
+					"unlimitedAward": "Nagroda nielimitowana",
+					"limitedAward": "Limit {AWARD_LIMIT, plural, offset:0 one {jednej nagrody} other {# nagród}} na dziecko",
+					"noLeveledBadge": "Odznaka przyznawana jednorazowo",
+					"3LeveledBadge": "Odznaka 3 poziomowa",
+					"5LeveledBadge": "Odznaka 5 poziomowa"
 				}
 			},
 			"statistics": {
@@ -100,7 +107,8 @@
 	},
 	"alert": {
 		"error": "Wystąpił błąd",
-		"noConnection": "Brak połączenia"
+		"noConnection": "Brak połączenia",
+		"noHint": "Brak podpowiedzi"
 	},
 	"actions": {
 		"exit": "Wyjdź",

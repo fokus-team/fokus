@@ -13,7 +13,6 @@ part 'child_plans_state.dart';
 
 class ChildPlansCubit extends Cubit<ChildPlansState> {
 	final ActiveUserCubit _activeUserCubit;
-	final DataRepository _dbProvider = GetIt.I<DataRepository>();
 	final PlanRepeatabilityService _repeatabilityService = GetIt.I<PlanRepeatabilityService>();
 
   ChildPlansCubit(this._activeUserCubit) : super(ChildPlansInitial());
@@ -21,20 +20,7 @@ class ChildPlansCubit extends Cubit<ChildPlansState> {
   void loadChildPlansForToday() async {
 	  if (!(state is ChildPlansInitial))
 		  return;
-	  var userId = (_activeUserCubit.state as ActiveUserPresent).user.id;
-	  emit(ChildPlansLoadInProgress());
-		var plans = await _repeatabilityService.getChildPlansByDate(userId, Date.now());
-		var activePlanInstance = await _dbProvider.getActiveChildPlanInstance(userId);
-		Plan activePlan;
-		if (activePlanInstance != null) {
-			activePlan = plans.firstWhere((plan) => plan.id == activePlanInstance.planID);
-			plans.remove(activePlan);
-		}
-		emit(ChildPlansLoadSuccess(
-				plans: plans.map((plan) => _createUIPlan(plan)).toList(),
-				activePlan: activePlan != null ? _createUIPlan(activePlan) : null
-		));
+	  var plans = await _repeatabilityService.getChildPlansByDate((_activeUserCubit.state as ActiveUserPresent).user.id, Date.now());
+	  emit(ChildPlansLoadSuccess(plans.map((plan) => UIPlan.fromDBModel(plan, _repeatabilityService.buildPlanDescription(plan.repeatability))).toList()));
   }
-
-  UIPlan _createUIPlan(Plan plan) => UIPlan.fromDBModel(plan, _repeatabilityService.buildPlanDescription(plan.repeatability));
 }

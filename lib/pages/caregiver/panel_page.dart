@@ -4,11 +4,12 @@ import 'package:flutter_cubit/flutter_cubit.dart';
 
 import 'package:fokus/logic/caregiver_panel/caregiver_panel_cubit.dart';
 import 'package:fokus/model/app_page.dart';
-import 'package:fokus/model/currency_type.dart';
 import 'package:fokus/logic/active_user/active_user_cubit.dart';
 import 'package:fokus/model/ui/user/ui_child.dart';
 import 'package:fokus/utils/app_locales.dart';
 import 'package:fokus/utils/cubit_utils.dart';
+import 'package:fokus/utils/icon_sets.dart';
+
 import 'package:fokus/widgets/app_header.dart';
 import 'package:fokus/widgets/app_navigation_bar.dart';
 import 'package:fokus/widgets/item_card.dart';
@@ -67,7 +68,8 @@ class _CaregiverPanelPageState extends State<CaregiverPanelPage> {
 								ItemCardMenuItem(text: "actions.edit", onTapped: () => {log("edit")}),
 								ItemCardMenuItem(text: "actions.delete", onTapped: () => {log("delete")})
 							],
-							image: true,
+							graphicType: GraphicAssetType.childAvatars,
+							graphic: child.avatar,
 							chips: <Widget>[
 								for (var currency in child.points.entries)
 									AttributeChip.withCurrency(content: '${currency.value}', currencyType: currency.key)

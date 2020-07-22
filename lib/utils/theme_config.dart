@@ -15,6 +15,7 @@ class AppColors {
   // Child colors
   static final Color childBackgroundColor = Colors.lightGreen;
   static final Color childButtonColor = Colors.orange;
+  static final Color childActionColor = Colors.amber;
 
   // Currency colors
 	static final Map<CurrencyType, Color> currencyColor = {

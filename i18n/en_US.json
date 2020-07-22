@@ -93,6 +93,15 @@
 					"myPoints": "My points",
 					"pageHint": "Complete tasks and earn points.",
 					"garden": "Garden"
+				},
+				"content": {
+					"todaysPlans": "Today's plans",
+					"inProgress": "In progress",
+					"futurePlans": "Check future plans",
+					"tasks": "{NUM_TASKS, plural, offset:0  one {# task} other {# tasks}}",
+					"noPlans": "No plans",
+					"remainingTodaysPlans": "Remaining today's plans",
+					"allPlansCompleted": "There's nothing left to do"
 				}
 			}
 		}

@@ -24,7 +24,7 @@ class _ChildPanelPageState extends State<ChildPanelPage> {
 							if (state is ChildPlansInitial)
 								CubitProvider.of<ChildPlansCubit>(context).loadChildPlansForToday();
 							else if (state is ChildPlansLoadSuccess)
-								return Text(state.toString() + state.activePlan.description(context));
+								return Text(state.toString());
 							return Expanded(child: Center(child: CircularProgressIndicator()));
 						},
 					)

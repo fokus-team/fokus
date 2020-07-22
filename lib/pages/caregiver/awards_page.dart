@@ -44,7 +44,7 @@ class _CaregiverAwardsPageState extends State<CaregiverAwardsPage> {
 								elements: <Widget>[
 									ItemCard(
 										title: "Wycieczka do Zoo", 
-										subtitle: "Limit 2 na dziecko",
+										subtitle: AppLocales.of(context).translate('$_pageKey.content.limitedAward', {'AWARD_LIMIT': 2}),
 										menuItems: [
 											ItemCardMenuItem(text: "actions.edit", onTapped: () => {log("edit")}),
 											ItemCardMenuItem(text: "actions.delete", onTapped: () => {log("delete")})
@@ -70,7 +70,7 @@ class _CaregiverAwardsPageState extends State<CaregiverAwardsPage> {
 								elements: <Widget>[
 									ItemCard(
 										title: "Super planista", 
-										subtitle: "3 poziomy",
+										subtitle: AppLocales.of(context).translate('$_pageKey.content.3LeveledBadge'),
 										menuItems: [
 											ItemCardMenuItem(text: "actions.edit", onTapped: () => {log("edit")}),
 											ItemCardMenuItem(text: "actions.delete", onTapped: () => {log("delete")})

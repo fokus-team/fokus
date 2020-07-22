@@ -24,9 +24,9 @@ class HeaderActionButton {
 
 	HeaderActionButton(this.icon, this.text, this.customContent, this.action, [this.backgroundColor]);
 	HeaderActionButton.normal(IconData icon, String text, Function action, [Color backgroundColor])
-		: this(icon, text, null, action, backgroundColor);
+			: this(icon, text, null, action, backgroundColor);
 	HeaderActionButton.custom(Widget customContent, Function action, [Color backgroundColor])
-		: this(null, null, customContent, action, backgroundColor);
+			: this(null, null, customContent, action, backgroundColor);
 }
 
 class AppHeader extends StatelessWidget {
@@ -37,15 +37,15 @@ class AppHeader extends StatelessWidget {
 
 	AppHeader({this.title, this.text, this.headerActionButtons, this.headerType});
 	AppHeader.greetings({String text, List<HeaderActionButton> headerActionButtons}) : this(
-		text: text, 
-		headerActionButtons: headerActionButtons,
-		headerType: AppHeaderType.greetings
+			text: text,
+			headerActionButtons: headerActionButtons,
+			headerType: AppHeaderType.greetings
 	);
 	AppHeader.normal({String title, String text, List<HeaderActionButton> headerActionButtons}) : this(
-		title: title,
-		text: text, 
-		headerActionButtons: headerActionButtons,
-		headerType: AppHeaderType.normal
+			title: title,
+			text: text,
+			headerActionButtons: headerActionButtons,
+			headerType: AppHeaderType.normal
 	);
 
   @override

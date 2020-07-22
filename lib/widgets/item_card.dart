@@ -87,7 +87,7 @@ class ItemCard extends StatelessWidget {
 	Widget build(BuildContext context) {
 		return IntrinsicHeight(
 			child: Card(
-				elevation: isActive ? 1.2 : 0.2,
+				elevation: isActive ? 1.2 : 0.6,
 				color: isActive ? Colors.white : disabledButtonColor,
 				shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppBoxProperties.roundedCornersRadius)),
 				margin: EdgeInsets.symmetric(

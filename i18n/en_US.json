@@ -49,7 +49,9 @@
 				"content": {
 					"addedPlansTitle": "Added plans",
 					"noPlansAdded": "No plans to display, add the first one now",
-					"tasksCount": "{NUM_TASKS, plural, offset:0  =1 {# task} other {# tasks}}"
+					"tasksCount": "{NUM_TASKS, plural, offset:0  =1 {# task} other {# tasks}}",
+					"activePlan": "Plan active",
+					"inactivePlan": "Plan inactive"
 				}
 			},
 			"awards": {
@@ -64,7 +66,12 @@
 					"noAwardsAdded": "No awards to display, add the first one now",
 					"addedBadgesTitle": "Added badges",
 					"noBadgesAdded": "No badges to display, add the first one now",
-					"pointCost": "Award's point cost"
+					"pointCost": "Award's point cost",
+					"unlimitedAward": "Unlimited award",
+					"limitedAward": "Limited {AWARD_LIMIT, plural, offset:0 one {one award} other {# awards}} per child",
+					"noLeveledBadge": "One-time badge",
+					"3LeveledBadge": "3-leveled badge",
+					"5LeveledBadge": "5-leveled badge"
 				}
 			},
 			"statistics": {
@@ -86,6 +93,15 @@
 					"myPoints": "My points",
 					"pageHint": "Complete tasks and earn points.",
 					"garden": "Garden"
+				},
+				"content": {
+					"todaysPlans": "Today's plans",
+					"inProgress": "In progress",
+					"futurePlans": "Check future plans",
+					"tasks": "{NUM_TASKS, plural, offset:0  one {# task} other {# tasks}}",
+					"noPlans": "No plans",
+					"remainingTodaysPlans": "Remaining today's plans",
+					"allPlansCompleted": "There's nothing left to do"
 				}
 			}
 		}
@@ -100,7 +116,8 @@
 	},
 	"alert": {
 		"error": "Error occurred",
-		"noConnection": "No connection"
+		"noConnection": "No connection",
+		"noHint": "No hint"
 	},
 	"actions": {
 		"exit": "Exit",

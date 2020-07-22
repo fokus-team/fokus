@@ -42,10 +42,30 @@ class _CaregiverPlansPageState extends State<CaregiverPlansPage> {
 								elements: <Widget>[
 									ItemCard(
 										title: "Sprzątanie pokoju", 
-										subtitle: "Co każdą sobotę",
-										onTapped: () => {log("go to details page")},
+										subtitle: AppLocales.of(context).translate('repeatability.weekly', {'WEEKDAY': '2'}) + ' ' +
+										 AppLocales.of(context).translate('repeatability.weekday', {'WEEKDAY': '2'}) + ' ' + 
+										 AppLocales.of(context).translate('and') + ' ' + AppLocales.of(context).translate('repeatability.weekday', {'WEEKDAY': '6'}),
+										actionButton: ItemCardActionButton(
+											color: Colors.teal,
+											icon: Icons.keyboard_arrow_right,
+											onTapped: () => {log("go to details page")}
+										),
 										chips: <Widget>[
+											AttributeChip.withIcon(color: Colors.green, icon: Icons.radio_button_checked, tooltip: '$_pageKey.content.activePlan'),
 											AttributeChip.withIcon(content: "4 zadania", color: Colors.indigo, icon: Icons.layers)
+										],
+									),
+									ItemCard(
+										title: "Projekt szkolny", 
+										subtitle: AppLocales.of(context).translate('repeatability.once', {'DAY': '12 sierpnia'}),
+										actionButton: ItemCardActionButton(
+											color: Colors.teal,
+											icon: Icons.keyboard_arrow_right,
+											onTapped: () => {log("go to details page")}
+										),
+										chips: <Widget>[
+											AttributeChip.withIcon(color: Colors.red, icon: Icons.radio_button_unchecked, tooltip: '$_pageKey.content.inactivePlan'),
+											AttributeChip.withIcon(content: "2 zadania", color: Colors.indigo, icon: Icons.layers)
 										],
 									)
 								]

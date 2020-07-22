@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_cubit/flutter_cubit.dart';
 
 import 'package:fokus/logic/child_plans/child_plans_cubit.dart';
+import 'package:fokus/model/db/plan/plan_instance_state.dart';
+import 'package:fokus/model/ui/plan/ui_plan_instance.dart';
 import 'package:fokus/utils/app_locales.dart';
 import 'package:fokus/utils/theme_config.dart';
 import 'package:fokus/widgets/app_header.dart';
@@ -55,8 +57,9 @@ class _ChildPanelPageState extends State<ChildPanelPage> {
   }
 
   List<Segment> _buildPanelSegments(ChildPlansLoadSuccess state) {
+  	var activePlan = state.plans.firstWhere((plan) => plan.state == PlanInstanceState.active);
     return [
-			if(state.activePlan != null)
+			if(activePlan != null)
         Segment(title: '$_pageKey.content.inProgress', elements: <Widget>[
           ItemCard(
             actionButton: ItemCardActionButton(
@@ -64,8 +67,8 @@ class _ChildPanelPageState extends State<ChildPanelPage> {
               color: AppColors.childActionColor,
               onTapped: () => {log("startPlan")},
             ),
-            title: state.activePlan.name,
-            subtitle: state.activePlan.description(context),
+            title: activePlan.name,
+            subtitle: activePlan.description(context),
             isActive: true,
             //TODO: add progress from DB
             progressPercentage: 0.4,
@@ -73,32 +76,33 @@ class _ChildPanelPageState extends State<ChildPanelPage> {
               AttributeChip.withIcon(
                 icon: Icons.description,
                 color: AppColors.mainBackgroundColor,
-                content: ' ${AppLocales.of(context).translate("$_pageKey.content.tasks", {'NUM_TASKS': state.activePlan.taskCount})}'
+                content: ' ${AppLocales.of(context).translate("$_pageKey.content.tasks", {'NUM_TASKS': activePlan.taskCount})}'
               )
             ],
           )
         ],
       ),
       Segment(
-        title: '$_pageKey.content.' + (state.activePlan == null ? 'todaysPlans' : 'remainingTodaysPlans'),
-        noElementsMessage: '$_pageKey.content.' + (state.activePlan == null ? 'noPlans' : 'allPlansCompleted'),
+        title: '$_pageKey.content.' + (activePlan == null ? 'todaysPlans' : 'remainingTodaysPlans'),
+        noElementsMessage: '$_pageKey.content.' + (activePlan == null ? 'noPlans' : 'allPlansCompleted'),
         elements: <Widget>[
           for (var plan in state.plans)
-            ItemCard(
-              actionButton: ItemCardActionButton(
-                icon: Icons.play_arrow,
-                color: AppColors.childButtonColor,
-                onTapped: () => {log("startPlan")}),
-              title: plan.name,
-              subtitle: plan.description(context),
-              chips: <Widget>[
-                AttributeChip.withIcon(
-                  icon: Icons.description,
-                  color: AppColors.mainBackgroundColor,
-                  content: ' ${AppLocales.of(context).translate("$_pageKey.content.tasks", {'NUM_TASKS': plan.taskCount})}'
-                )
-              ],
-            )
+          	if (plan.id != activePlan.id)
+	            ItemCard(
+	              actionButton: ItemCardActionButton(
+	                icon: Icons.play_arrow,
+	                color: AppColors.childButtonColor,
+	                onTapped: () => {log("startPlan")}),
+	              title: plan.name,
+	              subtitle: plan.description(context),
+	              chips: <Widget>[
+	                AttributeChip.withIcon(
+	                  icon: Icons.description,
+	                  color: AppColors.mainBackgroundColor,
+	                  content: ' ${AppLocales.of(context).translate("$_pageKey.content.tasks", {'NUM_TASKS': plan.taskCount})}'
+	                )
+	              ],
+	            )
         ],
       ),
     ];

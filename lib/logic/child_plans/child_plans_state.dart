@@ -12,7 +12,7 @@ class ChildPlansInitial extends ChildPlansState {}
 class ChildPlansLoadInProgress extends ChildPlansState {}
 
 class ChildPlansLoadSuccess extends ChildPlansState {
-	final List<UIPlan> plans;
+	final List<UIPlanInstance> plans;
 
   ChildPlansLoadSuccess(this.plans);
 

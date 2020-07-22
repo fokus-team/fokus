@@ -22,6 +22,11 @@ mixin PlanDbRepository implements DbRepository {
 	  return client.queryOneTyped(Collection.planInstance, _buildPlanQuery(childId, state: PlanInstanceState.active), (json) => PlanInstance.fromJson(json));
 	}
 
+	Future<List<PlanInstance>> getPlanInstancesForPlans(ObjectId childId, List<ObjectId> planIDs) {
+		var query = _buildPlanQuery(childId).and(where.oneFrom('planID', planIDs));
+		return client.queryTyped(Collection.planInstance, query, (json) => PlanInstance.fromJson(json));
+	}
+
 	SelectorBuilder _buildPlanQuery(ObjectId childId, {ObjectId planId, Date date, bool activeOnly = false, PlanInstanceState state}) {
 		var query = where.eq('assignedTo', childId);
 		if (activeOnly)

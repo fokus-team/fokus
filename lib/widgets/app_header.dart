@@ -16,49 +16,39 @@ import 'package:fokus/widgets/app_avatar.dart';
 enum AppHeaderType { greetings, normal }
 
 class HeaderActionButton {
-  final IconData icon;
-  final String text;
-  final Function action;
-  final Widget customContent;
-  final Color backgroundColor;
+	final IconData icon;
+	final String text;
+	final Function action;
+	final Widget customContent;
+	final Color backgroundColor;
 
-  HeaderActionButton(this.icon, this.text, this.customContent, this.action,
-      [this.backgroundColor]);
-
-  HeaderActionButton.normal(IconData icon, String text, Function action,
-      [Color backgroundColor])
-      : this(icon, text, null, action, backgroundColor);
-
-  HeaderActionButton.custom(Widget customContent, Function action,
-      [Color backgroundColor])
-      : this(null, null, customContent, action, backgroundColor);
+	HeaderActionButton(this.icon, this.text, this.customContent, this.action, [this.backgroundColor]);
+	HeaderActionButton.normal(IconData icon, String text, Function action, [Color backgroundColor])
+			: this(icon, text, null, action, backgroundColor);
+	HeaderActionButton.custom(Widget customContent, Function action, [Color backgroundColor])
+			: this(null, null, customContent, action, backgroundColor);
 }
 
 class AppHeader extends StatelessWidget {
-  final String title;
-  final String text;
-  final List<HeaderActionButton> headerActionButtons;
-  final AppHeaderType headerType;
+	final String title;
+	final String text;
+	final List<HeaderActionButton> headerActionButtons;
+	final AppHeaderType headerType;
 
-  AppHeader({this.title, this.text, this.headerActionButtons, this.headerType});
-
-  AppHeader.greetings(
-      {String text, List<HeaderActionButton> headerActionButtons})
-      : this(
-            text: text,
-            headerActionButtons: headerActionButtons,
-            headerType: AppHeaderType.greetings);
-
-  AppHeader.normal(
-      {String title, String text, List<HeaderActionButton> headerActionButtons})
-      : this(
-            title: title,
-            text: text,
-            headerActionButtons: headerActionButtons,
-            headerType: AppHeaderType.normal);
+	AppHeader({this.title, this.text, this.headerActionButtons, this.headerType});
+	AppHeader.greetings({String text, List<HeaderActionButton> headerActionButtons}) : this(
+			text: text,
+			headerActionButtons: headerActionButtons,
+			headerType: AppHeaderType.greetings
+	);
+	AppHeader.normal({String title, String text, List<HeaderActionButton> headerActionButtons}) : this(
+			title: title,
+			text: text,
+			headerActionButtons: headerActionButtons,
+			headerType: AppHeaderType.normal
+	);
 
   @override
-
   Widget build(BuildContext context) => headerType == AppHeaderType.greetings ? buildGreetings(context) : buildNormal(context);
 
 	Widget headerImage(UIUser user) {

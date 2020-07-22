@@ -4,13 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_cubit/flutter_cubit.dart';
 
 import 'package:fokus/logic/active_user/active_user_cubit.dart';
-import 'package:fokus/model/currency_type.dart';
 import 'package:fokus/model/db/user/user_role.dart';
 import 'package:fokus/model/ui/ui_child.dart';
 import 'package:fokus/model/ui/ui_user.dart';
 import 'package:fokus/utils/app_locales.dart';
+import 'package:fokus/utils/icon_sets.dart';
 import 'package:fokus/utils/theme_config.dart';
 import 'package:fokus/widgets/attribute_chip.dart';
+import 'package:fokus/widgets/app_avatar.dart';
 
 enum AppHeaderType { greetings, normal }
 
@@ -60,9 +61,12 @@ class AppHeader extends StatelessWidget {
 
   Widget build(BuildContext context) => headerType == AppHeaderType.greetings ? buildGreetings(context) : buildNormal(context);
 
-	Image headerImage(UIUser user) {
-		// TODO Handling the avatars (based on type and avatar parameters), returning sunflower for now
-		return Image.asset('assets/image/sunflower_logo.png', height: 64);
+	Widget headerImage(UIUser user) {
+		if(user.role == UserRole.caregiver) {
+			return Image.asset('assets/image/sunflower_logo.png', height: 64);
+		} else {
+			return AppAvatar(user.avatar, color: childAvatars[user.avatar].color);
+		}
 	}
 
 	Widget headerIconButton(IconData icon, Function action) {
@@ -185,7 +189,7 @@ class AppHeader extends StatelessWidget {
 											children: <TextSpan>[
 												TextSpan(
 													text: currentUser.name,
-													style: Theme.of(context).textTheme.headline1.copyWith(color: Colors.white)
+													style: Theme.of(context).textTheme.headline1.copyWith(color: Colors.white, height: 1.1)
 												)
 											]
 										),

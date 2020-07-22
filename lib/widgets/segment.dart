@@ -91,17 +91,16 @@ class Segment extends StatelessWidget {
 	@override
 	Widget build(BuildContext context) {
 		return ListView(
-				shrinkWrap: true,
-				padding: EdgeInsets.only(top: AppBoxProperties.sectionPadding),
-					physics: BouncingScrollPhysics(),
-				children: <Widget>[
-					buildSectionHeader(context),
-					if(elements.length > 0)
-						...elements
-					else if(noElementsMessage != null)
-						buildNoElementsInfo(context)
-				]
-			
+			shrinkWrap: true,
+			padding: EdgeInsets.only(top: AppBoxProperties.sectionPadding),
+			physics: BouncingScrollPhysics(),
+			children: <Widget>[
+				buildSectionHeader(context),
+				if(elements.length > 0)
+					...elements
+				else if(noElementsMessage != null)
+					buildNoElementsInfo(context)
+			]
 		);
 	}
 

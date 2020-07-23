@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fokus/widgets/app_navigation_bar.dart';
 import 'package:fokus/widgets/app_header.dart';
+import 'package:fokus/widgets/segment.dart';
 
 class ChildAchievementsPage extends StatefulWidget {
 	@override
@@ -8,6 +9,8 @@ class ChildAchievementsPage extends StatefulWidget {
 }
 
 class _ChildAchievementsPageState extends State<ChildAchievementsPage> {
+  static const String _pageKey = 'page.childSection.achievements';
+
 	@override
 	Widget build(BuildContext context) {
 		return Scaffold(
@@ -15,9 +18,14 @@ class _ChildAchievementsPageState extends State<ChildAchievementsPage> {
 				crossAxisAlignment: CrossAxisAlignment.start,
 				children: [
 					ChildCustomHeader(),
-					Container(
-						padding: EdgeInsets.all(8.0),
-						child: Text('Moje osiągnięcia', textAlign: TextAlign.left, style: Theme.of(context).textTheme.headline2)
+					AppSegments(
+						segments: [
+							Segment(
+								title: '$_pageKey.content.achievementsTitle',
+								noElementsMessage: '$_pageKey.content.noAchievementsMessage',
+								elements: <Widget>[]
+							),
+						]
 					)
 				]
 			),

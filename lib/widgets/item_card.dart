@@ -134,7 +134,7 @@ class ItemCard extends StatelessWidget {
 		return Flexible(
 			child: Column(
 				crossAxisAlignment: CrossAxisAlignment.start,
-				mainAxisAlignment: MainAxisAlignment.center,
+				mainAxisAlignment: (progressPercentage != null) ? MainAxisAlignment.spaceBetween : MainAxisAlignment.center,
 				children: <Widget>[
 					buildContentSection(context),
 					if(progressPercentage != null && actionButton != null)
@@ -172,7 +172,8 @@ class ItemCard extends StatelessWidget {
 									Text(
 										subtitle, 
 										style: Theme.of(context).textTheme.subtitle2,
-										overflow: TextOverflow.fade,
+										overflow: TextOverflow.ellipsis,
+										maxLines: titleMaxLines,
 										softWrap: false,
 									),
 								if(chips != null && chips.isNotEmpty)

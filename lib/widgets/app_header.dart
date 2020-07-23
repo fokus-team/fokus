@@ -247,7 +247,7 @@ class ChildCustomHeader extends StatelessWidget {
 							),
 							for (var currency in (user as UIChild).points.entries)
 								Padding(
-									padding: EdgeInsets.only(left: 2.0),
+									padding: EdgeInsets.only(left: 4.0),
 									child: AttributeChip.withCurrency(content: '${currency.value}', currencyType: currency.key)
 								),
 						]

@@ -45,7 +45,7 @@ class _ChildPanelPageState extends State<ChildPanelPage> {
 	          children: <Widget>[
 	            RoundedButton(
 		            iconData: Icons.calendar_today,
-		            text: '${AppLocales.of(context).translate("$_pageKey.content.futurePlans")} ',
+		            text: AppLocales.of(context).translate('$_pageKey.content.futurePlans'),
 		            color: AppColors.childButtonColor,
 		          ),
 	          ],
@@ -71,12 +71,12 @@ class _ChildPanelPageState extends State<ChildPanelPage> {
             subtitle: activePlan.description(context),
             isActive: true,
             //TODO: add progress from DB
-            progressPercentage: 0.4,
+            progressPercentage: 0.33,
             chips: <Widget>[
               AttributeChip.withIcon(
                 icon: Icons.description,
-                color: AppColors.mainBackgroundColor,
-                content: ' ${AppLocales.of(context).translate("$_pageKey.content.tasks", {'NUM_TASKS': activePlan.taskCount})}'
+                color: Colors.lightGreen,
+                content: AppLocales.of(context).translate('$_pageKey.content.taskProgress', {'NUM_TASKS': 1, 'NUM_ALL_TASKS': 3})
               )
             ],
           )
@@ -87,7 +87,7 @@ class _ChildPanelPageState extends State<ChildPanelPage> {
         noElementsMessage: '$_pageKey.content.' + (activePlan == null ? 'noPlans' : 'allPlansCompleted'),
         elements: <Widget>[
           for (var plan in state.plans)
-          	if (plan.id != activePlan.id)
+	          if (plan.id != activePlan.id)
 	            ItemCard(
 	              actionButton: ItemCardActionButton(
 	                icon: Icons.play_arrow,
@@ -99,7 +99,7 @@ class _ChildPanelPageState extends State<ChildPanelPage> {
 	                AttributeChip.withIcon(
 	                  icon: Icons.description,
 	                  color: AppColors.mainBackgroundColor,
-	                  content: ' ${AppLocales.of(context).translate("$_pageKey.content.tasks", {'NUM_TASKS': plan.taskCount})}'
+	                  content: AppLocales.of(context).translate('$_pageKey.content.tasks', {'NUM_TASKS': plan.taskCount})
 	                )
 	              ],
 	            )

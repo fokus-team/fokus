@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fokus/widgets/app_navigation_bar.dart';
 import 'package:fokus/widgets/app_header.dart';
+import 'package:fokus/widgets/segment.dart';
 
 class ChildAwardsPage extends StatefulWidget {
 	@override
@@ -8,6 +9,8 @@ class ChildAwardsPage extends StatefulWidget {
 }
 
 class _ChildAwardsPageState extends State<ChildAwardsPage> {
+  static const String _pageKey = 'page.childSection.awards';
+
 	@override
 	Widget build(BuildContext context) {
 		return Scaffold(
@@ -15,9 +18,14 @@ class _ChildAwardsPageState extends State<ChildAwardsPage> {
 				crossAxisAlignment: CrossAxisAlignment.start,
 				children: [
 					ChildCustomHeader(),
-					Container(
-						padding: EdgeInsets.all(8.0),
-						child: Text('Dostępne nagrody', textAlign: TextAlign.left, style: Theme.of(context).textTheme.headline2)
+					AppSegments(
+						segments: [
+							Segment(
+								title: '$_pageKey.content.awardsTitle',
+								noElementsMessage: '$_pageKey.content.noAwardsMessage',
+								elements: <Widget>[]
+							),
+						]
 					)
 				]
 			),

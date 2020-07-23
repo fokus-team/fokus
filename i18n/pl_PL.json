@@ -28,7 +28,7 @@
 					"greetings": "Witaj",
 					"addChild": "Dodaj dziecko",
 					"addCaregiver": "Dodaj opiekuna",
-					"pageHint": "Zarządzaj profilami dzieci i powiązanymi kontami opiekunów."
+					"pageHint": "Zarządzaj profilami dzieci i powiązanymi kontami opiekunów"
 				},
 				"content": {
 					"childProfilesTitle": "Profile dzieci",
@@ -44,7 +44,7 @@
 					"title": "Plany",
 					"addPlan": "Dodaj plan",
 					"calendar": "Kalendarz",
-					"pageHint": "Twórz, przypisuj i zarządzaj planami oraz zadaniami."
+					"pageHint": "Twórz, przypisuj i zarządzaj planami oraz zadaniami"
 				},
 				"content": {
 					"addedPlansTitle": "Zdefiniowane plany",
@@ -59,7 +59,7 @@
 					"title": "Nagrody",
 					"addAward": "Dodaj nagrodę",
 					"addBadge": "Dodaj odznakę",
-					"pageHint": "Zwiększ motywację do wykonywania planów używając punktów, nagród i odznak."
+					"pageHint": "Zwiększ motywację do wykonywania planów używając punktów, nagród i odznak"
 				},
 				"content": {
 					"addedAwardsTitle": "Zdefiniowane nagrody",
@@ -78,7 +78,7 @@
 				"header": {
 					"title": "Statystyki",
 					"history": "Historia wydarzeń",
-					"pageHint": "Przeglądaj i analizuj wykonaną przez dzieci pracę."
+					"pageHint": "Przeglądaj i analizuj wykonaną przez dzieci pracę"
 				},
 				"content": {
 					"basicStatisticsTitle": "Podstawowe statystyki",
@@ -91,7 +91,7 @@
 				"header": {
 					"greetings": "Cześć",
 					"myPoints": "Moje punkty",
-					"pageHint": "Wykonuj zadania i zdobywaj punkty.",
+					"pageHint": "Wykonuj zadania i zdobywaj punkty",
 					"garden": "Ogród"
 				},
 				"content": {
@@ -101,7 +101,20 @@
 					"tasks": "{NUM_TASKS, plural, offset:0  zero {# zadań} one {# zadanie} two {# zadania} few {# zadania} other {# zadań}}",
 					"noPlans": "Brak planów",
 					"remainingTodaysPlans": "Pozostałe dzisiejsze plany",
-					"allPlansCompleted": "Nie ma nic więcej do zrobienia"
+					"allPlansCompleted": "Nie ma nic więcej do zrobienia",
+					"taskProgress": "Wykonano {NUM_TASKS} z {NUM_ALL_TASKS, plural, offset:0 one {# zadania} other {# zadań}}"
+				}
+			},
+			"awards": {
+				"content": {
+					"awardsTitle": "Nagrody do zdobycia",
+					"noAwardsMessage": "Brak nagród do wyświetlenia"
+				}
+			},
+			"achievements": {
+				"content": {
+					"achievementsTitle": "Osiągnięcia",
+					"noAchievementsMessage": "Brak osiągnięć do wyświetlenia"
 				}
 			}
 		}

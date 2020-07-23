@@ -102,7 +102,8 @@
 					"noPlans": "Brak planów",
 					"remainingTodaysPlans": "Pozostałe dzisiejsze plany",
 					"allPlansCompleted": "Nie ma nic więcej do zrobienia",
-					"taskProgress": "Wykonano {NUM_TASKS} z {NUM_ALL_TASKS, plural, offset:0 one {# zadania} other {# zadań}}"
+					"noTaskCompleted": "{NUM_ALL_TASKS, plural, offset:0 one {# zadanie} two {# zadania} few {# zadania} other {# zadań}} do wykonania",
+					"taskProgress": "Wykonano {NUM_TASKS} z {NUM_ALL_TASKS} zadań"
 				}
 			},
 			"awards": {

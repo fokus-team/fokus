@@ -58,6 +58,7 @@ class _ChildPanelPageState extends State<ChildPanelPage> {
 
   List<Segment> _buildPanelSegments(ChildPlansLoadSuccess state) {
   	var activePlan = state.plans.firstWhere((plan) => plan.state == PlanInstanceState.active);
+  	var taskDescriptionKey = '$_pageKey.content.' + (activePlan.completedTaskCount > 0 ? 'taskProgress' : 'noTaskCompleted');
     return [
 			if(activePlan != null)
         Segment(title: '$_pageKey.content.inProgress', elements: <Widget>[
@@ -71,12 +72,12 @@ class _ChildPanelPageState extends State<ChildPanelPage> {
             subtitle: activePlan.description(context),
             isActive: true,
             //TODO: add progress from DB
-            progressPercentage: 0.33,
+            progressPercentage: activePlan.completedTaskCount / activePlan.taskCount,
             chips: <Widget>[
               AttributeChip.withIcon(
                 icon: Icons.description,
                 color: Colors.lightGreen,
-                content: AppLocales.of(context).translate('$_pageKey.content.taskProgress', {'NUM_TASKS': 1, 'NUM_ALL_TASKS': 3})
+                content: AppLocales.of(context).translate(taskDescriptionKey, {'NUM_TASKS': activePlan.completedTaskCount, 'NUM_ALL_TASKS': activePlan.taskCount})
               )
             ],
           )

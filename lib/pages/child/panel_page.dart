@@ -21,6 +21,7 @@ class ChildPanelPage extends StatefulWidget {
 }
 
 class _ChildPanelPageState extends State<ChildPanelPage> {
+	var _planInProgress = (UIPlanInstance plan) => plan.state == PlanInstanceState.active || plan.state == PlanInstanceState.notCompleted;
   static const String _pageKey = 'page.childSection.panel';
 
   @override
@@ -57,55 +58,71 @@ class _ChildPanelPageState extends State<ChildPanelPage> {
   }
 
   List<Segment> _buildPanelSegments(ChildPlansLoadSuccess state) {
-  	var activePlan = state.plans.firstWhere((plan) => plan.state == PlanInstanceState.active);
-  	var taskDescriptionKey = '$_pageKey.content.' + (activePlan.completedTaskCount > 0 ? 'taskProgress' : 'noTaskCompleted');
+  	var activePlan = state.plans.firstWhere((plan) => plan.state == PlanInstanceState.active, orElse: () => null);
+  	var otherPlans = state.plans.where((plan) => (activePlan == null || plan.id != activePlan.id) && plan.state != PlanInstanceState.completed).toList();
+  	var completedPlans = state.plans.where((plan) => plan.state == PlanInstanceState.completed).toList();
+
     return [
 			if(activePlan != null)
-        Segment(title: '$_pageKey.content.inProgress', elements: <Widget>[
-          ItemCard(
-            actionButton: ItemCardActionButton(
-              icon: Icons.launch,
-              color: AppColors.childActionColor,
-              onTapped: () => {log("startPlan")},
-            ),
-            title: activePlan.name,
-            subtitle: activePlan.description(context),
-            isActive: true,
-            //TODO: add progress from DB
-            progressPercentage: activePlan.completedTaskCount / activePlan.taskCount,
-            chips: <Widget>[
-              AttributeChip.withIcon(
-                icon: Icons.description,
-                color: Colors.lightGreen,
-                content: AppLocales.of(context).translate(taskDescriptionKey, {'NUM_TASKS': activePlan.completedTaskCount, 'NUM_ALL_TASKS': activePlan.taskCount})
-              )
-            ],
-          )
-        ],
-      ),
-      Segment(
-        title: '$_pageKey.content.' + (activePlan == null ? 'todaysPlans' : 'remainingTodaysPlans'),
-        noElementsMessage: '$_pageKey.content.' + (activePlan == null ? 'noPlans' : 'allPlansCompleted'),
-        elements: <Widget>[
-          for (var plan in state.plans)
-	          if (plan.id != activePlan.id)
-	            ItemCard(
-	              actionButton: ItemCardActionButton(
-	                icon: Icons.play_arrow,
-	                color: AppColors.childButtonColor,
-	                onTapped: () => {log("startPlan")}),
-	              title: plan.name,
-	              subtitle: plan.description(context),
-	              chips: <Widget>[
-	                AttributeChip.withIcon(
-	                  icon: Icons.description,
-	                  color: AppColors.mainBackgroundColor,
-	                  content: AppLocales.of(context).translate('$_pageKey.content.tasks', {'NUM_TASKS': plan.taskCount})
-	                )
-	              ],
-	            )
-        ],
-      ),
+				_getPlansSegment(
+					plans: [activePlan],
+					icon: Icons.launch,
+					color: AppColors.childActionColor,
+					title: '$_pageKey.content.inProgress'
+				),
+	    if (otherPlans.isNotEmpty || state.plans.isEmpty)
+		    _getPlansSegment(
+			    plans: otherPlans,
+			    icon: Icons.play_arrow,
+			    color: AppColors.childButtonColor,
+			    title: '$_pageKey.content.' + (activePlan == null ? 'todaysPlans' : 'remainingTodaysPlans'),
+			    noElementsMessage: '$_pageKey.content.noPlans'
+		    ),
+	    if (completedPlans.isNotEmpty)
+		    _getPlansSegment(
+			    plans: completedPlans,
+			    icon: Icons.check,
+			    color: AppColors.childBackgroundColor,
+			    title: '$_pageKey.content.completedPlans'
+		    ),
     ];
+  }
+
+  Segment _getPlansSegment({List<UIPlanInstance> plans, IconData icon, Color color, String title, String noElementsMessage}) {
+  	return Segment(
+		  title: title,
+		  noElementsMessage: noElementsMessage,
+		  elements: <Widget>[
+			  for (var plan in plans)
+				  ItemCard(
+					  actionButton: ItemCardActionButton(
+						  icon: icon,
+						  color: color,
+						  disabled: plan.state == PlanInstanceState.completed,
+						  onTapped: () => {log("startPlan")}
+						),
+					  title: plan.name,
+					  subtitle: plan.description(context),
+					  isActive: plan.state != PlanInstanceState.completed,
+					  progressPercentage: _planInProgress(plan) ? plan.completedTaskCount / plan.taskCount : null,
+					  chips: <Widget>[_getTaskChipForPlan(plan)],
+				  )
+		  ],
+	  );
+  }
+
+  AttributeChip _getTaskChipForPlan(UIPlanInstance plan) {
+  	if (!_planInProgress(plan))
+  		return AttributeChip.withIcon(
+			  icon: Icons.description,
+			  color: AppColors.mainBackgroundColor,
+			  content: AppLocales.of(context).translate('$_pageKey.content.tasks', {'NUM_TASKS': plan.taskCount})
+		  );
+	  var taskDescriptionKey = '$_pageKey.content.' + (plan.completedTaskCount > 0 ? 'taskProgress' : 'noTaskCompleted');
+  	return AttributeChip.withIcon(
+		  icon: Icons.description,
+		  color: Colors.lightGreen,
+		  content: AppLocales.of(context).translate(taskDescriptionKey, {'NUM_TASKS': plan.completedTaskCount, 'NUM_ALL_TASKS': plan.taskCount})
+	  );
   }
 }

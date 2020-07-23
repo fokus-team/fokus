@@ -28,11 +28,16 @@ class ChildPlansCubit extends Cubit<ChildPlansState> {
 	  var instances = await _dbRepository.getPlanInstancesForPlans(childId, plans.map((plan) => plan.id).toList());
 	  var planMap = Map.fromEntries(instances.map((instance) => MapEntry(instance, plans.firstWhere((plan) => plan.id == instance.planID))));
 
-	  var activePlan = instances.firstWhere((plan) => plan.state == PlanInstanceState.active);
-	  var elapsedTime = activePlan != null ? DateTime.now().difference(activePlan.duration.from).inMinutes : 0;
-	  var completedTasks = await _dbRepository.getCompletedTaskCount(activePlan.id);
-	  var uiInstances = instances.map((instance) => UIPlanInstance.fromDBModel(instance, planMap[instance].name, completedTasks, elapsedTime, getDescription(planMap[instance]))).toList();
-	  uiInstances..addAll(plans.where((plan) => !planMap.values.contains(plan)).map((plan) => UIPlanInstance.fromDBPlanModel(plan, getDescription(plan))));
+	  List<UIPlanInstance> uiInstances = [];
+	  for (int i = 0; i < instances.length; i++)
+	  	if (instances[i].state == PlanInstanceState.active || instances[i].state == PlanInstanceState.notCompleted) {
+			  var elapsedTime = DateTime.now().difference(instances[i].duration.from).inMinutes;
+			  var completedTasks = await _dbRepository.getCompletedTaskCount(instances[i].id);
+	  		uiInstances.add(UIPlanInstance.fromDBModel(instances[i], planMap[instances[i]].name, completedTasks, elapsedTime, getDescription(planMap[instances[i]])));
+	  		instances.removeAt(i);
+		  }
+	  uiInstances.addAll(instances.map((instance) => UIPlanInstance.fromDBModel(instance, planMap[instance].name, 0, 0, getDescription(planMap[instance]))));
+	  uiInstances.addAll(plans.where((plan) => !planMap.values.contains(plan)).map((plan) => UIPlanInstance.fromDBPlanModel(plan, getDescription(plan))));
 	  emit(ChildPlansLoadSuccess(uiInstances));
   }
 }

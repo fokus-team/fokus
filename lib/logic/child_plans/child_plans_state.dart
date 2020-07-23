@@ -12,16 +12,15 @@ class ChildPlansInitial extends ChildPlansState {}
 class ChildPlansLoadInProgress extends ChildPlansState {}
 
 class ChildPlansLoadSuccess extends ChildPlansState {
-	final List<UIPlan> plans;
-	final UIPlan activePlan;
+	final List<UIPlanInstance> plans;
 
-  ChildPlansLoadSuccess({this.plans, this.activePlan});
+  ChildPlansLoadSuccess(this.plans);
 
   @override
-	List<Object> get props => [plans, activePlan];
+	List<Object> get props => [plans];
 
 	@override
 	String toString() {
-		return 'ChildPlansLoadSuccess{plans: $plans, activePlan: $activePlan}';
+		return 'ChildPlansLoadSuccess{plans: $plans}';
 	}
 }

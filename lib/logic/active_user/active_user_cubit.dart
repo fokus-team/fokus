@@ -5,14 +5,14 @@ import 'package:mongo_dart/mongo_dart.dart';
 
 import 'package:fokus/model/db/user/user.dart';
 import 'package:fokus/model/db/user/user_role.dart';
-import 'package:fokus/model/ui/ui_user.dart';
+import 'package:fokus/model/ui/user/ui_user.dart';
 import 'package:fokus/services/data/data_repository.dart';
 import 'package:fokus/services/app_config/app_config_repository.dart';
 
 part 'active_user_state.dart';
 
 class ActiveUserCubit extends Cubit<ActiveUserState> {
-	final DataRepository _dbProvider = GetIt.I<DataRepository>();
+	final DataRepository _dbRepository = GetIt.I<DataRepository>();
 	final AppConfigRepository _appConfig = GetIt.I<AppConfigRepository>();
 
   ActiveUserCubit() : super(NoActiveUser());
@@ -28,6 +28,6 @@ class ActiveUserCubit extends Cubit<ActiveUserState> {
   }
 
 	// Temporary until we have a login page
-	void loginUserByRole(UserRole role) async => loginUser(await _dbProvider.getUserByRole(role));
-	void loginUserById(ObjectId id) async => loginUser(await _dbProvider.getUserById(id));
+	void loginUserByRole(UserRole role) async => loginUser(await _dbRepository.getUserByRole(role));
+	void loginUserById(ObjectId id) async => loginUser(await _dbRepository.getUserById(id));
 }

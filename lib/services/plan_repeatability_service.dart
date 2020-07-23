@@ -12,10 +12,10 @@ import 'package:fokus/utils/string_utils.dart';
 import 'data/data_repository.dart';
 
 class PlanRepeatabilityService {
-	final DataRepository _dbProvider = GetIt.I<DataRepository>();
+	final DataRepository _dbRepository = GetIt.I<DataRepository>();
 
   Future<List<Plan>> getChildPlansByDate(ObjectId childId, Date date, {bool activeOnly = true}) async {
-    var childPlans = await _dbProvider.getChildPlans(childId, activeOnly: activeOnly);
+    var childPlans = await _dbRepository.getChildPlans(childId, activeOnly: activeOnly);
     return childPlans.where((plan) => planInstanceExistsByDate(plan, date)).toList();
   }
 

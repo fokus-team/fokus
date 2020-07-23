@@ -16,7 +16,7 @@ part 'child_plans_state.dart';
 
 class ChildPlansCubit extends Cubit<ChildPlansState> {
 	final ActiveUserCubit _activeUserCubit;
-	final DataRepository _dbProvider = GetIt.I<DataRepository>();
+	final DataRepository _dbRepository = GetIt.I<DataRepository>();
 	final PlanRepeatabilityService _repeatabilityService = GetIt.I<PlanRepeatabilityService>();
 
   ChildPlansCubit(this._activeUserCubit) : super(ChildPlansInitial());
@@ -27,7 +27,7 @@ class ChildPlansCubit extends Cubit<ChildPlansState> {
 	  var getDescription = (Plan plan) => _repeatabilityService.buildPlanDescription(plan.repeatability);
 	  var childId = (_activeUserCubit.state as ActiveUserPresent).user.id;
 	  var plans = await _repeatabilityService.getChildPlansByDate(childId, Date.now());
-	  var instances = await _dbProvider.getPlanInstancesForPlans(childId, plans.map((plan) => plan.id).toList());
+	  var instances = await _dbRepository.getPlanInstancesForPlans(childId, plans.map((plan) => plan.id).toList());
 	  var planMap = Map.fromEntries(instances.map((instance) => MapEntry(instance, plans.firstWhere((plan) => plan.id == instance.planID))));
 
 	  var uiInstances = instances.map((instance) => UIPlanInstance.fromDBModel(instance, planMap[instance].name, 0, 0, getDescription(planMap[instance]))).toList();

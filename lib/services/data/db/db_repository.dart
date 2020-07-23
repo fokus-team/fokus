@@ -4,5 +4,5 @@ import 'mongodb_provider.dart';
 
 abstract class DbRepository {
 	@protected
-	MongoDbProvider get client;
+	MongoDbProvider get dbClient;
 }

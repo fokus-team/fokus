@@ -11,8 +11,8 @@ import '../task/task_db_repository.dart';
 
 class DbDataRepository with UserDbRepository, PlanDbRepository, TaskDbRepository implements DataRepository, DbRepository {
 	@override
-	final MongoDbProvider client = MongoDbProvider();
+	final MongoDbProvider dbClient = MongoDbProvider();
 
 	@override
-	Future initialize() async => client.initialize(GetIt.I<RemoteConfigProvider>().dbAccessString);
+	Future initialize() async => dbClient.initialize(GetIt.I<RemoteConfigProvider>().dbAccessString);
 }

@@ -70,8 +70,8 @@ flutter:
         - assets/animation/sunflower_with_title_rotate_only.json
         - assets/image/sunflower_logo.svg
         - assets/image/sunflower_logo.png
-        - assets/help/en/first_steps.md
-        - assets/help/pl/first_steps.md
+        - assets/help/en/
+        - assets/help/pl/
         - assets/image/avatar/
         - assets/image/avatar/child/
         - assets/image/award/

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:fokus/utils/app_locales.dart';
-import 'package:fokus/utils/dialog_utils.dart';
 import 'package:fokus/utils/theme_config.dart';
+import 'package:fokus/widgets/help_icon_button.dart';
 
 class Segment extends StatelessWidget {
 	final String title;
@@ -49,21 +49,7 @@ class Segment extends StatelessWidget {
 						],
 					),
 					if(helpPage != null)
-						Tooltip(
-							message: AppLocales.of(context).translate('actions.help'),
-							child: InkWell(
-								customBorder: new CircleBorder(),
-								onTap: () => { showHelpDialog(context, helpPage) },
-								child: Padding(
-									padding: EdgeInsets.all(8.0),
-									child:Icon(
-										Icons.help_outline,
-										size: 26.0,
-										color: AppColors.darkTextColor
-									)
-								)
-							)
-						)
+						HelpIconButton(helpPage: helpPage, theme: HelpIconButtonTheme.dark)
 				],
 			),
 		);

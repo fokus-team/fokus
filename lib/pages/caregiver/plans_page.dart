@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:fokus/model/app_page.dart';
 import 'package:fokus/utils/app_locales.dart';
 
 import 'package:fokus/widgets/app_header.dart';
@@ -24,7 +25,7 @@ class _CaregiverPlansPageState extends State<CaregiverPlansPage> {
 				crossAxisAlignment: CrossAxisAlignment.start,
 				children: <Widget>[
 					AppHeader.normal(title: '$_pageKey.header.title', text: '$_pageKey.header.pageHint', headerActionButtons: [
-						HeaderActionButton.normal(Icons.add, '$_pageKey.header.addPlan', () => { log("Dodaj plan") }),
+						HeaderActionButton.normal(Icons.add, '$_pageKey.header.addPlan', () => { Navigator.of(context).pushNamed('/caregiver/plan-form-page', arguments: AppFormType.create) }),
 						HeaderActionButton.normal(Icons.calendar_today, '$_pageKey.header.calendar', () => { log("Kalendarz") }, Colors.amber)
 					]),
 					AppSegments(

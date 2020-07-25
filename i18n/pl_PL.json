@@ -54,6 +54,15 @@
 					"inactivePlan": "Plan nieaktywny"
 				}
 			},
+			"planForm": {
+				"createPlanTitle": "Dodawanie nowego planu",
+				"editPlanTitle": "Edytowanie planu",
+				"step": "Krok {NUM_STEP}",
+				"stepOneTitle": "Parametry planu",
+				"stepTwoTitle": "Lista zadań",
+				"createPlanButton": "Stwórz plan",
+				"savePlanButton": "Zapisz plan"
+			},
 			"awards": {
 				"header": {
 					"title": "Nagrody",
@@ -140,10 +149,13 @@
 		"edit": "Edytuj",
 		"delete": "Usuń",
 		"details": "Pokaż szczegóły",
-		"help": "Pokaż pomoc"
+		"help": "Pokaż pomoc",
+		"back": "Wstecz",
+		"next": "Dalej"
 	},
 	"help": {
-		"first_steps": "Pierwsze kroki"
+		"first_steps": "Pierwsze kroki",
+		"plan_creation": "Tworzenie planu"
 	},
 	"and": "i"
 }

@@ -1,5 +1,6 @@
 import 'package:cubit/cubit.dart';
 import 'package:get_it/get_it.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 import 'package:fokus/services/data/db/db_data_repository.dart';
 import 'package:fokus/services/remote_config_provider.dart';
@@ -24,7 +25,10 @@ class AppInitCubit extends Cubit<AppInitState> {
 	void initializeApp() async {
 		// TODO Differentiate between no internet connection and db access error
 
-		await _provider<RemoteConfigProvider>().initialize().then(
+		await Future.wait([
+			initializeDateFormatting(),
+			_provider<RemoteConfigProvider>().initialize()
+		]).then(
 			(_) => _provider<DataRepository>().initialize()
 		).then((_) => emit(AppInitSuccess())).catchError((error) => emit(AppInitFailure(error)));
 	}

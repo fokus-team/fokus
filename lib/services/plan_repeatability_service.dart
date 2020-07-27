@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 import 'package:mongo_dart/mongo_dart.dart';
@@ -33,8 +34,8 @@ class PlanRepeatabilityService {
   }
 
 	TranslateFunc buildPlanDescription(PlanRepeatability rules, {bool detailed = false}) {
-  	var formatDate = (date) => DateFormat.yMd().format(date);
   	return (context) {
+		  var formatDate = (date) => DateFormat.yMd(Localizations.localeOf(context).toString()).format(date);
   		String description = '';
 		  if (rules.type == RepeatabilityType.once)
 		  	description += AppLocales.of(context).translate('repeatability.once', {'DAY': formatDate(rules.range.from)});

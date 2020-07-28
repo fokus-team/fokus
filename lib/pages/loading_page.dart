@@ -26,7 +26,7 @@ class LoadingPage extends StatelessWidget {
 					CubitListener<AppInitCubit, AppInitState>(
 						listener: (BuildContext context, AppInitState state) {
 							if (state is AppInitFailure)
-								showAlertDialog(context, 'alert.error', 'alert.noConnection', ButtonType.retry, () => _retryInitialization(context));
+								showAlertDialog(context, 'alert.noConnection', 'alert.connectionRetry', ButtonType.retry, () => _retryInitialization(context));
 							else if (state is AppInitSuccess)
 								CubitProvider.of<UserRestoreCubit>(context).restoreUser();
 						},

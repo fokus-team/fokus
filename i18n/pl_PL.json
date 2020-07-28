@@ -129,8 +129,8 @@
 		"range": "od {FROM} do {TO}"
 	},
 	"alert": {
-		"error": "Wystąpił błąd",
 		"noConnection": "Brak połączenia",
+		"connectionRetry": "Upewnij się że urządzenie ma dostęp do internetu",
 		"noHint": "Brak podpowiedzi"
 	},
 	"actions": {

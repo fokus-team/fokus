@@ -1,36 +1,65 @@
-import 'package:fokus/model/db/collection.dart';
-
+import 'dart:async';
+import 'package:get_it/get_it.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
-class MongoDbProvider {
-	var _useLocalhost = false;
-	var _localhostConfig = 'mongodb://root:pass@192.168.0.10:27017/admin';
+import 'package:fokus/model/db/collection.dart';
+import 'package:fokus/services/exception/db_query_failed.dart';
+import 'package:fokus/services/exception/no_db_connection.dart';
+import 'package:fokus/services/remote_config_provider.dart';
 
+
+class MongoDbProvider {
 	Db _db;
 
-	Future initialize(String config) async {
-		_db = new Db(_useLocalhost ? _localhostConfig : config);
-		return _db.open(secure: !_useLocalhost);
+	Future initialize() async {
+		_db = new Db(GetIt.I<RemoteConfigProvider>().dbAccessString);
+		return _db.open(
+			secure: true,
+			timeoutConfig: TimeoutConfig(
+				connectionTimeout: 8000,
+				socketTimeout: 4000,
+				keepAliveTime: 10
+			)
+		).catchError((e) => throw NoDbConnection(e));
 	}
 
-	Future<Map<String, dynamic>> queryOne(Collection collection, [SelectorBuilder selector]) => _db.collection(collection.name).findOne(selector);
-	Future<Stream<Map<String, dynamic>>> query(Collection collection, [SelectorBuilder selector]) async => _db.collection(collection.name).find(selector);
-
-	Future<int> count(Collection collection, [SelectorBuilder selector]) async => _db.collection(collection.name).count(selector);
+	Future<int> count(Collection collection, [SelectorBuilder selector]) => _execute(() => _db.collection(collection.name).count(selector));
 	Future<bool> exists(Collection collection, [SelectorBuilder selector]) async => await count(collection, selector) > 0;
 
-
 	Future<T> queryOneTyped<T>(Collection collection, SelectorBuilder query, T Function(Map<String, dynamic>) constructElement) {
-		return this.queryOne(collection, query).then((response) => constructElement(response));
+		return this._queryOne(collection, query).then((response) => constructElement(response));
 	}
 
-
 	Future<List<T>> queryTyped<T>(Collection collection, SelectorBuilder query, T Function(Map<String, dynamic>) constructElement) {
-		return this.query(collection, query).then((response) => response.map((element) => constructElement(element)).toList());
+		return this._query(collection, query).then((response) => response.map((element) => constructElement(element)).toList());
 	}
 
 	Future<Map<ObjectId, T>> queryTypedMap<T>(Collection collection, SelectorBuilder query, MapEntry<ObjectId, T> Function(Map<String, dynamic>) constructEntry) {
-		return this.query(collection, query).then((response) async => Map.fromEntries(await response.map((element) => constructEntry(element)).toList()));
+		return this._query(collection, query).then((response) async => Map.fromEntries(response.map((element) => constructEntry(element)).toList()));
+	}
+
+	Future<Map<String, dynamic>> _queryOne(Collection collection, [SelectorBuilder selector]) => _execute(() => _db.collection(collection.name).findOne(selector));
+	Future<List<Map<String, dynamic>>> _query(Collection collection, [SelectorBuilder selector]) {
+	  return _execute(() async => await _db.collection(collection.name).find(selector).toList());
+	}
+
+	Future<T> _execute<T>(Future<T> Function() query) async {
+		try {
+			if (_db.state != State.OPEN)
+				await initialize();
+			return await query().timeout(Duration(milliseconds: 10));
+		} on TimeoutException {
+			// Retry before throwing
+			return query();
+		} on ConnectionException {
+			// Try to reconnect before throwing
+			await initialize();
+			return query();
+		} catch(e) {
+			if (e is NoDbConnection)
+				throw e;
+			throw DbQueryFailed(e);
+		}
 	}
 
 	// TODO call

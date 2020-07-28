@@ -1,4 +1,7 @@
+import 'dart:isolate';
+
 import 'package:cubit/cubit.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cubit/flutter_cubit.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -22,12 +25,16 @@ import 'package:fokus/pages/roles_page.dart';
 import 'package:fokus/widgets/page_theme.dart';
 import 'package:fokus/model/app_page.dart';
 
-void main() => runApp(
-	CubitProvider<ActiveUserCubit>(
-		create: (context) => ActiveUserCubit(),
-		child: FokusApp(),
-	)
-);
+void main() {
+	setupCrashlytics();
+
+  runApp(
+		CubitProvider<ActiveUserCubit>(
+			create: (context) => ActiveUserCubit(),
+			child: FokusApp(),
+		)
+	);
+}
 
 class FokusApp extends StatelessWidget {
 	@override
@@ -96,4 +103,16 @@ class FokusApp extends StatelessWidget {
 			),
 		);
 	}
+}
+
+void setupCrashlytics() {
+	Crashlytics.instance.enableInDevMode = true;
+	FlutterError.onError = Crashlytics.instance.recordFlutterError;
+	Isolate.current.addErrorListener(RawReceivePort((pair) async {
+		final List<dynamic> errorAndStacktrace = pair;
+		await Crashlytics.instance.recordError(
+			errorAndStacktrace.first,
+			errorAndStacktrace.last,
+		);
+	}).sendPort);
 }

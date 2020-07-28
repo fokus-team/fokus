@@ -13,14 +13,14 @@ class Reward {
   Reward({this.createdBy, this.id, this.icon, this.limit, this.name, this.cost});
 
   factory Reward.fromJson(Map<String, dynamic> json) {
-    return Reward(
+    return json != null ? Reward(
       createdBy: json['createdBy'],
       id: json['_id'],
       icon: json['icon'],
       limit: json['limit'],
       name: json['name'],
       cost: json['cost'] != null ? Points.fromJson(json['points']) : null,
-    );
+    ) : null;
   }
 
   Map<String, dynamic> toJson() {

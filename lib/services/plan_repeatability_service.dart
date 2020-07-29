@@ -43,11 +43,11 @@ class PlanRepeatabilityService {
 				String andWord = AppLocales.of(context).translate('and');
 			  if (rules.type == RepeatabilityType.weekly) {
 					List<String> weekdays = rules.days.map((day) => AppLocales.of(context).translate('repeatability.weekday', {'WEEKDAY': '$day'})).toList();
-					String weekdayString = StringUtils.displayJoin(weekdays, andWord);
+					String weekdayString = displayJoin(weekdays, andWord);
 				  description += '${AppLocales.of(context).translate('repeatability.weekly', {'WEEKDAY': '${rules.days[0]}'})} $weekdayString';
 			  }
 			  else if (rules.type == RepeatabilityType.monthly) {
-				  String dayString = StringUtils.displayJoin(rules.days.map((day) => '$day').toList(), andWord);
+				  String dayString = displayJoin(rules.days.map((day) => '$day').toList(), andWord);
 				  description += AppLocales.of(context).translate('repeatability.monthly', {'DAYS': dayString});
 			  }
 		  }

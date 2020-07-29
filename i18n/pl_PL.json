@@ -134,6 +134,7 @@
 		"noHint": "Brak podpowiedzi"
 	},
 	"actions": {
+		"ok": "Ok",
 		"exit": "Wyjdź",
 		"retry": "Spróbuj ponownie",
 		"close": "Zamknij",

@@ -134,6 +134,7 @@
 		"noHint": "No hint"
 	},
 	"actions": {
+		"ok": "Ok",
 		"exit": "Exit",
 		"retry": "Retry",
 		"close": "Close",

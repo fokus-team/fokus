@@ -9,11 +9,11 @@ import 'package:fokus/services/remote_config_provider.dart';
 
 
 class MongoDbProvider {
-	Db _db;
+	Db _client;
 
 	Future initialize() async {
-		_db = new Db(GetIt.I<RemoteConfigProvider>().dbAccessString);
-		return _db.open(
+		_client = new Db(GetIt.I<RemoteConfigProvider>().dbAccessString);
+		return _client.open(
 			secure: true,
 			timeoutConfig: TimeoutConfig(
 				connectionTimeout: 8000,
@@ -23,7 +23,7 @@ class MongoDbProvider {
 		).catchError((e) => throw NoDbConnection(e));
 	}
 
-	Future<int> count(Collection collection, [SelectorBuilder selector]) => _execute(() => _db.collection(collection.name).count(selector));
+	Future<int> count(Collection collection, [SelectorBuilder selector]) => _execute(() => _client.collection(collection.name).count(selector));
 	Future<bool> exists(Collection collection, [SelectorBuilder selector]) async => await count(collection, selector) > 0;
 
 	Future<T> queryOneTyped<T>(Collection collection, SelectorBuilder query, T Function(Map<String, dynamic>) constructElement) {
@@ -38,16 +38,16 @@ class MongoDbProvider {
 		return this._query(collection, query).then((response) async => Map.fromEntries(response.map((element) => constructEntry(element)).toList()));
 	}
 
-	Future<Map<String, dynamic>> _queryOne(Collection collection, [SelectorBuilder selector]) => _execute(() => _db.collection(collection.name).findOne(selector));
+	Future<Map<String, dynamic>> _queryOne(Collection collection, [SelectorBuilder selector]) => _execute(() => _client.collection(collection.name).findOne(selector));
 	Future<List<Map<String, dynamic>>> _query(Collection collection, [SelectorBuilder selector]) {
-	  return _execute(() async => await _db.collection(collection.name).find(selector).toList());
+	  return _execute(() async => await _client.collection(collection.name).find(selector).toList());
 	}
 
 	Future<T> _execute<T>(Future<T> Function() query) async {
 		try {
-			if (_db.state != State.OPEN)
+			if (_client.state != State.OPEN)
 				await initialize();
-			return await query().timeout(Duration(milliseconds: 10));
+			return await query();
 		} on TimeoutException {
 			// Retry before throwing
 			return query();
@@ -63,5 +63,5 @@ class MongoDbProvider {
 	}
 
 	// TODO call
-	void close() async => await _db.close();
+	void close() async => await _client.close();
 }

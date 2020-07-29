@@ -7,7 +7,7 @@ class Currency {
 
 	Currency({this.icon, this.name});
 
-	factory Currency.fromJson(Map<String, dynamic> json) => Currency()..fromJson(json);
+	factory Currency.fromJson(Map<String, dynamic> json) => json != null ? (Currency()..fromJson(json)) : null;
 
 	@protected
 	void fromJson(Map<String, dynamic> json) {

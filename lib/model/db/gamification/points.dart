@@ -9,10 +9,10 @@ class Points extends Currency {
   Points({String name, CurrencyType icon, this.createdBy, this.quantity}) : super(name : name, icon: icon);
 
   factory Points.fromJson(Map<String, dynamic> json) {
-    return Points(
+    return json != null ? (Points(
 	    createdBy: json['createdBy'],
       quantity: json['quantity'],
-    )..fromJson(json);
+    )..fromJson(json)) : null;
   }
 
   Map<String, dynamic> toJson() {

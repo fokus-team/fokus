@@ -10,12 +10,12 @@ class ChildReward {
   ChildReward({this.cost, this.date, this.id, this.quantity});
 
   factory ChildReward.fromJson(Map<String, dynamic> json) {
-    return ChildReward(
+    return json != null ? ChildReward(
       cost: json['cost'],
       date: TimeDate.parseDBString(json['date']),
       id: json['_id'],
       quantity: json['quantity'],
-    );
+    ) : null;
   }
 
   Map<String, dynamic> toJson() {

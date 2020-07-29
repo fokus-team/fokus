@@ -6,11 +6,11 @@ class Badge {
   Badge({this.icon, this.maxLevel, this.name});
 
   factory Badge.fromJson(Map<String, dynamic> json) {
-    return Badge(
+    return json != null ? Badge(
       icon: json['icon'],
       maxLevel: json['maxLevel'],
       name: json['name'],
-    );
+    ) : null;
   }
 
   Map<String, dynamic> toJson() {

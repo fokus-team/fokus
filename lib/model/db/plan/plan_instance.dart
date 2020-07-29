@@ -19,7 +19,7 @@ class PlanInstance {
   PlanInstance({this.id, this.instances, this.planID, this.assignedTo, this.date, this.state, this.duration, this.tasks});
 
   factory PlanInstance.fromJson(Map<String, dynamic> json) {
-    return PlanInstance(
+    return json != null ? PlanInstance(
 	    id: json['_id'],
 	    state: PlanInstanceState.values[json['state']],
 	    planID: json['planID'],
@@ -28,7 +28,7 @@ class PlanInstance {
       duration: json['duration'] != null ? Duration.fromJson(json['duration']) : null,
       instances: json['instances'] != null ? new List<ObjectId>.from(json['instances']) : [],
       tasks: json['tasks'] != null ? (json['tasks'] as List).map((i) => PlanInstanceTask.fromJson(i)).toList() : [],
-    );
+    ) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -58,10 +58,10 @@ class PlanInstanceTask {
   PlanInstanceTask({this.createdBy, this.taskInstanceID});
 
   factory PlanInstanceTask.fromJson(Map<String, dynamic> json) {
-    return PlanInstanceTask(
+    return json != null ? PlanInstanceTask(
       createdBy: json['createdBy'],
       taskInstanceID: json['taskID'],
-    );
+    ) : null;
   }
 
   Map<String, dynamic> toJson() {

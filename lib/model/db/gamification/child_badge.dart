@@ -11,14 +11,14 @@ class ChildBadge {
   ChildBadge({this.comment, this.date, this.icon, this.level, this.maxLevel, this.name});
 
   factory ChildBadge.fromJson(Map<String, dynamic> json) {
-    return ChildBadge(
+    return json != null ? ChildBadge(
       comment: json['comment'],
       date: TimeDate.parseDBString(json['date']),
       icon: json['icon'],
       level: json['level'],
       maxLevel: json['maxLevel'],
       name: json['name'],
-    );
+    ) : null;
   }
 
   Map<String, dynamic> toJson() {

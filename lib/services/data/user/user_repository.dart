@@ -8,7 +8,7 @@ abstract class UserRepository {
 	Future<Map<ObjectId, String>> getUserNames(List<ObjectId> users);
 	Future<List<Child>> getCaregiverChildren(ObjectId caregiverId);
 
-	// Temporary until we have a login page
 	Future<User> getUserById(ObjectId id);
+	// Temporary until we have a login page
 	Future<User> getUserByRole(UserRole role);
 }

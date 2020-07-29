@@ -129,11 +129,12 @@
 		"range": "from {FROM} to {TO}"
 	},
 	"alert": {
-		"error": "Error occurred",
 		"noConnection": "No connection",
+		"connectionRetry": "Ensure the device has access to internet",
 		"noHint": "No hint"
 	},
 	"actions": {
+		"ok": "Ok",
 		"exit": "Exit",
 		"retry": "Retry",
 		"close": "Close",

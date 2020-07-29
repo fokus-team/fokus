@@ -30,7 +30,7 @@ class Plan {
       this.tasks});
 
   factory Plan.fromJson(Map<String, dynamic> json) {
-    return Plan(
+    return json != null ? Plan(
       active: json['active'],
       assignedTo: json['assignedTo'] != null ? new List<ObjectId>.from(json['assignedTo']) : [],
       changedInstances: json['changedInstances'] != null ? (json['changedInstances'] as List).map((date) => Date.parseDBString(date)) : [],
@@ -41,7 +41,7 @@ class Plan {
       name: json['name'],
       repeatability: PlanRepeatability.fromJson(json['repeatability']),
       tasks: json['tasks'] != null ? new List<ObjectId>.from(json['tasks']) : [],
-    );
+    ) : null;
   }
 
   Map<String, dynamic> toJson() {

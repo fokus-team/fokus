@@ -1,9 +1,6 @@
 import 'package:intl/intl.dart';
-
-import 'package:fokus/model/db/date/time_date.dart';
 import 'package:meta/meta.dart';
 
-import 'date.dart';
 
 abstract class DateBase extends DateTime {
   DateBase(int year, int month, int day, [int hour = 0, int minute = 0, int second = 0]) : super(year, month, day, hour, minute, second);

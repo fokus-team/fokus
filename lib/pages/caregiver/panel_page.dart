@@ -26,30 +26,27 @@ class _CaregiverPanelPageState extends State<CaregiverPanelPage> {
 	
 	@override
 	Widget build(BuildContext context) {
-    return CubitUtils.navigateOnState<ActiveUserCubit, ActiveUserState, NoActiveUser>(
-			navigation: (navigator) => navigator.pushReplacementNamed(AppPage.rolesPage.name),
-			child: Scaffold(
-				body: Column(
-					mainAxisAlignment: MainAxisAlignment.start,
-					children: <Widget>[
-						AppHeader.greetings(text: '$_pageKey.header.pageHint', headerActionButtons: [
-							HeaderActionButton.normal(Icons.add, '$_pageKey.header.addChild', () => { log("Dodaj dziecko") }),
-							HeaderActionButton.normal(Icons.add, '$_pageKey.header.addCaregiver', () => { log("Dodaj opiekuna") })
-						]),
-						CubitBuilder<CaregiverPanelCubit, CaregiverPanelState>(
-							cubit: CubitProvider.of<CaregiverPanelCubit>(context),
-							builder: (context, state) {
-								if (state is CaregiverPanelInitial)
-									CubitProvider.of<CaregiverPanelCubit>(context).loadPanelData();
-								else if (state is CaregiverPanelLoadSuccess)
-									return AppSegments(segments: _buildPanelSegments(state));
-								return Expanded(child: Center(child: CircularProgressIndicator())); // TODO Decide what to show when loading (globally)
-							},
-						)
-					]
-				),
-				bottomNavigationBar: AppNavigationBar.caregiverPage(currentIndex: 0)
-	    )
+    return Scaffold(
+			body: Column(
+				mainAxisAlignment: MainAxisAlignment.start,
+				children: <Widget>[
+					AppHeader.greetings(text: '$_pageKey.header.pageHint', headerActionButtons: [
+						HeaderActionButton.normal(Icons.add, '$_pageKey.header.addChild', () => { log("Dodaj dziecko") }),
+						HeaderActionButton.normal(Icons.add, '$_pageKey.header.addCaregiver', () => { log("Dodaj opiekuna") })
+					]),
+					CubitBuilder<CaregiverPanelCubit, CaregiverPanelState>(
+						cubit: CubitProvider.of<CaregiverPanelCubit>(context),
+						builder: (context, state) {
+							if (state is CaregiverPanelInitial)
+								CubitProvider.of<CaregiverPanelCubit>(context).loadPanelData();
+							else if (state is CaregiverPanelLoadSuccess)
+								return AppSegments(segments: _buildPanelSegments(state));
+							return Expanded(child: Center(child: CircularProgressIndicator())); // TODO Decide what to show when loading (globally)
+						},
+					)
+				]
+			),
+			bottomNavigationBar: AppNavigationBar.caregiverPage(currentIndex: 0)
     );
 	}
 

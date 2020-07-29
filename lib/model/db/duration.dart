@@ -11,10 +11,10 @@ class Duration<D extends DateBase> {
 
   factory Duration.fromJson(Map<String, dynamic> json) {
   	var parseDate = (String pattern) => D == Date ? Date.parseDBString(pattern) : TimeDate.parseDBString(pattern);
-    return Duration(
+    return json != null ? Duration(
       from: json['from'] != null ? parseDate(json['from']) : null,
       to: json['to'] != null ? parseDate(json['to']) : null,
-    );
+    ) : null;
   }
 
   Map<String, dynamic> toJson() {

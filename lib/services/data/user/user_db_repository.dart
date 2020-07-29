@@ -8,7 +8,7 @@ import 'package:fokus/services/data/db/db_repository.dart';
 
 mixin UserDbRepository implements DbRepository {
 	Future<User> getUser([SelectorBuilder selector]) {
-		return dbClient.queryOne(Collection.user, selector).then((response) => User.typedFromJson(response));
+		return dbClient.queryOneTyped(Collection.user, selector, (json) => User.typedFromJson(json));
 	}
 
 	Future<Map<ObjectId, String>> getUserNames(List<ObjectId> users) {
@@ -21,7 +21,7 @@ mixin UserDbRepository implements DbRepository {
 		return dbClient.queryTyped(Collection.user, query, (json) => Child.fromJson(json));
 	}
 
-	// Temporary until we have a login page
 	Future<User> getUserById(ObjectId id) => getUser(where.eq('_id', id));
+	// Temporary until we have a login page
 	Future<User> getUserByRole(UserRole role) => getUser(where.eq('role', role.index));
 }

@@ -1,7 +1,6 @@
 import 'package:cubit/cubit.dart';
 import 'package:equatable/equatable.dart';
 import 'package:get_it/get_it.dart';
-import 'package:mongo_dart/mongo_dart.dart';
 
 import 'package:fokus/model/db/user/user.dart';
 import 'package:fokus/model/db/user/user_role.dart';
@@ -18,6 +17,8 @@ class ActiveUserCubit extends Cubit<ActiveUserState> {
   ActiveUserCubit() : super(NoActiveUser());
 
 	void loginUser(User user) async {
+		if (user == null) // TODO show in UI once we have a login page
+			return;
 		_appConfig.setLastUser(user.id);
 		emit(ActiveUserPresent(UIUser.typedFromDBModel(user)));
 	}
@@ -29,5 +30,4 @@ class ActiveUserCubit extends Cubit<ActiveUserState> {
 
 	// Temporary until we have a login page
 	void loginUserByRole(UserRole role) async => loginUser(await _dbRepository.getUserByRole(role));
-	void loginUserById(ObjectId id) async => loginUser(await _dbRepository.getUserById(id));
 }

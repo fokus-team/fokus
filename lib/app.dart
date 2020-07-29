@@ -1,7 +1,4 @@
-import 'dart:isolate';
-
 import 'package:cubit/cubit.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cubit/flutter_cubit.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -18,6 +15,7 @@ import 'package:fokus/pages/child/achievements_page.dart';
 import 'package:fokus/pages/child/awards_page.dart';
 import 'package:fokus/pages/child/panel_page.dart';
 import 'package:fokus/utils/app_locales.dart';
+import 'package:fokus/utils/crash_handler.dart';
 import 'package:fokus/utils/cubit_utils.dart';
 import 'package:fokus/utils/theme_config.dart';
 import 'package:fokus/pages/loading_page.dart';
@@ -26,17 +24,21 @@ import 'package:fokus/widgets/page_theme.dart';
 import 'package:fokus/model/app_page.dart';
 
 void main() {
-	setupCrashlytics();
-
-  runApp(
+	var navigatorKey = GlobalKey<NavigatorState>();
+	CrashHandler.runAppGuarded(
 		CubitProvider<ActiveUserCubit>(
 			create: (context) => ActiveUserCubit(),
-			child: FokusApp(),
-		)
+			child: FokusApp(navigatorKey),
+		),
+		navigatorKey
 	);
 }
 
 class FokusApp extends StatelessWidget {
+	final GlobalKey<NavigatorState> _navigatorKey;
+
+  FokusApp(this._navigatorKey);
+
 	@override
 	Widget build(BuildContext context) {
 		return MaterialApp(
@@ -51,6 +53,7 @@ class FokusApp extends StatelessWidget {
 				const Locale('en', 'US'),
 				const Locale('pl', 'PL'),
 			],
+			navigatorKey: _navigatorKey,
 			initialRoute: AppPage.loadingPage.name,
 			routes: _createRoutes(),
 			theme: _createAppTheme(),
@@ -103,16 +106,4 @@ class FokusApp extends StatelessWidget {
 			),
 		);
 	}
-}
-
-void setupCrashlytics() {
-	Crashlytics.instance.enableInDevMode = true;
-	FlutterError.onError = Crashlytics.instance.recordFlutterError;
-	Isolate.current.addErrorListener(RawReceivePort((pair) async {
-		final List<dynamic> errorAndStacktrace = pair;
-		await Crashlytics.instance.recordError(
-			errorAndStacktrace.first,
-			errorAndStacktrace.last,
-		);
-	}).sendPort);
 }

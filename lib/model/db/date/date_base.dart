@@ -5,7 +5,7 @@ import 'package:meta/meta.dart';
 abstract class DateBase extends DateTime {
   DateBase(int year, int month, int day, [int hour = 0, int minute = 0, int second = 0]) : super(year, month, day, hour, minute, second);
 
-  String toDBString();
+  DateTime toDBDate();
 
   String toAppString(DateFormat format) => format.format(this.toLocal());
 

@@ -13,7 +13,7 @@ class ChildBadge {
   factory ChildBadge.fromJson(Map<String, dynamic> json) {
     return json != null ? ChildBadge(
       comment: json['comment'],
-      date: TimeDate.parseDBString(json['date']),
+      date: TimeDate.parseDBDate(json['date']),
       icon: json['icon'],
       level: json['level'],
       maxLevel: json['maxLevel'],
@@ -24,7 +24,7 @@ class ChildBadge {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['comment'] = this.comment;
-    data['date'] = this.date.toDBString();
+    data['date'] = this.date.toDBDate();
     data['icon'] = this.icon;
     data['level'] = this.level;
     data['maxLevel'] = this.maxLevel;

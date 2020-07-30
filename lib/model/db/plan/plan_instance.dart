@@ -24,7 +24,7 @@ class PlanInstance {
 	    state: PlanInstanceState.values[json['state']],
 	    planID: json['planID'],
       assignedTo: json['assignedTo'],
-      date: Date.parseDBString(json['date']),
+      date: Date.parseDBDate(json['date']),
       duration: json['duration'] != null ? Duration.fromJson(json['duration']) : null,
       instances: json['instances'] != null ? new List<ObjectId>.from(json['instances']) : [],
       tasks: json['tasks'] != null ? (json['tasks'] as List).map((i) => PlanInstanceTask.fromJson(i)).toList() : [],
@@ -37,7 +37,7 @@ class PlanInstance {
     data['planID'] = this.planID;
     data['state'] = this.state.index;
     data['assignedTo'] = this.assignedTo;
-    data['date'] = this.date.toDBString();
+    data['date'] = this.date.toDBDate();
     if (this.duration != null) {
       data['duration'] = this.duration.toJson();
     }

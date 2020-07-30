@@ -84,6 +84,14 @@
 					"basicStatisticsTitle": "Podstawowe statystyki",
 					"basicStatisticsSubtitle": "Ekran statystyk nie jest dostępny w tej wersji aplikacji"
 				}
+			},
+			"planDetails":  {
+				"header": {
+					"title": "Szczegóły planu"
+				},
+				"content": {
+
+				}
 			}
 		},
 		"childSection": {

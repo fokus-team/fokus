@@ -28,7 +28,15 @@
 					"greetings": "Witaj",
 					"addChild": "Dodaj dziecko",
 					"addCaregiver": "Dodaj opiekuna",
-					"pageHint": "Zarządzaj profilami dzieci i powiązanymi kontami opiekunów."
+					"pageHint": "Zarządzaj profilami dzieci i powiązanymi kontami opiekunów"
+				},
+				"content": {
+					"childProfilesTitle": "Profile dzieci",
+					"noChildProfilesAdded": "Brak przypisanych dzieci",
+					"caregiverProfilesTitle": "Zaprzyjaźnieni opiekunowie",
+					"noCaregiverProfilesAdded": "Brak zaprzyjaźnionych opiekunów",
+					"todayPlans": "{NUM_PLANS, plural, offset:0 zero {Brak planów} one {# plan} two {# plany} few {# plany} other {# planów}} na dziś",
+					"activePlan": "1 plan w trakcie wykonywania"
 				}
 			},
 			"plans": {
@@ -36,7 +44,14 @@
 					"title": "Plany",
 					"addPlan": "Dodaj plan",
 					"calendar": "Kalendarz",
-					"pageHint": "Twórz, przypisuj i zarządzaj planami oraz zadaniami."
+					"pageHint": "Twórz, przypisuj i zarządzaj planami oraz zadaniami"
+				},
+				"content": {
+					"addedPlansTitle": "Zdefiniowane plany",
+					"noPlansAdded": "Brak zdefiniowanych planów, dodaj pierwszy teraz",
+					"tasksCount": "{NUM_TASKS, plural, offset:0 zero {# zadań} one {# zadanie} two {# zadania} few {# zadania} other {# zadań}}",
+					"activePlan": "Plan aktywny",
+					"inactivePlan": "Plan nieaktywny"
 				}
 			},
 			"awards": {
@@ -44,14 +59,30 @@
 					"title": "Nagrody",
 					"addAward": "Dodaj nagrodę",
 					"addBadge": "Dodaj odznakę",
-					"pageHint": "Zwiększ motywację do wykonywania planów używając punktów, nagród i odznak."
+					"pageHint": "Zwiększ motywację do wykonywania planów używając punktów, nagród i odznak"
+				},
+				"content": {
+					"addedAwardsTitle": "Zdefiniowane nagrody",
+					"noAwardsAdded": "Brak zdefiniowanych nagród, dodaj pierwszą teraz",
+					"addedBadgesTitle": "Zdefiniowane odznaki",
+					"noBadgesAdded": "Brak zdefiniowanych odznak, dodaj pierwszą teraz",
+					"pointCost": "Koszt punktowy nagrody",
+					"unlimitedAward": "Nagroda nielimitowana",
+					"limitedAward": "Limit {AWARD_LIMIT, plural, offset:0 one {jednej nagrody} other {# nagród}} na dziecko",
+					"noLeveledBadge": "Odznaka przyznawana jednorazowo",
+					"3LeveledBadge": "Odznaka 3 poziomowa",
+					"5LeveledBadge": "Odznaka 5 poziomowa"
 				}
 			},
 			"statistics": {
 				"header": {
 					"title": "Statystyki",
 					"history": "Historia wydarzeń",
-					"pageHint": "Przeglądaj i analizuj wykonaną przez dzieci pracę."
+					"pageHint": "Przeglądaj i analizuj wykonaną przez dzieci pracę"
+				},
+				"content": {
+					"basicStatisticsTitle": "Podstawowe statystyki",
+					"basicStatisticsSubtitle": "Ekran statystyk nie jest dostępny w tej wersji aplikacji"
 				}
 			}
 		},
@@ -60,22 +91,60 @@
 				"header": {
 					"greetings": "Cześć",
 					"myPoints": "Moje punkty",
-					"pageHint": "Wykonuj zadania i zdobywaj punkty.",
+					"pageHint": "Wykonuj zadania i zdobywaj punkty",
 					"garden": "Ogród"
+				},
+				"content": {
+					"todaysPlans": "Dzisiejsze plany",
+					"remainingTodaysPlans": "Pozostałe dzisiejsze plany",
+					"inProgress": "W trakcie",
+					"noPlans": "Brak planów",
+					"completedPlans": "Zakończone plany",
+					"futurePlans": "Zobacz przyszłe plany",
+					"tasks": "{NUM_TASKS, plural, offset:0  zero {# zadań} one {# zadanie} two {# zadania} few {# zadania} other {# zadań}}",
+					"noTaskCompleted": "{NUM_ALL_TASKS, plural, offset:0 one {# zadanie} two {# zadania} few {# zadania} other {# zadań}} do wykonania",
+					"taskProgress": "Wykonano {NUM_TASKS} z {NUM_ALL_TASKS} zadań"
+				}
+			},
+			"awards": {
+				"content": {
+					"awardsTitle": "Nagrody do zdobycia",
+					"noAwardsMessage": "Brak nagród do wyświetlenia"
+				}
+			},
+			"achievements": {
+				"content": {
+					"achievementsTitle": "Osiągnięcia",
+					"noAchievementsMessage": "Brak osiągnięć do wyświetlenia"
 				}
 			}
 		}
 	},
+	"repeatability": {
+		"once": "Dnia {DAY}",
+		"weekly": "Co {WEEKDAY, select, 1 {każdy} 2 {każdy} 3 {każdą} 4 {każdy} 5 {każdy} 6 {każdą} 7 {każdą} other {}}",
+		"monthly": "Każdego {DAYS} dnia miesiąca",
+		"weekday": "{WEEKDAY, select, 1 {poniedziałek} 2 {wtorek} 3 {środę} 4 {czwartek} 5 {piątek} 6 {sobotę} 7 {niedzielę} other {}}",
+		"untilCompleted": "dopóki niezakończony",
+		"range": "od {FROM} do {TO}"
+	},
 	"alert": {
-		"error": "Wystąpił błąd",
-		"noConnection": "Brak połączenia"
+		"noConnection": "Brak połączenia",
+		"connectionRetry": "Upewnij się że urządzenie ma dostęp do internetu",
+		"noHint": "Brak podpowiedzi"
 	},
 	"actions": {
+		"ok": "Ok",
 		"exit": "Wyjdź",
 		"retry": "Spróbuj ponownie",
-		"close": "Zamknij"
+		"close": "Zamknij",
+		"edit": "Edytuj",
+		"delete": "Usuń",
+		"details": "Pokaż szczegóły",
+		"help": "Pokaż pomoc"
 	},
 	"help": {
 		"first_steps": "Pierwsze kroki"
-	}
+	},
+	"and": "i"
 }

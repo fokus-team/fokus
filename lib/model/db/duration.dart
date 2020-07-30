@@ -1,16 +1,20 @@
+import 'package:fokus/model/db/date/date.dart';
+import 'package:fokus/model/db/date/time_date.dart';
+
 import 'date/date_base.dart';
 
 class Duration<D extends DateBase> {
-  DateBase from;
-  DateBase to;
+  D from;
+  D to;
 
   Duration({this.from, this.to});
 
   factory Duration.fromJson(Map<String, dynamic> json) {
-    return Duration(
-      from: DateBase.parseDBString(json['from']),
-      to: DateBase.parseDBString(json['to']),
-    );
+  	var parseDate = (String pattern) => D == Date ? Date.parseDBString(pattern) : TimeDate.parseDBString(pattern);
+    return json != null ? Duration(
+      from: json['from'] != null ? parseDate(json['from']) : null,
+      to: json['to'] != null ? parseDate(json['to']) : null,
+    ) : null;
   }
 
   Map<String, dynamic> toJson() {

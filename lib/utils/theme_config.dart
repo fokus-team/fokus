@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fokus/model/currency_type.dart';
 
 class AppColors {
   // Main app colors
@@ -14,19 +15,28 @@ class AppColors {
   // Child colors
   static final Color childBackgroundColor = Colors.lightGreen;
   static final Color childButtonColor = Colors.orange;
+  static final Color childActionColor = Colors.amber;
 
   // Currency colors
-  static final Color diamondColor = Color.fromARGB(255, 3, 169, 244);
-  static final Color emeraldColor = Color.fromARGB(255, 4, 224, 144);
-  static final Color amethystColor = Color.fromARGB(255, 145, 49, 255);
-  static final Color rubyColor = Color.fromARGB(255, 220, 0, 89);
+	static final Map<CurrencyType, Color> currencyColor = {
+		CurrencyType.diamond: Color.fromARGB(255, 3, 169, 244),
+		CurrencyType.emerald: Color.fromARGB(255, 14, 204, 93),
+		CurrencyType.amethyst: Color.fromARGB(255, 145, 49, 255),
+		CurrencyType.ruby: Color.fromARGB(255, 220, 0, 89)
+	};
 
 }
 
 class AppBoxProperties {
 	// Paddings, margins, borders and box shadows goes here
-	static final double buttonIconPadding = 4.0;
-	
+  static final double buttonIconPadding = 4.0;
+  static final double roundedCornersRadius = 5.0;
+  static final double screenEdgePadding = 20.0;
+  static final double cardListPadding = 5.0;
+  static final double containerPadding = 10.0;
+  static final double columnChildrenPadding = 5.0;
+  static final double sectionPadding = 15.0;
+
 }
 
 class AppSectionStyle {

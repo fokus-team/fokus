@@ -28,7 +28,15 @@
 					"greetings": "Welcome",
 					"addChild": "Add child",
 					"addCaregiver": "Add caregiver",
-					"pageHint": "Manage child profiles and connected caregiver accounts."
+					"pageHint": "Manage child profiles and connected caregiver accounts"
+				},
+				"content": {
+					"childProfilesTitle": "Child profiles",
+					"noChildProfilesAdded": "No children assigned",
+					"caregiverProfilesTitle": "Befriended caregivers",
+					"noCaregiverProfilesAdded": "No befriended caregivers found",
+					"todayPlans": "{NUM_PLANS, plural, offset:0 zero {No plans} one {# plan} other {# plans}} for today",
+					"activePlan": "1 plan currently in progress"
 				}
 			},
 			"plans": {
@@ -36,7 +44,14 @@
 					"title": "Plans",
 					"addPlan": "Add plan",
 					"calendar": "Calendar",
-					"pageHint": "Create, assign and manage plans with tasks."
+					"pageHint": "Create, assign and manage plans with tasks"
+				},
+				"content": {
+					"addedPlansTitle": "Added plans",
+					"noPlansAdded": "No plans to display, add the first one now",
+					"tasksCount": "{NUM_TASKS, plural, offset:0  =1 {# task} other {# tasks}}",
+					"activePlan": "Plan active",
+					"inactivePlan": "Plan inactive"
 				}
 			},
 			"awards": {
@@ -44,14 +59,30 @@
 					"title": "Awards",
 					"addAward": "Add award",
 					"addBadge": "Add badge",
-					"pageHint": "Increase work motivation by using points, awards and badges."
+					"pageHint": "Increase work motivation by using points, awards and badges"
+				},
+				"content": {
+					"addedAwardsTitle": "Added awards",
+					"noAwardsAdded": "No awards to display, add the first one now",
+					"addedBadgesTitle": "Added badges",
+					"noBadgesAdded": "No badges to display, add the first one now",
+					"pointCost": "Award's point cost",
+					"unlimitedAward": "Unlimited award",
+					"limitedAward": "Limited {AWARD_LIMIT, plural, offset:0 one {one award} other {# awards}} per child",
+					"noLeveledBadge": "One-time badge",
+					"3LeveledBadge": "3-leveled badge",
+					"5LeveledBadge": "5-leveled badge"
 				}
 			},
 			"statistics": {
 				"header": {
 					"title": "Statistics",
 					"history": "Event history",
-					"pageHint": "View and analyze the work done by children."
+					"pageHint": "View and analyze the work done by children"
+				},
+				"content": {
+					"basicStatisticsTitle": "Basic statistics",
+					"basicStatisticsSubtitle": "This screen is not available in this version of the application"
 				}
 			}
 		},
@@ -60,22 +91,60 @@
 				"header": {
 					"greetings": "Hello",
 					"myPoints": "My points",
-					"pageHint": "Complete tasks and earn points.",
+					"pageHint": "Complete tasks and earn points",
 					"garden": "Garden"
+				},
+				"content": {
+					"todaysPlans": "Today's plans",
+					"remainingTodaysPlans": "Remaining today's plans",
+					"inProgress": "In progress",
+					"noPlans": "No plans",
+					"completedPlans": "Completed plans",
+					"futurePlans": "Check future plans",
+					"tasks": "{NUM_TASKS, plural, offset:0  one {# task} other {# tasks}}",
+					"noTaskCompleted": "{NUM_ALL_TASKS, plural, offset:0 one {# task} other {# tasks}} to complete",
+					"taskProgress": "{NUM_TASKS} out of {NUM_ALL_TASKS} tasks completed"
+				}
+			},
+			"awards": {
+				"content": {
+					"awardsTitle": "Available awards",
+					"noAwardsMessage": "No available awards to display"
+				}
+			},
+			"achievements": {
+				"content": {
+					"achievementsTitle": "Achievements",
+					"noAchievementsMessage": "No achievements to display"
 				}
 			}
 		}
 	},
+	"repeatability": {
+		"once": "On {DAY}",
+		"weekly": "Every",
+		"monthly": "Every {DAYS} day of the month",
+		"weekday": "{WEEKDAY, select, 1 {monday} 2 {tuesday} 3 {wednesday} 4 {thursday} 5 {friday} 6 {saturday} 7 {sunday} other {}}",
+		"untilCompleted": "until completed",
+		"range": "from {FROM} to {TO}"
+	},
 	"alert": {
-		"error": "Error occurred",
-		"noConnection": "No connection"
+		"noConnection": "No connection",
+		"connectionRetry": "Ensure the device has access to internet",
+		"noHint": "No hint"
 	},
 	"actions": {
+		"ok": "Ok",
 		"exit": "Exit",
 		"retry": "Retry",
-		"close": "Close"
+		"close": "Close",
+		"edit": "Edit",
+		"delete": "Delete",
+		"details": "Show details",
+		"help": "Show help"
 	},
 	"help": {
 		"first_steps": "First steps"
-	}
+	},
+	"and": "and"
 }

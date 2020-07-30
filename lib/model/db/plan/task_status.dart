@@ -7,12 +7,12 @@ class TaskStatus {
 	TaskStatus({this.completed, this.state, this.pointsAwarded, this.rating});
 
 	factory TaskStatus.fromJson(Map<String, dynamic> json) {
-		return TaskStatus(
+		return json != null ? TaskStatus(
 			completed: json['completed'],
 			state: TaskState.values[json['state']],
 			pointsAwarded: json['pointsAwarded'],
 			rating: json['rating'],
-		);
+		) : null;
 	}
 
 	Map<String, dynamic> toJson() {

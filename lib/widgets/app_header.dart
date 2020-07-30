@@ -5,8 +5,13 @@ import 'package:flutter_cubit/flutter_cubit.dart';
 
 import 'package:fokus/logic/active_user/active_user_cubit.dart';
 import 'package:fokus/model/db/user/user_role.dart';
+import 'package:fokus/model/ui/user/ui_child.dart';
+import 'package:fokus/model/ui/user/ui_user.dart';
 import 'package:fokus/utils/app_locales.dart';
+import 'package:fokus/utils/icon_sets.dart';
 import 'package:fokus/utils/theme_config.dart';
+import 'package:fokus/widgets/attribute_chip.dart';
+import 'package:fokus/widgets/app_avatar.dart';
 
 enum AppHeaderType { greetings, normal }
 
@@ -19,9 +24,9 @@ class HeaderActionButton {
 
 	HeaderActionButton(this.icon, this.text, this.customContent, this.action, [this.backgroundColor]);
 	HeaderActionButton.normal(IconData icon, String text, Function action, [Color backgroundColor])
-		: this(icon, text, null, action, backgroundColor);
+			: this(icon, text, null, action, backgroundColor);
 	HeaderActionButton.custom(Widget customContent, Function action, [Color backgroundColor])
-		: this(null, null, customContent, action, backgroundColor);
+			: this(null, null, customContent, action, backgroundColor);
 }
 
 class AppHeader extends StatelessWidget {
@@ -32,23 +37,26 @@ class AppHeader extends StatelessWidget {
 
 	AppHeader({this.title, this.text, this.headerActionButtons, this.headerType});
 	AppHeader.greetings({String text, List<HeaderActionButton> headerActionButtons}) : this(
-		text: text, 
-		headerActionButtons: headerActionButtons,
-		headerType: AppHeaderType.greetings
+			text: text,
+			headerActionButtons: headerActionButtons,
+			headerType: AppHeaderType.greetings
 	);
 	AppHeader.normal({String title, String text, List<HeaderActionButton> headerActionButtons}) : this(
-		title: title,
-		text: text, 
-		headerActionButtons: headerActionButtons,
-		headerType: AppHeaderType.normal
+			title: title,
+			text: text,
+			headerActionButtons: headerActionButtons,
+			headerType: AppHeaderType.normal
 	);
 
   @override
   Widget build(BuildContext context) => headerType == AppHeaderType.greetings ? buildGreetings(context) : buildNormal(context);
 
-	Image headerImage(ActiveUserPresent user) {
-		// TODO Handling the avatars (based on type and avatar parameters), returning sunflower for now
-		return Image.asset('assets/image/sunflower_logo.png', height: 64);
+	Widget headerImage(UIUser user) {
+		if(user.role == UserRole.caregiver) {
+			return Image.asset('assets/image/sunflower_logo.png', height: 64);
+		} else {
+			return AppAvatar(user.avatar, color: childAvatars[user.avatar].color);
+		}
 	}
 
 	Widget headerIconButton(IconData icon, Function action) {
@@ -67,13 +75,27 @@ class AppHeader extends StatelessWidget {
 	}
 	
 	Widget headerActionButton(BuildContext context, HeaderActionButton button) {
+		if(button.customContent != null) {
+			return GestureDetector(
+				onTap: button.action,
+				child: Container(
+					margin: EdgeInsets.all(4.0),
+					decoration: ShapeDecoration(
+						shape: Theme.of(context).buttonTheme.shape,
+						color: button.backgroundColor ?? Colors.transparent
+					),
+					padding: EdgeInsets.symmetric(vertical: 6.0, horizontal: 10.0),
+					child: button.customContent
+				)
+			);
+		}
 		return Container(
 			padding: EdgeInsets.all(4.0),
 			child: FlatButton(
 				onPressed: button.action,
 				color: (button.backgroundColor != null) ? button.backgroundColor : Theme.of(context).buttonColor,
 				padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
-				child: (button.customContent != null) ? button.customContent : Row(
+				child: Row(
 					mainAxisAlignment: MainAxisAlignment.center,
 					children: <Widget>[
 						Padding(
@@ -102,7 +124,7 @@ class AppHeader extends StatelessWidget {
 		);
 	}
 
-	Widget buildHederContainer(BuildContext context, Widget innerContent) {
+	Widget buildHeaderContainer(BuildContext context, Widget innerContent) {
 		return Material(
 			elevation: 4.0,
 			color: Theme.of(context).appBarTheme.color,
@@ -133,9 +155,10 @@ class AppHeader extends StatelessWidget {
 	}
 
 	Widget buildGreetings(BuildContext context) {
-		var currentUser = CubitProvider.of<ActiveUserCubit>(context).state as ActiveUserPresent;
+		var cubit = CubitProvider.of<ActiveUserCubit>(context);
+		var currentUser = (cubit.state as ActiveUserPresent).user;
 
-		return buildHederContainer(context, 
+		return buildHeaderContainer(context, 
 			Row(
 				mainAxisAlignment: MainAxisAlignment.spaceBetween,
 				crossAxisAlignment: CrossAxisAlignment.start,
@@ -156,7 +179,7 @@ class AppHeader extends StatelessWidget {
 											children: <TextSpan>[
 												TextSpan(
 													text: currentUser.name,
-													style: Theme.of(context).textTheme.headline1.copyWith(color: Colors.white)
+													style: Theme.of(context).textTheme.headline1.copyWith(color: Colors.white, height: 1.1)
 												)
 											]
 										),
@@ -170,7 +193,7 @@ class AppHeader extends StatelessWidget {
 							headerIconButton(Icons.notifications, () => { log("Powiadomienia") }),
 							headerIconButton(
 								Icons.more_vert,
-								() => CubitProvider.of<ActiveUserCubit>(context).logoutUser()
+								() => cubit.logoutUser()
 							),
 						],
 					)
@@ -180,7 +203,7 @@ class AppHeader extends StatelessWidget {
 	}
 
 	Widget buildNormal(BuildContext context) {
-		return buildHederContainer(context, 
+		return buildHeaderContainer(context, 
 			Row(
 				mainAxisAlignment: MainAxisAlignment.spaceBetween,
 				crossAxisAlignment: CrossAxisAlignment.start,
@@ -206,4 +229,35 @@ class AppHeader extends StatelessWidget {
 		);
 	}
 
+}
+
+class ChildCustomHeader extends StatelessWidget {
+	@override
+	Widget build(BuildContext context) {
+		var user = (CubitProvider.of<ActiveUserCubit>(context).state as ActiveUserPresent).user;
+
+		return AppHeader.greetings(text: 'page.childSection.panel.header.pageHint', headerActionButtons: [
+			HeaderActionButton.custom(
+				Container(
+					child: Row(
+						children: <Widget>[
+							Text(
+								'${AppLocales.of(context).translate('page.childSection.panel.header.myPoints')}: ',
+								style: Theme.of(context).textTheme.button.copyWith(color: AppColors.darkTextColor)
+							),
+							for (var currency in (user as UIChild).points.entries)
+								Padding(
+									padding: EdgeInsets.only(left: 4.0),
+									child: AttributeChip.withCurrency(content: '${currency.value}', currencyType: currency.key)
+								),
+						]
+					)
+				),
+				() => { log('Child detailed wallet popup') },
+				Colors.white
+			),
+			//HeaderActionButton.normal(Icons.local_florist, 'page.childSection.panel.header.garden', () => { log("Ogród") })
+		]);
+	}
+	
 }

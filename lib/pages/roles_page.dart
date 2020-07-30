@@ -24,6 +24,8 @@ class RolesPage extends StatelessWidget {
 				      _roleButton(context, UserRole.child),
 				      Container(
 				        child: RawMaterialButton(
+									highlightColor: Colors.transparent,
+									splashColor: Colors.transparent,
 				          onPressed: () => {
 				            showHelpDialog(context, 'first_steps')
 				          },
@@ -57,7 +59,10 @@ class RolesPage extends StatelessWidget {
 		  fontWeight: FontWeight.normal
 	  );
 	  return Container(
-		  width: 240,
+			constraints: new BoxConstraints(
+				minWidth: 240,
+				maxWidth: 260,
+			),
 		  padding: EdgeInsets.all(4.0),
 		  child: FlatButton(
 			  onPressed: () => CubitProvider.of<ActiveUserCubit>(context).loginUserByRole(role),
@@ -94,7 +99,7 @@ class RolesPage extends StatelessWidget {
 		  child: child,
 		  listener: (context, state) {
 		    if (state is ActiveUserPresent)
-		      Navigator.of(context).pushReplacementNamed(state.role.panelPage.name);
+		      Navigator.of(context).pushReplacementNamed(state.user.role.panelPage.name);
 		  }
 	  );
   }

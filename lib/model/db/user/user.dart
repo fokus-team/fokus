@@ -11,16 +11,17 @@ class User {
 
   List<int> accessCode;
   int avatar;
-  List<String> connections;
+  List<ObjectId> connections;
 
   User({this.id, this.role});
 
   @protected
   void fromJson(Map<String, dynamic> json) {
     name = json['name'];
-    accessCode = json['accessCode'] != null ? new List<int>.from(json['accessCode']) : null;
+    accessCode = json['accessCode'] != null ? new List<int>.from(json['accessCode']) : [];
     avatar = json['avatar'];
-    connections = json['connections'] != null ? new List<String>.from(json['connections']) : null;
+    connections = json['connections'] != null ? new List<ObjectId>.from(json['connections']) : [];
+    connections = json['connections'] != null ? new List<ObjectId>.from(json['connections']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -38,7 +39,9 @@ class User {
     return data;
   }
 
-  static User typedFromJson(Map<String, dynamic> json) {
+  factory User.typedFromJson(Map<String, dynamic> json) {
+  	if (json == null)
+  		return null;
   	var rawRole = json['role'];
   	if (rawRole == null)
   		return null;

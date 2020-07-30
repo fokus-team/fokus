@@ -21,6 +21,7 @@ class ActiveUserCubit extends Cubit<ActiveUserState> {
 			return;
 		_appConfig.setLastUser(user.id);
 		emit(ActiveUserPresent(UIUser.typedFromDBModel(user)));
+		// do a data check
 	}
 
   void logoutUser() {

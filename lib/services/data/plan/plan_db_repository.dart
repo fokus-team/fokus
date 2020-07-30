@@ -1,11 +1,11 @@
-import 'package:fokus/model/db/plan/plan_instance.dart';
-import 'package:fokus/model/db/plan/plan_instance_state.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
 import 'package:fokus/model/db/collection.dart';
 import 'package:fokus/model/db/date/date.dart';
 import 'package:fokus/model/db/plan/plan.dart';
 import 'package:fokus/services/data/db/db_repository.dart';
+import 'package:fokus/model/db/plan/plan_instance.dart';
+import 'package:fokus/model/db/plan/plan_instance_state.dart';
 
 mixin PlanDbRepository implements DbRepository {
 	Future<List<Plan>> getChildPlans(ObjectId childId, {bool activeOnly = true}) {
@@ -22,8 +22,13 @@ mixin PlanDbRepository implements DbRepository {
 	  return dbClient.queryOneTyped(Collection.planInstance, _buildPlanQuery(childId, state: PlanInstanceState.active), (json) => PlanInstance.fromJson(json));
 	}
 
-	Future<List<PlanInstance>> getPlanInstancesForPlans(ObjectId childId, List<ObjectId> planIDs) {
-		var query = _buildPlanQuery(childId).and(where.oneFrom('planID', planIDs));
+	Future<List<PlanInstance>> getPlanInstancesForPlans(ObjectId childId, List<ObjectId> planIDs, [Date date]) {
+		var query = _buildPlanQuery(childId, date: date).and(where.oneFrom('planID', planIDs));
+		return dbClient.queryTyped(Collection.planInstance, query, (json) => PlanInstance.fromJson(json));
+	}
+
+	Future<List<PlanInstance>> getPastNotCompletedPlanInstances(ObjectId childId, List<ObjectId> planIDs, Date beforeDate) {
+		var query = _buildPlanQuery(childId).and(where.oneFrom('planID', planIDs)).and(where.lt('date', beforeDate)).and(where.ne('state', PlanInstanceState.completed.index));
 		return dbClient.queryTyped(Collection.planInstance, query, (json) => PlanInstance.fromJson(json));
 	}
 

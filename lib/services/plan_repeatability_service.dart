@@ -15,12 +15,15 @@ import 'data/data_repository.dart';
 class PlanRepeatabilityService {
 	final DataRepository _dbRepository = GetIt.I<DataRepository>();
 
-  Future<List<Plan>> getChildPlansByDate(ObjectId childId, Date date, {bool activeOnly = true}) async {
-    var childPlans = await _dbRepository.getChildPlans(childId, activeOnly: activeOnly);
-    return childPlans.where((plan) => planInstanceExistsByDate(plan, date)).toList();
-  }
+	Future<List<Plan>> getPlansByDate(ObjectId childId, Date date, {bool activeOnly = true}) async {
+		return filterPlansByDate(await _dbRepository.getChildPlans(childId, activeOnly: activeOnly), date);
+	}
 
-  bool planInstanceExistsByDate(Plan plan, Date date) {
+	Future<List<Plan>> filterPlansByDate(List<Plan> plans, Date date, {bool activeOnly = true}) async {
+		return plans.where((plan) => _planInstanceExistsByDate(plan, date)).toList();
+	}
+
+  bool _planInstanceExistsByDate(Plan plan, Date date) {
   	var rules = plan.repeatability;
 	  if (rules.range.from > date)
 		  return false;
@@ -33,11 +36,13 @@ class PlanRepeatabilityService {
 	  return false;
   }
 
-	TranslateFunc buildPlanDescription(PlanRepeatability rules, {bool detailed = false}) {
+	TranslateFunc buildPlanDescription(PlanRepeatability rules, {Date instanceDate, bool detailed = false}) {
   	return (context) {
 		  var formatDate = (date) => DateFormat.yMd(Localizations.localeOf(context).toString()).format(date);
   		String description = '';
-		  if (rules.type == RepeatabilityType.once)
+		  if (rules.untilCompleted && instanceDate != null)
+			  description += AppLocales.of(context).translate('repeatability.startedOn', {'DAY': formatDate(instanceDate)});
+		  else if (rules.type == RepeatabilityType.once)
 		  	description += AppLocales.of(context).translate('repeatability.once', {'DAY': formatDate(rules.range.from)});
 			else {
 				String andWord = AppLocales.of(context).translate('and');

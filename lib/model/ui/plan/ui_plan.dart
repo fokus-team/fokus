@@ -8,9 +8,10 @@ import 'ui_plan_base.dart';
 
 class UIPlan extends UIPlanBase {
 	final int taskCount;
+	final bool isActive;
 
-  UIPlan(ObjectId id, String name, this.taskCount, TranslateFunc description) : super(id, name, description);
-	UIPlan.fromDBModel(Plan plan, TranslateFunc description) : this(plan.id, plan.name, plan.tasks.length, description);
+  UIPlan(ObjectId id, String name, this.isActive, this.taskCount, TranslateFunc description) : super(id, name, description);
+	UIPlan.fromDBModel(Plan plan, TranslateFunc description) : this(plan.id, plan.name, plan.active, plan.tasks.length, description);
 
   @override
   List<Object> get props => super.props..addAll([[taskCount]]);

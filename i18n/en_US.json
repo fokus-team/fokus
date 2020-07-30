@@ -47,11 +47,10 @@
 					"pageHint": "Create, assign and manage plans with tasks"
 				},
 				"content": {
-					"addedPlansTitle": "Added plans",
-					"noPlansAdded": "No plans to display, add the first one now",
-					"tasksCount": "{NUM_TASKS, plural, offset:0  =1 {# task} other {# tasks}}",
-					"activePlan": "Plan active",
-					"inactivePlan": "Plan inactive"
+					"addedActivePlansTitle": "Added plans",
+					"addedDeactivatedPlansTitle": "Added plans",
+					"noPlansAdded": "No plans to display",
+					"tasksCount": "{NUM_TASKS, plural, offset:0  =1 {# task} other {# tasks}}"
 				}
 			},
 			"awards": {

@@ -6,7 +6,6 @@ import 'package:fokus/logic/caregiver_plans/caregiver_plans_cubit.dart';
 import 'package:fokus/model/ui/plan/ui_plan.dart';
 import 'package:fokus/utils/app_locales.dart';
 
-
 import 'package:fokus/widgets/app_header.dart';
 import 'package:fokus/widgets/app_navigation_bar.dart';
 import 'package:fokus/widgets/item_card.dart';
@@ -40,25 +39,26 @@ class _CaregiverPlansPageState extends State<CaregiverPlansPage> {
                         Colors.amber)
                   ]),
               CubitBuilder<CaregiverPlansCubit, CaregiverPlansState>(
-                cubit: CubitProvider.of<CaregiverPlansCubit>(context),
-                builder: (context, state) {
-                  if (state is CaregiverPlansInitial)
-                    CubitProvider.of<CaregiverPlansCubit>(context)
-                        .loadCaregiverPlans();
-                  else if (state is CaregiverPlansLoadSuccess)
-                    return AppSegments(
-                        segments: _buildPanelSegments(state, context));
-                  return Expanded(
-                      child: Center(child: CircularProgressIndicator()));
-                },
-              ),
-            ]),
+                  cubit: CubitProvider.of<CaregiverPlansCubit>(context),
+                  builder: (context, state) {
+                    if (state is CaregiverPlansInitial)
+                      CubitProvider.of<CaregiverPlansCubit>(context)
+                          .loadCaregiverPlans();
+                    else if (state is CaregiverPlansLoadSuccess)
+                      return AppSegments(
+                          segments: _buildPanelSegments(state, context));
+                    return Expanded(
+                        child: Center(child: CircularProgressIndicator()));
+                  }
+              )
+            ]
+				),
         bottomNavigationBar: AppNavigationBar.caregiverPage(currentIndex: 1));
   }
 }
 
 List<Segment> _buildPanelSegments(CaregiverPlansLoadSuccess state, context) {
-	var activePlans =
+  var activePlans =
       state.plans.where((blueprint) => (blueprint.isActive)).toList();
   var deactivatedPlans =
       state.plans.where((blueprint) => (!blueprint.isActive)).toList();
@@ -66,17 +66,21 @@ List<Segment> _buildPanelSegments(CaregiverPlansLoadSuccess state, context) {
     _getPlansSegment(
         plans: activePlans,
         title: '$_pageKey.content.addedActivePlansTitle',
-        noElementsAction: RaisedButton(
-          child: Text(
-              AppLocales.of(context).translate('$_pageKey.header.addPlan'),
-              style: Theme.of(context).textTheme.button),
-          onPressed: () => {},
-        ),
+        noElementsAction: deactivatedPlans.isEmpty
+            ? RaisedButton(
+                child: Text(
+                    AppLocales.of(context)
+                        .translate('$_pageKey.header.addPlan'),
+                    style: Theme.of(context).textTheme.button),
+                onPressed: () => {},
+              )
+            : SizedBox.shrink(),
         context: context),
-    _getPlansSegment(
-        plans: deactivatedPlans,
-        title: '$_pageKey.content.addedDeactivatedPlansTitle',
-        context: context)
+    if (deactivatedPlans.isNotEmpty)
+      _getPlansSegment(
+          plans: deactivatedPlans,
+          title: '$_pageKey.content.addedDeactivatedPlansTitle',
+          context: context)
   ];
 }
 

@@ -33,7 +33,14 @@ mixin PlanDbRepository implements DbRepository {
 	}
 
 	SelectorBuilder _buildPlanQuery({ObjectId caregiverId, ObjectId childId, ObjectId planId, Date date, bool activeOnly = false, PlanInstanceState state}) {
-		var query = where.eq('assignedTo', childId);
+		var query;
+		if (childId != null)  {
+			query = where.eq('assignedTo', childId);
+			if (caregiverId != null)
+				query = query.and(where.eq('createdBy', caregiverId));
+		}
+		else if (caregiverId != null)
+			query = where.eq('createdBy', caregiverId);
 		if (activeOnly)
 			query.and(where.eq('active', true));
 		if (state != null)

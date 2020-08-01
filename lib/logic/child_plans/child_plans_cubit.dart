@@ -25,7 +25,7 @@ class ChildPlansCubit extends Cubit<ChildPlansState> {
 	  var getDescription = (Plan plan, [Date instanceDate]) => _repeatabilityService.buildPlanDescription(plan.repeatability, instanceDate: instanceDate);
 	  var childId = (_activeUserCubit.state as ActiveUserPresent).user.id;
 
-	  var allPlans = await _dbRepository.getChildPlans(childId);
+	  var allPlans = await _dbRepository.getPlans(childId: childId);
 	  var todayPlans = await _repeatabilityService.filterPlansByDate(allPlans, Date.now());
 	  var todayPlanIds = todayPlans.map((plan) => plan.id).toList();
 	  var untilCompletedPlans = allPlans.where((plan) => plan.repeatability.untilCompleted && !todayPlans.contains(plan.id)).map((plan) => plan.id).toList();

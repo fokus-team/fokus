@@ -20,70 +20,57 @@ class CaregiverPlansPage extends StatefulWidget {
 const String _pageKey = 'page.caregiverSection.plans';
 
 class _CaregiverPlansPageState extends State<CaregiverPlansPage> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-			body: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
-				AppHeader.normal(title: '$_pageKey.header.title', text: '$_pageKey.header.pageHint', headerActionButtons: [
-					HeaderActionButton.normal(Icons.add, '$_pageKey.header.addPlan', () => {log("Dodaj plan")}),
-					HeaderActionButton.normal(Icons.calendar_today, '$_pageKey.header.calendar', () => {log("Kalendarz")}, Colors.amber)
-				]),
-				CubitBuilder<CaregiverPlansCubit, CaregiverPlansState>(
-					cubit: CubitProvider.of<CaregiverPlansCubit>(context),
-					builder: (context, state) {
-						if (state is CaregiverPlansInitial)
-							CubitProvider.of<CaregiverPlansCubit>(context).loadCaregiverPlans();
-						else if (state is CaregiverPlansLoadSuccess)
-							return AppSegments(segments: _buildPanelSegments(state, context));
-						return Expanded(child: Center(child: CircularProgressIndicator()));
-					}
-				)
-			]
+	@override
+	Widget build(BuildContext context) {
+		return Scaffold(body: Column(crossAxisAlignment: CrossAxisAlignment.start,
+			children: <Widget>[
+				AppHeader.normal(title: '$_pageKey.header.title',
+					text: '$_pageKey.header.pageHint',
+					headerActionButtons: [
+						HeaderActionButton.normal(Icons.add, '$_pageKey.header.addPlan', () => {log("Dodaj plan")}),
+						HeaderActionButton.normal(Icons.calendar_today, '$_pageKey.header.calendar', () => {log("Kalendarz")}, Colors.amber)
+					]),
+				CubitBuilder<CaregiverPlansCubit, CaregiverPlansState>(cubit: CubitProvider.of<CaregiverPlansCubit>(context), builder: (context, state) {
+					if (state is CaregiverPlansInitial)
+						CubitProvider.of<CaregiverPlansCubit>(context).loadCaregiverPlans();
+					else if (state is CaregiverPlansLoadSuccess) return AppSegments(segments: _buildPanelSegments(state));
+					return Expanded(child: Center(child: CircularProgressIndicator()));
+				})
+			]), bottomNavigationBar: AppNavigationBar.caregiverPage(currentIndex: 1));
+	}
+
+
+	List<Segment> _buildPanelSegments(CaregiverPlansLoadSuccess state) {
+		var activePlans = state.plans.where((blueprint) => (blueprint.isActive)).toList();
+		var deactivatedPlans = state.plans.where((blueprint) => (!blueprint.isActive)).toList();
+		return [
+			_getPlansSegment(plans: activePlans,
+				title: '$_pageKey.content.addedActivePlansTitle',
+				noElementsAction: deactivatedPlans.isEmpty ? RaisedButton(child: Text(AppLocales.of(context).translate('$_pageKey.header.addPlan'), style: Theme
+					.of(context)
+					.textTheme
+					.button), onPressed: () => {},) : SizedBox.shrink(),
 			),
-			bottomNavigationBar: AppNavigationBar.caregiverPage(currentIndex: 1));
-  }
-}
+			if (deactivatedPlans.isNotEmpty) _getPlansSegment(plans: deactivatedPlans, title: '$_pageKey.content.addedDeactivatedPlansTitle')
+		];
+	}
 
-List<Segment> _buildPanelSegments(CaregiverPlansLoadSuccess state, context) {
-  var activePlans = state.plans.where((blueprint) => (blueprint.isActive)).toList();
-  var deactivatedPlans = state.plans.where((blueprint) => (!blueprint.isActive)).toList();
-  return [
-  	_getPlansSegment(
-			plans: activePlans,
-			title: '$_pageKey.content.addedActivePlansTitle',
-			noElementsAction: deactivatedPlans.isEmpty
-				? RaisedButton(
-					child: Text(AppLocales.of(context).translate('$_pageKey.header.addPlan'),
-					style: Theme.of(context).textTheme.button),
-					onPressed: () => {},
-				)
-				: SizedBox.shrink(),
-			context: context),
-    if (deactivatedPlans.isNotEmpty)
-    	_getPlansSegment(plans: deactivatedPlans, title: '$_pageKey.content.addedDeactivatedPlansTitle', context: context)
-  ];
-}
-
-Segment _getPlansSegment({List<UIPlan> plans, String title, String noElementsMessage, Widget noElementsAction, context}) {
-  return Segment(
-    title: title,
-    noElementsMessage: '$_pageKey.content.noPlansAdded',
-    noElementsAction: noElementsAction,
-    elements: <Widget>[
-      for (var plan in plans)
-        ItemCard(
-          title: plan.name,
-          subtitle: plan.description(context),
-          actionButton: ItemCardActionButton(
-						color: Colors.teal, icon: Icons.keyboard_arrow_right, onTapped: () => {log("go to details page")}),
-          chips: <Widget>[
-            AttributeChip.withIcon(
-							content: AppLocales.of(context).translate('$_pageKey.content.tasks', {'NUM_TASKS': plan.taskCount}),
-							color: Colors.indigo,
-							icon: Icons.layers
-						)
-          ],
-        ),
-    ],
-  );
+	Segment _getPlansSegment({List<UIPlan> plans, String title, String noElementsMessage, Widget noElementsAction}) {
+		return Segment(title: title,
+			noElementsMessage: '$_pageKey.content.noPlansAdded',
+			noElementsAction: noElementsAction,
+			elements: <Widget>[
+				for (var plan in plans)
+					ItemCard(title: plan.name,
+						subtitle: plan.description(context),
+						actionButton: ItemCardActionButton(color: Colors.teal, icon: Icons.keyboard_arrow_right, onTapped: () => {log("go to details page")}),
+						chips: <Widget>[
+							AttributeChip.withIcon(
+								content: AppLocales.of(context).translate('$_pageKey.content.tasks', {'NUM_TASKS': plan.taskCount}), color: Colors.indigo, icon: Icons.layers
+							)
+						],
+					),
+			],
+		);
+	}
 }

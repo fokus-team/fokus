@@ -53,6 +53,16 @@
 					"tasksCount": "{NUM_TASKS, plural, offset:0  =1 {# task} other {# tasks}}"
 				}
 			},
+			"planInProgress": {
+				"header": {
+					"title": "In progress:"
+				},
+				"content": {
+					"toDoTasks": "To-do list",
+					"additionalTasks": "Additional tasks",
+					"noTasks": "No tasks to display"
+				}
+			},
 			"awards": {
 				"header": {
 					"title": "Awards",

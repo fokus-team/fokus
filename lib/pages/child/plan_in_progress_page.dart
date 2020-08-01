@@ -1,77 +1,86 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_cubit/flutter_cubit.dart';
 import 'package:fokus/widgets/item_card.dart';
 import 'package:fokus/widgets/segment.dart';
 
-class PlanInProgressPage extends StatelessWidget {
+class ChildPlanInProgressPage extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-		return Scaffold(
-			body: Column(
-				crossAxisAlignment: CrossAxisAlignment.start,
-				children: [
-					CubitBuilder<ChildPlansCubit, ChildPlansState>(
-						cubit: CubitProvider.of<ChildPlansCubit>(context),
-						builder: (context, state) {
-							if (state is ChildPlansInitial)
-								CubitProvider.of<ChildPlansCubit>(context).loadChildPlansForToday();
-							else if (state is ChildPlansLoadSuccess)
-								return AppSegments(segments: _buildPanelSegments(state));
-							return Expanded(child: Center(child: CircularProgressIndicator()));
-						}
-						)
-				],
-				)
-			);
-  }
-
-	List<Segment> _buildPanelSegments(ChildPlansLoadSuccess state) {
-		var mandatoryTasks = state.plans.where((plan) => (activePlan == null || plan.id != activePlan.id) && plan.state != PlanInstanceState.completed).toList();
-		var additionalTasks = state.plans.where((plan) => (activePlan == null || plan.id != activePlan.id) && plan.state != PlanInstanceState.completed).toList();
-
-		return [
-			if(mandatoryTasks.isNotEmpty)
-				_getTasksSegment(
-					plans: [activePlan],
-					icon: Icons.launch,
-					color: AppColors.childActionColor,
-					title: '$_pageKey.content.inProgress'
-					),
-			if (additionalTasks.isNotEmpty)
-				_getTasksSegment(
-					plans: otherPlans,
-					icon: Icons.play_arrow,
-					color: AppColors.childButtonColor,
-					title: '$_pageKey.content.' + (activePlan == null ? 'todaysPlans' : 'remainingTodaysPlans'),
-					noElementsMessage: '$_pageKey.content.noPlans'
-					)
-		];
-	}
-
-	Segment _getPlansSegment({List<UIPlanInstance> plans, IconData icon, Color color, String title, String noElementsMessage}) {
-		return Segment(
-			title: title,
-			noElementsMessage: noElementsMessage,
-			elements: <Widget>[
-				for (var plan in plans)
-					ItemCard(
-						actionButton: ItemCardActionButton(
-							icon: icon,
-							color: color,
-							disabled: plan.state == PlanInstanceState.completed,
-							onTapped: () => {log("startPlan")}
-							),
-						title: plan.name,
-						subtitle: plan.description(context),
-						isActive: plan.state != PlanInstanceState.completed,
-						progressPercentage: _planInProgress(plan) ? plan.completedTaskCount / plan.taskCount : null,
-						chips: <Widget>[_getTaskChipForPlan(plan)],
-						)
-			],
-			);
-	}
-
+  _ChildPlanInProgressPageState createState() => new _ChildPlanInProgressPageState();
 }
 
+const String _pageKey = 'page.childSection.planInProgress';
+
+class _ChildPlanInProgressPageState extends State<ChildPlanInProgressPage> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+			body: Column(
+      	crossAxisAlignment: CrossAxisAlignment.start,
+      	children: [AppSegments(segments: _buildPanelSegments())],
+    ));
+  }
+
+  List<Segment> _buildPanelSegments() {
+    return [
+      _getTasksSegment(
+				title: '$_pageKey.content.toDoTasks',
+			),
+			_getAddTasksSegment(
+				title: '$_pageKey.content.additionalTasks')
+    ];
+  }
+
+  Segment _getTasksSegment({String title, String noElementsMessage}) {
+		return Segment(
+			title: title,
+			noElementsMessage: '$_pageKey.content.noTasks',
+			elements: <Widget>[
+				ItemCard(
+					title: "Opróżnij plecak",
+					subtitle: "Czas: 2:10",
+					actionButton: ItemCardActionButton(
+						color: Colors.lightGreen, icon: Icons.check, onTapped: () => log("Tapped finished activity")
+					),
+				),
+				ItemCard(
+					title: "Przygotuj książki i zeszyty na kolejny dzień według bardzo długiego planu zajęć",
+					subtitle: "6 minut",
+					actionButton: ItemCardActionButton(
+						color: Colors.teal, icon: Icons.play_arrow, onTapped:() => log("tapped start task")
+					),
+				),
+				ItemCard(
+					title: "Spakuj potrzebne rzeczy",
+					subtitle: "6 minut",
+					actionButton: ItemCardActionButton(
+						color: Colors.grey, icon: Icons.keyboard_arrow_up
+					),
+				)
+			]
+		);
+	}
+
+	Segment _getAddTasksSegment({String title, String noElementsMessage}) {
+		return Segment(
+			title: title,
+			noElementsMessage: '$_pageKey.content.noTasks',
+			elements: <Widget>[
+				ItemCard(
+					title: "Opróżnij plecak 2",
+					subtitle: "Czas: 5:10",
+					actionButton: ItemCardActionButton(
+						color: Colors.lightGreen, icon: Icons.check, onTapped: () => log("Tapped finished activity")
+					),
+				),
+				ItemCard(
+					title: "Przygotuj książki i zeszyty na kolejny dzień według bardzo długiego planu zajęć",
+					subtitle: "6 minut",
+					actionButton: ItemCardActionButton(
+						color: Colors.teal, icon: Icons.play_arrow, onTapped:() => log("tapped start task")
+					),
+				)
+			]
+		);
+	}
+}

@@ -105,6 +105,16 @@
 					"taskProgress": "Wykonano {NUM_TASKS} z {NUM_ALL_TASKS} zadań"
 				}
 			},
+			"planInProgress": {
+				"header": {
+					"title": "Wykonujesz:"
+				},
+				"content": {
+					"toDoTasks": "Zadania do wykonania",
+					"additionalTasks": "Zadania dodatkowe",
+					"noTasks": "Brak zadań"
+				}
+			},
 			"awards": {
 				"content": {
 					"awardsTitle": "Nagrody do zdobycia",

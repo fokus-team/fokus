@@ -1,6 +1,5 @@
 import 'package:fokus/model/db/date/date.dart';
 import 'package:fokus/model/db/date/time_date.dart';
-import 'package:mongo_dart/mongo_dart.dart';
 
 import 'date/date_base.dart';
 

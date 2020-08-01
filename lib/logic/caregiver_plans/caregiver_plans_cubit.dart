@@ -22,11 +22,10 @@ class CaregiverPlansCubit extends Cubit<CaregiverPlansState> {
     var getDescription = (Plan plan) => _repeatabilityService.buildPlanDescription(plan.repeatability);
     var caregiverId = (_activeUserCubit.state as ActiveUserPresent).user.id;
     var plans = await _dbRepository.getCaregiverPlans(caregiverId, activeOnly: false);
-		var planMap = Map.fromEntries(plans.map((blueprint) => MapEntry(blueprint, plans.firstWhere((plan) => plan.id == blueprint.id))));
 
     List<UIPlan> uiPlans = [];
     for(int i=0;i<plans.length;i++) {
-				uiPlans.add(UIPlan.fromDBModel(plans[i], getDescription(planMap[plans[i]])));
+				uiPlans.add(UIPlan.fromDBModel(plans[i], getDescription(plans[i])));
 		}
 		emit(CaregiverPlansLoadSuccess(uiPlans));
   }

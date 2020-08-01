@@ -33,22 +33,20 @@ mixin PlanDbRepository implements DbRepository {
 	}
 
 	SelectorBuilder _buildPlanQuery({ObjectId caregiverId, ObjectId childId, ObjectId planId, Date date, bool activeOnly = false, PlanInstanceState state}) {
-		var query;
-		if (childId != null)  {
-			query = where.eq('assignedTo', childId);
-			if (caregiverId != null)
-				query = query.and(where.eq('createdBy', caregiverId));
-		}
-		else if (caregiverId != null)
-			query = where.eq('createdBy', caregiverId);
+		SelectorBuilder query;
+		var addExpression = (expression) => query == null ? (query = expression) : query.and(expression);
+		if (childId != null)
+			addExpression(where.eq('assignedTo', childId));
+		if (caregiverId != null)
+			addExpression(where.eq('createdBy', caregiverId));
 		if (activeOnly)
-			query.and(where.eq('active', true));
+			addExpression(where.eq('active', true));
 		if (state != null)
-			query.and(where.eq('state', state.index));
+			addExpression(where.eq('state', state.index));
 		if (planId != null)
-			query.and(where.eq('planID', planId));
+			addExpression(where.eq('planID', planId));
 		if (date != null)
-			query.and(where.eq('date', date));
+			addExpression(where.eq('date', date));
 		return query;
 	}
 }

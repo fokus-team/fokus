@@ -47,11 +47,10 @@
 					"pageHint": "Twórz, przypisuj i zarządzaj planami oraz zadaniami"
 				},
 				"content": {
-					"addedPlansTitle": "Zdefiniowane plany",
-					"noPlansAdded": "Brak zdefiniowanych planów, dodaj pierwszy teraz",
-					"tasksCount": "{NUM_TASKS, plural, offset:0 zero {# zadań} one {# zadanie} two {# zadania} few {# zadania} other {# zadań}}",
-					"activePlan": "Plan aktywny",
-					"inactivePlan": "Plan nieaktywny"
+					"addedActivePlansTitle": "Aktywne plany",
+					"addedDeactivatedPlansTitle": "Nieaktywne plany",
+					"noPlansAdded": "Brak planów",
+					"tasks": "{NUM_TASKS, plural, offset:0  zero {# zadań} one {# zadanie} two {# zadania} few {# zadania} other {# zadań}}"
 				}
 			},
 			"awards": {

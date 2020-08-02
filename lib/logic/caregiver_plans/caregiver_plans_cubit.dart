@@ -21,7 +21,7 @@ class CaregiverPlansCubit extends Cubit<CaregiverPlansState> {
 
     var getDescription = (Plan plan) => _repeatabilityService.buildPlanDescription(plan.repeatability);
     var caregiverId = (_activeUserCubit.state as ActiveUserPresent).user.id;
-    var plans = await _dbRepository.getCaregiverPlans(caregiverId, activeOnly: false);
+    var plans = await _dbRepository.getPlans(caregiverId: caregiverId, activeOnly: false);
 
     List<UIPlan> uiPlans = [];
     for(int i=0;i<plans.length;i++) {

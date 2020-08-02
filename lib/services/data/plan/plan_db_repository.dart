@@ -32,8 +32,8 @@ mixin PlanDbRepository implements DbRepository {
 		return dbClient.queryTyped(Collection.planInstance, query, (json) => PlanInstance.fromJson(json));
 	}
 
-	Future<List<PlanInstance>> getPastNotCompletedPlanInstances(ObjectId childId, List<ObjectId> planIDs, Date beforeDate, {List<String> fields = const []}) {
-		var query = _buildPlanQuery(childId: childId).and(where.oneFrom('planID', planIDs)).and(where.lt('date', beforeDate)).and(where.ne('state', PlanInstanceState.completed.index));
+	Future<List<PlanInstance>> getPastNotCompletedPlanInstances(List<ObjectId> childIDs, List<ObjectId> planIDs, Date beforeDate, {List<String> fields = const []}) {
+		var query = where.oneFrom('assignedTo', childIDs).and(where.oneFrom('planID', planIDs)).and(where.lt('date', beforeDate)).and(where.ne('state', PlanInstanceState.completed.index));
 		if (fields.isNotEmpty)
 			query.fields(fields);
 		return dbClient.queryTyped(Collection.planInstance, query, (json) => PlanInstance.fromJson(json));

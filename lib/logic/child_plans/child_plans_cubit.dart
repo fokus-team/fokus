@@ -31,7 +31,7 @@ class ChildPlansCubit extends Cubit<ChildPlansState> {
 	  var untilCompletedPlans = allPlans.where((plan) => plan.repeatability.untilCompleted && !todayPlans.contains(plan.id)).map((plan) => plan.id).toList();
 
 	  var instances = await _dbRepository.getPlanInstancesForPlans(childId, todayPlanIds, Date.now());
-	  instances.addAll(await _dbRepository.getPastNotCompletedPlanInstances(childId, untilCompletedPlans, Date.now()));
+	  instances.addAll(await _dbRepository.getPastNotCompletedPlanInstances([childId], untilCompletedPlans, Date.now()));
 	  var planMap = Map.fromEntries(instances.map((instance) => MapEntry(instance, allPlans.firstWhere((plan) => plan.id == instance.planID))));
 
 	  List<UIPlanInstance> uiInstances = [];

@@ -7,7 +7,7 @@ class Date extends DateBase {
 
   Date.now() : this.fromDate(DateTime.now());
 
-  factory Date.parseDBDate(DateTime date) => Date.fromDate(date);
+  factory Date.parseDBDate(DateTime date) => date != null ? Date.fromDate(date) : null;
 
   @override
   DateTime toDBDate() => this;

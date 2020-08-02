@@ -7,7 +7,7 @@ class TimeDate extends DateBase {
 
   TimeDate.now() : this.fromDate(DateTime.now());
 
-  factory TimeDate.parseDBDate(DateTime date) => TimeDate.fromDate(date.toLocal());
+  factory TimeDate.parseDBDate(DateTime date) => date != null ? TimeDate.fromDate(date.toLocal()) : null;
 
   @override
   DateTime toDBDate() => this.toUtc();

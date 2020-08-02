@@ -11,7 +11,7 @@ abstract class PlanRepository {
 	Future<List<Plan>> getChildPlanInstances(ObjectId childId, {ObjectId planId, Date date, bool activeOnly = false});
 	Future<PlanInstance> getActiveChildPlanInstance(ObjectId childId);
 	Future<List<PlanInstance>> getPlanInstancesForPlans(ObjectId childId, List<ObjectId> planIDs, [Date date]);
-	Future<List<PlanInstance>> getPastNotCompletedPlanInstances(ObjectId childId, List<ObjectId> planIDs, Date beforeDate, {List<String> fields = const []});
+	Future<List<PlanInstance>> getPastNotCompletedPlanInstances(List<ObjectId> childIDs, List<ObjectId> planIDs, Date beforeDate, {List<String> fields = const []});
 
 	Future updatePlanInstances(List<ObjectId> ids, {PlanInstanceState state, TimeDate start, TimeDate end});
 }

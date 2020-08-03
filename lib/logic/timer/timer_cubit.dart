@@ -42,7 +42,12 @@ class TimerCubit extends Cubit<TimerState> {
 
 	void _timerTicked(int value) {
 		int endValue = _direction == CountDirection.up ? -1 : 0; // up does not have an end value
-	  value != endValue ? emit(TimerInProgress(value)) : emit(TimerComplete(endValue));
+		if (value != endValue)
+	    emit(TimerInProgress(value));
+		else {
+			emit(TimerComplete(endValue));
+			_tickerSubscription.cancel();
+		}
 	}
 
 	@override

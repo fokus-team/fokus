@@ -61,7 +61,53 @@
 				"stepOneTitle": "Plan parameters",
 				"stepTwoTitle": "Task list",
 				"createPlanButton": "Create plan",
-				"savePlanButton": "Save plan"
+				"savePlanButton": "Save plan",
+				"addTaskButton": "Add task",
+				"fields": {
+					"advancedOptionsTitle": "Advanced options",
+					"planName": {
+						"label": "Plan name",
+						"emptyError": "Plan name can't be empty"
+					},
+					"assignedChildren": {
+						"label": "Assigned children",
+						"hint": "Choose one or more children"
+					},
+					"repeatability": {
+						"label": "Repeatability",
+						"options": {
+							"recurring": "Recurring",
+							"onlyOnce": "Only once",
+							"untilCompleted": "Until completed"
+						}
+					},
+					"repeatabilityRange": {
+						"label": "Repeat period",
+						"options": {
+							"weekly": "Weekly",
+							"monthly": "Monthly"
+						}
+					},
+					"days": {
+						"labelWeekly": "Weekdays",
+						"labelMonthly": "Month days",
+						"hint": "Choose at least 1 day"
+					},
+					"onlyOneDate": {
+						"label": "Plan's date",
+						"emptyError": "Plan's date must be set"
+					},
+					"range": {
+						"fromLabel": "Plan available from date",
+						"toLabel": "Plan available to date",
+						"hint": "Leave empty to not limit date range"
+					},
+					"active": {
+						"label": "Plan active",
+						"hintOn": "Visible immediately after creation",
+						"hintOff": "Hidden after creation"
+					}
+				}
 			},
 			"awards": {
 				"header": {
@@ -137,10 +183,14 @@
 		"untilCompleted": "until completed",
 		"range": "from {FROM} to {TO}"
 	},
+	"date": {
+		"weekday": "{WEEKDAY, select, 1 {Monday} 2 {Tuesday} 3 {Wednesday} 4 {Thursday} 5 {Friday} 6 {Saturday} 7 {Sunday} other {}}"
+	},
 	"alert": {
 		"error": "Error occurred",
 		"noConnection": "No connection",
-		"noHint": "No hint"
+		"noHint": "No hint",
+		"genericEmptyValue": "This field can't be empty"
 	},
 	"actions": {
 		"exit": "Exit",
@@ -151,7 +201,15 @@
 		"details": "Show details",
 		"help": "Show help",
 		"back": "Go back",
-		"next": "Next"
+		"next": "Next",
+		"tapToSelect": "Tap to select",
+		"selected": "Wybrano",
+		"selectAll": "Select all",
+		"deselectAll": "Deselect all",
+		"search": "Search",
+		"confirm": "Confirm",
+		"clear": "Clear",
+		"clearAll": "Clear all"
 	},
 	"help": {
 		"first_steps": "First steps",

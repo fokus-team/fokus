@@ -39,19 +39,20 @@ class _ChildPanelPageState extends State<ChildPanelPage> {
 	            else if (state is ChildPlansLoadSuccess)
 	              return AppSegments(segments: _buildPanelSegments(state));
 	            return Expanded(child: Center(child: CircularProgressIndicator()));
-	          },
+	          }
 	        ),
 	        Row(
 						mainAxisAlignment: MainAxisAlignment.end,
 	          children: <Widget>[
 	            RoundedButton(
-		            iconData: Icons.calendar_today,
+		            icon: Icons.calendar_today,
 		            text: AppLocales.of(context).translate('$_pageKey.content.futurePlans'),
 		            color: AppColors.childButtonColor,
-		          ),
-	          ],
+								onPressed: () => { log("przyszłe plany") }
+		          )
+	          ]
 	        )
-	      ],
+	      ]
       ),
       bottomNavigationBar: AppNavigationBar.childPage(currentIndex: 0)
     );

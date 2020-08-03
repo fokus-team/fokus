@@ -11,11 +11,13 @@ class ItemCardActionButton {
 	final Color color;
 	final Function onTapped;
 	final bool disabled;
+	final double size;
 
 	ItemCardActionButton({
 		this.icon,
 		this.color,
 		this.onTapped,
+		this.size = 40.0,
 		this.disabled = false
 	});
 }
@@ -36,6 +38,8 @@ class ItemCard extends StatelessWidget {
 	final String subtitle;
 	final GraphicAssetType graphicType;
 	final int graphic;
+	final double graphicHeight;
+	final bool graphicShowCheckmark;
 	final double progressPercentage;
 	final List<Widget> chips;
 	final List<ItemCardMenuItem> menuItems;
@@ -45,8 +49,7 @@ class ItemCard extends StatelessWidget {
 
 	// Element's visual params
 	final int titleMaxLines = 3;
-	final double imageHeight = 76.0;
-	final double badgeImageHeight = 44.0;
+	static const double defaultImageHeight = 76.0;
 	final double progressIndicatorHeight = 10.0;
 	final Color disabledButtonColor = Colors.grey[200];
   final Color inactiveProgressBar = Colors.grey[300];
@@ -57,6 +60,8 @@ class ItemCard extends StatelessWidget {
 		this.subtitle,
 		this.graphicType,
 		this.graphic,
+		this.graphicHeight = defaultImageHeight,
+		this.graphicShowCheckmark,
 		this.progressPercentage,
 		this.chips,
 		this.menuItems,
@@ -68,16 +73,16 @@ class ItemCard extends StatelessWidget {
 	Widget headerImage() {
 		switch(graphicType) {
 			case GraphicAssetType.childAvatars:
-				return AppAvatar(graphic, size: imageHeight, color: childAvatars[graphic].color);
+				return AppAvatar(graphic, size: graphicHeight, color: childAvatars[graphic].color, checked: graphicShowCheckmark);
 			break;
 			case GraphicAssetType.awardsIcons:
-				return SvgPicture.asset(awardIconSvgPath(graphic), height: imageHeight);
+				return SvgPicture.asset(awardIconSvgPath(graphic), height: graphicHeight);
 			break;
 			case GraphicAssetType.badgeIcons:
-				return SvgPicture.asset(badgeIconSvgPath(graphic), height: badgeImageHeight);
+				return SvgPicture.asset(badgeIconSvgPath(graphic), height: graphicHeight);
 			break;
 			default:
-				return Image.asset('assets/image/sunflower_logo.png', height: imageHeight);
+				return Image.asset('assets/image/sunflower_logo.png', height: graphicHeight);
 			break;
 		}
 	}
@@ -233,7 +238,7 @@ class ItemCard extends StatelessWidget {
 					onPressed: null,
 					shape: RoundedRectangleBorder(borderRadius: BorderRadius.horizontal(right: Radius.circular(AppBoxProperties.roundedCornersRadius))),
 					child: Center(
-						child: Icon(actionButton.icon, color: actionButton.color, size: 40.0),
+						child: Icon(actionButton.icon, color: actionButton.color, size: actionButton.size),
 					)
 				);
 			} else {
@@ -243,7 +248,7 @@ class ItemCard extends StatelessWidget {
 					color: actionButton.color,
 					disabledColor: disabledButtonColor,
 					child: Center(
-						child: Icon(actionButton.icon, color: Colors.white, size: 40.0),
+						child: Icon(actionButton.icon, color: Colors.white, size: actionButton.size),
 					)
 				);
 			}

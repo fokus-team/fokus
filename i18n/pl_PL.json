@@ -61,7 +61,53 @@
 				"stepOneTitle": "Parametry planu",
 				"stepTwoTitle": "Lista zadań",
 				"createPlanButton": "Stwórz plan",
-				"savePlanButton": "Zapisz plan"
+				"savePlanButton": "Zapisz plan",
+				"addTaskButton": "Dodaj zadanie",
+				"fields": {
+					"advancedOptionsTitle": "Ustawienia zaawansowane",
+					"planName": {
+						"label": "Nazwa planu",
+						"emptyError": "Nazwa planu nie może być pusta"
+					},
+					"assignedChildren": {
+						"label": "Przypisane dzieci",
+						"hint": "Wybierz jedno lub więcej dzieci"
+					},
+					"repeatability": {
+						"label": "Powtarzalność",
+						"options": {
+							"recurring": "Plan cykliczny",
+							"onlyOnce": "Plan jednorazowy",
+							"untilCompleted": "Plan do ukończenia"
+						}
+					},
+					"repeatabilityRange": {
+						"label": "Okres powtarzania",
+						"options": {
+							"weekly": "Tygodniowo",
+							"monthly": "Miesięcznie"
+						}
+					},
+					"days": {
+						"labelWeekly": "Dni tygodnia",
+						"labelMonthly": "Dni miesiąca",
+						"hint": "Wybierz minimum 1 dzień"
+					},
+					"onlyOneDate": {
+						"label": "Data wykonania",
+						"emptyError": "Data wykonania musi być ustawiona"
+					},
+					"range": {
+						"fromLabel": "Plan dostępny od dnia",
+						"toLabel": "Plan dostępny do dnia",
+						"hint": "Pozostaw puste, aby nie ograniczać zakresu"
+					},
+					"active": {
+						"label": "Plan aktywny",
+						"hintOn": "Widoczny od razu po stworzeniu",
+						"hintOff": "Ukryty po stworzeniu"
+					}
+				}
 			},
 			"awards": {
 				"header": {
@@ -137,10 +183,14 @@
 		"untilCompleted": "dopóki niezakończony",
 		"range": "od {FROM} do {TO}"
 	},
+	"date": {
+		"weekday": "{WEEKDAY, select, 1 {Poniedziałek} 2 {Wtorek} 3 {Środa} 4 {Czwartek} 5 {Piątek} 6 {Sobota} 7 {Niedziela} other {}}"
+	},
 	"alert": {
 		"error": "Wystąpił błąd",
 		"noConnection": "Brak połączenia",
-		"noHint": "Brak podpowiedzi"
+		"noHint": "Brak podpowiedzi",
+		"genericEmptyValue": "Pole nie może być puste"
 	},
 	"actions": {
 		"exit": "Wyjdź",
@@ -151,7 +201,15 @@
 		"details": "Pokaż szczegóły",
 		"help": "Pokaż pomoc",
 		"back": "Wstecz",
-		"next": "Dalej"
+		"next": "Dalej",
+		"tapToSelect": "Dotknij, aby wybrać",
+		"selected": "Wybrano",
+		"selectAll": "Zaznacz wszystkie",
+		"deselectAll": "Odcznacz wszystkie",
+		"search": "Szukaj",
+		"confirm": "Zatwierdź",
+		"clear": "Wyczyść",
+		"clearAll": "Wyczyść wszystkie"
 	},
 	"help": {
 		"first_steps": "Pierwsze kroki",

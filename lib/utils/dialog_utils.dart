@@ -30,6 +30,6 @@ void showHelpDialog(BuildContext context, String helpPage) {
 		barrierLabel: AppLocales.of(context).translate('actions.close'),
     barrierColor: Colors.black.withOpacity(0.4),
 		context: context,
-		pageBuilder: (context, anim1, anim2) {},
+		pageBuilder: (context, anim1, anim2) { return SizedBox.shrink(); },
 	);
 }

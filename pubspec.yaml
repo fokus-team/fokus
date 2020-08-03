@@ -40,6 +40,7 @@ dependencies:
     lottie: ^0.4.0+1
     flutter_svg: ^0.17.1
     flutter_markdown: ^0.3.4
+    smart_select: ^3.0.3
     badges: ^1.1.1
 
 dependency_overrides:

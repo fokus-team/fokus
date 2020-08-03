@@ -36,11 +36,11 @@ class ChildPlansCubit extends Cubit<ChildPlansState> {
 
 	  List<UIPlanInstance> uiInstances = [];
 	  for (var instance in instances) {
-		  var elapsedTime = 0;
+		  var elapsedTime = () => 0;
 		  if (instance.state == PlanInstanceState.active || instance.state == PlanInstanceState.notCompleted) {
-			  elapsedTime = DateTime.now().difference(instance.duration.from).inMinutes;
+			  elapsedTime = () => DateTime.now().difference(instance.duration.from).inSeconds;
 		  } else if (instance.state == PlanInstanceState.completed)
-		  	elapsedTime = instance.duration.to.difference(instance.duration.from).inMinutes;
+		  	elapsedTime = () => instance.duration.to.difference(instance.duration.from).inSeconds;
 		  var completedTasks = await _dbRepository.getCompletedTaskCount(instance.id);
 		  uiInstances.add(UIPlanInstance.fromDBModel(instance, planMap[instance].name, completedTasks, elapsedTime, getDescription(planMap[instance], instance.date)));
 	  }

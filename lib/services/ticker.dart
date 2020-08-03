@@ -5,7 +5,7 @@ enum CountDirection {
 }
 
 class Ticker {
-	Stream<int> tick({@required CountDirection direction, int value}) {
-	  return Stream.periodic(Duration(seconds: 1), (x) => direction == CountDirection.up ? value + x + 1 : value - x - 1);
+	Stream<int> tick({@required int initialValue, @required CountDirection direction}) {
+	  return Stream.periodic(Duration(seconds: 1), (x) => direction == CountDirection.up ? initialValue + x + 1 : initialValue - x - 1);
 	}
 }

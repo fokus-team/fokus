@@ -9,18 +9,18 @@ part 'timer_state.dart';
 
 class TimerCubit extends Cubit<TimerState> {
 	final Ticker _ticker;
-	int _value;
+	int Function() _currentValue;
 	CountDirection _direction;
 
 	StreamSubscription<int> _tickerSubscription;
 
-	TimerCubit(this._value, [this._direction = CountDirection.up]) : _ticker = Ticker(), super(TimerInitial(_value));
+	TimerCubit(this._currentValue, [this._direction = CountDirection.up]) : _ticker = Ticker(), super(TimerInitial(_currentValue()));
 
 	void startTimer() {
-		int value = state.value;
+		int value = _currentValue();
 		emit(TimerInProgress(value));
 		_tickerSubscription?.cancel();
-		_tickerSubscription = _ticker.tick(direction: _direction, value: value).listen((value) => _timerTicked(value));
+		_tickerSubscription = _ticker.tick(direction: _direction, initialValue: value).listen((value) => _timerTicked(value));
 	}
 
 	void pauseTimer() {
@@ -33,11 +33,11 @@ class TimerCubit extends Cubit<TimerState> {
 			_tickerSubscription.resume();
 	}
 
-	void resetTimer({int value, CountDirection direction = CountDirection.up}) {
-		this._value = value;
+	void resetTimer({int Function() currentValue, CountDirection direction = CountDirection.up}) {
+		this._currentValue = currentValue;
 		this._direction = direction;
 		_tickerSubscription?.cancel();
-		emit(TimerInitial(_value));
+		emit(TimerInitial(_currentValue()));
 	}
 
 	void _timerTicked(int value) {

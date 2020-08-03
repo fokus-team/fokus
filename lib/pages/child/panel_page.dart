@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_cubit/flutter_cubit.dart';
 
 import 'package:fokus/logic/child_plans/child_plans_cubit.dart';
+import 'package:fokus/logic/timer/timer_cubit.dart';
 import 'package:fokus/model/db/plan/plan_instance_state.dart';
 import 'package:fokus/model/ui/plan/ui_plan_instance.dart';
 import 'package:fokus/utils/app_locales.dart';
+import 'package:fokus/utils/duration_utils.dart';
 import 'package:fokus/utils/theme_config.dart';
 import 'package:fokus/widgets/app_header.dart';
 import 'package:fokus/widgets/app_navigation_bar.dart';
@@ -15,15 +17,15 @@ import 'package:fokus/widgets/item_card.dart';
 import 'package:fokus/widgets/rounded_button.dart';
 import 'package:fokus/widgets/segment.dart';
 
+var _planInProgress = (UIPlanInstance plan) => plan.state == PlanInstanceState.active || plan.state == PlanInstanceState.notCompleted;
+const String _pageKey = 'page.childSection.panel';
+
 class ChildPanelPage extends StatefulWidget {
   @override
   _ChildPanelPageState createState() => new _ChildPanelPageState();
 }
 
 class _ChildPanelPageState extends State<ChildPanelPage> {
-	var _planInProgress = (UIPlanInstance plan) => plan.state == PlanInstanceState.active || plan.state == PlanInstanceState.notCompleted;
-  static const String _pageKey = 'page.childSection.panel';
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,18 +59,22 @@ class _ChildPanelPageState extends State<ChildPanelPage> {
     );
   }
 
-  List<Segment> _buildPanelSegments(ChildPlansLoadSuccess state) {
+  List<Widget> _buildPanelSegments(ChildPlansLoadSuccess state) {
   	var activePlan = state.plans.firstWhere((plan) => plan.state == PlanInstanceState.active, orElse: () => null);
   	var otherPlans = state.plans.where((plan) => (activePlan == null || plan.id != activePlan.id) && plan.state != PlanInstanceState.completed).toList();
   	var completedPlans = state.plans.where((plan) => plan.state == PlanInstanceState.completed).toList();
 
     return [
 			if(activePlan != null)
-				_getPlansSegment(
-					plans: [activePlan],
-					icon: Icons.launch,
-					color: AppColors.childActionColor,
-					title: '$_pageKey.content.inProgress'
+				CubitProvider<TimerCubit>(
+					create: (_) => TimerCubit(activePlan.elapsedActiveTime)..startTimer(),
+					child: _getPlansSegment(
+						plans: [activePlan],
+						icon: Icons.launch,
+						color: AppColors.childActionColor,
+						title: '$_pageKey.content.inProgress',
+						displayTimer: true
+					),
 				),
 	    if (otherPlans.isNotEmpty || state.plans.isEmpty)
 		    _getPlansSegment(
@@ -88,7 +94,7 @@ class _ChildPanelPageState extends State<ChildPanelPage> {
     ];
   }
 
-  Segment _getPlansSegment({List<UIPlanInstance> plans, IconData icon, Color color, String title, String noElementsMessage}) {
+  Segment _getPlansSegment({List<UIPlanInstance> plans, IconData icon, Color color, String title, String noElementsMessage, bool displayTimer = false}) {
   	return Segment(
 		  title: title,
 		  noElementsMessage: noElementsMessage,
@@ -105,24 +111,44 @@ class _ChildPanelPageState extends State<ChildPanelPage> {
 					  subtitle: plan.description(context),
 					  isActive: plan.state != PlanInstanceState.completed,
 					  progressPercentage: _planInProgress(plan) ? plan.completedTaskCount / plan.taskCount : null,
-					  chips: <Widget>[_getTaskChipForPlan(plan)],
+					  chips: [PlanChip(plan, displayTimer)],
 				  )
 		  ],
 	  );
   }
+}
 
-  AttributeChip _getTaskChipForPlan(UIPlanInstance plan) {
-  	if (!_planInProgress(plan))
-  		return AttributeChip.withIcon(
+class PlanChip extends StatelessWidget {
+	final UIPlanInstance plan;
+	final bool displayTimer;
+
+	PlanChip(this.plan, [this.displayTimer = false]);
+
+  @override
+  Widget build(BuildContext context) {
+	  if (!_planInProgress(plan))
+		  return AttributeChip.withIcon(
 			  icon: Icons.description,
 			  color: AppColors.mainBackgroundColor,
 			  content: AppLocales.of(context).translate('$_pageKey.content.tasks', {'NUM_TASKS': plan.taskCount})
 		  );
 	  var taskDescriptionKey = '$_pageKey.content.' + (plan.completedTaskCount > 0 ? 'taskProgress' : 'noTaskCompleted');
-  	return AttributeChip.withIcon(
+	  if (displayTimer)
+		  return CubitBuilder<TimerCubit, TimerState>(
+			  cubit: CubitProvider.of<TimerCubit>(context),
+			  builder: (context, state) {
+				  return AttributeChip.withIcon(
+					  icon: Icons.timer,
+					  color: Colors.lightGreen,
+					  content: formatDuration(Duration(seconds: state.value))
+				  );
+			  },
+		  );
+	  return AttributeChip.withIcon(
 		  icon: Icons.description,
 		  color: Colors.lightGreen,
 		  content: AppLocales.of(context).translate(taskDescriptionKey, {'NUM_TASKS': plan.completedTaskCount, 'NUM_ALL_TASKS': plan.taskCount})
 	  );
   }
 }
+

@@ -13,7 +13,7 @@ import 'package:fokus/utils/theme_config.dart';
 import 'package:fokus/widgets/attribute_chip.dart';
 import 'package:fokus/widgets/app_avatar.dart';
 
-enum AppHeaderType { greetings, normal }
+enum AppHeaderType { greetings, normal, widget }
 
 class HeaderActionButton {
 	final IconData icon;
@@ -34,8 +34,9 @@ class AppHeader extends StatelessWidget {
 	final String text;
 	final List<HeaderActionButton> headerActionButtons;
 	final AppHeaderType headerType;
+	final Widget appHeaderWidget;
 
-	AppHeader({this.title, this.text, this.headerActionButtons, this.headerType});
+	AppHeader({this.title, this.text, this.headerActionButtons, this.headerType, this.appHeaderWidget});
 	AppHeader.greetings({String text, List<HeaderActionButton> headerActionButtons}) : this(
 			text: text,
 			headerActionButtons: headerActionButtons,
@@ -47,9 +48,23 @@ class AppHeader extends StatelessWidget {
 			headerActionButtons: headerActionButtons,
 			headerType: AppHeaderType.normal
 	);
+	AppHeader.widget({String title, String text, List<HeaderActionButton> headerActionButtons, Widget appHeaderWidget}) : this(
+		title: title,
+		text: text,
+		headerActionButtons: headerActionButtons,
+		headerType: AppHeaderType.widget,
+		appHeaderWidget: appHeaderWidget
+	);
 
   @override
-  Widget build(BuildContext context) => headerType == AppHeaderType.greetings ? buildGreetings(context) : buildNormal(context);
+  Widget build(BuildContext context) {
+  	if(headerType == AppHeaderType.greetings)
+  		buildGreetings(context);
+  	else if(headerType == AppHeaderType.widget)
+			buildWidget(context);
+  	else
+			buildNormal(context);
+  }
 
 	Widget headerImage(UIUser user) {
 		if(user.role == UserRole.caregiver) {
@@ -154,6 +169,7 @@ class AppHeader extends StatelessWidget {
 		);
 	}
 
+
 	Widget buildGreetings(BuildContext context) {
 		var cubit = CubitProvider.of<ActiveUserCubit>(context);
 		var currentUser = (cubit.state as ActiveUserPresent).user;
@@ -226,6 +242,34 @@ class AppHeader extends StatelessWidget {
 					)
 				]
 			)
+		);
+	}
+
+	Widget buildWidget(BuildContext context) {
+		return buildHeaderContainer(context,
+			Column(
+				children: <Widget>[
+					Row(
+						mainAxisAlignment: MainAxisAlignment.start,
+						crossAxisAlignment: CrossAxisAlignment.start,
+						children: <Widget>[
+							Row(
+								children: <Widget>[
+									headerIconButton(Icons.arrow_left, () => {Navigator.of(context).pop()})
+								],
+							),
+							Padding(
+								padding: EdgeInsets.only(left: 4.0, top: 5.0),
+								child: Text(
+									AppLocales.of(context).translate(title),
+									style: Theme.of(context).textTheme.headline1.copyWith(color: Colors.white)
+								)
+							),
+						]
+					),
+					appHeaderWidget
+			],
+			),
 		);
 	}
 

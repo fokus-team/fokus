@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:fokus/utils/app_locales.dart';
+import 'package:fokus/widgets/app_header.dart';
 import 'package:fokus/widgets/attribute_chip.dart';
 import 'package:fokus/widgets/item_card.dart';
 import 'package:fokus/widgets/segment.dart';
@@ -20,26 +21,18 @@ class _ChildPlanInProgressPageState extends State<ChildPlanInProgressPage> {
 			body: Column(
       	crossAxisAlignment: CrossAxisAlignment.start,
       	children: [
-        	AppBar(
-            title: Text(AppLocales.of(context).translate('$_pageKey.header.title'),
-							textAlign: TextAlign.left
-						)
-					),
-					Padding(
-					  padding: const EdgeInsets.only(top: 16.0),
-					  child: ItemCard(
-					  	title: "Sprzątanie pokoju",
-					  	subtitle: "Co każdy poniedziałek, środę, czwartek i piątek",
-					  	isActive: true,
-					  	progressPercentage: 0.4,
-					  	chips:
-					  		<Widget>[AttributeChip.withIcon(
-					  			icon: Icons.description,
-					  			color: Colors.lightGreen,
-					  			content: AppLocales.of(context).translate('page.childSection.panel.content.taskProgress', {'NUM_TASKS': 2, 'NUM_ALL_TASKS': 5})
-		)],
-					  ),
-					),
+        	AppHeader.widget(title: "Właśnie wykonujesz:", appHeaderWidget: ItemCard(
+						title: "Sprzątanie pokoju",
+						subtitle: "Co każdy poniedziałek, środę, czwartek i piątek",
+						isActive: true,
+						progressPercentage: 0.4,
+						chips:
+						<Widget>[AttributeChip.withIcon(
+							icon: Icons.description,
+							color: Colors.lightGreen,
+							content: AppLocales.of(context).translate('page.childSection.panel.content.taskProgress', {'NUM_TASKS': 2, 'NUM_ALL_TASKS': 5})
+						)],
+					),),
         	AppSegments(segments: _buildPanelSegments())
       	],
    		)

@@ -107,7 +107,7 @@
 			},
 			"planInProgress": {
 				"header": {
-					"title": "Wykonujesz:"
+					"title": "Aktualnie wykonujesz:"
 				},
 				"content": {
 					"toDoTasks": "Zadania do wykonania",

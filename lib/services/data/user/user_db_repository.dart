@@ -16,8 +16,10 @@ mixin UserDbRepository implements DbRepository {
 		return dbClient.queryTypedMap(Collection.user, query, (json) => MapEntry(json['_id'], json['name']));
 	}
 
-	Future<List<Child>> getCaregiverChildren(ObjectId caregiverId) {
+	Future<List<Child>> getCaregiverChildren(ObjectId caregiverId, [List<String> fields = const []]) {
 		var query = where.eq('role', UserRole.child.index).and(where.eq('connections', caregiverId));
+		if (fields.isNotEmpty)
+			query.fields(fields);
 		return dbClient.queryTyped(Collection.user, query, (json) => Child.fromJson(json));
 	}
 

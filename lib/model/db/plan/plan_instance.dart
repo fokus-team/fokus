@@ -21,7 +21,7 @@ class PlanInstance {
   factory PlanInstance.fromJson(Map<String, dynamic> json) {
     return json != null ? PlanInstance(
 	    id: json['_id'],
-	    state: PlanInstanceState.values[json['state']],
+	    state: json['state'] != null ? PlanInstanceState.values[json['state']] : null,
 	    planID: json['planID'],
       assignedTo: json['assignedTo'],
       date: Date.parseDBDate(json['date']),

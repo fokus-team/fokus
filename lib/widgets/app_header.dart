@@ -10,7 +10,7 @@ import 'package:fokus/model/ui/user/ui_user.dart';
 import 'package:fokus/utils/app_locales.dart';
 import 'package:fokus/utils/icon_sets.dart';
 import 'package:fokus/utils/theme_config.dart';
-import 'package:fokus/widgets/attribute_chip.dart';
+import 'package:fokus/widgets/chips/attribute_chip.dart';
 import 'package:fokus/widgets/app_avatar.dart';
 
 enum AppHeaderType { greetings, normal }

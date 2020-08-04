@@ -7,6 +7,7 @@ import 'package:fokus/services/data/db/db_repository.dart';
 import 'package:fokus/model/db/plan/plan_instance.dart';
 import 'package:fokus/model/db/date/time_date.dart';
 import 'package:fokus/model/db/plan/plan_instance_state.dart';
+import 'package:fokus/services/data/data_repository.dart';
 
 mixin PlanDbRepository implements DbRepository {
 	Future<List<Plan>> getPlans({ObjectId caregiverId, ObjectId childId, List<String> fields = const [], bool activeOnly = true, bool oneDayOnly = false}) {
@@ -33,21 +34,20 @@ mixin PlanDbRepository implements DbRepository {
 	}
 
 	Future<List<PlanInstance>> getPastNotCompletedPlanInstances(List<ObjectId> childIDs, List<ObjectId> planIDs, Date beforeDate, {List<String> fields = const []}) {
-		var query = where.oneFrom('assignedTo', childIDs).and(where.oneFrom('planID', planIDs)).and(where.lt('date', beforeDate)).and(where.ne('state', PlanInstanceState.completed.index));
+		var query = where.oneFrom('assignedTo', childIDs).and(where.oneFrom('planID', planIDs)).and(where.lt('date', beforeDate));
+		query.and(where.ne('state', PlanInstanceState.completed.index)).and(where.ne('state', PlanInstanceState.lostForever.index));
 		if (fields.isNotEmpty)
 			query.fields(fields);
 		return dbClient.queryTyped(Collection.planInstance, query, (json) => PlanInstance.fromJson(json));
 	}
 	
-	Future updatePlanInstances(List<ObjectId> ids, {PlanInstanceState state, TimeDate start, TimeDate end}) {
+	Future updatePlanInstances(ObjectId instanceId, {PlanInstanceState state, DateSpanUpdate<TimeDate> durationChange}) {
 		var document = modify;
 		if (state != null)
 			document.set('state', state.index);
-		if (start != null)
-			document.set('duration.from', start.toDBDate());
-		if (end != null)
-			document.set('duration.to', end.toDBDate());
-		return dbClient.update(Collection.planInstance, where.oneFrom('_id', ids), document);
+		if (durationChange != null)
+			document.set('duration.${durationChange.getQuery()}', durationChange.value.toDBDate());
+		return dbClient.update(Collection.planInstance, where.eq('_id', instanceId), document);
 	}
 
 	SelectorBuilder _buildPlanQuery({ObjectId caregiverId, ObjectId childId, ObjectId planId, Date date, bool activeOnly = false, PlanInstanceState state}) {

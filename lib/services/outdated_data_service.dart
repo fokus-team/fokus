@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:collection/collection.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
@@ -8,7 +7,7 @@ import 'package:fokus/model/db/user/user_role.dart';
 import 'package:fokus/model/db/date/date.dart';
 import 'package:fokus/model/db/date/time_date.dart';
 import 'package:fokus/model/db/plan/plan_instance_state.dart';
-import 'package:fokus/model/db/plan/plan_instance.dart';
+import 'package:fokus/model/db/date_span.dart';
 
 import 'data/data_repository.dart';
 
@@ -45,15 +44,18 @@ class OutdatedDataService {
 				childId: getRoleId(UserRole.child), fields: ['_id'], oneDayOnly: true, activeOnly: false);
 
 		var childrenIDs = _role == UserRole.caregiver ? (await _dbRepository.getCaregiverChildren(_userId, ['_id'])).map((child) => child.id).toList() : [_userId];
-		var instances = await _dbRepository.getPastNotCompletedPlanInstances(childrenIDs, plans.map((plan) => plan.id).toList(), Date.now(), fields: ['_id', 'date']);
+		var instances = await _dbRepository.getPastNotCompletedPlanInstances(childrenIDs, plans.map((plan) => plan.id).toList(), Date.now(), fields: ['_id', 'date', 'duration']);
 
 		var getEndTime = (Date date) => TimeDate.fromDate(date.add(Duration(days: 1)));
-		var plansByDate = groupBy<PlanInstance, Date>(instances, (plan) => plan.date);
 
 		List<Future> updates = [];
 		// TODO Mark plans with all non-optional tasks done as completed
-		//for (var date in plansByDate.entries)
-		//	updates.add(_dbRepository.updatePlanInstances(date.value.map((plan) => plan.id).toList(), state: PlanInstanceState.lostForever, end: getEndTime(date.key)));
+		for (var instance in instances)
+			updates.add(_dbRepository.updatePlanInstances(
+				instance.id,
+				state: PlanInstanceState.lostForever,
+				durationChange: DateSpanUpdate<TimeDate>(getEndTime(instance.date), SpanDateType.end, instance.duration.length - 1))
+			);
 		return Future.wait(updates);
 		// TODO there are also 'to' fields in task instance last 'duration' and 'breaks' objects that could be left missing here - handle here or inside statistics code
 	}

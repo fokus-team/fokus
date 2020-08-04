@@ -2,8 +2,8 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:fokus/utils/app_locales.dart';
-import 'package:fokus/widgets/app_header.dart';
 import 'package:fokus/widgets/attribute_chip.dart';
+import 'package:fokus/widgets/flexible_app_header.dart';
 import 'package:fokus/widgets/item_card.dart';
 import 'package:fokus/widgets/segment.dart';
 
@@ -18,24 +18,31 @@ class _ChildPlanInProgressPageState extends State<ChildPlanInProgressPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-			body: Column(
-      	crossAxisAlignment: CrossAxisAlignment.start,
-      	children: [
-        	AppHeader.widget(title: "Właśnie wykonujesz:", appHeaderWidget: ItemCard(
-						title: "Sprzątanie pokoju",
-						subtitle: "Co każdy poniedziałek, środę, czwartek i piątek",
-						isActive: true,
-						progressPercentage: 0.4,
-						chips:
-						<Widget>[AttributeChip.withIcon(
-							icon: Icons.description,
-							color: Colors.lightGreen,
-							content: AppLocales.of(context).translate('page.childSection.panel.content.taskProgress', {'NUM_TASKS': 2, 'NUM_ALL_TASKS': 5})
-						)],
-					),),
-        	AppSegments(segments: _buildPanelSegments())
-      	],
-   		)
+			body: CustomScrollView(
+      	slivers: [
+      		FlexibleAppHeader(
+						expandedHeight: 200,
+						pinnedTitle: '$_pageKey.header.title',
+						flexibleSpaceWidget: ItemCard(
+							title: "Sprzątanie pokoju w odstępach kilkudziesięciukilku minutowych oraz wielogodzinowych melancholijnych spotkaniach przy otwartym oknie pośród gwiazd Betlejem skąpanych w mroku piekła i nieba oraz genialnym muzykowaniem z najlepszymi ludźmi",
+							subtitle: "Co każdy poniedziałek, wtorek i czwartek",
+							isActive: true,
+							progressPercentage: 0.4,
+							chips:
+							<Widget>[AttributeChip.withIcon(
+								icon: Icons.description,
+								color: Colors.lightGreen,
+								content: AppLocales.of(context).translate('page.childSection.panel.content.taskProgress', {'NUM_TASKS': 2, 'NUM_ALL_TASKS': 5})
+							)],
+							titleMaxLines: 1,
+							activeProgressBarColor: Colors.amber,
+						),
+					),
+        	SliverList(
+						delegate: SliverChildListDelegate(_buildPanelSegments())
+					)
+				]
+			)
 		);
   }
 
@@ -63,14 +70,14 @@ class _ChildPlanInProgressPageState extends State<ChildPlanInProgressPage> {
       ),
       ItemCard(
         title: "Przygotuj książki i zeszyty na kolejny dzień według bardzo długiego planu zajęć",
-				chips:
-				<Widget>[AttributeChip.withIcon(
-					icon: Icons.access_time,
-					color: Colors.amber,
-					content: "6 minut"
-				)],
-        actionButton:
-            ItemCardActionButton(color: Colors.teal, icon: Icons.play_arrow, onTapped: () => log("tapped start task")),
+				chips:<Widget>[
+					AttributeChip.withIcon(
+						icon: Icons.access_time,
+						color: Colors.amber,
+						content: "6 minut"
+					)
+				],
+        actionButton:	ItemCardActionButton(color: Colors.teal, icon: Icons.play_arrow, onTapped: () => log("tapped start task")),
       ),
       ItemCard(
         title: "Spakuj potrzebne rzeczy",
@@ -81,7 +88,47 @@ class _ChildPlanInProgressPageState extends State<ChildPlanInProgressPage> {
 					content: "5 minut"
 				)],
         actionButton: ItemCardActionButton(color: Colors.grey, icon: Icons.keyboard_arrow_up),
-      )
+      ),
+			ItemCard(
+				title: "Spakuj potrzebne rzeczy",
+				chips:
+				<Widget>[AttributeChip.withIcon(
+					icon: Icons.access_time,
+					color: Colors.amber,
+					content: "5 minut"
+				)],
+				actionButton: ItemCardActionButton(color: Colors.grey, icon: Icons.keyboard_arrow_up),
+			),
+			ItemCard(
+				title: "Spakuj potrzebne rzeczy",
+				chips:
+				<Widget>[AttributeChip.withIcon(
+					icon: Icons.access_time,
+					color: Colors.amber,
+					content: "5 minut"
+				)],
+				actionButton: ItemCardActionButton(color: Colors.grey, icon: Icons.keyboard_arrow_up),
+			),
+			ItemCard(
+				title: "Spakuj potrzebne rzeczy",
+				chips:
+				<Widget>[AttributeChip.withIcon(
+					icon: Icons.access_time,
+					color: Colors.amber,
+					content: "5 minut"
+				)],
+				actionButton: ItemCardActionButton(color: Colors.grey, icon: Icons.keyboard_arrow_up),
+			),
+			ItemCard(
+				title: "Spakuj potrzebne rzeczy",
+				chips:
+				<Widget>[AttributeChip.withIcon(
+					icon: Icons.access_time,
+					color: Colors.amber,
+					content: "5 minut"
+				)],
+				actionButton: ItemCardActionButton(color: Colors.grey, icon: Icons.keyboard_arrow_up),
+			)
     ]);
   }
 

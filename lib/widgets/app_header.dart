@@ -24,9 +24,9 @@ class HeaderActionButton {
 
 	HeaderActionButton(this.icon, this.text, this.customContent, this.action, [this.backgroundColor]);
 	HeaderActionButton.normal(IconData icon, String text, Function action, [Color backgroundColor])
-			: this(icon, text, null, action, backgroundColor);
+		: this(icon, text, null, action, backgroundColor);
 	HeaderActionButton.custom(Widget customContent, Function action, [Color backgroundColor])
-			: this(null, null, customContent, action, backgroundColor);
+		: this(null, null, customContent, action, backgroundColor);
 }
 
 class AppHeader extends StatelessWidget {
@@ -38,15 +38,15 @@ class AppHeader extends StatelessWidget {
 
 	AppHeader({this.title, this.text, this.headerActionButtons, this.headerType, this.appHeaderWidget});
 	AppHeader.greetings({String text, List<HeaderActionButton> headerActionButtons}) : this(
-			text: text,
-			headerActionButtons: headerActionButtons,
-			headerType: AppHeaderType.greetings
+		text: text,
+		headerActionButtons: headerActionButtons,
+		headerType: AppHeaderType.greetings
 	);
 	AppHeader.normal({String title, String text, List<HeaderActionButton> headerActionButtons}) : this(
-			title: title,
-			text: text,
-			headerActionButtons: headerActionButtons,
-			headerType: AppHeaderType.normal
+		title: title,
+		text: text,
+		headerActionButtons: headerActionButtons,
+		headerType: AppHeaderType.normal
 	);
 	AppHeader.widget({String title, String text, List<HeaderActionButton> headerActionButtons, Widget appHeaderWidget}) : this(
 		title: title,
@@ -56,15 +56,15 @@ class AppHeader extends StatelessWidget {
 		appHeaderWidget: appHeaderWidget
 	);
 
-  @override
-  Widget build(BuildContext context) {
-  	if(headerType == AppHeaderType.greetings)
-  		buildGreetings(context);
-  	else if(headerType == AppHeaderType.widget)
-			buildWidget(context);
-  	else
-			buildNormal(context);
-  }
+	@override
+	Widget build(BuildContext context) {
+		if(headerType == AppHeaderType.greetings)
+			return buildGreetings(context);
+		else if(headerType == AppHeaderType.widget)
+			return buildWidget(context);
+		else
+			return buildNormal(context);
+	}
 
 	Widget headerImage(UIUser user) {
 		if(user.role == UserRole.caregiver) {
@@ -88,7 +88,7 @@ class AppHeader extends StatelessWidget {
 			)
 		);
 	}
-	
+
 	Widget headerActionButton(BuildContext context, HeaderActionButton button) {
 		if(button.customContent != null) {
 			return GestureDetector(
@@ -151,6 +151,7 @@ class AppHeader extends StatelessWidget {
 							innerContent,
 							if (text != null)
 								headerTextField(context, text),
+							if (headerActionButtons != null)
 							Container(
 								height: 48,
 								alignment: Alignment.centerLeft,
@@ -158,8 +159,7 @@ class AppHeader extends StatelessWidget {
 									physics: BouncingScrollPhysics(),
 									shrinkWrap: true,
 									scrollDirection: Axis.horizontal,
-									children: headerActionButtons.map((element) => 
-										headerActionButton(context, element)).toList()
+									children: headerActionButtons.map((element) => headerActionButton(context, element)).toList()
 								)
 							)
 						]
@@ -174,7 +174,7 @@ class AppHeader extends StatelessWidget {
 		var cubit = CubitProvider.of<ActiveUserCubit>(context);
 		var currentUser = (cubit.state as ActiveUserPresent).user;
 
-		return buildHeaderContainer(context, 
+		return buildHeaderContainer(context,
 			Row(
 				mainAxisAlignment: MainAxisAlignment.spaceBetween,
 				crossAxisAlignment: CrossAxisAlignment.start,
@@ -209,7 +209,7 @@ class AppHeader extends StatelessWidget {
 							headerIconButton(Icons.notifications, () => { log("Powiadomienia") }),
 							headerIconButton(
 								Icons.more_vert,
-								() => cubit.logoutUser()
+									() => cubit.logoutUser()
 							),
 						],
 					)
@@ -219,7 +219,7 @@ class AppHeader extends StatelessWidget {
 	}
 
 	Widget buildNormal(BuildContext context) {
-		return buildHeaderContainer(context, 
+		return buildHeaderContainer(context,
 			Row(
 				mainAxisAlignment: MainAxisAlignment.spaceBetween,
 				crossAxisAlignment: CrossAxisAlignment.start,
@@ -236,7 +236,7 @@ class AppHeader extends StatelessWidget {
 							headerIconButton(Icons.notifications, () => { log("Powiadomienia") }),
 							headerIconButton(
 								Icons.more_vert,
-								() => CubitProvider.of<ActiveUserCubit>(context).logoutUser()
+									() => CubitProvider.of<ActiveUserCubit>(context).logoutUser()
 							),
 						],
 					)
@@ -250,25 +250,35 @@ class AppHeader extends StatelessWidget {
 			Column(
 				children: <Widget>[
 					Row(
-						mainAxisAlignment: MainAxisAlignment.start,
-						crossAxisAlignment: CrossAxisAlignment.start,
+						mainAxisAlignment: MainAxisAlignment.center,
+						crossAxisAlignment: CrossAxisAlignment.center,
 						children: <Widget>[
-							Row(
-								children: <Widget>[
-									headerIconButton(Icons.arrow_left, () => {Navigator.of(context).pop()})
-								],
+							Column(
+								mainAxisAlignment: MainAxisAlignment.center,
+							  crossAxisAlignment: CrossAxisAlignment.center,
+							  children: <Widget>[
+							    		IconButton(icon: Icon(Icons.chevron_left, color: Colors.white, size: 48,), onPressed: () => {Navigator.of(context).pop()})
+							  ],
 							),
-							Padding(
-								padding: EdgeInsets.only(left: 4.0, top: 5.0),
-								child: Text(
-									AppLocales.of(context).translate(title),
-									style: Theme.of(context).textTheme.headline1.copyWith(color: Colors.white)
-								)
+							Expanded(
+							  child: Column(
+							  	mainAxisAlignment: MainAxisAlignment.center,
+							    crossAxisAlignment: CrossAxisAlignment.start,
+							    children: <Widget>[
+							      Padding(
+							      	padding: EdgeInsets.only(left: 20.0, top: 5.0, bottom: 10),
+							      	child: Text(
+							      		AppLocales.of(context).translate(title),
+							      		style: Theme.of(context).textTheme.headline1.copyWith(color: Colors.white)
+							      	)
+							      ),
+							  		appHeaderWidget
+							    ],
+							  ),
 							),
 						]
-					),
-					appHeaderWidget
-			],
+					)
+				],
 			),
 		);
 	}
@@ -297,11 +307,11 @@ class ChildCustomHeader extends StatelessWidget {
 						]
 					)
 				),
-				() => { log('Child detailed wallet popup') },
+					() => { log('Child detailed wallet popup') },
 				Colors.white
 			),
 			//HeaderActionButton.normal(Icons.local_florist, 'page.childSection.panel.header.garden', () => { log("Ogród") })
 		]);
 	}
-	
+
 }

@@ -42,15 +42,16 @@ class ItemCard extends StatelessWidget {
 	final ItemCardActionButton actionButton;
 	final Function onTapped;
 	final bool isActive;
+	final int titleMaxLines;
+	final Color activeProgressBarColor;
 
 	// Element's visual params
-	final int titleMaxLines = 3;
 	final double imageHeight = 76.0;
 	final double badgeImageHeight = 44.0;
 	final double progressIndicatorHeight = 10.0;
 	final Color disabledButtonColor = Colors.grey[200];
   final Color inactiveProgressBar = Colors.grey[300];
-  final Color activeProgressBar = Colors.lightGreen;
+
 
 	ItemCard({
 		@required this.title, 
@@ -62,7 +63,9 @@ class ItemCard extends StatelessWidget {
 		this.menuItems,
 		this.actionButton,
 		this.onTapped,
-		this.isActive = true
+		this.isActive = true,
+		this.titleMaxLines = 3,
+		this.activeProgressBarColor = Colors.lightGreen
 	}) : assert(graphic != null ? graphicType != null : true);
 	
 	Widget headerImage() {
@@ -198,13 +201,15 @@ class ItemCard extends StatelessWidget {
 		return Container(
 			height: progressIndicatorHeight,
 			decoration: BoxDecoration(
-				borderRadius: BorderRadius.only(bottomLeft: Radius.circular(AppBoxProperties.roundedCornersRadius))
+				borderRadius: actionButton != null ?
+					BorderRadius.only(bottomLeft: Radius.circular(AppBoxProperties.roundedCornersRadius))
+					: BorderRadius.vertical(bottom: Radius.circular(AppBoxProperties.roundedCornersRadius))
 			),
 			clipBehavior: Clip.hardEdge,
 			child: LinearProgressIndicator(
 				value: progressPercentage,
 				backgroundColor: inactiveProgressBar,
-				valueColor: AlwaysStoppedAnimation<Color>(activeProgressBar)
+				valueColor: AlwaysStoppedAnimation<Color>(activeProgressBarColor)
 			)
 		);
 	}

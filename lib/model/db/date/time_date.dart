@@ -3,11 +3,11 @@ import 'date_base.dart';
 class TimeDate extends DateBase {
   TimeDate(int year, int month, int day, [int hour = 0, int minute = 0, int second = 0]) : super(year, month, day, hour, minute, second);
 
-  TimeDate.fromDate(DateTime date) : super(date.year, date.month, date.day, date.hour, date.day, date.second);
+  TimeDate.fromDate(DateTime date) : super(date.year, date.month, date.day, date.hour, date.minute, date.second);
 
   TimeDate.now() : this.fromDate(DateTime.now());
 
-  factory TimeDate.parseDBDate(DateTime date) => TimeDate.fromDate(date.toLocal());
+  factory TimeDate.parseDBDate(DateTime date) => date != null ? TimeDate.fromDate(date.toLocal()) : null;
 
   @override
   DateTime toDBDate() => this.toUtc();

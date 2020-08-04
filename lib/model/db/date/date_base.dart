@@ -3,7 +3,8 @@ import 'package:meta/meta.dart';
 
 
 abstract class DateBase extends DateTime {
-  DateBase(int year, int month, int day, [int hour = 0, int minute = 0, int second = 0]) : super(year, month, day, hour, minute, second);
+	DateBase(int year, int month, int day, [int hour = 0, int minute = 0, int second = 0]) : super(year, month, day, hour, minute, second);
+	DateBase.utc(int year, int month, int day, [int hour = 0, int minute = 0, int second = 0]) : super.utc(year, month, day, hour, minute, second);
 
   DateTime toDBDate();
 

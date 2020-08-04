@@ -34,9 +34,25 @@ class _NotificationsPageState extends State<NotificationsPage> {
 					AppSegments(
 						segments: [
               NotificationCard(
-                title: "Maciek odebrał nagrodę",
+                childName: "Maciek",
+                notificationType: NotificationType.receivedAward,
+                dateTime: DateTime.now(),
                 subtitle: "1 godzina gry na konsoli",
                 graphic: 0
+              ),
+              NotificationCard(
+                  childName: "Gosia",
+                  notificationType: NotificationType.finishedTask,
+                  dateTime: DateTime.now(),
+                  subtitle: "Sprzątanie pokoju",
+                  graphic: 20
+              ),
+              NotificationCard(
+                  childName: "Maciek",
+                  notificationType: NotificationType.unfinishedTask,
+                  dateTime: DateTime.now(),
+                  subtitle: "Bardzo długie sprzątanie pokoju, oj jakie długie niepotrzebnie",
+                  graphic: 0
               ),
 						]
 					)

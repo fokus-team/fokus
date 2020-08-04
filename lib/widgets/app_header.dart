@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_cubit/flutter_cubit.dart';
 
 import 'package:fokus/logic/active_user/active_user_cubit.dart';
+import 'package:fokus/model/app_page.dart';
 import 'package:fokus/model/db/user/user_role.dart';
 import 'package:fokus/model/ui/user/ui_child.dart';
 import 'package:fokus/model/ui/user/ui_user.dart';
@@ -190,7 +191,7 @@ class AppHeader extends StatelessWidget {
 					),
 					Row(
 						children: <Widget>[
-							headerIconButton(Icons.notifications, () => { log("Powiadomienia") }),
+							headerIconButton(Icons.notifications, () => Navigator.of(context).pushNamed(AppPage.notificationsPage.name)), // pytanko jak tu zrobić osobno caregiver i child
 							headerIconButton(
 								Icons.more_vert,
 								() => cubit.logoutUser()
@@ -217,7 +218,7 @@ class AppHeader extends StatelessWidget {
 					),
 					Row(
 						children: <Widget>[
-							headerIconButton(Icons.notifications, () => { log("Powiadomienia") }),
+							headerIconButton(Icons.notifications, () => Navigator.of(context).pushNamed(AppPage.notificationsPage.name)),
 							headerIconButton(
 								Icons.more_vert,
 								() => CubitProvider.of<ActiveUserCubit>(context).logoutUser()

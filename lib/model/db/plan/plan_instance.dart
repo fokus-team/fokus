@@ -1,6 +1,6 @@
 import 'package:fokus/model/db/date/date.dart';
 import 'package:fokus/model/db/date/time_date.dart';
-import 'package:fokus/model/db/duration.dart';
+import 'package:fokus/model/db/date_span.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
 import 'plan_instance_state.dart';
@@ -12,7 +12,7 @@ class PlanInstance {
 
   Date date;
 	PlanInstanceState state;
-  Duration<TimeDate> duration;
+	List<DateSpan<TimeDate>> duration;
   List<ObjectId> instances;
   List<PlanInstanceTask> tasks;
 
@@ -25,7 +25,7 @@ class PlanInstance {
 	    planID: json['planID'],
       assignedTo: json['assignedTo'],
       date: Date.parseDBDate(json['date']),
-      duration: json['duration'] != null ? Duration.fromJson(json['duration']) : null,
+	    duration: json['duration'] != null ? (json['duration'] as List).map((i) => DateSpan.fromJson<TimeDate>(i)).toList() : [],
       instances: json['instances'] != null ? new List<ObjectId>.from(json['instances']) : [],
       tasks: json['tasks'] != null ? (json['tasks'] as List).map((i) => PlanInstanceTask.fromJson(i)).toList() : [],
     ) : null;
@@ -39,7 +39,7 @@ class PlanInstance {
     data['assignedTo'] = this.assignedTo;
     data['date'] = this.date.toDBDate();
     if (this.duration != null) {
-      data['duration'] = this.duration.toJson();
+	    data['duration'] = this.duration.map((v) => v.toJson()).toList();
     }
     if (this.instances != null) {
       data['instances'] = this.instances;

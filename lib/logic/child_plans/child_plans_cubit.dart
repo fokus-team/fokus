@@ -9,6 +9,7 @@ import 'package:fokus/model/db/plan/plan_instance_state.dart';
 import 'package:fokus/model/ui/plan/ui_plan_instance.dart';
 import 'package:fokus/services/data/data_repository.dart';
 import 'package:fokus/services/plan_repeatability_service.dart';
+import 'package:fokus/utils/duration_utils.dart';
 
 part 'child_plans_state.dart';
 
@@ -36,11 +37,7 @@ class ChildPlansCubit extends Cubit<ChildPlansState> {
 
 	  List<UIPlanInstance> uiInstances = [];
 	  for (var instance in instances) {
-		  var elapsedTime = 0;
-		  if (instance.state == PlanInstanceState.active || instance.state == PlanInstanceState.notCompleted) {
-			  elapsedTime = DateTime.now().difference(instance.duration.from).inMinutes;
-		  } else if (instance.state == PlanInstanceState.completed)
-		  	elapsedTime = instance.duration.to.difference(instance.duration.from).inMinutes;
+		  var elapsedTime = () => sumDurations(instance.duration).inSeconds;
 		  var completedTasks = await _dbRepository.getCompletedTaskCount(instance.id);
 		  uiInstances.add(UIPlanInstance.fromDBModel(instance, planMap[instance].name, completedTasks, elapsedTime, getDescription(planMap[instance], instance.date)));
 	  }

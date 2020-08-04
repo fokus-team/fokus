@@ -51,8 +51,9 @@ class OutdatedDataService {
 		var plansByDate = groupBy<PlanInstance, Date>(instances, (plan) => plan.date);
 
 		List<Future> updates = [];
-		for (var date in plansByDate.entries)
-			updates.add(_dbRepository.updatePlanInstances(date.value.map((plan) => plan.id).toList(), state: PlanInstanceState.lostForever, end: getEndTime(date.key)));
+		// TODO Mark plans with all non-optional tasks done as completed
+		//for (var date in plansByDate.entries)
+		//	updates.add(_dbRepository.updatePlanInstances(date.value.map((plan) => plan.id).toList(), state: PlanInstanceState.lostForever, end: getEndTime(date.key)));
 		return Future.wait(updates);
 		// TODO there are also 'to' fields in task instance last 'duration' and 'breaks' objects that could be left missing here - handle here or inside statistics code
 	}

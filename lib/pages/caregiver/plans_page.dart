@@ -9,7 +9,7 @@ import 'package:fokus/utils/app_locales.dart';
 import 'package:fokus/widgets/app_header.dart';
 import 'package:fokus/widgets/app_navigation_bar.dart';
 import 'package:fokus/widgets/item_card.dart';
-import 'package:fokus/widgets/attribute_chip.dart';
+import 'package:fokus/widgets/chips/attribute_chip.dart';
 import 'package:fokus/widgets/segment.dart';
 
 class CaregiverPlansPage extends StatefulWidget {

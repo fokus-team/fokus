@@ -24,3 +24,15 @@ class DateSpan<D extends DateBase> {
     return data;
   }
 }
+
+enum SpanDateType {
+	start, end
+}
+
+extension SpanDateTypeField on SpanDateType {
+	String get field => const {
+		SpanDateType.start: 'from',
+		SpanDateType.end: 'to'
+	}[this];
+}
+

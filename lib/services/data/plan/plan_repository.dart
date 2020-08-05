@@ -9,8 +9,7 @@ import 'package:fokus/model/db/date/date.dart';
 import 'package:fokus/model/db/plan/plan.dart';
 
 abstract class PlanRepository {
-	Future<List<Plan>> getPlans({ObjectId caregiverId, ObjectId childId, List<String> fields = const [], bool activeOnly = true, bool oneDayOnly = false});
-	Future<List<Plan>> getChildPlanInstances(ObjectId childId, {ObjectId planId, Date date, bool activeOnly = false});
+	Future<List<Plan>> getPlans({ObjectId caregiverId, ObjectId childId, bool activeOnly = true, bool oneDayOnly = false, List<String> fields = const []});
 	Future<PlanInstance> getActiveChildPlanInstance(ObjectId childId);
 	Future<List<PlanInstance>> getPlanInstancesForPlans(ObjectId childId, List<ObjectId> planIDs, [Date date]);
 	Future<List<PlanInstance>> getPastNotCompletedPlanInstances(List<ObjectId> childIDs, List<ObjectId> planIDs, Date beforeDate, {List<String> fields = const []});

@@ -10,18 +10,13 @@ import 'package:fokus/model/db/plan/plan_instance_state.dart';
 import 'package:fokus/services/data/data_repository.dart';
 
 mixin PlanDbRepository implements DbRepository {
-	Future<List<Plan>> getPlans({ObjectId caregiverId, ObjectId childId, List<String> fields = const [], bool activeOnly = true, bool oneDayOnly = false}) {
+	Future<List<Plan>> getPlans({ObjectId caregiverId, ObjectId childId, bool activeOnly = true, bool oneDayOnly = false, List<String> fields = const []}) {
 		var query = _buildPlanQuery(caregiverId: caregiverId, childId: childId, activeOnly: activeOnly);
 		if (oneDayOnly)
 			query.and(where.ne('repeatability.untilCompleted', true));
 		if (fields.isNotEmpty)
 			query.fields(fields);
 		return dbClient.queryTyped(Collection.plan, query, (json) => Plan.fromJson(json));
-	}
-
-	Future<List<Plan>> getChildPlanInstances(ObjectId childId, {ObjectId planId, Date date, bool activeOnly = false}) {
-		var query = _buildPlanQuery(childId: childId, planId: planId, date: date, activeOnly: activeOnly);
-		return dbClient.queryTyped(Collection.planInstance, query, (json) => Plan.fromJson(json));
 	}
 
 	Future<PlanInstance> getActiveChildPlanInstance(ObjectId childId) {

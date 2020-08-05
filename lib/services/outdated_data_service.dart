@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:fokus/model/db/plan/plan_instance.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
@@ -44,19 +45,25 @@ class OutdatedDataService {
 				childId: getRoleId(UserRole.child), fields: ['_id'], oneDayOnly: true, activeOnly: false);
 
 		var childrenIDs = _role == UserRole.caregiver ? (await _dbRepository.getCaregiverChildren(_userId, ['_id'])).map((child) => child.id).toList() : [_userId];
-		var instances = await _dbRepository.getPastNotCompletedPlanInstances(childrenIDs, plans.map((plan) => plan.id).toList(), Date.now(), fields: ['_id', 'date', 'duration']);
+		var instances = await _dbRepository.getPastNotCompletedPlanInstances(childrenIDs, plans.map((plan) => plan.id).toList(), Date.now(), fields: ['_id', 'date', 'duration', 'state']);
 
 		var getEndTime = (Date date) => TimeDate.fromDate(date.add(Duration(days: 1)));
 
 		List<Future> updates = [];
-		// TODO Mark plans with all non-optional tasks done as completed
 		for (var instance in instances)
 			updates.add(_dbRepository.updatePlanInstances(
 				instance.id,
-				state: PlanInstanceState.lostForever,
+				state: await _determineFinalPlanState(instance),
 				durationChange: DateSpanUpdate<TimeDate>(getEndTime(instance.date), SpanDateType.end, instance.duration.length - 1))
 			);
 		return Future.wait(updates);
 		// TODO there are also 'to' fields in task instance last 'duration' and 'breaks' objects that could be left missing here - handle here or inside statistics code
+	}
+
+	Future<PlanInstanceState> _determineFinalPlanState(PlanInstance instance) async {
+		if (instance.state == PlanInstanceState.notStarted)
+			return PlanInstanceState.lostForever;
+		var tasks = await _dbRepository.getTaskInstances(planInstanceId: instance.id, requiredOnly: true, fields: ['status.completed']);
+		return tasks.every((task) => task.status.completed) ? PlanInstanceState.completed : PlanInstanceState.lostForever;
 	}
 }

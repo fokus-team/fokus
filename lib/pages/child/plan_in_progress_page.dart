@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:fokus/utils/app_locales.dart';
-import 'package:fokus/widgets/attribute_chip.dart';
+import 'package:fokus/widgets/chips/attribute_chip.dart';
 import 'package:fokus/widgets/flexible_app_header.dart';
 import 'package:fokus/widgets/item_card.dart';
 import 'package:fokus/widgets/segment.dart';
@@ -51,7 +51,7 @@ class _ChildPlanInProgressPageState extends State<ChildPlanInProgressPage> {
       _getTasksSegment(
         title: '$_pageKey.content.toDoTasks',
       ),
-      _getAddTasksSegment(title: '$_pageKey.content.additionalTasks')
+      _getAdditionalTasksSegment(title: '$_pageKey.content.additionalTasks')
     ];
   }
 
@@ -132,7 +132,7 @@ class _ChildPlanInProgressPageState extends State<ChildPlanInProgressPage> {
     ]);
   }
 
-  Segment _getAddTasksSegment({String title, String noElementsMessage}) {
+  Segment _getAdditionalTasksSegment({String title, String noElementsMessage}) {
     return Segment(title: title, noElementsMessage: '$_pageKey.content.noTasks', elements: <Widget>[
       ItemCard(
         title: "Opróżnij plecak 2",

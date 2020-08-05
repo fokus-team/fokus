@@ -17,17 +17,8 @@ class Plan {
   List<ObjectId> instances;
   List<ObjectId> assignedTo;
 
-  Plan(
-      {this.active,
-      this.assignedTo,
-      this.changedInstances,
-      this.createdAt,
-      this.createdBy,
-      this.id,
-      this.instances,
-      this.name,
-      this.repeatability,
-      this.tasks});
+  Plan({this.active, this.assignedTo, this.changedInstances, this.createdAt,
+	  this.createdBy, this.id, this.instances, this.name, this.repeatability, this.tasks});
 
   factory Plan.fromJson(Map<String, dynamic> json) {
     return json != null ? Plan(

@@ -13,10 +13,11 @@ class PlanInstance {
   Date date;
 	PlanInstanceState state;
 	List<DateSpan<TimeDate>> duration;
-  List<ObjectId> instances;
-  List<PlanInstanceTask> tasks;
+	List<ObjectId> tasks;
+	List<ObjectId> addedTasks;
+  List<ObjectId> taskInstances;
 
-  PlanInstance({this.id, this.instances, this.planID, this.assignedTo, this.date, this.state, this.duration, this.tasks});
+  PlanInstance({this.id, this.taskInstances, this.planID, this.assignedTo, this.date, this.state, this.duration, this.tasks, this.addedTasks});
 
   factory PlanInstance.fromJson(Map<String, dynamic> json) {
     return json != null ? PlanInstance(
@@ -26,8 +27,9 @@ class PlanInstance {
       assignedTo: json['assignedTo'],
       date: Date.parseDBDate(json['date']),
 	    duration: json['duration'] != null ? (json['duration'] as List).map((i) => DateSpan.fromJson<TimeDate>(i)).toList() : [],
-      instances: json['instances'] != null ? new List<ObjectId>.from(json['instances']) : [],
-      tasks: json['tasks'] != null ? (json['tasks'] as List).map((i) => PlanInstanceTask.fromJson(i)).toList() : [],
+      taskInstances: json['instances'] != null ? new List<ObjectId>.from(json['taskInstances']) : [],
+	    tasks: json['tasks'] != null ? new List<ObjectId>.from(json['tasks']) : [],
+	    addedTasks: json['addedTasks'] != null ? new List<ObjectId>.from(json['addedTasks']) : [],
     ) : null;
   }
 
@@ -41,33 +43,15 @@ class PlanInstance {
     if (this.duration != null) {
 	    data['duration'] = this.duration.map((v) => v.toJson()).toList();
     }
-    if (this.instances != null) {
-      data['instances'] = this.instances;
+    if (this.taskInstances != null) {
+      data['taskInstances'] = this.taskInstances;
+    }
+    if (this.addedTasks != null) {
+	    data['addedTasks'] = this.addedTasks;
     }
     if (this.tasks != null) {
-      data['tasks'] = this.tasks.map((v) => v.toJson()).toList();
+	    data['tasks'] = this.tasks;
     }
-    return data;
-  }
-}
-
-class PlanInstanceTask {
-	ObjectId createdBy;
-  ObjectId taskInstanceID;
-
-  PlanInstanceTask({this.createdBy, this.taskInstanceID});
-
-  factory PlanInstanceTask.fromJson(Map<String, dynamic> json) {
-    return json != null ? PlanInstanceTask(
-      createdBy: json['createdBy'],
-      taskInstanceID: json['taskID'],
-    ) : null;
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['createdBy'] = this.createdBy;
-    data['taskID'] = this.taskInstanceID;
     return data;
   }
 }

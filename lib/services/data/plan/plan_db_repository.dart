@@ -19,8 +19,13 @@ mixin PlanDbRepository implements DbRepository {
 		return dbClient.queryTyped(Collection.plan, query, (json) => Plan.fromJson(json));
 	}
 
-	Future<PlanInstance> getActiveChildPlanInstance(ObjectId childId) {
-		return dbClient.queryOneTyped(Collection.planInstance, _buildPlanQuery(childId: childId, state: PlanInstanceState.active), (json) => PlanInstance.fromJson(json));
+	Future<List<PlanInstance>> getPlanInstances({ObjectId childId, PlanInstanceState state, List<ObjectId> planIDs, Date date}) {
+		var query = _buildPlanQuery(childId: childId, state: state, date: date);
+		return dbClient.queryTyped(Collection.planInstance, query, (json) => PlanInstance.fromJson(json));
+	}
+
+	Future<bool> getActiveChildPlanInstance(ObjectId childId) {
+		return dbClient.exists(Collection.planInstance, _buildPlanQuery(childId: childId, state: PlanInstanceState.active));
 	}
 
 	Future<List<PlanInstance>> getPlanInstancesForPlans(ObjectId childId, List<ObjectId> planIDs, [Date date]) {
@@ -45,7 +50,7 @@ mixin PlanDbRepository implements DbRepository {
 		return dbClient.update(Collection.planInstance, where.eq('_id', instanceId), document);
 	}
 
-	SelectorBuilder _buildPlanQuery({ObjectId caregiverId, ObjectId childId, ObjectId planId, Date date, bool activeOnly = false, PlanInstanceState state}) {
+	SelectorBuilder _buildPlanQuery({ObjectId caregiverId, ObjectId childId, ObjectId planId, PlanInstanceState state, Date date, bool activeOnly = false}) {
 		SelectorBuilder query;
 		var addExpression = (expression) => query == null ? (query = expression) : query.and(expression);
 		if (childId != null)

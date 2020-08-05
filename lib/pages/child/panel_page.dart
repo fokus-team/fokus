@@ -23,7 +23,6 @@ class ChildPanelPage extends StatefulWidget {
 }
 
 class _ChildPanelPageState extends State<ChildPanelPage> {
-	var _planInProgress = (UIPlanInstance plan) => plan.state == PlanInstanceState.active || plan.state == PlanInstanceState.notCompleted;
 	static const String _pageKey = 'page.childSection.panel';
 
   @override
@@ -110,7 +109,7 @@ class _ChildPanelPageState extends State<ChildPanelPage> {
 					  title: plan.name,
 					  subtitle: plan.description(context),
 					  isActive: plan.state != PlanInstanceState.completed,
-					  progressPercentage: _planInProgress(plan) ? plan.completedTaskCount / plan.taskCount : null,
+					  progressPercentage: plan.state.inProgress ? plan.completedTaskCount / plan.taskCount : null,
 					  chips: [
 					  	if (displayTimer)
 					  	  TimerChip(color: AppColors.childButtonColor),
@@ -122,7 +121,7 @@ class _ChildPanelPageState extends State<ChildPanelPage> {
   }
 
   AttributeChip _getTaskChipForPlan(UIPlanInstance plan) {
-	  if (!_planInProgress(plan))
+	  if (!plan.state.inProgress)
 		  return AttributeChip.withIcon(
 				  icon: Icons.description,
 				  color: AppColors.mainBackgroundColor,

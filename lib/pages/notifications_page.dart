@@ -24,7 +24,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
 					AppBar(
             leading: IconButton(
               icon: Icon(Icons.keyboard_arrow_left, size: 32, color: Colors.white),
-              onPressed: () => {Navigator.of(context).pop()} // pytanko tutaj
+              onPressed: () => {Navigator.of(context).pop()}
             ),
             title: Text(
               "Powiadomienia",
@@ -34,11 +34,11 @@ class _NotificationsPageState extends State<NotificationsPage> {
 					AppSegments(
 						segments: [
               NotificationCard(
-                childName: "Maciek",
+                childName: "Aleksandrittobuonaserra",
                 notificationType: NotificationType.receivedAward,
                 dateTime: DateTime.now(),
                 subtitle: "1 godzina gry na konsoli",
-                graphic: 0
+                graphic: 10
               ),
               NotificationCard(
                   childName: "Gosia",
@@ -49,9 +49,9 @@ class _NotificationsPageState extends State<NotificationsPage> {
               ),
               NotificationCard(
                   childName: "Maciek",
-                  notificationType: NotificationType.unfinishedTask,
+                  notificationType: NotificationType.unfinishedPlan,
                   dateTime: DateTime.now(),
-                  subtitle: "Bardzo długie sprzątanie pokoju, oj jakie długie niepotrzebnie",
+                  subtitle: "Bardzo długie sprzątanie pokoju, oj jakie długie niepotrzebnie, taki plan był no co zrobisz",
                   graphic: 0
               ),
 						]

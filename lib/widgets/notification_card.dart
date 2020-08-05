@@ -6,25 +6,23 @@ import 'package:intl/intl.dart';
 enum NotificationType{
   receivedAward,
   finishedTask,
-  unfinishedTask
+  unfinishedPlan
 }
 
 extension NotificationTypeName on NotificationType {
   String get name => const {
     NotificationType.receivedAward: 'odebrał nagrodę',
     NotificationType.finishedTask: 'wykonał zadanie',
-    NotificationType.unfinishedTask: 'nie wykonał zadania',
+    NotificationType.unfinishedPlan: 'nie skończył planu',
   }[this];
 }
 
 class NotificationCard extends ItemCard {
 
-  //pytanko - ten string do jsona, czy jakoś inaczej rozwiązujemy to
-  final DateFormat _dateFormat = DateFormat("dd.MM.yyyy hh:mm");
   final _typeIcon = {
     NotificationType.receivedAward : Icons.star,
     NotificationType.finishedTask : Icons.view_headline,
-    NotificationType.unfinishedTask : Icons.cancel
+    NotificationType.unfinishedPlan : Icons.cancel
   };
   final Color _iconColor = Colors.grey[500];
 
@@ -73,30 +71,33 @@ class NotificationCard extends ItemCard {
           Expanded(
               flex: 1,
               child: Padding(
-                  padding: (graphic != null) ? EdgeInsets.all(6.0) : EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+                  padding: (graphic != null) ? EdgeInsets.symmetric(horizontal: 6.0, vertical: 8.0) : EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                          title,
-                          style: Theme.of(context).textTheme.bodyText2,
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: titleMaxLines
+                        title,
+                        style: Theme.of(context).textTheme.bodyText2,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1
                       ),
                       if(subtitle != null)
-                        Text(
-                          subtitle,
-                          style: Theme.of(context).textTheme.headline2,
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: titleMaxLines,
-                          softWrap: false,
+                        Padding(
+                          padding: EdgeInsets.only(top: 2.0, bottom: 4.0),
+                          child: Text(
+                            subtitle,
+                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: titleMaxLines,
+                            softWrap: false,
+                          )
                         ),
                       if(dateTime != null)
                         Text(
-                          _dateFormat.format(dateTime),
+                          "${DateFormat.yMd(Localizations.localeOf(context).toString()).format(dateTime)} ${DateFormat.Hm(Localizations.localeOf(context).toString()).format(dateTime)}",
                           style: Theme.of(context).textTheme.subtitle2,
                           overflow: TextOverflow.ellipsis,
-                          maxLines: titleMaxLines,
+                          maxLines: 1,
                           softWrap: false,
                         ),
                       if(chips != null && chips.isNotEmpty)

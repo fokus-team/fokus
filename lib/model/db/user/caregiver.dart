@@ -1,4 +1,3 @@
-import 'package:fokus/model/currency_type.dart';
 import 'package:fokus/model/db/gamification/badge.dart';
 import 'package:fokus/model/db/gamification/currency.dart';
 import 'package:fokus/model/db/user/user_role.dart';
@@ -17,14 +16,14 @@ class Caregiver extends User {
   Caregiver({ObjectId id, this.badges, this.email, this.friends, this.password, this.currencies}) : super(id: id, role: UserRole.caregiver);
 
   factory Caregiver.fromJson(Map<String, dynamic> json) {
-    return Caregiver(
+    return json != null ? (Caregiver(
 	    id: json['_id'],
       email: json['email'],
       friends: json['friends'] != null ? new List<ObjectId>.from(json['friends']) : [],
 	    badges: json['badges'] != null ? (json['badges'] as List).map((i) => Badge.fromJson(i)).toList() : [],
 	    currencies: json['currencies'] != null ? (json['currencies'] as List).map((i) => Currency.fromJson(i)).toList() : [],
       password: json['password'],
-    )..fromJson(json);
+    )..fromJson(json)) : null;
   }
 
   Map<String, dynamic> toJson() {

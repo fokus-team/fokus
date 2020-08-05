@@ -27,7 +27,7 @@ class CaregiverPanelCubit extends Cubit<CaregiverPanelState> {
 	  var children = await _dbRepository.getCaregiverChildren(activeUser.id);
 	  List<UIChild> childList = [];
 	  for (var child in children) {
-		  var plans = await _repeatabilityService.getChildPlansByDate(child.id, Date.now(), activeOnly: false);
+		  var plans = await _repeatabilityService.getPlansByDate(child.id, Date.now(), activeOnly: false);
 		  childList.add(UIChild.fromDBModel(child, todayPlanCount: plans.length, hasActivePlan: await _dbRepository.getActiveChildPlanInstance(child.id) != null));
 	  }
 	  emit(CaregiverPanelLoadSuccess(childList, await _dbRepository.getUserNames((activeUser as UICaregiver).friends)));

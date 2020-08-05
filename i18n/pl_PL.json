@@ -47,11 +47,10 @@
 					"pageHint": "Twórz, przypisuj i zarządzaj planami oraz zadaniami"
 				},
 				"content": {
-					"addedPlansTitle": "Zdefiniowane plany",
-					"noPlansAdded": "Brak zdefiniowanych planów, dodaj pierwszy teraz",
-					"tasksCount": "{NUM_TASKS, plural, offset:0 zero {# zadań} one {# zadanie} two {# zadania} few {# zadania} other {# zadań}}",
-					"activePlan": "Plan aktywny",
-					"inactivePlan": "Plan nieaktywny"
+					"addedActivePlansTitle": "Aktywne plany",
+					"addedDeactivatedPlansTitle": "Nieaktywne plany",
+					"noPlansAdded": "Brak planów",
+					"tasks": "{NUM_TASKS, plural, offset:0  zero {# zadań} one {# zadanie} two {# zadania} few {# zadania} other {# zadań}}"
 				}
 			},
 			"planForm": {
@@ -177,6 +176,7 @@
 	},
 	"repeatability": {
 		"once": "Dnia {DAY}",
+		"startedOn": "Od {DAY}",
 		"weekly": "Co {WEEKDAY, select, 1 {każdy} 2 {każdy} 3 {każdą} 4 {każdy} 5 {każdy} 6 {każdą} 7 {każdą} other {}}",
 		"monthly": "Każdego {DAYS} dnia miesiąca",
 		"weekday": "{WEEKDAY, select, 1 {poniedziałek} 2 {wtorek} 3 {środę} 4 {czwartek} 5 {piątek} 6 {sobotę} 7 {niedzielę} other {}}",
@@ -187,12 +187,13 @@
 		"weekday": "{WEEKDAY, select, 1 {Poniedziałek} 2 {Wtorek} 3 {Środa} 4 {Czwartek} 5 {Piątek} 6 {Sobota} 7 {Niedziela} other {}}"
 	},
 	"alert": {
-		"error": "Wystąpił błąd",
 		"noConnection": "Brak połączenia",
 		"noHint": "Brak podpowiedzi",
-		"genericEmptyValue": "Pole nie może być puste"
+		"genericEmptyValue": "Pole nie może być puste",
+		"connectionRetry": "Upewnij się że urządzenie ma dostęp do internetu"
 	},
 	"actions": {
+		"ok": "Ok",
 		"exit": "Wyjdź",
 		"retry": "Spróbuj ponownie",
 		"close": "Zamknij",

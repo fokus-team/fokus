@@ -47,11 +47,10 @@
 					"pageHint": "Create, assign and manage plans with tasks"
 				},
 				"content": {
-					"addedPlansTitle": "Added plans",
-					"noPlansAdded": "No plans to display, add the first one now",
-					"tasksCount": "{NUM_TASKS, plural, offset:0  =1 {# task} other {# tasks}}",
-					"activePlan": "Plan active",
-					"inactivePlan": "Plan inactive"
+					"addedActivePlansTitle": "Added plans",
+					"addedDeactivatedPlansTitle": "Deactivated plans",
+					"noPlansAdded": "No plans to display",
+					"tasksCount": "{NUM_TASKS, plural, offset:0  =1 {# task} other {# tasks}}"
 				}
 			},
 			"planForm": {
@@ -177,6 +176,7 @@
 	},
 	"repeatability": {
 		"once": "On {DAY}",
+		"startedOn": "From {DAY}",
 		"weekly": "Every",
 		"monthly": "Every {DAYS} day of the month",
 		"weekday": "{WEEKDAY, select, 1 {monday} 2 {tuesday} 3 {wednesday} 4 {thursday} 5 {friday} 6 {saturday} 7 {sunday} other {}}",
@@ -187,12 +187,13 @@
 		"weekday": "{WEEKDAY, select, 1 {Monday} 2 {Tuesday} 3 {Wednesday} 4 {Thursday} 5 {Friday} 6 {Saturday} 7 {Sunday} other {}}"
 	},
 	"alert": {
-		"error": "Error occurred",
 		"noConnection": "No connection",
 		"noHint": "No hint",
-		"genericEmptyValue": "This field can't be empty"
+		"genericEmptyValue": "This field can't be empty",
+		"connectionRetry": "Ensure the device has access to internet"
 	},
 	"actions": {
+		"ok": "Ok",
 		"exit": "Exit",
 		"retry": "Retry",
 		"close": "Close",

@@ -7,7 +7,7 @@ authors:
     - Jan Czubiak
 repository: https://github.com/fokus-team/fokus
 
-version: 1.0.0+1
+version: 0.1.0-dev
 
 environment:
     sdk: ">=2.6.0 <3.0.0"
@@ -23,6 +23,7 @@ dependencies:
 
     firebase_core: ^0.4.0+9
     firebase_analytics: ^5.0.11
+    firebase_crashlytics: ^0.1.4+1
     firebase_remote_config: ^0.3.0+3
 
     get_it: ^4.0.2
@@ -34,6 +35,7 @@ dependencies:
     equatable: ^1.1.0
     meta: ^1.1.6
     intl: ^0.16.1
+    collection: ^1.14.12
     shared_preferences: ^0.5.8
 
     cupertino_icons: ^0.1.2

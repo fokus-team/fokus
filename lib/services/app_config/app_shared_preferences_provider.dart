@@ -21,5 +21,5 @@ class AppSharedPreferencesProvider implements AppConfigProvider {
   bool containsEntry(AppConfigEntry entry) => _preferences.containsKey(entry.key);
 
   @override
-  Set<AppConfigEntry> getEntries() => _preferences.getKeys().map((e) => AppConfigEntry.values.firstWhere((entry) => entry.key == e)).toSet();
+  Set<AppConfigEntry> getEntries() => _preferences.getKeys().map((e) => AppConfigEntry.values.firstWhere((entry) => entry.key == e, orElse: () => null)).toSet();
 }

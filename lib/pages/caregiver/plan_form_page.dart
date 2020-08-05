@@ -2,10 +2,8 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 
 import 'package:fokus/model/app_page.dart';
-import 'package:fokus/logic/active_user/active_user_cubit.dart';
 import 'package:fokus/model/ui/plan/ui_plan_form.dart';
 import 'package:fokus/utils/app_locales.dart';
-import 'package:fokus/utils/cubit_utils.dart';
 import 'package:fokus/utils/theme_config.dart';
 import 'package:fokus/widgets/forms/plan_form.dart';
 import 'package:fokus/widgets/help_icon_button.dart';
@@ -44,46 +42,43 @@ class _CaregiverPlanFormPageState extends State<CaregiverPlanFormPage> {
 		AppFormType formType = ModalRoute.of(context).settings.arguments;
 		formKey = GlobalKey<FormState>();
 		
-    return CubitUtils.navigateOnState<ActiveUserCubit, ActiveUserState, NoActiveUser>(
-			navigation: (navigator) => navigator.pushReplacementNamed(AppPage.rolesPage.name),
-			child: Scaffold(
-				appBar: AppBar(
-					title: Text((formType == AppFormType.create) ?
-						AppLocales.of(context).translate('$_pageKey.createPlanTitle')
-						: AppLocales.of(context).translate('$_pageKey.editPlanTitle')
-					),
-					actions: <Widget>[
-						HelpIconButton(helpPage: 'plan_creation')
-					],
+    return Scaffold(
+			appBar: AppBar(
+				title: Text((formType == AppFormType.create) ?
+					AppLocales.of(context).translate('$_pageKey.createPlanTitle')
+					: AppLocales.of(context).translate('$_pageKey.editPlanTitle')
 				),
-				body: Column(
-					mainAxisAlignment: MainAxisAlignment.spaceBetween,
-					children: <Widget>[
-						Expanded(
-            	child: Form(
-								key: formKey,
-								child: Stepper(
-									steps: [
-										buildStep(context, 0, '$_pageKey.stepOneTitle'),
-										buildStep(context, 1, '$_pageKey.stepTwoTitle')
-									],
-									currentStep: currentStep,
-									onStepContinue: next,
-									onStepTapped: (step) => goTo(step),
-									onStepCancel: cancel,
-									type: StepperType.horizontal,
-									controlsBuilder: (BuildContext context, {VoidCallback onStepContinue, VoidCallback onStepCancel}) {
-										_onStepContinue = onStepContinue;
-										_onStepCancel = onStepCancel;
-										return SizedBox.shrink();
-									}
-								)
+				actions: <Widget>[
+					HelpIconButton(helpPage: 'plan_creation')
+				],
+			),
+			body: Column(
+				mainAxisAlignment: MainAxisAlignment.spaceBetween,
+				children: <Widget>[
+					Expanded(
+						child: Form(
+							key: formKey,
+							child: Stepper(
+								steps: [
+									buildStep(context, 0, '$_pageKey.stepOneTitle'),
+									buildStep(context, 1, '$_pageKey.stepTwoTitle')
+								],
+								currentStep: currentStep,
+								onStepContinue: next,
+								onStepTapped: (step) => goTo(step),
+								onStepCancel: cancel,
+								type: StepperType.horizontal,
+								controlsBuilder: (BuildContext context, {VoidCallback onStepContinue, VoidCallback onStepCancel}) {
+									_onStepContinue = onStepContinue;
+									_onStepCancel = onStepCancel;
+									return SizedBox.shrink();
+								}
 							)
-						),
-						buildStepButtonsBar(context)
-					]
-				)
-	    )
+						)
+					),
+					buildStepButtonsBar(context)
+				]
+			)
     );
 	}
 

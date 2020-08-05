@@ -6,9 +6,9 @@ import 'package:mongo_dart/mongo_dart.dart';
 abstract class UserRepository {
 	Future<User> getUser([SelectorBuilder selector]);
 	Future<Map<ObjectId, String>> getUserNames(List<ObjectId> users);
-	Future<List<Child>> getCaregiverChildren(ObjectId caregiverId);
+	Future<List<Child>> getCaregiverChildren(ObjectId caregiverId, [List<String> fields = const []]);
 
-	// Temporary until we have a login page
 	Future<User> getUserById(ObjectId id);
+	// Temporary until we have a login page
 	Future<User> getUserByRole(UserRole role);
 }

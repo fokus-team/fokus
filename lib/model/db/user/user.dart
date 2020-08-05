@@ -40,6 +40,8 @@ class User {
   }
 
   factory User.typedFromJson(Map<String, dynamic> json) {
+  	if (json == null)
+  		return null;
   	var rawRole = json['role'];
   	if (rawRole == null)
   		return null;

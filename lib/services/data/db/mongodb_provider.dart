@@ -60,7 +60,7 @@ class MongoDbProvider {
 			return query();
 		} on MongoQueryTimeout { // Query timeout, retry
 			return query();
-		} catch(e) {
+		} catch(e) { // TODO Handle double MongoQueryTimeout
 			if (e is NoDbConnection)
 				throw e;
 			throw DbQueryFailed(e);

@@ -1,5 +1,5 @@
 name: fokus
-description: Mobile application that helps kids with completing tasks while also offering parental control
+description: Mobile application that helps kids complete their daily tasks under parental control
 authors:
     - Stanisław Góra <contact@sgora.dev>
     - Mikołaj Mirko
@@ -25,6 +25,8 @@ dependencies:
     firebase_analytics: ^5.0.11
     firebase_crashlytics: ^0.1.4+1
     firebase_remote_config: ^0.3.0+3
+    firebase_auth: ^0.16.1
+    google_sign_in: ^4.5.1
 
     get_it: ^4.0.2
     cubit: ^0.1.2

@@ -1,6 +1,6 @@
-import 'package:cubit/cubit.dart';
+import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_cubit/flutter_cubit.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'package:fokus/logic/active_user/active_user_cubit.dart';
@@ -27,7 +27,7 @@ import 'package:fokus/model/app_page.dart';
 void main() {
 	var navigatorKey = GlobalKey<NavigatorState>();
 	Instrumentator.runAppGuarded(
-		CubitProvider<ActiveUserCubit>(
+		BlocProvider<ActiveUserCubit>(
 			create: (context) => ActiveUserCubit(),
 			child: FokusApp(navigatorKey),
 		),
@@ -62,7 +62,7 @@ class FokusApp extends StatelessWidget {
 	}
 
 	Map<String, WidgetBuilder> _createRoutes() {
-		var activeUser = (context) => CubitProvider.of<ActiveUserCubit>(context);
+		var activeUser = (context) => BlocProvider.of<ActiveUserCubit>(context);
 		return {
 			AppPage.loadingPage.name: (context) => PageTheme.loginSection(child: LoadingPage()),
 			AppPage.rolesPage.name: (context) => PageTheme.loginSection(child: RolesPage()),
@@ -76,9 +76,9 @@ class FokusApp extends StatelessWidget {
 		};
 	}
 
-	Widget _wrapAppPage<Cubit extends CubitStream<Object>>(UserRole userRole, Widget page, [Cubit pageCubit]) {
+	Widget _wrapAppPage<CubitType extends Cubit>(UserRole userRole, Widget page, [CubitType pageCubit]) {
 		if (pageCubit != null)
-			page = CubitProvider<Cubit>(
+			page = BlocProvider<CubitType>(
 				create: (context) => pageCubit,
 				child: page,
 			);

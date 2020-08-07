@@ -1,6 +1,6 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
-import 'package:flutter_cubit/flutter_cubit.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:fokus/logic/caregiver_panel/caregiver_panel_cubit.dart';
 import 'package:fokus/model/ui/user/ui_child.dart';
@@ -30,11 +30,11 @@ class _CaregiverPanelPageState extends State<CaregiverPanelPage> {
 						HeaderActionButton.normal(Icons.add, '$_pageKey.header.addChild', () => { log("Dodaj dziecko") }),
 						HeaderActionButton.normal(Icons.add, '$_pageKey.header.addCaregiver', () => { log("Dodaj opiekuna") })
 					]),
-					CubitBuilder<CaregiverPanelCubit, CaregiverPanelState>(
-						cubit: CubitProvider.of<CaregiverPanelCubit>(context),
+					BlocBuilder<CaregiverPanelCubit, CaregiverPanelState>(
+						cubit: BlocProvider.of<CaregiverPanelCubit>(context),
 						builder: (context, state) {
 							if (state is CaregiverPanelInitial)
-								CubitProvider.of<CaregiverPanelCubit>(context).loadPanelData();
+								BlocProvider.of<CaregiverPanelCubit>(context).loadPanelData();
 							else if (state is CaregiverPanelLoadSuccess)
 								return AppSegments(segments: _buildPanelSegments(state));
 							return Expanded(child: Center(child: CircularProgressIndicator())); // TODO Decide what to show when loading (globally)

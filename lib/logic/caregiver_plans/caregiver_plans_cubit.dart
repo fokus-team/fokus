@@ -1,4 +1,4 @@
-import 'package:cubit/cubit.dart';
+import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:fokus/logic/active_user/active_user_cubit.dart';
 import 'package:fokus/model/db/plan/plan.dart';

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_cubit/flutter_cubit.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:fokus/logic/timer/timer_cubit.dart';
 import 'package:fokus/utils/duration_utils.dart';
@@ -12,8 +12,8 @@ class TimerChip extends StatelessWidget {
 
 	@override
 	Widget build(BuildContext context) {
-		return CubitBuilder<TimerCubit, TimerState>(
-			cubit: CubitProvider.of<TimerCubit>(context),
+		return BlocBuilder<TimerCubit, TimerState>(
+			cubit: BlocProvider.of<TimerCubit>(context),
 			builder: (context, state) {
 				return AttributeChip.withIcon(
 					icon: Icons.timer,

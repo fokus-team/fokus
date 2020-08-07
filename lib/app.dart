@@ -17,7 +17,7 @@ import 'package:fokus/pages/child/awards_page.dart';
 import 'package:fokus/pages/child/panel_page.dart';
 import 'package:fokus/pages/notifications_page.dart';
 import 'package:fokus/utils/app_locales.dart';
-import 'package:fokus/utils/crash_handler.dart';
+import 'package:fokus/services/instrumentator.dart';
 import 'package:fokus/utils/cubit_utils.dart';
 import 'package:fokus/utils/theme_config.dart';
 import 'package:fokus/pages/loading_page.dart';
@@ -27,7 +27,7 @@ import 'package:fokus/model/app_page.dart';
 
 void main() {
 	var navigatorKey = GlobalKey<NavigatorState>();
-	CrashHandler.runAppGuarded(
+	Instrumentator.runAppGuarded(
 		CubitProvider<ActiveUserCubit>(
 			create: (context) => ActiveUserCubit(),
 			child: FokusApp(navigatorKey),

@@ -18,7 +18,7 @@ class MongoDbProvider {
 			timeoutConfig: TimeoutConfig(
 				connectionTimeout: 8000,
 				socketTimeout: 4000,
-				keepAliveTime: 10
+				keepAliveTime: 10 * 60
 			)
 		).catchError((e) => throw NoDbConnection(e));
 	}
@@ -52,14 +52,15 @@ class MongoDbProvider {
 			if (_client.state != State.OPEN)
 				await initialize();
 			return await query();
-		} on TimeoutException {
-			// Retry before throwing
-			return query();
-		} on ConnectionException {
-			// Try to reconnect before throwing
+		} on TimeoutException { // Keep alive disconnected
 			await initialize();
 			return query();
-		} catch(e) {
+		} on ConnectionException { // Connection closed, try to reconnect
+			await initialize();
+			return query();
+		} on MongoQueryTimeout { // Query timeout, retry
+			return query();
+		} catch(e) { // TODO Handle double MongoQueryTimeout
 			if (e is NoDbConnection)
 				throw e;
 			throw DbQueryFailed(e);

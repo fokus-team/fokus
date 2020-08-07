@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'dart:ui';
+import 'package:intl/message_format.dart';
+import 'package:logging/logging.dart';
+
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'package:intl/message_format.dart';
 
 typedef TranslateFunc = String Function(BuildContext);
 
@@ -26,6 +28,8 @@ class AppLocalesDelegate extends LocalizationsDelegate<AppLocales> {
 }
 
 class AppLocales {
+	final Logger _logger = Logger('AppLocales');
+
 	final Locale locale;
 
 	AppLocales(this.locale);
@@ -50,11 +54,11 @@ class AppLocales {
 			if (args == null)
 				return string;
 			return MessageFormat(string, locale: locale.toString()).format(args);
-		}  on NoSuchMethodError {
-			debugPrint('Key $keyPath has no localized string in language ${locale.languageCode}');
+		} on NoSuchMethodError {
+			_logger.warning('Key $keyPath has no localized string in language ${locale.languageCode}');
 			return '';
 		} on Error catch (e) {
-			debugPrint('$e');
+			_logger.severe('$e');
 			return '';
 		}
 	}

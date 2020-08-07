@@ -14,7 +14,7 @@ class Task {
 
   Task({this.description, this.id, this.name, this.optional, this.planID, this.points, this.subtasks, this.timer});
 
-  factory Task.fromJson(Map<ObjectId, dynamic> json) {
+  factory Task.fromJson(Map<String, dynamic> json) {
     return json != null ? Task(
       description: json['description'],
 	    id: json['_id'],

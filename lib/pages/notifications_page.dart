@@ -45,7 +45,16 @@ class _NotificationsPageState extends State<NotificationsPage> {
                   notificationType: NotificationType.finishedTask,
                   dateTime: DateTime.now(),
                   subtitle: "Sprzątanie pokoju",
-                  graphic: 20
+                  graphic: 20,
+                  chip: NotificationCard.gradeTheTaskChip
+              ),
+              NotificationCard(
+                  childName: "Gosia",
+                  notificationType: NotificationType.finishedTask,
+                  dateTime: DateTime.now(),
+                  subtitle: "Spakowanie plecaka",
+                  graphic: 20,
+                  chip: NotificationCard.taskGradedChip
               ),
               NotificationCard(
                   childName: "Maciek",

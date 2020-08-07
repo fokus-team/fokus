@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:fokus/utils/icon_sets.dart';
+import 'package:fokus/widgets/attribute_chip.dart';
 import 'package:fokus/widgets/item_card.dart';
 import 'package:intl/intl.dart';
 
@@ -24,7 +27,7 @@ class NotificationCard extends ItemCard {
     NotificationType.finishedTask : Icons.view_headline,
     NotificationType.unfinishedPlan : Icons.cancel
   };
-  final Color _iconColor = Colors.grey[500];
+  final Color _iconColor = Colors.grey;
 
   final String childName;
   final NotificationType notificationType;
@@ -39,23 +42,32 @@ class NotificationCard extends ItemCard {
     this.dateTime,
     subtitle,
     graphic,
-    chips,
-    menuItems,
-    actionButton,
-    onTapped,
+    chip
   }) : super(
-  title: makeTitle(childName, notificationType),
-  subtitle: subtitle,
-  graphicType: GraphicAssetType.childAvatars,
-  graphic: graphic,
-  chips: chips,
-  menuItems: menuItems,
-  actionButton: actionButton,
-  onTapped: onTapped,
+    title: makeTitle(childName, notificationType),
+    subtitle: subtitle,
+    graphicType: GraphicAssetType.childAvatars,
+    graphic: graphic,
+    chips: [if (chip != null) chip]
   );
 
   @override
   double get imageHeight => super.imageHeight * 0.7;
+
+  static Widget gradeTheTaskChip = GestureDetector(
+      onTap: () => {log("open the grading page")},
+      child: AttributeChip.withIcon(
+        content: "Oceń zadanie",
+        color: Colors.red,
+        icon: Icons.assignment
+      )
+  );
+
+  static Widget taskGradedChip = AttributeChip.withIcon(
+    content: "Oceniono",
+    color: Colors.grey[750],
+    icon: Icons.check
+  );
 
   @override
   Widget buildContentSection(BuildContext context){
@@ -102,12 +114,12 @@ class NotificationCard extends ItemCard {
                         ),
                       if(chips != null && chips.isNotEmpty)
                         Padding(
-                            padding: EdgeInsets.only(top: 8.0),
-                            child: Wrap(
-                                spacing: 2,
-                                runSpacing: 4,
-                                children: chips
-                            )
+                          padding: EdgeInsets.only(top: 8.0),
+                          child: Wrap(
+                            spacing: 2,
+                            runSpacing: 4,
+                            children: chips
+                          )
                         )
                     ],
                   )

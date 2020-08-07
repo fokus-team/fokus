@@ -9,6 +9,8 @@ import 'package:fokus/services/app_config/app_shared_preferences_provider.dart';
 import 'package:fokus/services/data/data_repository.dart';
 import 'package:fokus/services/plan_repeatability_service.dart';
 import 'package:fokus/services/outdated_data_service.dart';
+import 'package:fokus/services/auth/authentication_repository.dart';
+import 'package:fokus/services/auth/firebase_auth_repository.dart';
 
 import 'app_init_state.dart';
 
@@ -21,6 +23,7 @@ class AppInitCubit extends Cubit<AppInitState> {
 		_provider.registerSingleton<DataRepository>(DbDataRepository());
 		_provider.registerSingleton<PlanRepeatabilityService>(PlanRepeatabilityService());
 		_provider.registerSingleton<OutdatedDataService>(OutdatedDataService());
+		_provider.registerSingleton<AuthenticationRepository>(FirebaseAuthRepository());
 		initializeApp();
 	}
 

@@ -7,9 +7,10 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-import 'package:fokus/services/exception/no_db_connection.dart';
 import 'package:fokus/widgets/dialogs/dialog.dart';
 import 'package:fokus/model/button_type.dart';
+
+import 'exception/db_exceptions.dart';
 
 class Instrumentator {
 	final Logger _logger = Logger('Instrumentator');

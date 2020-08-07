@@ -3,8 +3,7 @@ import 'package:get_it/get_it.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
 import 'package:fokus/model/db/collection.dart';
-import 'package:fokus/services/exception/db_query_failed.dart';
-import 'package:fokus/services/exception/no_db_connection.dart';
+import 'package:fokus/services/exception/db_exceptions.dart';
 import 'package:fokus/services/remote_config_provider.dart';
 
 

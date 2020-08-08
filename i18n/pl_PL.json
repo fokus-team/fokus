@@ -141,7 +141,9 @@
 		"edit": "Edytuj",
 		"delete": "Usuń",
 		"details": "Pokaż szczegóły",
-		"help": "Pokaż pomoc"
+		"help": "Pokaż pomoc",
+		"login": "Zaloguj",
+		"signIn": "Załóż konto"
 	},
 	"help": {
 		"first_steps": "Pierwsze kroki"

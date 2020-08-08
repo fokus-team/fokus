@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:fokus/model/app_page.dart';
-import 'package:fokus/model/navigation_item.dart';
+import 'package:fokus/model/ui/app_page.dart';
+import 'package:fokus/model/ui/navigation_item.dart';
 import 'package:fokus/model/db/user/user.dart';
 import 'package:fokus/utils/app_locales.dart';
 

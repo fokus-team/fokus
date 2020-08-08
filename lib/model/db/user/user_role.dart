@@ -1,4 +1,4 @@
-import 'package:fokus/model/app_page.dart';
+import 'package:fokus/model/ui/app_page.dart';
 
 enum UserRole { caregiver, child }
 

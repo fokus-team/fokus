@@ -24,7 +24,7 @@ import 'package:fokus/utils/theme_config.dart';
 import 'package:fokus/pages/loading_page.dart';
 import 'package:fokus/pages/roles_page.dart';
 import 'package:fokus/widgets/page_theme.dart';
-import 'package:fokus/model/app_page.dart';
+import 'package:fokus/model/ui/app_page.dart';
 
 void main() {
 	var navigatorKey = GlobalKey<NavigatorState>();

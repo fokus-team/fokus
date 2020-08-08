@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 import 'package:fokus/widgets/dialogs/dialog.dart';
-import 'package:fokus/model/button_type.dart';
+import 'package:fokus/model/ui/button.dart';
 
 import 'exception/db_exceptions.dart';
 
@@ -70,7 +70,7 @@ class Instrumentator {
 						AppDialog(
 							titleKey: 'alert.noConnection',
 							textKey: 'alert.connectionRetry',
-							buttons: [DialogButton(ButtonType.ok, () => Navigator.of(context).pop())],
+							buttons: [UIButton(ButtonType.ok, (_) => Navigator.of(context).pop())],
 						),
 				);
 				return true;

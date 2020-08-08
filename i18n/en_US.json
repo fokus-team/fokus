@@ -141,7 +141,9 @@
 		"edit": "Edit",
 		"delete": "Delete",
 		"details": "Show details",
-		"help": "Show help"
+		"help": "Show help",
+		"login": "Login",
+		"signIn": "Sign in"
 	},
 	"help": {
 		"first_steps": "First steps"

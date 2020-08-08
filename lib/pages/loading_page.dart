@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fokus/model/app_page.dart';
+import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/db/user/user_role.dart';
 import 'package:fokus/logic/active_user/active_user_cubit.dart';
 import 'package:fokus/logic/app_init/app_init_cubit.dart';
@@ -24,7 +24,7 @@ class LoadingPage extends StatelessWidget {
 					BlocListener<AppInitCubit, AppInitState>(
 						listener: (BuildContext context, AppInitState state) {
 							if (state is AppInitFailure)
-								showNoConnectionDialog(context, () => _retryInitialization(context));
+								showNoConnectionDialog(context, _retryInitialization);
 							else if (state is AppInitSuccess)
 								BlocProvider.of<UserRestoreCubit>(context).restoreUser();
 						},

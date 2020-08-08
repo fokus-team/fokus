@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
-import 'package:fokus/utils/app_locales.dart';
+import 'package:fokus/services/app_locales.dart';
 
 class UIPlanBase extends Equatable {
 	final ObjectId id;

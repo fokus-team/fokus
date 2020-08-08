@@ -7,7 +7,7 @@ import 'package:fokus/model/db/date/date.dart';
 import 'package:fokus/model/db/plan/plan.dart';
 import 'package:fokus/model/db/plan/repeatability_type.dart';
 import 'package:fokus/model/db/plan/plan_repeatability.dart';
-import 'package:fokus/utils/app_locales.dart';
+import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/string_utils.dart';
 
 import 'data/data_repository.dart';

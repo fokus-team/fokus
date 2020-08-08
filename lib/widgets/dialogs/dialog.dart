@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fokus/model/ui/button.dart';
-import 'package:fokus/utils/app_locales.dart';
+import 'package:fokus/services/app_locales.dart';
 
 class AppDialog extends StatelessWidget {
 	final String titleKey, textKey;

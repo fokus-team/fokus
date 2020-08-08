@@ -7,7 +7,7 @@ import 'package:fokus/logic/app_init/app_init_cubit.dart';
 import 'package:fokus/logic/app_init/app_init_state.dart';
 import 'package:fokus/logic/user_restore/user_restore_cubit.dart';
 import 'package:fokus/logic/user_restore/user_restore_state.dart';
-import 'package:fokus/utils/app_locales.dart';
+import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/dialog_utils.dart';
 import 'package:fokus/utils/theme_config.dart';
 

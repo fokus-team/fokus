@@ -7,7 +7,7 @@ import 'package:fokus/logic/active_user/active_user_cubit.dart';
 import 'package:fokus/model/db/user/user_role.dart';
 import 'package:fokus/model/ui/user/ui_child.dart';
 import 'package:fokus/model/ui/user/ui_user.dart';
-import 'package:fokus/utils/app_locales.dart';
+import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/icon_sets.dart';
 import 'package:fokus/utils/theme_config.dart';
 import 'package:fokus/widgets/chips/attribute_chip.dart';

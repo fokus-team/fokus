@@ -24,22 +24,26 @@ class _CaregiverPlansPageState extends State<CaregiverPlansPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-			body: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
-				AppHeader.normal(title: '$_pageKey.header.title', text: '$_pageKey.header.pageHint', headerActionButtons: [
-					HeaderActionButton.normal(Icons.add, '$_pageKey.header.addPlan', () => { Navigator.of(context).pushNamed(AppPage.caregiverPlanForm.name) }),
-					HeaderActionButton.normal(Icons.calendar_today, '$_pageKey.header.calendar', () => {log("Kalendarz")}, Colors.amber)
-				]),
-				CubitBuilder<CaregiverPlansCubit, CaregiverPlansState>(
-					cubit: CubitProvider.of<CaregiverPlansCubit>(context),
-					builder: (context, state) {
-						if (state is CaregiverPlansInitial)
-							CubitProvider.of<CaregiverPlansCubit>(context).loadCaregiverPlans();
-						else if (state is CaregiverPlansLoadSuccess)
-							return AppSegments(segments: _buildPanelSegments(state, context));
-						return Expanded(child: Center(child: CircularProgressIndicator()));
-					}
-				)
-			]
+			body: Column(
+				crossAxisAlignment: CrossAxisAlignment.start,
+				children: <Widget>[
+					AppHeader.normal(title: '$_pageKey.header.title', text: '$_pageKey.header.pageHint', headerActionButtons: [
+						HeaderActionButton.normal(Icons.add, '$_pageKey.header.addPlan',
+							() => Navigator.of(context).pushNamed(AppPage.caregiverPlanForm.name, arguments: AppFormType.create)),
+						HeaderActionButton.normal(Icons.calendar_today, '$_pageKey.header.calendar', 
+							() => log("Kalendarz"), Colors.amber)
+					]),
+					CubitBuilder<CaregiverPlansCubit, CaregiverPlansState>(
+						cubit: CubitProvider.of<CaregiverPlansCubit>(context),
+						builder: (context, state) {
+							if (state is CaregiverPlansInitial)
+								CubitProvider.of<CaregiverPlansCubit>(context).loadCaregiverPlans();
+							else if (state is CaregiverPlansLoadSuccess)
+								return AppSegments(segments: _buildPanelSegments(state, context));
+							return Expanded(child: Center(child: CircularProgressIndicator()));
+						}
+					)
+				]
 			),
 			bottomNavigationBar: AppNavigationBar.caregiverPage(currentIndex: 1));
   }
@@ -76,15 +80,15 @@ Segment _getPlansSegment({List<UIPlan> plans, String title, String noElementsMes
           title: plan.name,
           subtitle: plan.description(context),
           actionButton: ItemCardActionButton(
-						color: Colors.teal, icon: Icons.keyboard_arrow_right, onTapped: () => {log("go to details page")}),
+						color: Colors.teal, icon: Icons.keyboard_arrow_right, onTapped: () => { log("go to details page") }),
           chips: <Widget>[
             AttributeChip.withIcon(
 							content: AppLocales.of(context).translate('$_pageKey.content.tasks', {'NUM_TASKS': plan.taskCount}),
 							color: Colors.indigo,
 							icon: Icons.layers
 						)
-          ],
-        ),
-    ],
+          ]
+        )
+    ]
   );
 }

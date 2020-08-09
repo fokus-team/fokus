@@ -1,4 +1,4 @@
-
+import 'package:fokus/model/ui/plan/ui_task_form.dart';
 import 'package:mongo_dart/mongo_dart.dart' as Mongo;
 
 enum PlanFormRepeatability { recurring, onlyOnce, untilCompleted }
@@ -17,15 +17,8 @@ class UIPlanForm {
 
 	List<UITaskForm> tasks = List<UITaskForm>();
 
-	UIPlanForm() {
-		tasks.add(UITaskForm(title: 'Aaaa'));
-		tasks.add(UITaskForm(title: 'Bbbb'));
-		tasks.add(UITaskForm(title: 'Cccc'));
-	}
+	void setOnlyOnceDate(DateTime date) { onlyOnceDate = date; }
+	void setRangeFromDate(DateTime date) { rangeFromDate = date; }
+	void setRangeToDate(DateTime date) { rangeToDate = date; }
 
-}
-
-class UITaskForm {
-	String title;
-	UITaskForm({this.title});
 }

@@ -3,11 +3,15 @@ import 'package:flutter/material.dart';
 
 import 'package:fokus/model/app_page.dart';
 import 'package:fokus/model/ui/plan/ui_plan_form.dart';
+
 import 'package:fokus/utils/app_locales.dart';
 import 'package:fokus/utils/theme_config.dart';
+
+import 'package:fokus/widgets/forms/tasks_list.dart';
 import 'package:fokus/widgets/forms/plan_form.dart';
 import 'package:fokus/widgets/help_icon_button.dart';
-import 'package:fokus/widgets/rounded_button.dart';
+
+enum PlanFormStep { planParameters, taskList }
 
 class CaregiverPlanFormPage extends StatefulWidget {
 	@override
@@ -16,35 +20,28 @@ class CaregiverPlanFormPage extends StatefulWidget {
 
 class _CaregiverPlanFormPageState extends State<CaregiverPlanFormPage> {
 	static const String _pageKey = 'page.caregiverSection.planForm';
-	VoidCallback _onStepContinue;
-	VoidCallback _onStepCancel;
-	final int stepCount = 2;
-	int currentStep = 0;
-	bool complete = false;
-	UIPlanForm planForm = UIPlanForm();
+	final int screenTransitionDuration = 500;
+
+	PlanFormStep currentStep = PlanFormStep.planParameters;
+	UIPlanForm plan = UIPlanForm(); // TODO Edit mode for the form
+
 	GlobalKey<FormState> formKey;
+	GlobalKey<TaskListState> taskListState;
 
-	next() {
-		currentStep + 1 != stepCount ? goTo(currentStep + 1) : setState(() => complete = true);
-	}
+	bool isCurrentStepOne() => (currentStep == PlanFormStep.planParameters);
+	bool isCurrentModeCreate() => (ModalRoute.of(context).settings.arguments == AppFormType.create);
 
-	cancel() {
-		if (currentStep > 0)
-			goTo(currentStep - 1);
-	}
-
-	goTo(int step) {
-		setState(() => currentStep = step);
-	}
+	void next() => setState(() { currentStep = PlanFormStep.taskList; });
+	void back() => setState(() { currentStep = PlanFormStep.planParameters; });
+	void submit() { log("Dodaj/edytuj plan"); /* TODO Form submit with minimum task count validation */ }
 
 	@override
 	Widget build(BuildContext context) {
-		AppFormType formType = ModalRoute.of(context).settings.arguments;
 		formKey = GlobalKey<FormState>();
-		
+		taskListState = GlobalKey<TaskListState>();
     return Scaffold(
 			appBar: AppBar(
-				title: Text((formType == AppFormType.create) ?
+				title: Text(isCurrentModeCreate() ?
 					AppLocales.of(context).translate('$_pageKey.createPlanTitle')
 					: AppLocales.of(context).translate('$_pageKey.editPlanTitle')
 				),
@@ -52,139 +49,114 @@ class _CaregiverPlanFormPageState extends State<CaregiverPlanFormPage> {
 					HelpIconButton(helpPage: 'plan_creation')
 				],
 			),
-			body: Column(
-				mainAxisAlignment: MainAxisAlignment.spaceBetween,
-				children: <Widget>[
-					Expanded(
-						child: Form(
-							key: formKey,
-							child: Stepper(
-								steps: [
-									buildStep(context, 0, '$_pageKey.stepOneTitle'),
-									buildStep(context, 1, '$_pageKey.stepTwoTitle')
-								],
-								currentStep: currentStep,
-								onStepContinue: next,
-								onStepTapped: (step) => goTo(step),
-								onStepCancel: cancel,
-								type: StepperType.horizontal,
-								controlsBuilder: (BuildContext context, {VoidCallback onStepContinue, VoidCallback onStepCancel}) {
-									_onStepContinue = onStepContinue;
-									_onStepCancel = onStepCancel;
-									return SizedBox.shrink();
-								}
-							)
-						)
-					),
-					buildStepButtonsBar(context)
-				]
-			)
+			body: buildStepper(context)
     );
 	}
 
-	Step buildStep(BuildContext context, int index, String title) {
-		return Step(
-			title: Text(AppLocales.of(context).translate('$_pageKey.step', {'NUM_STEP': index+1}),
-				style: Theme.of(context).textTheme.headline3
-			),
-			subtitle: Text(AppLocales.of(context).translate(title),
-				style: Theme.of(context).textTheme.bodyText2
-			),
-			isActive: currentStep == index,
-			content: (index == 0) ? buildStepOneContent(context) : buildStepTwoContent(context)
-		);
-	}
+	Widget buildStepOneContent(BuildContext context) => PlanForm(
+		plan: plan,
+		goNextCallback: () {
+			if(formKey.currentState.validate())
+				next();
+		}
+	);
 
-	Widget buildStepButtonsBar(BuildContext context) {
-		AppFormType formType = ModalRoute.of(context).settings.arguments;
+	Widget buildStepTwoContent(BuildContext context) => TaskList(
+		plan: plan,
+		key: taskListState,
+		goBackCallback: back,
+		submitCallback: submit,
+		isCreateMode: isCurrentModeCreate(),
+	); 
 
-		return Material(
-			elevation: 10.0,
-			child: Container(
-				margin: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-				child: ConstrainedBox(
-					constraints: BoxConstraints.tightFor(height: 50.0),
-					child: Row(
-						mainAxisAlignment: MainAxisAlignment.spaceBetween,
-						children: <Widget>[
-							(currentStep == 1) ?
-								FlatButton(
-									onPressed: () => _onStepCancel(),
-									textColor: AppColors.mediumTextColor,
-									child: Row(children: <Widget>[Icon(Icons.chevron_left), Text(AppLocales.of(context).translate('actions.back'))]),
-								)
-								: SizedBox.shrink(),
-							FlatButton(
-								onPressed: () => {
-									if(formKey.currentState.validate())
-										_onStepContinue()
-								},
-								textColor: AppColors.mainBackgroundColor,
-								child: (currentStep == 0) ? 
-									Row(children: <Widget>[Text(AppLocales.of(context).translate('actions.next')), Icon(Icons.chevron_right)])
-									: Text(AppLocales.of(context).translate('$_pageKey.${(formType == AppFormType.create) ? 'createPlanButton' : 'savePlanButton'}'))
-							)
-						]
-					)
-				)
-			)
-		);
-	}
-
-	Widget buildStepOneContent(BuildContext context) {
-		return PlanForm(plan: planForm);
-	}
-
-	Widget buildStepTwoContent(BuildContext context) {
+	Widget buildStepper(BuildContext context) {
 		return Column(
 			children: <Widget>[
-				Wrap(
-					runAlignment: WrapAlignment.spaceAround,
-					children: <Widget>[
-						RoundedButton(
-							text: AppLocales.of(context).translate('$_pageKey.addTaskButton'),
-							icon: Icons.add,
-							onPressed: () => { log("nowe zadanie") },
-							dense: true
-						),
-						RoundedButton(
-							text: AppLocales.of(context).translate('actions.clearAll'),
-							color: Colors.red,
-							icon: Icons.delete,
-							onPressed: () => { log("wyczyść wszystkie") },
-							dense: true
+				Container(
+					margin: EdgeInsets.zero,
+					width: double.infinity,
+					decoration: AppBoxProperties.elevatedContainer,
+					child: Padding(
+						padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 20.0),
+						child: AnimatedSwitcher(
+							duration: Duration(milliseconds: screenTransitionDuration),
+							transitionBuilder: (Widget child, Animation<double> animation) {
+								final inAnimation = Tween<Offset>(begin: Offset(-2.0, 0.0), end: Offset(0.0, 0.0)).animate(animation);
+								return SlideTransition(
+									position: inAnimation,
+									child: child
+								);
+							},
+							layoutBuilder: (Widget currentChild, List<Widget> previousChildren) {
+								List<Widget> children = previousChildren;
+								if (currentChild != null)
+									children = children.toList()..add(currentChild);
+								return Stack(
+									children: children,
+									alignment: Alignment.centerLeft,
+								);
+							},
+							child: Column(
+								key: ValueKey(currentStep),
+								crossAxisAlignment: CrossAxisAlignment.start,
+								children: <Widget>[
+									Text(
+										AppLocales.of(context).translate('$_pageKey.step', {'NUM_STEP': (isCurrentStepOne() ? '1' : '2')}) + '/2',
+										style: Theme.of(context).textTheme.headline2
+									),
+									Text(AppLocales.of(context).translate(isCurrentStepOne() ? '$_pageKey.stepOneTitle' : '$_pageKey.stepTwoTitle'),
+										style: Theme.of(context).textTheme.bodyText2
+									)
+								]
+							)
 						)
-					]
+					)
 				),
-				// if(planForm.tasks.isNotEmpty)
-				// 	SizedBox(
-				// 		height: 400,
-				// 		child: ReorderableListView(
-				// 			onReorder: _onReorder,
-				// 			scrollDirection: Axis.vertical,
-				// 			children: List.generate(
-				// 				planForm.tasks.length,
-				// 				(index) {
-				// 					return ListTile(
-				// 						key: Key('$index'),
-				// 						leading: Text(index.toString()),
-				// 						title: Text(planForm.tasks[index].title)
-				// 					);
-				// 				},
-				// 			)
-				// 		)
-				// 	)
+				Expanded(
+					child: AnimatedSwitcher(
+						switchInCurve: Curves.easeInOut,
+						switchOutCurve: Curves.easeInOut,
+						duration: Duration(milliseconds: screenTransitionDuration),
+						reverseDuration: Duration(milliseconds: screenTransitionDuration),
+						transitionBuilder: (Widget child, Animation<double> animation) {
+							final inAnimation = Tween<Offset>(begin: Offset(1.5, 0.0), end: Offset(0.0, 0.0)).animate(animation);
+							final outAnimation = Tween<Offset>(begin: Offset(-1.5, 0.0), end: Offset(0.0, 0.0)).animate(animation);
+							if (child.key == ValueKey(PlanFormStep.taskList)) {
+								return ClipRect(
+									child: SlideTransition(
+										position: inAnimation,
+										child: child
+									)
+								);
+							} else {
+								return ClipRect(
+									child: SlideTransition(
+										position: outAnimation,
+										child: child
+									)
+								);
+							}
+						},
+						layoutBuilder: (Widget currentChild, List<Widget> previousChildren) {
+							List<Widget> children = previousChildren;
+							if (currentChild != null)
+								children = children.toList()..add(currentChild);
+							return Stack(
+								children: children,
+								alignment: Alignment.topLeft,
+							);
+						},
+						child: Container(
+							key: ValueKey(currentStep),
+							child: Form(
+								key: formKey,
+								child: isCurrentStepOne() ? buildStepOneContent(context) : buildStepTwoContent(context)
+							)
+						)
+					)
+				)
 			]
 		);
 	}
-
-	// void _onReorder(int oldIndex, int newIndex) {
-  //   setState(() {
-	// 		if (newIndex > oldIndex)
-	// 			newIndex -= 1;
-	// 		final UITaskForm item = planForm.tasks.removeAt(oldIndex);
-	// 		planForm.tasks.insert(newIndex, item);
-  //   });
-  // }
 
 }

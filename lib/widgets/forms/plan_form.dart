@@ -1,30 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:smart_select/smart_select.dart';
+import 'package:mongo_dart/mongo_dart.dart' as Mongo;
+
 import 'package:fokus/model/ui/plan/ui_plan_form.dart';
 import 'package:fokus/model/ui/user/ui_child.dart';
 
 import 'package:fokus/utils/app_locales.dart';
 import 'package:fokus/utils/icon_sets.dart';
 import 'package:fokus/utils/theme_config.dart';
-import 'package:fokus/widgets/forms/datepicker_field.dart';
 
+import 'package:fokus/widgets/forms/datepicker_field.dart';
 import 'package:fokus/widgets/item_card.dart';
-import 'package:mongo_dart/mongo_dart.dart' as Mongo;
-import 'package:smart_select/smart_select.dart';
 
 class PlanForm extends StatefulWidget {
 	final UIPlanForm plan;
+	final Function goNextCallback;
 
 	PlanForm({
-		@required this.plan
+		@required this.plan,
+		@required this.goNextCallback
 	});
 
 	@override
 	_PlanFormState createState() => new _PlanFormState();
-
 }
 
 class _PlanFormState extends State<PlanForm> {
 	static const String _pageKey = 'page.caregiverSection.planForm.fields';
+
+	double bottomBarHeight = 60.0;
 
 	TextEditingController _planNameContoller = TextEditingController();
 	TextEditingController _dateOneDayOnlyContoller = TextEditingController();
@@ -32,54 +36,78 @@ class _PlanFormState extends State<PlanForm> {
 	TextEditingController _dateRageToContoller = TextEditingController();
 
 	List<UIChild> children = [
-		UIChild(Mongo.ObjectId.fromSeconds(1), "Mateusz", avatar: 5),
-		UIChild(Mongo.ObjectId.fromSeconds(2), "Gosia", avatar: 23),
-		UIChild(Mongo.ObjectId.fromSeconds(3), "Andżelika", avatar: 21),
-		UIChild(Mongo.ObjectId.fromSeconds(4), "Joanna", avatar: 24)
-	];
+		UIChild(Mongo.ObjectId.fromHexString('5f9997f18c7472942f9979a8'), "Mateusz", avatar: 5),
+		UIChild(Mongo.ObjectId.fromHexString('f1068d375fe7b2e20ea84512'), "Gosia", avatar: 23),
+		UIChild(Mongo.ObjectId.fromHexString('72af61d19e589bad8d0fc5c5'), "Andżelika", avatar: 21),
+		UIChild(Mongo.ObjectId.fromHexString('a5b458256654875d95d19210'), "Joanna", avatar: 24)
+	]; // TODO Load children list from user
 
-	void setDateCallback(Future<DateTime> pickedDate, DateTime dateField, TextEditingController dateContoller) {
-		pickedDate.then((value) => {
-			if (value != null && value != dateField)
-				setState(() { 
-					dateField = value; 
-					dateContoller.value = TextEditingValue(text: value.toLocal().toString().split(' ')[0]);
-				})
+	String getOnlyDatePart(DateTime date) => date != null ? date.toLocal().toString().split(' ')[0] : '';
+
+	void setDateCallback(DateTime pickedDate, Function dateSetter, TextEditingController dateContoller) {
+		setState(() {
+			dateSetter(pickedDate);
+			dateContoller.value = TextEditingValue(text: getOnlyDatePart(pickedDate));
 		});
 	}
+	
+  @override
+	void initState() {
+		_planNameContoller.text = widget.plan.name ?? '';
+		_dateOneDayOnlyContoller.text = widget.plan.onlyOnceDate != null ? getOnlyDatePart(widget.plan.onlyOnceDate) : '';
+		_dateRageFromContoller.text = widget.plan.rangeFromDate != null ? getOnlyDatePart(widget.plan.rangeFromDate) : '';
+		_dateRageToContoller.text = widget.plan.rangeToDate != null ? getOnlyDatePart(widget.plan.rangeToDate) : '';
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-			children: <Widget>[
-				buildPlanNameField(context),
-				buildChildrenAssignedField(context),
-				Divider(),
-				buildRepeatabilityTypeField(context),
-				if(widget.plan.repeatability == PlanFormRepeatability.recurring)
-					buildRecurringFields(context)
-				else if(widget.plan.repeatability == PlanFormRepeatability.onlyOnce)
-					buildOneDayOnlyFields(context)
-				else
-					buildUntilCompletedFields(context)
+    return Stack(
+			children: [
+				Positioned.fill(
+					bottom: bottomBarHeight,
+					child: ListView(
+						shrinkWrap: true,
+						children: <Widget>[
+							buildPlanNameField(context),
+							buildChildrenAssignedField(context),
+							Divider(),
+							buildRepeatabilityTypeField(context),
+							if(widget.plan.repeatability == PlanFormRepeatability.recurring)
+								buildRecurringFields(context)
+							else if(widget.plan.repeatability == PlanFormRepeatability.onlyOnce)
+								buildOneDayOnlyFields(context)
+							else
+								buildUntilCompletedFields(context)
+						]
+					)
+				),
+				Positioned.fill(
+					top: null,
+					child: buildBottomNavigation(context)
+				)
 			]
-    );
+		);
   }
 
 	Widget buildPlanNameField(BuildContext context) {
-		return TextFormField(
-			controller: _planNameContoller,
-			decoration: InputDecoration(
-				icon: Padding(padding: EdgeInsets.all(8.0), child: Icon(Icons.description)),
-				contentPadding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 12.0),
-				border: OutlineInputBorder(),
-				labelText: AppLocales.of(context).translate('$_pageKey.planName.label')
-			),
-			maxLength: 120,
-			validator: (value) {
-				return value.isEmpty ? AppLocales.of(context).translate('$_pageKey.planName.emptyError') : null;
-			},
-			onChanged: (val) => setState(() => widget.plan.name = val)
+		return Padding(
+			padding: EdgeInsets.only(top: 25.0, bottom: 10.0, left: 20.0, right: 20.0),
+			child: TextFormField(
+				controller: _planNameContoller,
+				decoration: InputDecoration(
+					icon: Padding(padding: EdgeInsets.all(5.0), child: Icon(Icons.description)),
+					contentPadding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
+					border: OutlineInputBorder(),
+					labelText: AppLocales.of(context).translate('$_pageKey.planName.label')
+				),
+				maxLength: 120,
+				textCapitalization: TextCapitalization.sentences,
+				validator: (value) {
+					return value.trim().isEmpty ? AppLocales.of(context).translate('$_pageKey.planName.emptyError') : null;
+				},
+				onChanged: (val) => setState(() => widget.plan.name = val)
+			)
 		);
 	}
 
@@ -95,7 +123,6 @@ class _PlanFormState extends State<PlanForm> {
 				meta: (index, item) => item
 			),
 			isTwoLine: true,
-			padding: EdgeInsets.zero,
 			choiceType: SmartSelectChoiceType.chips,
 			choiceConfig: SmartSelectChoiceConfig(
 				builder: (item, checked, onChange) => 
@@ -118,8 +145,12 @@ class _PlanFormState extends State<PlanForm> {
 				searchBarHint: AppLocales.of(context).translate('actions.search'),
 				trailing: buildBottomSheetBar(context, children.length > 1, children, widget.plan.children)
 			),
-			leading: Padding(padding: EdgeInsets.only(left: 8.0), child: Icon(Icons.people)),
-			onChange: (val) => setState(() => widget.plan.children = val)
+			leading: Padding(padding: EdgeInsets.all(8.0), child: Icon(Icons.people)),
+			onChange: (val) => setState(() {
+				FocusManager.instance.primaryFocus.unfocus();
+				widget.plan.children.clear();
+				widget.plan.children = val;
+			})
 		);
 	}
 
@@ -187,9 +218,8 @@ class _PlanFormState extends State<PlanForm> {
 					)
 			],
 			isTwoLine: true,
-			padding: EdgeInsets.zero,
 			modalType: SmartSelectModalType.bottomSheet,
-			leading: Padding(padding: EdgeInsets.only(left: 8.0), child: Icon(Icons.refresh)),
+			leading: Padding(padding: EdgeInsets.all(8.0), child: Icon(Icons.refresh)),
 			onChange: (val) => setState(() => widget.plan.repeatability = val)
 		);
 	}
@@ -211,10 +241,12 @@ class _PlanFormState extends State<PlanForm> {
 							)
 					],
 					isTwoLine: true,
-					padding: EdgeInsets.zero,
 					modalType: SmartSelectModalType.bottomSheet,
-					leading: Padding(padding: EdgeInsets.only(left: 8.0), child: Icon(Icons.event)),
-					onChange: (val) => setState(() => widget.plan.repeatabilityRage = val),
+					leading: Padding(padding: EdgeInsets.all(8.0), child: Icon(Icons.event)),
+					onChange: (val) => setState(() {
+						widget.plan.repeatabilityRage = val;
+						widget.plan.days.clear();
+					}),
 				),
 				SmartSelect<int>.multiple(
 					title: AppLocales.of(context).translate('$_pageKey.days.label${isWeekly ? 'Weekly' : 'Monthly'}'),
@@ -226,13 +258,12 @@ class _PlanFormState extends State<PlanForm> {
 						title: (index, item) => isWeekly ? AppLocales.of(context).translate('date.weekday', {'WEEKDAY': item.toString()}) : item.toString()
 					),
 					isTwoLine: true,
-					padding: EdgeInsets.zero,
 					choiceType: SmartSelectChoiceType.chips,
 					modalType: SmartSelectModalType.bottomSheet,
 					modalConfig: SmartSelectModalConfig(
 						trailing: buildBottomSheetBar(context, true, dayList, widget.plan.days)
 					),
-					leading: Padding(padding: EdgeInsets.only(left: 8.0), child: Icon(Icons.date_range)),
+					leading: Padding(padding: EdgeInsets.all(8.0), child: Icon(Icons.date_range)),
 					onChange: (val) => setState(() => { widget.plan.days = val })
 				),
 				Divider(),
@@ -248,7 +279,7 @@ class _PlanFormState extends State<PlanForm> {
 				labelText: AppLocales.of(context).translate('$_pageKey.onlyOneDate.label'),
 				errorText: AppLocales.of(context).translate('$_pageKey.onlyOneDate.emptyError'),
 				dateController: _dateOneDayOnlyContoller, 
-				dateField: widget.plan.onlyOnceDate, 
+				dateSetter: widget.plan.setOnlyOnceDate, 
 				callback: setDateCallback,
 				canBeEmpty: false
 			)
@@ -264,7 +295,7 @@ class _PlanFormState extends State<PlanForm> {
 			crossAxisAlignment: CrossAxisAlignment.start,
 			children: <Widget>[
 				Padding(
-					padding: EdgeInsets.only(top: 8.0, bottom: 12.0),
+					padding: EdgeInsets.only(top: 8.0, bottom: 12.0, left: 20.0),
 					child: Text(
 						AppLocales.of(context).translate('$_pageKey.advancedOptionsTitle'),
 						style: TextStyle(fontWeight: FontWeight.bold)
@@ -277,7 +308,7 @@ class _PlanFormState extends State<PlanForm> {
 						labelText: AppLocales.of(context).translate('$_pageKey.range.fromLabel'),
 						rangeToDate: widget.plan.rangeToDate,
 						dateController: _dateRageFromContoller, 
-						dateField: widget.plan.rangeFromDate, 
+						dateSetter: widget.plan.setRangeFromDate, 
 						callback: setDateCallback
 					)
 				),
@@ -289,7 +320,7 @@ class _PlanFormState extends State<PlanForm> {
 						helperText: AppLocales.of(context).translate('$_pageKey.range.hint'),
 						rangeFromDate: widget.plan.rangeFromDate,
 						dateController: _dateRageToContoller, 
-						dateField: widget.plan.rangeToDate, 
+						dateSetter: widget.plan.setRangeToDate,
 						callback: setDateCallback
 					)
 				),
@@ -297,7 +328,6 @@ class _PlanFormState extends State<PlanForm> {
 					padding: EdgeInsets.only(top: 12.0),
 					child: SwitchListTile(
 						value: widget.plan.isActive,
-						contentPadding: EdgeInsets.zero,
 						title: Text(AppLocales.of(context).translate('$_pageKey.active.label')),
 						subtitle: Text(AppLocales.of(context).translate('$_pageKey.active.${widget.plan.isActive ? 'hintOn' : 'hintOff'}')),
 						secondary: Padding(padding: EdgeInsets.all(8.0), child: Icon(Icons.lightbulb_outline)),
@@ -305,6 +335,37 @@ class _PlanFormState extends State<PlanForm> {
 					)
 				),
 			]
+		);
+	}
+
+	Widget buildBottomNavigation(BuildContext context) {
+		return Container(
+			height: bottomBarHeight,
+			child: Stack(
+				children: [
+					Positioned(
+						bottom: 0,
+						left: 0,
+						right: 0,
+						child: Container(
+							padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
+							decoration: AppBoxProperties.elevatedContainer,
+							height: bottomBarHeight,
+							child: Row(
+								mainAxisAlignment: MainAxisAlignment.end,
+								crossAxisAlignment: CrossAxisAlignment.end,
+								children: <Widget>[
+									FlatButton(
+										onPressed: () => widget.goNextCallback(),
+										textColor: AppColors.mainBackgroundColor,
+										child: Row(children: <Widget>[Text(AppLocales.of(context).translate('actions.next')), Icon(Icons.chevron_right)])
+									)
+								]
+							)
+						)
+					)
+				]
+			)
 		);
 	}
 

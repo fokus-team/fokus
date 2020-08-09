@@ -62,6 +62,15 @@
 				"createPlanButton": "Create plan",
 				"savePlanButton": "Save plan",
 				"addTaskButton": "Add task",
+				"editTaskButton": "Edit task",
+				"removeTaskButton": "Remove task",
+				"saveTaskButton": "Save task",
+				"noTasksMessage": "The task list is empty",
+				"requiredTaskListTitle": "Required tasks",
+				"optionalTaskListTitle": "Optional tasks",
+				"clearAllTasksText": "Are you sure you want to clear all added tasks?",
+				"taskLimitTitle": "Task limit",
+				"taskLimitText": "You reached plan's task limit ({TASK_LIMIT_NUM}). You can't add another one.",
 				"fields": {
 					"advancedOptionsTitle": "Advanced options",
 					"planName": {
@@ -107,6 +116,24 @@
 						"hintOff": "Hidden after creation"
 					}
 				}
+			},
+			"taskForm": {
+				"taskName": "Task name",
+				"taskDescription": "Task description",
+				"taskOrder": "Order execution",
+				"taskPoints": "Points awarded",
+				"taskPointsHint": "Leave empty to not award points",
+				"taskPointsCurrency": "Point currency",
+				"taskTimer": "Task execution time",
+				"taskTimerNotSet": "Unlimited",
+				"taskTimerSet": "Limited to",
+				"taskTimerFormat": "{HOURS_NUM, plural, offset:0 zero {} other {# hr }}{MINUTES_NUM} min",
+				"taskOptional": "Optional task",
+				"taskOptionalHint": "Optional tasks have no order",
+				"unsavedProgressTitle": "Unsaved progress",
+				"unsavedProgressMessage": "You have unsaved progress. Are you sure you want to exit?",
+				"removeTaskTitle": "Remove task",
+				"removeTaskText": "Are you sure you want to remove this task?"
 			},
 			"awards": {
 				"header": {
@@ -190,11 +217,13 @@
 		"noConnection": "No connection",
 		"noHint": "No hint",
 		"genericEmptyValue": "This field can't be empty",
-		"connectionRetry": "Ensure the device has access to internet"
+		"connectionRetry": "Ensure the device has access to internet",
+		"genericRangeOverflowValue": "Value must be in the range {A}-{B}"
 	},
 	"actions": {
 		"ok": "Ok",
 		"exit": "Exit",
+		"cancel": "Cancel",
 		"retry": "Retry",
 		"close": "Close",
 		"edit": "Edit",
@@ -214,7 +243,10 @@
 	},
 	"help": {
 		"first_steps": "First steps",
-		"plan_creation": "Plan creation"
+		"plan_creation": "Plan creation",
+		"task_creation": "Task creation"
 	},
-	"and": "and"
+	"and": "and",
+	"hour": "hr",
+	"minute": "min"
 }

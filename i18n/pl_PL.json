@@ -62,6 +62,15 @@
 				"createPlanButton": "Stwórz plan",
 				"savePlanButton": "Zapisz plan",
 				"addTaskButton": "Dodaj zadanie",
+				"editTaskButton": "Edytuj zadanie",
+				"removeTaskButton": "Usuń zadanie",
+				"saveTaskButton": "Zapisz zadanie",
+				"noTasksMessage": "Lista zadań jest pusta",
+				"requiredTaskListTitle": "Lista zadań obowiązkowych",
+				"optionalTaskListTitle": "Lista zadań opcjonalnych",
+				"clearAllTasksText": "Na pewno chcesz usunąć wszystkie wprowadzone zadania?",
+				"taskLimitTitle": "Limit zadań",
+				"taskLimitText": "Osiągnięto dozwolony limit zadań w planie ({TASK_LIMIT_NUM}). Nie możesz dodać kolejnego zadania.",
 				"fields": {
 					"advancedOptionsTitle": "Ustawienia zaawansowane",
 					"planName": {
@@ -107,6 +116,24 @@
 						"hintOff": "Ukryty po stworzeniu"
 					}
 				}
+			},
+			"taskForm": {
+				"taskName": "Nazwa zadania",
+				"taskDescription": "Opis zadania",
+				"taskOrder": "Kolejność wykonywania",
+				"taskPoints": "Nagroda punktowa",
+				"taskPointsHint": "Pozostaw puste, aby nie przyznawać punktów",
+				"taskPointsCurrency": "Waluta punktów",
+				"taskTimer": "Czas na wykonanie zadania",
+				"taskTimerNotSet": "Nieograniczony",
+				"taskTimerSet": "Ustawiony na",
+				"taskTimerFormat": "{HOURS_NUM, plural, offset:0 zero {} other {# godz. }}{MINUTES_NUM} min",
+				"taskOptional": "Zadanie opcjonalne",
+				"taskOptionalHint": "Zadania opcjonalne występują poza kolejnością",
+				"unsavedProgressTitle": "Niezapisane dane",
+				"unsavedProgressMessage": "Posiadasz niezapisane dane. Czy jesteś pewien, że chcesz wyjść?",
+				"removeTaskTitle": "Usuń zadanie",
+				"removeTaskText": "Na pewno chcesz usunąć to zadanie?"
 			},
 			"awards": {
 				"header": {
@@ -190,11 +217,13 @@
 		"noConnection": "Brak połączenia",
 		"noHint": "Brak podpowiedzi",
 		"genericEmptyValue": "Pole nie może być puste",
-		"connectionRetry": "Upewnij się że urządzenie ma dostęp do internetu"
+		"connectionRetry": "Upewnij się że urządzenie ma dostęp do internetu",
+		"genericRangeOverflowValue": "Wartość musi mieścić się w zakresie {A}-{B}"
 	},
 	"actions": {
 		"ok": "Ok",
 		"exit": "Wyjdź",
+		"cancel": "Anuluj",
 		"retry": "Spróbuj ponownie",
 		"close": "Zamknij",
 		"edit": "Edytuj",
@@ -214,7 +243,10 @@
 	},
 	"help": {
 		"first_steps": "Pierwsze kroki",
-		"plan_creation": "Tworzenie planu"
+		"plan_creation": "Tworzenie planu",
+		"task_creation": "Konfiguracja zadania"
 	},
-	"and": "i"
+	"and": "i",
+	"hour": "godz.",
+	"minute": "min"
 }

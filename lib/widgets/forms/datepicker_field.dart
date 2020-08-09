@@ -6,7 +6,7 @@ class DatePickerField extends StatefulWidget {
 	final String errorText;
 	final String helperText;
 	final IconData icon;
-	final DateTime dateField;
+	final Function dateSetter;
 	final TextEditingController dateController;
 	final bool canBeEmpty;
 	final DateTime rangeFromDate;
@@ -17,7 +17,7 @@ class DatePickerField extends StatefulWidget {
 	DatePickerField({
 		@required this.labelText,
 		@required this.dateController,
-		@required this.dateField,
+		@required this.dateSetter,
 		@required this.callback,
 		this.errorText,
 		this.helperText,
@@ -37,6 +37,17 @@ class _DatePickerFieldState extends State<DatePickerField> {
 	bool _showClearButton = false;
 
 	Future<DateTime> _selectDate(BuildContext context) async {
+		DateTime initial = (widget.dateController.text != '' ? 
+			DateTime.tryParse(widget.dateController.text) :
+			(widget.rangeFromDate != null ? 
+				widget.rangeFromDate : 
+				(widget.rangeToDate != null ? 
+					widget.rangeToDate :
+					DateTime.now()
+				)
+			)
+		);
+
     return await showDatePicker(
 			locale: AppLocales.of(context).locale,
 			context: context,
@@ -44,49 +55,57 @@ class _DatePickerFieldState extends State<DatePickerField> {
 			fieldLabelText: widget.labelText,
 			firstDate: widget.rangeFromDate != null ? widget.rangeFromDate : DateTime.now(),
 			lastDate: widget.rangeToDate != null ? widget.rangeToDate : DateTime(2100),
-			initialDate: widget.initialDate != null ? widget.initialDate : DateTime.now()
+			initialDate: initial
 		);
   }
 
   @override
   void initState() {
     super.initState();
+		_showClearButton = widget.dateController.text.isNotEmpty;
     widget.dateController.addListener(() {
-      setState(() => {_showClearButton = widget.dateController.text.isNotEmpty});
+      setState(() => { _showClearButton = widget.dateController.text.isNotEmpty });
     });
   }
 
   @override
   Widget build(BuildContext context) {
-		String errorMessage = (widget.errorText != null) ? widget.errorText : AppLocales.of(context).translate('alert.genericEmptyValue');
-		return Stack(
-			alignment: Alignment.topRight,
-			children: [
-				TextFormField(
-					onTap: () => widget.callback(_selectDate(context), widget.dateField, widget.dateController),
-					controller: widget.dateController,
-					readOnly: true,
-					decoration: InputDecoration(
-						icon: Padding(padding: EdgeInsets.all(8.0), child: Icon(widget.icon)),
-						contentPadding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 12.0),
-						border: OutlineInputBorder(),
-						labelText: widget.labelText,
-						hintText: AppLocales.of(context).translate('actions.tapToSelect'),
-						helperText: widget.helperText
-					),
-					validator: (value) {
-						return widget.canBeEmpty ? null : (value.isEmpty ? errorMessage : null);
-					}
-				),
-				if(_showClearButton)
-					IconButton(
-						icon: Icon(Icons.clear),
-						onPressed: () {
-							FocusScope.of(context).requestFocus(FocusNode());
-							widget.dateController.clear();
+		String errorMessage = (widget.errorText != null) ?
+			widget.errorText :
+			AppLocales.of(context).translate('alert.genericEmptyValue');
+		
+		return Padding(
+			padding: EdgeInsets.only(top: 0, bottom: 0, left: 20.0, right: 20.0),
+			child: Stack(
+				alignment: Alignment.topRight,
+				children: [
+					TextFormField(
+						onTap: () => _selectDate(context).then((value) => widget.callback(value, widget.dateSetter, widget.dateController)),
+						controller: widget.dateController,
+						readOnly: true,
+						decoration: InputDecoration(
+							icon: Padding(padding: EdgeInsets.all(5.0), child: Icon(widget.icon)),
+							contentPadding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
+							border: OutlineInputBorder(),
+							labelText: widget.labelText,
+							hintText: AppLocales.of(context).translate('actions.tapToSelect'),
+							helperText: widget.helperText
+						),
+						validator: (value) {
+							return widget.canBeEmpty ? null : (value.isEmpty ? errorMessage : null);
 						}
-					)
-			]
+					),
+					if(_showClearButton)
+						IconButton(
+							icon: Icon(Icons.clear),
+							onPressed: () {
+								FocusScope.of(context).requestFocus(FocusNode());
+								widget.dateController.clear();
+								widget.callback(null, widget.dateSetter, widget.dateController);
+							}
+						)
+				]
+			)
 		);
 	}
 

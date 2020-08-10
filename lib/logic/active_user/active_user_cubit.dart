@@ -22,13 +22,13 @@ class ActiveUserCubit extends Cubit<ActiveUserState> {
 		if (user == null) // TODO show in UI once we have a login page
 			return;
 		_appConfig.setLastUser(user.id);
-		_outdatedDataService.onUserLogin(user.id, user.role);
+		_outdatedDataService.onUserSignIn(user.id, user.role);
 		emit(ActiveUserPresent(UIUser.typedFromDBModel(user)));
 	}
 
   void logoutUser() {
 	  _appConfig.removeLastUser();
-	  _outdatedDataService.onUserLogout();
+	  _outdatedDataService.onUserSignOut();
 	  emit(NoActiveUser());
   }
 

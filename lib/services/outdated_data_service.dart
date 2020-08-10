@@ -18,18 +18,18 @@ class OutdatedDataService {
 	ObjectId _userId;
 	UserRole _role;
 
-	void onUserLogin(ObjectId userId, UserRole role) {
+	void onUserSignIn(ObjectId userId, UserRole role) {
 		_userId = userId;
 		_role = role;
 
-		onUserLogout();
+		onUserSignOut();
 		_updateOutdatedData();
 		var now = DateTime.now();
 		Duration timeToMidnight = DateTime(now.year, now.month, now.day + 1).difference(now);
 		_dataCheckTimer = Timer(timeToMidnight, _firstTimerCallback);
 	}
 
-	void onUserLogout() {
+	void onUserSignOut() {
 		if (_dataCheckTimer != null)
 			_dataCheckTimer.cancel();
 	}

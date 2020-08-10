@@ -21,9 +21,11 @@
 				"child": "Child",
 				"help": "I need help"
 			},
-			"caregiverLogin": {
-			},
 			"caregiverSignIn": {
+				"googleSignIn": "Sign in with Google"
+			},
+			"caregiverSignUp": {
+				"googleSignUp": "Sign up with Google"
 			}
 		},
 		"caregiverSection": {
@@ -146,8 +148,8 @@
 		"delete": "Delete",
 		"details": "Show details",
 		"help": "Show help",
-		"login": "Login",
-		"signIn": "Sign in"
+		"signIn": "Login",
+		"signUp": "Sign up"
 	},
 	"authentication": {
 		"name": "First name",

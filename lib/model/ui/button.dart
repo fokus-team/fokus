@@ -8,7 +8,7 @@ class UIButton {
 }
 
 enum ButtonType {
-	exit, ok, retry, close, login, signIn
+	exit, ok, retry, close, signIn, signUp
 }
 
 extension TextButtonType on ButtonType {
@@ -17,7 +17,7 @@ extension TextButtonType on ButtonType {
 		ButtonType.ok: 'actions.ok',
 		ButtonType.retry: 'actions.retry',
 		ButtonType.close: 'actions.close',
-		ButtonType.login: 'actions.login',
-		ButtonType.signIn: 'actions.signIn'
+		ButtonType.signIn: 'actions.signIn',
+		ButtonType.signUp: 'actions.signUp'
 	}[this];
 }

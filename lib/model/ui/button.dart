@@ -18,6 +18,6 @@ extension TextButtonType on ButtonType {
 		ButtonType.retry: 'actions.retry',
 		ButtonType.close: 'actions.close',
 		ButtonType.login: 'actions.login',
-		ButtonType.signIn: 'action.signIn'
+		ButtonType.signIn: 'actions.signIn'
 	}[this];
 }

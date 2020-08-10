@@ -20,6 +20,10 @@
 				"caregiver": "Caregiver",
 				"child": "Child",
 				"help": "I need help"
+			},
+			"caregiverLogin": {
+			},
+			"caregiverSignIn": {
 			}
 		},
 		"caregiverSection": {
@@ -144,6 +148,15 @@
 		"help": "Show help",
 		"login": "Login",
 		"signIn": "Sign in"
+	},
+	"authentication": {
+		"name": "First name",
+		"email": "E-mail address",
+		"invalidEmail": "Invalid e-mail address",
+		"password": "Password",
+		"passwordNotLongEnough": "Password must have at least {LENGTH, plural, offset:0 one {# character} other {# characters}} long",
+		"confirmPassword": "Repeat password",
+		"noPasswordMatch": "Passwords do not match"
 	},
 	"help": {
 		"first_steps": "First steps"

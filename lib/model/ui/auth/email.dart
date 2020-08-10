@@ -2,6 +2,12 @@ import 'package:formz/formz.dart';
 
 enum EmailValidationError { invalid }
 
+extension EmailValidationErrorTextKey on EmailValidationError {
+	String get key => const {
+		EmailValidationError.invalid: 'authentication.invalidEmail',
+	}[this];
+}
+
 class Email extends FormzInput<String, EmailValidationError> {
 	const Email.pure() : super.pure('');
 	const Email.dirty([String value = '']) : super.dirty(value);

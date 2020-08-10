@@ -20,6 +20,10 @@
 				"caregiver": "Opiekunem",
 				"child": "Dzieckiem",
 				"help": "Potrzebuję pomocy"
+			},
+			"caregiverLogin": {
+			},
+			"caregiverSignIn": {
 			}
 		},
 		"caregiverSection": {
@@ -144,6 +148,15 @@
 		"help": "Pokaż pomoc",
 		"login": "Zaloguj",
 		"signIn": "Załóż konto"
+	},
+	"authentication": {
+		"name": "Imię",
+		"email": "Adres e-mail",
+		"invalidEmail": "Nieprawidłowy adres e-mail",
+		"password": "Hasło",
+		"passwordNotLongEnough": "Hasło musi być przynajmniej {LENGTH} znakowe",
+		"confirmPassword": "Powtórz hasło",
+		"noPasswordMatch": "Hasła nie pasują"
 	},
 	"help": {
 		"first_steps": "Pierwsze kroki"

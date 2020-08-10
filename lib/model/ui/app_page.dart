@@ -9,8 +9,8 @@ extension AppPageName on AppPage {
 	String get name => const {
 		AppPage.loadingPage: '/loading-page',
 		AppPage.rolesPage: '/roles-page',
-		AppPage.caregiverLoginPage: '/auth/caregiver-sign-in-page',
-		AppPage.caregiverSignInPage: '/auth/caregiver-login-page',
+		AppPage.caregiverLoginPage: '/auth/caregiver-login-page',
+		AppPage.caregiverSignInPage: '/auth/caregiver-sign-in-page',
 		AppPage.caregiverPanel: '/caregiver/panel-page',
 		AppPage.caregiverPlans: '/caregiver/plans-page',
 		AppPage.caregiverAwards: '/caregiver/awards-page',

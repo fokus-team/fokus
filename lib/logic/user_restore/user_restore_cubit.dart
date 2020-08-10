@@ -23,7 +23,7 @@ class UserRestoreCubit extends Cubit<UserRestoreState> {
 			emit(UserRestoreFailure());
 			return;
 		}
-		var user = await _dbRepository.getUserById(lastUserId);
+		var user = await _dbRepository.getUser(id: lastUserId);
 		if (user == null) {
 			emit(UserRestoreFailure());
 			return;

@@ -33,5 +33,5 @@ class ActiveUserCubit extends Cubit<ActiveUserState> {
   }
 
 	// Temporary until we have a login page
-	void loginUserByRole(UserRole role) async => loginUser(await _dbRepository.getUserByRole(role));
+	void loginUserByRole(UserRole role) async => loginUser(await _dbRepository.getUser(role: role));
 }

@@ -26,6 +26,8 @@ class MongoDbProvider {
 		return _execute(() => _client.collection(collection.name).update(selector, document, multiUpdate: true));
 	}
 
+	Future insert(Collection collection, Map<String, dynamic> document) => _execute(() => _client.collection(collection.name).insert(document));
+
 	Future<int> count(Collection collection, [SelectorBuilder selector]) => _execute(() => _client.collection(collection.name).count(selector));
 	Future<bool> exists(Collection collection, [SelectorBuilder selector]) async => await count(collection, selector) > 0;
 

@@ -28,17 +28,16 @@ class Caregiver extends User {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = super.toJson();
-    data['email'] = this.email;
-    data['password'] = this.password;
-    if (this.badges != null) {
+    if (this.email != null)
+	    data['email'] = this.email;
+    if (this.password != null)
+	    data['password'] = this.password;
+    if (this.badges != null)
 	    data['badges'] = this.badges.map((v) => v.toJson()).toList();
-    }
-    if (this.currencies != null) {
+    if (this.currencies != null)
 	    data['currencies'] = this.currencies.map((v) => v.toJson()).toList();
-    }
-    if (this.friends != null) {
+    if (this.friends != null)
       data['friends'] = this.friends;
-    }
     return data;
   }
 }

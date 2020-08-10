@@ -26,16 +26,18 @@ class User {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['avatar'] = this.avatar;
-    data['_id'] = this.id;
-    data['name'] = this.name;
-    data['role'] = this.role.index;
-    if (this.accessCode != null) {
+    if (this.avatar != null)
+      data['avatar'] = this.avatar;
+    if (this.id != null)
+      data['_id'] = this.id;
+    if (this.name != null)
+	    data['name'] = this.name;
+    if (this.role != null)
+	    data['role'] = this.role.index;
+    if (this.accessCode != null)
       data['accessCode'] = this.accessCode;
-    }
-    if (this.connections != null) {
+    if (this.connections != null)
       data['connections'] = this.connections;
-    }
     return data;
   }
 

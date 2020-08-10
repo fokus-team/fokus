@@ -65,7 +65,7 @@ class RolesPage extends StatelessWidget {
 			),
 		  padding: EdgeInsets.all(4.0),
 		  child: FlatButton(
-			  onPressed: () => Navigator.of(context).pushNamed(AppPage.caregiverSignInPage.name),
+			  onPressed: () => BlocProvider.of<ActiveUserCubit>(context).loginUserByRole(role),
 			  color: role == UserRole.caregiver ? AppColors.caregiverButtonColor : AppColors.childButtonColor,
 			  padding: EdgeInsets.all(20.0),
 			  child: Row(

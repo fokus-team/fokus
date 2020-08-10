@@ -7,8 +7,11 @@ import 'package:fokus/model/db/user/user_role.dart';
 import 'package:fokus/services/data/db/db_repository.dart';
 
 mixin UserDbRepository implements DbRepository {
-	Future<User> getUser([SelectorBuilder selector]) {
-		return dbClient.queryOneTyped(Collection.user, selector, (json) => User.typedFromJson(json));
+	Future<User> getUser({ObjectId id, ObjectId connected, UserRole role, List<String> fields}) {
+		var query = _buildUserQuery(id: id, connected: connected, role: role);
+		if (fields != null)
+			query.fields(fields);
+		return dbClient.queryOneTyped(Collection.user, query, (json) => User.typedFromJson(json));
 	}
 
 	Future<Map<ObjectId, String>> getUserNames(List<ObjectId> users) {
@@ -16,14 +19,24 @@ mixin UserDbRepository implements DbRepository {
 		return dbClient.queryTypedMap(Collection.user, query, (json) => MapEntry(json['_id'], json['name']));
 	}
 
-	Future<List<Child>> getCaregiverChildren(ObjectId caregiverId, [List<String> fields = const []]) {
+	Future<List<Child>> getCaregiverChildren(ObjectId caregiverId, [List<String> fields]) {
 		var query = where.eq('role', UserRole.child.index).and(where.eq('connections', caregiverId));
-		if (fields.isNotEmpty)
+		if (fields != null)
 			query.fields(fields);
 		return dbClient.queryTyped(Collection.user, query, (json) => Child.fromJson(json));
 	}
 
-	Future<User> getUserById(ObjectId id) => getUser(where.eq('_id', id));
-	// Temporary until we have a login page
-	Future<User> getUserByRole(UserRole role) => getUser(where.eq('role', role.index));
+	Future createUser(User user) => dbClient.insert(Collection.user, user.toJson());
+
+	SelectorBuilder _buildUserQuery({ObjectId id, ObjectId connected, UserRole role}) {
+		SelectorBuilder query;
+		var addExpression = (expression) => query == null ? (query = expression) : query.and(expression);
+		if (id != null)
+			addExpression(where.eq('_id', id));
+		if (connected != null)
+			addExpression(where.eq('connections', connected));
+		if (role != null)
+			addExpression(where.eq('role', role.index));
+		return query;
+	}
 }

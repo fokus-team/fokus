@@ -27,18 +27,14 @@ class Child extends User {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = super.toJson();
-    if (this.badges != null) {
+    if (this.badges != null)
       data['badges'] = this.badges.map((v) => v.toJson()).toList();
-    }
-    if (this.permissions != null) {
+    if (this.permissions != null)
       data['permissions'] = this.permissions.map((v) => v.index).toList();
-    }
-    if (this.points != null) {
+    if (this.points != null)
       data['points'] = this.points.map((v) => v.toJson()).toList();
-    }
-    if (this.rewards != null) {
+    if (this.rewards != null)
       data['rewards'] = this.rewards.map((v) => v.toJson()).toList();
-    }
     return data;
   }
 }

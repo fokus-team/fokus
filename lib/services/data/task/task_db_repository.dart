@@ -9,16 +9,16 @@ import 'package:fokus/model/db/plan/task_instance.dart';
 mixin TaskDbRepository implements DbRepository {
 	final Logger _logger = Logger('TaskDbRepository');
 
-	Future<List<Task>> getTasks({ObjectId planId, bool requiredOnly = false, bool optionalOnly = false, List<String> fields = const []}) {
+	Future<List<Task>> getTasks({ObjectId planId, bool requiredOnly = false, bool optionalOnly = false, List<String> fields}) {
 		var query = _buildTaskQuery(planId: planId, optionalOnly: optionalOnly, requiredOnly: requiredOnly);
-		if (fields.isNotEmpty)
+		if (fields != null)
 			query.fields(fields);
 		return dbClient.queryTyped(Collection.task, query, (json) => Task.fromJson(json));
 	}
 
-	Future<List<TaskInstance>> getTaskInstances({ObjectId planInstanceId, bool requiredOnly = false, bool optionalOnly = false, List<String> fields = const []}) {
+	Future<List<TaskInstance>> getTaskInstances({ObjectId planInstanceId, bool requiredOnly = false, bool optionalOnly = false, List<String> fields}) {
 		var query = _buildTaskQuery(planInstanceId: planInstanceId, requiredOnly: requiredOnly, optionalOnly: optionalOnly);
-		if (fields.isNotEmpty)
+		if (fields != null)
 			query.fields(fields);
 		return dbClient.queryTyped(Collection.taskInstance, query, (json) => TaskInstance.fromJson(json));
 	}

@@ -2,9 +2,10 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:get_it/get_it.dart';
+
 import 'package:fokus/model/auth_user.dart';
 import 'package:fokus/services/auth/authentication_repository.dart';
-import 'package:get_it/get_it.dart';
 
 part 'authentication_event.dart';
 part 'authentication_state.dart';

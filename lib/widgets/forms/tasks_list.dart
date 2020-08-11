@@ -55,10 +55,7 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 						children: [
 							buildReordableTaskList(context),
 							buildOptionalTaskList(context),
-							AnimatedSwitcher(
-								duration: defaultSwitchDuration,
-								child: (widget.plan.tasks.isEmpty) ? buildNoTasksAddedMessage(context) : SizedBox.shrink()
-							),
+							buildNoTasksAddedMessage(context),
 							SizedBox(height: 32.0)
 						]
 					)
@@ -186,9 +183,12 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 					}
 				);
 			},
-			header: requiredTasks.isNotEmpty ?
-				buildTaskListHeader(context, AppLocales.of(context).translate('$_pageKey.requiredTaskListTitle'), requiredTasks.length)
-				: SizedBox.shrink()
+			header: AnimatedSwitcher(
+				duration: defaultSwitchDuration,
+				child: widget.plan.tasks.isNotEmpty ?
+					buildTaskListHeader(context, AppLocales.of(context).translate('$_pageKey.requiredTaskListTitle'), requiredTasks.length)
+					: SizedBox.shrink()
+			)
 		);
 	}
 
@@ -196,8 +196,12 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 		final optionalTasks = widget.plan.tasks.where((element) => element.optional == true);
 		return Column(
 			children: [
-				if(optionalTasks.isNotEmpty)
-					buildTaskListHeader(context, AppLocales.of(context).translate('$_pageKey.optionalTaskListTitle'), optionalTasks.length),
+				AnimatedSwitcher(
+					duration: defaultSwitchDuration,
+					child: (optionalTasks.isNotEmpty) ?
+						buildTaskListHeader(context, AppLocales.of(context).translate('$_pageKey.optionalTaskListTitle'), optionalTasks.length)
+						: SizedBox.shrink()
+				),
 				ImplicitlyAnimatedList<UITaskForm>(
 					shrinkWrap: true,
 					physics: NeverScrollableScrollPhysics(),
@@ -244,29 +248,39 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 	}
 
 	Widget buildNoTasksAddedMessage(BuildContext context) {
-		return Center(
-			child: Padding(
-				padding: EdgeInsets.only(top: 50.0),
-				child: Column(
-					children: <Widget>[
-						Padding(
-							padding: EdgeInsets.only(bottom: 10.0),
-							child: Icon(
-								Icons.local_florist,
-								size: 65.0,
-								color: Colors.grey[400]
+		return AnimatedSwitcher(
+			duration: Duration(seconds: 2),
+			reverseDuration: defaultSwitchDuration,
+			transitionBuilder: (Widget child, Animation<double> animation) {
+				CurvedAnimation delayedAnimation = CurvedAnimation(parent: animation, curve: Interval(0.5, 1.0, curve: Curves.fastOutSlowIn));
+				return FadeTransition(child: child, opacity: delayedAnimation);
+			},
+			child: (widget.plan.tasks.isEmpty) ?
+			Center(
+				child: Padding(
+					padding: EdgeInsets.only(top: 50.0),
+					child: Column(
+						children: <Widget>[
+							Padding(
+								padding: EdgeInsets.only(bottom: 10.0),
+								child: Icon(
+									Icons.local_florist,
+									size: 65.0,
+									color: Colors.grey[400]
+								)
+							),
+							Text(
+								AppLocales.of(context).translate('$_pageKey.noTasksMessage'), 
+								style: TextStyle(
+									fontSize: 16.0,
+									color: Colors.grey[400]
+								)
 							)
-						),
-						Text(
-							AppLocales.of(context).translate('$_pageKey.noTasksMessage'), 
-							style: TextStyle(
-								fontSize: 16.0,
-								color: Colors.grey[400]
-							)
-						)
-					]
+						]
+					)
 				)
 			)
+			: SizedBox.shrink()
 		);
 	}
 

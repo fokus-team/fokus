@@ -17,12 +17,9 @@ class CaregiverSignUpPage extends StatelessWidget {
 	
   @override
   Widget build(BuildContext context) {
-	  return BlocProvider<CaregiverSignUpCubit>(
-		  create: (_) => CaregiverSignUpCubit(),
-		  child: Scaffold(
-		    body: SafeArea(
-			    child: _buildSignUpForm(context),
-		    ),
+	  return Scaffold(
+		  body: SafeArea(
+			  child: _buildSignUpForm(context),
 		  ),
 	  );
   }

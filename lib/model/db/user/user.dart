@@ -13,7 +13,7 @@ class User {
   int avatar;
   List<ObjectId> connections;
 
-  User({this.id, this.role});
+  User({this.id, this.role, this.name});
 
   @protected
   void fromJson(Map<String, dynamic> json) {

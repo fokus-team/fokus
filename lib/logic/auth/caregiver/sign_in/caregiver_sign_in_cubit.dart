@@ -1,5 +1,4 @@
 import 'package:fokus/logic/auth/caregiver/caregiver_auth_state_base.dart';
-import 'package:fokus/logic/auth/formz_state.dart';
 import 'package:formz/formz.dart';
 
 import 'package:fokus/logic/auth/caregiver/caregiver_auth_cubit_base.dart';

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:isolate';
 
+import 'package:bloc/bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:logging/logging.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -17,6 +18,7 @@ class Instrumentator {
 	GlobalKey<NavigatorState> _navigatorKey;
 
 	Instrumentator.runAppGuarded(Widget app, this._navigatorKey) {
+		Bloc.observer = FokusBlocObserver();
 		_setupLogger();
 		_setupCrashlytics();
 
@@ -78,4 +80,11 @@ class Instrumentator {
 		}
 		return false;
 	}
+}
+
+class FokusBlocObserver extends BlocObserver {
+	@override
+  void onError(Cubit cubit, Object error, StackTrace stackTrace) {
+		super.onError(cubit, error, stackTrace);
+  }
 }

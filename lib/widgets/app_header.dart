@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:fokus/logic/active_user/active_user_cubit.dart';
+import 'package:fokus/logic/auth/auth_bloc/authentication_bloc.dart';
 import 'package:fokus/model/db/user/user_role.dart';
 import 'package:fokus/model/ui/user/ui_child.dart';
 import 'package:fokus/model/ui/user/ui_user.dart';
@@ -155,8 +155,8 @@ class AppHeader extends StatelessWidget {
 	}
 
 	Widget buildGreetings(BuildContext context) {
-		var cubit = BlocProvider.of<ActiveUserCubit>(context);
-		var currentUser = (cubit.state as ActiveUserPresent).user;
+		var authenticationBloc = context.bloc<AuthenticationBloc>();
+		var currentUser = authenticationBloc.state.user;
 
 		return buildHeaderContainer(context, 
 			Row(
@@ -193,7 +193,7 @@ class AppHeader extends StatelessWidget {
 							headerIconButton(Icons.notifications, () => { log("Powiadomienia") }),
 							headerIconButton(
 								Icons.more_vert,
-								() => cubit.logoutUser()
+								() => authenticationBloc.add(AuthenticationLogoutRequested())
 							),
 						],
 					)
@@ -220,7 +220,7 @@ class AppHeader extends StatelessWidget {
 							headerIconButton(Icons.notifications, () => { log("Powiadomienia") }),
 							headerIconButton(
 								Icons.more_vert,
-								() => BlocProvider.of<ActiveUserCubit>(context).logoutUser()
+								() => context.bloc<AuthenticationBloc>().add(AuthenticationLogoutRequested())
 							),
 						],
 					)
@@ -234,7 +234,7 @@ class AppHeader extends StatelessWidget {
 class ChildCustomHeader extends StatelessWidget {
 	@override
 	Widget build(BuildContext context) {
-		var user = (BlocProvider.of<ActiveUserCubit>(context).state as ActiveUserPresent).user;
+		var currentUser = context.bloc<AuthenticationBloc>().state.user;
 
 		return AppHeader.greetings(text: 'page.childSection.panel.header.pageHint', headerActionButtons: [
 			HeaderActionButton.custom(
@@ -245,7 +245,7 @@ class ChildCustomHeader extends StatelessWidget {
 								'${AppLocales.of(context).translate('page.childSection.panel.header.myPoints')}: ',
 								style: Theme.of(context).textTheme.button.copyWith(color: AppColors.darkTextColor)
 							),
-							for (var currency in (user as UIChild).points.entries)
+							for (var currency in (currentUser as UIChild).points.entries)
 								Padding(
 									padding: EdgeInsets.only(left: 4.0),
 									child: AttributeChip.withCurrency(content: '${currency.value}', currencyType: currency.key)

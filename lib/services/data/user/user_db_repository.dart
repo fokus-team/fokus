@@ -7,8 +7,8 @@ import 'package:fokus/model/db/user/user_role.dart';
 import 'package:fokus/services/data/db/db_repository.dart';
 
 mixin UserDbRepository implements DbRepository {
-	Future<User> getUser({ObjectId id, ObjectId connected, UserRole role, List<String> fields}) {
-		var query = _buildUserQuery(id: id, connected: connected, role: role);
+	Future<User> getUser({ObjectId id, ObjectId connected, String authenticationId, UserRole role, List<String> fields}) {
+		var query = _buildUserQuery(id: id, connected: connected, authenticationId: authenticationId, role: role);
 		if (fields != null)
 			query.fields(fields);
 		return dbClient.queryOneTyped(Collection.user, query, (json) => User.typedFromJson(json));
@@ -28,11 +28,13 @@ mixin UserDbRepository implements DbRepository {
 
 	Future createUser(User user) => dbClient.insert(Collection.user, user.toJson());
 
-	SelectorBuilder _buildUserQuery({ObjectId id, ObjectId connected, UserRole role}) {
+	SelectorBuilder _buildUserQuery({ObjectId id, ObjectId connected, String authenticationId, UserRole role}) {
 		SelectorBuilder query;
 		var addExpression = (expression) => query == null ? (query = expression) : query.and(expression);
 		if (id != null)
 			addExpression(where.eq('_id', id));
+		if (authenticationId != null)
+			addExpression(where.eq('authenticationID', authenticationId));
 		if (connected != null)
 			addExpression(where.eq('connections', connected));
 		if (role != null)

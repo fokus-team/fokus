@@ -11,10 +11,12 @@ class FirebaseAuthRepository implements AuthenticationRepository {
 	final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 	final GoogleSignIn _googleSignIn = GoogleSignIn.standard();
 
+	String signedUpUserName;
+
 	@override
-	Stream<AuthUser> get user {
+	Stream<AuthenticatedUser> get user {
 		return _firebaseAuth.onAuthStateChanged.map((firebaseUser) {
-			return firebaseUser == null ? AuthUser.empty : firebaseUser.toUser;
+			return firebaseUser == null ? AuthenticatedUser.empty : _asAuthUser(firebaseUser);
 		});
 	}
 
@@ -22,17 +24,20 @@ class FirebaseAuthRepository implements AuthenticationRepository {
 	Future<void> logInWithEmailAndPassword({@required String email, @required String password}) async {
 		assert(email != null && password != null);
 		try {
-			await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password,);
+			await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
 		} on Exception {
 			throw EmailLogInFailure();
 		}
 	}
 
 	@override
-	Future<void> signUp({@required String email, @required String password}) async {
+	Future<void> signUp({@required String email, @required String password, String name = ''}) async {
 		assert(email != null && password != null);
+		signedUpUserName = name;
+		var updateInfo = UserUpdateInfo();
+		updateInfo.displayName = name;
 		try {
-			await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
+			await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password).then((user) => user.user.updateProfile(updateInfo));
 		} on Exception {
 			throw SignUpFailure();
 		}
@@ -64,10 +69,10 @@ class FirebaseAuthRepository implements AuthenticationRepository {
 			throw LogOutFailure();
 		}
 	}
-}
 
-extension on FirebaseUser {
-	AuthUser get toUser {
-		return AuthUser(id: uid);
+	AuthenticatedUser _asAuthUser(FirebaseUser user) {
+	  var authUser = AuthenticatedUser(id: user.uid, email: user.email, name: user.displayName ?? signedUpUserName);
+	  signedUpUserName = null;
+	  return authUser;
 	}
 }

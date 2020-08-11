@@ -1,13 +1,18 @@
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
-class AuthUser extends Equatable {
+class AuthenticatedUser extends Equatable {
+	final String name;
+	final String email;
 	final String id;
 
-	const AuthUser({@required this.id});
+	const AuthenticatedUser({@required this.id, @required this.email, @required this.name});
 
-	static const empty = AuthUser(id: '');
+	static const empty = AuthenticatedUser(id: '', name: '', email: '');
 
   @override
   List<Object> get props => [id];
+
+	@override
+  String toString() => 'AuthUser{name: $name, email: $email}';
 }

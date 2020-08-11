@@ -1,5 +1,4 @@
 import 'package:bloc/bloc.dart';
-import 'package:fokus/services/data/data_repository.dart';
 import 'package:formz/formz.dart';
 import 'package:get_it/get_it.dart';
 import 'package:meta/meta.dart';
@@ -11,8 +10,6 @@ import 'caregiver_auth_state_base.dart';
 class CaregiverAuthCubitBase<State extends CaregiverAuthStateBase> extends Cubit<State> {
 	@protected
 	final AuthenticationRepository authenticationRepository = GetIt.I<AuthenticationRepository>();
-	@protected
-	final DataRepository dbRepository = GetIt.I<DataRepository>();
 
   CaregiverAuthCubitBase(State state) : super(state);
 

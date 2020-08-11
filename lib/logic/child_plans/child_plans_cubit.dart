@@ -2,7 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:get_it/get_it.dart';
 
-import 'package:fokus/logic/active_user/active_user_cubit.dart';
+import 'package:fokus/model/ui/user/ui_user.dart';
 import 'package:fokus/model/db/date/date.dart';
 import 'package:fokus/model/db/plan/plan.dart';
 import 'package:fokus/model/ui/plan/ui_plan_instance.dart';
@@ -13,17 +13,17 @@ import 'package:fokus/utils/duration_utils.dart';
 part 'child_plans_state.dart';
 
 class ChildPlansCubit extends Cubit<ChildPlansState> {
-	final ActiveUserCubit _activeUserCubit;
+	final ActiveUserFunction _activeUser;
 	final DataRepository _dbRepository = GetIt.I<DataRepository>();
 	final PlanRepeatabilityService _repeatabilityService = GetIt.I<PlanRepeatabilityService>();
 
-  ChildPlansCubit(this._activeUserCubit) : super(ChildPlansInitial());
+  ChildPlansCubit(this._activeUser) : super(ChildPlansInitial());
 
   void loadChildPlansForToday() async {
 	  if (!(state is ChildPlansInitial))
 		  return;
 	  var getDescription = (Plan plan, [Date instanceDate]) => _repeatabilityService.buildPlanDescription(plan.repeatability, instanceDate: instanceDate);
-	  var childId = (_activeUserCubit.state as ActiveUserPresent).user.id;
+	  var childId = _activeUser().id;
 
 	  var allPlans = await _dbRepository.getPlans(childId: childId);
 	  var todayPlans = await _repeatabilityService.filterPlansByDate(allPlans, Date.now());

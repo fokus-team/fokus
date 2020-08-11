@@ -15,3 +15,10 @@ extension UserRolePanelPage on UserRole {
 		UserRole.child: AppPage.childPanel
 	}[this];
 }
+
+extension UserRoleSignInPage on UserRole {
+	AppPage get signInPage => const {
+		UserRole.caregiver: AppPage.caregiverSignInPage,
+		UserRole.child: AppPage.childSignInPage
+	}[this];
+}

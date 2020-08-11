@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_cubit/flutter_cubit.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:fokus/logic/active_user/active_user_cubit.dart';
 import 'package:fokus/model/app_page.dart';
@@ -156,7 +156,7 @@ class AppHeader extends StatelessWidget {
 	}
 
 	Widget buildGreetings(BuildContext context) {
-		var cubit = CubitProvider.of<ActiveUserCubit>(context);
+		var cubit = BlocProvider.of<ActiveUserCubit>(context);
 		var currentUser = (cubit.state as ActiveUserPresent).user;
 
 		return buildHeaderContainer(context, 
@@ -221,7 +221,7 @@ class AppHeader extends StatelessWidget {
 							headerIconButton(Icons.notifications, () => Navigator.of(context).pushNamed(AppPage.notificationsPage.name)),
 							headerIconButton(
 								Icons.more_vert,
-								() => CubitProvider.of<ActiveUserCubit>(context).logoutUser()
+								() => BlocProvider.of<ActiveUserCubit>(context).logoutUser()
 							),
 						],
 					)
@@ -235,7 +235,7 @@ class AppHeader extends StatelessWidget {
 class ChildCustomHeader extends StatelessWidget {
 	@override
 	Widget build(BuildContext context) {
-		var user = (CubitProvider.of<ActiveUserCubit>(context).state as ActiveUserPresent).user;
+		var user = (BlocProvider.of<ActiveUserCubit>(context).state as ActiveUserPresent).user;
 
 		return AppHeader.greetings(text: 'page.childSection.panel.header.pageHint', headerActionButtons: [
 			HeaderActionButton.custom(

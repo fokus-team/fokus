@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_cubit/flutter_cubit.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/model/app_page.dart';
 import 'package:fokus/model/db/user/user_role.dart';
 import 'package:fokus/logic/active_user/active_user_cubit.dart';
@@ -65,7 +65,7 @@ class RolesPage extends StatelessWidget {
 			),
 		  padding: EdgeInsets.all(4.0),
 		  child: FlatButton(
-			  onPressed: () => CubitProvider.of<ActiveUserCubit>(context).loginUserByRole(role),
+			  onPressed: () => BlocProvider.of<ActiveUserCubit>(context).loginUserByRole(role),
 			  color: role == UserRole.caregiver ? AppColors.caregiverButtonColor : AppColors.childButtonColor,
 			  padding: EdgeInsets.all(20.0),
 			  child: Row(
@@ -95,7 +95,7 @@ class RolesPage extends StatelessWidget {
 
   // Temporary until we have a login page
   Widget _directLogin({Widget child}) {
-  	return CubitListener<ActiveUserCubit, ActiveUserState>(
+  	return BlocListener<ActiveUserCubit, ActiveUserState>(
 		  child: child,
 		  listener: (context, state) {
 		    if (state is ActiveUserPresent)

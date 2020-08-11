@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_cubit/flutter_cubit.dart';
 import 'package:fokus/model/app_page.dart';
 import 'package:fokus/model/db/user/user_role.dart';
 import 'package:fokus/logic/active_user/active_user_cubit.dart';
@@ -15,22 +14,22 @@ import 'package:fokus/utils/theme_config.dart';
 class LoadingPage extends StatelessWidget {
 	@override
 	Widget build(BuildContext context) {
-		return MultiCubitProvider(
+		return MultiBlocProvider(
 			providers: [
-				CubitProvider<AppInitCubit>(create: (BuildContext context) => AppInitCubit()),
-				CubitProvider<UserRestoreCubit>(create: (BuildContext context) => UserRestoreCubit(CubitProvider.of<ActiveUserCubit>(context))),
+				BlocProvider<AppInitCubit>(create: (BuildContext context) => AppInitCubit()),
+				BlocProvider<UserRestoreCubit>(create: (BuildContext context) => UserRestoreCubit(BlocProvider.of<ActiveUserCubit>(context))),
 			],
 			child: MultiBlocListener(
 				listeners: [
-					CubitListener<AppInitCubit, AppInitState>(
+					BlocListener<AppInitCubit, AppInitState>(
 						listener: (BuildContext context, AppInitState state) {
 							if (state is AppInitFailure)
 								showNoConnectionDialog(context, () => _retryInitialization(context));
 							else if (state is AppInitSuccess)
-								CubitProvider.of<UserRestoreCubit>(context).restoreUser();
+								BlocProvider.of<UserRestoreCubit>(context).restoreUser();
 						},
 					),
-					CubitListener<UserRestoreCubit, UserRestoreState>(
+					BlocListener<UserRestoreCubit, UserRestoreState>(
 						listener: (BuildContext context, UserRestoreState state) {
 							Navigator.of(context).pushReplacementNamed((state is UserRestoreSuccess ? state.userRole.panelPage : AppPage.rolesPage).name);
 						},
@@ -59,7 +58,7 @@ class LoadingPage extends StatelessWidget {
 	}
 
 	void _retryInitialization(BuildContext context) {
-		CubitProvider.of<AppInitCubit>(context).initializeApp();
+		BlocProvider.of<AppInitCubit>(context).initializeApp();
 		Navigator.of(context).pop();
 	}
 }

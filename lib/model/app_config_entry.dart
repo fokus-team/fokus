@@ -1,8 +1,9 @@
 enum AppConfigEntry {
-	someEntry
+	savedChildProfiles
 }
 
 extension AppConfigEntryKey on AppConfigEntry {
 	String get key => const {
+		AppConfigEntry.savedChildProfiles: 'savedChildProfiles'
 	}[this];
 }

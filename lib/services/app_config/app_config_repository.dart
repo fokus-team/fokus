@@ -11,4 +11,20 @@ class AppConfigRepository {
 		await _settingsProvider.initialize();
 		return this;
 	}
+
+	List<ObjectId> getSavedChildProfiles() {
+	  if (_settingsProvider.containsEntry(AppConfigEntry.savedChildProfiles))
+	    return _settingsProvider.getStringList(AppConfigEntry.savedChildProfiles).map((id) => ObjectId.parse(id));
+	  return null;
+	}
+
+	void saveChildProfile(ObjectId userId) {
+		var newList = _settingsProvider.getStringList(AppConfigEntry.savedChildProfiles)..add(userId.toHexString());
+	  _settingsProvider.setStringList(AppConfigEntry.savedChildProfiles, newList);
+	}
+
+	void removeSavedChildProfile(ObjectId userId) {
+		var newList = _settingsProvider.getStringList(AppConfigEntry.savedChildProfiles).where((element) => element != userId.toHexString());
+		_settingsProvider.setStringList(AppConfigEntry.savedChildProfiles, newList);
+	}
 }

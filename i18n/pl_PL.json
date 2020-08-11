@@ -26,6 +26,11 @@
 			},
 			"caregiverSignUp": {
 				"googleSignUp": "Załóż konto z Google"
+			},
+			"childSignIn": {
+				"createNewProfile": "Stwórz nowy profil dziecka"
+			},
+			"childSignUp": {
 			}
 		},
 		"caregiverSection": {

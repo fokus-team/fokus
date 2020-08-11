@@ -5,7 +5,9 @@ import 'package:fokus/model/app_page.dart';
 import 'package:fokus/model/ui/plan/ui_plan_form.dart';
 
 import 'package:fokus/utils/app_locales.dart';
+import 'package:fokus/utils/dialog_utils.dart';
 import 'package:fokus/utils/theme_config.dart';
+import 'package:fokus/widgets/dialogs/general_dialog.dart';
 
 import 'package:fokus/widgets/forms/tasks_list.dart';
 import 'package:fokus/widgets/forms/plan_form.dart';
@@ -33,7 +35,19 @@ class _CaregiverPlanFormPageState extends State<CaregiverPlanFormPage> {
 
 	void next() => setState(() { currentStep = PlanFormStep.taskList; });
 	void back() => setState(() { currentStep = PlanFormStep.planParameters; });
-	void submit() { log("Dodaj/edytuj plan"); /* TODO Form submit with minimum task count validation */ }
+	void submit() {
+		if(plan.tasks.isEmpty) {
+			showBasicDialog(
+				context,
+				GeneralDialog.discard(
+					title: AppLocales.of(context).translate('$_pageKey.taskListEmptyTitle'),
+					content: AppLocales.of(context).translate('$_pageKey.taskListEmptyText')
+				)
+			);
+		} else {
+			log("Dodaj/edytuj plan"); /* TODO Form submit */ 
+		}
+	}
 
 	@override
 	Widget build(BuildContext context) {

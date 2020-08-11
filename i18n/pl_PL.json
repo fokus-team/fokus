@@ -71,6 +71,8 @@
 				"clearAllTasksText": "Na pewno chcesz usunąć wszystkie wprowadzone zadania?",
 				"taskLimitTitle": "Limit zadań",
 				"taskLimitText": "Osiągnięto dozwolony limit zadań w planie ({TASK_LIMIT_NUM}). Nie możesz dodać kolejnego zadania.",
+				"taskListEmptyTitle": "Brak zadań",
+				"taskListEmptyText": "Każdy plan musi posiadać minimum jedno zadanie.",
 				"fields": {
 					"advancedOptionsTitle": "Ustawienia zaawansowane",
 					"planName": {

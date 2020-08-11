@@ -71,6 +71,8 @@
 				"clearAllTasksText": "Are you sure you want to clear all added tasks?",
 				"taskLimitTitle": "Task limit",
 				"taskLimitText": "You reached plan's task limit ({TASK_LIMIT_NUM}). You can't add another one.",
+				"taskListEmptyTitle": "No tasks added",
+				"taskListEmptyText": "Each plan must have minimum 1 task.",
 				"fields": {
 					"advancedOptionsTitle": "Advanced options",
 					"planName": {

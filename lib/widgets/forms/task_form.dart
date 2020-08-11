@@ -37,7 +37,7 @@ class TaskForm extends StatefulWidget {
 class _TaskFormState extends State<TaskForm> {
 	static const String _pageKeyTaskForm = 'page.caregiverSection.taskForm';
 	static const String _pageKeyPlanForm = 'page.caregiverSection.planForm';
-	double bottomBarHeight;
+	double bottomBarHeight = 60.0;
 
 	GlobalKey<FormState> taskFormKey;
 	bool isDataChanged = false;
@@ -57,7 +57,6 @@ class _TaskFormState extends State<TaskForm> {
 
 	@override
   void initState() {
-		bottomBarHeight = formModeIsCreate() ? 60.0 : 82.0;
 		taskFormKey = GlobalKey<FormState>();
 		task = UITaskForm(
 			key: ValueKey(DateTime.now().toString()),
@@ -152,6 +151,7 @@ class _TaskFormState extends State<TaskForm> {
 			Navigator.pop(context, true);
 			return Future.value(false);
 		} else {
+			FocusManager.instance.primaryFocus.unfocus();
 			return showDialog<bool>(
 				context: context,
 				builder: (c) => AlertDialog(
@@ -192,8 +192,13 @@ class _TaskFormState extends State<TaskForm> {
 						dense: true,
 						contentPadding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 4.0),
 						trailing: HelpIconButton(helpPage: 'task_creation'),
+						leading: IconButton(
+							tooltip: AppLocales.of(context).translate('actions.back'),
+							icon: Icon(Icons.arrow_back, color: Colors.white),
+							onPressed: () => exitForm(context, false),
+						),
 						title: Padding(
-							padding: EdgeInsets.only(top: appBarVerticalPadding, bottom: appBarVerticalPadding, left: 12.0),
+							padding: EdgeInsets.only(top: appBarVerticalPadding, bottom: appBarVerticalPadding, left: 4.0),
 							child: Column(
 								crossAxisAlignment: CrossAxisAlignment.start,
 								children: <Widget>[
@@ -202,7 +207,7 @@ class _TaskFormState extends State<TaskForm> {
 										child: Text(AppLocales.of(context).translate('$_pageKeyPlanForm.${formModeIsCreate() ? 'addTaskButton' : 'editTaskButton'}')), 
 										style: hasTitle ?
 											Theme.of(context).textTheme.bodyText1 :
-											Theme.of(context).textTheme.headline3.copyWith(color: Colors.white)
+											Theme.of(context).textTheme.headline3.copyWith(color: Colors.white, fontSize: 20.0)
 									),
 									AnimatedSwitcher(
 										duration: Duration(milliseconds: 400),
@@ -238,79 +243,41 @@ class _TaskFormState extends State<TaskForm> {
 
 	Widget buildBottomNavigation(BuildContext context) {
 		return Container(
-			height: bottomBarHeight + 34.0,
-			child: Stack(
-				children: [
-					Positioned(
-						bottom: 0,
-						left: 0,
-						right: 0,
-						child: Container(
-							padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
-							decoration: AppBoxProperties.elevatedContainer,
-							height: bottomBarHeight,
+			padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
+			decoration: AppBoxProperties.elevatedContainer,
+			height: bottomBarHeight,
+			child: Row(
+				mainAxisAlignment: MainAxisAlignment.spaceBetween,
+				crossAxisAlignment: CrossAxisAlignment.end,
+				children: <Widget>[
+					!formModeIsCreate() ?
+						FlatButton(
+							onPressed: () => showDeleteTaskDialog(context),
+							textColor: Colors.red,
 							child: Row(
-								mainAxisAlignment: MainAxisAlignment.spaceBetween,
-								crossAxisAlignment: CrossAxisAlignment.end,
 								children: <Widget>[
-									FlatButton(
-										onPressed: () => exitForm(context, false),
-										textColor: AppColors.mediumTextColor,
-										child: Row(
-											children: <Widget>[
-												Icon(Icons.chevron_left),
-												Text(AppLocales.of(context).translate('actions.cancel'))
-											]
-										)
-									),
-									FlatButton(
-										onPressed: () => saveTask(context),
-										child: Row(
-											children: <Widget>[
-												Hero(
-													tag: formModeIsCreate() ? "newTaskDialog" : "none12345235",
-													child: Text(
-														AppLocales.of(context).translate('$_pageKeyPlanForm.${formModeIsCreate() ? 'addTaskButton' : 'saveTaskButton'}'),
-														style: Theme.of(context).textTheme.button.copyWith(color: AppColors.mainBackgroundColor)
-													)
-												)
-											]
-										)
-									)
+									Icon(Icons.close),
+									Text(AppLocales.of(context).translate('$_pageKeyPlanForm.removeTaskButton'))
 								]
 							)
 						)
-					),
-					if(!formModeIsCreate())
-						Positioned(
-							top: 0,
-							left: 0,
-							right: 0,
-							child: buildFloatingButton(context)
+						: SizedBox.shrink(),
+					FlatButton(
+						onPressed: () => saveTask(context),
+						child: Row(
+							children: <Widget>[
+								Hero(
+									tag: formModeIsCreate() ? "newTaskDialog" : "none12345235",
+									child: Text(
+										AppLocales.of(context).translate('$_pageKeyPlanForm.${formModeIsCreate() ? 'addTaskButton' : 'saveTaskButton'}'),
+										style: Theme.of(context).textTheme.button.copyWith(color: AppColors.mainBackgroundColor)
+									)
+								)
+							]
 						)
+					)
 				]
 			)
-		);
-	}
-
-	Widget buildFloatingButton(BuildContext context) {
-		return Wrap(
-			alignment: WrapAlignment.center,
-			children: [
-				Container(
-					margin: EdgeInsets.symmetric(vertical: 10.0), 
-					child: FloatingActionButton.extended(
-						tooltip: AppLocales.of(context).translate('$_pageKeyPlanForm.removeTaskButton'),
-						heroTag: null,
-						materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-						elevation: 4.0,
-						icon: Icon(Icons.delete),
-						label: Text(AppLocales.of(context).translate('$_pageKeyPlanForm.removeTaskButton')),
-						backgroundColor: Colors.red,
-						onPressed: () { showDeleteTaskDialog(context); }
-					)
-				)
-			]
 		);
 	}
 

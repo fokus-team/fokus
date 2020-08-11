@@ -50,18 +50,17 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 			children: [
 				Positioned.fill(
 					bottom: bottomBarHeight,
-					child: AnimatedSwitcher(
-						duration: defaultSwitchDuration,
-						child: (widget.plan.tasks.isNotEmpty) ?
-						ListView(
-							physics: inReorder ? NeverScrollableScrollPhysics() : null,
-							children: [
-								buildReordableTaskList(context),
-								buildOptionalTaskList(context),
-								SizedBox(height: 32.0)
-							]
-						)
-						: buildNoTasksAddedMessage(context)
+					child: ListView(
+						physics: inReorder ? NeverScrollableScrollPhysics() : null,
+						children: [
+							buildReordableTaskList(context),
+							buildOptionalTaskList(context),
+							AnimatedSwitcher(
+								duration: defaultSwitchDuration,
+								child: (widget.plan.tasks.isEmpty) ? buildNoTasksAddedMessage(context) : SizedBox.shrink()
+							),
+							SizedBox(height: 32.0)
+						]
 					)
 				),
 				Positioned.fill(
@@ -187,48 +186,48 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 					}
 				);
 			},
-			header: buildTaskListHeader(context, AppLocales.of(context).translate('$_pageKey.requiredTaskListTitle'), requiredTasks.length)
+			header: requiredTasks.isNotEmpty ?
+				buildTaskListHeader(context, AppLocales.of(context).translate('$_pageKey.requiredTaskListTitle'), requiredTasks.length)
+				: SizedBox.shrink()
 		);
 	}
 
 	Widget buildOptionalTaskList(BuildContext context) {
 		final optionalTasks = widget.plan.tasks.where((element) => element.optional == true);
-		if(optionalTasks.length > 0) {
-			return Column(
-				children: [
+		return Column(
+			children: [
+				if(optionalTasks.isNotEmpty)
 					buildTaskListHeader(context, AppLocales.of(context).translate('$_pageKey.optionalTaskListTitle'), optionalTasks.length),
-					ImplicitlyAnimatedList<UITaskForm>(
-						shrinkWrap: true,
-						physics: NeverScrollableScrollPhysics(),
-						items: optionalTasks.toList(),
-						areItemsTheSame: (a, b) => a.key == b.key,
-						insertDuration: insertDuration,
-						removeDuration: removeDuration,
-						itemBuilder: (context, itemAnimation, item, index) {
-							final offsetAnimation = Tween<Offset>(begin: Offset(-2.0, 0.0), end: Offset(0.0, 0.0)).animate(CurvedAnimation(
-								curve: Interval(0.6, 1, curve: Curves.easeOutCubic),
+				ImplicitlyAnimatedList<UITaskForm>(
+					shrinkWrap: true,
+					physics: NeverScrollableScrollPhysics(),
+					items: optionalTasks.toList(),
+					areItemsTheSame: (a, b) => a.key == b.key,
+					insertDuration: insertDuration,
+					removeDuration: removeDuration,
+					itemBuilder: (context, itemAnimation, item, index) {
+						final offsetAnimation = Tween<Offset>(begin: Offset(-2.0, 0.0), end: Offset(0.0, 0.0)).animate(CurvedAnimation(
+							curve: Interval(0.6, 1, curve: Curves.easeOutCubic),
+							parent: itemAnimation,
+						));
+						return SizeTransition(
+							axis: Axis.vertical,
+							sizeFactor: CurvedAnimation(
+							curve: Interval(0, 0.5, curve: Curves.easeOutCubic),
 								parent: itemAnimation,
-							));
-							return SizeTransition(
-								axis: Axis.vertical,
-								sizeFactor: CurvedAnimation(
-								curve: Interval(0, 0.5, curve: Curves.easeOutCubic),
-									parent: itemAnimation,
-								),
-								child: SlideTransition(
-									position: offsetAnimation,
-									child: Container(
-										margin: EdgeInsets.symmetric(horizontal: 16.0),
-										child: buildTaskCard(context, item, Colors.white, true)
-									)
-								) 
-							);
-						}
-					)
-				]
-			);
-		}
-		return SizedBox.shrink();
+							),
+							child: SlideTransition(
+								position: offsetAnimation,
+								child: Container(
+									margin: EdgeInsets.symmetric(horizontal: 16.0),
+									child: buildTaskCard(context, item, Colors.white, true)
+								)
+							) 
+						);
+					}
+				)
+			]
+		);
 	}
 
 	Widget buildTaskListHeader(BuildContext context, String title, int count) {
@@ -247,7 +246,7 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 	Widget buildNoTasksAddedMessage(BuildContext context) {
 		return Center(
 			child: Padding(
-				padding: EdgeInsets.only(top: 80.0),
+				padding: EdgeInsets.only(top: 50.0),
 				child: Column(
 					children: <Widget>[
 						Padding(
@@ -432,7 +431,7 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 							overflow: Overflow.visible
 						);
 					},
-					child: widget.plan.tasks.length > 0 ?
+					child: widget.plan.tasks.isNotEmpty ?
 						Container(
 							margin: EdgeInsets.symmetric(vertical: 10.0), 
 							padding: EdgeInsets.only(right: 6.0),

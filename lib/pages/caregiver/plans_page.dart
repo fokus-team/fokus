@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_cubit/flutter_cubit.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/logic/caregiver_plans/caregiver_plans_cubit.dart';
 import 'package:fokus/model/app_page.dart';
 import 'package:fokus/model/ui/plan/ui_plan.dart';
@@ -33,11 +33,11 @@ class _CaregiverPlansPageState extends State<CaregiverPlansPage> {
 						HeaderActionButton.normal(Icons.calendar_today, '$_pageKey.header.calendar', 
 							() => log("Kalendarz"), Colors.amber)
 					]),
-					CubitBuilder<CaregiverPlansCubit, CaregiverPlansState>(
-						cubit: CubitProvider.of<CaregiverPlansCubit>(context),
+					BlocBuilder<CaregiverPlansCubit, CaregiverPlansState>(
+						cubit: BlocProvider.of<CaregiverPlansCubit>(context),
 						builder: (context, state) {
 							if (state is CaregiverPlansInitial)
-								CubitProvider.of<CaregiverPlansCubit>(context).loadCaregiverPlans();
+								BlocProvider.of<CaregiverPlansCubit>(context).loadCaregiverPlans();
 							else if (state is CaregiverPlansLoadSuccess)
 								return AppSegments(segments: _buildPanelSegments(state, context));
 							return Expanded(child: Center(child: CircularProgressIndicator()));

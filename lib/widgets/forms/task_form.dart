@@ -155,8 +155,8 @@ class _TaskFormState extends State<TaskForm> {
 			return showDialog<bool>(
 				context: context,
 				builder: (c) => AlertDialog(
-					title: Text(AppLocales.of(context).translate('$_pageKeyTaskForm.unsavedProgressTitle')),
-					content: Text(AppLocales.of(context).translate('$_pageKeyTaskForm.unsavedProgressMessage')),
+					title: Text(AppLocales.of(context).translate('alert.unsavedProgressTitle')),
+					content: Text(AppLocales.of(context).translate('alert.unsavedProgressMessage')),
 					actions: [
 						FlatButton(
 							child: Text(AppLocales.of(context).translate('actions.cancel')),
@@ -185,7 +185,7 @@ class _TaskFormState extends State<TaskForm> {
 		double appBarVerticalPadding = hasTitle ? 8.0 : 12.0;
 		return Material(
 			elevation: 4.0,
-			color: Colors.teal,
+			color: AppColors.formColor,
 			child: Container(
 				child: SafeArea(
 					child: ListTile(

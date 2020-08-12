@@ -1,4 +1,4 @@
-import 'package:cubit/cubit.dart';
+import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mongo_dart/mongo_dart.dart';
@@ -28,7 +28,7 @@ class CaregiverPanelCubit extends Cubit<CaregiverPanelState> {
 	  List<UIChild> childList = [];
 	  for (var child in children) {
 		  var plans = await _repeatabilityService.getPlansByDate(child.id, Date.now(), activeOnly: false);
-		  childList.add(UIChild.fromDBModel(child, todayPlanCount: plans.length, hasActivePlan: await _dbRepository.getActiveChildPlanInstance(child.id) != null));
+		  childList.add(UIChild.fromDBModel(child, todayPlanCount: plans.length, hasActivePlan: await _dbRepository.getActiveChildPlanInstance(child.id)));
 	  }
 	  emit(CaregiverPanelLoadSuccess(childList, await _dbRepository.getUserNames((activeUser as UICaregiver).friends)));
   }

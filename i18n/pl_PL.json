@@ -132,8 +132,6 @@
 				"taskTimerFormat": "{HOURS_NUM, plural, offset:0 zero {} other {# godz. }}{MINUTES_NUM} min",
 				"taskOptional": "Zadanie opcjonalne",
 				"taskOptionalHint": "Zadania opcjonalne występują poza kolejnością",
-				"unsavedProgressTitle": "Niezapisane dane",
-				"unsavedProgressMessage": "Posiadasz niezapisane dane. Czy jesteś pewien, że chcesz wyjść?",
 				"removeTaskTitle": "Usuń zadanie",
 				"removeTaskText": "Na pewno chcesz usunąć to zadanie?"
 			},
@@ -220,7 +218,9 @@
 		"noHint": "Brak podpowiedzi",
 		"genericEmptyValue": "Pole nie może być puste",
 		"connectionRetry": "Upewnij się że urządzenie ma dostęp do internetu",
-		"genericRangeOverflowValue": "Wartość musi mieścić się w zakresie {A}-{B}"
+		"genericRangeOverflowValue": "Wartość musi mieścić się w zakresie {A}-{B}",
+		"unsavedProgressTitle": "Niezapisane dane",
+		"unsavedProgressMessage": "Posiadasz niezapisane dane. Czy jesteś pewien, że chcesz wyjść?"
 	},
 	"actions": {
 		"ok": "Ok",

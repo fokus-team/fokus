@@ -132,8 +132,6 @@
 				"taskTimerFormat": "{HOURS_NUM, plural, offset:0 zero {} other {# hr }}{MINUTES_NUM} min",
 				"taskOptional": "Optional task",
 				"taskOptionalHint": "Optional tasks have no order",
-				"unsavedProgressTitle": "Unsaved progress",
-				"unsavedProgressMessage": "You have unsaved progress. Are you sure you want to exit?",
 				"removeTaskTitle": "Remove task",
 				"removeTaskText": "Are you sure you want to remove this task?"
 			},
@@ -220,7 +218,9 @@
 		"noHint": "No hint",
 		"genericEmptyValue": "This field can't be empty",
 		"connectionRetry": "Ensure the device has access to internet",
-		"genericRangeOverflowValue": "Value must be in the range {A}-{B}"
+		"genericRangeOverflowValue": "Value must be in the range {A}-{B}",
+		"unsavedProgressTitle": "Unsaved progress",
+		"unsavedProgressMessage": "You have unsaved progress. Are you sure you want to exit?"
 	},
 	"actions": {
 		"ok": "Ok",

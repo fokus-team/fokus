@@ -7,6 +7,7 @@ class AppColors {
   static final Color mediumTextColor = Colors.grey[600];
   static final Color darkTextColor = Colors.black87;
   static final Color mainBackgroundColor = Color.fromARGB(255, 30, 121, 233);
+	static final Color formColor = Colors.teal;
 
   // Caregiver colors
   static final Color caregiverBackgroundColor = Color.fromARGB(255, 30, 121, 233);

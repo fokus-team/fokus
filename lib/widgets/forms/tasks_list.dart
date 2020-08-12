@@ -308,7 +308,7 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 												children: [
 													AttributeChip.withIcon(
 														content: optional ? null : '#${(index+1).toString()}',
-														icon: optional ? Icons.insert_link : null,
+														icon: optional ? Icons.bubble_chart : null,
 														color: Colors.blueGrey
 													),
 													if(task.pointsValue != null && task.pointsValue != 0)
@@ -470,7 +470,7 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 						elevation: 4.0,
 						icon: Icon(Icons.add),
 						label: Text(AppLocales.of(context).translate('$_pageKey.addTaskButton')),
-						backgroundColor: widget.plan.tasks.length < maxTaskCount ? Colors.teal : Colors.grey,
+						backgroundColor: widget.plan.tasks.length < maxTaskCount ? AppColors.formColor : Colors.grey,
 						onPressed: () {
 							if(widget.plan.tasks.length < maxTaskCount)
 								addNewTask();

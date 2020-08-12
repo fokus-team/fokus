@@ -1,4 +1,4 @@
-import 'package:cubit/cubit.dart';
+import 'package:bloc/bloc.dart';
 import 'package:get_it/get_it.dart';
 
 import 'package:fokus/logic/active_user/active_user_cubit.dart';

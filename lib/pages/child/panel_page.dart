@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_cubit/flutter_cubit.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:fokus/logic/child_plans/child_plans_cubit.dart';
 import 'package:fokus/logic/timer/timer_cubit.dart';
@@ -24,7 +24,6 @@ class ChildPanelPage extends StatefulWidget {
 }
 
 class _ChildPanelPageState extends State<ChildPanelPage> {
-	var _planInProgress = (UIPlanInstance plan) => plan.state == PlanInstanceState.active || plan.state == PlanInstanceState.notCompleted;
 	static const String _pageKey = 'page.childSection.panel';
 
   @override
@@ -34,11 +33,11 @@ class _ChildPanelPageState extends State<ChildPanelPage> {
 	      crossAxisAlignment: CrossAxisAlignment.start,
 	      children: [
 	        ChildCustomHeader(),
-	        CubitBuilder<ChildPlansCubit, ChildPlansState>(
-	          cubit: CubitProvider.of<ChildPlansCubit>(context),
+	        BlocBuilder<ChildPlansCubit, ChildPlansState>(
+	          cubit: BlocProvider.of<ChildPlansCubit>(context),
 	          builder: (context, state) {
 	            if (state is ChildPlansInitial)
-	              CubitProvider.of<ChildPlansCubit>(context).loadChildPlansForToday();
+	              BlocProvider.of<ChildPlansCubit>(context).loadChildPlansForToday();
 	            else if (state is ChildPlansLoadSuccess)
 	              return AppSegments(segments: _buildPanelSegments(state));
 	            return Expanded(child: Center(child: CircularProgressIndicator()));
@@ -68,7 +67,7 @@ class _ChildPanelPageState extends State<ChildPanelPage> {
 
     return [
 			if(activePlan != null)
-				CubitProvider<TimerCubit>(
+				BlocProvider<TimerCubit>(
 					create: (_) => TimerCubit(activePlan.elapsedActiveTime)..startTimer(),
 					child: _getPlansSegment(
 						plans: [activePlan],
@@ -112,7 +111,7 @@ class _ChildPanelPageState extends State<ChildPanelPage> {
 					  title: plan.name,
 					  subtitle: plan.description(context),
 					  isActive: plan.state != PlanInstanceState.completed,
-					  progressPercentage: _planInProgress(plan) ? plan.completedTaskCount / plan.taskCount : null,
+					  progressPercentage: plan.state.inProgress ? plan.completedTaskCount / plan.taskCount : null,
 					  chips: [
 					  	if (displayTimer)
 					  	  TimerChip(color: AppColors.childButtonColor),
@@ -124,7 +123,7 @@ class _ChildPanelPageState extends State<ChildPanelPage> {
   }
 
   AttributeChip _getTaskChipForPlan(UIPlanInstance plan) {
-	  if (!_planInProgress(plan))
+	  if (!plan.state.inProgress)
 		  return AttributeChip.withIcon(
 				  icon: Icons.description,
 				  color: AppColors.mainBackgroundColor,

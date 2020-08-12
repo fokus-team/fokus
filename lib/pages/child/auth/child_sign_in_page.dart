@@ -21,7 +21,7 @@ class ChildSignInPage extends StatelessWidget {
 			children: <Widget>[
 				MaterialButton(
 					child: Text(AppLocales.of(context).translate('$_pageKey.createNewProfile')),
-					color: AppColors.childButtonColor,
+					color: AppColors.childActionColor,
 					onPressed: () => Navigator.of(context).pushNamed(AppPage.childSignUpPage.name),
 				),
 			],

@@ -42,7 +42,7 @@ dependencies:
 
     cupertino_icons: ^0.1.2
     lottie: ^0.4.0+1
-    flutter_svg: ^0.17.1
+    flutter_svg: ^0.18.0
     flutter_markdown: ^0.3.4
     badges: ^1.1.1
 

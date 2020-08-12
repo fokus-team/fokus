@@ -12,6 +12,12 @@ class AppConfigRepository {
 		return this;
 	}
 
+	ObjectId getSignedInChild() => _settingsProvider.containsEntry(AppConfigEntry.signedInChild) ? ObjectId.parse(_settingsProvider.getString(AppConfigEntry.signedInChild)) : null;
+
+	void signInChild(ObjectId userId) => _settingsProvider.setString(AppConfigEntry.signedInChild, userId.toHexString());
+
+	void signOutChild() => _settingsProvider.remove(AppConfigEntry.signedInChild);
+
 	List<ObjectId> getSavedChildProfiles() {
 	  if (_settingsProvider.containsEntry(AppConfigEntry.savedChildProfiles))
 	    return _settingsProvider.getStringList(AppConfigEntry.savedChildProfiles).map((id) => ObjectId.parse(id));

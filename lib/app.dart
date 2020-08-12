@@ -6,6 +6,8 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:fokus/logic/auth/auth_bloc/authentication_bloc.dart';
 import 'package:fokus/logic/auth/caregiver/sign_in/caregiver_sign_in_cubit.dart';
 import 'package:fokus/logic/auth/caregiver/sign_up/caregiver_sign_up_cubit.dart';
+import 'package:fokus/logic/auth/child/sign_in/child_sign_in_cubit.dart';
+import 'package:fokus/logic/auth/child/sign_up/child_sign_up_cubit.dart';
 import 'package:fokus/logic/caregiver_panel/caregiver_panel_cubit.dart';
 import 'package:fokus/logic/caregiver_plans/caregiver_plans_cubit.dart';
 import 'package:fokus/logic/child_plans/child_plans_cubit.dart';
@@ -88,8 +90,8 @@ class FokusApp extends StatelessWidget {
 			AppPage.rolesPage.name: (context) => _createPage(RolesPage(), context),
 			AppPage.caregiverSignInPage.name: (context) => _createPage(CaregiverSignInPage(), context, CaregiverSignInCubit()),
 			AppPage.caregiverSignUpPage.name: (context) => _createPage(CaregiverSignUpPage(), context, CaregiverSignUpCubit()),
-			AppPage.childSignInPage.name: (context) => _createPage(ChildSignInPage(), context),
-			AppPage.childSignUpPage.name: (context) => _createPage(ChildSignUpPage(), context),
+			AppPage.childSignInPage.name: (context) => _createPage(ChildSignInPage(), context, ChildSignInCubit()),
+			AppPage.childSignUpPage.name: (context) => _createPage(ChildSignUpPage(), context, ChildSignUpCubit()),
 			AppPage.caregiverPanel.name: (context) => _createPage(CaregiverPanelPage(), context, CaregiverPanelCubit(getActiveUser(context))),
 			AppPage.caregiverPlans.name: (context) => _createPage(CaregiverPlansPage(), context, CaregiverPlansCubit(getActiveUser(context))),
 			AppPage.caregiverAwards.name: (context) => _createPage(CaregiverAwardsPage(), context),

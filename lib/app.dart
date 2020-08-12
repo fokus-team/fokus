@@ -67,7 +67,7 @@ class FokusApp extends StatelessWidget {
 		return {
 			AppPage.loadingPage.name: (context) => PageTheme.loginSection(child: LoadingPage()),
 			AppPage.rolesPage.name: (context) => PageTheme.loginSection(child: RolesPage()),
-      AppPage.notificationsPage.name: (context) => _wrapAppPage(UserRole.caregiver, NotificationsPage()),
+      AppPage.notificationsPage.name: (context) => _wrapAppPage(UserRole.caregiver, NotificationsPage()), // TODO userrole could be of any type in some pages - support this
 			AppPage.caregiverPanel.name: (context) => _wrapAppPage(UserRole.caregiver, CaregiverPanelPage(), CaregiverPanelCubit(activeUser(context))),
 			AppPage.caregiverPlans.name: (context) => _wrapAppPage(UserRole.caregiver, CaregiverPlansPage(), CaregiverPlansCubit(activeUser(context))),
 			AppPage.caregiverAwards.name: (context) => _wrapAppPage(UserRole.caregiver, CaregiverAwardsPage()),

@@ -1,73 +1,131 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+
+import 'package:fokus/model/currency_type.dart';
+import 'package:fokus/utils/app_paths.dart';
 import 'package:fokus/utils/icon_sets.dart';
-import 'package:fokus/widgets/attribute_chip.dart';
+import 'package:fokus/utils/theme_config.dart';
+import 'package:fokus/widgets/chips/attribute_chip.dart';
 import 'package:fokus/widgets/item_card.dart';
+
 import 'package:intl/intl.dart';
 
 enum NotificationType{
-  receivedAward,
-  finishedTask,
-  unfinishedPlan
+  caregiver_receivedAward,
+  caregiver_finishedTaskUngraded,
+  caregiver_finishedTaskGraded,
+  caregiver_unfinishedPlan,
+  child_taskGraded,
+  child_receivedBadge
 }
 
-extension NotificationTypeName on NotificationType {
-  String get name => const {
-    NotificationType.receivedAward: 'odebrał nagrodę',
-    NotificationType.finishedTask: 'wykonał zadanie',
-    NotificationType.unfinishedPlan: 'nie skończył planu',
+extension NotificationTypeExtension on NotificationType {
+  String get title => const {
+    NotificationType.caregiver_receivedAward: ' odebrał nagrodę',
+    NotificationType.caregiver_finishedTaskUngraded: ' wykonał zadanie',
+    NotificationType.caregiver_finishedTaskGraded: ' wykonał zadanie',
+    NotificationType.caregiver_unfinishedPlan: ' nie skończył planu',
+    NotificationType.child_taskGraded: 'Dostałeś punkty za zadanie!',
+    NotificationType.child_receivedBadge: 'Otrzymałeś odznakę!'
+  }[this];
+
+  Icon get icon => Icon(
+    const {
+      NotificationType.caregiver_receivedAward : Icons.star,
+      NotificationType.caregiver_finishedTaskUngraded : Icons.view_headline,
+      NotificationType.caregiver_finishedTaskGraded : Icons.view_headline,
+      NotificationType.caregiver_unfinishedPlan : Icons.cancel,
+      NotificationType.child_taskGraded : Icons.view_headline,
+      NotificationType.child_receivedBadge : Icons.star
+    }[this],
+    color: Colors.grey
+  );
+
+  GraphicAssetType get graphicType => const {
+    NotificationType.caregiver_receivedAward: GraphicAssetType.childAvatars,
+    NotificationType.caregiver_finishedTaskUngraded: GraphicAssetType.childAvatars,
+    NotificationType.caregiver_finishedTaskGraded: GraphicAssetType.childAvatars,
+    NotificationType.caregiver_unfinishedPlan: GraphicAssetType.childAvatars,
+    NotificationType.child_taskGraded: GraphicAssetType.badgeIcons, // actually currency icon
+    NotificationType.child_receivedBadge: GraphicAssetType.badgeIcons
+  }[this];
+
+  List<Widget> get chips => {
+    NotificationType.caregiver_finishedTaskUngraded: [
+      GestureDetector(
+        onTap: () => {log("open the grading page")},
+        child: AttributeChip.withIcon(
+          content: "Oceń zadanie",
+          color: Colors.red,
+          icon: Icons.assignment
+        )
+      )
+    ],
+    NotificationType.caregiver_finishedTaskGraded: [
+      AttributeChip.withIcon(
+        content: "Oceniono",
+        color: Colors.grey[750],
+        icon: Icons.check
+      )
+    ]
   }[this];
 }
 
 class NotificationCard extends ItemCard {
 
-  final _typeIcon = {
-    NotificationType.receivedAward : Icons.star,
-    NotificationType.finishedTask : Icons.view_headline,
-    NotificationType.unfinishedPlan : Icons.cancel
-  };
-  final Color _iconColor = Colors.grey;
-
   final String childName;
   final NotificationType notificationType;
   final DateTime dateTime;
+  final CurrencyType currencyType;
+  final int currencyValue;
 
-  static String makeTitle(String name, NotificationType type) => "$name ${type.name}";
+  static String makeTitle(String name, NotificationType type) => name + type.title;
 
   //TODO check what should be required
   NotificationCard({
-    this.childName,
+    this.childName = "",
     this.notificationType,
     this.dateTime,
+    this.currencyType,
+    this.currencyValue = 0,
+    title,
     subtitle,
+    graphicType,
     graphic,
-    chip
+    chips
   }) : super(
-    title: makeTitle(childName, notificationType),
+    title: title ?? makeTitle(childName, notificationType),
     subtitle: subtitle,
-    graphicType: GraphicAssetType.childAvatars,
+    graphicType: graphicType ?? notificationType.graphicType,
     graphic: graphic,
-    chips: [if (chip != null) chip]
-  );
+    chips: chips ?? notificationType.chips ?? []
+  ){
+    if(notificationType == NotificationType.child_taskGraded) {
+      this.chips.add(
+        AttributeChip.withIcon(
+          content: currencyValue.toString(),
+          color: AppColors.currencyColor[currencyType],
+          icon: Icons.add
+        )
+      );
+    }
+  }
 
   @override
   double get imageHeight => super.imageHeight * 0.7;
 
-  static Widget gradeTheTaskChip = GestureDetector(
-      onTap: () => {log("open the grading page")},
-      child: AttributeChip.withIcon(
-        content: "Oceń zadanie",
-        color: Colors.red,
-        icon: Icons.assignment
-      )
-  );
+  @override
+  double get badgeImageHeight => imageHeight;
 
-  static Widget taskGradedChip = AttributeChip.withIcon(
-    content: "Oceniono",
-    color: Colors.grey[750],
-    icon: Icons.check
-  );
+  @override
+  Widget headerImage(){
+    if(currencyType == null)
+      return super.headerImage();
+    else
+      return SvgPicture.asset(currencySvgPath(currencyType), height: imageHeight);
+  }
 
   @override
   Widget buildContentSection(BuildContext context){
@@ -75,7 +133,7 @@ class NotificationCard extends ItemCard {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          if(graphic != null)
+          if(graphic != null || currencyType != null)
             Padding(
                 padding: EdgeInsets.all(6.0),
                 child: headerImage()
@@ -83,7 +141,7 @@ class NotificationCard extends ItemCard {
           Expanded(
               flex: 1,
               child: Padding(
-                  padding: (graphic != null) ? EdgeInsets.symmetric(horizontal: 6.0, vertical: 8.0) : EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+                  padding: (graphic != null || currencyType != null) ? EdgeInsets.symmetric(horizontal: 6.0, vertical: 8.0) : EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
@@ -128,7 +186,7 @@ class NotificationCard extends ItemCard {
           if(notificationType != null)
             Padding(
                 padding: EdgeInsets.all(6.0),
-                child: Icon(_typeIcon[notificationType], color: _iconColor)
+                child: notificationType.icon
             )
         ]
     );

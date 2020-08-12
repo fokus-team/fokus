@@ -73,6 +73,27 @@
 					"5LeveledBadge": "Odznaka 5 poziomowa"
 				}
 			},
+			"awardForm": {
+				"addAwardTitle": "Dodaj nagrodę",
+				"unsavedProgressTitle": "Niezapisane dane",
+				"unsavedProgressMessage": "Posiadasz niezapisane dane. Czy jesteś pewien, że chcesz wyjść?",
+				"saveAwardButton": "Dodaj nagodę",
+				"fields": {
+					"awardName": "Nazwa nagrody",
+					"awardLimit": "Limit nagród",
+					"awardLimitHint": "Pozostaw puste, aby nie limitować",
+					"awardPoints": "Koszt punktowy",
+					"awardPointsHint": "Cena nagrody musi mieścić się w przedziale 0-1000000",
+					"awardPointsCurrency": "Waluta punktów",
+					"awardIcon": "Ikona nagrody"
+				},
+				"groups": {
+					"gift": "Prezent",
+					"activity": "Aktywność",
+					"relax": "Odpoczynek",
+					"food": "Jedzenie"
+				}
+			},
 			"statistics": {
 				"header": {
 					"title": "Statystyki",
@@ -136,6 +157,7 @@
 	"actions": {
 		"ok": "Ok",
 		"exit": "Wyjdź",
+		"cancel": "Anuluj",
 		"retry": "Spróbuj ponownie",
 		"close": "Zamknij",
 		"edit": "Edytuj",

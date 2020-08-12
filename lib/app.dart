@@ -8,6 +8,7 @@ import 'package:fokus/logic/caregiver_panel/caregiver_panel_cubit.dart';
 import 'package:fokus/logic/caregiver_plans/caregiver_plans_cubit.dart';
 import 'package:fokus/logic/child_plans/child_plans_cubit.dart';
 import 'package:fokus/model/db/user/user_role.dart';
+import 'package:fokus/pages/caregiver/award_form_page.dart';
 import 'package:fokus/pages/caregiver/awards_page.dart';
 import 'package:fokus/pages/caregiver/panel_page.dart';
 import 'package:fokus/pages/caregiver/plans_page.dart';
@@ -69,6 +70,8 @@ class FokusApp extends StatelessWidget {
 			AppPage.caregiverPanel.name: (context) => _wrapAppPage(UserRole.caregiver, CaregiverPanelPage(), CaregiverPanelCubit(activeUser(context))),
 			AppPage.caregiverPlans.name: (context) => _wrapAppPage(UserRole.caregiver, CaregiverPlansPage(), CaregiverPlansCubit(activeUser(context))),
 			AppPage.caregiverAwards.name: (context) => _wrapAppPage(UserRole.caregiver, CaregiverAwardsPage()),
+			AppPage.caregiverAwardForm.name: (context) => _wrapAppPage(UserRole.caregiver, CaregiverAwardFormPage()),
+			// AppPage.caregiverBadgeForm.name: (context) => _wrapAppPage(UserRole.caregiver, CaregiverBadgesFormPage()),
 			AppPage.caregiverStatistics.name: (context) => _wrapAppPage(UserRole.caregiver, CaregiverStatisticsPage()),
 			AppPage.childPanel.name: (context) => _wrapAppPage(UserRole.child, ChildPanelPage(), ChildPlansCubit(activeUser(context))),
 			AppPage.childAwards.name: (context) => _wrapAppPage(UserRole.child, ChildAwardsPage()),

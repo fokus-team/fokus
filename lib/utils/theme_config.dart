@@ -37,6 +37,18 @@ class AppBoxProperties {
   static final double columnChildrenPadding = 5.0;
   static final double sectionPadding = 15.0;
 
+	static final BoxDecoration elevatedContainer = BoxDecoration(
+		color: Colors.white,
+		shape: BoxShape.rectangle,
+		boxShadow: [
+			BoxShadow(
+				color: Colors.grey.withOpacity(.2),
+				blurRadius: 10.0,
+				spreadRadius: 4.0
+			)
+		],
+	);
+	
 }
 
 class AppSectionStyle {

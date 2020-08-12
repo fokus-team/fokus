@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:fokus/model/app_page.dart';
 import 'package:fokus/model/currency_type.dart';
 import 'package:fokus/utils/app_locales.dart';
 import 'package:fokus/utils/icon_sets.dart';
@@ -26,7 +27,9 @@ class _CaregiverAwardsPageState extends State<CaregiverAwardsPage> {
 				crossAxisAlignment: CrossAxisAlignment.start,
 				children: <Widget>[
 					AppHeader.normal(title: '$_pageKey.header.title', text: '$_pageKey.header.pageHint', headerActionButtons: [
-						HeaderActionButton.normal(Icons.add, '$_pageKey.header.addAward', () => { log("Dodaj nagrodę") }),
+						HeaderActionButton.normal(Icons.add, '$_pageKey.header.addAward', () => {
+							Navigator.of(context).pushNamed(AppPage.caregiverAwardForm.name)
+						}),
 						HeaderActionButton.normal(Icons.add, '$_pageKey.header.addBadge', () => { log("Dodaj odznakę") })
 					]),
 					AppSegments(

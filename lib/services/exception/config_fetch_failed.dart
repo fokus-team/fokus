@@ -1,0 +1,1 @@
+class ConfigFetchFailed implements Exception {}

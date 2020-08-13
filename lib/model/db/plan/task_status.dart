@@ -9,7 +9,7 @@ class TaskStatus {
 	factory TaskStatus.fromJson(Map<String, dynamic> json) {
 		return json != null ? TaskStatus(
 			completed: json['completed'],
-			state: TaskState.values[json['state']],
+			state: json['state'] != null ? TaskState.values[json['state']] : null,
 			pointsAwarded: json['pointsAwarded'],
 			rating: json['rating'],
 		) : null;

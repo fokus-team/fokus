@@ -1,5 +1,6 @@
-import 'package:cubit/cubit.dart';
+import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:fokus/services/outdated_data_service.dart';
 import 'package:get_it/get_it.dart';
 
 import 'package:fokus/model/db/user/user.dart';
@@ -12,6 +13,7 @@ part 'active_user_state.dart';
 
 class ActiveUserCubit extends Cubit<ActiveUserState> {
 	final DataRepository _dbRepository = GetIt.I<DataRepository>();
+	final OutdatedDataService _outdatedDataService = GetIt.I<OutdatedDataService>();
 	final AppConfigRepository _appConfig = GetIt.I<AppConfigRepository>();
 
   ActiveUserCubit() : super(NoActiveUser());
@@ -20,11 +22,13 @@ class ActiveUserCubit extends Cubit<ActiveUserState> {
 		if (user == null) // TODO show in UI once we have a login page
 			return;
 		_appConfig.setLastUser(user.id);
+		_outdatedDataService.onUserLogin(user.id, user.role);
 		emit(ActiveUserPresent(UIUser.typedFromDBModel(user)));
 	}
 
   void logoutUser() {
 	  _appConfig.removeLastUser();
+	  _outdatedDataService.onUserLogout();
 	  emit(NoActiveUser());
   }
 

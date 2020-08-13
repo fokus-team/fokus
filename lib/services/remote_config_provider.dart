@@ -1,9 +1,10 @@
-import 'package:flutter/foundation.dart';
+import 'package:logging/logging.dart';
 
 import 'package:firebase_remote_config/firebase_remote_config.dart';
-import 'exception/config_fetch_failed_exception.dart';
+import 'exception/config_fetch_failed.dart';
 
 class RemoteConfigProvider {
+	final Logger _logger = Logger('RemoteConfigProvider');
 	RemoteConfig _remoteConfig;
 	
 	String _dbAccessString;
@@ -18,8 +19,8 @@ class RemoteConfigProvider {
 
 		var dbConfig = _remoteConfig.getString(_dbConfigKey);
 		if (dbConfig == '') {
-			debugPrint('Could not retrieve the database configuration');
-			throw ConfigFetchFailedException();
+			_logger.warning('Could not retrieve the database configuration');
+			throw ConfigFetchFailed();
 		}
 		_dbAccessString = dbConfig;
 	}

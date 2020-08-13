@@ -1,3 +1,4 @@
+import 'package:logging/logging.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
 import 'package:fokus/model/db/collection.dart';
@@ -6,6 +7,8 @@ import 'package:fokus/services/data/db/db_repository.dart';
 import 'package:fokus/model/db/plan/task_instance.dart';
 
 mixin TaskDbRepository implements DbRepository {
+	final Logger _logger = Logger('TaskDbRepository');
+
 	Future<List<Task>> getTasks({ObjectId planId, bool requiredOnly = false, bool optionalOnly = false, List<String> fields = const []}) {
 		var query = _buildTaskQuery(planId: planId, optionalOnly: optionalOnly, requiredOnly: requiredOnly);
 		if (fields.isNotEmpty)
@@ -28,9 +31,9 @@ mixin TaskDbRepository implements DbRepository {
 		SelectorBuilder query;
 		var addExpression = (expression) => query == null ? (query = expression) : query.and(expression);
 		if (planId != null && planInstanceId != null)
-			print("Both plan and plan instance IDs specified in task query");
+			_logger.warning("Both plan and plan instance IDs specified in task query");
 		if (requiredOnly && optionalOnly)
-			print("Both required and optional only flags specified in task query");
+			_logger.warning("Both required and optional only flags specified in task query");
 
 		if (planId != null)
 			addExpression(where.eq('planID', planId));

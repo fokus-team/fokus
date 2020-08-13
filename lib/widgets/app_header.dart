@@ -13,6 +13,8 @@ import 'package:fokus/utils/theme_config.dart';
 import 'package:fokus/widgets/chips/attribute_chip.dart';
 import 'package:fokus/widgets/app_avatar.dart';
 
+import 'back_icon_button.dart';
+
 enum AppHeaderType { greetings, normal, widget }
 
 class HeaderActionButton {
@@ -250,18 +252,33 @@ class AppHeader extends StatelessWidget {
 			Column(
 				children: <Widget>[
 					Row(
-						mainAxisAlignment: MainAxisAlignment.start,
+						mainAxisAlignment: MainAxisAlignment.spaceBetween,
 						crossAxisAlignment: CrossAxisAlignment.center,
 						children: <Widget>[
-							IconButton(icon: Icon(Icons.chevron_left, color: Colors.white), onPressed: () => {Navigator.of(context).pop()}),
-							Padding(
-								padding: EdgeInsets.only(left: 20.0, top: 5.0, bottom: 10),
-								child: Text(
-									AppLocales.of(context).translate(title),
-									style: Theme.of(context).textTheme.headline1.copyWith(color: Colors.white)
-								)
+							Column(
+							  children: <Widget>[
+							    Row(
+							      children: <Widget>[
+							        BackIconButton(),
+											Text(
+												AppLocales.of(context).translate(title),
+												style: Theme.of(context).textTheme.headline1.copyWith(color: Colors.white)
+											)
+							      ],
+							    )
+								],
+							),
+							Column(
+							  children: <Widget>[
+							  	// TODO: change this widget to widget made by Miko
+							    Padding(
+							      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+							      child: IconButton(icon: Icon(Icons.help, color: Colors.white, size: 26,), onPressed: null,),
+							    ),
+							  ],
 							)
-						]),
+						]
+					),
 					Row(
 						children: <Widget>[
 							Expanded(
@@ -304,5 +321,4 @@ class ChildCustomHeader extends StatelessWidget {
 			//HeaderActionButton.normal(Icons.local_florist, 'page.childSection.panel.header.garden', () => { log("Ogród") })
 		]);
 	}
-
 }

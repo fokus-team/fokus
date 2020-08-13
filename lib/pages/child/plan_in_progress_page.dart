@@ -13,9 +13,9 @@ class ChildPlanInProgressPage extends StatefulWidget {
   _ChildPlanInProgressPageState createState() => new _ChildPlanInProgressPageState();
 }
 
-const String _pageKey = 'page.childSection.planInProgress';
-
 class _ChildPlanInProgressPageState extends State<ChildPlanInProgressPage> {
+	final String _pageKey = 'page.childSection.planInProgress';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

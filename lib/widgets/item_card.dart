@@ -42,7 +42,7 @@ class ItemCard extends StatelessWidget {
 	final ItemCardActionButton actionButton;
 	final Function onTapped;
 	final bool isActive;
-	final int titleMaxLines;
+	final int textMaxLines;
 	final Color activeProgressBarColor;
 
 	// Element's visual params
@@ -64,8 +64,8 @@ class ItemCard extends StatelessWidget {
 		this.actionButton,
 		this.onTapped,
 		this.isActive = true,
-		this.titleMaxLines = 3,
-		this.activeProgressBarColor = Colors.lightGreen
+		this.textMaxLines = 3,
+		this.activeProgressBarColor = AppColors.childBackgroundColor
 	}) : assert(graphic != null ? graphicType != null : true);
 	
 	Widget headerImage() {
@@ -169,14 +169,14 @@ class ItemCard extends StatelessWidget {
 									title, 
 									style: Theme.of(context).textTheme.headline3,
 									overflow: TextOverflow.ellipsis,
-									maxLines: titleMaxLines
+									maxLines: textMaxLines
 								),
 								if(subtitle != null)
 									Text(
 										subtitle, 
 										style: Theme.of(context).textTheme.subtitle2,
 										overflow: TextOverflow.ellipsis,
-										maxLines: titleMaxLines,
+										maxLines: textMaxLines,
 										softWrap: false,
 									),
 								if(chips != null && chips.isNotEmpty)

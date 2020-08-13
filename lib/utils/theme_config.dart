@@ -13,7 +13,7 @@ class AppColors {
   static final Color caregiverButtonColor = Colors.teal;
 
   // Child colors
-  static final Color childBackgroundColor = Colors.lightGreen;
+  static const Color childBackgroundColor = Colors.lightGreen;
   static final Color childButtonColor = Colors.orange;
   static final Color childActionColor = Colors.amber;
 

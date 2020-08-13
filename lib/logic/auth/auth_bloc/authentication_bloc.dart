@@ -5,6 +5,7 @@ import 'package:equatable/equatable.dart';
 import 'package:fokus/model/ui/user/ui_child.dart';
 import 'package:logging/logging.dart';
 import 'package:get_it/get_it.dart';
+import 'package:mongo_dart/mongo_dart.dart';
 
 import 'package:fokus/model/auth_user.dart';
 import 'package:fokus/services/auth/authentication_repository.dart';
@@ -14,7 +15,6 @@ import 'package:fokus/model/db/user/caregiver.dart';
 import 'package:fokus/model/db/user/user_role.dart';
 import 'package:fokus/model/db/user/user.dart';
 import 'package:fokus/services/app_config/app_config_repository.dart';
-import 'package:mongo_dart/mongo_dart.dart';
 
 part 'authentication_event.dart';
 part 'authentication_state.dart';
@@ -43,8 +43,10 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 		  _logger.fine('Signing out user ${state.user}');
 		  if (state.user.role == UserRole.caregiver)
 		    _authenticationRepository.logOut();
-		  else
-		  	_appConfigRepository.signOutChild();
+		  else {
+			  _appConfigRepository.signOutChild();
+			  add(AuthenticationUserChanged(AuthenticatedUser.empty));
+		  }
 	  }
   }
 

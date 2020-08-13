@@ -28,9 +28,11 @@
 				"googleSignUp": "Sign up with Google"
 			},
 			"childSignIn": {
+				"childCode": "Child code",
 				"createNewProfile": "Create a new child profile"
 			},
 			"childSignUp": {
+				"caregiverCode": "Caregiver code"
 			}
 		},
 		"caregiverSection": {
@@ -160,6 +162,8 @@
 		"name": "First name",
 		"email": "E-mail address",
 		"invalidEmail": "Invalid e-mail address",
+		"userCodeToShort": "Code is to short",
+		"userCodeToLong": "Code is to long",
 		"password": "Password",
 		"passwordNotLongEnough": "Password must have at least {LENGTH, plural, offset:0 one {# character} other {# characters}} long",
 		"confirmPassword": "Repeat password",

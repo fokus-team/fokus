@@ -25,7 +25,7 @@ class AppConfigRepository {
 	}
 
 	void saveChildProfile(ObjectId userId) {
-		var savedList = _settingsProvider.getStringList(AppConfigEntry.savedChildProfiles);
+		var savedList = _settingsProvider.getStringList(AppConfigEntry.savedChildProfiles) ?? [];
 		if (!savedList.contains(userId)) {
 			savedList.add(userId.toHexString());
 			_settingsProvider.setStringList(AppConfigEntry.savedChildProfiles, savedList);

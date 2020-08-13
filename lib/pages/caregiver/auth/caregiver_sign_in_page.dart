@@ -31,7 +31,7 @@ class CaregiverSignInPage extends StatelessWidget {
 					getField: (state) => state.email,
 					changedAction: (cubit, value) => cubit.emailChanged(value),
 					labelKey: 'authentication.email',
-					getErrorKey: (state) => [state.email.error.key, ],
+					getErrorKey: (state) => [state.email.error.key],
 					inputType: TextInputType.emailAddress
 				),
 				AuthenticationInputField<CaregiverSignInCubit, CaregiverSignInState>(

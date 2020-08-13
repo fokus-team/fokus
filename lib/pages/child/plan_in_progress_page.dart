@@ -2,8 +2,9 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:fokus/utils/app_locales.dart';
+import 'package:fokus/utils/theme_config.dart';
+import 'package:fokus/widgets/app_header.dart';
 import 'package:fokus/widgets/chips/attribute_chip.dart';
-import 'package:fokus/widgets/flexible_app_header.dart';
 import 'package:fokus/widgets/item_card.dart';
 import 'package:fokus/widgets/segment.dart';
 
@@ -18,30 +19,23 @@ class _ChildPlanInProgressPageState extends State<ChildPlanInProgressPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-			body: CustomScrollView(
-      	slivers: [
-      		FlexibleAppHeader(
-						expandedHeight: 200,
-						pinnedTitle: '$_pageKey.header.title',
-						flexibleSpaceWidget: ItemCard(
-							title: "Sprzątanie pokoju w odstępach kilkudziesięciukilku minutowych oraz wielogodzinowych melancholijnych spotkaniach przy otwartym oknie pośród gwiazd Betlejem skąpanych w mroku piekła i nieba oraz genialnym muzykowaniem z najlepszymi ludźmi",
-							subtitle: "Co każdy poniedziałek, wtorek i czwartek",
-							isActive: true,
-							progressPercentage: 0.4,
-							chips:
-							<Widget>[AttributeChip.withIcon(
-								icon: Icons.description,
-								color: Colors.lightGreen,
-								content: AppLocales.of(context).translate('page.childSection.panel.content.taskProgress', {'NUM_TASKS': 2, 'NUM_ALL_TASKS': 5})
-							)],
-							titleMaxLines: 1,
-							activeProgressBarColor: Colors.amber,
-						),
-					),
-        	SliverList(
-						delegate: SliverChildListDelegate(_buildPanelSegments())
-					)
-				]
+			body: Column(
+			crossAxisAlignment: CrossAxisAlignment.start,
+			children: [AppHeader.widget(title: '$_pageKey.header.title', appHeaderWidget: ItemCard(
+				title: "Sprzątanie pokoju",
+				subtitle: "Co każdy poniedziałek, środę, czwartek i piątek",
+				isActive: true,
+				progressPercentage: 0.4,
+				activeProgressBarColor: AppColors.childActionColor,
+				chips:
+				<Widget>[AttributeChip.withIcon(
+					icon: Icons.description,
+					color: Colors.lightGreen,
+					content: AppLocales.of(context).translate('page.childSection.panel.content.taskProgress', {'NUM_TASKS': 2, 'NUM_ALL_TASKS': 5})
+				)],
+			),),
+				AppSegments(segments: _buildPanelSegments())
+			],
 			)
 		);
   }

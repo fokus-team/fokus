@@ -250,34 +250,25 @@ class AppHeader extends StatelessWidget {
 			Column(
 				children: <Widget>[
 					Row(
-						mainAxisAlignment: MainAxisAlignment.center,
+						mainAxisAlignment: MainAxisAlignment.start,
 						crossAxisAlignment: CrossAxisAlignment.center,
 						children: <Widget>[
-							Column(
-								mainAxisAlignment: MainAxisAlignment.center,
-							  crossAxisAlignment: CrossAxisAlignment.center,
-							  children: <Widget>[
-							    		IconButton(icon: Icon(Icons.chevron_left, color: Colors.white, size: 48,), onPressed: () => {Navigator.of(context).pop()})
-							  ],
-							),
+							IconButton(icon: Icon(Icons.chevron_left, color: Colors.white), onPressed: () => {Navigator.of(context).pop()}),
+							Padding(
+								padding: EdgeInsets.only(left: 20.0, top: 5.0, bottom: 10),
+								child: Text(
+									AppLocales.of(context).translate(title),
+									style: Theme.of(context).textTheme.headline1.copyWith(color: Colors.white)
+								)
+							)
+						]),
+					Row(
+						children: <Widget>[
 							Expanded(
-							  child: Column(
-							  	mainAxisAlignment: MainAxisAlignment.center,
-							    crossAxisAlignment: CrossAxisAlignment.start,
-							    children: <Widget>[
-							      Padding(
-							      	padding: EdgeInsets.only(left: 20.0, top: 5.0, bottom: 10),
-							      	child: Text(
-							      		AppLocales.of(context).translate(title),
-							      		style: Theme.of(context).textTheme.headline1.copyWith(color: Colors.white)
-							      	)
-							      ),
-							  		appHeaderWidget
-							    ],
-							  ),
-							),
-						]
-					)
+								child: appHeaderWidget,
+							)
+						],
+					),
 				],
 			),
 		);

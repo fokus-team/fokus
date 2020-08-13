@@ -151,7 +151,8 @@
 		"edit": "Edit",
 		"delete": "Delete",
 		"details": "Show details",
-		"help": "Show help"
+		"help": "Show help",
+		"back": "Back"
 	},
 	"help": {
 		"first_steps": "First steps"

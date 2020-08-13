@@ -37,8 +37,10 @@ class AppHeader extends StatelessWidget {
 	final List<HeaderActionButton> headerActionButtons;
 	final AppHeaderType headerType;
 	final Widget appHeaderWidget;
+	final bool showHelp;
+	final bool showMenu;
 
-	AppHeader({this.title, this.text, this.headerActionButtons, this.headerType, this.appHeaderWidget});
+	AppHeader({this.title, this.text, this.headerActionButtons, this.headerType, this.appHeaderWidget, this.showHelp = false, this.showMenu = false});
 	AppHeader.greetings({String text, List<HeaderActionButton> headerActionButtons}) : this(
 		text: text,
 		headerActionButtons: headerActionButtons,
@@ -50,12 +52,14 @@ class AppHeader extends StatelessWidget {
 		headerActionButtons: headerActionButtons,
 		headerType: AppHeaderType.normal
 	);
-	AppHeader.widget({String title, String text, List<HeaderActionButton> headerActionButtons, Widget appHeaderWidget}) : this(
+	AppHeader.widget({String title, String text, List<HeaderActionButton> headerActionButtons, Widget appHeaderWidget, bool showHelp = false, bool showMenu = false}) : this(
 		title: title,
 		text: text,
 		headerActionButtons: headerActionButtons,
 		headerType: AppHeaderType.widget,
-		appHeaderWidget: appHeaderWidget
+		appHeaderWidget: appHeaderWidget,
+		showHelp: showHelp,
+		showMenu: showMenu
 	);
 
 	@override
@@ -141,12 +145,12 @@ class AppHeader extends StatelessWidget {
 		);
 	}
 
-	Widget buildHeaderContainer(BuildContext context, Widget innerContent) {
+	Widget buildHeaderContainer(BuildContext context, Widget innerContent, {double horizontalEdge = 8.0}) {
 		return Material(
 			elevation: 4.0,
 			color: Theme.of(context).appBarTheme.color,
 			child: Container(
-				padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 8.0),
+				padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: horizontalEdge),
 				child: SafeArea(
 					child: Column(
 						children: <Widget>[
@@ -252,29 +256,25 @@ class AppHeader extends StatelessWidget {
 			Column(
 				children: <Widget>[
 					Row(
-						mainAxisAlignment: MainAxisAlignment.spaceBetween,
+						mainAxisAlignment: MainAxisAlignment.start,
 						crossAxisAlignment: CrossAxisAlignment.center,
 						children: <Widget>[
-							Column(
-							  children: <Widget>[
-							    Row(
-							      children: <Widget>[
-							        BackIconButton(),
-											Text(
-												AppLocales.of(context).translate(title),
-												style: Theme.of(context).textTheme.headline1.copyWith(color: Colors.white)
-											)
-							      ],
-							    )
-								],
+							BackIconButton(),
+							Expanded(
+							  child: Text(
+							  	AppLocales.of(context).translate(title),
+							  	style: Theme.of(context).textTheme.headline1.copyWith(color: Colors.white),
+							  	overflow: TextOverflow.ellipsis,
+									maxLines: 2,
+							  ),
 							),
-							Column(
+							Row(
+								mainAxisAlignment: MainAxisAlignment.end,
+							  crossAxisAlignment: CrossAxisAlignment.center,
 							  children: <Widget>[
 							  	// TODO: change this widget to widget made by Miko
-							    Padding(
-							      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-							      child: IconButton(icon: Icon(Icons.help, color: Colors.white, size: 26,), onPressed: null,),
-							    ),
+							    this.showHelp ? IconButton(icon: Icon(Icons.help, color: Colors.white, size: 26,), onPressed: null,) : SizedBox.shrink(),
+									this.showMenu ? IconButton(icon: Icon(Icons.more_vert, color: Colors.white, size: 26,), onPressed: null,) : SizedBox.shrink()
 							  ],
 							)
 						]
@@ -288,6 +288,7 @@ class AppHeader extends StatelessWidget {
 					),
 				],
 			),
+			horizontalEdge: 0.0
 		);
 	}
 

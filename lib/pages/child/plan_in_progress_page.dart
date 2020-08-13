@@ -20,22 +20,29 @@ class _ChildPlanInProgressPageState extends State<ChildPlanInProgressPage> {
   Widget build(BuildContext context) {
     return Scaffold(
 			body: Column(
-			crossAxisAlignment: CrossAxisAlignment.start,
-			children: [AppHeader.widget(title: '$_pageKey.header.title', appHeaderWidget: ItemCard(
-				title: "Sprzątanie pokoju",
-				subtitle: "Co każdy poniedziałek, środę, czwartek i piątek",
-				isActive: true,
-				progressPercentage: 0.4,
-				activeProgressBarColor: AppColors.childActionColor,
-				chips:
-				<Widget>[AttributeChip.withIcon(
-					icon: Icons.description,
-					color: Colors.lightGreen,
-					content: AppLocales.of(context).translate('page.childSection.panel.content.taskProgress', {'NUM_TASKS': 2, 'NUM_ALL_TASKS': 5})
-				)],
-			),),
-				AppSegments(segments: _buildPanelSegments())
-			],
+				crossAxisAlignment: CrossAxisAlignment.start,
+				children: [
+					AppHeader.widget(
+						title: '$_pageKey.header.title',
+						appHeaderWidget: ItemCard(
+							title: "Sprzątanie pokoju",
+							subtitle: "Co każdy poniedziałek, środę, czwartek i piątek",
+							isActive: true,
+							progressPercentage: 0.4,
+							activeProgressBarColor: AppColors.childActionColor,
+							chips:
+							<Widget>[
+								AttributeChip.withIcon(
+									icon: Icons.description,
+									color: AppColors.childBackgroundColor,
+									content: AppLocales.of(context).translate('page.childSection.panel.content.taskProgress', {'NUM_TASKS': 2, 'NUM_ALL_TASKS': 5})
+								)
+							],
+						),
+						showHelp: true
+					),
+					AppSegments(segments: _buildPanelSegments())
+				],
 			)
 		);
   }
@@ -50,106 +57,142 @@ class _ChildPlanInProgressPageState extends State<ChildPlanInProgressPage> {
   }
 
   Segment _getTasksSegment({String title, String noElementsMessage}) {
-    return Segment(title: title, noElementsMessage: '$_pageKey.content.noTasks', elements: <Widget>[
-      ItemCard(
-        title: "Opróżnij plecak",
-				chips:
-				<Widget>[AttributeChip.withIcon(
-					icon: Icons.timer,
-					color: Colors.lightGreen,
-					content: "Czas: 2:10"
-				)],
-        actionButton: ItemCardActionButton(
-            color: Colors.lightGreen, icon: Icons.check, onTapped: () => log("Tapped finished activity")),
-      ),
-      ItemCard(
-        title: "Przygotuj książki i zeszyty na kolejny dzień według bardzo długiego planu zajęć",
-				chips:<Widget>[
-					AttributeChip.withIcon(
-						icon: Icons.access_time,
-						color: Colors.amber,
-						content: "6 minut"
-					)
-				],
-        actionButton:	ItemCardActionButton(color: Colors.teal, icon: Icons.play_arrow, onTapped: () => log("tapped start task")),
-      ),
-      ItemCard(
-        title: "Spakuj potrzebne rzeczy",
-				chips:
-				<Widget>[AttributeChip.withIcon(
-					icon: Icons.access_time,
-					color: Colors.amber,
-					content: "5 minut"
-				)],
-        actionButton: ItemCardActionButton(color: Colors.grey, icon: Icons.keyboard_arrow_up),
-      ),
-			ItemCard(
-				title: "Spakuj potrzebne rzeczy",
-				chips:
-				<Widget>[AttributeChip.withIcon(
-					icon: Icons.access_time,
-					color: Colors.amber,
-					content: "5 minut"
-				)],
-				actionButton: ItemCardActionButton(color: Colors.grey, icon: Icons.keyboard_arrow_up),
-			),
-			ItemCard(
-				title: "Spakuj potrzebne rzeczy",
-				chips:
-				<Widget>[AttributeChip.withIcon(
-					icon: Icons.access_time,
-					color: Colors.amber,
-					content: "5 minut"
-				)],
-				actionButton: ItemCardActionButton(color: Colors.grey, icon: Icons.keyboard_arrow_up),
-			),
-			ItemCard(
-				title: "Spakuj potrzebne rzeczy",
-				chips:
-				<Widget>[AttributeChip.withIcon(
-					icon: Icons.access_time,
-					color: Colors.amber,
-					content: "5 minut"
-				)],
-				actionButton: ItemCardActionButton(color: Colors.grey, icon: Icons.keyboard_arrow_up),
-			),
-			ItemCard(
-				title: "Spakuj potrzebne rzeczy",
-				chips:
-				<Widget>[AttributeChip.withIcon(
-					icon: Icons.access_time,
-					color: Colors.amber,
-					content: "5 minut"
-				)],
-				actionButton: ItemCardActionButton(color: Colors.grey, icon: Icons.keyboard_arrow_up),
-			)
-    ]);
+    return Segment(
+			title: title,
+			noElementsMessage: '$_pageKey.content.noTasks',
+			elements: <Widget>[
+				ItemCard(
+					title: "Opróżnij plecak",
+					chips:
+					<Widget>[
+						AttributeChip.withIcon(
+							icon: Icons.timer,
+							color: AppColors.childBackgroundColor,
+							content: "Czas: 2:10"
+						)
+					],
+					actionButton: ItemCardActionButton(
+							color: AppColors.childBackgroundColor, icon: Icons.check, onTapped: () => log("Tapped finished activity")
+					),
+				),
+				ItemCard(
+					title: "Przygotuj książki i zeszyty na kolejny dzień według bardzo długiego planu zajęć",
+					chips:<Widget>[
+						AttributeChip.withIcon(
+							icon: Icons.access_time,
+							color: AppColors.childActionColor,
+							content: "6 minut"
+						)
+					],
+					actionButton:	ItemCardActionButton(color: Colors.teal, icon: Icons.play_arrow, onTapped: () => log("tapped start task")),
+				),
+				ItemCard(
+					title: "Spakuj potrzebne rzeczy",
+					chips:
+					<Widget>[
+						AttributeChip.withIcon(
+							icon: Icons.access_time,
+							color: AppColors.childActionColor,
+							content: "5 minut"
+						)
+					],
+					actionButton: ItemCardActionButton(color: Colors.grey, icon: Icons.keyboard_arrow_up),
+				),
+				ItemCard(
+					title: "Spakuj potrzebne rzeczy",
+					chips:
+					<Widget>[
+						AttributeChip.withIcon(
+							icon: Icons.access_time,
+							color: AppColors.childActionColor,
+							content: "5 minut"
+						)
+					],
+					actionButton: ItemCardActionButton(color: Colors.grey, icon: Icons.keyboard_arrow_up),
+				),
+				ItemCard(
+					title: "Spakuj potrzebne rzeczy",
+					chips:
+					<Widget>[
+						AttributeChip.withIcon(
+							icon: Icons.access_time,
+							color: AppColors.childActionColor,
+							content: "5 minut"
+						)
+					],
+					actionButton: ItemCardActionButton(color: Colors.grey, icon: Icons.keyboard_arrow_up),
+				),
+				ItemCard(
+					title: "Spakuj potrzebne rzeczy",
+					chips:
+					<Widget>[
+						AttributeChip.withIcon(
+							icon: Icons.access_time,
+							color: AppColors.childActionColor,
+							content: "5 minut"
+						)
+					],
+					actionButton: ItemCardActionButton(color: Colors.grey, icon: Icons.keyboard_arrow_up),
+				),
+				ItemCard(
+					title: "Spakuj potrzebne rzeczy",
+					chips:
+					<Widget>[
+						AttributeChip.withIcon(
+							icon: Icons.access_time,
+							color: AppColors.childActionColor,
+							content: "5 minut"
+						)
+					],
+					actionButton: ItemCardActionButton(color: Colors.grey, icon: Icons.keyboard_arrow_up),
+				),
+				ItemCard(
+					title: "Spakuj potrzebne rzeczy",
+					chips:
+					<Widget>[
+						AttributeChip.withIcon(
+							icon: Icons.access_time,
+							color: AppColors.childActionColor,
+							content: "5 minut"
+						)
+					],
+					actionButton: ItemCardActionButton(color: Colors.grey, icon: Icons.keyboard_arrow_up),
+				)
+			]
+		);
   }
 
   Segment _getAdditionalTasksSegment({String title, String noElementsMessage}) {
-    return Segment(title: title, noElementsMessage: '$_pageKey.content.noTasks', elements: <Widget>[
-      ItemCard(
-        title: "Opróżnij plecak 2",
-				chips:
-				<Widget>[AttributeChip.withIcon(
-					icon: Icons.timer,
-					color: Colors.lightGreen,
-					content: "Czas: 5:24"
-				)],
-        actionButton: ItemCardActionButton(
-            color: Colors.lightGreen, icon: Icons.check, onTapped: () => log("Tapped finished activity")),
-      ),
-      ItemCard(
-        title: "Przygotuj książki i zeszyty na kolejny dzień według bardzo długiego planu zajęć",
-				chips:
-				<Widget>[AttributeChip.withIcon(
-					icon: Icons.access_time,
-					color: Colors.amber,
-					content: "8 minut"
-				)],
-        actionButton:
-            ItemCardActionButton(color: Colors.teal, icon: Icons.play_arrow, onTapped: () => log("tapped start task")),
-      )
-    ]);
+    return Segment(
+			title: title,
+			noElementsMessage: '$_pageKey.content.noTasks',
+			elements: <Widget>[
+				ItemCard(
+					title: "Opróżnij plecak 2",
+					chips:
+					<Widget>[
+						AttributeChip.withIcon(
+							icon: Icons.timer,
+							color: AppColors.childBackgroundColor,
+							content: "Czas: 5:24"
+						)
+					],
+					actionButton: ItemCardActionButton(
+							color: AppColors.childBackgroundColor, icon: Icons.check, onTapped: () => log("Tapped finished activity")),
+				),
+				ItemCard(
+					title: "Przygotuj książki i zeszyty na kolejny dzień według bardzo długiego planu zajęć",
+					chips:
+					<Widget>[
+						AttributeChip.withIcon(
+							icon: Icons.access_time,
+							color: AppColors.childActionColor,
+							content: "8 minut"
+						)
+					],
+					actionButton: ItemCardActionButton(color: Colors.teal, icon: Icons.play_arrow, onTapped: () => log("tapped start task")),
+				)
+			]
+		);
   }
 }

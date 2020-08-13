@@ -107,7 +107,7 @@
 			},
 			"planInProgress": {
 				"header": {
-					"title": "Aktualnie wykonywane"
+					"title": "Aktualny plan"
 				},
 				"content": {
 					"toDoTasks": "Zadania do wykonania",
@@ -151,7 +151,8 @@
 		"edit": "Edytuj",
 		"delete": "Usuń",
 		"details": "Pokaż szczegóły",
-		"help": "Pokaż pomoc"
+		"help": "Pokaż pomoc",
+		"back": "Cofnij"
 	},
 	"help": {
 		"first_steps": "Pierwsze kroki"

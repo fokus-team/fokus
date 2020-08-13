@@ -13,7 +13,7 @@ class BackIconButton extends StatelessWidget {
 	@override
 	Widget build(BuildContext context) {
 		return Tooltip(
-			message: AppLocales.of(context).translate('actions.help'),
+			message: AppLocales.of(context).translate('actions.back'),
 			child: InkWell(
 				customBorder: new CircleBorder(),
 				onTap: () => {Navigator.of(context).pop()},

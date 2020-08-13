@@ -113,6 +113,16 @@
 					"taskProgress": "Wykonano {NUM_TASKS} z {NUM_ALL_TASKS} zadań"
 				}
 			},
+			"planInProgress": {
+				"header": {
+					"title": "Aktualny plan"
+				},
+				"content": {
+					"toDoTasks": "Zadania do wykonania",
+					"additionalTasks": "Zadania dodatkowe",
+					"noTasks": "Brak zadań"
+				}
+			},
 			"awards": {
 				"content": {
 					"awardsTitle": "Nagrody do zdobycia",
@@ -149,7 +159,8 @@
 		"edit": "Edytuj",
 		"delete": "Usuń",
 		"details": "Pokaż szczegóły",
-		"help": "Pokaż pomoc"
+		"help": "Pokaż pomoc",
+		"back": "Cofnij"
 	},
 	"help": {
 		"first_steps": "Pierwsze kroki"

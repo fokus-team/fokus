@@ -16,6 +16,7 @@ import 'package:fokus/pages/child/achievements_page.dart';
 import 'package:fokus/pages/child/awards_page.dart';
 import 'package:fokus/pages/child/panel_page.dart';
 import 'file:///D:/Fokus/fokus/lib/pages/caregiver/plan_details_page.dart';
+import 'package:fokus/pages/child/plan_in_progress_page.dart';
 import 'package:fokus/utils/app_locales.dart';
 import 'package:fokus/services/instrumentator.dart';
 import 'package:fokus/utils/cubit_utils.dart';
@@ -75,6 +76,7 @@ class FokusApp extends StatelessWidget {
 			AppPage.childAwards.name: (context) => _wrapAppPage(UserRole.child, ChildAwardsPage()),
 			AppPage.childAchievements.name: (context) => _wrapAppPage(UserRole.child, ChildAchievementsPage()),
 			AppPage.caregiverPlanDetails.name: (context) => _wrapAppPage(UserRole.caregiver, CaregiverPlanDetailsPage()),
+			AppPage.childPlanInProgress.name: (context) => _wrapAppPage(UserRole.child, ChildPlanInProgressPage())
 		};
 	}
 

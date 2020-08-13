@@ -12,7 +12,7 @@ part 'caregiver_plans_state.dart';
 
 class CaregiverPlansCubit extends Cubit<CaregiverPlansState> {
 	final ActiveUserFunction _activeUser;
-  final DataRepository _dbRepository = GetIt.I<DataRepository>();
+  final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final PlanRepeatabilityService _repeatabilityService = GetIt.I<PlanRepeatabilityService>();
 
   CaregiverPlansCubit(this._activeUser) : super(CaregiverPlansInitial());
@@ -22,7 +22,7 @@ class CaregiverPlansCubit extends Cubit<CaregiverPlansState> {
 
     var getDescription = (Plan plan) => _repeatabilityService.buildPlanDescription(plan.repeatability);
     var caregiverId = _activeUser().id;
-    var plans = await _dbRepository.getPlans(caregiverId: caregiverId, activeOnly: false);
+    var plans = await _dataRepository.getPlans(caregiverId: caregiverId, activeOnly: false);
 
     List<UIPlan> uiPlans = [];
     for(int i=0;i<plans.length;i++) {

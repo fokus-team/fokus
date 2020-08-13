@@ -25,8 +25,11 @@ class AppConfigRepository {
 	}
 
 	void saveChildProfile(ObjectId userId) {
-		var newList = _settingsProvider.getStringList(AppConfigEntry.savedChildProfiles)..add(userId.toHexString());
-	  _settingsProvider.setStringList(AppConfigEntry.savedChildProfiles, newList);
+		var savedList = _settingsProvider.getStringList(AppConfigEntry.savedChildProfiles);
+		if (!savedList.contains(userId)) {
+			savedList.add(userId.toHexString());
+			_settingsProvider.setStringList(AppConfigEntry.savedChildProfiles, savedList);
+		}
 	}
 
 	void removeSavedChildProfile(ObjectId userId) {

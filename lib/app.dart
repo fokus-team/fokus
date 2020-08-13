@@ -90,7 +90,7 @@ class FokusApp extends StatelessWidget {
 			AppPage.rolesPage.name: (context) => _createPage(RolesPage(), context),
 			AppPage.caregiverSignInPage.name: (context) => _createPage(CaregiverSignInPage(), context, CaregiverSignInCubit()),
 			AppPage.caregiverSignUpPage.name: (context) => _createPage(CaregiverSignUpPage(), context, CaregiverSignUpCubit()),
-			AppPage.childSignInPage.name: (context) => _createPage(ChildSignInPage(), context, ChildSignInCubit()),
+			AppPage.childSignInPage.name: (context) => _createPage(ChildSignInPage(), context, ChildSignInCubit(context.bloc<AuthenticationBloc>())),
 			AppPage.childSignUpPage.name: (context) => _createPage(ChildSignUpPage(), context, ChildSignUpCubit()),
 			AppPage.caregiverPanel.name: (context) => _createPage(CaregiverPanelPage(), context, CaregiverPanelCubit(getActiveUser(context))),
 			AppPage.caregiverPlans.name: (context) => _createPage(CaregiverPlansPage(), context, CaregiverPlansCubit(getActiveUser(context))),

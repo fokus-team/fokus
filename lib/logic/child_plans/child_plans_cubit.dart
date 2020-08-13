@@ -14,7 +14,7 @@ part 'child_plans_state.dart';
 
 class ChildPlansCubit extends Cubit<ChildPlansState> {
 	final ActiveUserFunction _activeUser;
-	final DataRepository _dbRepository = GetIt.I<DataRepository>();
+	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final PlanRepeatabilityService _repeatabilityService = GetIt.I<PlanRepeatabilityService>();
 
   ChildPlansCubit(this._activeUser) : super(ChildPlansInitial());
@@ -25,19 +25,19 @@ class ChildPlansCubit extends Cubit<ChildPlansState> {
 	  var getDescription = (Plan plan, [Date instanceDate]) => _repeatabilityService.buildPlanDescription(plan.repeatability, instanceDate: instanceDate);
 	  var childId = _activeUser().id;
 
-	  var allPlans = await _dbRepository.getPlans(childId: childId);
+	  var allPlans = await _dataRepository.getPlans(childId: childId);
 	  var todayPlans = await _repeatabilityService.filterPlansByDate(allPlans, Date.now());
 	  var todayPlanIds = todayPlans.map((plan) => plan.id).toList();
 	  var untilCompletedPlans = allPlans.where((plan) => plan.repeatability.untilCompleted && !todayPlans.contains(plan.id)).map((plan) => plan.id).toList();
 
-	  var instances = await _dbRepository.getPlanInstancesForPlans(childId, todayPlanIds, Date.now());
-	  instances.addAll(await _dbRepository.getPastNotCompletedPlanInstances([childId], untilCompletedPlans, Date.now()));
+	  var instances = await _dataRepository.getPlanInstancesForPlans(childId, todayPlanIds, Date.now());
+	  instances.addAll(await _dataRepository.getPastNotCompletedPlanInstances([childId], untilCompletedPlans, Date.now()));
 	  var planMap = Map.fromEntries(instances.map((instance) => MapEntry(instance, allPlans.firstWhere((plan) => plan.id == instance.planID))));
 
 	  List<UIPlanInstance> uiInstances = [];
 	  for (var instance in instances) {
 		  var elapsedTime = () => sumDurations(instance.duration).inSeconds;
-		  var completedTasks = await _dbRepository.getCompletedTaskCount(instance.id);
+		  var completedTasks = await _dataRepository.getCompletedTaskCount(instance.id);
 		  uiInstances.add(UIPlanInstance.fromDBModel(instance, planMap[instance].name, completedTasks, elapsedTime, getDescription(planMap[instance], instance.date)));
 	  }
 	  uiInstances.addAll(todayPlans.where((plan) => !planMap.values.contains(plan)).map((plan) => UIPlanInstance.fromDBPlanModel(plan, getDescription(plan))));

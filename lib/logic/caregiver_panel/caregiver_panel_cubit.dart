@@ -14,7 +14,7 @@ part 'caregiver_panel_state.dart';
 
 class CaregiverPanelCubit extends Cubit<CaregiverPanelState> {
 	final ActiveUserFunction _activeUser;
-	final DataRepository _dbRepository = GetIt.I<DataRepository>();
+	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final PlanRepeatabilityService _repeatabilityService = GetIt.I<PlanRepeatabilityService>();
 
   CaregiverPanelCubit(this._activeUser) : super(CaregiverPanelInitial());
@@ -24,12 +24,12 @@ class CaregiverPanelCubit extends Cubit<CaregiverPanelState> {
   		return;
 	  emit(CaregiverPanelLoadInProgress());
 	  var activeUser = _activeUser();
-	  var children = await _dbRepository.getCaregiverChildren(activeUser.id);
+	  var children = await _dataRepository.getCaregiverChildren(activeUser.id);
 	  List<UIChild> childList = [];
 	  for (var child in children) {
 		  var plans = await _repeatabilityService.getPlansByDate(child.id, Date.now(), activeOnly: false);
-		  childList.add(UIChild.fromDBModel(child, todayPlanCount: plans.length, hasActivePlan: await _dbRepository.getActiveChildPlanInstance(child.id)));
+		  childList.add(UIChild.fromDBModel(child, todayPlanCount: plans.length, hasActivePlan: await _dataRepository.getActiveChildPlanInstance(child.id)));
 	  }
-	  emit(CaregiverPanelLoadSuccess(childList, await _dbRepository.getUserNames((activeUser as UICaregiver).friends)));
+	  emit(CaregiverPanelLoadSuccess(childList, await _dataRepository.getUserNames((activeUser as UICaregiver).friends)));
   }
 }

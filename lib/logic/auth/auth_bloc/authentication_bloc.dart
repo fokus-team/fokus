@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:fokus/model/db/user/child.dart';
 import 'package:fokus/model/ui/user/ui_child.dart';
 import 'package:logging/logging.dart';
 import 'package:get_it/get_it.dart';
@@ -25,7 +24,8 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 
 	AuthenticationRepository _authenticationRepository = GetIt.I<AuthenticationRepository>();
 	AppConfigRepository _appConfigRepository = GetIt.I<AppConfigRepository>();
-	DataRepository _dbRepository = GetIt.I<DataRepository>();
+	DataRepository _dataRepository = GetIt.I<DataRepository>();
+
 	StreamSubscription<AuthenticatedUser> _userSubscription;
 
   AuthenticationBloc() : super(AuthenticationState.unknown()) {
@@ -37,8 +37,8 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 	  if (event is AuthenticationUserChanged)
 		  yield await _processUserChangedEvent(event);
 	  else if (event is AuthenticationChildLoginRequested) {
-			_appConfigRepository.signInChild(event.child.id);
-		  yield AuthenticationState.authenticated(UIChild.fromDBModel(event.child));
+			_appConfigRepository.signInChild(event.childId);
+		  yield AuthenticationState.authenticated(UIChild.fromDBModel(await _dataRepository.getUser(id: event.childId)));
 	  } else if (event is AuthenticationLogoutRequested) {
 		  _logger.fine('Signing out user ${state.user}');
 		  if (state.user.role == UserRole.caregiver)
@@ -57,15 +57,15 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
   	if (noSignedInCaregiver && wasAppOpened) {
 		  var signedInChild = _appConfigRepository.getSignedInChild();
 		  if (signedInChild != null)
-			  return AuthenticationState.authenticated(UIUser.typedFromDBModel(await _dbRepository.getUser(id: signedInChild)));
+			  return AuthenticationState.authenticated(UIUser.typedFromDBModel(await _dataRepository.getUser(id: signedInChild)));
 		  else
 		    return const AuthenticationState.unauthenticated();
 	  }
-		user = await _dbRepository.getUser(authenticationId: event.user.id);
+		user = await _dataRepository.getUser(authenticationId: event.user.id);
 		if (user == null) {
 			_logger.fine('Creating new user for ${event.user}');
-			_dbRepository.createUser(Caregiver.fromAuthUser(event.user));
-			user = await _dbRepository.getUser(authenticationId: event.user.id);
+			_dataRepository.createUser(Caregiver.fromAuthUser(event.user));
+			user = await _dataRepository.getUser(authenticationId: event.user.id);
 		}
 		return AuthenticationState.authenticated(UIUser.typedFromDBModel(user));
   }

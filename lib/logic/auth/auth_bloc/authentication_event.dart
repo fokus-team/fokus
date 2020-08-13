@@ -17,12 +17,12 @@ class AuthenticationUserChanged extends AuthenticationEvent {
 }
 
 class AuthenticationChildLoginRequested extends AuthenticationEvent {
-	final Child child;
+	final ObjectId childId;
 
-	const AuthenticationChildLoginRequested(this.child);
+	const AuthenticationChildLoginRequested(this.childId);
 
 	@override
-	List<Object> get props => [child.id];
+	List<Object> get props => [childId];
 }
 
 class AuthenticationLogoutRequested extends AuthenticationEvent {}

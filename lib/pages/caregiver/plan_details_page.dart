@@ -49,6 +49,7 @@ class _CaregiverPlanDetailsPageState extends State<CaregiverPlanDetailsPage> {
 									ButtonType.delete,
 									(context) => showDialog(
 										context: context,
+										//TODO: replace with Dialog made by Miko - blocked by pull request
 										builder: (context) => AppDialog(
 											titleKey: 'alert.deletePlan',
 											textKey: 'alert.confirmPlanDeletion',

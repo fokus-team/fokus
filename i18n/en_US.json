@@ -73,6 +73,39 @@
 					"5LeveledBadge": "5-leveled badge"
 				}
 			},
+			"awardForm": {
+				"addAwardTitle": "Add award",
+				"editAwardTitle": "Edit award",
+				"addAwardButton": "Add award",
+				"saveAwardButton": "Save award",
+				"removeAwardButton": "Remove award",
+				"removeAwardTitle": "Remove award",
+				"removeAwardText": "Are you sure you want to remove this wawrd?",
+				"fields": {
+					"awardName": {
+						"label": "Award name",
+						"emptyError": "Award name can't be empty"
+					},
+					"awardLimit": {
+						"label": "Award limit",
+						"hint": "Leave empty to not limit"
+					},
+					"awardPoints": {
+						"valueLabel": "Award point cost",
+						"currencyLabel": "Point currency",
+						"emptyError": "Point cost must be at least 1"
+					},
+					"awardIcon": {
+						"label": "Award icon",
+						"groups": {
+							"gift": "Gift",
+							"activity": "Activity",
+							"relax": "Relax",
+							"food": "Food"
+						}
+					}
+				}
+			},
 			"statistics": {
 				"header": {
 					"title": "Statistics",
@@ -130,8 +163,12 @@
 	},
 	"alert": {
 		"noConnection": "No connection",
+		"noHint": "No hint",
+		"genericEmptyValue": "This field can't be empty",
 		"connectionRetry": "Ensure the device has access to internet",
-		"noHint": "No hint"
+		"genericRangeOverflowValue": "Value must be in the range {A}-{B}",
+		"unsavedProgressTitle": "Unsaved progress",
+		"unsavedProgressMessage": "You have unsaved progress. Are you sure you want to exit?"
 	},
 	"actions": {
 		"ok": "Ok",

@@ -75,23 +75,36 @@
 			},
 			"awardForm": {
 				"addAwardTitle": "Dodaj nagrodę",
-				"unsavedProgressTitle": "Niezapisane dane",
-				"unsavedProgressMessage": "Posiadasz niezapisane dane. Czy jesteś pewien, że chcesz wyjść?",
-				"saveAwardButton": "Dodaj nagodę",
+				"editAwardTitle": "Edytuj nagrodę",
+				"addAwardButton": "Dodaj nagodę",
+				"saveAwardButton": "Zapisz nagodę",
+				"removeAwardButton": "Usuń nagodę",
+				"removeAwardTitle": "Usuń nagrodę",
+				"removeAwardText": "Na pewno chcesz usunąć tą nagrodę?",
 				"fields": {
-					"awardName": "Nazwa nagrody",
-					"awardLimit": "Limit nagród",
-					"awardLimitHint": "Pozostaw puste, aby nie limitować",
-					"awardPoints": "Koszt punktowy",
-					"awardPointsHint": "Cena nagrody musi mieścić się w przedziale 0-1000000",
-					"awardPointsCurrency": "Waluta punktów",
-					"awardIcon": "Ikona nagrody"
-				},
-				"groups": {
-					"gift": "Prezent",
-					"activity": "Aktywność",
-					"relax": "Odpoczynek",
-					"food": "Jedzenie"
+					"awardName": {
+						"label": "Nazwa nagrody",
+						"emptyError": "Nazwa nagrody nie może być pusta"
+					},
+					"awardLimit": {
+						"label": "Limit nagród",
+						"hint": "Pozostaw puste, aby nie limitować"
+					},
+					"awardPoints": {
+						"valueLabel": "Koszt punktowy",
+						"currencyLabel": "Waluta punktów",
+						"hint": "Cena nagrody musi mieścić się w przedziale 1-1000000",
+						"emptyError": "Koszt punktowy musi wynosić minimum 1 punkt"
+					},
+					"awardIcon": {
+						"label": "Ikona nagrody",
+						"groups": {
+							"gift": "Prezent",
+							"activity": "Aktywność",
+							"relax": "Odpoczynek",
+							"food": "Jedzenie"
+						}
+					}
 				}
 			},
 			"statistics": {
@@ -151,8 +164,12 @@
 	},
 	"alert": {
 		"noConnection": "Brak połączenia",
+		"noHint": "Brak podpowiedzi",
+		"genericEmptyValue": "Pole nie może być puste",
 		"connectionRetry": "Upewnij się że urządzenie ma dostęp do internetu",
-		"noHint": "Brak podpowiedzi"
+		"genericRangeOverflowValue": "Wartość musi mieścić się w zakresie {A}-{B}",
+		"unsavedProgressTitle": "Niezapisane dane",
+		"unsavedProgressMessage": "Posiadasz niezapisane dane. Czy jesteś pewien, że chcesz wyjść?"
 	},
 	"actions": {
 		"ok": "Ok",

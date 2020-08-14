@@ -164,7 +164,8 @@
 		"delete": "Usuń",
 		"details": "Pokaż szczegóły",
 		"help": "Pokaż pomoc",
-		"back": "Cofnij"
+		"back": "Cofnij",
+		"unpair": "Rozłącz"
 	},
 	"help": {
 		"first_steps": "Pierwsze kroki"

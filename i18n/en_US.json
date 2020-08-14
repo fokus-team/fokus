@@ -164,7 +164,8 @@
 		"delete": "Delete",
 		"details": "Show details",
 		"help": "Show help",
-		"back": "Back"
+		"back": "Back",
+		"unpair": "Unpair"
 	},
 	"help": {
 		"first_steps": "First steps"

@@ -25,6 +25,8 @@ import 'package:fokus/pages/roles_page.dart';
 import 'package:fokus/widgets/page_theme.dart';
 import 'package:fokus/model/app_page.dart';
 
+import 'pages/caregiver/plan_details_page.dart';
+
 void main() {
 	var navigatorKey = GlobalKey<NavigatorState>();
 	Instrumentator.runAppGuarded(
@@ -74,6 +76,7 @@ class FokusApp extends StatelessWidget {
 			AppPage.childPanel.name: (context) => _wrapAppPage(UserRole.child, ChildPanelPage(), ChildPlansCubit(activeUser(context))),
 			AppPage.childAwards.name: (context) => _wrapAppPage(UserRole.child, ChildAwardsPage()),
 			AppPage.childAchievements.name: (context) => _wrapAppPage(UserRole.child, ChildAchievementsPage()),
+			AppPage.caregiverPlanDetails.name: (context) => _wrapAppPage(UserRole.caregiver, CaregiverPlanDetailsPage()),
 			AppPage.childPlanInProgress.name: (context) => _wrapAppPage(UserRole.child, ChildPlanInProgressPage())
 		};
 	}

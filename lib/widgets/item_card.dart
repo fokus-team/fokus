@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:fokus/utils/app_locales.dart';
+import 'package:fokus/model/button_type.dart';
 import 'package:fokus/utils/app_paths.dart';
 import 'package:fokus/utils/icon_sets.dart';
 import 'package:fokus/utils/theme_config.dart';
 import 'package:fokus/widgets/app_avatar.dart';
+import 'package:fokus/widgets/popup_menu_list.dart';
 
 class ItemCardActionButton {
 	final IconData icon;
@@ -20,15 +21,6 @@ class ItemCardActionButton {
 	});
 }
 
-class ItemCardMenuItem {
-	final String text;
-	final Function onTapped;
-
-	ItemCardMenuItem({
-		this.text,
-		this.onTapped
-	});
-}
 
 class ItemCard extends StatelessWidget {
 	// Element's content
@@ -38,7 +30,7 @@ class ItemCard extends StatelessWidget {
 	final int graphic;
 	final double progressPercentage;
 	final List<Widget> chips;
-	final List<ItemCardMenuItem> menuItems;
+	final List<UIButton> menuItems;
 	final ItemCardActionButton actionButton;
 	final Function onTapped;
 	final bool isActive;
@@ -217,20 +209,7 @@ class ItemCard extends StatelessWidget {
 	// Menu options or big action button
 	Widget buildActionSection() {
 		if(menuItems != null && menuItems.isNotEmpty) {
-			return InkWell(
-				customBorder: new CircleBorder(),
-				child: PopupMenuButton<int>(
-					icon: Icon(
-						Icons.more_vert,
-						size: 26.0
-					),
-					onSelected: (int value) => { menuItems[value].onTapped() },
-					itemBuilder: (context) => [
-						for (int i = 0; i < menuItems.length; i++)
-							PopupMenuItem(value: i, child: Text(AppLocales.of(context).translate(menuItems[i].text)))
-					],
-				)
-			);
+			return PopupMenuList(items: menuItems);
 		}
 		if(actionButton != null) {
 			if(actionButton.disabled) {

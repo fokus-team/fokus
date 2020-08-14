@@ -93,6 +93,16 @@
 					"basicStatisticsTitle": "Basic statistics",
 					"basicStatisticsSubtitle": "This screen is not available in this version of the application"
 				}
+			},
+			"planDetails": {
+				"header": {
+					"title": "Plan details"
+				},
+				"content": {
+					"mandatoryTasks": "Mandatory tasks",
+					"additionalTasks": "Additional tasks",
+					"noTasks": "No tasks"
+				}
 			}
 		},
 		"childSection": {
@@ -141,7 +151,9 @@
 	"alert": {
 		"noConnection": "No connection",
 		"connectionRetry": "Ensure the device has access to internet",
-		"noHint": "No hint"
+		"noHint": "No hint",
+		"deletePlan": "Deleting the plan",
+		"confirmPlanDeletion": "Are you sure you want to delete the plan?"
 	},
 	"actions": {
 		"ok": "Ok",
@@ -152,7 +164,8 @@
 		"delete": "Delete",
 		"details": "Show details",
 		"help": "Show help",
-		"back": "Back"
+		"back": "Back",
+		"unpair": "Unpair"
 	},
 	"help": {
 		"first_steps": "First steps"

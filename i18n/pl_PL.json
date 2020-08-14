@@ -83,6 +83,16 @@
 					"basicStatisticsTitle": "Podstawowe statystyki",
 					"basicStatisticsSubtitle": "Ekran statystyk nie jest dostępny w tej wersji aplikacji"
 				}
+			},
+			"planDetails":  {
+				"header": {
+					"title": "Szczegóły planu"
+				},
+				"content": {
+					"mandatoryTasks": "Zadania obowiązkowe",
+					"additionalTasks": "Zadania dodatkowe",
+					"noTasks": "Brak zadań"
+				}
 			}
 		},
 		"childSection": {
@@ -141,7 +151,9 @@
 	"alert": {
 		"noConnection": "Brak połączenia",
 		"connectionRetry": "Upewnij się że urządzenie ma dostęp do internetu",
-		"noHint": "Brak podpowiedzi"
+		"noHint": "Brak podpowiedzi",
+		"deletePlan": "Usuwanie planu",
+		"confirmPlanDeletion": "Czy na pewno chcesz usunąć plan?"
 	},
 	"actions": {
 		"ok": "Ok",
@@ -152,7 +164,8 @@
 		"delete": "Usuń",
 		"details": "Pokaż szczegóły",
 		"help": "Pokaż pomoc",
-		"back": "Cofnij"
+		"back": "Cofnij",
+		"unpair": "Rozłącz"
 	},
 	"help": {
 		"first_steps": "Pierwsze kroki"

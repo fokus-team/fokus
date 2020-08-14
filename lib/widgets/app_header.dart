@@ -38,9 +38,9 @@ class AppHeader extends StatelessWidget {
 	final AppHeaderType headerType;
 	final Widget appHeaderWidget;
 	final bool showHelp;
-	final bool showMenu;
+	final Widget popupMenuWidget;
 
-	AppHeader({this.title, this.text, this.headerActionButtons, this.headerType, this.appHeaderWidget, this.showHelp = false, this.showMenu = false});
+	AppHeader({this.title, this.text, this.headerActionButtons, this.headerType, this.appHeaderWidget, this.showHelp = false, this.popupMenuWidget});
 	AppHeader.greetings({String text, List<HeaderActionButton> headerActionButtons}) : this(
 		text: text,
 		headerActionButtons: headerActionButtons,
@@ -52,14 +52,14 @@ class AppHeader extends StatelessWidget {
 		headerActionButtons: headerActionButtons,
 		headerType: AppHeaderType.normal
 	);
-	AppHeader.widget({String title, String text, List<HeaderActionButton> headerActionButtons, Widget appHeaderWidget, bool showHelp = false, bool showMenu = false}) : this(
+	AppHeader.widget({String title, String text, List<HeaderActionButton> headerActionButtons, Widget appHeaderWidget, bool showHelp = false, Widget popupMenuWidget}) : this(
 		title: title,
 		text: text,
 		headerActionButtons: headerActionButtons,
 		headerType: AppHeaderType.widget,
 		appHeaderWidget: appHeaderWidget,
 		showHelp: showHelp,
-		showMenu: showMenu
+		popupMenuWidget: popupMenuWidget
 	);
 
 	@override
@@ -274,7 +274,7 @@ class AppHeader extends StatelessWidget {
 							  children: <Widget>[
 							  	// TODO: change this widget to widget made by Miko
 							    this.showHelp ? IconButton(icon: Icon(Icons.help, color: Colors.white, size: 26,), onPressed: null,) : SizedBox.shrink(),
-									this.showMenu ? IconButton(icon: Icon(Icons.more_vert, color: Colors.white, size: 26,), onPressed: null,) : SizedBox.shrink()
+									this.popupMenuWidget != null ? popupMenuWidget : SizedBox.shrink()
 							  ],
 							)
 						]

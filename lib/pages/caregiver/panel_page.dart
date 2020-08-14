@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:fokus/logic/caregiver_panel/caregiver_panel_cubit.dart';
+import 'package:fokus/model/button_type.dart';
 import 'package:fokus/model/ui/user/ui_child.dart';
 import 'package:fokus/utils/app_locales.dart';
 import 'package:fokus/utils/icon_sets.dart';
@@ -57,9 +58,9 @@ class _CaregiverPanelPageState extends State<CaregiverPanelPage> {
 							title: child.name,
 							subtitle: getChildCardSubtitle(context, child),
 							menuItems: [
-								ItemCardMenuItem(text: "actions.details", onTapped: () => {log("details")}),
-								ItemCardMenuItem(text: "actions.edit", onTapped: () => {log("edit")}),
-								ItemCardMenuItem(text: "actions.delete", onTapped: () => {log("delete")})
+								UIButton(ButtonType.details, (context) => {log("details")}),
+								UIButton(ButtonType.edit, (context) => {log("edit")}),
+								UIButton(ButtonType.delete, (context) => {log("delete")})
 							],
 							graphicType: GraphicAssetType.childAvatars,
 							graphic: child.avatar,
@@ -78,7 +79,7 @@ class _CaregiverPanelPageState extends State<CaregiverPanelPage> {
 						ItemCard(
 							title: friend,
 							menuItems: [
-								ItemCardMenuItem(text: "actions.delete", onTapped: () => {log("delete")})
+								UIButton(ButtonType.delete, (context) => {log("delete")})
 							],
 						)
 				]

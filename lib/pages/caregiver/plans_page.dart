@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/logic/caregiver_plans/caregiver_plans_cubit.dart';
+import 'package:fokus/model/app_page.dart';
 import 'package:fokus/model/ui/plan/ui_plan.dart';
 import 'package:fokus/utils/app_locales.dart';
 
@@ -76,7 +77,7 @@ Segment _getPlansSegment({List<UIPlan> plans, String title, String noElementsMes
 					title: plan.name,
 					subtitle: plan.description(context),
 					actionButton: ItemCardActionButton(
-						color: Colors.teal, icon: Icons.keyboard_arrow_right, onTapped: () => {log("go to details page")}),
+						color: Colors.teal, icon: Icons.keyboard_arrow_right, onTapped: () => {Navigator.of(context).pushNamed(AppPage.caregiverPlanDetails.name)}),
 					chips: <Widget>[
 						AttributeChip.withIcon(
 							content: AppLocales.of(context).translate('$_pageKey.content.tasks', {'NUM_TASKS': plan.taskCount}),

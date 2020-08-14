@@ -89,7 +89,9 @@
 					"title": "Szczegóły planu"
 				},
 				"content": {
-
+					"mandatoryTasks": "Zadania obowiązkowe",
+					"additionalTasks": "Zadania dodatkowe",
+					"noTasks": "Brak zadań"
 				}
 			}
 		},
@@ -149,7 +151,9 @@
 	"alert": {
 		"noConnection": "Brak połączenia",
 		"connectionRetry": "Upewnij się że urządzenie ma dostęp do internetu",
-		"noHint": "Brak podpowiedzi"
+		"noHint": "Brak podpowiedzi",
+		"deletePlan": "Usuwanie planu",
+		"confirmPlanDeletion": "Czy na pewno chcesz usunąć plan?"
 	},
 	"actions": {
 		"ok": "Ok",

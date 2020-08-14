@@ -60,7 +60,6 @@ class _CaregiverPanelPageState extends State<CaregiverPanelPage> {
 							menuItems: [
 								UIButton(ButtonType.details, (context) => {log("details")}),
 								UIButton(ButtonType.edit, (context) => {log("edit")}),
-								UIButton(ButtonType.delete, (context) => {log("delete")})
 							],
 							graphicType: GraphicAssetType.childAvatars,
 							graphic: child.avatar,

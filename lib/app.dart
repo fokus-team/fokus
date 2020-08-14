@@ -15,7 +15,6 @@ import 'package:fokus/pages/caregiver/statistics_page.dart';
 import 'package:fokus/pages/child/achievements_page.dart';
 import 'package:fokus/pages/child/awards_page.dart';
 import 'package:fokus/pages/child/panel_page.dart';
-import 'file:///D:/Fokus/fokus/lib/pages/caregiver/plan_details_page.dart';
 import 'package:fokus/pages/child/plan_in_progress_page.dart';
 import 'package:fokus/utils/app_locales.dart';
 import 'package:fokus/services/instrumentator.dart';
@@ -25,6 +24,8 @@ import 'package:fokus/pages/loading_page.dart';
 import 'package:fokus/pages/roles_page.dart';
 import 'package:fokus/widgets/page_theme.dart';
 import 'package:fokus/model/app_page.dart';
+
+import 'pages/caregiver/plan_details_page.dart';
 
 void main() {
 	var navigatorKey = GlobalKey<NavigatorState>();

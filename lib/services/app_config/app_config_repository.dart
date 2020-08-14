@@ -18,11 +18,7 @@ class AppConfigRepository {
 
 	void signOutChild() => _settingsProvider.remove(AppConfigEntry.signedInChild);
 
-	List<ObjectId> getSavedChildProfiles() {
-	  if (_settingsProvider.containsEntry(AppConfigEntry.savedChildProfiles))
-	    return _settingsProvider.getStringList(AppConfigEntry.savedChildProfiles).map((id) => ObjectId.parse(id));
-	  return null;
-	}
+	List<ObjectId> getSavedChildProfiles() => _settingsProvider.getStringList(AppConfigEntry.savedChildProfiles)?.map((id) => ObjectId.parse(id))?.toList();
 
 	void saveChildProfile(ObjectId userId) {
 		var savedList = _settingsProvider.getStringList(AppConfigEntry.savedChildProfiles) ?? [];
@@ -35,5 +31,9 @@ class AppConfigRepository {
 	void removeSavedChildProfile(ObjectId userId) {
 		var newList = _settingsProvider.getStringList(AppConfigEntry.savedChildProfiles).where((element) => element != userId.toHexString());
 		_settingsProvider.setStringList(AppConfigEntry.savedChildProfiles, newList);
+	}
+
+	void clearSavedChildProfiles() {
+		_settingsProvider.setStringList(AppConfigEntry.savedChildProfiles, []);
 	}
 }

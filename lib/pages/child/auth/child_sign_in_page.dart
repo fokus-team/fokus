@@ -17,29 +17,52 @@ class ChildSignInPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
 	    body: SafeArea(
-			  child: _buildSignInForm(context)
+			  child: Column(
+				  children: <Widget>[
+				  	BlocBuilder<ChildSignInCubit, ChildSignInState>(
+						  cubit: context.bloc<ChildSignInCubit>(),
+						  buildWhen: (oldState, newState) => oldState.savedChildren != newState.savedChildren,
+						  builder: (context, state) {
+							  var cubit = context.bloc<ChildSignInCubit>();
+							  if (state.savedChildren == null) {
+								  cubit.loadSavedProfiles();
+								  return Expanded(child: Center(child: CircularProgressIndicator())); // TODO Decide what to show when loading (globally)
+							  }
+							  return Column(
+								  children: [
+								  	for (var child in state.savedChildren)
+										  MaterialButton(
+											  child: Text(child.name),
+											  color: AppColors.childActionColor,
+											  onPressed: () => cubit.signInWithCachedId(child.id),
+										  )
+								  ],
+							  );
+						  },
+					  ),
+				    ..._buildSignInForm(context)
+	        ]
+			  )
 	    ),
     );
   }
 
-	Widget _buildSignInForm(BuildContext context) {
-		return Column(
-			children: <Widget>[
-				AuthenticationInputField<ChildSignInCubit, ChildSignInState>(
-						getField: (state) => state.childCode,
-						changedAction: (cubit, value) => cubit.childCodeChanged(value),
-						labelKey: '$_pageKey.childCode',
-						getErrorKey: (state) => [state.childCode.error.key],
-				),
-				AuthenticationSubmitButton<ChildSignInCubit, ChildSignInState>(
-						button: UIButton(ButtonType.signIn, (context) => context.bloc<ChildSignInCubit>().signInNewChild())
-				),
-				MaterialButton(
-					child: Text(AppLocales.of(context).translate('$_pageKey.createNewProfile')),
-					color: AppColors.childActionColor,
-					onPressed: () => Navigator.of(context).pushNamed(AppPage.childSignUpPage.name),
-				),
-			],
-		);
+	List<Widget> _buildSignInForm(BuildContext context) {
+		return [
+			AuthenticationInputField<ChildSignInCubit, ChildSignInState>(
+				getField: (state) => state.childCode,
+				changedAction: (cubit, value) => cubit.childCodeChanged(value),
+				labelKey: '$_pageKey.childCode',
+				getErrorKey: (state) => [state.childCode.error.key],
+			),
+			AuthenticationSubmitButton<ChildSignInCubit, ChildSignInState>(
+				button: UIButton(ButtonType.signIn, (context) => context.bloc<ChildSignInCubit>().signInNewChild())
+			),
+			MaterialButton(
+				child: Text(AppLocales.of(context).translate('$_pageKey.createNewProfile')),
+				color: AppColors.childActionColor,
+				onPressed: () => Navigator.of(context).pushNamed(AppPage.childSignUpPage.name),
+			),
+		];
 	}
 }

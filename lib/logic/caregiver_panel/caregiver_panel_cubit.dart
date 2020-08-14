@@ -9,6 +9,7 @@ import 'package:fokus/model/ui/user/ui_child.dart';
 import 'package:fokus/model/db/date/date.dart';
 import 'package:fokus/model/ui/user/ui_caregiver.dart';
 import 'package:fokus/model/ui/user/ui_user.dart';
+import 'package:fokus/model/db/user/user_role.dart';
 
 part 'caregiver_panel_state.dart';
 
@@ -24,7 +25,7 @@ class CaregiverPanelCubit extends Cubit<CaregiverPanelState> {
   		return;
 	  emit(CaregiverPanelLoadInProgress());
 	  var activeUser = _activeUser();
-	  var children = await _dataRepository.getCaregiverChildren(activeUser.id);
+	  var children = await _dataRepository.getUsers(connected: activeUser.id, role: UserRole.child);
 	  List<UIChild> childList = [];
 	  for (var child in children) {
 		  var plans = await _repeatabilityService.getPlansByDate(child.id, Date.now(), activeOnly: false);

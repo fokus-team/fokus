@@ -44,7 +44,7 @@ class OutdatedDataService {
 		var plans = await _dataRepository.getPlans(caregiverId: getRoleId(UserRole.caregiver),
 				childId: getRoleId(UserRole.child), fields: ['_id'], oneDayOnly: true, activeOnly: false);
 
-		var childrenIDs = _role == UserRole.caregiver ? (await _dataRepository.getCaregiverChildren(_userId, ['_id'])).map((child) => child.id).toList() : [_userId];
+		var childrenIDs = _role == UserRole.caregiver ? (await _dataRepository.getUsers(role: UserRole.child, connected: _userId, fields: ['_id'])).map((child) => child.id).toList() : [_userId];
 		var instances = await _dataRepository.getPastNotCompletedPlanInstances(childrenIDs, plans.map((plan) => plan.id).toList(), Date.now(), fields: ['_id', 'date', 'duration', 'state']);
 
 		var getEndTime = (Date date) => TimeDate.fromDate(date.add(Duration(days: 1)));

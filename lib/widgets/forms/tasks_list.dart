@@ -51,7 +51,7 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 				Positioned.fill(
 					bottom: bottomBarHeight,
 					child: ListView(
-						physics: inReorder ? NeverScrollableScrollPhysics() : null,
+						physics: inReorder ? NeverScrollableScrollPhysics() : BouncingScrollPhysics(),
 						children: [
 							buildReordableTaskList(context),
 							buildOptionalTaskList(context),
@@ -145,12 +145,12 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 			physics: NeverScrollableScrollPhysics(),
 			items: requiredTasks.toList(),
 			areItemsTheSame: (a, b) => a.key == b.key,
-			onReorderStarted: (_, __) => setState(() { inReorder = true; }),
+			onReorderStarted: (item, index) => setState(() => inReorder = true),
 			onReorderFinished: (item, from, to, newItems) => onReorderFinished(newItems),
 			insertDuration: insertDuration,
 			removeDuration: removeDuration,
 			dragDuration: dragDuration,
-			itemBuilder: (context, itemAnimation, item, index) {
+			itemBuilder: (_context, itemAnimation, item, index) {
 				return Reorderable(
 					key: item.key,
 					builder: (context, dragAnimation, inDrag) {
@@ -174,7 +174,7 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 										child: Handle(
 											vibrate: true,
 											delay: dragDelayDuration,
-											child: buildTaskCard(context, item, color, false)
+											child: buildTaskCard(_context, item, color, false)
 										)
 									)
 								)
@@ -286,39 +286,55 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 
 	Widget buildTaskCard(BuildContext context, UITaskForm task, Color color, bool optional) {
 		int index = (widget.plan.tasks..where((element) => element.optional == optional)).indexOf(task);
+		bool haveSetPoints = task.pointsValue != null && task.pointsValue != 0;
+		bool haveSetTimer = task.timer != null && task.timer != 0;
 
 		return Card(
 			child: InkWell(
 				onTap: () => editTask(task),
-				child: Column(
-					mainAxisSize: MainAxisSize.min,
-					crossAxisAlignment: CrossAxisAlignment.start,
-					children: <Widget>[
-						Row(
-							mainAxisAlignment: MainAxisAlignment.spaceBetween,
-							children: <Widget>[
-								Expanded(
-									child: Material(
-										type: MaterialType.transparency,
-										child: Padding(
-											padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 6.0),
-											child: Wrap(
+				child: Padding(
+					padding: EdgeInsets.all(6.0),
+					child: Row(
+						mainAxisAlignment: MainAxisAlignment.start,
+						crossAxisAlignment: CrossAxisAlignment.start,
+						children: <Widget>[
+							AttributeChip.withIcon(
+								content: optional ? null : '#${(index+1).toString()}',
+								icon: optional ? Icons.label_important : null,
+								color: Colors.blueGrey[600]
+							),
+							Expanded(
+								child: Padding(
+									padding: EdgeInsets.symmetric(vertical: 3.0, horizontal: 6.0),
+									child: Column(
+										mainAxisSize: MainAxisSize.min,
+										mainAxisAlignment: MainAxisAlignment.start,
+										crossAxisAlignment: CrossAxisAlignment.start,
+										children: [
+											Padding(
+												padding: EdgeInsets.only(left: 0, bottom: (!haveSetTimer && !haveSetPoints) ? 0.0 : 8.0),
+													child: Hero(
+													tag: task.key,
+													child: Text(
+														task.title,
+														style: Theme.of(context).textTheme.bodyText2.copyWith(fontSize: 17.0),
+														maxLines: 3,
+														overflow: TextOverflow.ellipsis
+													)
+												)
+											),
+											Wrap(
 												runSpacing: 2.0,
 												spacing: 4.0,
 												children: [
-													AttributeChip.withIcon(
-														content: optional ? null : '#${(index+1).toString()}',
-														icon: optional ? Icons.bubble_chart : null,
-														color: Colors.blueGrey
-													),
-													if(task.pointsValue != null && task.pointsValue != 0)
+													if(haveSetPoints)
 														AttributeChip.withCurrency(
 															content: task.pointsValue.toString(),
 															currencyType: task.pointCurrency.type
 														),
-													if(task.timer != null && task.timer != 0)
+													if(haveSetTimer)
 														AttributeChip.withIcon(
-															content: AppLocales.of(context).translate('page.caregiverSection.taskForm.taskTimerFormat', {
+															content: AppLocales.of(context).translate('page.caregiverSection.taskForm.fields.taskTimer.format', {
 																'HOURS_NUM': (task.timer ~/ 60).toString(),
 																'MINUTES_NUM': (task.timer % 60).toString()
 															}),
@@ -327,28 +343,16 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 														)
 												]
 											)
-										)
+										]
 									)
-								),
-								Padding(
-									padding: EdgeInsets.all(8.0),
-									child: Icon(Icons.call_made, color: Colors.grey)
 								)
-							]
-						),
-						Padding(
-							padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 14.0).copyWith(bottom: 10.0),
-							child: Hero(
-								tag: task.key,
-								child: Text(
-									task.title,
-									style: Theme.of(context).textTheme.bodyText2.copyWith(fontSize: 17.0),
-									maxLines: 3,
-									overflow: TextOverflow.ellipsis
-								)
+							),
+							Padding(
+								padding: EdgeInsets.all(2.0),
+								child: Icon(Icons.call_made, color: Colors.grey)
 							)
-						)
-					]
+						]
+					)
 				)
 			)
 		);

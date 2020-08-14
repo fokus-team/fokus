@@ -120,20 +120,34 @@
 				}
 			},
 			"taskForm": {
-				"taskName": "Nazwa zadania",
-				"taskDescription": "Opis zadania",
-				"taskOrder": "Kolejność wykonywania",
-				"taskPoints": "Nagroda punktowa",
-				"taskPointsHint": "Pozostaw puste, aby nie przyznawać punktów",
-				"taskPointsCurrency": "Waluta punktów",
-				"taskTimer": "Czas na wykonanie zadania",
-				"taskTimerNotSet": "Nieograniczony",
-				"taskTimerSet": "Ustawiony na",
-				"taskTimerFormat": "{HOURS_NUM, plural, offset:0 zero {} other {# godz. }}{MINUTES_NUM} min",
-				"taskOptional": "Zadanie opcjonalne",
-				"taskOptionalHint": "Zadania opcjonalne występują poza kolejnością",
 				"removeTaskTitle": "Usuń zadanie",
-				"removeTaskText": "Na pewno chcesz usunąć to zadanie?"
+				"removeTaskText": "Na pewno chcesz usunąć to zadanie?",
+				"fields": {
+					"taskName": {
+						"label": "Nazwa zadania"
+					},
+					"taskDescription": {
+						"label": "Opis zadania"
+					},
+					"taskOrder": {
+						"label": "Kolejność wykonywania"
+					},
+					"taskPoints": {
+						"valueLabel": "Nagroda punktowa",
+						"currencyLabel": "Waluta punktów",
+						"hint": "Pozostaw puste, aby nie przyznawać punktów"
+					},
+					"taskTimer": {
+						"label": "Czas na wykonanie zadania",
+						"notSet": "Nieograniczony",
+						"set": "Ustawiony na",
+						"format": "{HOURS_NUM, plural, offset:0 zero {} other {# godz. }}{MINUTES_NUM} min"
+					},
+					"taskOptional": {
+						"label": "Zadanie opcjonalne",
+						"hint": "Zadania opcjonalne występują poza kolejnością"
+					}
+				}
 			},
 			"awards": {
 				"header": {

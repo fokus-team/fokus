@@ -120,20 +120,34 @@
 				}
 			},
 			"taskForm": {
-				"taskName": "Task name",
-				"taskDescription": "Task description",
-				"taskOrder": "Order execution",
-				"taskPoints": "Points awarded",
-				"taskPointsHint": "Leave empty to not award points",
-				"taskPointsCurrency": "Point currency",
-				"taskTimer": "Task execution time",
-				"taskTimerNotSet": "Unlimited",
-				"taskTimerSet": "Limited to",
-				"taskTimerFormat": "{HOURS_NUM, plural, offset:0 zero {} other {# hr }}{MINUTES_NUM} min",
-				"taskOptional": "Optional task",
-				"taskOptionalHint": "Optional tasks have no order",
 				"removeTaskTitle": "Remove task",
-				"removeTaskText": "Are you sure you want to remove this task?"
+				"removeTaskText": "Are you sure you want to remove this task?",
+				"fields": {
+					"taskName": {
+						"label": "Task name"
+					},
+					"taskDescription": {
+						"label": "Task description"
+					},
+					"taskOrder": {
+						"label": "Order execution"
+					},
+					"taskPoints": {
+						"valueLabel": "Points awarded",
+						"currencyLabel": "Point currency",
+						"hint": "Leave empty to not award points"
+					},
+					"taskTimer": {
+						"label": "Task execution time",
+						"notSet": "Unlimited",
+						"set": "Limited to",
+						"format": "{HOURS_NUM, plural, offset:0 zero {} other {# hr }}{MINUTES_NUM} min"
+					},
+					"taskOptional": {
+						"label": "Optional task",
+						"hint": "Optional tasks have no order"
+					}
+				}
 			},
 			"awards": {
 				"header": {

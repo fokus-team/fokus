@@ -307,7 +307,7 @@ class _TaskFormState extends State<TaskForm> {
 					icon: Padding(padding: EdgeInsets.all(5.0), child: Icon(Icons.edit)),
 					contentPadding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 12.0),
 					border: OutlineInputBorder(),
-					labelText: AppLocales.of(context).translate('$_pageKeyTaskForm.taskName')
+					labelText: AppLocales.of(context).translate('$_pageKeyTaskForm.fields.taskName.label')
 				),
 				maxLength: 120,
 				textCapitalization: TextCapitalization.sentences,
@@ -331,7 +331,7 @@ class _TaskFormState extends State<TaskForm> {
 					icon: Padding(padding: EdgeInsets.all(5.0), child: Icon(Icons.description)),
 					contentPadding: EdgeInsets.symmetric(vertical: 14.0, horizontal: 12.0),
 					border: OutlineInputBorder(),
-					labelText: AppLocales.of(context).translate('$_pageKeyTaskForm.taskDescription'),
+					labelText: AppLocales.of(context).translate('$_pageKeyTaskForm.fields.taskDescription.label'),
 					alignLabelWithHint: true
 				),
 				maxLength: 1000,
@@ -364,12 +364,13 @@ class _TaskFormState extends State<TaskForm> {
 										hintText: "0",
 										helperMaxLines: 3,
 										errorMaxLines: 3,
-										helperText: AppLocales.of(context).translate('$_pageKeyTaskForm.taskPointsHint'),
-										labelText: AppLocales.of(context).translate('$_pageKeyTaskForm.taskPoints'),
+										helperText: AppLocales.of(context).translate('$_pageKeyTaskForm.fields.taskPoints.hint'),
+										labelText: AppLocales.of(context).translate('$_pageKeyTaskForm.fields.taskPoints.valueLabel'),
 										suffixIcon: IconButton(
 											onPressed: () {
 												FocusScope.of(context).requestFocus(FocusNode());
 												_pointsController.clear();
+												task.pointsValue = null;
 											},
 											icon: Icon(Icons.clear)
 										)
@@ -399,7 +400,7 @@ class _TaskFormState extends State<TaskForm> {
 									}
 								},
 								child: Tooltip(
-									message: AppLocales.of(context).translate('$_pageKeyTaskForm.taskPointsCurrency'),
+									message: AppLocales.of(context).translate('$_pageKeyTaskForm.fields.taskPoints.currencyLabel'),
 									child: Row(
 										children: <Widget>[
 											Padding(
@@ -422,7 +423,7 @@ class _TaskFormState extends State<TaskForm> {
 					)
 				);
 			},
-			title: AppLocales.of(context).translate('$_pageKeyTaskForm.taskPointsCurrency'),
+			title: AppLocales.of(context).translate('$_pageKeyTaskForm.fields.taskPoints.currencyLabel'),
 			value: task.pointCurrency,
 			options: [
 				for(UIPlanCurrency element in currencies)
@@ -460,11 +461,11 @@ class _TaskFormState extends State<TaskForm> {
 			child: ListTile(
 				contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
 				leading: Padding(padding: EdgeInsets.all(8.0), child: Icon(Icons.timer)),
-				title: Text(AppLocales.of(context).translate('$_pageKeyTaskForm.taskTimer')),
+				title: Text(AppLocales.of(context).translate('$_pageKeyTaskForm.fields.taskTimer.label')),
 				subtitle: (task.timer == 0) ?
-					Text(AppLocales.of(context).translate('$_pageKeyTaskForm.taskTimerNotSet'))
-					: Text(AppLocales.of(context).translate('$_pageKeyTaskForm.taskTimerSet') + ' ' 
-						+ AppLocales.of(context).translate('$_pageKeyTaskForm.taskTimerFormat', {
+					Text(AppLocales.of(context).translate('$_pageKeyTaskForm.fields.taskTimer.notSet'))
+					: Text(AppLocales.of(context).translate('$_pageKeyTaskForm.fields.taskTimer.set') + ' ' 
+						+ AppLocales.of(context).translate('$_pageKeyTaskForm.fields.taskTimer.format', {
 						'HOURS_NUM': (task.timer ~/ 60).toString(),
 						'MINUTES_NUM': (task.timer % 60).toString()
 					})),
@@ -508,7 +509,7 @@ class _TaskFormState extends State<TaskForm> {
 			height: 120.0,
 			looping: true,
 			hideHeader: true,
-			title: Text(AppLocales.of(context).translate('$_pageKeyTaskForm.taskTimer')),
+			title: Text(AppLocales.of(context).translate('$_pageKeyTaskForm.fields.taskTimer.label')),
 			onConfirm: (Picker picker, List value) {
 				var times = picker.getSelectedValues();
 				var timeInMinutes = times[0]*60 + times[1];
@@ -544,8 +545,8 @@ class _TaskFormState extends State<TaskForm> {
 			padding: EdgeInsets.only(top: 12.0),
 			child: SwitchListTile(
 				value: task.optional,
-				title: Text(AppLocales.of(context).translate('$_pageKeyTaskForm.taskOptional')),
-				subtitle: Text(AppLocales.of(context).translate('$_pageKeyTaskForm.taskOptionalHint')),
+				title: Text(AppLocales.of(context).translate('$_pageKeyTaskForm.fields.taskOptional.label')),
+				subtitle: Text(AppLocales.of(context).translate('$_pageKeyTaskForm.fields.taskOptional.hint')),
 				secondary: Padding(padding: EdgeInsets.all(8.0), child: Icon(Icons.unfold_more)),
 				onChanged: (val) => setState(() => task.optional = val)
 			)

@@ -14,6 +14,7 @@ import 'data/data_repository.dart';
 
 class OutdatedDataService {
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
+
 	Timer _dataCheckTimer;
 	ObjectId _userId;
 	UserRole _role;

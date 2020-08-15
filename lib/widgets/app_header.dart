@@ -193,7 +193,7 @@ class AppHeader extends StatelessWidget {
 							headerIconButton(Icons.notifications, () => { log("Powiadomienia") }),
 							headerIconButton(
 								Icons.more_vert,
-								() => authenticationBloc.add(AuthenticationLogoutRequested())
+								() => authenticationBloc.add(AuthenticationSignOutRequested())
 							),
 						],
 					)
@@ -220,7 +220,7 @@ class AppHeader extends StatelessWidget {
 							headerIconButton(Icons.notifications, () => { log("Powiadomienia") }),
 							headerIconButton(
 								Icons.more_vert,
-								() => context.bloc<AuthenticationBloc>().add(AuthenticationLogoutRequested())
+								() => context.bloc<AuthenticationBloc>().add(AuthenticationSignOutRequested())
 							),
 						],
 					)

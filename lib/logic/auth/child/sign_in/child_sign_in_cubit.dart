@@ -21,7 +21,7 @@ class ChildSignInCubit extends ChildAuthCubitBase<ChildSignInState> {
   }
 
   void signInWithCachedId(ObjectId childId) async {
-		authenticationBloc.add(AuthenticationChildLoginRequested(await dataRepository.getUser(id: childId)));
+		authenticationBloc.add(AuthenticationChildSignInRequested(await dataRepository.getUser(id: childId)));
   }
 
   void signInNewChild() async {

@@ -23,7 +23,7 @@ class ChildSignUpCubit extends ChildAuthCubitBase<ChildSignUpState> {
 	  child.id = await dataRepository.createUser(child);
 	  await dataRepository.updateUser(caregiverId, newConnections: [child.id]);
 	  appConfigRepository.saveChildProfile(child.id);
-	  authenticationBloc.add(AuthenticationChildLoginRequested(child));
+	  authenticationBloc.add(AuthenticationChildSignInRequested(child));
 	  emit(state.copyWith(status: FormzStatus.submissionSuccess));
   }
 

@@ -1,4 +1,3 @@
-import 'package:logging/logging.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
 import 'package:fokus/model/db/collection.dart';
@@ -11,8 +10,6 @@ import 'package:fokus/model/db/plan/plan_instance_state.dart';
 import 'package:fokus/services/data/data_repository.dart';
 
 mixin PlanDbRepository implements DbRepository {
-	final Logger _logger = Logger('PlanDbRepository');
-
 	Future<List<Plan>> getPlans({ObjectId caregiverId, ObjectId childId, bool activeOnly = true, bool oneDayOnly = false, List<String> fields}) {
 		var query = _buildPlanQuery(caregiverId: caregiverId, childId: childId, activeOnly: activeOnly);
 		if (oneDayOnly)

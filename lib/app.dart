@@ -31,6 +31,7 @@ import 'package:fokus/pages/loading_page.dart';
 import 'package:fokus/pages/roles_page.dart';
 import 'package:fokus/widgets/page_theme.dart';
 import 'package:fokus/model/ui/app_page.dart';
+import 'package:fokus/model/db/user/user_role.dart';
 import 'package:fokus/utils/service_injection.dart';
 
 void main() {

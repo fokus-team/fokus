@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 
 import 'package:fokus/logic/auth/caregiver/sign_up/caregiver_sign_up_cubit.dart';
-import 'package:fokus/model/ui/button.dart';
+import 'package:fokus/model/ui/ui_button.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/widgets/auth/auth_input_field.dart';
 import 'package:fokus/widgets/auth/auth_submit_button.dart';
@@ -65,7 +65,7 @@ class CaregiverSignUpPage extends StatelessWidget {
 					hideInput: true
 			  ),
 			  AuthenticationSubmitButton<CaregiverSignUpCubit, CaregiverSignUpState>(
-					button: UIButton(ButtonType.signUp, (context) => context.bloc<CaregiverSignUpCubit>().signUpFormSubmitted())
+					button: UIButton.ofType(ButtonType.signUp, (context) => context.bloc<CaregiverSignUpCubit>().signUpFormSubmitted())
 			  ),
 			  GoogleSignInButton(
 					onPressed: () => context.bloc<CaregiverSignUpCubit>().logInWithGoogle(),

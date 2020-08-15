@@ -72,7 +72,7 @@ class Instrumentator {
 						AppDialog(
 							titleKey: 'alert.noConnection',
 							textKey: 'alert.connectionRetry',
-							buttons: [UIButton(ButtonType.ok, (_) => Navigator.of(context).pop())],
+							buttons: [UIButton.ofType(ButtonType.ok, (_) => Navigator.of(context).pop())],
 						),
 				);
 				return true;

@@ -1,3 +1,4 @@
+import 'package:logging/logging.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
 import 'package:fokus/model/db/collection.dart';
@@ -6,6 +7,8 @@ import 'package:fokus/model/db/user/user_role.dart';
 import 'package:fokus/services/data/db/db_repository.dart';
 
 mixin UserDbRepository implements DbRepository {
+	final Logger _logger = Logger('UserDbRepository');
+
 	Future<User> getUser({ObjectId id, ObjectId connected, String authenticationId, UserRole role, List<String> fields}) {
 		var query = _buildUserQuery(id: id, connected: connected, authenticationId: authenticationId, role: role);
 		if (fields != null && !fields.contains('role'))
@@ -43,6 +46,9 @@ mixin UserDbRepository implements DbRepository {
 	SelectorBuilder _buildUserQuery({List<ObjectId> ids, ObjectId id, ObjectId connected, String authenticationId, UserRole role}) {
 		SelectorBuilder query;
 		var addExpression = (expression) => query == null ? (query = expression) : query.and(expression);
+		if (ids != null && id != null)
+			_logger.warning("Both ID and ID list specified in user query");
+
 		if (ids != null)
 			addExpression(where.oneFrom('_id', ids));
 		if (id != null)

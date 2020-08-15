@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:fokus/logic/child_plans/child_plans_cubit.dart';
-import 'package:fokus/model/app_page.dart';
+import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/logic/timer/timer_cubit.dart';
 import 'package:fokus/model/db/plan/plan_instance_state.dart';
 import 'package:fokus/model/ui/plan/ui_plan_instance.dart';

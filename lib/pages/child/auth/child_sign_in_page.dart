@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/logic/auth/child/sign_in/child_sign_in_cubit.dart';
 import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/ui/auth/user_code.dart';
-import 'package:fokus/model/ui/button.dart';
+import 'package:fokus/model/ui/ui_button.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/theme_config.dart';
 import 'package:fokus/widgets/auth/auth_input_field.dart';
@@ -56,7 +56,7 @@ class ChildSignInPage extends StatelessWidget {
 				getErrorKey: (state) => [state.childCode.error.key],
 			),
 			AuthenticationSubmitButton<ChildSignInCubit, ChildSignInState>(
-				button: UIButton(ButtonType.signIn, (context) => context.bloc<ChildSignInCubit>().signInNewChild())
+				button: UIButton.ofType(ButtonType.signIn, (context) => context.bloc<ChildSignInCubit>().signInNewChild())
 			),
 			MaterialButton(
 				child: Text(AppLocales.of(context).translate('$_pageKey.createNewProfile')),

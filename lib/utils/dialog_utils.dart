@@ -11,7 +11,7 @@ void showNoConnectionDialog(BuildContext context, void Function(BuildContext) ac
 		builder: (context) => AppDialog(
 			titleKey: 'alert.noConnection',
 			textKey: 'alert.connectionRetry',
-			buttons: [UIButton(ButtonType.retry, action)],
+			buttons: [UIButton.ofType(ButtonType.retry, action)],
 		),
 	);
 }

@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:fokus/model/ui/ui_button.dart';
-import 'package:fokus/utils/app_locales.dart';
+import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/theme_config.dart';
 import 'package:fokus/widgets/app_header.dart';
 import 'package:fokus/widgets/chips/attribute_chip.dart';
@@ -54,8 +54,8 @@ class _CaregiverPlanDetailsPageState extends State<CaregiverPlanDetailsPage> {
 											titleKey: 'alert.deletePlan',
 											textKey: 'alert.confirmPlanDeletion',
 											buttons: [
-												DialogButton(ButtonType.close, () => Navigator.of(context).pop()),
-												DialogButton(ButtonType.ok, () => Navigator.of(context).pop())
+												UIButton.ofType(ButtonType.close, (context) => Navigator.of(context).pop()),
+												UIButton.ofType(ButtonType.ok, (context) => Navigator.of(context).pop())
 											],
 										),
 									)

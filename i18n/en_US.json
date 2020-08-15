@@ -163,7 +163,7 @@
 	},
 	"alert": {
 		"noConnection": "No connection",
-		"connectionRetry": "Ensure the device has access to internet",
+		"connectionRetry": "Ensure the device has access to the internet",
 		"noHint": "No hint",
 		"deletePlan": "Deleting the plan",
 		"confirmPlanDeletion": "Are you sure you want to delete the plan?"
@@ -178,7 +178,7 @@
 		"details": "Show details",
 		"help": "Show help",
 		"back": "Back",
-		"unpair": "Unpair"
+		"unpair": "Unpair",
 		"signIn": "Login",
 		"signUp": "Sign up"
 	},

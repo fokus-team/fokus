@@ -2,15 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:fokus/model/ui/ui_button.dart';
 import 'package:fokus/services/app_locales.dart';
 
-class DialogButton {
-	final ButtonType type;
-	final void Function() action;
-
-	DialogButton(this.type, this.action);
-}
-import 'package:fokus/model/ui/button.dart';
-import 'package:fokus/services/app_locales.dart';
-
 class AppDialog extends StatelessWidget {
 	final String titleKey, textKey;
 	final List<UIButton> buttons;
@@ -23,7 +14,7 @@ class AppDialog extends StatelessWidget {
 			title: Text(AppLocales.of(context).translate(titleKey)),
 			content: Text(AppLocales.of(context).translate(textKey)),
 			actions: buttons.map((button) => FlatButton(
-				child: Text(AppLocales.of(context).translate(button.type.key)),
+				child: Text(AppLocales.of(context).translate(button.textKey)),
 				onPressed: () => button.action(context),
 			)).toList(),
 		);

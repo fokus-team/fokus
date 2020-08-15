@@ -5,7 +5,7 @@ import 'package:formz/formz.dart';
 
 import 'package:fokus/logic/auth/caregiver/sign_in/caregiver_sign_in_cubit.dart';
 import 'package:fokus/model/ui/app_page.dart';
-import 'package:fokus/model/ui/button.dart';
+import 'package:fokus/model/ui/ui_button.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/theme_config.dart';
 import 'package:fokus/widgets/auth/auth_input_field.dart';
@@ -52,7 +52,7 @@ class CaregiverSignInPage extends StatelessWidget {
 					hideInput: true,
 				),
 				AuthenticationSubmitButton<CaregiverSignInCubit, CaregiverSignInState>(
-					button: UIButton(ButtonType.signIn, (context) => context.bloc<CaregiverSignInCubit>().logInWithCredentials())
+					button: UIButton.ofType(ButtonType.signIn, (context) => context.bloc<CaregiverSignInCubit>().logInWithCredentials())
 				),
 				MaterialButton(
 					child: Text(AppLocales.of(context).translate('actions.signUp')),

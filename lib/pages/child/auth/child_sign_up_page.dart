@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:fokus/logic/auth/child/sign_up/child_sign_up_cubit.dart';
-import 'package:fokus/model/ui/button.dart';
+import 'package:fokus/model/ui/ui_button.dart';
 import 'package:fokus/widgets/auth/auth_input_field.dart';
 import 'package:fokus/widgets/auth/auth_submit_button.dart';
 import 'package:fokus/model/ui/auth/user_code.dart';
@@ -36,7 +36,7 @@ class ChildSignUpPage extends StatelessWidget {
 				  getErrorKey: (state) => [state.name.error.key],
 			  ),
 			  AuthenticationSubmitButton<ChildSignUpCubit, ChildSignUpState>(
-					button: UIButton(ButtonType.signUp, (context) => context.bloc<ChildSignUpCubit>().signUpFormSubmitted())
+					button: UIButton.ofType(ButtonType.signUp, (context) => context.bloc<ChildSignUpCubit>().signUpFormSubmitted())
 			  ),
 		  ],
 	  );

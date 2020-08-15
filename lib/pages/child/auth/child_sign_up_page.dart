@@ -36,7 +36,7 @@ class ChildSignUpPage extends StatelessWidget {
 				  getErrorKey: (state) => [state.name.error.key],
 			  ),
 			  AuthenticationSubmitButton<ChildSignUpCubit, ChildSignUpState>(
-					  button: UIButton(ButtonType.signUp, (context) => context.bloc<ChildSignUpCubit>().signUpFormSubmitted())
+					button: UIButton(ButtonType.signUp, (context) => context.bloc<ChildSignUpCubit>().signUpFormSubmitted())
 			  ),
 		  ],
 	  );

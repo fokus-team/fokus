@@ -13,10 +13,13 @@ class Child extends User {
   List<Points> points;
   List<ChildReward> rewards;
 
-  Child({ObjectId id, this.badges, this.permissions, this.points, this.rewards}) : super(id: id, role: UserRole.child);
+  Child.create({String name, int avatar, List<ObjectId> connections}) : this._(name: name, avatar: avatar, connections: connections);
+
+  Child._({ObjectId id, String name, int avatar, List<ObjectId> connections, this.badges, this.permissions, this.points, this.rewards}) :
+			  super(id: id, name: name, role: UserRole.child, avatar: avatar, connections: connections);
 
   factory Child.fromJson(Map<String, dynamic> json) {
-    return json != null ? (Child(
+    return json != null ? (Child._(
 	    id: json['_id'],
       badges: json['badges'] != null ? (json['badges'] as List).map((i) => ChildBadge.fromJson(i)).toList() : [],
       permissions: json['permissions'] != null ? (json['badges'] as List).map((i) => ChildPermission.values[i]).toList() : [],

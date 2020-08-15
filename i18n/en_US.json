@@ -164,6 +164,7 @@
 		"invalidEmail": "Invalid e-mail address",
 		"userCodeToShort": "Code is to short",
 		"userCodeToLong": "Code is to long",
+		"noSuchUser": "User does not exist",
 		"password": "Password",
 		"passwordNotLongEnough": "Password must have at least {LENGTH, plural, offset:0 one {# character} other {# characters}} long",
 		"confirmPassword": "Repeat password",

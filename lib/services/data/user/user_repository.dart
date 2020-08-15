@@ -7,6 +7,8 @@ abstract class UserRepository {
 	Future<List<User>> getUsers({List<ObjectId> ids, ObjectId connected, UserRole role, List<String> fields});
 
 	Future<Map<ObjectId, String>> getUserNames(List<ObjectId> users);
+	Future<bool> userExists({ObjectId id, UserRole role});
 
 	Future createUser(User user);
+	Future updateUser(ObjectId userId, {List<ObjectId> newConnections});
 }

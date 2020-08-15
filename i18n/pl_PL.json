@@ -164,6 +164,7 @@
 		"invalidEmail": "Nieprawidłowy adres e-mail",
 		"userCodeToShort": "Kod jest za krótki",
 		"userCodeToLong": "Kod jest za długi",
+		"noSuchUser": "Użytkownik nie istnieje",
 		"password": "Hasło",
 		"passwordNotLongEnough": "Hasło musi być przynajmniej {LENGTH} znakowe",
 		"confirmPassword": "Powtórz hasło",

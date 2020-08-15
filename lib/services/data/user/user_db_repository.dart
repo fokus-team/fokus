@@ -29,7 +29,16 @@ mixin UserDbRepository implements DbRepository {
 		return dbClient.queryTypedMap(Collection.user, query, (json) => MapEntry(json['_id'], json['name']));
 	}
 
+	Future<bool> userExists({ObjectId id, UserRole role}) => dbClient.exists(Collection.user, _buildUserQuery(id: id, role: role));
+
 	Future createUser(User user) => dbClient.insert(Collection.user, user.toJson());
+
+	Future updateUser(ObjectId userId, {List<ObjectId> newConnections}) {
+		var document = modify;
+		if (newConnections != null)
+			document.addAllToSet('connections', newConnections);
+		return dbClient.update(Collection.user, where.eq('_id', userId), document);
+	}
 
 	SelectorBuilder _buildUserQuery({List<ObjectId> ids, ObjectId id, ObjectId connected, String authenticationId, UserRole role}) {
 		SelectorBuilder query;

@@ -2,12 +2,12 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:fokus/model/ui/user/ui_child.dart';
 import 'package:logging/logging.dart';
 import 'package:get_it/get_it.dart';
-import 'package:mongo_dart/mongo_dart.dart';
 
 import 'package:fokus/model/auth_user.dart';
+import 'package:fokus/model/db/user/child.dart';
+import 'package:fokus/model/ui/user/ui_child.dart';
 import 'package:fokus/services/auth/authentication_repository.dart';
 import 'package:fokus/model/ui/user/ui_user.dart';
 import 'package:fokus/services/data/data_repository.dart';
@@ -37,8 +37,8 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 	  if (event is AuthenticationUserChanged)
 		  yield await _processUserChangedEvent(event);
 	  else if (event is AuthenticationChildLoginRequested) {
-			_appConfigRepository.signInChild(event.childId);
-		  yield AuthenticationState.authenticated(UIChild.fromDBModel(await _dataRepository.getUser(id: event.childId)));
+			_appConfigRepository.signInChild(event.child.id);
+		  yield AuthenticationState.authenticated(UIChild.fromDBModel(event.child));
 	  } else if (event is AuthenticationLogoutRequested) {
 		  _logger.fine('Signing out user ${state.user}');
 		  if (state.user.role == UserRole.caregiver)
@@ -66,8 +66,8 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 		user = await _dataRepository.getUser(authenticationId: event.user.id);
 		if (user == null) {
 			_logger.fine('Creating new user for ${event.user}');
-			_dataRepository.createUser(Caregiver.fromAuthUser(event.user));
-			user = await _dataRepository.getUser(authenticationId: event.user.id);
+			var user = Caregiver.fromAuthUser(event.user);
+			user.id = await _dataRepository.createUser(user);
 		}
 		return AuthenticationState.authenticated(UIUser.typedFromDBModel(user));
   }

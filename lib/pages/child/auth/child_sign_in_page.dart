@@ -26,7 +26,7 @@ class ChildSignInPage extends StatelessWidget {
 							  var cubit = context.bloc<ChildSignInCubit>();
 							  if (state.savedChildren == null) {
 								  cubit.loadSavedProfiles();
-								  return Expanded(child: Center(child: CircularProgressIndicator())); // TODO Decide what to show when loading (globally)
+								  return Expanded(child: Center(child: CircularProgressIndicator())); // TODO Come up with smarter loading indicator as we have more content below
 							  }
 							  return Column(
 								  children: [

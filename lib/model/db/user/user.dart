@@ -5,7 +5,7 @@ import 'package:meta/meta.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
 class User {
-  final ObjectId id;
+  ObjectId id;
   final UserRole role;
   String name;
 
@@ -13,7 +13,7 @@ class User {
   int avatar;
   List<ObjectId> connections;
 
-  User({this.id, this.role, this.name});
+  User({this.id, this.role, this.name, this.avatar, this.connections, this.accessCode});
 
   @protected
   void fromJson(Map<String, dynamic> json) {

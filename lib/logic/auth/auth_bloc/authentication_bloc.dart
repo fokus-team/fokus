@@ -45,7 +45,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 	  	_outdatedDataService.onUserSignOut();
 		  _logger.fine('Signing out user ${state.user}');
 		  if (state.user.role == UserRole.caregiver)
-		    _authenticationRepository.logOut();
+		    _authenticationRepository.signOut();
 		  else {
 			  _appConfigRepository.signOutChild();
 			  add(AuthenticationUserChanged(AuthenticatedUser.empty));

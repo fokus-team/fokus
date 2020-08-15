@@ -22,7 +22,8 @@
 				"help": "I need help"
 			},
 			"caregiverSignIn": {
-				"googleSignIn": "Sign in with Google"
+				"googleSignIn": "Sign in with Google",
+				"signInFailed": "Incorrect email or password"
 			},
 			"caregiverSignUp": {
 				"googleSignUp": "Sign up with Google"

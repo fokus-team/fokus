@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:logging/logging.dart';
 import 'package:meta/meta.dart';
 
 import 'package:fokus/model/auth_user.dart';
@@ -8,6 +10,8 @@ import 'package:fokus/services/exception/auth_exceptions.dart';
 import 'authentication_repository.dart';
 
 class FirebaseAuthRepository implements AuthenticationRepository {
+	final Logger _logger = Logger('FirebaseAuthRepository');
+
 	final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 	final GoogleSignIn _googleSignIn = GoogleSignIn.standard();
 
@@ -21,30 +25,46 @@ class FirebaseAuthRepository implements AuthenticationRepository {
 	}
 
 	@override
-	Future<void> logInWithEmailAndPassword({@required String email, @required String password}) async {
+	Future<void> signInWithEmail({@required String email, @required String password}) async {
 		assert(email != null && password != null);
 		try {
 			await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
-		} on Exception {
-			throw EmailLogInFailure();
+		} catch (e) {
+			EmailSignInError reason;
+			if (e is PlatformException) {
+				if (e.code == 'ERROR_WRONG_PASSWORD' || e.code == 'ERROR_USER_NOT_FOUND')
+					reason = EmailSignInError.incorrectData;
+				else if (e.code == 'ERROR_USER_DISABLED')
+					reason = EmailSignInError.userDisabled;
+				else
+					_handleException('Sign In', e);
+			}
+			throw EmailSignInFailure(reason: reason);
 		}
 	}
 
 	@override
-	Future<void> signUp({@required String email, @required String password, String name = ''}) async {
+	Future<void> signUpWithEmail({@required String email, @required String password, String name = ''}) async {
 		assert(email != null && password != null);
 		signedUpUserName = name;
 		var updateInfo = UserUpdateInfo();
 		updateInfo.displayName = name;
 		try {
 			await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password).then((user) => user.user.updateProfile(updateInfo));
-		} on Exception {
-			throw SignUpFailure();
+		} catch (e) {
+			EmailSignUpError reason;
+			if (e is PlatformException) {
+				if (e.code == 'ERROR_EMAIL_ALREADY_IN_USE')
+					reason = EmailSignUpError.emailAlreadyUsed;
+				else
+					_handleException('Sign Up', e);
+			}
+			throw EmailSignUpFailure(reason: reason);
 		}
 	}
 
 	@override
-	Future<void> logInWithGoogle() async {
+	Future<void> signInWithGoogle() async {
 		try {
 			final googleUser = await _googleSignIn.signIn();
 			final googleAuth = await googleUser.authentication;
@@ -53,20 +73,20 @@ class FirebaseAuthRepository implements AuthenticationRepository {
 				idToken: googleAuth.idToken,
 			);
 			await _firebaseAuth.signInWithCredential(credential);
-		} on Exception {
-			throw GoogleLogInFailure();
+		} catch (e) {
+			throw GoogleSignInFailure();
 		}
 	}
 
 	@override
-	Future<void> logOut() async {
+	Future<void> signOut() async {
 		try {
 			await Future.wait([
 				_firebaseAuth.signOut(),
 				_googleSignIn.signOut(),
 			]);
-		} on Exception {
-			throw LogOutFailure();
+		} catch (e) {
+			throw SignOutFailure();
 		}
 	}
 
@@ -74,5 +94,9 @@ class FirebaseAuthRepository implements AuthenticationRepository {
 	  var authUser = AuthenticatedUser(id: user.uid, email: user.email, name: user.displayName ?? signedUpUserName);
 	  signedUpUserName = null;
 	  return authUser;
+	}
+
+	void _handleException(String method, PlatformException exception) {
+		_logger.warning('Firebase $method response: ${exception.code} ${exception.message}');
 	}
 }

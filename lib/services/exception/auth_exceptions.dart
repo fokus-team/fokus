@@ -1,7 +1,18 @@
-class SignUpFailure implements Exception {}
+enum EmailSignInError { incorrectData, userDisabled }
+enum EmailSignUpError { emailAlreadyUsed }
 
-class EmailLogInFailure implements Exception {}
+class EmailSignUpFailure implements Exception {
+	final EmailSignUpError reason;
 
-class GoogleLogInFailure implements Exception {}
+  EmailSignUpFailure({this.reason});
+}
 
-class LogOutFailure implements Exception {}
+class EmailSignInFailure implements Exception {
+	final EmailSignInError reason;
+
+  EmailSignInFailure({this.reason});
+}
+
+class GoogleSignInFailure implements Exception {}
+
+class SignOutFailure implements Exception {}

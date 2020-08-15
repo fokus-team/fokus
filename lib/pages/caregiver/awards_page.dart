@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:fokus/model/button_type.dart';
+import 'package:fokus/model/ui/ui_button.dart';
 import 'package:fokus/model/currency_type.dart';
 import 'package:fokus/utils/app_locales.dart';
 import 'package:fokus/utils/icon_sets.dart';
@@ -47,8 +47,8 @@ class _CaregiverAwardsPageState extends State<CaregiverAwardsPage> {
 										title: "Wycieczka do Zoo", 
 										subtitle: AppLocales.of(context).translate('$_pageKey.content.limitedAward', {'AWARD_LIMIT': 2}),
 										menuItems: [
-											UIButton(ButtonType.edit, (context) => {log("edit")}),
-											UIButton(ButtonType.delete, (context) => {log("delete")})
+											UIButton.ofType(ButtonType.edit, (context) => {log("edit")}),
+											UIButton.ofType(ButtonType.delete, (context) => {log("delete")})
 										],
 										graphicType: GraphicAssetType.awardsIcons,
 										graphic: 16,
@@ -73,8 +73,8 @@ class _CaregiverAwardsPageState extends State<CaregiverAwardsPage> {
 										title: "Super planista", 
 										subtitle: AppLocales.of(context).translate('$_pageKey.content.3LeveledBadge'),
 										menuItems: [
-											UIButton(ButtonType.edit, (context) => {log("edit")}),
-											UIButton(ButtonType.delete, (context) => {log("delete")})
+											UIButton.ofType(ButtonType.edit, (context) => {log("edit")}),
+											UIButton.ofType(ButtonType.delete, (context) => {log("delete")})
 										],
 										graphicType: GraphicAssetType.badgeIcons,
 										graphic: 3,

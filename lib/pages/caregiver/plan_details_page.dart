@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:fokus/model/button_type.dart';
+import 'package:fokus/model/ui/ui_button.dart';
 import 'package:fokus/utils/app_locales.dart';
 import 'package:fokus/utils/theme_config.dart';
 import 'package:fokus/widgets/app_header.dart';
@@ -44,8 +44,8 @@ class _CaregiverPlanDetailsPageState extends State<CaregiverPlanDetailsPage> {
 						popupMenuWidget: PopupMenuList(
 							lightTheme: true,
 							items: [
-								UIButton(ButtonType.edit,(context) => log("Tapped edit")),
-								UIButton(
+								UIButton.ofType(ButtonType.edit,(context) => log("Tapped edit")),
+								UIButton.ofType(
 									ButtonType.delete,
 									(context) => showDialog(
 										context: context,

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
-import 'package:fokus/model/button_type.dart';
+import 'package:fokus/model/ui/ui_button.dart';
 import 'package:fokus/utils/app_locales.dart';
 import 'package:fokus/utils/app_paths.dart';
 

@@ -50,7 +50,7 @@
 					"addedActivePlansTitle": "Added plans",
 					"addedDeactivatedPlansTitle": "Deactivated plans",
 					"noPlansAdded": "No plans to display",
-					"tasksCount": "{NUM_TASKS, plural, offset:0  =1 {# task} other {# tasks}}"
+					"tasks": "{NUM_TASKS, plural, offset:0  =1 {# task} other {# tasks}}"
 				}
 			},
 			"planInProgress": {

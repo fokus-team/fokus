@@ -9,7 +9,7 @@ import 'package:flutter/widgets.dart';
 
 import 'package:fokus/services/exception/no_db_connection.dart';
 import 'package:fokus/widgets/dialogs/dialog.dart';
-import 'package:fokus/model/button_type.dart';
+import 'package:fokus/model/ui/ui_button.dart';
 
 class Instrumentator {
 	final Logger _logger = Logger('Instrumentator');

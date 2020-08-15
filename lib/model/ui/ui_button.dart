@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 enum ButtonType { exit, ok, retry, close, details, edit, delete, unpair }
 
 class UIButton {
-	final ButtonType type;
+	final String textKey;
 	final void Function(BuildContext) action;
-	UIButton(this.type, this.action);
+
+	UIButton(this.textKey, this.action);
+	UIButton.ofType(ButtonType type, this.action) : textKey = type.key;
 }
 
 extension TextButtonType on ButtonType {
@@ -18,5 +20,5 @@ extension TextButtonType on ButtonType {
 		ButtonType.edit: 'actions.edit',
 		ButtonType.delete: 'actions.delete',
 		ButtonType.unpair: 'actions.unpair'
-		}[this];
+  }[this];
 }

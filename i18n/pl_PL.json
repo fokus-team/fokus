@@ -22,10 +22,8 @@
 				"help": "Potrzebuję pomocy"
 			},
 			"caregiverSignIn": {
-				"googleSignIn": "Zaloguj się z Google"
 			},
 			"caregiverSignUp": {
-				"googleSignUp": "Załóż konto z Google"
 			},
 			"childSignIn": {
 				"childCode": "Kod dziecka",
@@ -187,6 +185,8 @@
 		"email": "Adres e-mail",
 		"password": "Hasło",
 		"confirmPassword": "Powtórz hasło",
+		"googleSignIn": "Zaloguj się z Google",
+		"googleSignUp": "Załóż konto z Google",
 
 		"error": {
 			"incorrectData": "Nieprawidłowy e-mail lub hasło",

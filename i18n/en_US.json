@@ -22,10 +22,8 @@
 				"help": "I need help"
 			},
 			"caregiverSignIn": {
-				"googleSignIn": "Sign in with Google"
 			},
 			"caregiverSignUp": {
-				"googleSignUp": "Sign up with Google"
 			},
 			"childSignIn": {
 				"childCode": "Child code",
@@ -187,6 +185,8 @@
 		"email": "E-mail address",
 		"password": "Password",
 		"confirmPassword": "Repeat password",
+		"googleSignIn": "Sign in with Google",
+		"googleSignUp": "Sign up with Google",
 
 		"error": {
 			"incorrectData": "Incorrect e-mail or password",

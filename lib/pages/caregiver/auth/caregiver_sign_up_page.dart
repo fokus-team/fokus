@@ -69,7 +69,7 @@ class CaregiverSignUpPage extends StatelessWidget {
 			  ),
 			  GoogleSignInButton(
 					onPressed: () => context.bloc<CaregiverSignUpCubit>().logInWithGoogle(),
-				  text: AppLocales.of(context).translate('$_pageKey.googleSignUp'),
+				  text: AppLocales.of(context).translate('authentication.googleSignUp'),
 			  )
 		  ],
 	  );

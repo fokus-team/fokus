@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:fokus/model/ui/button.dart';
+import 'package:fokus/model/ui/ui_button.dart';
 import 'package:fokus/widgets/dialogs/dialog.dart';
 import 'package:fokus/widgets/dialogs/help_dialog.dart';
 

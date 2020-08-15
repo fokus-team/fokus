@@ -13,7 +13,9 @@ import 'package:fokus/utils/theme_config.dart';
 import 'package:fokus/widgets/chips/attribute_chip.dart';
 import 'package:fokus/widgets/app_avatar.dart';
 
-enum AppHeaderType { greetings, normal }
+import 'back_icon_button.dart';
+
+enum AppHeaderType { greetings, normal, widget }
 
 class HeaderActionButton {
 	final IconData icon;
@@ -24,9 +26,9 @@ class HeaderActionButton {
 
 	HeaderActionButton(this.icon, this.text, this.customContent, this.action, [this.backgroundColor]);
 	HeaderActionButton.normal(IconData icon, String text, Function action, [Color backgroundColor])
-			: this(icon, text, null, action, backgroundColor);
+		: this(icon, text, null, action, backgroundColor);
 	HeaderActionButton.custom(Widget customContent, Function action, [Color backgroundColor])
-			: this(null, null, customContent, action, backgroundColor);
+		: this(null, null, customContent, action, backgroundColor);
 }
 
 class AppHeader extends StatelessWidget {
@@ -34,22 +36,41 @@ class AppHeader extends StatelessWidget {
 	final String text;
 	final List<HeaderActionButton> headerActionButtons;
 	final AppHeaderType headerType;
+	final Widget appHeaderWidget;
+	final bool showHelp;
+	final Widget popupMenuWidget;
 
-	AppHeader({this.title, this.text, this.headerActionButtons, this.headerType});
+	AppHeader({this.title, this.text, this.headerActionButtons, this.headerType, this.appHeaderWidget, this.showHelp = false, this.popupMenuWidget});
 	AppHeader.greetings({String text, List<HeaderActionButton> headerActionButtons}) : this(
-			text: text,
-			headerActionButtons: headerActionButtons,
-			headerType: AppHeaderType.greetings
+		text: text,
+		headerActionButtons: headerActionButtons,
+		headerType: AppHeaderType.greetings
 	);
 	AppHeader.normal({String title, String text, List<HeaderActionButton> headerActionButtons}) : this(
-			title: title,
-			text: text,
-			headerActionButtons: headerActionButtons,
-			headerType: AppHeaderType.normal
+		title: title,
+		text: text,
+		headerActionButtons: headerActionButtons,
+		headerType: AppHeaderType.normal
+	);
+	AppHeader.widget({String title, String text, List<HeaderActionButton> headerActionButtons, Widget appHeaderWidget, bool showHelp = false, Widget popupMenuWidget}) : this(
+		title: title,
+		text: text,
+		headerActionButtons: headerActionButtons,
+		headerType: AppHeaderType.widget,
+		appHeaderWidget: appHeaderWidget,
+		showHelp: showHelp,
+		popupMenuWidget: popupMenuWidget
 	);
 
-  @override
-  Widget build(BuildContext context) => headerType == AppHeaderType.greetings ? buildGreetings(context) : buildNormal(context);
+	@override
+	Widget build(BuildContext context) {
+		if(headerType == AppHeaderType.greetings)
+			return buildGreetings(context);
+		else if(headerType == AppHeaderType.widget)
+			return buildWidget(context);
+		else
+			return buildNormal(context);
+	}
 
 	Widget headerImage(UIUser user) {
 		if(user.role == UserRole.caregiver) {
@@ -73,7 +94,7 @@ class AppHeader extends StatelessWidget {
 			)
 		);
 	}
-	
+
 	Widget headerActionButton(BuildContext context, HeaderActionButton button) {
 		if(button.customContent != null) {
 			return GestureDetector(
@@ -124,18 +145,19 @@ class AppHeader extends StatelessWidget {
 		);
 	}
 
-	Widget buildHeaderContainer(BuildContext context, Widget innerContent) {
+	Widget buildHeaderContainer(BuildContext context, Widget innerContent, {double horizontalEdge = 8.0}) {
 		return Material(
 			elevation: 4.0,
 			color: Theme.of(context).appBarTheme.color,
 			child: Container(
-				padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 8.0),
+				padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: horizontalEdge),
 				child: SafeArea(
 					child: Column(
 						children: <Widget>[
 							innerContent,
 							if (text != null)
 								headerTextField(context, text),
+							if (headerActionButtons != null)
 							Container(
 								height: 48,
 								alignment: Alignment.centerLeft,
@@ -143,8 +165,7 @@ class AppHeader extends StatelessWidget {
 									physics: BouncingScrollPhysics(),
 									shrinkWrap: true,
 									scrollDirection: Axis.horizontal,
-									children: headerActionButtons.map((element) => 
-										headerActionButton(context, element)).toList()
+									children: headerActionButtons.map((element) => headerActionButton(context, element)).toList()
 								)
 							)
 						]
@@ -154,11 +175,12 @@ class AppHeader extends StatelessWidget {
 		);
 	}
 
+
 	Widget buildGreetings(BuildContext context) {
 		var authenticationBloc = context.bloc<AuthenticationBloc>();
 		var currentUser = authenticationBloc.state.user;
 
-		return buildHeaderContainer(context, 
+		return buildHeaderContainer(context,
 			Row(
 				mainAxisAlignment: MainAxisAlignment.spaceBetween,
 				crossAxisAlignment: CrossAxisAlignment.start,
@@ -203,7 +225,7 @@ class AppHeader extends StatelessWidget {
 	}
 
 	Widget buildNormal(BuildContext context) {
-		return buildHeaderContainer(context, 
+		return buildHeaderContainer(context,
 			Row(
 				mainAxisAlignment: MainAxisAlignment.spaceBetween,
 				crossAxisAlignment: CrossAxisAlignment.start,
@@ -226,6 +248,47 @@ class AppHeader extends StatelessWidget {
 					)
 				]
 			)
+		);
+	}
+
+	Widget buildWidget(BuildContext context) {
+		return buildHeaderContainer(context,
+			Column(
+				children: <Widget>[
+					Row(
+						mainAxisAlignment: MainAxisAlignment.start,
+						crossAxisAlignment: CrossAxisAlignment.center,
+						children: <Widget>[
+							BackIconButton(),
+							Expanded(
+							  child: Text(
+							  	AppLocales.of(context).translate(title),
+							  	style: Theme.of(context).textTheme.headline1.copyWith(color: Colors.white),
+							  	overflow: TextOverflow.ellipsis,
+									maxLines: 2,
+							  ),
+							),
+							Row(
+								mainAxisAlignment: MainAxisAlignment.end,
+							  crossAxisAlignment: CrossAxisAlignment.center,
+							  children: <Widget>[
+							  	// TODO: change this widget to widget made by Miko
+							    this.showHelp ? IconButton(icon: Icon(Icons.help, color: Colors.white, size: 26,), onPressed: null,) : SizedBox.shrink(),
+									this.popupMenuWidget != null ? popupMenuWidget : SizedBox.shrink()
+							  ],
+							)
+						]
+					),
+					Row(
+						children: <Widget>[
+							Expanded(
+								child: appHeaderWidget,
+							)
+						],
+					),
+				],
+			),
+			horizontalEdge: 0.0
 		);
 	}
 
@@ -253,11 +316,10 @@ class ChildCustomHeader extends StatelessWidget {
 						]
 					)
 				),
-				() => { log('Child detailed wallet popup') },
+					() => { log('Child detailed wallet popup') },
 				Colors.white
 			),
 			//HeaderActionButton.normal(Icons.local_florist, 'page.childSection.panel.header.garden', () => { log("Ogród") })
 		]);
 	}
-	
 }

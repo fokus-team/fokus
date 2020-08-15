@@ -1,4 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:fokus/model/ui/ui_button.dart';
+import 'package:fokus/services/app_locales.dart';
+
+class DialogButton {
+	final ButtonType type;
+	final void Function() action;
+
+	DialogButton(this.type, this.action);
+}
 import 'package:fokus/model/ui/button.dart';
 import 'package:fokus/services/app_locales.dart';
 

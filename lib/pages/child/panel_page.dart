@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:fokus/logic/child_plans/child_plans_cubit.dart';
+import 'package:fokus/model/app_page.dart';
 import 'package:fokus/logic/timer/timer_cubit.dart';
 import 'package:fokus/model/db/plan/plan_instance_state.dart';
 import 'package:fokus/model/ui/plan/ui_plan_instance.dart';
@@ -13,8 +14,8 @@ import 'package:fokus/widgets/app_header.dart';
 import 'package:fokus/widgets/app_navigation_bar.dart';
 import 'package:fokus/widgets/chips/attribute_chip.dart';
 import 'package:fokus/widgets/chips/timer_chip.dart';
-import 'package:fokus/widgets/item_card.dart';
-import 'package:fokus/widgets/rounded_button.dart';
+import 'package:fokus/widgets/cards/item_card.dart';
+import 'package:fokus/widgets/buttons/rounded_button.dart';
 import 'package:fokus/widgets/segment.dart';
 
 
@@ -106,7 +107,7 @@ class _ChildPanelPageState extends State<ChildPanelPage> {
 						  icon: icon,
 						  color: color,
 						  disabled: plan.state == PlanInstanceState.completed,
-						  onTapped: () => {log("startPlan")}
+						  onTapped: () => Navigator.of(context).pushNamed(AppPage.childPlanInProgress.name)
 						),
 					  title: plan.name,
 					  subtitle: plan.description(context),

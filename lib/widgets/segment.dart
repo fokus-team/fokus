@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:fokus/utils/app_locales.dart';
 import 'package:fokus/utils/theme_config.dart';
-import 'package:fokus/widgets/help_icon_button.dart';
+import 'package:fokus/widgets/buttons/help_icon_button.dart';
 
 class Segment extends StatelessWidget {
 	final String title;
@@ -25,7 +25,8 @@ class Segment extends StatelessWidget {
 		return Padding(
 			padding: EdgeInsets.only(
 				left: AppBoxProperties.screenEdgePadding, 
-				right: AppBoxProperties.screenEdgePadding
+				right: AppBoxProperties.screenEdgePadding,
+				bottom: 4.0
 			),
 			child: Row(
 				mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -49,7 +50,7 @@ class Segment extends StatelessWidget {
 						],
 					),
 					if(helpPage != null)
-						HelpIconButton(helpPage: helpPage, theme: HelpIconButtonTheme.dark)
+						HelpIconButton(helpPage: helpPage, theme: Brightness.dark)
 				],
 			),
 		);

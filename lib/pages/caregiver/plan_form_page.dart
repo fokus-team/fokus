@@ -11,7 +11,7 @@ import 'package:fokus/widgets/dialogs/general_dialog.dart';
 
 import 'package:fokus/widgets/forms/tasks_list.dart';
 import 'package:fokus/widgets/forms/plan_form.dart';
-import 'package:fokus/widgets/help_icon_button.dart';
+import 'package:fokus/widgets/buttons/help_icon_button.dart';
 
 enum PlanFormStep { planParameters, taskList }
 

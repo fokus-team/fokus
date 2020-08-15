@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:fokus/utils/app_locales.dart';
+import 'package:fokus/model/ui/ui_button.dart';
 import 'package:fokus/utils/app_paths.dart';
 import 'package:fokus/utils/icon_sets.dart';
 import 'package:fokus/utils/theme_config.dart';
 import 'package:fokus/widgets/app_avatar.dart';
+import 'package:fokus/widgets/buttons/popup_menu_list.dart';
 
 class ItemCardActionButton {
 	final IconData icon;
@@ -22,16 +23,6 @@ class ItemCardActionButton {
 	});
 }
 
-class ItemCardMenuItem {
-	final String text;
-	final Function onTapped;
-
-	ItemCardMenuItem({
-		this.text,
-		this.onTapped
-	});
-}
-
 class ItemCard extends StatelessWidget {
 	// Element's content
 	final String title;
@@ -42,10 +33,12 @@ class ItemCard extends StatelessWidget {
 	final bool graphicShowCheckmark;
 	final double progressPercentage;
 	final List<Widget> chips;
-	final List<ItemCardMenuItem> menuItems;
+	final List<UIButton> menuItems;
 	final ItemCardActionButton actionButton;
 	final Function onTapped;
 	final bool isActive;
+	final int textMaxLines;
+	final Color activeProgressBarColor;
 
 	// Element's visual params
 	final int titleMaxLines = 3;
@@ -53,7 +46,6 @@ class ItemCard extends StatelessWidget {
 	final double progressIndicatorHeight = 10.0;
 	final Color disabledButtonColor = Colors.grey[200];
   final Color inactiveProgressBar = Colors.grey[300];
-  final Color activeProgressBar = Colors.lightGreen;
 
 	ItemCard({
 		@required this.title, 
@@ -67,7 +59,9 @@ class ItemCard extends StatelessWidget {
 		this.menuItems,
 		this.actionButton,
 		this.onTapped,
-		this.isActive = true
+		this.isActive = true,
+		this.textMaxLines = 3,
+		this.activeProgressBarColor = AppColors.childBackgroundColor
 	}) : assert(graphic != null ? graphicType != null : true);
 	
 	Widget headerImage() {
@@ -171,14 +165,14 @@ class ItemCard extends StatelessWidget {
 									title, 
 									style: Theme.of(context).textTheme.headline3,
 									overflow: TextOverflow.ellipsis,
-									maxLines: titleMaxLines
+									maxLines: textMaxLines
 								),
 								if(subtitle != null)
 									Text(
 										subtitle, 
 										style: Theme.of(context).textTheme.subtitle2,
 										overflow: TextOverflow.ellipsis,
-										maxLines: titleMaxLines,
+										maxLines: textMaxLines,
 										softWrap: false,
 									),
 								if(chips != null && chips.isNotEmpty)
@@ -203,13 +197,15 @@ class ItemCard extends StatelessWidget {
 		return Container(
 			height: progressIndicatorHeight,
 			decoration: BoxDecoration(
-				borderRadius: BorderRadius.only(bottomLeft: Radius.circular(AppBoxProperties.roundedCornersRadius))
+				borderRadius: actionButton != null ?
+					BorderRadius.only(bottomLeft: Radius.circular(AppBoxProperties.roundedCornersRadius))
+					: BorderRadius.vertical(bottom: Radius.circular(AppBoxProperties.roundedCornersRadius))
 			),
 			clipBehavior: Clip.hardEdge,
 			child: LinearProgressIndicator(
 				value: progressPercentage,
 				backgroundColor: inactiveProgressBar,
-				valueColor: AlwaysStoppedAnimation<Color>(activeProgressBar)
+				valueColor: AlwaysStoppedAnimation<Color>(activeProgressBarColor)
 			)
 		);
 	}
@@ -217,20 +213,7 @@ class ItemCard extends StatelessWidget {
 	// Menu options or big action button
 	Widget buildActionSection() {
 		if(menuItems != null && menuItems.isNotEmpty) {
-			return InkWell(
-				customBorder: new CircleBorder(),
-				child: PopupMenuButton<int>(
-					icon: Icon(
-						Icons.more_vert,
-						size: 26.0
-					),
-					onSelected: (int value) => { menuItems[value].onTapped() },
-					itemBuilder: (context) => [
-						for (int i = 0; i < menuItems.length; i++)
-							PopupMenuItem(value: i, child: Text(AppLocales.of(context).translate(menuItems[i].text)))
-					],
-				)
-			);
+			return PopupMenuList(items: menuItems);
 		}
 		if(actionButton != null) {
 			if(actionButton.disabled) {

@@ -1,13 +1,14 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:fokus/model/ui/ui_button.dart';
 import 'package:fokus/model/currency_type.dart';
 import 'package:fokus/utils/app_locales.dart';
 import 'package:fokus/utils/icon_sets.dart';
 
 import 'package:fokus/widgets/app_header.dart';
 import 'package:fokus/widgets/app_navigation_bar.dart';
-import 'package:fokus/widgets/item_card.dart';
+import 'package:fokus/widgets/cards/item_card.dart';
 import 'package:fokus/widgets/chips/attribute_chip.dart';
 import 'package:fokus/widgets/segment.dart';
 
@@ -46,8 +47,8 @@ class _CaregiverAwardsPageState extends State<CaregiverAwardsPage> {
 										title: "Wycieczka do Zoo", 
 										subtitle: AppLocales.of(context).translate('$_pageKey.content.limitedAward', {'AWARD_LIMIT': 1}),
 										menuItems: [
-											ItemCardMenuItem(text: "actions.edit", onTapped: () => {log("edit")}),
-											ItemCardMenuItem(text: "actions.delete", onTapped: () => {log("delete")})
+											UIButton.ofType(ButtonType.edit, (context) => {log("edit")}),
+											UIButton.ofType(ButtonType.delete, (context) => {log("delete")})
 										],
 										graphicType: GraphicAssetType.awardsIcons,
 										graphic: 16,
@@ -72,8 +73,8 @@ class _CaregiverAwardsPageState extends State<CaregiverAwardsPage> {
 										title: "Super planista", 
 										subtitle: AppLocales.of(context).translate('$_pageKey.content.3LeveledBadge'),
 										menuItems: [
-											ItemCardMenuItem(text: "actions.edit", onTapped: () => {log("edit")}),
-											ItemCardMenuItem(text: "actions.delete", onTapped: () => {log("delete")})
+											UIButton.ofType(ButtonType.edit, (context) => {log("edit")}),
+											UIButton.ofType(ButtonType.delete, (context) => {log("delete")})
 										],
 										graphicType: GraphicAssetType.badgeIcons,
 										graphic: 3,

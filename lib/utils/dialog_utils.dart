@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:fokus/model/button_type.dart';
 import 'package:fokus/utils/app_locales.dart';
 import 'package:fokus/widgets/dialogs/general_dialog.dart';
+import 'package:fokus/model/ui/ui_button.dart';
 
 import 'package:fokus/widgets/dialogs/dialog.dart';
 import 'package:fokus/widgets/dialogs/help_dialog.dart';
@@ -29,7 +29,7 @@ void showHelpDialog(BuildContext context, String helpPage) {
 	showGeneralDialog(
 		transitionBuilder: (context, a1, a2, widget) {
       return Transform.translate(
-        offset: Offset(10.0, a1.value),
+        offset: Offset(0.0, a1.value),
         child: Opacity(
           opacity: a1.value,
           child: HelpDialog(helpPage: helpPage)

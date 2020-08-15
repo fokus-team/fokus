@@ -50,7 +50,17 @@
 					"addedActivePlansTitle": "Added plans",
 					"addedDeactivatedPlansTitle": "Deactivated plans",
 					"noPlansAdded": "No plans to display",
-					"tasksCount": "{NUM_TASKS, plural, offset:0  =1 {# task} other {# tasks}}"
+					"tasks": "{NUM_TASKS, plural, offset:0  =1 {# task} other {# tasks}}"
+				}
+			},
+			"planInProgress": {
+				"header": {
+					"title": "In progress"
+				},
+				"content": {
+					"toDoTasks": "To-do list",
+					"additionalTasks": "Additional tasks",
+					"noTasks": "No tasks to display"
 				}
 			},
 			"planForm": {
@@ -179,6 +189,16 @@
 					"basicStatisticsTitle": "Basic statistics",
 					"basicStatisticsSubtitle": "This screen is not available in this version of the application"
 				}
+			},
+			"planDetails": {
+				"header": {
+					"title": "Plan details"
+				},
+				"content": {
+					"mandatoryTasks": "Mandatory tasks",
+					"additionalTasks": "Additional tasks",
+					"noTasks": "No tasks"
+				}
 			}
 		},
 		"childSection": {
@@ -230,11 +250,13 @@
 	"alert": {
 		"noConnection": "No connection",
 		"noHint": "No hint",
-		"genericEmptyValue": "This field can't be empty",
 		"connectionRetry": "Ensure the device has access to internet",
+		"genericEmptyValue": "This field can't be empty",
 		"genericRangeOverflowValue": "Value must be in the range {A}-{B}",
 		"unsavedProgressTitle": "Unsaved progress",
-		"unsavedProgressMessage": "You have unsaved progress. Are you sure you want to exit?"
+		"unsavedProgressMessage": "You have unsaved progress. Are you sure you want to exit?",
+		"deletePlan": "Deleting the plan",
+		"confirmPlanDeletion": "Are you sure you want to delete the plan?"
 	},
 	"actions": {
 		"ok": "Ok",
@@ -246,7 +268,7 @@
 		"delete": "Delete",
 		"details": "Show details",
 		"help": "Show help",
-		"back": "Go back",
+		"back": "Back",
 		"next": "Next",
 		"tapToSelect": "Tap to select",
 		"selected": "Wybrano",
@@ -255,12 +277,14 @@
 		"search": "Search",
 		"confirm": "Confirm",
 		"clear": "Clear",
-		"clearAll": "Clear all"
+		"clearAll": "Clear all",
+		"unpair": "Unpair"
 	},
 	"help": {
 		"first_steps": "First steps",
 		"plan_creation": "Plan creation",
-		"task_creation": "Task creation"
+		"task_creation": "Task creation",
+		"plan_info": "Plans"
 	},
 	"and": "and",
 	"hour": "hr",

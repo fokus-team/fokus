@@ -6,7 +6,7 @@ import 'package:smart_select/smart_select.dart';
 import 'package:mongo_dart/mongo_dart.dart' as Mongo;
 
 import 'package:fokus/model/currency_type.dart';
-import 'package:fokus/model/ui/plan/ui_task_form.dart';
+import 'package:fokus/model/ui/plan/ui_task.dart';
 import 'package:fokus/model/ui/plan/ui_plan_currency.dart';
 
 import 'package:fokus/utils/app_locales.dart';
@@ -15,10 +15,11 @@ import 'package:fokus/utils/dialog_utils.dart';
 import 'package:fokus/utils/theme_config.dart';
 
 import 'package:fokus/widgets/dialogs/general_dialog.dart';
-import 'package:fokus/widgets/help_icon_button.dart';
+import 'package:fokus/widgets/buttons/help_icon_button.dart';
+import 'package:fokus/widgets/buttons/back_icon_button.dart';
 
 class TaskForm extends StatefulWidget {
-	final UITaskForm task;
+	final UITask task;
 	final Function createTaskCallback;
 	final Function removeTaskCallback;
 	final Function saveTaskCallback;
@@ -41,7 +42,7 @@ class _TaskFormState extends State<TaskForm> {
 
 	GlobalKey<FormState> taskFormKey;
 	bool isDataChanged = false;
-	UITaskForm task;
+	UITask task;
 
 	List<UIPlanCurrency> currencies = [
 		UIPlanCurrency(id: Mongo.ObjectId.fromHexString('5f9997f18c7472942f9979a3'), type: CurrencyType.diamond, title: "Punkty"),
@@ -58,7 +59,7 @@ class _TaskFormState extends State<TaskForm> {
 	@override
   void initState() {
 		taskFormKey = GlobalKey<FormState>();
-		task = UITaskForm(
+		task = UITask(
 			key: ValueKey(DateTime.now().toString()),
 			pointCurrency: currencies[0]
 		);
@@ -192,11 +193,7 @@ class _TaskFormState extends State<TaskForm> {
 						dense: true,
 						contentPadding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 4.0),
 						trailing: HelpIconButton(helpPage: 'task_creation'),
-						leading: IconButton(
-							tooltip: AppLocales.of(context).translate('actions.back'),
-							icon: Icon(Icons.arrow_back, color: Colors.white),
-							onPressed: () => exitForm(context, false),
-						),
+						leading: BackIconButton(),
 						title: Padding(
 							padding: EdgeInsets.only(top: appBarVerticalPadding, bottom: appBarVerticalPadding, left: 4.0),
 							child: Column(

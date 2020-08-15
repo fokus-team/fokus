@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:fokus/widgets/cards/task_card.dart';
 import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorderable_list.dart';
 
-import 'package:fokus/model/ui/plan/ui_task_form.dart';
+import 'package:fokus/model/ui/plan/ui_task.dart';
 import 'package:fokus/model/ui/plan/ui_plan_form.dart';
 
 import 'package:fokus/utils/dialog_utils.dart';
@@ -9,7 +10,6 @@ import 'package:fokus/utils/theme_config.dart';
 import 'package:fokus/utils/app_locales.dart';
 
 import 'package:fokus/widgets/dialogs/general_dialog.dart';
-import 'package:fokus/widgets/chips/attribute_chip.dart';
 import 'package:fokus/widgets/forms/task_form.dart';
 
 class TaskList extends StatefulWidget {
@@ -106,11 +106,11 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 		));
 	}
 
-	void editTask(UITaskForm task) {
+	void editTask(UITask task) {
 		Navigator.of(context).push(MaterialPageRoute(
 			builder: (context) => TaskForm(
 				task: task,
-				saveTaskCallback: (UITaskForm updatedTask) {
+				saveTaskCallback: (UITask updatedTask) {
 					Future.wait([
 						Future(() => setState(() {
 							task.copy(updatedTask);
@@ -130,7 +130,7 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 		));
 	}
 
-	void onReorderFinished(List<UITaskForm> newItems) {
+	void onReorderFinished(List<UITask> newItems) {
     setState(() {
       inReorder = false;
 			widget.plan.tasks..retainWhere((task) => task.optional == true)..addAll(newItems);
@@ -140,7 +140,7 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 
 	Widget buildReordableTaskList(BuildContext context) {
 		final requiredTasks = widget.plan.tasks.where((element) => element.optional == false);
-		return ImplicitlyAnimatedReorderableList<UITaskForm>(
+		return ImplicitlyAnimatedReorderableList<UITask>(
 			shrinkWrap: true,
 			physics: NeverScrollableScrollPhysics(),
 			items: requiredTasks.toList(),
@@ -154,7 +154,6 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 				return Reorderable(
 					key: item.key,
 					builder: (context, dragAnimation, inDrag) {
-						final color = Color.lerp(Colors.white, Colors.white.withOpacity(0.8), dragAnimation.value);
 						final offsetAnimation = Tween<Offset>(begin: Offset(-2.0, 0.0), end: Offset(0.0, 0.0)).animate(CurvedAnimation(
 							curve: Interval(0.6, 1, curve: Curves.easeOutCubic),
 							parent: itemAnimation,
@@ -174,7 +173,7 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 										child: Handle(
 											vibrate: true,
 											delay: dragDelayDuration,
-											child: buildTaskCard(_context, item, color, false)
+											child: buildTaskCard(_context, item, false)
 										)
 									)
 								)
@@ -202,7 +201,7 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 						buildTaskListHeader(context, AppLocales.of(context).translate('$_pageKey.optionalTaskListTitle'), optionalTasks.length)
 						: SizedBox.shrink()
 				),
-				ImplicitlyAnimatedList<UITaskForm>(
+				ImplicitlyAnimatedList<UITask>(
 					shrinkWrap: true,
 					physics: NeverScrollableScrollPhysics(),
 					items: optionalTasks.toList(),
@@ -224,7 +223,7 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 								position: offsetAnimation,
 								child: Container(
 									margin: EdgeInsets.symmetric(horizontal: 16.0),
-									child: buildTaskCard(context, item, Colors.white, true)
+									child: buildTaskCard(context, item, true)
 								)
 							) 
 						);
@@ -284,78 +283,9 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 		);
 	}
 
-	Widget buildTaskCard(BuildContext context, UITaskForm task, Color color, bool optional) {
+	Widget buildTaskCard(BuildContext context, UITask task, bool optional) {
 		int index = (widget.plan.tasks..where((element) => element.optional == optional)).indexOf(task);
-		bool haveSetPoints = task.pointsValue != null && task.pointsValue != 0;
-		bool haveSetTimer = task.timer != null && task.timer != 0;
-
-		return Card(
-			child: InkWell(
-				onTap: () => editTask(task),
-				child: Padding(
-					padding: EdgeInsets.all(6.0),
-					child: Row(
-						mainAxisAlignment: MainAxisAlignment.start,
-						crossAxisAlignment: CrossAxisAlignment.start,
-						children: <Widget>[
-							AttributeChip.withIcon(
-								content: optional ? null : '#${(index+1).toString()}',
-								icon: optional ? Icons.label_important : null,
-								color: Colors.blueGrey[600]
-							),
-							Expanded(
-								child: Padding(
-									padding: EdgeInsets.symmetric(vertical: 3.0, horizontal: 6.0),
-									child: Column(
-										mainAxisSize: MainAxisSize.min,
-										mainAxisAlignment: MainAxisAlignment.start,
-										crossAxisAlignment: CrossAxisAlignment.start,
-										children: [
-											Padding(
-												padding: EdgeInsets.only(left: 0, bottom: (!haveSetTimer && !haveSetPoints) ? 0.0 : 8.0),
-													child: Hero(
-													tag: task.key,
-													child: Text(
-														task.title,
-														style: Theme.of(context).textTheme.bodyText2.copyWith(fontSize: 17.0),
-														maxLines: 3,
-														overflow: TextOverflow.ellipsis
-													)
-												)
-											),
-											Wrap(
-												runSpacing: 2.0,
-												spacing: 4.0,
-												children: [
-													if(haveSetPoints)
-														AttributeChip.withCurrency(
-															content: task.pointsValue.toString(),
-															currencyType: task.pointCurrency.type
-														),
-													if(haveSetTimer)
-														AttributeChip.withIcon(
-															content: AppLocales.of(context).translate('page.caregiverSection.taskForm.fields.taskTimer.format', {
-																'HOURS_NUM': (task.timer ~/ 60).toString(),
-																'MINUTES_NUM': (task.timer % 60).toString()
-															}),
-															icon: Icons.timer, 
-															color: Colors.orange
-														)
-												]
-											)
-										]
-									)
-								)
-							),
-							Padding(
-								padding: EdgeInsets.all(2.0),
-								child: Icon(Icons.call_made, color: Colors.grey)
-							)
-						]
-					)
-				)
-			)
-		);
+		return TaskCard(task: task, index: index, onTap: editTask);
 	}
 
 	void showConfirmClearAllDialog(BuildContext context, Function clearCallback) {

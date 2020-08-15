@@ -5,13 +5,11 @@ import 'package:fokus/utils/app_locales.dart';
 import 'package:fokus/utils/dialog_utils.dart';
 import 'package:fokus/utils/theme_config.dart';
 
-enum HelpIconButtonTheme { light, dark } 
-
 class HelpIconButton extends StatelessWidget {
 	final String helpPage;
-	final HelpIconButtonTheme theme;
+	final Brightness theme;
 
-	HelpIconButton({@required this.helpPage, this.theme = HelpIconButtonTheme.light});
+	HelpIconButton({@required this.helpPage, this.theme = Brightness.light});
 
 	@override
 	Widget build(BuildContext context) {
@@ -25,7 +23,7 @@ class HelpIconButton extends StatelessWidget {
 					child: Icon(
 						Icons.help_outline,
 						size: 26.0,
-						color: (theme == HelpIconButtonTheme.light) ? AppColors.lightTextColor : AppColors.darkTextColor
+						color: (theme == Brightness.light) ? AppColors.lightTextColor : AppColors.darkTextColor
 					)
 				)
 			)

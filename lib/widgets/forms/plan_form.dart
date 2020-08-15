@@ -10,7 +10,7 @@ import 'package:fokus/utils/icon_sets.dart';
 import 'package:fokus/utils/theme_config.dart';
 
 import 'package:fokus/widgets/forms/datepicker_field.dart';
-import 'package:fokus/widgets/item_card.dart';
+import 'package:fokus/widgets/cards/item_card.dart';
 
 class PlanForm extends StatefulWidget {
 	final UIPlanForm plan;

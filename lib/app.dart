@@ -16,6 +16,7 @@ import 'package:fokus/pages/caregiver/statistics_page.dart';
 import 'package:fokus/pages/child/achievements_page.dart';
 import 'package:fokus/pages/child/awards_page.dart';
 import 'package:fokus/pages/child/panel_page.dart';
+import 'package:fokus/pages/child/plan_in_progress_page.dart';
 import 'package:fokus/utils/app_locales.dart';
 import 'package:fokus/services/instrumentator.dart';
 import 'package:fokus/utils/cubit_utils.dart';
@@ -24,6 +25,8 @@ import 'package:fokus/pages/loading_page.dart';
 import 'package:fokus/pages/roles_page.dart';
 import 'package:fokus/widgets/page_theme.dart';
 import 'package:fokus/model/app_page.dart';
+
+import 'pages/caregiver/plan_details_page.dart';
 
 void main() {
 	var navigatorKey = GlobalKey<NavigatorState>();
@@ -75,6 +78,8 @@ class FokusApp extends StatelessWidget {
 			AppPage.childPanel.name: (context) => _wrapAppPage(UserRole.child, ChildPanelPage(), ChildPlansCubit(activeUser(context))),
 			AppPage.childAwards.name: (context) => _wrapAppPage(UserRole.child, ChildAwardsPage()),
 			AppPage.childAchievements.name: (context) => _wrapAppPage(UserRole.child, ChildAchievementsPage()),
+			AppPage.caregiverPlanDetails.name: (context) => _wrapAppPage(UserRole.caregiver, CaregiverPlanDetailsPage()),
+			AppPage.childPlanInProgress.name: (context) => _wrapAppPage(UserRole.child, ChildPlanInProgressPage())
 		};
 	}
 
@@ -100,8 +105,8 @@ class FokusApp extends StatelessWidget {
 			textTheme: TextTheme(
 				// Will probably change over time
 				headline1: TextStyle(fontSize: 26.0, fontWeight: FontWeight.bold, color: AppColors.darkTextColor), // Scaffold/appbar headline
-				headline2: TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold, color: AppColors.darkTextColor), // Main headline before lists
-				headline3: TextStyle(fontSize: 21.0, fontWeight: FontWeight.normal, color: AppColors.darkTextColor), //For headers inside list elements
+				headline2: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold, color: AppColors.darkTextColor), // Main headline before lists
+				headline3: TextStyle(fontSize: 20.0, fontWeight: FontWeight.normal, color: AppColors.darkTextColor), //For headers inside list elements
 				subtitle2: TextStyle(fontSize: 13.0, fontWeight: FontWeight.normal, color: AppColors.mediumTextColor), // Little subtitle for headline2
 				bodyText1: TextStyle(fontSize: 15.0, fontWeight: FontWeight.normal, color: AppColors.lightTextColor), // Classic body text on light background
 				bodyText2: TextStyle(fontSize: 15.0, fontWeight: FontWeight.normal, color: AppColors.darkTextColor), // Classic body text on color

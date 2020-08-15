@@ -5,7 +5,7 @@ enum RepeatedPasswordValidationError { noPasswordMatch }
 
 extension RepeatedPassErrorTextKey on RepeatedPasswordValidationError {
 	String get key => const {
-		RepeatedPasswordValidationError.noPasswordMatch: 'authentication.noPasswordMatch',
+		RepeatedPasswordValidationError.noPasswordMatch: 'authentication.error.noPasswordMatch',
 	}[this];
 }
 

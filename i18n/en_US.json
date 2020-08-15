@@ -22,8 +22,7 @@
 				"help": "I need help"
 			},
 			"caregiverSignIn": {
-				"googleSignIn": "Sign in with Google",
-				"signInFailed": "Incorrect email or password"
+				"googleSignIn": "Sign in with Google"
 			},
 			"caregiverSignUp": {
 				"googleSignUp": "Sign up with Google"
@@ -162,14 +161,20 @@
 	"authentication": {
 		"name": "First name",
 		"email": "E-mail address",
-		"invalidEmail": "Invalid e-mail address",
-		"userCodeToShort": "Code is to short",
-		"userCodeToLong": "Code is to long",
-		"noSuchUser": "User does not exist",
 		"password": "Password",
-		"passwordNotLongEnough": "Password must have at least {LENGTH, plural, offset:0 one {# character} other {# characters}} long",
 		"confirmPassword": "Repeat password",
-		"noPasswordMatch": "Passwords do not match"
+
+		"error": {
+			"incorrectData": "Incorrect e-mail or password",
+			"emailAlreadyUsed": "E-mail address is already used",
+			"userDisabled": "User has been disabled",
+			"invalidEmail": "Invalid e-mail address",
+			"userCodeToShort": "Code is to short",
+			"userCodeToLong": "Code is to long",
+			"noSuchUser": "User does not exist",
+			"passwordNotLongEnough": "Password must have at least {LENGTH, plural, offset:0 one {# character} other {# characters}} long",
+			"noPasswordMatch": "Passwords do not match"
+		}
 	},
 	"help": {
 		"first_steps": "First steps"

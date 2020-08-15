@@ -4,7 +4,7 @@ enum PasswordValidationError { notLongEnough }
 
 extension PasswordValidationErrorTextKey on PasswordValidationError {
 	String get key => const {
-		PasswordValidationError.notLongEnough: 'authentication.passwordNotLongEnough',
+		PasswordValidationError.notLongEnough: 'authentication.error.passwordNotLongEnough',
 	}[this];
 }
 

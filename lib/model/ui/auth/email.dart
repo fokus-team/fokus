@@ -4,7 +4,7 @@ enum EmailValidationError { invalid }
 
 extension EmailValidationErrorTextKey on EmailValidationError {
 	String get key => const {
-		EmailValidationError.invalid: 'authentication.invalidEmail',
+		EmailValidationError.invalid: 'authentication.error.invalidEmail',
 	}[this];
 }
 

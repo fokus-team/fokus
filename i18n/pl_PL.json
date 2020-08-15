@@ -22,8 +22,7 @@
 				"help": "Potrzebuję pomocy"
 			},
 			"caregiverSignIn": {
-				"googleSignIn": "Zaloguj się z Google",
-				"signInFailed": "Nieprawidłowy email lub hasło"
+				"googleSignIn": "Zaloguj się z Google"
 			},
 			"caregiverSignUp": {
 				"googleSignUp": "Załóż konto z Google"
@@ -162,14 +161,20 @@
 	"authentication": {
 		"name": "Imię",
 		"email": "Adres e-mail",
-		"invalidEmail": "Nieprawidłowy adres e-mail",
-		"userCodeToShort": "Kod jest za krótki",
-		"userCodeToLong": "Kod jest za długi",
-		"noSuchUser": "Użytkownik nie istnieje",
 		"password": "Hasło",
-		"passwordNotLongEnough": "Hasło musi być przynajmniej {LENGTH} znakowe",
 		"confirmPassword": "Powtórz hasło",
-		"noPasswordMatch": "Hasła nie pasują"
+
+		"error": {
+			"incorrectData": "Nieprawidłowy e-mail lub hasło",
+			"emailAlreadyUsed": "Adres e-mail jest już zajęty",
+			"userDisabled": "Użytkownik został wyłączony",
+			"invalidEmail": "Nieprawidłowy adres e-mail",
+			"userCodeToShort": "Kod jest za krótki",
+			"userCodeToLong": "Kod jest za długi",
+			"noSuchUser": "Użytkownik nie istnieje",
+			"passwordNotLongEnough": "Hasło musi być przynajmniej {LENGTH} znakowe",
+			"noPasswordMatch": "Hasła nie pasują"
+		}
 	},
 	"help": {
 		"first_steps": "Pierwsze kroki"

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:formz/formz.dart';
 
 import 'package:fokus/logic/auth/caregiver/sign_up/caregiver_sign_up_cubit.dart';
 import 'package:fokus/model/ui/button.dart';
@@ -11,6 +12,7 @@ import 'package:fokus/model/ui/auth/confirmed_password.dart';
 import 'package:fokus/model/ui/auth/email.dart';
 import 'package:fokus/model/ui/auth/name.dart';
 import 'package:fokus/model/ui/auth/password.dart';
+import 'package:fokus/services/exception/auth_exceptions.dart';
 
 class CaregiverSignUpPage extends StatelessWidget {
 	static const String _pageKey = 'page.loginSection.caregiverSignUp';
@@ -19,7 +21,15 @@ class CaregiverSignUpPage extends StatelessWidget {
   Widget build(BuildContext context) {
 	  return Scaffold(
 		  body: SafeArea(
-			  child: _buildSignUpForm(context),
+			  child: BlocListener<CaregiverSignUpCubit, CaregiverSignUpState>(
+				  listener: (context, state) {
+					  if (state.status.isSubmissionFailure && state.response != null)
+						  Scaffold.of(context)..hideCurrentSnackBar()..showSnackBar(
+							  SnackBar(content: Text(AppLocales.of(context).translate(state.response.key))),
+						  );
+				  },
+				  child: _buildSignUpForm(context),
+			  )
 		  ),
 	  );
   }

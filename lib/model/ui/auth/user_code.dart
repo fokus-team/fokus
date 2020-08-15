@@ -4,9 +4,9 @@ enum UserCodeValidationError { toShort, toLong, noSuchUser }
 
 extension UserCodeValidationErrorTextKey on UserCodeValidationError {
 	String get key => const {
-		UserCodeValidationError.toShort: 'authentication.userCodeToShort',
-		UserCodeValidationError.toLong: 'authentication.userCodeToLong',
-		UserCodeValidationError.noSuchUser: 'authentication.noSuchUser',
+		UserCodeValidationError.toShort: 'authentication.error.userCodeToShort',
+		UserCodeValidationError.toLong: 'authentication.error.userCodeToLong',
+		UserCodeValidationError.noSuchUser: 'authentication.error.noSuchUser',
 	}[this];
 }
 

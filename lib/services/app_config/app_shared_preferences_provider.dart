@@ -22,4 +22,10 @@ class AppSharedPreferencesProvider implements AppConfigProvider {
 
   @override
   Set<AppConfigEntry> getEntries() => _preferences.getKeys().map((e) => AppConfigEntry.values.firstWhere((entry) => entry.key == e, orElse: () => null)).toSet();
+
+  @override
+  List<String> getStringList(AppConfigEntry entry) => _preferences.getStringList(entry.key);
+
+  @override
+  void setStringList(AppConfigEntry entry, List<String> list) => _preferences.setStringList(entry.key, list);
 }

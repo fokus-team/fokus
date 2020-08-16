@@ -7,7 +7,7 @@ import 'package:fokus/model/ui/plan/ui_plan_form.dart';
 
 import 'package:fokus/utils/dialog_utils.dart';
 import 'package:fokus/utils/theme_config.dart';
-import 'package:fokus/utils/app_locales.dart';
+import 'package:fokus/services/app_locales.dart';
 
 import 'package:fokus/widgets/dialogs/general_dialog.dart';
 import 'package:fokus/widgets/forms/task_form.dart';

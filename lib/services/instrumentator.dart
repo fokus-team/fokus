@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'dart:isolate';
 
-import 'package:fokus/utils/app_locales.dart';
+import 'package:bloc/bloc.dart';
+import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/dialog_utils.dart';
 import 'package:fokus/widgets/dialogs/general_dialog.dart';
 import 'package:intl/intl.dart';
@@ -10,15 +11,14 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-import 'package:fokus/services/exception/no_db_connection.dart';
-import 'package:fokus/widgets/dialogs/dialog.dart';
-import 'package:fokus/model/ui/ui_button.dart';
+import 'exception/db_exceptions.dart';
 
 class Instrumentator {
 	final Logger _logger = Logger('Instrumentator');
 	GlobalKey<NavigatorState> _navigatorKey;
 
 	Instrumentator.runAppGuarded(Widget app, this._navigatorKey) {
+		Bloc.observer = FokusBlocObserver();
 		_setupLogger();
 		_setupCrashlytics();
 
@@ -78,4 +78,11 @@ class Instrumentator {
 		}
 		return false;
 	}
+}
+
+class FokusBlocObserver extends BlocObserver {
+	@override
+  void onError(Cubit cubit, Object error, StackTrace stackTrace) {
+		super.onError(cubit, error, stackTrace);
+  }
 }

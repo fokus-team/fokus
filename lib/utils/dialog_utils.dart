@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:fokus/utils/app_locales.dart';
+
+import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/widgets/dialogs/general_dialog.dart';
 import 'package:fokus/model/ui/ui_button.dart';
-
 import 'package:fokus/widgets/dialogs/dialog.dart';
 import 'package:fokus/widgets/dialogs/help_dialog.dart';
 
@@ -13,7 +13,7 @@ void showNoConnectionDialog(BuildContext context, void Function() action) {
 		builder: (context) => AppDialog(
 			titleKey: 'alert.noConnection',
 			textKey: 'alert.connectionRetry',
-			buttons: [DialogButton(ButtonType.retry, action)],
+			buttons: [UIButton.ofType(ButtonType.retry, action)],
 		),
 	);
 }

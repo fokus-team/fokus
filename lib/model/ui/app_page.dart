@@ -1,13 +1,19 @@
 enum AppPage {
 	loadingPage, rolesPage,
+	caregiverSignInPage, caregiverSignUpPage, childSignInPage, childSignUpPage,
 	caregiverPanel, caregiverPlans, caregiverPlanForm, caregiverAwards, caregiverStatistics,
 	childPanel, childAwards, childAchievements, childPlanInProgress, caregiverPlanDetails
+
 }
 
 extension AppPageName on AppPage {
 	String get name => const {
 		AppPage.loadingPage: '/loading-page',
 		AppPage.rolesPage: '/roles-page',
+		AppPage.caregiverSignInPage: '/auth/caregiver-sign-in-page',
+		AppPage.caregiverSignUpPage: '/auth/caregiver-sign-up-page',
+		AppPage.childSignInPage: '/auth/child-sign-in-page',
+		AppPage.childSignUpPage: '/auth/child-sign-up-page',
 		AppPage.caregiverPanel: '/caregiver/panel-page',
 		AppPage.caregiverPlans: '/caregiver/plans-page',
 		AppPage.caregiverPlanForm: '/caregiver/plan-form-page',

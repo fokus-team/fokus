@@ -9,7 +9,7 @@ import 'package:fokus/model/currency_type.dart';
 import 'package:fokus/model/ui/plan/ui_task.dart';
 import 'package:fokus/model/ui/plan/ui_plan_currency.dart';
 
-import 'package:fokus/utils/app_locales.dart';
+import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/app_paths.dart';
 import 'package:fokus/utils/dialog_utils.dart';
 import 'package:fokus/utils/theme_config.dart';

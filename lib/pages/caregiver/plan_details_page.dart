@@ -5,7 +5,7 @@ import 'package:fokus/model/currency_type.dart';
 import 'package:fokus/model/ui/plan/ui_plan_currency.dart';
 import 'package:fokus/model/ui/plan/ui_task.dart';
 import 'package:fokus/model/ui/ui_button.dart';
-import 'package:fokus/utils/app_locales.dart';
+import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/dialog_utils.dart';
 import 'package:fokus/utils/theme_config.dart';
 import 'package:fokus/widgets/app_header.dart';
@@ -52,7 +52,7 @@ class _CaregiverPlanDetailsPageState extends State<CaregiverPlanDetailsPage> {
 							items: [
 								UIButton.ofType(ButtonType.edit, () => log("Tapped edit")),
 								UIButton.ofType(ButtonType.delete, () => showBasicDialog(
-									context, 
+									context,
 									GeneralDialog.confirm(
 										title: AppLocales.of(context).translate('alert.deletePlan'),
 										content: AppLocales.of(context).translate('alert.confirmPlanDeletion'),

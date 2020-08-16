@@ -13,10 +13,13 @@ class Child extends User {
   List<Points> points;
   List<ChildReward> rewards;
 
-  Child({ObjectId id, this.badges, this.permissions, this.points, this.rewards}) : super(id: id, role: UserRole.child);
+  Child.create({String name, int avatar, List<ObjectId> connections}) : this._(name: name, avatar: avatar, connections: connections);
+
+  Child._({ObjectId id, String name, int avatar, List<ObjectId> connections, this.badges, this.permissions, this.points, this.rewards}) :
+			  super(id: id, name: name, role: UserRole.child, avatar: avatar, connections: connections);
 
   factory Child.fromJson(Map<String, dynamic> json) {
-    return json != null ? (Child(
+    return json != null ? (Child._(
 	    id: json['_id'],
       badges: json['badges'] != null ? (json['badges'] as List).map((i) => ChildBadge.fromJson(i)).toList() : [],
       permissions: json['permissions'] != null ? (json['badges'] as List).map((i) => ChildPermission.values[i]).toList() : [],
@@ -27,18 +30,14 @@ class Child extends User {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = super.toJson();
-    if (this.badges != null) {
+    if (this.badges != null)
       data['badges'] = this.badges.map((v) => v.toJson()).toList();
-    }
-    if (this.permissions != null) {
+    if (this.permissions != null)
       data['permissions'] = this.permissions.map((v) => v.index).toList();
-    }
-    if (this.points != null) {
+    if (this.points != null)
       data['points'] = this.points.map((v) => v.toJson()).toList();
-    }
-    if (this.rewards != null) {
+    if (this.rewards != null)
       data['rewards'] = this.rewards.map((v) => v.toJson()).toList();
-    }
     return data;
   }
 }

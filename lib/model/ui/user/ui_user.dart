@@ -7,6 +7,8 @@ import 'package:fokus/model/db/user/user_role.dart';
 import 'ui_caregiver.dart';
 import 'ui_child.dart';
 
+typedef ActiveUserFunction = UIUser Function();
+
 class UIUser extends Equatable {
 	final ObjectId id;
 	final String name;
@@ -20,4 +22,9 @@ class UIUser extends Equatable {
 
 	@override
   List<Object> get props => [id, name, avatar];
+
+	@override
+  String toString() {
+    return 'UIUser{name: $name, role: $role}';
+  }
 }

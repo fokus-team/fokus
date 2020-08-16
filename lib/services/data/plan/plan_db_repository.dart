@@ -1,4 +1,3 @@
-import 'package:logging/logging.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
 import 'package:fokus/model/db/collection.dart';
@@ -11,13 +10,11 @@ import 'package:fokus/model/db/plan/plan_instance_state.dart';
 import 'package:fokus/services/data/data_repository.dart';
 
 mixin PlanDbRepository implements DbRepository {
-	final Logger _logger = Logger('PlanDbRepository');
-
-	Future<List<Plan>> getPlans({ObjectId caregiverId, ObjectId childId, bool activeOnly = true, bool oneDayOnly = false, List<String> fields = const []}) {
+	Future<List<Plan>> getPlans({ObjectId caregiverId, ObjectId childId, bool activeOnly = true, bool oneDayOnly = false, List<String> fields}) {
 		var query = _buildPlanQuery(caregiverId: caregiverId, childId: childId, activeOnly: activeOnly);
 		if (oneDayOnly)
 			query.and(where.ne('repeatability.untilCompleted', true));
-		if (fields.isNotEmpty)
+		if (fields != null)
 			query.fields(fields);
 		return dbClient.queryTyped(Collection.plan, query, (json) => Plan.fromJson(json));
 	}
@@ -36,10 +33,10 @@ mixin PlanDbRepository implements DbRepository {
 		return dbClient.queryTyped(Collection.planInstance, query, (json) => PlanInstance.fromJson(json));
 	}
 
-	Future<List<PlanInstance>> getPastNotCompletedPlanInstances(List<ObjectId> childIDs, List<ObjectId> planIDs, Date beforeDate, {List<String> fields = const []}) {
+	Future<List<PlanInstance>> getPastNotCompletedPlanInstances(List<ObjectId> childIDs, List<ObjectId> planIDs, Date beforeDate, {List<String> fields}) {
 		var query = where.oneFrom('assignedTo', childIDs).and(where.oneFrom('planID', planIDs)).and(where.lt('date', beforeDate));
 		query.and(where.ne('state', PlanInstanceState.completed.index)).and(where.ne('state', PlanInstanceState.lostForever.index));
-		if (fields.isNotEmpty)
+		if (fields != null)
 			query.fields(fields);
 		return dbClient.queryTyped(Collection.planInstance, query, (json) => PlanInstance.fromJson(json));
 	}

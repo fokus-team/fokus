@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fokus/model/ui/plan/ui_task.dart';
-import 'package:fokus/utils/app_locales.dart';
+import 'package:fokus/services/app_locales.dart';
 import '../chips/attribute_chip.dart';
 
 class TaskCard extends StatelessWidget {

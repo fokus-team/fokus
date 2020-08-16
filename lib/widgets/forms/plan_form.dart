@@ -7,7 +7,7 @@ import 'package:mongo_dart/mongo_dart.dart' as Mongo;
 import 'package:fokus/model/ui/plan/ui_plan_form.dart';
 import 'package:fokus/model/ui/user/ui_child.dart';
 
-import 'package:fokus/utils/app_locales.dart';
+import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/icon_sets.dart';
 import 'package:fokus/utils/theme_config.dart';
 

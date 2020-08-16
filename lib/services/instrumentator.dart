@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:isolate';
 
 import 'package:bloc/bloc.dart';
-import 'package:fokus/utils/app_locales.dart';
+import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/dialog_utils.dart';
 import 'package:fokus/widgets/dialogs/general_dialog.dart';
 import 'package:intl/intl.dart';
@@ -10,9 +10,6 @@ import 'package:logging/logging.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-
-import 'package:fokus/widgets/dialogs/dialog.dart';
-import 'package:fokus/model/ui/ui_button.dart';
 
 import 'exception/db_exceptions.dart';
 

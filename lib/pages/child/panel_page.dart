@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -12,8 +14,8 @@ import 'package:fokus/widgets/app_header.dart';
 import 'package:fokus/widgets/app_navigation_bar.dart';
 import 'package:fokus/widgets/chips/attribute_chip.dart';
 import 'package:fokus/widgets/chips/timer_chip.dart';
-import 'package:fokus/widgets/item_card.dart';
-import 'package:fokus/widgets/rounded_button.dart';
+import 'package:fokus/widgets/cards/item_card.dart';
+import 'package:fokus/widgets/buttons/rounded_button.dart';
 import 'package:fokus/widgets/segment.dart';
 
 
@@ -40,19 +42,20 @@ class _ChildPanelPageState extends State<ChildPanelPage> {
 	            else if (state is ChildPlansLoadSuccess)
 	              return AppSegments(segments: _buildPanelSegments(state));
 	            return Expanded(child: Center(child: CircularProgressIndicator()));
-	          },
+	          }
 	        ),
 	        Row(
 						mainAxisAlignment: MainAxisAlignment.end,
 	          children: <Widget>[
 	            RoundedButton(
-		            iconData: Icons.calendar_today,
+		            icon: Icons.calendar_today,
 		            text: AppLocales.of(context).translate('$_pageKey.content.futurePlans'),
 		            color: AppColors.childButtonColor,
-		          ),
-	          ],
+								onPressed: () => { log("przyszłe plany") }
+		          )
+	          ]
 	        )
-	      ],
+	      ]
       ),
       bottomNavigationBar: AppNavigationBar.childPage(currentIndex: 0)
     );

@@ -9,7 +9,7 @@ import 'package:fokus/utils/app_locales.dart';
 import 'package:fokus/utils/icon_sets.dart';
 import 'package:fokus/widgets/app_header.dart';
 import 'package:fokus/widgets/app_navigation_bar.dart';
-import 'package:fokus/widgets/item_card.dart';
+import 'package:fokus/widgets/cards/item_card.dart';
 import 'package:fokus/widgets/chips/attribute_chip.dart';
 import 'package:fokus/widgets/segment.dart';
 
@@ -58,9 +58,9 @@ class _CaregiverPanelPageState extends State<CaregiverPanelPage> {
 							title: child.name,
 							subtitle: getChildCardSubtitle(context, child),
 							menuItems: [
-								UIButton.ofType(ButtonType.details, (context) => {log("details")}),
-								UIButton.ofType(ButtonType.edit, (context) => {log("edit")}),
-								UIButton.ofType(ButtonType.unpair, (context) => {log("unpair")})
+								UIButton.ofType(ButtonType.details, () => {log("details")}),
+								UIButton.ofType(ButtonType.edit, () => {log("edit")}),
+								UIButton.ofType(ButtonType.unpair, () => {log("unpair")})
 							],
 							graphicType: GraphicAssetType.childAvatars,
 							graphic: child.avatar,
@@ -79,7 +79,7 @@ class _CaregiverPanelPageState extends State<CaregiverPanelPage> {
 						ItemCard(
 							title: friend,
 							menuItems: [
-								UIButton.ofType(ButtonType.unpair, (context) => {log("unpair")})
+								UIButton.ofType(ButtonType.unpair, () => {log("unpair")})
 							],
 						)
 				]

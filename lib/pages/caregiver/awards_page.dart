@@ -8,7 +8,7 @@ import 'package:fokus/utils/icon_sets.dart';
 
 import 'package:fokus/widgets/app_header.dart';
 import 'package:fokus/widgets/app_navigation_bar.dart';
-import 'package:fokus/widgets/item_card.dart';
+import 'package:fokus/widgets/cards/item_card.dart';
 import 'package:fokus/widgets/chips/attribute_chip.dart';
 import 'package:fokus/widgets/segment.dart';
 
@@ -45,10 +45,10 @@ class _CaregiverAwardsPageState extends State<CaregiverAwardsPage> {
 								elements: <Widget>[
 									ItemCard(
 										title: "Wycieczka do Zoo", 
-										subtitle: AppLocales.of(context).translate('$_pageKey.content.limitedAward', {'AWARD_LIMIT': 2}),
+										subtitle: AppLocales.of(context).translate('$_pageKey.content.limitedAward', {'AWARD_LIMIT': 1}),
 										menuItems: [
-											UIButton.ofType(ButtonType.edit, (context) => {log("edit")}),
-											UIButton.ofType(ButtonType.delete, (context) => {log("delete")})
+											UIButton.ofType(ButtonType.edit, () => {log("edit")}),
+											UIButton.ofType(ButtonType.delete, () => {log("delete")})
 										],
 										graphicType: GraphicAssetType.awardsIcons,
 										graphic: 16,
@@ -73,11 +73,12 @@ class _CaregiverAwardsPageState extends State<CaregiverAwardsPage> {
 										title: "Super planista", 
 										subtitle: AppLocales.of(context).translate('$_pageKey.content.3LeveledBadge'),
 										menuItems: [
-											UIButton.ofType(ButtonType.edit, (context) => {log("edit")}),
-											UIButton.ofType(ButtonType.delete, (context) => {log("delete")})
+											UIButton.ofType(ButtonType.edit, () => {log("edit")}),
+											UIButton.ofType(ButtonType.delete, () => {log("delete")})
 										],
 										graphicType: GraphicAssetType.badgeIcons,
 										graphic: 3,
+										graphicHeight: 44.0,
 									)
 								]
 							)

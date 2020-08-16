@@ -53,6 +53,102 @@
 					"tasks": "{NUM_TASKS, plural, offset:0  zero {# zadań} one {# zadanie} two {# zadania} few {# zadania} other {# zadań}}"
 				}
 			},
+			"planForm": {
+				"createPlanTitle": "Dodawanie nowego planu",
+				"editPlanTitle": "Edytowanie planu",
+				"step": "Krok {NUM_STEP}",
+				"stepOneTitle": "Parametry planu",
+				"stepTwoTitle": "Lista zadań",
+				"createPlanButton": "Stwórz plan",
+				"savePlanButton": "Zapisz plan",
+				"addTaskButton": "Dodaj zadanie",
+				"editTaskButton": "Edytuj zadanie",
+				"removeTaskButton": "Usuń zadanie",
+				"saveTaskButton": "Zapisz zadanie",
+				"noTasksMessage": "Lista zadań jest pusta",
+				"requiredTaskListTitle": "Lista zadań obowiązkowych",
+				"optionalTaskListTitle": "Lista zadań opcjonalnych",
+				"clearAllTasksText": "Na pewno chcesz usunąć wszystkie wprowadzone zadania?",
+				"taskLimitTitle": "Limit zadań",
+				"taskLimitText": "Osiągnięto dozwolony limit zadań w planie ({TASK_LIMIT_NUM}). Nie możesz dodać kolejnego zadania.",
+				"taskListEmptyTitle": "Brak zadań",
+				"taskListEmptyText": "Każdy plan musi posiadać minimum jedno zadanie.",
+				"fields": {
+					"advancedOptionsTitle": "Ustawienia zaawansowane",
+					"planName": {
+						"label": "Nazwa planu",
+						"emptyError": "Nazwa planu nie może być pusta"
+					},
+					"assignedChildren": {
+						"label": "Przypisane dzieci",
+						"hint": "Wybierz jedno lub więcej dzieci"
+					},
+					"repeatability": {
+						"label": "Powtarzalność",
+						"options": {
+							"recurring": "Plan cykliczny",
+							"onlyOnce": "Plan jednorazowy",
+							"untilCompleted": "Plan do ukończenia"
+						}
+					},
+					"repeatabilityRange": {
+						"label": "Okres powtarzania",
+						"options": {
+							"weekly": "Tygodniowo",
+							"monthly": "Miesięcznie"
+						}
+					},
+					"days": {
+						"labelWeekly": "Dni tygodnia",
+						"labelMonthly": "Dni miesiąca",
+						"hint": "Wybierz minimum 1 dzień"
+					},
+					"onlyOneDate": {
+						"label": "Data wykonania",
+						"emptyError": "Data wykonania musi być ustawiona"
+					},
+					"range": {
+						"fromLabel": "Plan dostępny od dnia",
+						"toLabel": "Plan dostępny do dnia",
+						"hint": "Pozostaw puste, aby nie ograniczać zakresu"
+					},
+					"active": {
+						"label": "Plan aktywny",
+						"hintOn": "Widoczny od razu po stworzeniu",
+						"hintOff": "Ukryty po stworzeniu"
+					}
+				}
+			},
+			"taskForm": {
+				"removeTaskTitle": "Usuń zadanie",
+				"removeTaskText": "Na pewno chcesz usunąć to zadanie?",
+				"fields": {
+					"taskName": {
+						"label": "Nazwa zadania"
+					},
+					"taskDescription": {
+						"label": "Opis zadania"
+					},
+					"taskOrder": {
+						"label": "Kolejność wykonywania"
+					},
+					"taskPoints": {
+						"valueLabel": "Nagroda punktowa",
+						"currencyLabel": "Waluta punktów",
+						"hint": "Pozostaw puste, aby nie przyznawać punktów"
+					},
+					"taskTimer": {
+						"label": "Czas na wykonanie zadania",
+						"notSet": "Nieograniczony",
+						"set": "Ustawiony na",
+						"format": "{HOURS_NUM, plural, offset:0 zero {} other {# godz. }}{MINUTES_NUM} min"
+					},
+					"taskOptional": {
+						"label": "Zadanie opcjonalne",
+						"hint": "Zadania opcjonalne występują poza kolejnością"
+					}
+				}
+			},
 			"awards": {
 				"header": {
 					"title": "Nagrody",
@@ -148,16 +244,24 @@
 		"untilCompleted": "dopóki niezakończony",
 		"range": "od {FROM} do {TO}"
 	},
+	"date": {
+		"weekday": "{WEEKDAY, select, 1 {Poniedziałek} 2 {Wtorek} 3 {Środa} 4 {Czwartek} 5 {Piątek} 6 {Sobota} 7 {Niedziela} other {}}"
+	},
 	"alert": {
 		"noConnection": "Brak połączenia",
-		"connectionRetry": "Upewnij się że urządzenie ma dostęp do internetu",
 		"noHint": "Brak podpowiedzi",
+		"connectionRetry": "Upewnij się że urządzenie ma dostęp do internetu",
+		"genericEmptyValue": "Pole nie może być puste",
+		"genericRangeOverflowValue": "Wartość musi mieścić się w zakresie {A}-{B}",
+		"unsavedProgressTitle": "Niezapisane dane",
+		"unsavedProgressMessage": "Posiadasz niezapisane dane. Czy jesteś pewien, że chcesz wyjść?",
 		"deletePlan": "Usuwanie planu",
 		"confirmPlanDeletion": "Czy na pewno chcesz usunąć plan?"
 	},
 	"actions": {
 		"ok": "Ok",
 		"exit": "Wyjdź",
+		"cancel": "Anuluj",
 		"retry": "Spróbuj ponownie",
 		"close": "Zamknij",
 		"edit": "Edytuj",
@@ -165,10 +269,24 @@
 		"details": "Pokaż szczegóły",
 		"help": "Pokaż pomoc",
 		"back": "Cofnij",
+		"next": "Dalej",
+		"tapToSelect": "Dotknij, aby wybrać",
+		"selected": "Wybrano",
+		"selectAll": "Zaznacz wszystkie",
+		"deselectAll": "Odcznacz wszystkie",
+		"search": "Szukaj",
+		"confirm": "Zatwierdź",
+		"clear": "Wyczyść",
+		"clearAll": "Wyczyść wszystkie",
 		"unpair": "Rozłącz"
 	},
 	"help": {
-		"first_steps": "Pierwsze kroki"
+		"first_steps": "Pierwsze kroki",
+		"plan_creation": "Tworzenie planu",
+		"task_creation": "Konfiguracja zadania",
+		"plan_info": "Plany"
 	},
-	"and": "i"
+	"and": "i",
+	"hour": "godz.",
+	"minute": "min"
 }

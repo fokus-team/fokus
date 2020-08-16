@@ -50,6 +50,15 @@ mixin PlanDbRepository implements DbRepository {
 		return dbClient.update(Collection.planInstance, where.eq('_id', instanceId), document);
 	}
 
+	Future updatePlan(ObjectId id, {List<ObjectId> addedTasks}) {
+		var document = modify;
+		if (addedTasks != null)
+			document.addAllToSet('tasks', addedTasks);
+		return dbClient.update(Collection.plan, where.eq('_id', id), document);
+	}
+
+	Future createPlan(Plan plan) => dbClient.insert(Collection.plan, plan.toJson());
+
 	SelectorBuilder _buildPlanQuery({ObjectId caregiverId, ObjectId childId, ObjectId planId, PlanInstanceState state, Date date, bool activeOnly = false}) {
 		SelectorBuilder query;
 		var addExpression = (expression) => query == null ? (query = expression) : query.and(expression);

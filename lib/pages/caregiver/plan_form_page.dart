@@ -1,5 +1,5 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/ui/plan/ui_plan_form.dart';
@@ -8,6 +8,7 @@ import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/dialog_utils.dart';
 import 'package:fokus/utils/theme_config.dart';
 import 'package:fokus/widgets/dialogs/general_dialog.dart';
+import 'package:fokus/logic/plan_form/plan_form_cubit.dart';
 
 import 'package:fokus/widgets/forms/tasks_list.dart';
 import 'package:fokus/widgets/forms/plan_form.dart';
@@ -36,7 +37,7 @@ class _CaregiverPlanFormPageState extends State<CaregiverPlanFormPage> {
 	void next() => setState(() { currentStep = PlanFormStep.taskList; });
 	void back() => setState(() { currentStep = PlanFormStep.planParameters; });
 	void submit() {
-		if(plan.tasks.isEmpty) {
+		if (plan.tasks.isEmpty) {
 			showBasicDialog(
 				context,
 				GeneralDialog.discard(
@@ -45,7 +46,7 @@ class _CaregiverPlanFormPageState extends State<CaregiverPlanFormPage> {
 				)
 			);
 		} else {
-			log("Dodaj/edytuj plan"); /* TODO Form submit */ 
+			context.bloc<PlanFormCubit>().submitPlanForm(plan);
 		}
 	}
 
@@ -53,17 +54,23 @@ class _CaregiverPlanFormPageState extends State<CaregiverPlanFormPage> {
 	Widget build(BuildContext context) {
 		formKey = GlobalKey<FormState>();
 		taskListState = GlobalKey<TaskListState>();
-    return Scaffold(
-			appBar: AppBar(
-				title: Text(isCurrentModeCreate() ?
-					AppLocales.of(context).translate('$_pageKey.createPlanTitle')
-					: AppLocales.of(context).translate('$_pageKey.editPlanTitle')
+    return BlocListener<PlanFormCubit, PlanFormState>(
+			listener: (context, state) {
+				if (state is PlanFormSubmissionSuccess)
+					Navigator.of(context).pop(); // TODO also show some visual feedback?
+			},
+			child: Scaffold(
+				appBar: AppBar(
+					title: Text(isCurrentModeCreate() ?
+						AppLocales.of(context).translate('$_pageKey.createPlanTitle')
+						: AppLocales.of(context).translate('$_pageKey.editPlanTitle')
+					),
+					actions: <Widget>[
+						HelpIconButton(helpPage: 'plan_creation')
+					],
 				),
-				actions: <Widget>[
-					HelpIconButton(helpPage: 'plan_creation')
-				],
-			),
-			body: buildStepper(context)
+				body: buildStepper(context)
+	    )
     );
 	}
 

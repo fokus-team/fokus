@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:fokus/model/ui/plan/ui_plan_form.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 import 'package:mongo_dart/mongo_dart.dart';
@@ -21,6 +22,12 @@ class PlanRepeatabilityService {
 
 	Future<List<Plan>> filterPlansByDate(List<Plan> plans, Date date, {bool activeOnly = true}) async {
 		return plans.where((plan) => _planInstanceExistsByDate(plan, date)).toList();
+	}
+
+	PlanRepeatability mapRepeatabilityModel(UIPlanForm planForm) {
+		RepeatabilityType type = planForm.repeatability == PlanFormRepeatability.recurring ? planForm.repeatabilityRage.dbType : RepeatabilityType.once;
+		var untilCompleted = planForm.repeatability == PlanFormRepeatability.untilCompleted;
+		return PlanRepeatability(type: type, untilCompleted: untilCompleted, range: planForm.rangeDate, days: planForm.days);
 	}
 
   bool _planInstanceExistsByDate(Plan plan, Date date) {

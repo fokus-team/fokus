@@ -17,4 +17,6 @@ abstract class PlanRepository {
 	Future<List<PlanInstance>> getPastNotCompletedPlanInstances(List<ObjectId> childIDs, List<ObjectId> planIDs, Date beforeDate, {List<String> fields});
 
 	Future updatePlanInstances(ObjectId instanceId, {PlanInstanceState state, DateSpanUpdate<TimeDate> durationChange});
+	Future updatePlan(ObjectId id, {List<ObjectId> addedTasks});
+	Future createPlan(Plan plan);
 }

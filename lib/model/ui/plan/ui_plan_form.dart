@@ -1,10 +1,18 @@
 import 'package:fokus/model/db/date/date.dart';
 import 'package:fokus/model/db/date_span.dart';
+import 'package:fokus/model/db/plan/repeatability_type.dart';
 import 'package:fokus/model/ui/plan/ui_task.dart';
 import 'package:mongo_dart/mongo_dart.dart' as Mongo;
 
 enum PlanFormRepeatability { recurring, onlyOnce, untilCompleted }
 enum PlanFormRepeatabilityRage { weekly, monthly }
+
+extension PlanFormRepeatabilityRageDbType on PlanFormRepeatabilityRage {
+	RepeatabilityType get dbType => const {
+		PlanFormRepeatabilityRage.weekly: RepeatabilityType.weekly,
+		PlanFormRepeatabilityRage.monthly: RepeatabilityType.monthly,
+	}[this];
+}
 
 class UIPlanForm {
 	String name;

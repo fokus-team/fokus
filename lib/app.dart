@@ -11,6 +11,7 @@ import 'package:fokus/logic/auth/child/sign_up/child_sign_up_cubit.dart';
 import 'package:fokus/logic/caregiver_panel/caregiver_panel_cubit.dart';
 import 'package:fokus/logic/caregiver_plans/caregiver_plans_cubit.dart';
 import 'package:fokus/logic/child_plans/child_plans_cubit.dart';
+import 'package:fokus/logic/plan_form/plan_form_cubit.dart';
 import 'package:fokus/pages/caregiver/auth/caregiver_sign_in_page.dart';
 import 'package:fokus/pages/caregiver/auth/caregiver_sign_up_page.dart';
 import 'package:fokus/pages/caregiver/awards_page.dart';
@@ -88,6 +89,7 @@ class FokusApp extends StatelessWidget {
 
 	Map<String, WidgetBuilder> _createRoutes() {
 		var getActiveUser = (BuildContext context) => () => context.bloc<AuthenticationBloc>().state.user;
+		var getParams = (BuildContext context) => ModalRoute.of(context).settings.arguments;
 		return {
 			AppPage.loadingPage.name: (context) => _createPage(LoadingPage(), context),
 			AppPage.rolesPage.name: (context) => _createPage(RolesPage(), context),
@@ -97,7 +99,7 @@ class FokusApp extends StatelessWidget {
 			AppPage.childSignUpPage.name: (context) => _createPage(ChildSignUpPage(), context, ChildSignUpCubit(context.bloc<AuthenticationBloc>())),
 			AppPage.caregiverPanel.name: (context) => _createPage(CaregiverPanelPage(), context, CaregiverPanelCubit(getActiveUser(context))),
 			AppPage.caregiverPlans.name: (context) => _createPage(CaregiverPlansPage(), context, CaregiverPlansCubit(getActiveUser(context))),
-			AppPage.caregiverPlanForm.name: (context) => _createPage(CaregiverPlanFormPage(), context),
+			AppPage.caregiverPlanForm.name: (context) => _createPage(CaregiverPlanFormPage(), context, PlanFormCubit(getParams(context), getActiveUser(context))),
 			AppPage.caregiverAwards.name: (context) => _createPage(CaregiverAwardsPage(), context),
 			AppPage.caregiverStatistics.name: (context) => _createPage(CaregiverStatisticsPage(), context),
 			AppPage.childPanel.name: (context) => _createPage(ChildPanelPage(), context, ChildPlansCubit(getActiveUser(context))),

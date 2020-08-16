@@ -27,6 +27,8 @@ mixin TaskDbRepository implements DbRepository {
 		return dbClient.count(Collection.taskInstance, where.eq('planInstanceID', planInstanceId).and(where.eq('status.completed', true)));
 	}
 
+	Future createTasks(List<Task> tasks) => dbClient.insertMany(Collection.task, tasks.map((task) => task.toJson()).toList());
+
 	SelectorBuilder _buildTaskQuery({ObjectId planId, ObjectId planInstanceId, bool requiredOnly, bool optionalOnly}) {
 		SelectorBuilder query;
 		var addExpression = (expression) => query == null ? (query = expression) : query.and(expression);

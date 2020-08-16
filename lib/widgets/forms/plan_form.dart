@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fokus/model/db/date/date.dart';
 import 'package:fokus/model/db/date_span.dart';
 import 'package:smart_select/smart_select.dart';
 import 'package:mongo_dart/mongo_dart.dart' as Mongo;
@@ -307,7 +308,7 @@ class _PlanFormState extends State<PlanForm> {
 					child: DatePickerField(
 						icon: Icons.event_note,
 						labelText: AppLocales.of(context).translate('$_pageKey.range.fromLabel'),
-						rangeDate: DateSpan(to: widget.plan.rangeDate.to),
+						rangeDate: DateSpan<Date>(to: widget.plan.rangeDate.to),
 						dateController: _dateRageFromContoller, 
 						dateSetter: widget.plan.setRangeFromDate, 
 						callback: setDateCallback
@@ -319,7 +320,7 @@ class _PlanFormState extends State<PlanForm> {
 						icon: Icons.event_note,
 						labelText: AppLocales.of(context).translate('$_pageKey.range.toLabel'),
 						helperText: AppLocales.of(context).translate('$_pageKey.range.hint'),
-						rangeDate: DateSpan(from: widget.plan.rangeDate.from),
+						rangeDate: DateSpan<Date>(from: widget.plan.rangeDate.from),
 						dateController: _dateRageToContoller, 
 						dateSetter: widget.plan.setRangeToDate,
 						callback: setDateCallback

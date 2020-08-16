@@ -11,7 +11,7 @@ class DatePickerField extends StatefulWidget {
 	final Function dateSetter;
 	final TextEditingController dateController;
 	final bool canBeEmpty;
-	final DateSpan rangeDate;
+	final DateSpan<Date> rangeDate;
 	final Date initialDate;
 	final Function callback;
 

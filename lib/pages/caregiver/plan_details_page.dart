@@ -50,8 +50,8 @@ class _CaregiverPlanDetailsPageState extends State<CaregiverPlanDetailsPage> {
 						popupMenuWidget: PopupMenuList(
 							lightTheme: true,
 							items: [
-								UIButton.ofType(ButtonType.edit, (context) => log("Tapped edit")),
-								UIButton.ofType(ButtonType.delete, (context) => showBasicDialog(
+								UIButton.ofType(ButtonType.edit, () => log("Tapped edit")),
+								UIButton.ofType(ButtonType.delete, () => showBasicDialog(
 									context, 
 									GeneralDialog.confirm(
 										title: AppLocales.of(context).translate('alert.deletePlan'),

@@ -13,7 +13,7 @@ class UIPlanForm {
 	PlanFormRepeatabilityRage repeatabilityRage = PlanFormRepeatabilityRage.weekly;
 	List<int> days = List<int>();
 	Date onlyOnceDate = Date.now();
-	DateSpan rangeDate = DateSpan();
+	DateSpan<Date> rangeDate = DateSpan();
 	bool isActive = true;
 
 	List<UITask> tasks = List<UITask>();

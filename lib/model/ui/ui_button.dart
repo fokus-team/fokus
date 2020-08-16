@@ -7,7 +7,7 @@ enum ButtonType { exit, ok, retry, close, details, edit, delete, unpair }
 class UIButton {
 	final String textKey;
 	final Color color;
-	final Function action;
+	final void Function() action;
 
 	UIButton(this.textKey, this.action, [this.color]);
 	UIButton.ofType(ButtonType type, this.action, [this.color]) : textKey = type.key;

@@ -1,15 +1,21 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:fokus/model/currency_type.dart';
+import 'package:fokus/model/ui/plan/ui_plan_currency.dart';
+import 'package:fokus/model/ui/plan/ui_task.dart';
 import 'package:fokus/model/ui/ui_button.dart';
 import 'package:fokus/services/app_locales.dart';
+import 'package:fokus/utils/dialog_utils.dart';
 import 'package:fokus/utils/theme_config.dart';
 import 'package:fokus/widgets/app_header.dart';
 import 'package:fokus/widgets/chips/attribute_chip.dart';
-import 'package:fokus/widgets/dialogs/dialog.dart';
-import 'package:fokus/widgets/item_card.dart';
-import 'package:fokus/widgets/popup_menu_list.dart';
+import 'package:fokus/widgets/dialogs/general_dialog.dart';
+import 'package:fokus/widgets/cards/item_card.dart';
+import 'package:fokus/widgets/buttons/popup_menu_list.dart';
 import 'package:fokus/widgets/segment.dart';
+import 'package:fokus/widgets/cards/task_card.dart';
+import 'package:mongo_dart/mongo_dart.dart' as Mongo;
 
 class CaregiverPlanDetailsPage extends StatefulWidget {
   @override
@@ -40,26 +46,21 @@ class _CaregiverPlanDetailsPageState extends State<CaregiverPlanDetailsPage> {
 								)
 							],
 						),
-						showHelp: true,
+						helpPage: 'plan_info',
 						popupMenuWidget: PopupMenuList(
 							lightTheme: true,
 							items: [
-								UIButton.ofType(ButtonType.edit,() => log("Tapped edit")),
-								UIButton.ofType(
-									ButtonType.delete,
-									() => showDialog(
-										context: context,
-										//TODO: replace with Dialog made by Miko - blocked by pull request
-										builder: (context) => AppDialog(
-											titleKey: 'alert.deletePlan',
-											textKey: 'alert.confirmPlanDeletion',
-											buttons: [
-												UIButton.ofType(ButtonType.close, () => Navigator.of(context).pop()),
-												UIButton.ofType(ButtonType.ok, () => Navigator.of(context).pop())
-											],
-										),
+								UIButton.ofType(ButtonType.edit, () => log("Tapped edit")),
+								UIButton.ofType(ButtonType.delete, () => showBasicDialog(
+									context,
+									GeneralDialog.confirm(
+										title: AppLocales.of(context).translate('alert.deletePlan'),
+										content: AppLocales.of(context).translate('alert.confirmPlanDeletion'),
+										confirmText: 'actions.delete',
+										confirmAction: () => Navigator.of(context).pop(),
+										confirmColor: Colors.red
 									)
-								)
+								))
 							],
 						)
 					),
@@ -73,9 +74,11 @@ class _CaregiverPlanDetailsPageState extends State<CaregiverPlanDetailsPage> {
 	List<Segment> _buildPanelSegments() {
 		return [
 			_getTasksSegment(
-				title: '$_pageKey.content.mandatoryTasks',
+				title: '$_pageKey.content.mandatoryTasks'
 			),
-			_getAdditionalTasksSegment(title: '$_pageKey.content.additionalTasks')
+			_getAdditionalTasksSegment(
+				title: '$_pageKey.content.additionalTasks'
+			)
 		];
 	}
 
@@ -84,82 +87,53 @@ class _CaregiverPlanDetailsPageState extends State<CaregiverPlanDetailsPage> {
 			title: title,
 			noElementsMessage: '$_pageKey.content.noTasks',
 			elements: <Widget>[
-				ItemCard(
-					title: "Opróżnij plecak",
-					chips:
-					<Widget>[
-						AttributeChip.withIcon(
-							icon: Icons.access_time,
-							color: AppColors.caregiverBackgroundColor,
-							content: "8 minut"
+				Padding(
+					padding: EdgeInsets.symmetric(horizontal: AppBoxProperties.screenEdgePadding),
+					child: TaskCard(
+						index: 0,
+						task: UITask(
+							key: ValueKey(DateTime.now()),
+							title: "Opróżnij plecak",
+							timer: 568,
+							pointsValue: 80,
+							pointCurrency: UIPlanCurrency(id: Mongo.ObjectId.fromHexString('5f9997f18c7472942f9979a3'), type: CurrencyType.diamond, title: "Punkty")
 						)
-					],
+					)
 				),
-				ItemCard(
-					title: "Przygotuj książki i zeszyty na kolejny dzień według bardzo długiego planu zajęć",
-					chips:<Widget>[
-						AttributeChip.withIcon(
-							icon: Icons.access_time,
-							color: AppColors.caregiverBackgroundColor,
-							content: "6 minut"
+				Padding(
+					padding: EdgeInsets.symmetric(horizontal: AppBoxProperties.screenEdgePadding),
+					child: TaskCard(
+						index: 1,
+						task: UITask(
+							key: ValueKey(DateTime.now()),
+							title: "Przygotuj książki i zeszyty na kolejny dzień według bardzo długiego planu zajęć",
+							timer: 60,
+							pointsValue: 100,
+							pointCurrency: UIPlanCurrency(id: Mongo.ObjectId.fromHexString('5f9997f18c7472942f9979a3'), type: CurrencyType.diamond, title: "Punkty")
 						)
-					],
+					)
 				),
-				ItemCard(
-					title: "Spakuj potrzebne rzeczy",
-					chips:
-					<Widget>[
-						AttributeChip.withIcon(
-							icon: Icons.access_time,
-							color: AppColors.caregiverBackgroundColor,
-							content: "5 minut"
+				Padding(
+					padding: EdgeInsets.symmetric(horizontal: AppBoxProperties.screenEdgePadding),
+					child: TaskCard(
+						index: 2,
+						task: UITask(
+							key: ValueKey(DateTime.now()),
+							title: "Spakuj potrzebne rzeczy"
 						)
-					],
+					)
 				),
-				ItemCard(
-					title: "Spakuj potrzebne rzeczy",
-					chips:
-					<Widget>[
-						AttributeChip.withIcon(
-							icon: Icons.access_time,
-							color: AppColors.caregiverBackgroundColor,
-							content: "5 minut"
+				Padding(
+					padding: EdgeInsets.symmetric(horizontal: AppBoxProperties.screenEdgePadding),
+					child: TaskCard(
+						index: 3,
+						task: UITask(
+							key: ValueKey(DateTime.now()),
+							title: "Spakuj potrzebne rzeczy part 2",
+							timer: 20
 						)
-					],
-				),
-				ItemCard(
-					title: "Spakuj potrzebne rzeczy",
-					chips:
-					<Widget>[
-						AttributeChip.withIcon(
-							icon: Icons.access_time,
-							color: AppColors.caregiverBackgroundColor,
-							content: "5 minut"
-						)
-					],
-				),
-				ItemCard(
-					title: "Spakuj potrzebne rzeczy",
-					chips:
-					<Widget>[
-						AttributeChip.withIcon(
-							icon: Icons.access_time,
-							color: AppColors.caregiverBackgroundColor,
-							content: "5 minut"
-						)
-					],
-				),
-				ItemCard(
-					title: "Spakuj potrzebne rzeczy",
-					chips:
-					<Widget>[
-						AttributeChip.withIcon(
-							icon: Icons.access_time,
-							color: AppColors.caregiverBackgroundColor,
-							content: "5 minut"
-						)
-					],
-				),
+					)
+				)
 			]
 		);
 	}
@@ -169,27 +143,18 @@ class _CaregiverPlanDetailsPageState extends State<CaregiverPlanDetailsPage> {
 			title: title,
 			noElementsMessage: '$_pageKey.content.noTasks',
 			elements: <Widget>[
-				ItemCard(
-					title: "Opróżnij plecak 2",
-					chips:
-					<Widget>[
-						AttributeChip.withIcon(
-							icon: Icons.access_time,
-							color: AppColors.caregiverBackgroundColor,
-							content: "8 minut"
+				Padding(
+					padding: EdgeInsets.symmetric(horizontal: AppBoxProperties.screenEdgePadding),
+					child: TaskCard(
+						task: UITask(
+							key: ValueKey(DateTime.now()),
+							title: "Opcjonalne zadanko",
+							timer: 20,
+							optional: true,
+							pointsValue: 300,
+							pointCurrency: UIPlanCurrency(id: Mongo.ObjectId.fromHexString('5f9997f18c7472942f9979a2'), type: CurrencyType.ruby, title: "Klejnoty")
 						)
-					],
-				),
-				ItemCard(
-					title: "Przygotuj książki i zeszyty na kolejny dzień według bardzo długiego planu zajęć",
-					chips:
-					<Widget>[
-						AttributeChip.withIcon(
-							icon: Icons.access_time,
-							color: AppColors.caregiverBackgroundColor,
-							content: "8 minut"
-						)
-					],
+					)
 				)
 			]
 		);

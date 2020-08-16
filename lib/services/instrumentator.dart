@@ -2,6 +2,9 @@ import 'dart:async';
 import 'dart:isolate';
 
 import 'package:bloc/bloc.dart';
+import 'package:fokus/utils/app_locales.dart';
+import 'package:fokus/utils/dialog_utils.dart';
+import 'package:fokus/widgets/dialogs/general_dialog.dart';
 import 'package:intl/intl.dart';
 import 'package:logging/logging.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -66,14 +69,12 @@ class Instrumentator {
 	bool _handleError(dynamic error, StackTrace stackTrace) {
 		if (_navigatorKey?.currentState?.overlay != null) {
 			if (error is NoDbConnection) { // TODO Handle differently, show info on page / only offline data
-				showDialog(
-					context: _navigatorKey.currentState.overlay.context,
-					builder: (context) =>
-						AppDialog(
-							titleKey: 'alert.noConnection',
-							textKey: 'alert.connectionRetry',
-							buttons: [UIButton.ofType(ButtonType.ok, () => Navigator.of(context).pop())],
-						),
+				showBasicDialog(
+					_navigatorKey.currentState.overlay.context,
+					GeneralDialog.discard(
+						title: AppLocales.of(_navigatorKey.currentState.overlay.context).translate('alert.noConnection'),
+						content: AppLocales.of(_navigatorKey.currentState.overlay.context).translate('alert.connectionRetry')
+					)
 				);
 				return true;
 			}

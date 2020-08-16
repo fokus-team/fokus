@@ -7,10 +7,9 @@ import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/ui/plan/ui_plan.dart';
 import 'package:fokus/services/app_locales.dart';
 
-
 import 'package:fokus/widgets/app_header.dart';
 import 'package:fokus/widgets/app_navigation_bar.dart';
-import 'package:fokus/widgets/item_card.dart';
+import 'package:fokus/widgets/cards/item_card.dart';
 import 'package:fokus/widgets/chips/attribute_chip.dart';
 import 'package:fokus/widgets/segment.dart';
 
@@ -22,25 +21,29 @@ class CaregiverPlansPage extends StatefulWidget {
 const String _pageKey = 'page.caregiverSection.plans';
 
 class _CaregiverPlansPageState extends State<CaregiverPlansPage> {
-	@override
-	Widget build(BuildContext context) {
-		return Scaffold(
-			body: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
-				AppHeader.normal(title: '$_pageKey.header.title', text: '$_pageKey.header.pageHint', headerActionButtons: [
-					HeaderActionButton.normal(Icons.add, '$_pageKey.header.addPlan', () => {log("Dodaj plan")}),
-					HeaderActionButton.normal(Icons.calendar_today, '$_pageKey.header.calendar', () => {log("Kalendarz")}, Colors.amber)
-				]),
-				BlocBuilder<CaregiverPlansCubit, CaregiverPlansState>(
-					cubit: BlocProvider.of<CaregiverPlansCubit>(context),
-					builder: (context, state) {
-						if (state is CaregiverPlansInitial)
-							BlocProvider.of<CaregiverPlansCubit>(context).loadCaregiverPlans();
-						else if (state is CaregiverPlansLoadSuccess)
-							return AppSegments(segments: _buildPanelSegments(state, context));
-						return Expanded(child: Center(child: CircularProgressIndicator()));
-					}
-				)
-			]
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+			body: Column(
+				crossAxisAlignment: CrossAxisAlignment.start,
+				children: <Widget>[
+					AppHeader.normal(title: '$_pageKey.header.title', text: '$_pageKey.header.pageHint', headerActionButtons: [
+						HeaderActionButton.normal(Icons.add, '$_pageKey.header.addPlan',
+							() => Navigator.of(context).pushNamed(AppPage.caregiverPlanForm.name, arguments: AppFormType.create)),
+						HeaderActionButton.normal(Icons.calendar_today, '$_pageKey.header.calendar', 
+							() => log("Kalendarz"), Colors.amber)
+					]),
+					BlocBuilder<CaregiverPlansCubit, CaregiverPlansState>(
+						cubit: BlocProvider.of<CaregiverPlansCubit>(context),
+						builder: (context, state) {
+							if (state is CaregiverPlansInitial)
+								BlocProvider.of<CaregiverPlansCubit>(context).loadCaregiverPlans();
+							else if (state is CaregiverPlansLoadSuccess)
+								return AppSegments(segments: _buildPanelSegments(state, context));
+							return Expanded(child: Center(child: CircularProgressIndicator()));
+						}
+					)
+				]
 			),
 			bottomNavigationBar: AppNavigationBar.caregiverPage(currentIndex: 1));
 	}
@@ -57,7 +60,7 @@ List<Segment> _buildPanelSegments(CaregiverPlansLoadSuccess state, context) {
 				? RaisedButton(
 				child: Text(AppLocales.of(context).translate('$_pageKey.header.addPlan'),
 					style: Theme.of(context).textTheme.button),
-				onPressed: () => {},
+				onPressed: () => {}
 			)
 				: SizedBox.shrink(),
 			context: context),
@@ -84,8 +87,8 @@ Segment _getPlansSegment({List<UIPlan> plans, String title, String noElementsMes
 							color: Colors.indigo,
 							icon: Icons.layers
 						)
-					],
-				),
-		],
+					]
+				)
+		]
 	);
 }

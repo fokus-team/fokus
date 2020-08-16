@@ -12,8 +12,8 @@ import 'package:fokus/utils/icon_sets.dart';
 import 'package:fokus/utils/theme_config.dart';
 import 'package:fokus/widgets/chips/attribute_chip.dart';
 import 'package:fokus/widgets/app_avatar.dart';
-
-import 'back_icon_button.dart';
+import 'package:fokus/widgets/buttons/help_icon_button.dart';
+import 'package:fokus/widgets/buttons/back_icon_button.dart';
 
 enum AppHeaderType { greetings, normal, widget }
 
@@ -37,10 +37,10 @@ class AppHeader extends StatelessWidget {
 	final List<HeaderActionButton> headerActionButtons;
 	final AppHeaderType headerType;
 	final Widget appHeaderWidget;
-	final bool showHelp;
+	final String helpPage;
 	final Widget popupMenuWidget;
 
-	AppHeader({this.title, this.text, this.headerActionButtons, this.headerType, this.appHeaderWidget, this.showHelp = false, this.popupMenuWidget});
+	AppHeader({this.title, this.text, this.headerActionButtons, this.headerType, this.appHeaderWidget, this.helpPage, this.popupMenuWidget});
 	AppHeader.greetings({String text, List<HeaderActionButton> headerActionButtons}) : this(
 		text: text,
 		headerActionButtons: headerActionButtons,
@@ -52,13 +52,13 @@ class AppHeader extends StatelessWidget {
 		headerActionButtons: headerActionButtons,
 		headerType: AppHeaderType.normal
 	);
-	AppHeader.widget({String title, String text, List<HeaderActionButton> headerActionButtons, Widget appHeaderWidget, bool showHelp = false, Widget popupMenuWidget}) : this(
+	AppHeader.widget({String title, String text, List<HeaderActionButton> headerActionButtons, Widget appHeaderWidget, String helpPage, Widget popupMenuWidget}) : this(
 		title: title,
 		text: text,
 		headerActionButtons: headerActionButtons,
 		headerType: AppHeaderType.widget,
 		appHeaderWidget: appHeaderWidget,
-		showHelp: showHelp,
+		helpPage: helpPage,
 		popupMenuWidget: popupMenuWidget
 	);
 
@@ -145,12 +145,12 @@ class AppHeader extends StatelessWidget {
 		);
 	}
 
-	Widget buildHeaderContainer(BuildContext context, Widget innerContent, {double horizontalEdge = 8.0}) {
+	Widget buildHeaderContainer(BuildContext context, Widget innerContent, {double horizontalEdge = 8.0, double verticalEdge = 10.0}) {
 		return Material(
 			elevation: 4.0,
 			color: Theme.of(context).appBarTheme.color,
 			child: Container(
-				padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: horizontalEdge),
+				padding: EdgeInsets.symmetric(vertical: verticalEdge, horizontal: horizontalEdge),
 				child: SafeArea(
 					child: Column(
 						children: <Widget>[
@@ -253,44 +253,47 @@ class AppHeader extends StatelessWidget {
 	Widget buildWidget(BuildContext context) {
 		return buildHeaderContainer(context,
 			Column(
-				children: <Widget>[
+				mainAxisSize: MainAxisSize.min,
+				children: [
 					Row(
+						mainAxisSize: MainAxisSize.min,
 						mainAxisAlignment: MainAxisAlignment.start,
-						crossAxisAlignment: CrossAxisAlignment.center,
-						children: <Widget>[
-							BackIconButton(),
+						crossAxisAlignment: CrossAxisAlignment.start,
+						children: [
 							Expanded(
-							  child: Text(
-							  	AppLocales.of(context).translate(title),
-							  	style: Theme.of(context).textTheme.headline1.copyWith(color: Colors.white),
-							  	overflow: TextOverflow.ellipsis,
-									maxLines: 2,
-							  ),
-							),
-							Row(
-								mainAxisAlignment: MainAxisAlignment.end,
-							  crossAxisAlignment: CrossAxisAlignment.center,
-							  children: <Widget>[
-							  	// TODO: change this widget to widget made by Miko
-							    this.showHelp ? IconButton(icon: Icon(Icons.help, color: Colors.white, size: 26,), onPressed: null,) : SizedBox.shrink(),
-									this.popupMenuWidget != null ? popupMenuWidget : SizedBox.shrink()
-							  ],
+								child: ListTile(
+									dense: true,
+									contentPadding: EdgeInsets.symmetric(horizontal: 4.0),
+									trailing: Row(
+										mainAxisSize: MainAxisSize.min,
+										mainAxisAlignment: MainAxisAlignment.end,
+										crossAxisAlignment: CrossAxisAlignment.center,
+										children: <Widget>[
+											this.helpPage != null ? HelpIconButton(helpPage: helpPage) : SizedBox.shrink(),
+											this.popupMenuWidget != null ? popupMenuWidget : SizedBox.shrink()
+										],
+									),
+									leading: BackIconButton(),
+									title: Padding(
+										padding: EdgeInsets.only(left: 4.0),
+										child: Text(
+											AppLocales.of(context).translate(title), 
+											style: Theme.of(context).textTheme.headline3.copyWith(color: Colors.white, fontSize: 20.0),
+											overflow: TextOverflow.ellipsis,
+											maxLines: 2
+										)
+									)
+								)
 							)
 						]
 					),
-					Row(
-						children: <Widget>[
-							Expanded(
-								child: appHeaderWidget,
-							)
-						],
-					),
-				],
+					appHeaderWidget
+				]
 			),
+			verticalEdge: 6.0,
 			horizontalEdge: 0.0
 		);
-	}
-
+	 }
 }
 
 class ChildCustomHeader extends StatelessWidget {

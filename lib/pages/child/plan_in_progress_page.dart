@@ -5,7 +5,7 @@ import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/theme_config.dart';
 import 'package:fokus/widgets/app_header.dart';
 import 'package:fokus/widgets/chips/attribute_chip.dart';
-import 'package:fokus/widgets/item_card.dart';
+import 'package:fokus/widgets/cards/item_card.dart';
 import 'package:fokus/widgets/segment.dart';
 
 class ChildPlanInProgressPage extends StatefulWidget {
@@ -39,7 +39,7 @@ class _ChildPlanInProgressPageState extends State<ChildPlanInProgressPage> {
 								)
 							],
 						),
-						showHelp: true
+						helpPage: 'plan_info'
 					),
 					AppSegments(segments: _buildPanelSegments())
 				],

@@ -1,36 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:fokus/utils/app_locales.dart';
+import 'package:fokus/model/ui/ui_button.dart';
 import 'package:fokus/utils/theme_config.dart';
 
 enum GeneralDialogType { confirm, discard }
 
-class GeneralDialogButton {
-	String text;
-	Color color;
-	Function action;
-
-	GeneralDialogButton({
-		@required this.text,
-		@required this.color,
-		@required this.action
-	});
-
-  Widget getWidget(BuildContext context) {
-    return FlatButton(
-			child: Text(AppLocales.of(context).translate(text)),
-			textColor: color,
-			onPressed: action ?? () => Navigator.of(context).pop()
-		);
-  }
-
-}
-
 class GeneralDialog extends StatelessWidget {
 	final String title;
 	final String content;
-	final GeneralDialogButton cancelButton;
-	final GeneralDialogButton confirmButton;
-	final GeneralDialogButton discardButton;
+	final UIButton cancelButton;
+	final UIButton confirmButton;
+	final UIButton discardButton;
 	final GeneralDialogType type;
 
 	GeneralDialog({
@@ -54,15 +33,15 @@ class GeneralDialog extends StatelessWidget {
 	}) : this(
 		title: title,
 		content: content,
-		cancelButton: GeneralDialogButton(
-			text: cancelText ?? 'actions.cancel',
-			color: cancelColor ?? AppColors.mediumTextColor,
-			action: cancelAction
+		cancelButton: UIButton(
+			cancelText ?? 'actions.cancel',
+			cancelAction,
+			cancelColor ?? AppColors.mediumTextColor,
 		),
-		confirmButton: GeneralDialogButton(
-			text: confirmText ?? 'actions.confirm',
-			color: confirmColor ?? AppColors.mainBackgroundColor,
-			action: confirmAction
+		confirmButton: UIButton(
+			confirmText ?? 'actions.confirm',
+			confirmAction,
+			confirmColor ?? AppColors.mainBackgroundColor
 		),
 		type: GeneralDialogType.confirm
 	);
@@ -76,10 +55,10 @@ class GeneralDialog extends StatelessWidget {
 	}) : this(
 		title: title,
 		content: content,
-		discardButton: GeneralDialogButton(
-			text: discardText ?? 'actions.ok',
-			color: discardColor ?? AppColors.mainBackgroundColor,
-			action: discardAction
+		discardButton: UIButton(
+			discardText ?? 'actions.ok',
+			discardAction,
+			discardColor ?? AppColors.mainBackgroundColor
 		),
 		type: GeneralDialogType.discard
 	);

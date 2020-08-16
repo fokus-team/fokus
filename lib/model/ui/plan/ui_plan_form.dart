@@ -1,3 +1,5 @@
+import 'package:fokus/model/db/date/date.dart';
+import 'package:fokus/model/db/date_span.dart';
 import 'package:fokus/model/ui/plan/ui_task.dart';
 import 'package:mongo_dart/mongo_dart.dart' as Mongo;
 
@@ -10,15 +12,14 @@ class UIPlanForm {
 	PlanFormRepeatability repeatability = PlanFormRepeatability.recurring;
 	PlanFormRepeatabilityRage repeatabilityRage = PlanFormRepeatabilityRage.weekly;
 	List<int> days = List<int>();
-	DateTime onlyOnceDate;
-	DateTime rangeFromDate;
-	DateTime rangeToDate;
+	Date onlyOnceDate = Date.now();
+	DateSpan rangeDate = DateSpan();
 	bool isActive = true;
 
 	List<UITask> tasks = List<UITask>();
 
-	void setOnlyOnceDate(DateTime date) { onlyOnceDate = date; }
-	void setRangeFromDate(DateTime date) { rangeFromDate = date; }
-	void setRangeToDate(DateTime date) { rangeToDate = date; }
+	void setOnlyOnceDate(DateTime date) { onlyOnceDate = date != null ? Date.fromDate(date) : null; }
+	void setRangeFromDate(DateTime date) { rangeDate.from = date != null ? Date.fromDate(date) : null; }
+	void setRangeToDate(DateTime date) { rangeDate.to = date != null ? Date.fromDate(date) : null; } 
 
 }

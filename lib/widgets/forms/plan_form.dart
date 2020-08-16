@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fokus/model/db/date_span.dart';
 import 'package:smart_select/smart_select.dart';
 import 'package:mongo_dart/mongo_dart.dart' as Mongo;
 
@@ -55,8 +56,8 @@ class _PlanFormState extends State<PlanForm> {
 	void initState() {
 		_planNameContoller.text = widget.plan.name ?? '';
 		_dateOneDayOnlyContoller.text = widget.plan.onlyOnceDate != null ? getOnlyDatePart(widget.plan.onlyOnceDate) : '';
-		_dateRageFromContoller.text = widget.plan.rangeFromDate != null ? getOnlyDatePart(widget.plan.rangeFromDate) : '';
-		_dateRageToContoller.text = widget.plan.rangeToDate != null ? getOnlyDatePart(widget.plan.rangeToDate) : '';
+		_dateRageFromContoller.text = widget.plan.rangeDate.from != null ? getOnlyDatePart(widget.plan.rangeDate.from) : '';
+		_dateRageToContoller.text = widget.plan.rangeDate.to != null ? getOnlyDatePart(widget.plan.rangeDate.to) : '';
     super.initState();
   }
 
@@ -306,7 +307,7 @@ class _PlanFormState extends State<PlanForm> {
 					child: DatePickerField(
 						icon: Icons.event_note,
 						labelText: AppLocales.of(context).translate('$_pageKey.range.fromLabel'),
-						rangeToDate: widget.plan.rangeToDate,
+						rangeDate: DateSpan(to: widget.plan.rangeDate.to),
 						dateController: _dateRageFromContoller, 
 						dateSetter: widget.plan.setRangeFromDate, 
 						callback: setDateCallback
@@ -318,7 +319,7 @@ class _PlanFormState extends State<PlanForm> {
 						icon: Icons.event_note,
 						labelText: AppLocales.of(context).translate('$_pageKey.range.toLabel'),
 						helperText: AppLocales.of(context).translate('$_pageKey.range.hint'),
-						rangeFromDate: widget.plan.rangeFromDate,
+						rangeDate: DateSpan(from: widget.plan.rangeDate.from),
 						dateController: _dateRageToContoller, 
 						dateSetter: widget.plan.setRangeToDate,
 						callback: setDateCallback

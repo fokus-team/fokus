@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:fokus/model/db/date/date.dart';
+import 'package:fokus/model/db/date_span.dart';
 import 'package:fokus/utils/app_locales.dart';
 
 class DatePickerField extends StatefulWidget {
@@ -9,9 +11,8 @@ class DatePickerField extends StatefulWidget {
 	final Function dateSetter;
 	final TextEditingController dateController;
 	final bool canBeEmpty;
-	final DateTime rangeFromDate;
-	final DateTime rangeToDate;
-	final DateTime initialDate;
+	final DateSpan rangeDate;
+	final Date initialDate;
 	final Function callback;
 
 	DatePickerField({
@@ -23,8 +24,7 @@ class DatePickerField extends StatefulWidget {
 		this.helperText,
 		this.icon = Icons.event,
 		this.canBeEmpty = true,
-		this.rangeFromDate,
-		this.rangeToDate,
+		this.rangeDate,
 		this.initialDate
 	});
 
@@ -37,24 +37,24 @@ class _DatePickerFieldState extends State<DatePickerField> {
 	bool _showClearButton = false;
 
 	Future<DateTime> _selectDate(BuildContext context) async {
-		DateTime initial = (widget.dateController.text != '' ? 
-			DateTime.tryParse(widget.dateController.text) :
-			(widget.rangeFromDate != null ? 
-				widget.rangeFromDate : 
-				(widget.rangeToDate != null ? 
-					widget.rangeToDate :
-					DateTime.now()
-				)
-			)
-		);
+		DateTime initial = DateTime.now();
+		if(widget.dateController.text != '') {
+			initial = DateTime.tryParse(widget.dateController.text);
+		} else if(widget.rangeDate != null) {
+			if(widget.rangeDate.from != null) {
+				initial = widget.rangeDate.from;
+			} else if(widget.rangeDate.to != null) {
+				initial = widget.rangeDate.to;
+			}
+		}
 
     return await showDatePicker(
 			locale: AppLocales.of(context).locale,
 			context: context,
 			helpText: widget.labelText,
 			fieldLabelText: widget.labelText,
-			firstDate: widget.rangeFromDate != null ? widget.rangeFromDate : DateTime.now(),
-			lastDate: widget.rangeToDate != null ? widget.rangeToDate : DateTime(2100),
+			firstDate: (widget.rangeDate != null && widget.rangeDate.from != null) ? widget.rangeDate.from : DateTime.now(),
+			lastDate: (widget.rangeDate != null && widget.rangeDate.to != null) ? widget.rangeDate.to : DateTime(2100),
 			initialDate: initial
 		);
   }

@@ -65,7 +65,7 @@ class CaregiverSignUpPage extends StatelessWidget {
 					hideInput: true
 			  ),
 			  AuthenticationSubmitButton<CaregiverSignUpCubit, CaregiverSignUpState>(
-					button: UIButton.ofType(ButtonType.signUp, (context) => context.bloc<CaregiverSignUpCubit>().signUpFormSubmitted())
+					button: UIButton.ofType(ButtonType.signUp, () => context.bloc<CaregiverSignUpCubit>().signUpFormSubmitted())
 			  ),
 			  GoogleSignInButton(
 					onPressed: () => context.bloc<CaregiverSignUpCubit>().logInWithGoogle(),

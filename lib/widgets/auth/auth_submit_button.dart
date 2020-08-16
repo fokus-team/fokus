@@ -20,7 +20,7 @@ class AuthenticationSubmitButton<Bloc extends Cubit<State>, State extends FormzS
 			  return RaisedButton(
 				  child: Text(AppLocales.of(context).translate(button.textKey)),
 				  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppBoxProperties.roundedCornersRadius)),
-				  onPressed: state.status.isValidated ? () => button.action(context) : null,
+				  onPressed: state.status.isValidated ? () => button.action() : null,
 			  );
 		  },
 	  );

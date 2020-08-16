@@ -1,10 +1,8 @@
-import 'package:flutter/material.dart';
-
 enum ButtonType { exit, ok, retry, close, details, edit, delete, unpair, signIn, signUp }
 
 class UIButton {
 	final String textKey;
-	final void Function(BuildContext) action;
+	final void Function() action;
 
 	UIButton(this.textKey, this.action);
 	UIButton.ofType(ButtonType type, this.action) : textKey = type.key;

@@ -56,7 +56,7 @@ class ChildSignInPage extends StatelessWidget {
 				getErrorKey: (state) => [state.childCode.error.key],
 			),
 			AuthenticationSubmitButton<ChildSignInCubit, ChildSignInState>(
-				button: UIButton.ofType(ButtonType.signIn, (context) => context.bloc<ChildSignInCubit>().signInNewChild())
+				button: UIButton.ofType(ButtonType.signIn, () => context.bloc<ChildSignInCubit>().signInNewChild())
 			),
 			MaterialButton(
 				child: Text(AppLocales.of(context).translate('$_pageKey.createNewProfile')),

@@ -52,7 +52,7 @@ class CaregiverSignInPage extends StatelessWidget {
 					hideInput: true,
 				),
 				AuthenticationSubmitButton<CaregiverSignInCubit, CaregiverSignInState>(
-					button: UIButton.ofType(ButtonType.signIn, (context) => context.bloc<CaregiverSignInCubit>().logInWithCredentials())
+					button: UIButton.ofType(ButtonType.signIn, () => context.bloc<CaregiverSignInCubit>().logInWithCredentials())
 				),
 				MaterialButton(
 					child: Text(AppLocales.of(context).translate('actions.signUp')),

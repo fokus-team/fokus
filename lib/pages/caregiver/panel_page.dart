@@ -58,9 +58,9 @@ class _CaregiverPanelPageState extends State<CaregiverPanelPage> {
 							title: child.name,
 							subtitle: getChildCardSubtitle(context, child),
 							menuItems: [
-								UIButton.ofType(ButtonType.details, (context) => {log("details")}),
-								UIButton.ofType(ButtonType.edit, (context) => {log("edit")}),
-								UIButton.ofType(ButtonType.unpair, (context) => {log("unpair")})
+								UIButton.ofType(ButtonType.details, () => {log("details")}),
+								UIButton.ofType(ButtonType.edit, () => {log("edit")}),
+								UIButton.ofType(ButtonType.unpair, () => {log("unpair")})
 							],
 							graphicType: GraphicAssetType.childAvatars,
 							graphic: child.avatar,
@@ -79,7 +79,7 @@ class _CaregiverPanelPageState extends State<CaregiverPanelPage> {
 						ItemCard(
 							title: friend,
 							menuItems: [
-								UIButton.ofType(ButtonType.unpair, (context) => {log("unpair")})
+								UIButton.ofType(ButtonType.unpair, () => {log("unpair")})
 							],
 						)
 				]

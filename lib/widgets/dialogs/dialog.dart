@@ -15,7 +15,7 @@ class AppDialog extends StatelessWidget {
 			content: Text(AppLocales.of(context).translate(textKey)),
 			actions: buttons.map((button) => FlatButton(
 				child: Text(AppLocales.of(context).translate(button.textKey)),
-				onPressed: () => button.action(context),
+				onPressed: button.action,
 			)).toList(),
 		);
 	}

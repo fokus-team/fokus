@@ -47,8 +47,8 @@ class _CaregiverAwardsPageState extends State<CaregiverAwardsPage> {
 										title: "Wycieczka do Zoo", 
 										subtitle: AppLocales.of(context).translate('$_pageKey.content.limitedAward', {'AWARD_LIMIT': 2}),
 										menuItems: [
-											UIButton.ofType(ButtonType.edit, (context) => {log("edit")}),
-											UIButton.ofType(ButtonType.delete, (context) => {log("delete")})
+											UIButton.ofType(ButtonType.edit, () => {log("edit")}),
+											UIButton.ofType(ButtonType.delete, () => {log("delete")})
 										],
 										graphicType: GraphicAssetType.awardsIcons,
 										graphic: 16,
@@ -73,8 +73,8 @@ class _CaregiverAwardsPageState extends State<CaregiverAwardsPage> {
 										title: "Super planista", 
 										subtitle: AppLocales.of(context).translate('$_pageKey.content.3LeveledBadge'),
 										menuItems: [
-											UIButton.ofType(ButtonType.edit, (context) => {log("edit")}),
-											UIButton.ofType(ButtonType.delete, (context) => {log("delete")})
+											UIButton.ofType(ButtonType.edit, () => {log("edit")}),
+											UIButton.ofType(ButtonType.delete, () => {log("delete")})
 										],
 										graphicType: GraphicAssetType.badgeIcons,
 										graphic: 3,

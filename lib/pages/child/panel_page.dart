@@ -35,7 +35,6 @@ class _ChildPanelPageState extends State<ChildPanelPage> {
 	      children: [
 	        ChildCustomHeader(),
 	        BlocBuilder<ChildPlansCubit, ChildPlansState>(
-	          cubit: BlocProvider.of<ChildPlansCubit>(context),
 	          builder: (context, state) {
 	            if (state is ChildPlansInitial)
 	              BlocProvider.of<ChildPlansCubit>(context).loadChildPlansForToday();

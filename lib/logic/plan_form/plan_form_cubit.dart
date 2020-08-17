@@ -1,5 +1,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:fokus/model/db/user/user_role.dart';
+import 'package:fokus/model/ui/ui_currency.dart';
+import 'package:fokus/model/ui/user/ui_caregiver.dart';
+import 'package:fokus/model/ui/user/ui_child.dart';
 import 'package:get_it/get_it.dart';
 
 import 'package:fokus/model/ui/app_page.dart';
@@ -20,6 +24,12 @@ class PlanFormCubit extends Cubit<PlanFormState> {
 	final PlanRepeatabilityService _repeatabilityService = GetIt.I<PlanRepeatabilityService>();
 
   PlanFormCubit(this.formType, this._activeUser) : super(PlanFormInitial());
+
+  void loadFormData() async {
+	  var user = _activeUser();
+		var children = await _dataRepository.getUsers(role: UserRole.child, connected: user.id);
+		emit(PlanFormDataLoadSuccess(children.map((child) => UIChild.fromDBModel(child)).toList(), (user as UICaregiver).currencies));
+  }
 
   void submitPlanForm(UIPlanForm planForm) async {
 		emit(PlanFormSubmissionInProgress());

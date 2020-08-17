@@ -34,7 +34,6 @@ class _CaregiverPlansPageState extends State<CaregiverPlansPage> {
 							() => log("Kalendarz"), Colors.amber)
 					]),
 					BlocBuilder<CaregiverPlansCubit, CaregiverPlansState>(
-						cubit: BlocProvider.of<CaregiverPlansCubit>(context),
 						builder: (context, state) {
 							if (state is CaregiverPlansInitial)
 								BlocProvider.of<CaregiverPlansCubit>(context).loadCaregiverPlans();

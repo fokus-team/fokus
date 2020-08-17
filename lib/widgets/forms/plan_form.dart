@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fokus/logic/plan_form/plan_form_cubit.dart';
 import 'package:fokus/model/db/date/date.dart';
 import 'package:fokus/model/db/date_span.dart';
 import 'package:smart_select/smart_select.dart';
@@ -37,13 +39,6 @@ class _PlanFormState extends State<PlanForm> {
 	TextEditingController _dateRageFromContoller = TextEditingController();
 	TextEditingController _dateRageToContoller = TextEditingController();
 
-	List<UIChild> children = [
-		UIChild(Mongo.ObjectId.fromHexString('5f9997f18c7472942f9979a8'), "Mateusz", avatar: 5),
-		UIChild(Mongo.ObjectId.fromHexString('f1068d375fe7b2e20ea84512'), "Gosia", avatar: 23),
-		UIChild(Mongo.ObjectId.fromHexString('72af61d19e589bad8d0fc5c5'), "Andżelika", avatar: 21),
-		UIChild(Mongo.ObjectId.fromHexString('a5b458256654875d95d19210'), "Joanna", avatar: 24)
-	]; // TODO Load children list from user
-
 	String getOnlyDatePart(DateTime date) => date != null ? date.toLocal().toString().split(' ')[0] : '';
 
 	void setDateCallback(DateTime pickedDate, Function dateSetter, TextEditingController dateContoller) {
@@ -71,28 +66,28 @@ class _PlanFormState extends State<PlanForm> {
 					child: ListView(
 						shrinkWrap: true,
 						children: <Widget>[
-							buildPlanNameField(context),
-							buildChildrenAssignedField(context),
+							buildPlanNameField(),
+							buildChildrenAssignedField(),
 							Divider(),
-							buildRepeatabilityTypeField(context),
+							buildRepeatabilityTypeField(),
 							if(widget.plan.repeatability == PlanFormRepeatability.recurring)
-								buildRecurringFields(context)
+								buildRecurringFields()
 							else if(widget.plan.repeatability == PlanFormRepeatability.onlyOnce)
-								buildOneDayOnlyFields(context)
+								buildOneDayOnlyFields()
 							else
-								buildUntilCompletedFields(context)
+								buildUntilCompletedFields()
 						]
 					)
 				),
 				Positioned.fill(
 					top: null,
-					child: buildBottomNavigation(context)
+					child: buildBottomNavigation()
 				)
 			]
 		);
   }
 
-	Widget buildPlanNameField(BuildContext context) {
+	Widget buildPlanNameField() {
 		return Padding(
 			padding: EdgeInsets.only(top: 25.0, bottom: 10.0, left: 20.0, right: 20.0),
 			child: TextFormField(
@@ -113,13 +108,23 @@ class _PlanFormState extends State<PlanForm> {
 		);
 	}
 
-	Widget buildChildrenAssignedField(BuildContext context) {
+	Widget buildChildrenAssignedField() {
+		return BlocBuilder<PlanFormCubit, PlanFormState>(
+		  builder: (context, state) {
+		  	if (state is PlanFormDataLoadSuccess)
+		  		return getChildrenAssignedField(state.children);
+		  	return Container();
+			}
+		);
+	}
+
+	Widget getChildrenAssignedField(List<UIChild> children) {
 		return SmartSelect<Mongo.ObjectId>.multiple(
 			title: AppLocales.of(context).translate('$_pageKey.assignedChildren.label'),
 			placeholder: AppLocales.of(context).translate('$_pageKey.assignedChildren.hint'),
 			value: widget.plan.children,
 			options: SmartSelectOption.listFrom<Mongo.ObjectId, UIChild>(
-				source: children, 
+				source: children,
 				value: (index, item) => item.id,
 				title: (index, item) => item.name,
 				meta: (index, item) => item
@@ -127,20 +132,19 @@ class _PlanFormState extends State<PlanForm> {
 			isTwoLine: true,
 			choiceType: SmartSelectChoiceType.chips,
 			choiceConfig: SmartSelectChoiceConfig(
-				builder: (item, checked, onChange) => 
-					Theme(
-						data: ThemeData(textTheme: Theme.of(context).textTheme),
-						child: ItemCard(
-							title: item.title,
-							subtitle: AppLocales.of(context).translate(checked ? 'actions.selected' : 'actions.tapToSelect'),
-							graphicType: GraphicAssetType.childAvatars,
-							graphic: item.meta.avatar,
-							graphicShowCheckmark: checked,
-							graphicHeight: 44.0,
-							onTapped: onChange != null ? () => onChange(item.value, !checked) : null,
-							isActive: checked
-						)
+				builder: (item, checked, onChange) => Theme(
+					data: ThemeData(textTheme: Theme.of(context).textTheme),
+					child: ItemCard(
+						title: item.title,
+						subtitle: AppLocales.of(context).translate(checked ? 'actions.selected' : 'actions.tapToSelect'),
+						graphicType: GraphicAssetType.childAvatars,
+						graphic: item.meta.avatar,
+						graphicShowCheckmark: checked,
+						graphicHeight: 44.0,
+						onTapped: onChange != null ? () => onChange(item.value, !checked) : null,
+						isActive: checked
 					)
+				)
 			),
 			modalType: SmartSelectModalType.bottomSheet,
 			modalConfig: SmartSelectModalConfig(
@@ -208,7 +212,7 @@ class _PlanFormState extends State<PlanForm> {
 		);
 	}
 
-	Widget buildRepeatabilityTypeField(BuildContext context) {
+	Widget buildRepeatabilityTypeField() {
 		return SmartSelect<PlanFormRepeatability>.single(
 			title: AppLocales.of(context).translate('$_pageKey.repeatability.label'),
 			value: widget.plan.repeatability,
@@ -226,7 +230,7 @@ class _PlanFormState extends State<PlanForm> {
 		);
 	}
 
-	Widget buildRecurringFields(BuildContext context) {
+	Widget buildRecurringFields() {
 		bool isWeekly = widget.plan.repeatabilityRage == PlanFormRepeatabilityRage.weekly;
 		List<int> dayList = List<int>.generate(isWeekly ? 7 : 31, (i) => i + 1);
 
@@ -269,12 +273,12 @@ class _PlanFormState extends State<PlanForm> {
 					onChange: (val) => setState(() => { widget.plan.days = val })
 				),
 				Divider(),
-				buildDateRangeFields(context)
+				buildDateRangeFields()
 			],
 		);
 	}
 
-	Widget buildOneDayOnlyFields(BuildContext context) {
+	Widget buildOneDayOnlyFields() {
 		return Padding(
 			padding: EdgeInsets.only(top: 8.0),
 			child: DatePickerField(
@@ -288,11 +292,11 @@ class _PlanFormState extends State<PlanForm> {
 		);
 	}
 
-	Widget buildUntilCompletedFields(BuildContext context) {
-		return buildDateRangeFields(context);
+	Widget buildUntilCompletedFields() {
+		return buildDateRangeFields();
 	}
 
-	Widget buildDateRangeFields(BuildContext context) {
+	Widget buildDateRangeFields() {
 		return Column(
 			crossAxisAlignment: CrossAxisAlignment.start,
 			children: <Widget>[
@@ -340,7 +344,7 @@ class _PlanFormState extends State<PlanForm> {
 		);
 	}
 
-	Widget buildBottomNavigation(BuildContext context) {
+	Widget buildBottomNavigation() {
 		return Container(
 			height: bottomBarHeight,
 			child: Stack(

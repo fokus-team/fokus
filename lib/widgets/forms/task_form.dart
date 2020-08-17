@@ -3,11 +3,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_picker/flutter_picker.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:smart_select/smart_select.dart';
-import 'package:mongo_dart/mongo_dart.dart' as Mongo;
 
 import 'package:fokus/model/currency_type.dart';
 import 'package:fokus/model/ui/plan/ui_task.dart';
-import 'package:fokus/model/ui/plan/ui_plan_currency.dart';
+import 'package:fokus/model/ui/ui_currency.dart';
 
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/app_paths.dart';
@@ -44,10 +43,10 @@ class _TaskFormState extends State<TaskForm> {
 	bool isDataChanged = false;
 	UITask task;
 
-	List<UIPlanCurrency> currencies = [
-		UIPlanCurrency(id: Mongo.ObjectId.fromHexString('5f9997f18c7472942f9979a3'), type: CurrencyType.diamond, title: "Punkty"),
-		UIPlanCurrency(id: Mongo.ObjectId.fromHexString('5f9997f18c7472942f9979a2'), type: CurrencyType.ruby, title: "Klejnoty"),
-		UIPlanCurrency(id: Mongo.ObjectId.fromHexString('5f9997f18c7472942f9979a1'), type: CurrencyType.amethyst, title: "Super punkty")
+	List<UICurrency> currencies = [
+		UICurrency(type: CurrencyType.diamond, title: "Punkty"),
+		UICurrency(type: CurrencyType.ruby, title: "Klejnoty"),
+		UICurrency(type: CurrencyType.amethyst, title: "Super punkty")
 	]; // TODO Load currencies list from user
 
 	TextEditingController _titleController = TextEditingController();
@@ -61,7 +60,7 @@ class _TaskFormState extends State<TaskForm> {
 		taskFormKey = GlobalKey<FormState>();
 		task = UITask(
 			key: ValueKey(DateTime.now().toString()),
-			pointCurrency: currencies[0]
+			pointCurrency: currencies.firstWhere((element) => element.type == CurrencyType.diamond, orElse: () => UICurrency(type: CurrencyType.diamond))
 		);
 
 		if(!formModeIsCreate())
@@ -344,7 +343,7 @@ class _TaskFormState extends State<TaskForm> {
 	}
 	
 	Widget buildPointsFields(BuildContext context) {
-		return SmartSelect<UIPlanCurrency>.single(
+		return SmartSelect<UICurrency>.single(
 			builder: (context, state, function) {
 				return Padding(
 					padding: EdgeInsets.only(top: 0.0, bottom: 0.0, left: 20.0, right: 16.0),
@@ -423,15 +422,15 @@ class _TaskFormState extends State<TaskForm> {
 			title: AppLocales.of(context).translate('$_pageKeyTaskForm.fields.taskPoints.currencyLabel'),
 			value: task.pointCurrency,
 			options: [
-				for(UIPlanCurrency element in currencies)
+				for(UICurrency element in currencies)
 					SmartSelectOption(
-						title: element.title,
+						title: element.getName(context),
 						value: element
 					)
 			],
 			choiceConfig: SmartSelectChoiceConfig(
 				builder: (item, checked, onChange) {
-					return RadioListTile<UIPlanCurrency>(
+					return RadioListTile<UICurrency>(
 						value: item.value,
 						groupValue: task.pointCurrency,
 						onChanged: (val) => {onChange(item.value, !checked)},
@@ -441,7 +440,7 @@ class _TaskFormState extends State<TaskForm> {
 									padding: EdgeInsets.only(right: 6.0),
 									child: SvgPicture.asset(currencySvgPath(item.value.type), width: 30, fit: BoxFit.cover)
 								),
-								Text(item.value.title, style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.currencyColor[item.value.type]))
+								Text(item.value.getName(context), style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.currencyColor[item.value.type]))
 							]
 						)
 					);

@@ -32,7 +32,6 @@ class _CaregiverPanelPageState extends State<CaregiverPanelPage> {
 						HeaderActionButton.normal(Icons.add, '$_pageKey.header.addCaregiver', () => { log("Dodaj opiekuna") })
 					]),
 					BlocBuilder<CaregiverPanelCubit, CaregiverPanelState>(
-						cubit: BlocProvider.of<CaregiverPanelCubit>(context),
 						builder: (context, state) {
 							if (state is CaregiverPanelInitial)
 								BlocProvider.of<CaregiverPanelCubit>(context).loadPanelData();

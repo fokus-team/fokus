@@ -1,13 +1,13 @@
 import 'package:fokus/model/currency_type.dart';
 import 'package:fokus/model/db/gamification/currency.dart';
-import 'package:fokus/model/ui/plan/ui_plan_currency.dart';
+import 'package:fokus/model/ui/ui_currency.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
 class Points extends Currency {
 	ObjectId createdBy;
   int quantity;
 
-	Points.fromUICurrency(UIPlanCurrency currency, int quantity, {ObjectId creator}) :
+	Points.fromUICurrency(UICurrency currency, int quantity, {ObjectId creator}) :
 				this._(name: currency.title, icon: currency.type, quantity: quantity, createdBy: creator);
 
   Points._({String name, CurrencyType icon, this.createdBy, this.quantity}) : super(name : name, icon: icon);

@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:fokus/model/currency_type.dart';
-import 'package:fokus/model/ui/plan/ui_plan_currency.dart';
+import 'package:fokus/model/ui/ui_currency.dart';
 import 'package:fokus/model/ui/plan/ui_task.dart';
 import 'package:fokus/model/ui/ui_button.dart';
 import 'package:fokus/services/app_locales.dart';
@@ -15,7 +15,6 @@ import 'package:fokus/widgets/cards/item_card.dart';
 import 'package:fokus/widgets/buttons/popup_menu_list.dart';
 import 'package:fokus/widgets/segment.dart';
 import 'package:fokus/widgets/cards/task_card.dart';
-import 'package:mongo_dart/mongo_dart.dart' as Mongo;
 
 class CaregiverPlanDetailsPage extends StatefulWidget {
   @override
@@ -96,7 +95,7 @@ class _CaregiverPlanDetailsPageState extends State<CaregiverPlanDetailsPage> {
 							title: "Opróżnij plecak",
 							timer: 568,
 							pointsValue: 80,
-							pointCurrency: UIPlanCurrency(id: Mongo.ObjectId.fromHexString('5f9997f18c7472942f9979a3'), type: CurrencyType.diamond, title: "Punkty")
+							pointCurrency: UICurrency(type: CurrencyType.diamond, title: "Punkty")
 						)
 					)
 				),
@@ -109,7 +108,7 @@ class _CaregiverPlanDetailsPageState extends State<CaregiverPlanDetailsPage> {
 							title: "Przygotuj książki i zeszyty na kolejny dzień według bardzo długiego planu zajęć",
 							timer: 60,
 							pointsValue: 100,
-							pointCurrency: UIPlanCurrency(id: Mongo.ObjectId.fromHexString('5f9997f18c7472942f9979a3'), type: CurrencyType.diamond, title: "Punkty")
+							pointCurrency: UICurrency(type: CurrencyType.diamond, title: "Punkty")
 						)
 					)
 				),
@@ -152,7 +151,7 @@ class _CaregiverPlanDetailsPageState extends State<CaregiverPlanDetailsPage> {
 							timer: 20,
 							optional: true,
 							pointsValue: 300,
-							pointCurrency: UIPlanCurrency(id: Mongo.ObjectId.fromHexString('5f9997f18c7472942f9979a2'), type: CurrencyType.ruby, title: "Klejnoty")
+							pointCurrency: UICurrency(type: CurrencyType.ruby, title: "Klejnoty")
 						)
 					)
 				)

@@ -20,7 +20,6 @@ class ChildSignInPage extends StatelessWidget {
 			  child: Column(
 				  children: <Widget>[
 				  	BlocBuilder<ChildSignInCubit, ChildSignInState>(
-						  cubit: context.bloc<ChildSignInCubit>(),
 						  buildWhen: (oldState, newState) => oldState.savedChildren != newState.savedChildren,
 						  builder: (context, state) {
 							  var cubit = context.bloc<ChildSignInCubit>();

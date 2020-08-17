@@ -54,23 +54,27 @@ class _CaregiverPlanFormPageState extends State<CaregiverPlanFormPage> {
 	Widget build(BuildContext context) {
 		formKey = GlobalKey<FormState>();
 		taskListState = GlobalKey<TaskListState>();
-    return BlocListener<PlanFormCubit, PlanFormState>(
+    return BlocConsumer<PlanFormCubit, PlanFormState>(
 			listener: (context, state) {
 				if (state is PlanFormSubmissionSuccess)
 					Navigator.of(context).pop(); // TODO also show some visual feedback?
 			},
-			child: Scaffold(
-				appBar: AppBar(
-					title: Text(isCurrentModeCreate() ?
-						AppLocales.of(context).translate('$_pageKey.createPlanTitle')
-						: AppLocales.of(context).translate('$_pageKey.editPlanTitle')
-					),
-					actions: <Widget>[
-						HelpIconButton(helpPage: 'plan_creation')
-					],
-				),
-				body: buildStepper(context)
-	    )
+	    builder: (context, state) {
+				if (state is PlanFormInitial)
+					context.bloc<PlanFormCubit>().loadFormData();
+		    return Scaffold(
+			    appBar: AppBar(
+				    title: Text(isCurrentModeCreate() ?
+				    AppLocales.of(context).translate('$_pageKey.createPlanTitle')
+						    : AppLocales.of(context).translate('$_pageKey.editPlanTitle')
+				    ),
+				    actions: <Widget>[
+					    HelpIconButton(helpPage: 'plan_creation')
+				    ],
+			    ),
+			    body: buildStepper(context)
+		    );
+	    },
     );
 	}
 

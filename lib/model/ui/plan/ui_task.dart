@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:fokus/model/ui/plan/ui_plan_currency.dart';
+import 'package:fokus/model/ui/ui_currency.dart';
 
 class UITask {
 	Key key;
 	String title;
 	String description;
 	int pointsValue;
-	UIPlanCurrency pointCurrency;
+	UICurrency pointCurrency;
 	int timer;
 	bool optional;
 

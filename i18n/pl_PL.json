@@ -145,7 +145,7 @@
 					},
 					"taskPoints": {
 						"valueLabel": "Nagroda punktowa",
-						"currencyLabel": "Waluta punktów",
+						"currencyLabel": "Waluta",
 						"hint": "Pozostaw puste, aby nie przyznawać punktów"
 					},
 					"taskTimer": {

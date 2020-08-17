@@ -155,7 +155,7 @@
 					},
 					"taskPoints": {
 						"valueLabel": "Points awarded",
-						"currencyLabel": "Point currency",
+						"currencyLabel": "Currency",
 						"hint": "Leave empty to not award points"
 					},
 					"taskTimer": {
@@ -282,7 +282,7 @@
 		"back": "Back",
 		"next": "Next",
 		"tapToSelect": "Tap to select",
-		"selected": "Wybrano",
+		"selected": "Selected",
 		"selectAll": "Select all",
 		"deselectAll": "Deselect all",
 		"search": "Search",

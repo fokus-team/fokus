@@ -113,12 +113,12 @@ class _PlanFormState extends State<PlanForm> {
 		  builder: (context, state) {
 		  	if (state is PlanFormDataLoadSuccess)
 		  		return getChildrenAssignedField(state.children);
-		  	return Container();
+		  	return getChildrenAssignedField([], loading: true);
 			}
 		);
 	}
 
-	Widget getChildrenAssignedField(List<UIChild> children) {
+	Widget getChildrenAssignedField(List<UIChild> children, {bool loading = false}) {
 		return SmartSelect<Mongo.ObjectId>.multiple(
 			title: AppLocales.of(context).translate('$_pageKey.assignedChildren.label'),
 			placeholder: AppLocales.of(context).translate('$_pageKey.assignedChildren.hint'),
@@ -130,6 +130,8 @@ class _PlanFormState extends State<PlanForm> {
 				meta: (index, item) => item
 			),
 			isTwoLine: true,
+			isLoading: loading,
+			loadingText: AppLocales.of(context).translate('loading'),
 			choiceType: SmartSelectChoiceType.chips,
 			choiceConfig: SmartSelectChoiceConfig(
 				builder: (item, checked, onChange) => Theme(

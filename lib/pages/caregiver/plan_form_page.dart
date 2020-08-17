@@ -29,7 +29,6 @@ class _CaregiverPlanFormPageState extends State<CaregiverPlanFormPage> {
 	UIPlanForm plan = UIPlanForm(); // TODO Edit mode for the form
 
 	GlobalKey<FormState> formKey;
-	GlobalKey<TaskListState> taskListState;
 
 	bool isCurrentStepOne() => (currentStep == PlanFormStep.planParameters);
 	bool isCurrentModeCreate() => (ModalRoute.of(context).settings.arguments == AppFormType.create);
@@ -53,7 +52,6 @@ class _CaregiverPlanFormPageState extends State<CaregiverPlanFormPage> {
 	@override
 	Widget build(BuildContext context) {
 		formKey = GlobalKey<FormState>();
-		taskListState = GlobalKey<TaskListState>();
     return BlocConsumer<PlanFormCubit, PlanFormState>(
 			listener: (context, state) {
 				if (state is PlanFormSubmissionSuccess)
@@ -88,7 +86,6 @@ class _CaregiverPlanFormPageState extends State<CaregiverPlanFormPage> {
 
 	Widget buildStepTwoContent(BuildContext context) => TaskList(
 		plan: plan,
-		key: taskListState,
 		goBackCallback: back,
 		submitCallback: submit,
 		isCreateMode: isCurrentModeCreate(),

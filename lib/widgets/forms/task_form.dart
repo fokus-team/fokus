@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_picker/flutter_picker.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fokus/logic/plan_form/plan_form_cubit.dart';
 import 'package:smart_select/smart_select.dart';
 
 import 'package:fokus/model/currency_type.dart';
@@ -43,12 +45,6 @@ class _TaskFormState extends State<TaskForm> {
 	bool isDataChanged = false;
 	UITask task;
 
-	List<UICurrency> currencies = [
-		UICurrency(type: CurrencyType.diamond, title: "Punkty"),
-		UICurrency(type: CurrencyType.ruby, title: "Klejnoty"),
-		UICurrency(type: CurrencyType.amethyst, title: "Super punkty")
-	]; // TODO Load currencies list from user
-
 	TextEditingController _titleController = TextEditingController();
 	TextEditingController _descriptionController = TextEditingController();
 	TextEditingController _pointsController = TextEditingController();
@@ -60,7 +56,7 @@ class _TaskFormState extends State<TaskForm> {
 		taskFormKey = GlobalKey<FormState>();
 		task = UITask(
 			key: ValueKey(DateTime.now().toString()),
-			pointCurrency: currencies.firstWhere((element) => element.type == CurrencyType.diamond, orElse: () => UICurrency(type: CurrencyType.diamond))
+			pointCurrency: UICurrency(type: CurrencyType.diamond)
 		);
 
 		if(!formModeIsCreate())
@@ -96,8 +92,8 @@ class _TaskFormState extends State<TaskForm> {
 								child: Material(
 									child: Column(
 										children:[ 
-											buildCustomHeader(context),
-											Expanded(child: buildFormFields(context))
+											buildCustomHeader(),
+											Expanded(child: buildFormFields())
 										]
 									)
 								)
@@ -105,7 +101,7 @@ class _TaskFormState extends State<TaskForm> {
 						),
 						Positioned.fill(
 							top: null,
-							child: buildBottomNavigation(context)
+							child: buildBottomNavigation()
 						)
 					]
 				)
@@ -113,7 +109,7 @@ class _TaskFormState extends State<TaskForm> {
 		);
 	}
 
-	void showDeleteTaskDialog(BuildContext context) {
+	void showDeleteTaskDialog() {
 		showBasicDialog(
 			context,
 			GeneralDialog.confirm(
@@ -132,7 +128,7 @@ class _TaskFormState extends State<TaskForm> {
 		);
 	}
 
-	void saveTask(BuildContext context) {
+	void saveTask() {
 		if(taskFormKey.currentState.validate()) {
 			if(formModeIsCreate())
 				Future.wait([
@@ -180,7 +176,7 @@ class _TaskFormState extends State<TaskForm> {
 		}
 	}
 
-	Widget buildCustomHeader(BuildContext context) {
+	Widget buildCustomHeader() {
 		bool hasTitle = !formModeIsCreate() && task.title != null && task.title.length > 0;
 		double appBarVerticalPadding = hasTitle ? 8.0 : 12.0;
 		return Material(
@@ -237,7 +233,7 @@ class _TaskFormState extends State<TaskForm> {
 		);
 	}
 
-	Widget buildBottomNavigation(BuildContext context) {
+	Widget buildBottomNavigation() {
 		return Container(
 			padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
 			decoration: AppBoxProperties.elevatedContainer,
@@ -248,7 +244,7 @@ class _TaskFormState extends State<TaskForm> {
 				children: <Widget>[
 					!formModeIsCreate() ?
 						FlatButton(
-							onPressed: () => showDeleteTaskDialog(context),
+							onPressed: () => showDeleteTaskDialog(),
 							textColor: Colors.red,
 							child: Row(
 								children: <Widget>[
@@ -259,7 +255,7 @@ class _TaskFormState extends State<TaskForm> {
 						)
 						: SizedBox.shrink(),
 					FlatButton(
-						onPressed: () => saveTask(context),
+						onPressed: () => saveTask(),
 						child: Row(
 							children: <Widget>[
 								Hero(
@@ -277,23 +273,23 @@ class _TaskFormState extends State<TaskForm> {
 		);
 	}
 
-	Widget buildFormFields(BuildContext context) {
+	Widget buildFormFields() {
 		return ListView(
 			shrinkWrap: true,
 			children: <Widget>[
-				buildNameField(context),
-				buildDescriptionField(context),
-				buildPointsFields(context),
-				buildTimerField(context),
+				buildNameField(),
+				buildDescriptionField(),
+				buildPointsFields(),
+				buildTimerField(),
 				Divider(),
-				buildOptionalField(context),
+				buildOptionalField(),
 				if(!formModeIsCreate())
 					SizedBox(height: 32.0) 
 			]
 		);
 	}
 
-	Widget buildNameField(BuildContext context) {
+	Widget buildNameField() {
 		return Padding(
 			padding: EdgeInsets.only(top: 0.0, bottom: 6.0, left: 20.0, right: 20.0),
 			child: TextFormField(
@@ -318,7 +314,7 @@ class _TaskFormState extends State<TaskForm> {
 		);
 	}
 
-	Widget buildDescriptionField(BuildContext context) {
+	Widget buildDescriptionField() {
 		return Padding(
 			padding: EdgeInsets.only(top: 5.0, bottom: 6.0, left: 20.0, right: 20.0),
 			child: TextFormField(
@@ -341,9 +337,21 @@ class _TaskFormState extends State<TaskForm> {
 			)
 		);
 	}
+
+	Widget buildPointsFields() {
+		return BlocBuilder<PlanFormCubit, PlanFormState>(
+			cubit: context.bloc<PlanFormCubit>(),
+			builder: (context, state) {
+				if (state is PlanFormDataLoadSuccess)
+					return getPointsFields(state.currencies);
+				return getPointsFields([UICurrency(type: CurrencyType.diamond)], loading: true);
+			}
+		);
+	}
 	
-	Widget buildPointsFields(BuildContext context) {
+	Widget getPointsFields(List<UICurrency> currencies, {bool loading = false}) {
 		return SmartSelect<UICurrency>.single(
+			isLoading: loading,
 			builder: (context, state, function) {
 				return Padding(
 					padding: EdgeInsets.only(top: 0.0, bottom: 0.0, left: 20.0, right: 16.0),
@@ -406,7 +414,7 @@ class _TaskFormState extends State<TaskForm> {
 													backgroundColor: AppColors.currencyColor[state.value.type].withAlpha(50)
 												)
 											),
-											if(currencies.length > 1) 
+											if(currencies.length > 1)
 												Padding(
 													padding: EdgeInsets.only(left: 4.0, top: 2.0),
 													child: Icon(Icons.keyboard_arrow_right, color: Colors.grey)
@@ -451,7 +459,7 @@ class _TaskFormState extends State<TaskForm> {
 		);
 	}
 
-	Widget buildTimerField(BuildContext context) {
+	Widget buildTimerField() {
 		return Padding(
 			padding: EdgeInsets.only(top: 12.0),
 			child: ListTile(
@@ -468,13 +476,13 @@ class _TaskFormState extends State<TaskForm> {
 				trailing: Icon(Icons.keyboard_arrow_right, color: Colors.grey),
 				onTap: () {
 					FocusManager.instance.primaryFocus.unfocus();
-					showTimerPickerDialog(context);
+					showTimerPickerDialog();
 				}
 			)
 		);
 	}
 
-	void showTimerPickerDialog(BuildContext context) {
+	void showTimerPickerDialog() {
 		Picker(
 			adapter: NumberPickerAdapter(data: [
 				NumberPickerColumn(
@@ -536,7 +544,7 @@ class _TaskFormState extends State<TaskForm> {
 		).showDialog(context);
 	}
 
-	Widget buildOptionalField(BuildContext context) {
+	Widget buildOptionalField() {
 		return Padding(
 			padding: EdgeInsets.only(top: 12.0),
 			child: SwitchListTile(

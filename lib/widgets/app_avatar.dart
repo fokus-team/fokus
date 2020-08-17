@@ -1,11 +1,14 @@
+import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fokus/utils/app_paths.dart';
+import 'package:fokus/utils/icon_sets.dart';
 
 class AppAvatar extends StatelessWidget {
 	final int avatar;
 	final double size;
 	final Color color;
+	final bool checked;
 	//final UserType type; // in case of caregivers having avatars
 
 	AppAvatar(
@@ -13,20 +16,27 @@ class AppAvatar extends StatelessWidget {
 		{
 			//this.type = UserType.child,
 			this.size = 64,
-			this.color = Colors.transparent
+			this.color,
+			this.checked
 		}
 	);
 
 	@override
   Widget build(BuildContext context) {
-		return ClipOval(
-			child: Container(
-				width: size,
-				height: size,
-				color: color,
-				child: Transform.translate(
-					offset: const Offset(0.0, 8.0),
-					child: SvgPicture.asset(childAvatarSvgPath(avatar), fit: BoxFit.contain)
+		return Badge(
+			badgeContent: Icon(Icons.check, color: Colors.white, size: 16.0),
+			badgeColor: Colors.green,
+			animationType: BadgeAnimationType.scale,
+			showBadge: checked != null ? checked : false,
+			child: ClipOval(
+				child: Container(
+					width: size,
+					height: size,
+					color: (color != null) ? color : childAvatars[this.avatar].color,
+					child: Transform.translate(
+						offset: const Offset(0.0, 8.0),
+						child: SvgPicture.asset(childAvatarSvgPath(avatar), fit: BoxFit.contain)
+					)
 				)
 			)
 		);

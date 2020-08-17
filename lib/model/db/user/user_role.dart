@@ -1,4 +1,4 @@
-import 'package:fokus/model/app_page.dart';
+import 'package:fokus/model/ui/app_page.dart';
 
 enum UserRole { caregiver, child }
 
@@ -13,5 +13,12 @@ extension UserRolePanelPage on UserRole {
 	AppPage get panelPage => const {
 		UserRole.caregiver: AppPage.caregiverPanel,
 		UserRole.child: AppPage.childPanel
+	}[this];
+}
+
+extension UserRoleSignInPage on UserRole {
+	AppPage get signInPage => const {
+		UserRole.caregiver: AppPage.caregiverSignInPage,
+		UserRole.child: AppPage.childSignInPage
 	}[this];
 }

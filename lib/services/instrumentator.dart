@@ -1,21 +1,24 @@
 import 'dart:async';
 import 'dart:isolate';
 
+import 'package:bloc/bloc.dart';
+import 'package:fokus/services/app_locales.dart';
+import 'package:fokus/utils/dialog_utils.dart';
+import 'package:fokus/widgets/dialogs/general_dialog.dart';
 import 'package:intl/intl.dart';
 import 'package:logging/logging.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-import 'package:fokus/services/exception/no_db_connection.dart';
-import 'package:fokus/widgets/dialogs/dialog.dart';
-import 'package:fokus/model/button_type.dart';
+import 'exception/db_exceptions.dart';
 
 class Instrumentator {
 	final Logger _logger = Logger('Instrumentator');
 	GlobalKey<NavigatorState> _navigatorKey;
 
 	Instrumentator.runAppGuarded(Widget app, this._navigatorKey) {
+		Bloc.observer = FokusBlocObserver();
 		_setupLogger();
 		_setupCrashlytics();
 
@@ -63,18 +66,23 @@ class Instrumentator {
 	bool _handleError(dynamic error, StackTrace stackTrace) {
 		if (_navigatorKey?.currentState?.overlay != null) {
 			if (error is NoDbConnection) { // TODO Handle differently, show info on page / only offline data
-				showDialog(
-					context: _navigatorKey.currentState.overlay.context,
-					builder: (context) =>
-						AppDialog(
-							titleKey: 'alert.noConnection',
-							textKey: 'alert.connectionRetry',
-							buttons: [DialogButton(ButtonType.ok, () => Navigator.of(context).pop())],
-						),
+				showBasicDialog(
+					_navigatorKey.currentState.overlay.context,
+					GeneralDialog.discard(
+						title: AppLocales.of(_navigatorKey.currentState.overlay.context).translate('alert.noConnection'),
+						content: AppLocales.of(_navigatorKey.currentState.overlay.context).translate('alert.connectionRetry')
+					)
 				);
 				return true;
 			}
 		}
 		return false;
 	}
+}
+
+class FokusBlocObserver extends BlocObserver {
+	@override
+  void onError(Cubit cubit, Object error, StackTrace stackTrace) {
+		super.onError(cubit, error, stackTrace);
+  }
 }

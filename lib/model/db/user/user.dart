@@ -5,7 +5,7 @@ import 'package:meta/meta.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
 class User {
-  final ObjectId id;
+  ObjectId id;
   final UserRole role;
   String name;
 
@@ -13,7 +13,7 @@ class User {
   int avatar;
   List<ObjectId> connections;
 
-  User({this.id, this.role});
+  User({this.id, this.role, this.name, this.avatar, this.connections, this.accessCode});
 
   @protected
   void fromJson(Map<String, dynamic> json) {
@@ -26,16 +26,18 @@ class User {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['avatar'] = this.avatar;
-    data['_id'] = this.id;
-    data['name'] = this.name;
-    data['role'] = this.role.index;
-    if (this.accessCode != null) {
+    if (this.avatar != null)
+      data['avatar'] = this.avatar;
+    if (this.id != null)
+      data['_id'] = this.id;
+    if (this.name != null)
+	    data['name'] = this.name;
+    if (this.role != null)
+	    data['role'] = this.role.index;
+    if (this.accessCode != null)
       data['accessCode'] = this.accessCode;
-    }
-    if (this.connections != null) {
+    if (this.connections != null)
       data['connections'] = this.connections;
-    }
     return data;
   }
 

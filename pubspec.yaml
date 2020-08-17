@@ -1,5 +1,5 @@
 name: fokus
-description: Mobile application that helps kids with completing tasks while also offering parental control
+description: Mobile application that helps kids complete their daily tasks under parental control
 authors:
     - Stanisław Góra <contact@sgora.dev>
     - Mikołaj Mirko
@@ -25,6 +25,9 @@ dependencies:
     firebase_analytics: ^5.0.11
     firebase_crashlytics: ^0.1.4+1
     firebase_remote_config: ^0.3.0+3
+    firebase_auth: ^0.16.1
+    flutter_auth_buttons: ^0.9.0
+    google_sign_in: ^4.5.1
 
     get_it: ^4.0.2
     bloc: ^6.0.1
@@ -34,15 +37,17 @@ dependencies:
     meta: ^1.1.6
     logging: ^0.11.4
     intl: ^0.16.1
-    collection: ^1.14.12
+    formz: ^0.3.0
     shared_preferences: ^0.5.8
 
     cupertino_icons: ^0.1.2
     lottie: ^0.4.0+1
     flutter_svg: ^0.18.0
     flutter_markdown: ^0.3.4
-    badges: ^1.1.1
     smart_select: ^3.0.3
+    badges: ^1.1.1
+    implicitly_animated_reorderable_list: ^0.2.3
+    flutter_picker: ^1.1.5
 
 dependency_overrides:
     bson:
@@ -72,8 +77,8 @@ flutter:
         - assets/animation/sunflower_with_title_rotate_only.json
         - assets/image/sunflower_logo.svg
         - assets/image/sunflower_logo.png
-        - assets/help/en/first_steps.md
-        - assets/help/pl/first_steps.md
+        - assets/help/en/
+        - assets/help/pl/
         - assets/image/avatar/
         - assets/image/avatar/child/
         - assets/image/award/

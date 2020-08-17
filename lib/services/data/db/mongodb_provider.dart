@@ -3,8 +3,7 @@ import 'package:get_it/get_it.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
 import 'package:fokus/model/db/collection.dart';
-import 'package:fokus/services/exception/db_query_failed.dart';
-import 'package:fokus/services/exception/no_db_connection.dart';
+import 'package:fokus/services/exception/db_exceptions.dart';
 import 'package:fokus/services/remote_config_provider.dart';
 
 
@@ -12,7 +11,7 @@ class MongoDbProvider {
 	Db _client;
 
 	Future initialize() async {
-		_client = new Db(GetIt.I<RemoteConfigProvider>().dbAccessString);
+		_client = new Db(await GetIt.I<RemoteConfigProvider>().dbAccessString);
 		return _client.open(
 			secure: true,
 			timeoutConfig: TimeoutConfig(
@@ -26,6 +25,11 @@ class MongoDbProvider {
 	Future update(Collection collection, SelectorBuilder selector, ModifierBuilder document) {
 		return _execute(() => _client.collection(collection.name).update(selector, document, multiUpdate: true));
 	}
+
+	Future<ObjectId> insert(Collection collection, Map<String, dynamic> document) => _execute(() {
+		document['_id'] ??= ObjectId();
+	  return _client.collection(collection.name).insert(document).then((value) => document['_id']);
+	});
 
 	Future<int> count(Collection collection, [SelectorBuilder selector]) => _execute(() => _client.collection(collection.name).count(selector));
 	Future<bool> exists(Collection collection, [SelectorBuilder selector]) async => await count(collection, selector) > 0;
@@ -49,7 +53,7 @@ class MongoDbProvider {
 
 	Future<T> _execute<T>(Future<T> Function() query) async {
 		try {
-			if (_client.state != State.OPEN)
+			if (_client == null || _client.state != State.OPEN)
 				await initialize();
 			return await query();
 		} on TimeoutException { // Keep alive disconnected

@@ -6,10 +6,11 @@ import 'package:fokus/model/currency_type.dart';
 import 'package:fokus/model/ui/award/ui_award.dart';
 import 'package:fokus/model/ui/plan/ui_plan_currency.dart';
 import 'package:fokus/utils/icon_sets.dart';
+import 'package:fokus/widgets/buttons/help_icon_button.dart';
 import 'package:smart_select/smart_select.dart';
 import 'package:mongo_dart/mongo_dart.dart' as Mongo;
 
-import 'package:fokus/utils/app_locales.dart';
+import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/app_paths.dart';
 import 'package:fokus/utils/theme_config.dart';
 
@@ -39,7 +40,7 @@ class _CaregiverAwardFormPageState extends State<CaregiverAwardFormPage> {
 	@override
   void initState() {
 		awardFormKey = GlobalKey<FormState>();
-		award = UIAward(key: ValueKey(DateTime.now().toString()));
+		award = UIAward(key: ValueKey(DateTime.now()));
 		award.pointCurrency = currencies[0];
 		_titleController.text = '';
 		_limitController.text = '';
@@ -61,8 +62,11 @@ class _CaregiverAwardFormPageState extends State<CaregiverAwardFormPage> {
 			onWillPop: () => exitForm(context, true),
 			child: Scaffold(
 				appBar: AppBar(
-					backgroundColor: Colors.teal,
+					backgroundColor: AppColors.formColor,
 					title: Text(AppLocales.of(context).translate('$_pageKey.addAwardTitle')),
+					actions: <Widget>[
+						HelpIconButton(helpPage: 'award_creation')
+					]
 				),
 				body: Stack(
 					children: [
@@ -100,8 +104,8 @@ class _CaregiverAwardFormPageState extends State<CaregiverAwardFormPage> {
 			return showDialog<bool>(
 				context: context,
 				builder: (c) => AlertDialog(
-					title: Text(AppLocales.of(context).translate('$_pageKey.unsavedProgressTitle')),
-					content: Text(AppLocales.of(context).translate('$_pageKey.unsavedProgressMessage')),
+					title: Text(AppLocales.of(context).translate('alert.unsavedProgressTitle')),
+					content: Text(AppLocales.of(context).translate('alert.unsavedProgressMessage')),
 					actions: [
 						FlatButton(
 							child: Text(AppLocales.of(context).translate('actions.cancel')),
@@ -168,12 +172,12 @@ class _CaregiverAwardFormPageState extends State<CaregiverAwardFormPage> {
 					icon: Padding(padding: EdgeInsets.all(5.0), child: Icon(Icons.edit)),
 					contentPadding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 12.0),
 					border: OutlineInputBorder(),
-					labelText: AppLocales.of(context).translate('$_pageKey.fields.awardName')
+					labelText: AppLocales.of(context).translate('$_pageKey.fields.awardName.label')
 				),
 				maxLength: 120,
 				textCapitalization: TextCapitalization.sentences,
 				validator: (value) {
-					return value.trim().isEmpty ? AppLocales.of(context).translate('alert.genericEmptyValue') : null;
+					return value.trim().isEmpty ? AppLocales.of(context).translate('$_pageKey.fields.awardName.emptyError') : null;
 				},
 				onChanged: (val) => setState(() {
 					award.name = val;
@@ -192,9 +196,9 @@ class _CaregiverAwardFormPageState extends State<CaregiverAwardFormPage> {
 					icon: Padding(padding: EdgeInsets.all(5.0), child: Icon(Icons.block)),
 					contentPadding: EdgeInsets.symmetric(vertical: 14.0, horizontal: 12.0),
 					border: OutlineInputBorder(),
-					labelText: AppLocales.of(context).translate('$_pageKey.fields.awardLimit'),
+					labelText: AppLocales.of(context).translate('$_pageKey.fields.awardLimit.label'),
 					hintText: '0',
-					helperText: AppLocales.of(context).translate('$_pageKey.fields.awardLimitHint'),
+					helperText: AppLocales.of(context).translate('$_pageKey.fields.awardLimit.hint'),
 					suffixIcon: IconButton(
 						onPressed: () {
 							FocusScope.of(context).requestFocus(FocusNode());
@@ -233,8 +237,8 @@ class _CaregiverAwardFormPageState extends State<CaregiverAwardFormPage> {
 										hintText: "0",
 										helperMaxLines: 3,
 										errorMaxLines: 3,
-										helperText: AppLocales.of(context).translate('$_pageKey.fields.awardPointsHint'),
-										labelText: AppLocales.of(context).translate('$_pageKey.fields.awardPoints'),
+										helperText: AppLocales.of(context).translate('$_pageKey.fields.awardPoints.hint'),
+										labelText: AppLocales.of(context).translate('$_pageKey.fields.awardPoints.valueLabel'),
 										suffixIcon: IconButton(
 											onPressed: () {
 												FocusScope.of(context).requestFocus(FocusNode());
@@ -244,7 +248,7 @@ class _CaregiverAwardFormPageState extends State<CaregiverAwardFormPage> {
 										)
 									),
 									validator: (value) {
-										final range = [0, 1000000];
+										final range = [1, 1000000];
 										final int numValue = int.tryParse(value);
 										return (numValue != null && (numValue < range[0] || numValue > range[1])) ? 
 											AppLocales.of(context).translate('alert.genericRangeOverflowValue', {'A': range[0].toString(), 'B': range[1].toString()})
@@ -268,7 +272,7 @@ class _CaregiverAwardFormPageState extends State<CaregiverAwardFormPage> {
 									}
 								},
 								child: Tooltip(
-									message: AppLocales.of(context).translate('$_pageKey.fields.awardPointsCurrency'),
+									message: AppLocales.of(context).translate('$_pageKey.fields.awardPoints.currencyLabel'),
 									child: Row(
 										children: <Widget>[
 											Padding(
@@ -291,7 +295,7 @@ class _CaregiverAwardFormPageState extends State<CaregiverAwardFormPage> {
 					)
 				);
 			},
-			title: AppLocales.of(context).translate('$_pageKey.fields.awardPointsCurrency'),
+			title: AppLocales.of(context).translate('$_pageKey.fields.awardPoints.currencyLabel'),
 			value: award.pointCurrency,
 			options: [
 				for(UIPlanCurrency element in currencies)
@@ -318,7 +322,7 @@ class _CaregiverAwardFormPageState extends State<CaregiverAwardFormPage> {
 					);
 				}
 			),
-			modalType: SmartSelectModalType.popupDialog,
+			modalType: SmartSelectModalType.bottomSheet,
 			onChange: (val) => setState(() => award.pointCurrency = val)
 		);
 	}
@@ -328,14 +332,16 @@ class _CaregiverAwardFormPageState extends State<CaregiverAwardFormPage> {
 			padding: EdgeInsets.symmetric(vertical: 10.0),
 			child: SmartSelect<int>.single(
 				leading: SvgPicture.asset(awardIconSvgPath(award.icon), height: 74.0),
-				title: AppLocales.of(context).translate('$_pageKey.fields.awardIcon'),
+				title: AppLocales.of(context).translate('$_pageKey.fields.awardIcon.label'),
 				value: award.icon,
-				options: List.generate(awardIcons.length, (index) => 
-					SmartSelectOption(
-						title: AppLocales.of(context).translate('$_pageKey.groups.${awardIcons[index].label.toString().split('.').last}'),
-						group: AppLocales.of(context).translate('$_pageKey.groups.${awardIcons[index].label.toString().split('.').last}'),
-						value: index
-					)
+				options: List.generate(awardIcons.length, (index) {
+						final String name = AppLocales.of(context).translate('$_pageKey.fields.awardIcon.groups.${awardIcons[index].label.toString().split('.').last}');
+						return SmartSelectOption(
+							title: name,
+							group: name,
+							value: index
+						);
+					}
 				),
 				isTwoLine: true,
 				choiceConfig: SmartSelectChoiceConfig(
@@ -358,7 +364,10 @@ class _CaregiverAwardFormPageState extends State<CaregiverAwardFormPage> {
 					}
 				),
 				modalType: SmartSelectModalType.bottomSheet,
-				onChange: (val) => setState(() => award.icon = val)
+				onChange: (val) => setState(() {
+					FocusManager.instance.primaryFocus.unfocus();
+					award.icon = val;
+				})
 			)
 		);
 	}

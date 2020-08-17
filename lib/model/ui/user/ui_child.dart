@@ -12,7 +12,7 @@ class UIChild extends UIUser {
   UIChild(ObjectId id, String name, {this.todayPlanCount = 0, this.hasActivePlan = false, this.points = const {}, int avatar = -1}) :
 			  super(id, name, role: UserRole.child, avatar: avatar);
   UIChild.fromDBModel(Child child, {this.todayPlanCount = 0, this.hasActivePlan = false}):
-			  points = Map.fromEntries(child.points.map((type) => MapEntry(type.icon, type.quantity))), super.fromDBModel(child);
+			  points = child.points != null ? Map.fromEntries(child.points.map((type) => MapEntry(type.icon, type.quantity))) : {}, super.fromDBModel(child);
 
 	@override
 	List<Object> get props => super.props..addAll([id, todayPlanCount, hasActivePlan, points]);

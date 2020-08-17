@@ -32,7 +32,7 @@ class PlanRepeatabilityService {
 
   bool _planInstanceExistsByDate(Plan plan, Date date) {
   	var rules = plan.repeatability;
-	  if (rules.range.from > date)
+	  if (rules.range?.from != null && rules.range.from > date)
 		  return false;
   	if (rules.type == RepeatabilityType.once && rules.range.from == date)
   		return true;

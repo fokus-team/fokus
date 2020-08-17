@@ -19,8 +19,10 @@ class DateSpan<D extends DateBase> {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['from'] = this.from.toDBDate();
-    data['to'] = this.to.toDBDate();
+    if (from != null)
+      data['from'] = this.from.toDBDate();
+    if (to != null)
+	    data['to'] = this.to.toDBDate();
     return data;
   }
 }

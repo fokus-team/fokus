@@ -48,25 +48,30 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-		return Stack(
-			children: [
-				Positioned.fill(
-					bottom: bottomBarHeight,
-					child: ListView(
-						physics: inReorder ? NeverScrollableScrollPhysics() : BouncingScrollPhysics(),
-						children: [
-							buildReordableTaskList(context),
-							buildOptionalTaskList(context),
-							buildNoTasksAddedMessage(context),
-							SizedBox(height: 32.0)
-						]
+		return BlocBuilder<PlanFormCubit, PlanFormState>(
+			builder: (context, state) {
+				List<Widget> children = [
+					Positioned.fill(
+						bottom: bottomBarHeight,
+						child: ListView(
+							physics: inReorder ? NeverScrollableScrollPhysics() : BouncingScrollPhysics(),
+							children: [
+								buildReordableTaskList(context),
+								buildOptionalTaskList(context),
+								buildNoTasksAddedMessage(context),
+								SizedBox(height: 32.0)
+							]
+						)
+					),
+					Positioned.fill(
+						top: null,
+						child: buildBottomNavigation(context)
 					)
-				),
-				Positioned.fill(
-					top: null,
-					child: buildBottomNavigation(context)
-				)
-			]
+				];
+				if (state is PlanFormSubmissionInProgress)
+					children.add(Center(child: CircularProgressIndicator()));
+				return Stack(children: children);
+			}
 		);
 	}
 

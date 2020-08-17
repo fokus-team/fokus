@@ -64,16 +64,6 @@
 					"tasks": "{NUM_TASKS, plural, offset:0  =1 {# task} other {# tasks}}"
 				}
 			},
-			"planInProgress": {
-				"header": {
-					"title": "In progress"
-				},
-				"content": {
-					"toDoTasks": "To-do list",
-					"additionalTasks": "Additional tasks",
-					"noTasks": "No tasks to display"
-				}
-			},
 			"planForm": {
 				"createPlanTitle": "Creating new plan",
 				"editPlanTitle": "Editing existing plan",
@@ -230,6 +220,16 @@
 					"tasks": "{NUM_TASKS, plural, offset:0  one {# task} other {# tasks}}",
 					"noTaskCompleted": "{NUM_ALL_TASKS, plural, offset:0 one {# task} other {# tasks}} to complete",
 					"taskProgress": "{NUM_TASKS} out of {NUM_ALL_TASKS} tasks completed"
+				}
+			},
+			"planInProgress": {
+				"header": {
+					"title": "In progress"
+				},
+				"content": {
+					"toDoTasks": "To-do list",
+					"additionalTasks": "Additional tasks",
+					"noTasks": "No tasks to display"
 				}
 			},
 			"awards": {

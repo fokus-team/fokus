@@ -60,26 +60,29 @@ class _CaregiverPlanFormPageState extends State<CaregiverPlanFormPage> {
 	    builder: (context, state) {
 				if (state is PlanFormInitial)
 					context.bloc<PlanFormCubit>().loadFormData();
-		    return Scaffold(
-			    appBar: AppBar(
-				    title: Text(isCurrentModeCreate() ?
-				    AppLocales.of(context).translate('$_pageKey.createPlanTitle')
-						    : AppLocales.of(context).translate('$_pageKey.editPlanTitle')
-				    ),
-				    actions: <Widget>[
-					    HelpIconButton(helpPage: 'plan_creation')
-				    ],
-			    ),
-			    body: buildStepper(context)
-		    );
-	    },
+		    return WillPopScope(
+					onWillPop: () => showExitFormDialog(context, true, plan.isDataChanged()),
+					child: Scaffold(
+							appBar: AppBar(
+								title: Text(isCurrentModeCreate() ?
+								AppLocales.of(context).translate('$_pageKey.createPlanTitle')
+										: AppLocales.of(context).translate('$_pageKey.editPlanTitle')
+								),
+								actions: <Widget>[
+									HelpIconButton(helpPage: 'plan_creation')
+								],
+							),
+							body: buildStepper(context)
+						)
+				);
+			},
     );
 	}
 
 	Widget buildStepOneContent(BuildContext context) => PlanForm(
 		plan: plan,
 		goNextCallback: () {
-			if(formKey.currentState.validate())
+			if(formKey.currentState.validate() && (plan.repeatability == PlanFormRepeatability.recurring && plan.days.length > 0))
 				next();
 		}
 	);

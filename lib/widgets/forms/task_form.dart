@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_picker/flutter_picker.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fokus/logic/plan_form/plan_form_cubit.dart';
+import 'package:fokus/widgets/forms/pointpicker_field.dart';
 import 'package:smart_select/smart_select.dart';
 
 import 'package:fokus/model/currency_type.dart';
@@ -81,7 +82,7 @@ class _TaskFormState extends State<TaskForm> {
   @override
   Widget build(BuildContext context) {
 		return WillPopScope(
-			onWillPop: () => exitForm(context, true),
+			onWillPop: () => showExitFormDialog(context, true, isDataChanged),
 			child: Scaffold(
 				body: Stack(
 					children: [
@@ -142,39 +143,7 @@ class _TaskFormState extends State<TaskForm> {
 		}
 	}
 
-	Future<bool> exitForm(BuildContext context, bool isSystemPop) {
-		if (!isDataChanged) {
-			Navigator.pop(context, true);
-			return Future.value(false);
-		} else {
-			FocusManager.instance.primaryFocus.unfocus();
-			return showDialog<bool>(
-				context: context,
-				builder: (c) => AlertDialog(
-					title: Text(AppLocales.of(context).translate('alert.unsavedProgressTitle')),
-					content: Text(AppLocales.of(context).translate('alert.unsavedProgressMessage')),
-					actions: [
-						FlatButton(
-							child: Text(AppLocales.of(context).translate('actions.cancel')),
-							onPressed: () => Navigator.pop(c, false),
-						),
-						FlatButton(
-							textColor: Colors.red,
-							child: Text(AppLocales.of(context).translate('actions.exit')),
-							onPressed: () {
-								if(isSystemPop)
-									Navigator.pop(c, true);
-								else {
-									Navigator.of(context).pop();
-									Navigator.of(context).pop();
-								}
-							}
-						)
-					]
-				)
-			);
-		}
-	}
+
 
 	Widget buildCustomHeader() {
 		bool hasTitle = !formModeIsCreate() && task.title != null && task.title.length > 0;
@@ -188,7 +157,7 @@ class _TaskFormState extends State<TaskForm> {
 						dense: true,
 						contentPadding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 4.0),
 						trailing: HelpIconButton(helpPage: 'task_creation'),
-						leading: BackIconButton(),
+						leading: BackIconButton(exitCallback: () => showExitFormDialog(context, false, isDataChanged)),
 						title: Padding(
 							padding: EdgeInsets.only(top: appBarVerticalPadding, bottom: appBarVerticalPadding, left: 4.0),
 							child: Column(
@@ -307,8 +276,8 @@ class _TaskFormState extends State<TaskForm> {
 					return value.trim().isEmpty ? AppLocales.of(context).translate('alert.genericEmptyValue') : null;
 				},
 				onChanged: (val) => setState(() {
+					isDataChanged = task.title != val;
 					task.title = val;
-					isDataChanged = task.title != widget.task.title;
 				})
 			)
 		);
@@ -331,8 +300,8 @@ class _TaskFormState extends State<TaskForm> {
 				minLines: 4,
 				textCapitalization: TextCapitalization.sentences,
 				onChanged: (val) => setState(() {
+					isDataChanged = task.description != val;
 					task.description = val;
-					isDataChanged = task.description != widget.task.description;
 				})
 			)
 		);
@@ -350,112 +319,26 @@ class _TaskFormState extends State<TaskForm> {
 	}
 	
 	Widget getPointsFields(List<UICurrency> currencies, {bool loading = false}) {
-		return SmartSelect<UICurrency>.single(
-			isLoading: loading,
-			builder: (context, state, function) {
-				return Padding(
-					padding: EdgeInsets.only(top: 0.0, bottom: 0.0, left: 20.0, right: 16.0),
-					child: Row(
-						crossAxisAlignment: CrossAxisAlignment.start,
-						children: [
-							Expanded(
-								child: TextFormField(
-									controller: _pointsController,
-									decoration: InputDecoration(
-										icon: Padding(padding: EdgeInsets.all(5.0), child: Icon(Icons.star)),
-										contentPadding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 12.0),
-										border: OutlineInputBorder(),
-										hintText: "0",
-										helperMaxLines: 3,
-										errorMaxLines: 3,
-										helperText: AppLocales.of(context).translate('$_pageKeyTaskForm.fields.taskPoints.hint'),
-										labelText: AppLocales.of(context).translate('$_pageKeyTaskForm.fields.taskPoints.valueLabel'),
-										suffixIcon: IconButton(
-											onPressed: () {
-												FocusScope.of(context).requestFocus(FocusNode());
-												_pointsController.clear();
-												task.pointsValue = null;
-											},
-											icon: Icon(Icons.clear)
-										)
-									),
-									validator: (value) {
-										final range = [0, 1000000];
-										final int numValue = int.tryParse(value);
-										return (numValue != null && (numValue < range[0] || numValue > range[1])) ? 
-											AppLocales.of(context).translate('alert.genericRangeOverflowValue', {'A': range[0].toString(), 'B': range[1].toString()})
-											: null;
-									},
-									keyboardType: TextInputType.numberWithOptions(signed: true, decimal: false),
-									inputFormatters: <TextInputFormatter>[
-											WhitelistingTextInputFormatter.digitsOnly
-									],
-									onChanged: (val) => setState(() {
-										task.pointsValue = int.tryParse(val);
-										isDataChanged = task.pointsValue != widget.task.pointsValue;
-									})
-								)
-							),
-							GestureDetector(
-								onTap: () {
-									if(currencies.length > 1) {
-										FocusManager.instance.primaryFocus.unfocus();
-										function(context);
-									}
-								},
-								child: Tooltip(
-									message: AppLocales.of(context).translate('$_pageKeyTaskForm.fields.taskPoints.currencyLabel'),
-									child: Row(
-										children: <Widget>[
-											Padding(
-												padding: EdgeInsets.only(left: 10.0, top: 4.0),
-												child: CircleAvatar(
-													child: SvgPicture.asset(currencySvgPath(state.value.type), width: 28, fit: BoxFit.cover),
-													backgroundColor: AppColors.currencyColor[state.value.type].withAlpha(50)
-												)
-											),
-											if(currencies.length > 1)
-												Padding(
-													padding: EdgeInsets.only(left: 4.0, top: 2.0),
-													child: Icon(Icons.keyboard_arrow_right, color: Colors.grey)
-												)
-										]
-									)
-								)
-							)
-						]
-					)
-				);
+		return PointPickerField(
+			controller: _pointsController,
+			pickedCurrency: task.pointCurrency,
+			currencies: currencies,
+			loading: loading,
+			labelValueText: AppLocales.of(context).translate('$_pageKeyTaskForm.fields.taskPoints.valueLabel'),
+			helperValueText: AppLocales.of(context).translate('$_pageKeyTaskForm.fields.taskPoints.hint'),
+			labelCurrencyText: AppLocales.of(context).translate('$_pageKeyTaskForm.fields.taskPoints.currencyLabel'),
+			pointValueSetter: (val) {
+				setState(() {
+					isDataChanged = task.pointsValue != int.tryParse(val);
+					task.pointsValue = int.tryParse(val);
+				});
 			},
-			title: AppLocales.of(context).translate('$_pageKeyTaskForm.fields.taskPoints.currencyLabel'),
-			value: task.pointCurrency,
-			options: [
-				for(UICurrency element in currencies)
-					SmartSelectOption(
-						title: element.getName(context),
-						value: element
-					)
-			],
-			choiceConfig: SmartSelectChoiceConfig(
-				builder: (item, checked, onChange) {
-					return RadioListTile<UICurrency>(
-						value: item.value,
-						groupValue: task.pointCurrency,
-						onChanged: (val) => {onChange(item.value, !checked)},
-						title: Row(
-							children: [
-								Padding(
-									padding: EdgeInsets.only(right: 6.0),
-									child: SvgPicture.asset(currencySvgPath(item.value.type), width: 30, fit: BoxFit.cover)
-								),
-								Text(item.value.getName(context), style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.currencyColor[item.value.type]))
-							]
-						)
-					);
-				}
-			),
-			modalType: SmartSelectModalType.popupDialog,
-			onChange: (val) => setState(() => task.pointCurrency = val)
+			pointCurrencySetter: (val) {
+				setState(() {
+					isDataChanged = task.pointCurrency != val;
+					task.pointCurrency = val;
+				});
+			},
 		);
 	}
 

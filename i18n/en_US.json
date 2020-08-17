@@ -256,7 +256,8 @@
 		"range": "from {FROM} to {TO}"
 	},
 	"date": {
-		"weekday": "{WEEKDAY, select, 1 {Monday} 2 {Tuesday} 3 {Wednesday} 4 {Thursday} 5 {Friday} 6 {Saturday} 7 {Sunday} other {}}"
+		"weekday": "{WEEKDAY, select, 1 {Monday} 2 {Tuesday} 3 {Wednesday} 4 {Thursday} 5 {Friday} 6 {Saturday} 7 {Sunday} other {}}",
+		"everyday": "Codziennie"
 	},
 	"alert": {
 		"noConnection": "No connection",

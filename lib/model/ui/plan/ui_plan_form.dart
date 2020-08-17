@@ -30,4 +30,17 @@ class UIPlanForm {
 	void setRangeFromDate(DateTime date) { rangeDate.from = date != null ? Date.fromDate(date) : null; }
 	void setRangeToDate(DateTime date) { rangeDate.to = date != null ? Date.fromDate(date) : null; } 
 
+	bool isDataChanged() {
+		return name != null ||
+		children.isNotEmpty ||
+		repeatability != PlanFormRepeatability.recurring ||
+		repeatabilityRage != PlanFormRepeatabilityRage.weekly ||
+		days.isNotEmpty ||
+		onlyOnceDate != Date.now() ||
+		rangeDate.from != null ||
+		rangeDate.to != null ||
+		!isActive ||
+		tasks.isNotEmpty;
+	}
+
 }

@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/logic/plan_form/plan_form_cubit.dart';
 import 'package:fokus/model/db/date/date.dart';
 import 'package:fokus/model/db/date_span.dart';
+import 'package:fokus/model/ui/ui_button.dart';
+import 'package:fokus/widgets/buttons/bottom_sheet_bar_buttons.dart';
 import 'package:smart_select/smart_select.dart';
 import 'package:mongo_dart/mongo_dart.dart' as Mongo;
 
@@ -33,6 +35,7 @@ class _PlanFormState extends State<PlanForm> {
 	static const String _pageKey = 'page.caregiverSection.planForm.fields';
 
 	double bottomBarHeight = 60.0;
+	bool fieldsValidated = false;
 
 	TextEditingController _planNameContoller = TextEditingController();
 	TextEditingController _dateOneDayOnlyContoller = TextEditingController();
@@ -162,54 +165,29 @@ class _PlanFormState extends State<PlanForm> {
 		);
 	}
 
-	Widget buildBottomSheetBarButton(Color color, IconData icon, String text, Function onPressed) {
-		return Expanded(
-			child: RaisedButton(
-				shape: ContinuousRectangleBorder(),
-				padding: EdgeInsets.symmetric(vertical: 12.0),
-				color: color,
-				child: Row(
-					mainAxisAlignment: MainAxisAlignment.center,
-					children: <Widget>[
-						Padding(
-							padding: EdgeInsets.only(right: AppBoxProperties.buttonIconPadding),
-							child: Icon(icon, color: Colors.white)
-						),
-						Text(text, style: TextStyle(fontWeight: FontWeight.normal, color: Colors.white))
-					]
-				),
-				materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-				onPressed: onPressed
-			)
-		);
+	void onSelectAll(List<dynamic> sourceList, List<dynamic> valueList) {
+		// TODO Smart Select is really stuborn, fix state overwriting 
+		if(sourceList.length == valueList.length) {
+			setState(() {
+				valueList.clear();
+			});
+		} else {
+			setState(() {
+				valueList.clear();
+				valueList.addAll(sourceList);
+			});
+		}
 	}
 
 	Widget buildBottomSheetBar(BuildContext context, bool selectAllButton, List<dynamic> sourceList, List<dynamic> valueList) {
-		/* SELECT ALL
-		Function onSelectAll = () {
-			if(sourceList.length == valueList.length) {
-				setState(() => valueList.clear());
-			} else {
-				setState(() => valueList.clear());
-				List<Mongo.ObjectId> allChildren = List<Mongo.ObjectId>();
-				sourceList.forEach((element) {
-					allChildren.add(element.id);
-				});
-				setState(() => valueList = allChildren);
-			}
-		};
-		*/
-		return Row(
-			mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-			children: [
-				/* SELECT ALL
-				if(selectAllButton)
-					if(sourceList.length == valueList.length)
-						buildBottomSheetBarButton(AppColors.mainBackgroundColor, Icons.close, AppLocales.of(context).translate('actions.deselectAll'), onSelectAll)
-					else
-						buildBottomSheetBarButton(AppColors.mainBackgroundColor, Icons.playlist_add_check, AppLocales.of(context).translate('actions.selectAll'), onSelectAll),
-				*/		
-				buildBottomSheetBarButton(Colors.green, Icons.done, AppLocales.of(context).translate('actions.confirm'), () => { Navigator.pop(context) }),
+		return ButtonSheetBarButtons(
+			buttons: [
+				// if(selectAllButton)
+				// 	if(sourceList.length == valueList.length)
+				// 		UIButton('actions.deselectAll', () => onSelectAll(sourceList, valueList), AppColors.mainBackgroundColor, Icons.close)
+				// 	else
+				// 		UIButton('actions.selectAll', () => onSelectAll(sourceList, valueList), AppColors.mainBackgroundColor, Icons.playlist_add_check),
+				UIButton('actions.confirm', () => { Navigator.pop(context) }, Colors.green, Icons.done)
 			]
 		);
 	}
@@ -236,6 +214,16 @@ class _PlanFormState extends State<PlanForm> {
 		bool isWeekly = widget.plan.repeatabilityRage == PlanFormRepeatabilityRage.weekly;
 		List<int> dayList = List<int>.generate(isWeekly ? 7 : 31, (i) => i + 1);
 
+		String daysDisplay(List<int> values) {
+			if(values.isEmpty)
+				return AppLocales.of(context).translate('$_pageKey.days.hint');
+			if(values.length == dayList.length)
+				return AppLocales.of(context).translate('date.everyday');
+			return values.map((e) => 
+				isWeekly ? AppLocales.of(context).translate('date.weekday', {'WEEKDAY': e.toString()}) : e.toString()
+			).join(', ');
+		}
+
 		return Column(
 			children: <Widget>[
 				SmartSelect<PlanFormRepeatabilityRage>.single(
@@ -258,20 +246,31 @@ class _PlanFormState extends State<PlanForm> {
 				),
 				SmartSelect<int>.multiple(
 					title: AppLocales.of(context).translate('$_pageKey.days.label${isWeekly ? 'Weekly' : 'Monthly'}'),
-					placeholder: AppLocales.of(context).translate('$_pageKey.days.hint'),
 					value: widget.plan.days,
 					options: SmartSelectOption.listFrom<int, int>(
 						source: dayList,
 						value: (index, item) => item,
 						title: (index, item) => isWeekly ? AppLocales.of(context).translate('date.weekday', {'WEEKDAY': item.toString()}) : item.toString()
 					),
-					isTwoLine: true,
 					choiceType: SmartSelectChoiceType.chips,
 					modalType: SmartSelectModalType.bottomSheet,
 					modalConfig: SmartSelectModalConfig(
 						trailing: buildBottomSheetBar(context, true, dayList, widget.plan.days)
 					),
-					leading: Padding(padding: EdgeInsets.all(8.0), child: Icon(Icons.date_range)),
+					builder: (context, state, callback) {
+						return ListTile(
+							leading: Padding(padding: EdgeInsets.all(8.0), child: Icon(Icons.date_range)),
+							title: Text(AppLocales.of(context).translate('$_pageKey.days.label${isWeekly ? 'Weekly' : 'Monthly'}')),
+							subtitle: Text(
+								daysDisplay(state.values),
+								style: TextStyle(color: (fieldsValidated && widget.plan.days.isEmpty) ? Theme.of(context).errorColor : Colors.grey),
+								overflow: TextOverflow.ellipsis,
+								maxLines: 1
+							),
+							trailing: Icon(Icons.keyboard_arrow_right, color: Colors.grey),
+							onTap: () => callback(context)
+						);
+					},
 					onChange: (val) => setState(() => { widget.plan.days = val })
 				),
 				Divider(),
@@ -364,7 +363,10 @@ class _PlanFormState extends State<PlanForm> {
 								crossAxisAlignment: CrossAxisAlignment.end,
 								children: <Widget>[
 									FlatButton(
-										onPressed: () => widget.goNextCallback(),
+										onPressed: () {
+											setState(() => fieldsValidated = true);
+											widget.goNextCallback();
+										},
 										textColor: AppColors.mainBackgroundColor,
 										child: Row(children: <Widget>[Text(AppLocales.of(context).translate('actions.next')), Icon(Icons.chevron_right)])
 									)

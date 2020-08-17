@@ -256,7 +256,8 @@
 		"range": "od {FROM} do {TO}"
 	},
 	"date": {
-		"weekday": "{WEEKDAY, select, 1 {Poniedziałek} 2 {Wtorek} 3 {Środa} 4 {Czwartek} 5 {Piątek} 6 {Sobota} 7 {Niedziela} other {}}"
+		"weekday": "{WEEKDAY, select, 1 {Poniedziałek} 2 {Wtorek} 3 {Środa} 4 {Czwartek} 5 {Piątek} 6 {Sobota} 7 {Niedziela} other {}}",
+		"everyday": "Codziennie"
 	},
 	"alert": {
 		"noConnection": "Brak połączenia",
@@ -264,8 +265,8 @@
 		"connectionRetry": "Upewnij się że urządzenie ma dostęp do internetu",
 		"genericEmptyValue": "Pole nie może być puste",
 		"genericRangeOverflowValue": "Wartość musi mieścić się w zakresie {A}-{B}",
-		"unsavedProgressTitle": "Niezapisane dane",
-		"unsavedProgressMessage": "Posiadasz niezapisane dane. Czy jesteś pewien, że chcesz wyjść?",
+		"unsavedProgressTitle": "Niezapisane zmiany",
+		"unsavedProgressMessage": "Posiadasz niezapisane zmiany. Czy jesteś pewien, że chcesz wyjść?",
 		"deletePlan": "Usuwanie planu",
 		"confirmPlanDeletion": "Czy na pewno chcesz usunąć plan?"
 	},

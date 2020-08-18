@@ -6,7 +6,7 @@ import 'package:smart_select/smart_select.dart';
 import 'package:mongo_dart/mongo_dart.dart' as Mongo;
 
 import 'package:fokus/model/currency_type.dart';
-import 'package:fokus/model/ui/plan/ui_task.dart';
+import 'file:///D:/Fokus/fokus/lib/model/ui/task/ui_task_form.dart';
 import 'package:fokus/model/ui/plan/ui_plan_currency.dart';
 
 import 'package:fokus/services/app_locales.dart';
@@ -68,7 +68,7 @@ class _TaskFormState extends State<TaskForm> {
 			task.copy(widget.task);
 
 		if(widget.task != null) {
-			_titleController.text = widget.task.title;
+			_titleController.text = widget.task.name;
 			_descriptionController.text = widget.task.description;
 			_pointsController.text = widget.task.pointsValue != null ? widget.task.pointsValue.toString() : null;
 		}
@@ -182,7 +182,7 @@ class _TaskFormState extends State<TaskForm> {
 	}
 
 	Widget buildCustomHeader(BuildContext context) {
-		bool hasTitle = !formModeIsCreate() && task.title != null && task.title.length > 0;
+		bool hasTitle = !formModeIsCreate() && task.name != null && task.name.length > 0;
 		double appBarVerticalPadding = hasTitle ? 8.0 : 12.0;
 		return Material(
 			elevation: 4.0,
@@ -220,7 +220,7 @@ class _TaskFormState extends State<TaskForm> {
 											Hero(
 												tag: formModeIsCreate() ? "none3463634634" : widget.task.key,
 												child: Text(
-													task.title,
+													task.name,
 													style: Theme.of(context).textTheme.headline2.copyWith(color: Colors.white),
 													overflow: TextOverflow.fade,
 													softWrap: false,
@@ -312,8 +312,8 @@ class _TaskFormState extends State<TaskForm> {
 					return value.trim().isEmpty ? AppLocales.of(context).translate('alert.genericEmptyValue') : null;
 				},
 				onChanged: (val) => setState(() {
-					task.title = val;
-					isDataChanged = task.title != widget.task.title;
+					task.name = val;
+					isDataChanged = task.name != widget.task.name;
 				})
 			)
 		);

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fokus/widgets/cards/task_card.dart';
 import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorderable_list.dart';
 
-import 'package:fokus/model/ui/plan/ui_task.dart';
+import 'file:///D:/Fokus/fokus/lib/model/ui/task/ui_task_form.dart';
 import 'package:fokus/model/ui/plan/ui_plan_form.dart';
 
 import 'package:fokus/utils/dialog_utils.dart';

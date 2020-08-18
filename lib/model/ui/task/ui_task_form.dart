@@ -3,7 +3,7 @@ import 'package:fokus/model/ui/plan/ui_plan_currency.dart';
 
 class UITask {
 	Key key;
-	String title;
+	String name;
 	String description;
 	int pointsValue;
 	UIPlanCurrency pointCurrency;
@@ -12,7 +12,7 @@ class UITask {
 
 	UITask({
 		@required this.key, 
-		this.title,
+		this.name,
 		this.description,
 		this.pointsValue,
 		this.pointCurrency,
@@ -22,7 +22,7 @@ class UITask {
 
 	void copy(UITask task) {
 		key = task.key;
-		title = task.title;
+		name = task.name;
 		description = task.description;
 		pointsValue = task.pointsValue;
 		pointCurrency = task.pointCurrency;

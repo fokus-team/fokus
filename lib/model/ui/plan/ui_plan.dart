@@ -14,9 +14,9 @@ class UIPlan extends UIPlanBase {
 	UIPlan.fromDBModel(Plan plan, TranslateFunc description) : this(plan.id, plan.name, plan.active, plan.tasks.length, description);
 
   @override
-  List<Object> get props => super.props..addAll([[taskCount]]);
+  List<Object> get props => super.props..addAll([[taskCount, isActive]]);
 
   String print(BuildContext context) {
-    return 'UIPlan{name: $name, repeatabilityDescription: ${description(context)}, taskCount: $taskCount}';
+    return 'UIPlan{name: $name, repeatabilityDescription: ${description(context)}, taskCount: $taskCount, isActive: $isActive}';
   }
 }

@@ -1,6 +1,6 @@
 import 'package:fokus/model/db/date/date.dart';
 import 'package:fokus/model/db/date_span.dart';
-import 'package:fokus/model/ui/plan/ui_task.dart';
+import 'file:///D:/Fokus/fokus/lib/model/ui/task/ui_task_form.dart';
 import 'package:mongo_dart/mongo_dart.dart' as Mongo;
 
 enum PlanFormRepeatability { recurring, onlyOnce, untilCompleted }

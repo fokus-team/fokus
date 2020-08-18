@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:fokus/model/currency_type.dart';
 import 'package:fokus/model/ui/plan/ui_plan_currency.dart';
-import 'package:fokus/model/ui/plan/ui_task.dart';
+import 'file:///D:/Fokus/fokus/lib/model/ui/task/ui_task_form.dart';
 import 'package:fokus/model/ui/ui_button.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/dialog_utils.dart';
@@ -93,7 +93,7 @@ class _CaregiverPlanDetailsPageState extends State<CaregiverPlanDetailsPage> {
 						index: 0,
 						task: UITask(
 							key: ValueKey(DateTime.now()),
-							title: "Opróżnij plecak",
+							name: "Opróżnij plecak",
 							timer: 568,
 							pointsValue: 80,
 							pointCurrency: UIPlanCurrency(id: Mongo.ObjectId.fromHexString('5f9997f18c7472942f9979a3'), type: CurrencyType.diamond, title: "Punkty")
@@ -106,7 +106,7 @@ class _CaregiverPlanDetailsPageState extends State<CaregiverPlanDetailsPage> {
 						index: 1,
 						task: UITask(
 							key: ValueKey(DateTime.now()),
-							title: "Przygotuj książki i zeszyty na kolejny dzień według bardzo długiego planu zajęć",
+							name: "Przygotuj książki i zeszyty na kolejny dzień według bardzo długiego planu zajęć",
 							timer: 60,
 							pointsValue: 100,
 							pointCurrency: UIPlanCurrency(id: Mongo.ObjectId.fromHexString('5f9997f18c7472942f9979a3'), type: CurrencyType.diamond, title: "Punkty")
@@ -119,7 +119,7 @@ class _CaregiverPlanDetailsPageState extends State<CaregiverPlanDetailsPage> {
 						index: 2,
 						task: UITask(
 							key: ValueKey(DateTime.now()),
-							title: "Spakuj potrzebne rzeczy"
+							name: "Spakuj potrzebne rzeczy"
 						)
 					)
 				),
@@ -129,7 +129,7 @@ class _CaregiverPlanDetailsPageState extends State<CaregiverPlanDetailsPage> {
 						index: 3,
 						task: UITask(
 							key: ValueKey(DateTime.now()),
-							title: "Spakuj potrzebne rzeczy part 2",
+							name: "Spakuj potrzebne rzeczy part 2",
 							timer: 20
 						)
 					)
@@ -148,7 +148,7 @@ class _CaregiverPlanDetailsPageState extends State<CaregiverPlanDetailsPage> {
 					child: TaskCard(
 						task: UITask(
 							key: ValueKey(DateTime.now()),
-							title: "Opcjonalne zadanko",
+							name: "Opcjonalne zadanko",
 							timer: 20,
 							optional: true,
 							pointsValue: 300,

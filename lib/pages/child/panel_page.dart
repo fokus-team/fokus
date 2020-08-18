@@ -4,17 +4,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:fokus/logic/child_plans/child_plans_cubit.dart';
+import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/logic/timer/timer_cubit.dart';
 import 'package:fokus/model/db/plan/plan_instance_state.dart';
 import 'package:fokus/model/ui/plan/ui_plan_instance.dart';
-import 'package:fokus/utils/app_locales.dart';
+import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/theme_config.dart';
 import 'package:fokus/widgets/app_header.dart';
 import 'package:fokus/widgets/app_navigation_bar.dart';
 import 'package:fokus/widgets/chips/attribute_chip.dart';
 import 'package:fokus/widgets/chips/timer_chip.dart';
-import 'package:fokus/widgets/item_card.dart';
-import 'package:fokus/widgets/rounded_button.dart';
+import 'package:fokus/widgets/cards/item_card.dart';
+import 'package:fokus/widgets/buttons/rounded_button.dart';
 import 'package:fokus/widgets/segment.dart';
 
 
@@ -41,19 +42,20 @@ class _ChildPanelPageState extends State<ChildPanelPage> {
 	            else if (state is ChildPlansLoadSuccess)
 	              return AppSegments(segments: _buildPanelSegments(state));
 	            return Expanded(child: Center(child: CircularProgressIndicator()));
-	          },
+	          }
 	        ),
 	        Row(
 						mainAxisAlignment: MainAxisAlignment.end,
 	          children: <Widget>[
 	            RoundedButton(
-		            iconData: Icons.calendar_today,
+		            icon: Icons.calendar_today,
 		            text: AppLocales.of(context).translate('$_pageKey.content.futurePlans'),
 		            color: AppColors.childButtonColor,
-		          ),
-	          ],
+								onPressed: () => { log("przyszłe plany") }
+		          )
+	          ]
 	        )
-	      ],
+	      ]
       ),
       bottomNavigationBar: AppNavigationBar.childPage(currentIndex: 0)
     );
@@ -105,7 +107,7 @@ class _ChildPanelPageState extends State<ChildPanelPage> {
 						  icon: icon,
 						  color: color,
 						  disabled: plan.state == PlanInstanceState.completed,
-						  onTapped: () => {log("startPlan")}
+						  onTapped: () => Navigator.of(context).pushNamed(AppPage.childPlanInProgress.name)
 						),
 					  title: plan.name,
 					  subtitle: plan.description(context),

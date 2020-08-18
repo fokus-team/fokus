@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
 import 'package:fokus/model/db/plan/plan.dart';
-import 'package:fokus/utils/app_locales.dart';
+import 'package:fokus/services/app_locales.dart';
 
 import 'ui_plan_base.dart';
 

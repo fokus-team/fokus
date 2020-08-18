@@ -13,23 +13,24 @@ import 'package:fokus/model/db/date_span.dart';
 import 'data/data_repository.dart';
 
 class OutdatedDataService {
-	final DataRepository _dbRepository = GetIt.I<DataRepository>();
+	final DataRepository _dataRepository = GetIt.I<DataRepository>();
+
 	Timer _dataCheckTimer;
 	ObjectId _userId;
 	UserRole _role;
 
-	void onUserLogin(ObjectId userId, UserRole role) {
+	void onUserSignIn(ObjectId userId, UserRole role) {
 		_userId = userId;
 		_role = role;
 
-		onUserLogout();
+		onUserSignOut();
 		_updateOutdatedData();
 		var now = DateTime.now();
 		Duration timeToMidnight = DateTime(now.year, now.month, now.day + 1).difference(now);
 		_dataCheckTimer = Timer(timeToMidnight, _firstTimerCallback);
 	}
 
-	void onUserLogout() {
+	void onUserSignOut() {
 		if (_dataCheckTimer != null)
 			_dataCheckTimer.cancel();
 	}
@@ -41,17 +42,17 @@ class OutdatedDataService {
 
 	Future _updateOutdatedData() async {
 		var getRoleId = (UserRole paramRole) => paramRole == _role ? _userId : null;
-		var plans = await _dbRepository.getPlans(caregiverId: getRoleId(UserRole.caregiver),
+		var plans = await _dataRepository.getPlans(caregiverId: getRoleId(UserRole.caregiver),
 				childId: getRoleId(UserRole.child), fields: ['_id'], oneDayOnly: true, activeOnly: false);
 
-		var childrenIDs = _role == UserRole.caregiver ? (await _dbRepository.getCaregiverChildren(_userId, ['_id'])).map((child) => child.id).toList() : [_userId];
-		var instances = await _dbRepository.getPastNotCompletedPlanInstances(childrenIDs, plans.map((plan) => plan.id).toList(), Date.now(), fields: ['_id', 'date', 'duration', 'state']);
+		var childrenIDs = _role == UserRole.caregiver ? (await _dataRepository.getUsers(role: UserRole.child, connected: _userId, fields: ['_id'])).map((child) => child.id).toList() : [_userId];
+		var instances = await _dataRepository.getPastNotCompletedPlanInstances(childrenIDs, plans.map((plan) => plan.id).toList(), Date.now(), fields: ['_id', 'date', 'duration', 'state']);
 
 		var getEndTime = (Date date) => TimeDate.fromDate(date.add(Duration(days: 1)));
 
 		List<Future> updates = [];
 		for (var instance in instances)
-			updates.add(_dbRepository.updatePlanInstances(
+			updates.add(_dataRepository.updatePlanInstances(
 				instance.id,
 				state: await _determineFinalPlanState(instance),
 				durationChange: DateSpanUpdate<TimeDate>(getEndTime(instance.date), SpanDateType.end, instance.duration.length - 1))
@@ -63,7 +64,7 @@ class OutdatedDataService {
 	Future<PlanInstanceState> _determineFinalPlanState(PlanInstance instance) async {
 		if (instance.state == PlanInstanceState.notStarted)
 			return PlanInstanceState.lostForever;
-		var tasks = await _dbRepository.getTaskInstances(planInstanceId: instance.id, requiredOnly: true, fields: ['status.completed']);
+		var tasks = await _dataRepository.getTaskInstances(planInstanceId: instance.id, requiredOnly: true, fields: ['status.completed']);
 		return tasks.every((task) => task.status.completed) ? PlanInstanceState.completed : PlanInstanceState.lostForever;
 	}
 }

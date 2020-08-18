@@ -1,9 +1,10 @@
 enum AppConfigEntry {
-	lastUser
+	savedChildProfiles, signedInChild
 }
 
 extension AppConfigEntryKey on AppConfigEntry {
 	String get key => const {
-		AppConfigEntry.lastUser: 'lastUser',
+		AppConfigEntry.savedChildProfiles: 'savedChildProfiles',
+		AppConfigEntry.signedInChild: 'signedInChild'
 	}[this];
 }

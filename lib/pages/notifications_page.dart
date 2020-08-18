@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:fokus/logic/active_user/active_user_cubit.dart';
+import 'package:fokus/logic/auth/auth_bloc/authentication_bloc.dart';
 import 'package:fokus/model/currency_type.dart';
 import 'package:fokus/model/db/user/user_role.dart';
-import 'package:fokus/utils/app_locales.dart';
-import 'package:fokus/widgets/notification_card.dart';
+import 'package:fokus/services/app_locales.dart';
+import 'file:///D:/Studia/Projekt_Grupowy/fokus/lib/widgets/cards/notification_card.dart';
 import 'package:fokus/widgets/segment.dart';
 
 class NotificationsPage extends StatefulWidget {
@@ -59,20 +59,13 @@ class _NotificationsPageState extends State<NotificationsPage> {
         dateTime: DateTime.now(),
         subtitle: "Król pakowania plecaka",
         graphic: 0
-    ),
-    NotificationCard(
-        isGirl: true,
-        notificationType: NotificationType.child_receivedBadge,
-        dateTime: DateTime.now(),
-        subtitle: "Królowa pakowania plecaka",
-        graphic: 0
     )
   ];
 	
 	@override
 	Widget build(BuildContext context) {
-    var cubit = BlocProvider.of<ActiveUserCubit>(context);
-    var currentUser = (cubit.state as ActiveUserPresent).user;
+    var authenticationBloc = context.bloc<AuthenticationBloc>();
+    var currentUser = authenticationBloc.state.user;
 
     return Scaffold(
 			body: Column(

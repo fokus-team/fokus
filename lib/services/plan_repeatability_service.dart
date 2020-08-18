@@ -7,16 +7,16 @@ import 'package:fokus/model/db/date/date.dart';
 import 'package:fokus/model/db/plan/plan.dart';
 import 'package:fokus/model/db/plan/repeatability_type.dart';
 import 'package:fokus/model/db/plan/plan_repeatability.dart';
-import 'package:fokus/utils/app_locales.dart';
+import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/string_utils.dart';
 
 import 'data/data_repository.dart';
 
 class PlanRepeatabilityService {
-	final DataRepository _dbRepository = GetIt.I<DataRepository>();
+	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 
 	Future<List<Plan>> getPlansByDate(ObjectId childId, Date date, {bool activeOnly = true}) async {
-		return filterPlansByDate(await _dbRepository.getPlans(childId: childId, activeOnly: activeOnly), date);
+		return filterPlansByDate(await _dataRepository.getPlans(childId: childId, activeOnly: activeOnly), date);
 	}
 
 	Future<List<Plan>> filterPlansByDate(List<Plan> plans, Date date, {bool activeOnly = true}) async {

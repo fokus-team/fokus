@@ -3,33 +3,47 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-import 'package:fokus/logic/active_user/active_user_cubit.dart';
+import 'package:fokus/logic/auth/auth_bloc/authentication_bloc.dart';
+import 'package:fokus/logic/auth/caregiver/sign_in/caregiver_sign_in_cubit.dart';
+import 'package:fokus/logic/auth/caregiver/sign_up/caregiver_sign_up_cubit.dart';
+import 'package:fokus/logic/auth/child/sign_in/child_sign_in_cubit.dart';
+import 'package:fokus/logic/auth/child/sign_up/child_sign_up_cubit.dart';
 import 'package:fokus/logic/caregiver_panel/caregiver_panel_cubit.dart';
 import 'package:fokus/logic/caregiver_plans/caregiver_plans_cubit.dart';
 import 'package:fokus/logic/child_plans/child_plans_cubit.dart';
-import 'package:fokus/model/db/user/user_role.dart';
+import 'package:fokus/pages/caregiver/auth/caregiver_sign_in_page.dart';
+import 'package:fokus/pages/caregiver/auth/caregiver_sign_up_page.dart';
 import 'package:fokus/pages/caregiver/awards_page.dart';
 import 'package:fokus/pages/caregiver/panel_page.dart';
+import 'package:fokus/pages/caregiver/plan_details_page.dart';
+import 'package:fokus/pages/caregiver/plan_form_page.dart';
 import 'package:fokus/pages/caregiver/plans_page.dart';
 import 'package:fokus/pages/caregiver/statistics_page.dart';
 import 'package:fokus/pages/child/achievements_page.dart';
+import 'package:fokus/pages/child/auth/child_sign_in_page.dart';
+import 'package:fokus/pages/child/auth/child_sign_up_page.dart';
 import 'package:fokus/pages/child/awards_page.dart';
 import 'package:fokus/pages/child/panel_page.dart';
 import 'package:fokus/pages/notifications_page.dart';
-import 'package:fokus/utils/app_locales.dart';
+import 'package:fokus/pages/child/plan_in_progress_page.dart';
+import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/services/instrumentator.dart';
-import 'package:fokus/utils/cubit_utils.dart';
 import 'package:fokus/utils/theme_config.dart';
 import 'package:fokus/pages/loading_page.dart';
 import 'package:fokus/pages/roles_page.dart';
 import 'package:fokus/widgets/page_theme.dart';
-import 'package:fokus/model/app_page.dart';
+import 'package:fokus/model/ui/app_page.dart';
+import 'package:fokus/model/db/user/user_role.dart';
+import 'package:fokus/utils/service_injection.dart';
 
 void main() {
+	WidgetsFlutterBinding.ensureInitialized();
 	var navigatorKey = GlobalKey<NavigatorState>();
+	initializeServices();
+
 	Instrumentator.runAppGuarded(
-		BlocProvider<ActiveUserCubit>(
-			create: (context) => ActiveUserCubit(),
+		BlocProvider<AuthenticationBloc>(
+			create: (context) => AuthenticationBloc(),
 			child: FokusApp(navigatorKey),
 		),
 		navigatorKey
@@ -59,38 +73,56 @@ class FokusApp extends StatelessWidget {
 			initialRoute: AppPage.loadingPage.name,
 			routes: _createRoutes(),
 			theme: _createAppTheme(),
+			builder: _authenticationGateBuilder,
+		);
+	}
+
+	Widget _authenticationGateBuilder(BuildContext context, Widget child) {
+		return BlocListener<AuthenticationBloc, AuthenticationState>(
+			listener: (context, state) {
+				var redirectPage = state.status == AuthenticationStatus.authenticated ? state.user.role.panelPage : AppPage.rolesPage;
+				_navigatorKey.currentState.pushNamedAndRemoveUntil(redirectPage.name, (route) => false);
+			},
+			child: child
 		);
 	}
 
 	Map<String, WidgetBuilder> _createRoutes() {
-		var activeUser = (context) => BlocProvider.of<ActiveUserCubit>(context);
+		var getActiveUser = (BuildContext context) => () => context.bloc<AuthenticationBloc>().state.user;
 		return {
-			AppPage.loadingPage.name: (context) => PageTheme.loginSection(child: LoadingPage()),
-			AppPage.rolesPage.name: (context) => PageTheme.loginSection(child: RolesPage()),
-      AppPage.notificationsPage.name: (context) => _wrapAppPage(UserRole.caregiver, NotificationsPage()), // TODO userrole could be of any type in some pages - support this
-			AppPage.caregiverPanel.name: (context) => _wrapAppPage(UserRole.caregiver, CaregiverPanelPage(), CaregiverPanelCubit(activeUser(context))),
-			AppPage.caregiverPlans.name: (context) => _wrapAppPage(UserRole.caregiver, CaregiverPlansPage(), CaregiverPlansCubit(activeUser(context))),
-			AppPage.caregiverAwards.name: (context) => _wrapAppPage(UserRole.caregiver, CaregiverAwardsPage()),
-			AppPage.caregiverStatistics.name: (context) => _wrapAppPage(UserRole.caregiver, CaregiverStatisticsPage()),
-			AppPage.childPanel.name: (context) => _wrapAppPage(UserRole.child, ChildPanelPage(), ChildPlansCubit(activeUser(context))),
-			AppPage.childAwards.name: (context) => _wrapAppPage(UserRole.child, ChildAwardsPage()),
-			AppPage.childAchievements.name: (context) => _wrapAppPage(UserRole.child, ChildAchievementsPage()),
+			AppPage.loadingPage.name: (context) => _createPage(LoadingPage(), context),
+			AppPage.rolesPage.name: (context) => _createPage(RolesPage(), context),
+      AppPage.notificationsPage.name: (context) => _createPage(NotificationsPage(), context),
+			AppPage.caregiverSignInPage.name: (context) => _createPage(CaregiverSignInPage(), context, CaregiverSignInCubit()),
+			AppPage.caregiverSignUpPage.name: (context) => _createPage(CaregiverSignUpPage(), context, CaregiverSignUpCubit()),
+			AppPage.childSignInPage.name: (context) => _createPage(ChildSignInPage(), context, ChildSignInCubit(context.bloc<AuthenticationBloc>())),
+			AppPage.childSignUpPage.name: (context) => _createPage(ChildSignUpPage(), context, ChildSignUpCubit(context.bloc<AuthenticationBloc>())),
+			AppPage.caregiverPanel.name: (context) => _createPage(CaregiverPanelPage(), context, CaregiverPanelCubit(getActiveUser(context))),
+			AppPage.caregiverPlans.name: (context) => _createPage(CaregiverPlansPage(), context, CaregiverPlansCubit(getActiveUser(context))),
+			AppPage.caregiverPlanForm.name: (context) => _createPage(CaregiverPlanFormPage(), context),
+			AppPage.caregiverAwards.name: (context) => _createPage(CaregiverAwardsPage(), context),
+			AppPage.caregiverStatistics.name: (context) => _createPage(CaregiverStatisticsPage(), context),
+			AppPage.childPanel.name: (context) => _createPage(ChildPanelPage(), context, ChildPlansCubit(getActiveUser(context))),
+			AppPage.childAwards.name: (context) => _createPage(ChildAwardsPage(), context),
+			AppPage.childAchievements.name: (context) => _createPage(ChildAchievementsPage(), context),
+			AppPage.caregiverPlanDetails.name: (context) => _createPage(CaregiverPlanDetailsPage(), context),
+			AppPage.childPlanInProgress.name: (context) => _createPage(ChildPlanInProgressPage(), context)
 		};
 	}
 
-	Widget _wrapAppPage<CubitType extends Cubit>(UserRole userRole, Widget page, [CubitType pageCubit]) {
+	Widget _createPage<CubitType extends Cubit>(Widget page, BuildContext context, [CubitType pageCubit]) {
 		if (pageCubit != null)
 			page = BlocProvider<CubitType>(
 				create: (context) => pageCubit,
 				child: page,
 			);
-		return navigateOnState<ActiveUserCubit, ActiveUserState, NoActiveUser>(
-			navigation: (navigator) => navigator.pushNamedAndRemoveUntil(AppPage.rolesPage.name, (_) => false),
-			child: PageTheme.parametrizedRoleSection(
-				userRole: userRole,
+		var authState = context.bloc<AuthenticationBloc>().state;
+		if (authState.status == AuthenticationStatus.authenticated)
+			return PageTheme.parametrizedRoleSection(
+				userRole: authState.user.role,
 				child: page
-			)
-		);
+			);
+		return PageTheme.loginSection(child: page);
 	}
 
 	ThemeData _createAppTheme() {
@@ -100,8 +132,8 @@ class FokusApp extends StatelessWidget {
 			textTheme: TextTheme(
 				// Will probably change over time
 				headline1: TextStyle(fontSize: 26.0, fontWeight: FontWeight.bold, color: AppColors.darkTextColor), // Scaffold/appbar headline
-				headline2: TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold, color: AppColors.darkTextColor), // Main headline before lists
-				headline3: TextStyle(fontSize: 21.0, fontWeight: FontWeight.normal, color: AppColors.darkTextColor), //For headers inside list elements
+				headline2: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold, color: AppColors.darkTextColor), // Main headline before lists
+				headline3: TextStyle(fontSize: 20.0, fontWeight: FontWeight.normal, color: AppColors.darkTextColor), //For headers inside list elements
 				subtitle2: TextStyle(fontSize: 13.0, fontWeight: FontWeight.normal, color: AppColors.mediumTextColor), // Little subtitle for headline2
 				bodyText1: TextStyle(fontSize: 15.0, fontWeight: FontWeight.normal, color: AppColors.lightTextColor), // Classic body text on light background
 				bodyText2: TextStyle(fontSize: 15.0, fontWeight: FontWeight.normal, color: AppColors.darkTextColor), // Classic body text on color

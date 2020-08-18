@@ -20,6 +20,17 @@
 				"caregiver": "Caregiver",
 				"child": "Child",
 				"help": "I need help"
+			},
+			"caregiverSignIn": {
+			},
+			"caregiverSignUp": {
+			},
+			"childSignIn": {
+				"childCode": "Child code",
+				"createNewProfile": "Create a new child profile"
+			},
+			"childSignUp": {
+				"caregiverCode": "Caregiver code"
 			}
 		},
 		"notifications": {
@@ -68,7 +79,113 @@
 					"addedActivePlansTitle": "Added plans",
 					"addedDeactivatedPlansTitle": "Deactivated plans",
 					"noPlansAdded": "No plans to display",
-					"tasksCount": "{NUM_TASKS, plural, offset:0  =1 {# task} other {# tasks}}"
+					"tasks": "{NUM_TASKS, plural, offset:0  =1 {# task} other {# tasks}}"
+				}
+			},
+			"planInProgress": {
+				"header": {
+					"title": "In progress"
+				},
+				"content": {
+					"toDoTasks": "To-do list",
+					"additionalTasks": "Additional tasks",
+					"noTasks": "No tasks to display"
+				}
+			},
+			"planForm": {
+				"createPlanTitle": "Creating new plan",
+				"editPlanTitle": "Editing existing plan",
+				"step": "Step {NUM_STEP}",
+				"stepOneTitle": "Plan parameters",
+				"stepTwoTitle": "Task list",
+				"createPlanButton": "Create plan",
+				"savePlanButton": "Save plan",
+				"addTaskButton": "Add task",
+				"editTaskButton": "Edit task",
+				"removeTaskButton": "Remove task",
+				"saveTaskButton": "Save task",
+				"noTasksMessage": "The task list is empty",
+				"requiredTaskListTitle": "Required tasks",
+				"optionalTaskListTitle": "Optional tasks",
+				"clearAllTasksText": "Are you sure you want to clear all added tasks?",
+				"taskLimitTitle": "Task limit",
+				"taskLimitText": "You reached plan's task limit ({TASK_LIMIT_NUM}). You can't add another one.",
+				"taskListEmptyTitle": "No tasks added",
+				"taskListEmptyText": "Each plan must have minimum 1 task.",
+				"fields": {
+					"advancedOptionsTitle": "Advanced options",
+					"planName": {
+						"label": "Plan name",
+						"emptyError": "Plan name can't be empty"
+					},
+					"assignedChildren": {
+						"label": "Assigned children",
+						"hint": "Choose one or more children"
+					},
+					"repeatability": {
+						"label": "Repeatability",
+						"options": {
+							"recurring": "Recurring",
+							"onlyOnce": "Only once",
+							"untilCompleted": "Until completed"
+						}
+					},
+					"repeatabilityRange": {
+						"label": "Repeat period",
+						"options": {
+							"weekly": "Weekly",
+							"monthly": "Monthly"
+						}
+					},
+					"days": {
+						"labelWeekly": "Weekdays",
+						"labelMonthly": "Month days",
+						"hint": "Choose at least 1 day"
+					},
+					"onlyOneDate": {
+						"label": "Plan's date",
+						"emptyError": "Plan's date must be set"
+					},
+					"range": {
+						"fromLabel": "Plan available from date",
+						"toLabel": "Plan available to date",
+						"hint": "Leave empty to not limit date range"
+					},
+					"active": {
+						"label": "Plan active",
+						"hintOn": "Visible immediately after creation",
+						"hintOff": "Hidden after creation"
+					}
+				}
+			},
+			"taskForm": {
+				"removeTaskTitle": "Remove task",
+				"removeTaskText": "Are you sure you want to remove this task?",
+				"fields": {
+					"taskName": {
+						"label": "Task name"
+					},
+					"taskDescription": {
+						"label": "Task description"
+					},
+					"taskOrder": {
+						"label": "Order execution"
+					},
+					"taskPoints": {
+						"valueLabel": "Points awarded",
+						"currencyLabel": "Point currency",
+						"hint": "Leave empty to not award points"
+					},
+					"taskTimer": {
+						"label": "Task execution time",
+						"notSet": "Unlimited",
+						"set": "Limited to",
+						"format": "{HOURS_NUM, plural, offset:0 zero {} other {# hr }}{MINUTES_NUM} min"
+					},
+					"taskOptional": {
+						"label": "Optional task",
+						"hint": "Optional tasks have no order"
+					}
 				}
 			},
 			"awards": {
@@ -100,6 +217,16 @@
 				"content": {
 					"basicStatisticsTitle": "Basic statistics",
 					"basicStatisticsSubtitle": "This screen is not available in this version of the application"
+				}
+			},
+			"planDetails": {
+				"header": {
+					"title": "Plan details"
+				},
+				"content": {
+					"mandatoryTasks": "Mandatory tasks",
+					"additionalTasks": "Additional tasks",
+					"noTasks": "No tasks"
 				}
 			}
 		},
@@ -146,23 +273,71 @@
 		"untilCompleted": "until completed",
 		"range": "from {FROM} to {TO}"
 	},
+	"date": {
+		"weekday": "{WEEKDAY, select, 1 {Monday} 2 {Tuesday} 3 {Wednesday} 4 {Thursday} 5 {Friday} 6 {Saturday} 7 {Sunday} other {}}"
+	},
 	"alert": {
 		"noConnection": "No connection",
-		"connectionRetry": "Ensure the device has access to internet",
-		"noHint": "No hint"
+		"connectionRetry": "Ensure the device has access to the internet",
+		"noHint": "No hint",
+		"genericEmptyValue": "This field can't be empty",
+		"genericRangeOverflowValue": "Value must be in the range {A}-{B}",
+		"unsavedProgressTitle": "Unsaved progress",
+		"unsavedProgressMessage": "You have unsaved progress. Are you sure you want to exit?",
+		"deletePlan": "Deleting the plan",
+		"confirmPlanDeletion": "Are you sure you want to delete the plan?"
 	},
 	"actions": {
 		"ok": "Ok",
 		"exit": "Exit",
+		"cancel": "Cancel",
 		"retry": "Retry",
 		"close": "Close",
 		"edit": "Edit",
 		"delete": "Delete",
 		"details": "Show details",
-		"help": "Show help"
+		"help": "Show help",
+		"back": "Back",
+		"next": "Next",
+		"tapToSelect": "Tap to select",
+		"selected": "Wybrano",
+		"selectAll": "Select all",
+		"deselectAll": "Deselect all",
+		"search": "Search",
+		"confirm": "Confirm",
+		"clear": "Clear",
+		"clearAll": "Clear all",
+		"unpair": "Unpair",
+		"signIn": "Login",
+		"signUp": "Sign up"
+	},
+	"authentication": {
+		"name": "First name",
+		"email": "E-mail address",
+		"password": "Password",
+		"confirmPassword": "Repeat password",
+		"googleSignIn": "Sign in with Google",
+		"googleSignUp": "Sign up with Google",
+
+		"error": {
+			"incorrectData": "Incorrect e-mail or password",
+			"emailAlreadyUsed": "E-mail address is already used",
+			"userDisabled": "User has been disabled",
+			"invalidEmail": "Invalid e-mail address",
+			"userCodeToShort": "Code is to short",
+			"userCodeToLong": "Code is to long",
+			"noSuchUser": "User does not exist",
+			"passwordNotLongEnough": "Password must have at least {LENGTH, plural, offset:0 one {# character} other {# characters}} long",
+			"noPasswordMatch": "Passwords do not match"
+		}
 	},
 	"help": {
-		"first_steps": "First steps"
+		"first_steps": "First steps",
+		"plan_creation": "Plan creation",
+		"task_creation": "Task creation",
+		"plan_info": "Plans"
 	},
-	"and": "and"
+	"and": "and",
+	"hour": "hr",
+	"minute": "min"
 }

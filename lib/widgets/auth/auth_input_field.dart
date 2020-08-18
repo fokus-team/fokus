@@ -13,8 +13,17 @@ class AuthenticationInputField<Bloc extends Cubit<State>, State> extends Statele
 	final String labelKey;
 	final TextInputType inputType;
 	final bool hideInput;
+	final IconData icon;
 
-  AuthenticationInputField({this.getField, this.changedAction, this.labelKey, this.getErrorKey, this.inputType = TextInputType.text, this.hideInput = false});
+  AuthenticationInputField({
+		this.getField,
+		this.changedAction,
+		this.labelKey,
+		this.getErrorKey,
+		this.inputType = TextInputType.text,
+		this.hideInput = false,
+		this.icon = Icons.edit
+	});
 	
   @override
   Widget build(BuildContext context) {
@@ -27,12 +36,13 @@ class AuthenticationInputField<Bloc extends Cubit<State>, State> extends Statele
 					  onChanged: (value) => changedAction(context.bloc<Bloc>(), value),
 					  keyboardType: inputType,
 					  obscureText: hideInput,
-					  decoration: InputDecoration(
-						  filled: true,
-						  fillColor: Colors.white,
-						  labelText: AppLocales.of(context).translate(labelKey),
+						decoration: InputDecoration(
+							icon: Padding(padding: EdgeInsets.all(5.0), child: Icon(icon)),
+							contentPadding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
+							border: OutlineInputBorder(),
+							labelText: AppLocales.of(context).translate(labelKey),
 						  errorText: getField(state).invalid ? Function.apply(AppLocales.of(context).translate, getErrorKey(state)) : null,
-					  ),
+						)
 			    ),
 			  );
 		  },

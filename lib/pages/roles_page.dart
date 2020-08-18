@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fokus/widgets/auth/auth_widgets.dart';
 import 'package:lottie/lottie.dart';
 
 import 'package:fokus/model/ui/app_page.dart';
@@ -20,29 +21,11 @@ class RolesPage extends StatelessWidget {
 			      Lottie.asset('assets/animation/sunflower_with_title_rotate_only.json', width: 280),
 			      _roleButton(context, UserRole.caregiver),
 			      _roleButton(context, UserRole.child),
-			      Container(
-			        child: RawMaterialButton(
-								highlightColor: Colors.transparent,
-								splashColor: Colors.transparent,
-			          onPressed: () => {
-			            showHelpDialog(context, 'first_steps')
-			          },
-			          child: Row(
-			            crossAxisAlignment: CrossAxisAlignment.center,
-			            mainAxisAlignment: MainAxisAlignment.center,
-			            children: <Widget>[
-			              Padding(
-			                padding: EdgeInsets.only(right: AppBoxProperties.buttonIconPadding),
-			                child: Icon(Icons.help_outline, color: AppColors.lightTextColor)
-			              ),
-			              Text(
-			                AppLocales.of(context).translate('page.loginSection.roles.help'),
-			                style: Theme.of(context).textTheme.button,
-			              )
-			            ]
-			          )
-			        )
-			      )
+						AuthFloatingButton(
+							icon: Icons.help_outline,
+							action: () => showHelpDialog(context, 'first_steps'),
+							text: AppLocales.of(context).translate('page.loginSection.roles.help')
+						)
 			    ]
 			  ),
 			),
@@ -56,11 +39,7 @@ class RolesPage extends StatelessWidget {
 		  fontWeight: FontWeight.normal
 	  );
 	  return Container(
-			constraints: new BoxConstraints(
-				minWidth: 240,
-				maxWidth: 260,
-			),
-		  padding: EdgeInsets.all(4.0),
+		  padding: EdgeInsets.symmetric(horizontal: AppBoxProperties.screenEdgePadding + 6.0).copyWith(bottom: 8.0),
 		  child: FlatButton(
 			  onPressed: () => Navigator.of(context).pushNamed(role.signInPage.name),
 			  color: role == UserRole.caregiver ? AppColors.caregiverButtonColor : AppColors.childButtonColor,

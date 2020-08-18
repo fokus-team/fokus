@@ -22,8 +22,16 @@
 				"help": "I need help"
 			},
 			"caregiverSignIn": {
+				"logInTitle": "Log in",
+				"logInHint": "Access your account",
+				"registerTitle": "New account",
+				"registerHint": "Create new caregiver account to use the app",
+				"backToStartPage": "Back to start page"
 			},
 			"caregiverSignUp": {
+				"backToLoginPage": "Back to login page",
+				"registerTitle": "Create new account",
+				"registerHint": "Fill the form below or use your Google account"
 			},
 			"childSignIn": {
 				"childCode": "Child code",
@@ -320,6 +328,7 @@
 		"plan_info": "Plans"
 	},
 	"and": "and",
+	"or": "or",
 	"hour": "hr",
 	"minute": "min"
 }

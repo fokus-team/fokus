@@ -22,8 +22,16 @@
 				"help": "Potrzebuję pomocy"
 			},
 			"caregiverSignIn": {
+				"logInTitle": "Zaloguj się",
+				"logInHint": "Uzyskaj dostęp do swojego konta",
+				"registerTitle": "Nowe konto",
+				"registerHint": "Załóż nowe konto opiekuna aby móc korzystać z aplikacji",
+				"backToStartPage": "Powrót do ekranu startowego"
 			},
 			"caregiverSignUp": {
+				"backToLoginPage": "Powrót do ekranu logowania",
+				"registerTitle": "Stwórz nowe konto",
+				"registerHint": "Uzupełnij poniższy formularz lub użyj konta Google"
 			},
 			"childSignIn": {
 				"childCode": "Kod dziecka",
@@ -320,6 +328,7 @@
 		"plan_info": "Plany"
 	},
 	"and": "i",
+	"or": "lub",
 	"hour": "godz.",
 	"minute": "min"
 }

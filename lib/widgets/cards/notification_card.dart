@@ -94,10 +94,9 @@ class NotificationCard extends ItemCard {
   String getTitle(BuildContext context) => title ?? notificationType.title(context, childName);
   List<Widget> getChips(BuildContext context) => chips ?? notificationType.chips(context, currencyType, currencyValue);
 
-  //TODO check what should be required
   NotificationCard({
     this.childName = "",
-    this.notificationType,
+    @required this.notificationType,
     this.dateTime,
     this.currencyType,
     this.currencyValue = 0,
@@ -182,11 +181,10 @@ class NotificationCard extends ItemCard {
                   )
               )
           ),
-          if(notificationType != null)
-            Padding(
-                padding: EdgeInsets.all(6.0),
-                child: notificationType.icon
-            )
+          Padding(
+              padding: EdgeInsets.all(6.0),
+              child: notificationType.icon
+          )
         ]
     );
   }

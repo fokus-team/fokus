@@ -212,7 +212,7 @@ class AppHeader extends StatelessWidget {
 					),
 					Row(
 						children: <Widget>[
-							headerIconButton(Icons.notifications, () => Navigator.of(context).pushNamed(AppPage.notificationsPage.name)), // pytanko jak tu zrobić osobno caregiver i child
+							headerIconButton(Icons.notifications, () => Navigator.of(context).pushNamed(AppPage.notificationsPage.name)),
 							headerIconButton(
 								Icons.more_vert,
 								() => authenticationBloc.add(AuthenticationSignOutRequested())

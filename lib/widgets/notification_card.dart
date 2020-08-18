@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 import 'package:fokus/model/currency_type.dart';
+import 'package:fokus/utils/app_locales.dart';
 import 'package:fokus/utils/app_paths.dart';
 import 'package:fokus/utils/icon_sets.dart';
 import 'package:fokus/utils/theme_config.dart';
@@ -22,13 +23,15 @@ enum NotificationType{
 }
 
 extension NotificationTypeExtension on NotificationType {
-  String get title => const {
-    NotificationType.caregiver_receivedAward: ' odebrał nagrodę',
-    NotificationType.caregiver_finishedTaskUngraded: ' wykonał zadanie',
-    NotificationType.caregiver_finishedTaskGraded: ' wykonał zadanie',
-    NotificationType.caregiver_unfinishedPlan: ' nie skończył planu',
-    NotificationType.child_taskGraded: 'Dostałeś punkty za zadanie!',
-    NotificationType.child_receivedBadge: 'Otrzymałeś odznakę!'
+  static const String _pageKey = 'page.notifications.content';
+
+  String title(BuildContext context, String childName, bool isGirl) => {
+    NotificationType.caregiver_receivedAward: childName + " " + AppLocales.of(context).translate("$_pageKey.caregiver.receivedAward", {'ISGIRL': '$isGirl'}),
+    NotificationType.caregiver_finishedTaskUngraded: childName + " " + AppLocales.of(context).translate("$_pageKey.caregiver.finishedTask", {'ISGIRL': '$isGirl'}),
+    NotificationType.caregiver_finishedTaskGraded: childName + " " + AppLocales.of(context).translate("$_pageKey.caregiver.finishedTask", {'ISGIRL': '$isGirl'}),
+    NotificationType.caregiver_unfinishedPlan: childName + " " + AppLocales.of(context).translate("$_pageKey.caregiver.unfinishedPlan", {'ISGIRL': '$isGirl'}),
+    NotificationType.child_taskGraded: AppLocales.of(context).translate("$_pageKey.child.taskGraded", {'ISGIRL': '$isGirl'}),
+    NotificationType.child_receivedBadge: AppLocales.of(context).translate("$_pageKey.child.receivedBadge", {'ISGIRL': '$isGirl'})
   }[this];
 
   Icon get icon => Icon(
@@ -52,12 +55,12 @@ extension NotificationTypeExtension on NotificationType {
     NotificationType.child_receivedBadge: GraphicAssetType.badgeIcons
   }[this];
 
-  List<Widget> get chips => {
+  List<Widget> chips(BuildContext context, CurrencyType currencyType, int currencyValue) => {
     NotificationType.caregiver_finishedTaskUngraded: [
       GestureDetector(
         onTap: () => {log("open the grading page")},
         child: AttributeChip.withIcon(
-          content: "Oceń zadanie",
+          content: AppLocales.of(context).translate("$_pageKey.caregiver.gradeTask"),
           color: Colors.red,
           icon: Icons.assignment
         )
@@ -65,9 +68,16 @@ extension NotificationTypeExtension on NotificationType {
     ],
     NotificationType.caregiver_finishedTaskGraded: [
       AttributeChip.withIcon(
-        content: "Oceniono",
+        content: AppLocales.of(context).translate("$_pageKey.caregiver.graded"),
         color: Colors.grey[750],
         icon: Icons.check
+      )
+    ],
+    NotificationType.child_taskGraded: [
+      AttributeChip.withIcon(
+          content: currencyValue.toString(),
+          color: AppColors.currencyColor[currencyType],
+          icon: Icons.add
       )
     ]
   }[this];
@@ -76,16 +86,25 @@ extension NotificationTypeExtension on NotificationType {
 class NotificationCard extends ItemCard {
 
   final String childName;
+  final bool isGirl;
   final NotificationType notificationType;
   final DateTime dateTime;
   final CurrencyType currencyType;
   final int currencyValue;
 
-  static String makeTitle(String name, NotificationType type) => name + type.title;
+  bool getGender() {
+    if (isGirl == null && graphicType == GraphicAssetType.childAvatars && graphic != null) {
+      return graphic / 20 == 1;
+    }
+    return isGirl;
+  }
+  String getTitle(BuildContext context) => title ?? notificationType.title(context, childName, getGender());
+  List<Widget> getChips(BuildContext context) => chips ?? notificationType.chips(context, currencyType, currencyValue);
 
   //TODO check what should be required
   NotificationCard({
     this.childName = "",
+    this.isGirl,
     this.notificationType,
     this.dateTime,
     this.currencyType,
@@ -96,22 +115,12 @@ class NotificationCard extends ItemCard {
     graphic,
     chips
   }) : super(
-    title: title ?? makeTitle(childName, notificationType),
+    title: title,
     subtitle: subtitle,
     graphicType: graphicType ?? notificationType.graphicType,
     graphic: graphic,
-    chips: chips ?? notificationType.chips ?? []
-  ){
-    if(notificationType == NotificationType.child_taskGraded) {
-      this.chips.add(
-        AttributeChip.withIcon(
-          content: currencyValue.toString(),
-          color: AppColors.currencyColor[currencyType],
-          icon: Icons.add
-        )
-      );
-    }
-  }
+    chips: chips
+  );
 
   @override
   double get imageHeight => super.imageHeight * 0.7;
@@ -129,6 +138,7 @@ class NotificationCard extends ItemCard {
 
   @override
   Widget buildContentSection(BuildContext context){
+    List<Widget> chips = getChips(context);
     return Row(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -146,7 +156,7 @@ class NotificationCard extends ItemCard {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        title,
+                        getTitle(context),
                         style: Theme.of(context).textTheme.bodyText2,
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1

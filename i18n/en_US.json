@@ -22,6 +22,24 @@
 				"help": "I need help"
 			}
 		},
+		"notifications": {
+			"header": {
+				"title": "Notifications"
+			},
+			"content": {
+				"caregiver": {
+					"receivedAward": "received the award",
+					"finishedTask": "finished the task",
+					"unfinishedPlan": "didn't finish the plan",
+					"gradeTask": "Grade task",
+					"graded": "Graded"
+				},
+				"child": {
+					"taskGraded": "You received points for a task!",
+					"receivedBadge": "You received a badge!"
+				}
+			}
+		},
 		"caregiverSection": {
 			"panel": {
 				"header": {

@@ -22,6 +22,24 @@
 				"help": "Potrzebuję pomocy"
 			}
 		},
+		"notifications": {
+			"header": {
+				"title": "Powiadomienia"
+			},
+			"content": {
+				"caregiver": {
+					"receivedAward": "odebrał{ISGIRL, select, true {a} other {}} nagrodę",
+					"finishedTask": "wykonał{ISGIRL, select, true {a} other {}} zadanie",
+					"unfinishedPlan": "nie skończył{ISGIRL, select, true {a} other {}} planu",
+					"gradeTask": "Oceń zadanie",
+					"graded": "Oceniono"
+				},
+				"child": {
+					"taskGraded": "Dostał{ISGIRL, select, true {a} other {e}}ś punkty za zadanie!",
+					"receivedBadge": "Otrzymał{ISGIRL, select, true {a} other {e}}ś odznakę!"
+				}
+			}
+		},
 		"caregiverSection": {
 			"panel": {
 				"header": {

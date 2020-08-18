@@ -3,12 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/logic/plan_form/plan_form_cubit.dart';
 import 'package:fokus/model/db/date/date.dart';
 import 'package:fokus/model/db/date_span.dart';
+import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/ui/ui_button.dart';
 import 'package:fokus/widgets/buttons/bottom_sheet_bar_buttons.dart';
 import 'package:smart_select/smart_select.dart';
 import 'package:mongo_dart/mongo_dart.dart' as Mongo;
 
-import 'package:fokus/model/ui/plan/ui_plan_form.dart';
+import 'package:fokus/model/ui/form/plan_form_model.dart';
 import 'package:fokus/model/ui/user/ui_child.dart';
 
 import 'package:fokus/services/app_locales.dart';
@@ -19,7 +20,7 @@ import 'package:fokus/widgets/forms/datepicker_field.dart';
 import 'package:fokus/widgets/cards/item_card.dart';
 
 class PlanForm extends StatefulWidget {
-	final UIPlanForm plan;
+	final PlanFormModel plan;
 	final Function goNextCallback;
 
 	PlanForm({
@@ -37,10 +38,10 @@ class _PlanFormState extends State<PlanForm> {
 	double bottomBarHeight = 60.0;
 	bool fieldsValidated = false;
 
-	TextEditingController _planNameContoller = TextEditingController();
-	TextEditingController _dateOneDayOnlyContoller = TextEditingController();
-	TextEditingController _dateRageFromContoller = TextEditingController();
-	TextEditingController _dateRageToContoller = TextEditingController();
+	TextEditingController _planNameController = TextEditingController();
+	TextEditingController _dateOneDayOnlyController = TextEditingController();
+	TextEditingController _dateRageFromController = TextEditingController();
+	TextEditingController _dateRageToController = TextEditingController();
 
 	String getOnlyDatePart(DateTime date) => date != null ? date.toLocal().toString().split(' ')[0] : '';
 
@@ -53,10 +54,10 @@ class _PlanFormState extends State<PlanForm> {
 	
   @override
 	void initState() {
-		_planNameContoller.text = widget.plan.name ?? '';
-		_dateOneDayOnlyContoller.text = widget.plan.onlyOnceDate != null ? getOnlyDatePart(widget.plan.onlyOnceDate) : '';
-		_dateRageFromContoller.text = widget.plan.rangeDate.from != null ? getOnlyDatePart(widget.plan.rangeDate.from) : '';
-		_dateRageToContoller.text = widget.plan.rangeDate.to != null ? getOnlyDatePart(widget.plan.rangeDate.to) : '';
+		_planNameController.text = widget.plan.name ?? '';
+		_dateOneDayOnlyController.text = widget.plan.onlyOnceDate != null ? getOnlyDatePart(widget.plan.onlyOnceDate) : '';
+		_dateRageFromController.text = widget.plan.rangeDate.from != null ? getOnlyDatePart(widget.plan.rangeDate.from) : '';
+		_dateRageToController.text = widget.plan.rangeDate.to != null ? getOnlyDatePart(widget.plan.rangeDate.to) : '';
     super.initState();
   }
 
@@ -94,7 +95,7 @@ class _PlanFormState extends State<PlanForm> {
 		return Padding(
 			padding: EdgeInsets.only(top: 25.0, bottom: 10.0, left: 20.0, right: 20.0),
 			child: TextFormField(
-				controller: _planNameContoller,
+				controller: _planNameController,
 				decoration: InputDecoration(
 					icon: Padding(padding: EdgeInsets.all(5.0), child: Icon(Icons.description)),
 					contentPadding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
@@ -116,7 +117,7 @@ class _PlanFormState extends State<PlanForm> {
 		  builder: (context, state) {
 		  	if (state is PlanFormDataLoadSuccess)
 		  		return getChildrenAssignedField(state.children);
-		  	return getChildrenAssignedField([], loading: true);
+		  	return getChildrenAssignedField([], loading: state.formType == AppFormType.create);
 			}
 		);
 	}
@@ -285,7 +286,7 @@ class _PlanFormState extends State<PlanForm> {
 			child: DatePickerField(
 				labelText: AppLocales.of(context).translate('$_pageKey.onlyOneDate.label'),
 				errorText: AppLocales.of(context).translate('$_pageKey.onlyOneDate.emptyError'),
-				dateController: _dateOneDayOnlyContoller, 
+				dateController: _dateOneDayOnlyController,
 				dateSetter: widget.plan.setOnlyOnceDate, 
 				callback: setDateCallback,
 				canBeEmpty: false
@@ -314,7 +315,7 @@ class _PlanFormState extends State<PlanForm> {
 						icon: Icons.event_note,
 						labelText: AppLocales.of(context).translate('$_pageKey.range.fromLabel'),
 						rangeDate: DateSpan<Date>(to: widget.plan.rangeDate.to),
-						dateController: _dateRageFromContoller, 
+						dateController: _dateRageFromController,
 						dateSetter: widget.plan.setRangeFromDate, 
 						callback: setDateCallback
 					)
@@ -326,7 +327,7 @@ class _PlanFormState extends State<PlanForm> {
 						labelText: AppLocales.of(context).translate('$_pageKey.range.toLabel'),
 						helperText: AppLocales.of(context).translate('$_pageKey.range.hint'),
 						rangeDate: DateSpan<Date>(from: widget.plan.rangeDate.from),
-						dateController: _dateRageToContoller, 
+						dateController: _dateRageToController,
 						dateSetter: widget.plan.setRangeToDate,
 						callback: setDateCallback
 					)

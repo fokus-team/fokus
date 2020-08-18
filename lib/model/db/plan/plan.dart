@@ -1,7 +1,7 @@
 import 'package:fokus/model/db/date/date.dart';
 import 'package:fokus/model/db/date/time_date.dart';
 import 'package:fokus/model/db/plan/plan_repeatability.dart';
-import 'package:fokus/model/ui/plan/ui_plan_form.dart';
+import 'package:fokus/model/ui/form/plan_form_model.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
 class Plan {
@@ -18,7 +18,7 @@ class Plan {
   List<ObjectId> instances;
   List<ObjectId> assignedTo;
 
-  Plan.fromPlanForm(UIPlanForm plan, ObjectId creator, PlanRepeatability repeatability) : this._(name: plan.name,
+  Plan.fromPlanForm(PlanFormModel plan, ObjectId creator, PlanRepeatability repeatability, [ObjectId id]) : this._(name: plan.name, id: id ?? ObjectId(),
 		  active: plan.isActive, assignedTo: plan.children, createdAt: TimeDate.now(), createdBy: creator, repeatability: repeatability);
 
   Plan._({this.active, this.assignedTo, this.changedInstances, this.createdAt,

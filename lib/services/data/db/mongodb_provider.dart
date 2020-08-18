@@ -26,6 +26,14 @@ class MongoDbProvider {
 		return _execute(() => _client.collection(collection.name).update(selector, document, multiUpdate: true));
 	}
 
+	Future replace(Collection collection, SelectorBuilder selector, Map<String, dynamic> document) {
+		return _execute(() => _client.collection(collection.name).update(selector, document));
+	}
+
+	Future replaceAll(Collection collection, List<SelectorBuilder> selectors, List<Map<String, dynamic>> documents) {
+		return _execute(() => _client.collection(collection.name).updateAll(selectors, documents, upsert: true));
+	}
+
 	Future<ObjectId> insert(Collection collection, Map<String, dynamic> document) => _execute(() {
 		document['_id'] ??= ObjectId();
 		return _client.collection(collection.name).insert(document).then((_) => document['_id']);

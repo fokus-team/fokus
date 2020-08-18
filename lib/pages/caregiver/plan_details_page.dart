@@ -1,9 +1,10 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
+import 'package:mongo_dart/mongo_dart.dart' as Mongo;
+
 import 'package:fokus/model/currency_type.dart';
+import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/ui/ui_currency.dart';
-import 'package:fokus/model/ui/plan/ui_task.dart';
+import 'package:fokus/model/ui/form/task_form_model.dart';
 import 'package:fokus/model/ui/ui_button.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/dialog_utils.dart';
@@ -49,7 +50,7 @@ class _CaregiverPlanDetailsPageState extends State<CaregiverPlanDetailsPage> {
 						popupMenuWidget: PopupMenuList(
 							lightTheme: true,
 							items: [
-								UIButton.ofType(ButtonType.edit, () => log("Tapped edit")),
+								UIButton.ofType(ButtonType.edit, () => Navigator.of(context).pushNamed(AppPage.caregiverPlanForm.name, arguments: Mongo.ObjectId.parse('5f3ad3cf4ea005fba95da86b'))),
 								UIButton.ofType(ButtonType.delete, () => showBasicDialog(
 									context,
 									GeneralDialog.confirm(
@@ -90,7 +91,7 @@ class _CaregiverPlanDetailsPageState extends State<CaregiverPlanDetailsPage> {
 					padding: EdgeInsets.symmetric(horizontal: AppBoxProperties.screenEdgePadding),
 					child: TaskCard(
 						index: 0,
-						task: UITask(
+						task: TaskFormModel(
 							key: ValueKey(DateTime.now()),
 							title: "Opróżnij plecak",
 							timer: 568,
@@ -103,7 +104,7 @@ class _CaregiverPlanDetailsPageState extends State<CaregiverPlanDetailsPage> {
 					padding: EdgeInsets.symmetric(horizontal: AppBoxProperties.screenEdgePadding),
 					child: TaskCard(
 						index: 1,
-						task: UITask(
+						task: TaskFormModel(
 							key: ValueKey(DateTime.now()),
 							title: "Przygotuj książki i zeszyty na kolejny dzień według bardzo długiego planu zajęć",
 							timer: 60,
@@ -116,7 +117,7 @@ class _CaregiverPlanDetailsPageState extends State<CaregiverPlanDetailsPage> {
 					padding: EdgeInsets.symmetric(horizontal: AppBoxProperties.screenEdgePadding),
 					child: TaskCard(
 						index: 2,
-						task: UITask(
+						task: TaskFormModel(
 							key: ValueKey(DateTime.now()),
 							title: "Spakuj potrzebne rzeczy"
 						)
@@ -126,7 +127,7 @@ class _CaregiverPlanDetailsPageState extends State<CaregiverPlanDetailsPage> {
 					padding: EdgeInsets.symmetric(horizontal: AppBoxProperties.screenEdgePadding),
 					child: TaskCard(
 						index: 3,
-						task: UITask(
+						task: TaskFormModel(
 							key: ValueKey(DateTime.now()),
 							title: "Spakuj potrzebne rzeczy part 2",
 							timer: 20
@@ -145,7 +146,7 @@ class _CaregiverPlanDetailsPageState extends State<CaregiverPlanDetailsPage> {
 				Padding(
 					padding: EdgeInsets.symmetric(horizontal: AppBoxProperties.screenEdgePadding),
 					child: TaskCard(
-						task: UITask(
+						task: TaskFormModel(
 							key: ValueKey(DateTime.now()),
 							title: "Opcjonalne zadanko",
 							timer: 20,

@@ -8,4 +8,5 @@ abstract class TaskRepository {
 	Future<int> getCompletedTaskCount(ObjectId planInstanceId);
 
 	Future createTasks(List<Task> tasks);
+	Future updateTasks(List<Task> tasks);
 }

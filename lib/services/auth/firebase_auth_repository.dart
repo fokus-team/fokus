@@ -67,6 +67,8 @@ class FirebaseAuthRepository implements AuthenticationRepository {
 	Future<void> signInWithGoogle() async {
 		try {
 			final googleUser = await _googleSignIn.signIn();
+			if (googleUser == null)
+				return;
 			final googleAuth = await googleUser.authentication;
 			final credential = GoogleAuthProvider.getCredential(
 				accessToken: googleAuth.accessToken,

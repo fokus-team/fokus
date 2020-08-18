@@ -4,11 +4,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_picker/flutter_picker.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fokus/logic/plan_form/plan_form_cubit.dart';
+import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/widgets/forms/pointpicker_field.dart';
 import 'package:smart_select/smart_select.dart';
 
 import 'package:fokus/model/currency_type.dart';
-import 'package:fokus/model/ui/plan/ui_task.dart';
+import 'package:fokus/model/ui/form/task_form_model.dart';
 import 'package:fokus/model/ui/ui_currency.dart';
 
 import 'package:fokus/services/app_locales.dart';
@@ -21,7 +22,7 @@ import 'package:fokus/widgets/buttons/help_icon_button.dart';
 import 'package:fokus/widgets/buttons/back_icon_button.dart';
 
 class TaskForm extends StatefulWidget {
-	final UITask task;
+	final TaskFormModel task;
 	final Function createTaskCallback;
 	final Function removeTaskCallback;
 	final Function saveTaskCallback;
@@ -44,7 +45,7 @@ class _TaskFormState extends State<TaskForm> {
 
 	GlobalKey<FormState> taskFormKey;
 	bool isDataChanged = false;
-	UITask task;
+	TaskFormModel task;
 
 	TextEditingController _titleController = TextEditingController();
 	TextEditingController _descriptionController = TextEditingController();
@@ -55,7 +56,7 @@ class _TaskFormState extends State<TaskForm> {
 	@override
   void initState() {
 		taskFormKey = GlobalKey<FormState>();
-		task = UITask(
+		task = TaskFormModel(
 			key: ValueKey(DateTime.now().toString()),
 			pointCurrency: UICurrency(type: CurrencyType.diamond)
 		);
@@ -313,7 +314,7 @@ class _TaskFormState extends State<TaskForm> {
 			builder: (context, state) {
 				if (state is PlanFormDataLoadSuccess)
 					return getPointsFields(state.currencies);
-				return getPointsFields([UICurrency(type: CurrencyType.diamond)], loading: true);
+				return getPointsFields([UICurrency(type: CurrencyType.diamond)], loading: state.formType == AppFormType.create);
 			}
 		);
 	}

@@ -4,8 +4,8 @@ import 'package:fokus/logic/plan_form/plan_form_cubit.dart';
 import 'package:fokus/widgets/cards/task_card.dart';
 import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorderable_list.dart';
 
-import 'package:fokus/model/ui/plan/ui_task.dart';
-import 'package:fokus/model/ui/plan/ui_plan_form.dart';
+import 'package:fokus/model/ui/form/task_form_model.dart';
+import 'package:fokus/model/ui/form/plan_form_model.dart';
 
 import 'package:fokus/utils/dialog_utils.dart';
 import 'package:fokus/utils/theme_config.dart';
@@ -15,7 +15,7 @@ import 'package:fokus/widgets/dialogs/general_dialog.dart';
 import 'package:fokus/widgets/forms/task_form.dart';
 
 class TaskList extends StatefulWidget {
-	final UIPlanForm plan;
+	final PlanFormModel plan;
 	final Function goBackCallback;
 	final Function submitCallback;
 	final bool isCreateMode;
@@ -48,30 +48,25 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-		return BlocBuilder<PlanFormCubit, PlanFormState>(
-			builder: (context, state) {
-				List<Widget> children = [
-					Positioned.fill(
-						bottom: bottomBarHeight,
-						child: ListView(
-							physics: inReorder ? NeverScrollableScrollPhysics() : BouncingScrollPhysics(),
-							children: [
-								buildReordableTaskList(context),
-								buildOptionalTaskList(context),
-								buildNoTasksAddedMessage(context),
-								SizedBox(height: 32.0)
-							]
-						)
-					),
-					Positioned.fill(
-						top: null,
-						child: buildBottomNavigation(context)
+		return Stack(
+			children: [
+				Positioned.fill(
+					bottom: bottomBarHeight,
+					child: ListView(
+						physics: inReorder ? NeverScrollableScrollPhysics() : BouncingScrollPhysics(),
+						children: [
+							buildReordableTaskList(context),
+							buildOptionalTaskList(context),
+							buildNoTasksAddedMessage(context),
+							SizedBox(height: 32.0)
+						]
 					)
-				];
-				if (state is PlanFormSubmissionInProgress)
-					children.add(Center(child: CircularProgressIndicator()));
-				return Stack(children: children);
-			}
+				),
+				Positioned.fill(
+					top: null,
+					child: buildBottomNavigation(context)
+				)
+			]
 		);
 	}
 
@@ -120,11 +115,11 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 		));
 	}
 
-	void editTask(UITask task) {
+	void editTask(TaskFormModel task) {
 		Navigator.of(context).push(MaterialPageRoute(
 			builder: (context) => provideCubitForRoute(TaskForm(
 				task: task,
-				saveTaskCallback: (UITask updatedTask) {
+				saveTaskCallback: (TaskFormModel updatedTask) {
 					Future.wait([
 						Future(() => setState(() {
 							task.copy(updatedTask);
@@ -144,7 +139,7 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 		));
 	}
 
-	void onReorderFinished(List<UITask> newItems) {
+	void onReorderFinished(List<TaskFormModel> newItems) {
     setState(() {
       inReorder = false;
 			widget.plan.tasks..retainWhere((task) => task.optional == true)..addAll(newItems);
@@ -154,7 +149,7 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 
 	Widget buildReordableTaskList(BuildContext context) {
 		final requiredTasks = widget.plan.tasks.where((element) => element.optional == false);
-		return ImplicitlyAnimatedReorderableList<UITask>(
+		return ImplicitlyAnimatedReorderableList<TaskFormModel>(
 			shrinkWrap: true,
 			physics: NeverScrollableScrollPhysics(),
 			items: requiredTasks.toList(),
@@ -215,7 +210,7 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 						buildTaskListHeader(context, AppLocales.of(context).translate('$_pageKey.optionalTaskListTitle'), optionalTasks.length)
 						: SizedBox.shrink()
 				),
-				ImplicitlyAnimatedList<UITask>(
+				ImplicitlyAnimatedList<TaskFormModel>(
 					shrinkWrap: true,
 					physics: NeverScrollableScrollPhysics(),
 					items: optionalTasks.toList(),
@@ -297,7 +292,7 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 		);
 	}
 
-	Widget buildTaskCard(BuildContext context, UITask task, bool optional) {
+	Widget buildTaskCard(BuildContext context, TaskFormModel task, bool optional) {
 		int index = (widget.plan.tasks..where((element) => element.optional == optional)).indexOf(task);
 		return TaskCard(task: task, index: index, onTap: editTask);
 	}

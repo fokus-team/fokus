@@ -229,7 +229,26 @@
 				"content": {
 					"toDoTasks": "Zadania do wykonania",
 					"additionalTasks": "Zadania dodatkowe",
-					"noTasks": "Brak zadań"
+					"noTasks": "Brak zadań",
+					"tasks": "{NUM_TASKS, plural, offset:0  zero {# zadań} one {# zadanie} two {# zadania} few {# zadania} other {# zadań}}",
+					"taskTimer": {
+						"label": "Czas na wykonanie zadania",
+						"notSet": "Nieograniczony",
+						"set": "Ustawiony na",
+						"duration": "Łączny czas wykonywania zadania",
+						"formatDuration": "Czas: {TIME_NUM}",
+						"formatBreak": "Przerwa: {TIME_NUM}",
+						"format": "{HOURS_NUM, plural, offset:0 zero {} other {# godz. }}{MINUTES_NUM} min",
+						"break": "Łączny czas przerw"
+					},
+					"chips" : {
+						"rating" : "{RATING}/5",
+						"rejected" : "Odrzucone",
+						"notEvaluated" : "Nieocenione",
+						"rejectedTooltip" : "Zadanie odrzucone przez opiekuna",
+						"notEvaluatedTooltip" : "Poproś opiekuna o ocenę",
+						"pointsPossible" : "Możliwe do zdobycia"
+					}
 				}
 			},
 			"awards": {

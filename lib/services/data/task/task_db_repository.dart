@@ -16,6 +16,13 @@ mixin TaskDbRepository implements DbRepository {
 		return dbClient.queryTyped(Collection.task, query, (json) => Task.fromJson(json));
 	}
 
+	Future<Task> getTask({ObjectId taskId, bool requiredOnly = false, bool optionalOnly = false, List<String> fields}) {
+		var query = _buildTaskQuery(taskId: taskId, optionalOnly: optionalOnly, requiredOnly: requiredOnly);
+		if (fields != null)
+			query.fields(fields);
+		return dbClient.queryOneTyped(Collection.task, query, (json) => Task.fromJson(json));
+	}
+
 	Future<List<TaskInstance>> getTaskInstances({ObjectId planInstanceId, bool requiredOnly = false, bool optionalOnly = false, List<String> fields}) {
 		var query = _buildTaskQuery(planInstanceId: planInstanceId, requiredOnly: requiredOnly, optionalOnly: optionalOnly);
 		if (fields != null)
@@ -27,7 +34,7 @@ mixin TaskDbRepository implements DbRepository {
 		return dbClient.count(Collection.taskInstance, where.eq('planInstanceID', planInstanceId).and(where.eq('status.completed', true)));
 	}
 
-	SelectorBuilder _buildTaskQuery({ObjectId planId, ObjectId planInstanceId, bool requiredOnly, bool optionalOnly}) {
+	SelectorBuilder _buildTaskQuery({ObjectId planId, ObjectId planInstanceId, ObjectId taskId, bool requiredOnly, bool optionalOnly}) {
 		SelectorBuilder query;
 		var addExpression = (expression) => query == null ? (query = expression) : query.and(expression);
 		if (planId != null && planInstanceId != null)
@@ -39,6 +46,8 @@ mixin TaskDbRepository implements DbRepository {
 			addExpression(where.eq('planID', planId));
 		if (planInstanceId != null)
 			addExpression(where.eq('planInstanceID', planInstanceId));
+		if(taskId != null)
+			addExpression(where.eq('_id', taskId));
 		if (requiredOnly)
 			addExpression(where.notExists('optional').or(where.eq('optional', false)));
 		if (optionalOnly)

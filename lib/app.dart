@@ -11,6 +11,7 @@ import 'package:fokus/logic/auth/child/sign_up/child_sign_up_cubit.dart';
 import 'package:fokus/logic/caregiver_panel/caregiver_panel_cubit.dart';
 import 'package:fokus/logic/caregiver_plans/caregiver_plans_cubit.dart';
 import 'package:fokus/logic/child_plans/child_plans_cubit.dart';
+import 'package:fokus/logic/child_tasks/child_tasks_cubit.dart';
 import 'package:fokus/pages/caregiver/auth/caregiver_sign_in_page.dart';
 import 'package:fokus/pages/caregiver/auth/caregiver_sign_up_page.dart';
 import 'package:fokus/pages/caregiver/awards_page.dart';
@@ -104,7 +105,7 @@ class FokusApp extends StatelessWidget {
 			AppPage.childAwards.name: (context) => _createPage(ChildAwardsPage(), context),
 			AppPage.childAchievements.name: (context) => _createPage(ChildAchievementsPage(), context),
 			AppPage.caregiverPlanDetails.name: (context) => _createPage(CaregiverPlanDetailsPage(), context),
-			AppPage.childPlanInProgress.name: (context) => _createPage(ChildPlanInProgressPage(), context)
+			AppPage.childPlanInProgress.name: (context) => _createPage(ChildPlanInProgressPage(), context, ChildTasksCubit())
 		};
 	}
 

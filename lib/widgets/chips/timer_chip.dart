@@ -7,8 +7,9 @@ import 'package:fokus/widgets/chips/attribute_chip.dart';
 
 class TimerChip extends StatelessWidget {
 	final Color color;
+	final IconData icon;
 
-	TimerChip({this.color});
+	TimerChip({this.color, this.icon = Icons.timer});
 
 	@override
 	Widget build(BuildContext context) {
@@ -16,7 +17,7 @@ class TimerChip extends StatelessWidget {
 			cubit: BlocProvider.of<TimerCubit>(context),
 			builder: (context, state) {
 				return AttributeChip.withIcon(
-					icon: Icons.timer,
+					icon: icon,
 					color: color,
 					content: formatDuration(Duration(seconds: state.value))
 				);

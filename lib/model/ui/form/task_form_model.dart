@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:fokus/model/currency_type.dart';
 import 'package:fokus/model/db/plan/task.dart';
@@ -5,7 +6,7 @@ import 'package:fokus/model/ui/ui_currency.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
 
-class TaskFormModel {
+class TaskFormModel extends Equatable {
 	ObjectId id;
 	Key key;
 	String title;
@@ -30,6 +31,12 @@ class TaskFormModel {
 			description: task.description, timer: task.timer ?? 0, optional: task.optional ?? false, pointsValue: task.points?.quantity,
 			pointCurrency: task.points != null ? UICurrency.fromDBModel(task.points) : UICurrency(type: CurrencyType.diamond));
 
+	TaskFormModel.from(TaskFormModel task) : this(id: task.id, key: task.key, title: task.title, description: task.description,
+			pointsValue: task.pointsValue, pointCurrency: UICurrency.from(task.pointCurrency), timer: task.timer, optional: task.optional);
+
+	@override
+	List<Object> get props => [id, title, description, pointsValue, pointCurrency, timer, optional];
+
 	void copy(TaskFormModel task) {
 		key = task.key;
 		title = task.title;
@@ -40,5 +47,4 @@ class TaskFormModel {
 		optional = task.optional;
 		id = task.id;
 	}
-
 }

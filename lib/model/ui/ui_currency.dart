@@ -10,6 +10,7 @@ class UICurrency extends Equatable {
 
   UICurrency({this.type, String title}) : title = type == CurrencyType.diamond ? 'points' : title;
 	UICurrency.fromDBModel(Currency currency) : this(type: currency.icon, title: currency.name);
+	UICurrency.from(UICurrency currency) : this(type: currency.type, title: currency.title);
 	
 	@override
 	List<Object> get props => [type, title];

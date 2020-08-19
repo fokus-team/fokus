@@ -1,3 +1,5 @@
+import 'package:equatable/equatable.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:fokus/model/db/date/date.dart';
 import 'package:fokus/model/db/date_span.dart';
 import 'package:fokus/model/db/plan/plan.dart';
@@ -16,7 +18,7 @@ extension PlanFormRepeatabilityRageDbType on PlanFormRepeatabilityRage {
 	}[this];
 }
 
-class PlanFormModel {
+class PlanFormModel extends Equatable {
 	String name;
 	List<Mongo.ObjectId> children = List<Mongo.ObjectId>();
 	PlanFormRepeatability repeatability = PlanFormRepeatability.recurring;
@@ -25,6 +27,7 @@ class PlanFormModel {
 	Date onlyOnceDate = Date.now();
 	DateSpan<Date> rangeDate = DateSpan();
 	bool isActive = true;
+	List<TaskFormModel> tasks = List<TaskFormModel>();
 
 	PlanFormModel();
 
@@ -33,23 +36,14 @@ class PlanFormModel {
 			repeatabilityRage = plan.repeatability.type == RepeatabilityType.monthly ? PlanFormRepeatabilityRage.monthly : PlanFormRepeatabilityRage.weekly,
 			onlyOnceDate = plan.repeatability.range.from ?? Date.now(), rangeDate = plan.repeatability.range, isActive = plan.active;
 
-	List<TaskFormModel> tasks = List<TaskFormModel>();
+	PlanFormModel.from(PlanFormModel model) : name = model.name, children = List.from(model.children), days = List.from(model.days),
+			repeatability = model.repeatability, repeatabilityRage = model.repeatabilityRage, onlyOnceDate = Date.fromDate(model.onlyOnceDate),
+			rangeDate = DateSpan.from(model.rangeDate), isActive = model.isActive, tasks = List.from(model.tasks.map((task) => TaskFormModel.from(task)));
 
 	void setOnlyOnceDate(DateTime date) { onlyOnceDate = date != null ? Date.fromDate(date) : null; }
 	void setRangeFromDate(DateTime date) { rangeDate.from = date != null ? Date.fromDate(date) : null; }
-	void setRangeToDate(DateTime date) { rangeDate.to = date != null ? Date.fromDate(date) : null; } 
+	void setRangeToDate(DateTime date) { rangeDate.to = date != null ? Date.fromDate(date) : null; }
 
-	bool isDataChanged() {
-		return name != null ||
-		children.isNotEmpty ||
-		repeatability != PlanFormRepeatability.recurring ||
-		repeatabilityRage != PlanFormRepeatabilityRage.weekly ||
-		days.isNotEmpty ||
-		onlyOnceDate != Date.now() ||
-		rangeDate.from != null ||
-		rangeDate.to != null ||
-		!isActive ||
-		tasks.isNotEmpty;
-	}
-
+	@override
+	List<Object> get props => [name, children, repeatability, repeatabilityRage, days, onlyOnceDate, rangeDate, isActive, tasks];
 }

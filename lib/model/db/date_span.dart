@@ -9,6 +9,13 @@ class DateSpan<D extends DateBase> {
 
   DateSpan({this.from, this.to});
 
+  DateSpan.from(DateSpan<D> span) : this(
+	  from: span.from != null ? copy(span.from) : null,
+		to: span.to != null ? copy(span.to) : null
+  );
+
+  static D copy<D extends DateBase>(D date) => D == Date ? Date.fromDate(date) : TimeDate.fromDate(date);
+
   static DateSpan<D> fromJson<D extends DateBase>(Map<String, dynamic> json) {
   	var parseDate = (DateTime date) => D == Date ? Date.parseDBDate(date) : TimeDate.parseDBDate(date);
     return json != null ? DateSpan<D>(
@@ -25,6 +32,12 @@ class DateSpan<D extends DateBase> {
 	    data['to'] = this.to.toDBDate();
     return data;
   }
+
+  @override
+  bool operator ==(Object other) => identical(this, other) || other is DateSpan && runtimeType == other.runtimeType && from == other.from && to == other.to;
+
+  @override
+  int get hashCode => from.hashCode ^ to.hashCode;
 }
 
 enum SpanDateType {

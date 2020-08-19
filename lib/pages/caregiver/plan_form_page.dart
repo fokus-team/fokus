@@ -57,7 +57,7 @@ class _CaregiverPlanFormPageState extends State<CaregiverPlanFormPage> {
 				if (state is PlanFormSubmissionSuccess)
 					Navigator.of(context).pop(); // TODO also show some visual feedback?
 				else if (state is PlanFormDataLoadSuccess)
-					setState(() => plan = state.planForm);
+					setState(() => plan = PlanFormModel.from(state.planForm));
 			},
 	    builder: (context, state) {
 				List<Widget> children = [Scaffold(
@@ -81,7 +81,7 @@ class _CaregiverPlanFormPageState extends State<CaregiverPlanFormPage> {
 				else if (state is PlanFormSubmissionInProgress)
 					children.add(Center(child: CircularProgressIndicator()));
 		    return WillPopScope(
-					onWillPop: () => showExitFormDialog(context, true, state is PlanFormDataLoadSuccess && plan.isDataChanged()),
+					onWillPop: () => showExitFormDialog(context, true, state is PlanFormDataLoadSuccess && plan != state.planForm),
 					child: Stack(
 					  children: children
 					)

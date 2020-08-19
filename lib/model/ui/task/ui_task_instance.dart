@@ -5,7 +5,7 @@ import 'package:fokus/model/db/plan/task_instance.dart';
 import 'package:fokus/model/db/plan/task_status.dart';
 import 'package:fokus/model/ui/plan/ui_plan_currency.dart';
 import 'package:fokus/model/ui/task/ui_task_base.dart';
-import 'package:fokus/utils/task_status_checker.dart';
+import 'package:fokus/services/task_instances_service.dart';
 
 class UITaskInstance extends UITaskBase {
 	final int timer;
@@ -19,7 +19,7 @@ class UITaskInstance extends UITaskBase {
 	final TaskStatus status;
 
   UITaskInstance(ObjectId id, String name, bool optional, String description, this.timer, this.duration, this.breaks, this.planInstanceId, this.currency, this.points, this.taskId, this.taskUiType, this.status) : super(id, name, optional, description);
-	UITaskInstance.singleFromDBModel(TaskInstance task, String name, String description, UIPlanCurrency currency, int points) : this(task.id, name, task.optional, description, task.timer, task.duration, task.breaks, task.planInstanceID, currency, points, task.taskID, getSingleTaskInstanceStatus(task: task), task.status);
+	UITaskInstance.singleFromDBModel(TaskInstance task, String name, String description, UIPlanCurrency currency, int points) : this(task.id, name, task.optional, description, task.timer, task.duration, task.breaks, task.planInstanceID, currency, points, task.taskID, TaskInstancesService().getSingleTaskInstanceStatus(task: task), task.status);
 	UITaskInstance.listFromDBModel(TaskInstance task, String name, String description, UIPlanCurrency currency, int points, TaskUIType type) : this(task.id, name, task.optional, description, task.timer, task.duration, task.breaks, task.planInstanceID, currency, points, task.taskID, type, task.status);
 
 

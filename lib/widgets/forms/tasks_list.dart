@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:fokus/model/ui/task/ui_task_form.dart';
 import 'package:fokus/widgets/cards/task_card.dart';
 import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorderable_list.dart';
 
-import 'file:///D:/Fokus/fokus/lib/model/ui/task/ui_task_form.dart';
 import 'package:fokus/model/ui/plan/ui_plan_form.dart';
 
 import 'package:fokus/utils/dialog_utils.dart';
@@ -106,11 +106,11 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 		));
 	}
 
-	void editTask(UITask task) {
+	void editTask(UITaskForm task) {
 		Navigator.of(context).push(MaterialPageRoute(
 			builder: (context) => TaskForm(
 				task: task,
-				saveTaskCallback: (UITask updatedTask) {
+				saveTaskCallback: (UITaskForm updatedTask) {
 					Future.wait([
 						Future(() => setState(() {
 							task.copy(updatedTask);
@@ -130,7 +130,7 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 		));
 	}
 
-	void onReorderFinished(List<UITask> newItems) {
+	void onReorderFinished(List<UITaskForm> newItems) {
     setState(() {
       inReorder = false;
 			widget.plan.tasks..retainWhere((task) => task.optional == true)..addAll(newItems);
@@ -140,7 +140,7 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 
 	Widget buildReordableTaskList(BuildContext context) {
 		final requiredTasks = widget.plan.tasks.where((element) => element.optional == false);
-		return ImplicitlyAnimatedReorderableList<UITask>(
+		return ImplicitlyAnimatedReorderableList<UITaskForm>(
 			shrinkWrap: true,
 			physics: NeverScrollableScrollPhysics(),
 			items: requiredTasks.toList(),
@@ -201,7 +201,7 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 						buildTaskListHeader(context, AppLocales.of(context).translate('$_pageKey.optionalTaskListTitle'), optionalTasks.length)
 						: SizedBox.shrink()
 				),
-				ImplicitlyAnimatedList<UITask>(
+				ImplicitlyAnimatedList<UITaskForm>(
 					shrinkWrap: true,
 					physics: NeverScrollableScrollPhysics(),
 					items: optionalTasks.toList(),
@@ -283,7 +283,7 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 		);
 	}
 
-	Widget buildTaskCard(BuildContext context, UITask task, bool optional) {
+	Widget buildTaskCard(BuildContext context, UITaskForm task, bool optional) {
 		int index = (widget.plan.tasks..where((element) => element.optional == optional)).indexOf(task);
 		return TaskCard(task: task, index: index, onTap: editTask);
 	}

@@ -9,9 +9,8 @@ import 'package:fokus/model/db/plan/task_status.dart';
 import 'package:fokus/model/ui/plan/ui_plan_instance.dart';
 import 'package:fokus/model/ui/task/ui_task_instance.dart';
 import 'package:fokus/services/app_locales.dart';
+import 'package:fokus/services/task_instances_service.dart';
 import 'package:fokus/utils/duration_utils.dart';
-import 'package:fokus/utils/task_status_checker.dart';
-import 'package:fokus/utils/task_time_analyzer.dart';
 import 'package:fokus/utils/theme_config.dart';
 import 'package:fokus/widgets/app_header.dart';
 import 'package:fokus/widgets/chips/attribute_chip.dart';
@@ -26,9 +25,11 @@ class ChildPlanInProgressPage extends StatefulWidget {
 
 class _ChildPlanInProgressPageState extends State<ChildPlanInProgressPage> {
 	final String _pageKey = 'page.childSection.planInProgress';
+	final TaskInstancesService taskInstancesService = TaskInstancesService();
 
   @override
   Widget build(BuildContext context) {
+  	//TODO: move_planInstance as Cubit argument in app.data
 		final UIPlanInstance _planInstance = ModalRoute.of(context).settings.arguments;
 		var taskDescriptionKey = 'page.childSection.panel.content.' + (_planInstance.completedTaskCount > 0 ? 'taskProgress' : 'noTaskCompleted');
 		return Scaffold(
@@ -87,15 +88,27 @@ class _ChildPlanInProgressPageState extends State<ChildPlanInProgressPage> {
 							],
 							actionButton:	ItemCardActionButton(color: Colors.teal, icon: Icons.play_arrow, onTapped: () => log("tapped start task")),
 						)
+					else if(task.taskUiType == TaskUIType.stopped)
+							ItemCard(
+								title: task.name,
+								subtitle: task.description,
+								chips:<Widget>[
+									getDurationChip(task),
+									getBreaksChip(task),
+									if (task.timer > 0) getTimeChip(task),
+									if (task.points != 0) getCurrencyChip(task)
+								],
+								actionButton:	ItemCardActionButton(color: Colors.teal, icon: Icons.play_arrow, onTapped: () => log("tapped start task")),
+							)
 					else if(task.taskUiType == TaskUIType.inProgress)
 						BlocProvider<TimerCubit>(
-							create: (_) => TimerCubit(() => checkInProgressType(task.duration, task.breaks) == TaskInProgressType.inProgress ? getTaskTimeInSeconds(task.duration) : getTaskTimeInSeconds(task.breaks))..startTimer(),
+							create: (_) => TimerCubit(() => taskInstancesService.checkInProgressType(task.duration, task.breaks) == TaskInProgressType.inProgress ? sumDurations(task.duration).inSeconds : sumDurations(task.breaks).inSeconds)..startTimer(),
 							child:	ItemCard(
 								title: task.name,
 								subtitle: task.description,
 								chips:
 								<Widget>[
-									if(checkInProgressType(task.duration, task.breaks) == TaskInProgressType.inProgress)
+									if(taskInstancesService.checkInProgressType(task.duration, task.breaks) == TaskInProgressType.inProgress)
 										...[
 											TimerChip(
 												icon: Icons.access_time,
@@ -217,7 +230,7 @@ class _ChildPlanInProgressPageState extends State<ChildPlanInProgressPage> {
 	AttributeChip getBreaksChip(UITaskInstance task) {
 		return AttributeChip.withIcon(
 			content: AppLocales.of(context).translate('$_pageKey.content.taskTimer.formatBreak', {
-				'TIME_NUM' : formatDuration(Duration(seconds: getTaskTimeInSeconds(task.breaks)))
+				'TIME_NUM' : formatDuration(Duration(seconds: sumDurations(task.breaks).inSeconds))
 			}),
 			icon: Icons.free_breakfast,
 			color: Colors.indigo,
@@ -228,10 +241,10 @@ class _ChildPlanInProgressPageState extends State<ChildPlanInProgressPage> {
 	AttributeChip getDurationChip(UITaskInstance task) {
 		return AttributeChip.withIcon(
 			content: AppLocales.of(context).translate('$_pageKey.content.taskTimer.formatDuration', {
-				'TIME_NUM': formatDuration(Duration(seconds: getTaskTimeInSeconds(task.duration)))
+				'TIME_NUM': formatDuration(Duration(seconds: sumDurations(task.duration).inSeconds))
 			}),
 			icon: Icons.access_time,
-			color: Colors.lightGreen,
+			color: task.timer > sumDurations(task.duration).inMinutes ? Colors.lightGreen : Colors.deepOrange,
 			tooltip: '$_pageKey.content.taskTimer.duration',
 		);
 	}

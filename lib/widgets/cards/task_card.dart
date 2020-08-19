@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'file:///D:/Fokus/fokus/lib/model/ui/task/ui_task_form.dart';
+import 'package:fokus/model/ui/task/ui_task_form.dart';
 import 'package:fokus/services/app_locales.dart';
 import '../chips/attribute_chip.dart';
 
 class TaskCard extends StatelessWidget {
-	final UITask task;
+	final UITaskForm task;
 	final int index;
 	final Function onTap;
 

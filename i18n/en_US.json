@@ -64,16 +64,6 @@
 					"tasks": "{NUM_TASKS, plural, offset:0  =1 {# task} other {# tasks}}"
 				}
 			},
-			"planInProgress": {
-				"header": {
-					"title": "In progress"
-				},
-				"content": {
-					"toDoTasks": "To-do list",
-					"additionalTasks": "Additional tasks",
-					"noTasks": "No tasks to display"
-				}
-			},
 			"planForm": {
 				"createPlanTitle": "Creating new plan",
 				"editPlanTitle": "Editing existing plan",
@@ -200,6 +190,16 @@
 					"basicStatisticsTitle": "Basic statistics",
 					"basicStatisticsSubtitle": "This screen is not available in this version of the application"
 				}
+			},
+			"planDetails": {
+				"header": {
+					"title": "Plan details"
+				},
+				"content": {
+					"mandatoryTasks": "Mandatory tasks",
+					"additionalTasks": "Additional tasks",
+					"noTasks": "No tasks"
+				}
 			}
 		},
 		"childSection": {
@@ -222,27 +222,15 @@
 					"taskProgress": "{NUM_TASKS} out of {NUM_ALL_TASKS} tasks completed"
 				}
 			},
-			"awards": {
-				"content": {
-					"awardsTitle": "Available awards",
-					"noAwardsMessage": "No available awards to display"
-				}
-			},
-			"achievements": {
-				"content": {
-					"achievementsTitle": "Achievements",
-					"noAchievementsMessage": "No achievements to display"
-				}
-			},
-			"planDetails": {
+			"planInProgress": {
 				"header": {
-					"title": "Plan details"
+					"title": "In progress"
 				},
 				"content": {
-					"mandatoryTasks": "Mandatory tasks",
+					"toDoTasks": "To-do list",
 					"additionalTasks": "Additional tasks",
-					"tasks": "{NUM_TASKS, plural, offset:0  one {# task} other {# tasks}}",
 					"noTasks": "No tasks",
+					"tasks": "{NUM_TASKS, plural, offset:0  one {# task} other {# tasks}}",
 					"taskTimer": {
 						"label": "Time to complete the task",
 						"notSet": "Unlimited",
@@ -261,6 +249,18 @@
 						"notEvaluatedTooltip" : "Ask caregiver to rate task",
 						"pointsPossible" : "Max points to earn"
 					}
+				}
+			},
+			"awards": {
+				"content": {
+					"awardsTitle": "Available awards",
+					"noAwardsMessage": "No available awards to display"
+				}
+			},
+			"achievements": {
+				"content": {
+					"achievementsTitle": "Achievements",
+					"noAchievementsMessage": "No achievements to display"
 				}
 			}
 		}

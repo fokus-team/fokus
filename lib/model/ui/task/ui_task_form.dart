@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fokus/model/ui/plan/ui_plan_currency.dart';
 
-class UITask {
+class UITaskForm {
 	Key key;
 	String name;
 	String description;
@@ -10,7 +10,7 @@ class UITask {
 	int timer;
 	bool optional;
 
-	UITask({
+	UITaskForm({
 		@required this.key, 
 		this.name,
 		this.description,
@@ -20,7 +20,7 @@ class UITask {
 		this.optional = false
 	});
 
-	void copy(UITask task) {
+	void copy(UITaskForm task) {
 		key = task.key;
 		name = task.name;
 		description = task.description;

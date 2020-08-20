@@ -1,6 +1,7 @@
 import 'package:fokus/model/db/date/date.dart';
 import 'package:fokus/model/db/date/time_date.dart';
 import 'package:fokus/model/db/plan/plan_repeatability.dart';
+import 'package:fokus/model/ui/form/plan_form_model.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
 class Plan {
@@ -17,11 +18,14 @@ class Plan {
   List<ObjectId> instances;
   List<ObjectId> assignedTo;
 
-  Plan({this.active, this.assignedTo, this.changedInstances, this.createdAt,
+  Plan.fromPlanForm(PlanFormModel plan, ObjectId creator, PlanRepeatability repeatability, [ObjectId id]) : this._(name: plan.name, id: id ?? ObjectId(),
+		  active: plan.isActive, assignedTo: plan.children, createdAt: TimeDate.now(), createdBy: creator, repeatability: repeatability);
+
+  Plan._({this.active, this.assignedTo, this.changedInstances, this.createdAt,
 	  this.createdBy, this.id, this.instances, this.name, this.repeatability, this.tasks});
 
   factory Plan.fromJson(Map<String, dynamic> json) {
-    return json != null ? Plan(
+    return json != null ? Plan._(
       active: json['active'],
       assignedTo: json['assignedTo'] != null ? new List<ObjectId>.from(json['assignedTo']) : [],
       changedInstances: json['changedInstances'] != null ? (json['changedInstances'] as List).map((date) => Date.parseDBDate(date)) : [],
@@ -37,24 +41,26 @@ class Plan {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['active'] = this.active;
-    data['createdAt'] = this.createdAt.toDBDate();
-    data['createdBy'] = this.createdBy;
-    data['_id'] = this.id;
-    data['name'] = this.name;
-    data['repeatability'] = this.repeatability.toJson();
-    if (this.assignedTo != null) {
+    if (active != null)
+      data['active'] = this.active;
+    if (createdAt != null)
+      data['createdAt'] = this.createdAt.toDBDate();
+    if (createdBy != null)
+      data['createdBy'] = this.createdBy;
+    if (id != null)
+      data['_id'] = this.id;
+    if (name != null)
+      data['name'] = this.name;
+    if (repeatability != null)
+      data['repeatability'] = this.repeatability.toJson();
+    if (this.assignedTo != null)
       data['assignedTo'] = this.assignedTo;
-    }
-    if (this.changedInstances != null) {
+    if (this.changedInstances != null)
       data['changedInstances'] = this.changedInstances.map((e) => e.toDBDate()).toList();
-    }
-    if (this.instances != null) {
+    if (this.instances != null)
       data['instances'] = this.instances;
-    }
-    if (this.tasks != null) {
+    if (this.tasks != null)
       data['tasks'] = this.tasks;
-    }
     return data;
   }
 }

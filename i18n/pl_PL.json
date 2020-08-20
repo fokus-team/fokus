@@ -145,7 +145,7 @@
 					},
 					"taskPoints": {
 						"valueLabel": "Nagroda punktowa",
-						"currencyLabel": "Waluta punktów",
+						"currencyLabel": "Waluta",
 						"hint": "Pozostaw puste, aby nie przyznawać punktów"
 					},
 					"taskTimer": {
@@ -256,7 +256,8 @@
 		"range": "od {FROM} do {TO}"
 	},
 	"date": {
-		"weekday": "{WEEKDAY, select, 1 {Poniedziałek} 2 {Wtorek} 3 {Środa} 4 {Czwartek} 5 {Piątek} 6 {Sobota} 7 {Niedziela} other {}}"
+		"weekday": "{WEEKDAY, select, 1 {Poniedziałek} 2 {Wtorek} 3 {Środa} 4 {Czwartek} 5 {Piątek} 6 {Sobota} 7 {Niedziela} other {}}",
+		"everyday": "Codziennie"
 	},
 	"alert": {
 		"noConnection": "Brak połączenia",
@@ -264,8 +265,8 @@
 		"connectionRetry": "Upewnij się że urządzenie ma dostęp do internetu",
 		"genericEmptyValue": "Pole nie może być puste",
 		"genericRangeOverflowValue": "Wartość musi mieścić się w zakresie {A}-{B}",
-		"unsavedProgressTitle": "Niezapisane dane",
-		"unsavedProgressMessage": "Posiadasz niezapisane dane. Czy jesteś pewien, że chcesz wyjść?",
+		"unsavedProgressTitle": "Niezapisane zmiany",
+		"unsavedProgressMessage": "Posiadasz niezapisane zmiany. Czy jesteś pewien, że chcesz wyjść?",
 		"deletePlan": "Usuwanie planu",
 		"confirmPlanDeletion": "Czy na pewno chcesz usunąć plan?"
 	},
@@ -304,6 +305,8 @@
 		"error": {
 			"incorrectData": "Nieprawidłowy e-mail lub hasło",
 			"emailAlreadyUsed": "Adres e-mail jest już zajęty",
+			"emailInvalid": "Adres e-mail jest nieprawidłowy",
+			"nameEmpty": "Imię nie może być puste",
 			"userDisabled": "Użytkownik został wyłączony",
 			"invalidEmail": "Nieprawidłowy adres e-mail",
 			"userCodeToShort": "Kod jest za krótki",
@@ -319,6 +322,7 @@
 		"task_creation": "Konfiguracja zadania",
 		"plan_info": "Plany"
 	},
+	"points": "Punkty",
 	"and": "i",
 	"hour": "godz.",
 	"minute": "min"

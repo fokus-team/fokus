@@ -32,7 +32,6 @@ class _CaregiverPanelPageState extends State<CaregiverPanelPage> {
 						HeaderActionButton.normal(Icons.add, '$_pageKey.header.addCaregiver', () => { log("Dodaj opiekuna") })
 					]),
 					BlocBuilder<CaregiverPanelCubit, CaregiverPanelState>(
-						cubit: BlocProvider.of<CaregiverPanelCubit>(context),
 						builder: (context, state) {
 							if (state is CaregiverPanelInitial)
 								BlocProvider.of<CaregiverPanelCubit>(context).loadPanelData();
@@ -75,13 +74,14 @@ class _CaregiverPanelPageState extends State<CaregiverPanelPage> {
 				title: '$_pageKey.content.caregiverProfilesTitle',
 				noElementsMessage: '$_pageKey.content.noCaregiverProfilesAdded',
 				elements: <Widget>[
-					for (var friend in state.friends.values)
-						ItemCard(
-							title: friend,
-							menuItems: [
-								UIButton.ofType(ButtonType.unpair, () => {log("unpair")})
-							],
-						)
+					if (state.friends != null)
+						for (var friend in state.friends.values)
+							ItemCard(
+								title: friend,
+								menuItems: [
+									UIButton.ofType(ButtonType.unpair, () => {log("unpair")})
+								],
+							)
 				]
 			)
 		];

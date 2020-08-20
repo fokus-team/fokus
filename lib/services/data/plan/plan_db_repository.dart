@@ -10,6 +10,13 @@ import 'package:fokus/model/db/plan/plan_instance_state.dart';
 import 'package:fokus/services/data/data_repository.dart';
 
 mixin PlanDbRepository implements DbRepository {
+	Future<Plan> getPlan({ObjectId id, List<String> fields}) {
+		var query = _buildPlanQuery(id: id);
+		if (fields != null)
+			query.fields(fields);
+		return dbClient.queryOneTyped(Collection.plan, query, (json) => Plan.fromJson(json));
+	}
+
 	Future<List<Plan>> getPlans({ObjectId caregiverId, ObjectId childId, bool activeOnly = true, bool oneDayOnly = false, List<String> fields}) {
 		var query = _buildPlanQuery(caregiverId: caregiverId, childId: childId, activeOnly: activeOnly);
 		if (oneDayOnly)
@@ -50,9 +57,14 @@ mixin PlanDbRepository implements DbRepository {
 		return dbClient.update(Collection.planInstance, where.eq('_id', instanceId), document);
 	}
 
-	SelectorBuilder _buildPlanQuery({ObjectId caregiverId, ObjectId childId, ObjectId planId, PlanInstanceState state, Date date, bool activeOnly = false}) {
+	Future updatePlan(Plan plan) => dbClient.replace(Collection.plan, _buildPlanQuery(id: plan.id), plan.toJson());
+	Future createPlan(Plan plan) => dbClient.insert(Collection.plan, plan.toJson());
+
+	SelectorBuilder _buildPlanQuery({ObjectId id, ObjectId caregiverId, ObjectId childId, ObjectId planId, PlanInstanceState state, Date date, bool activeOnly = false}) {
 		SelectorBuilder query;
 		var addExpression = (expression) => query == null ? (query = expression) : query.and(expression);
+		if (id != null)
+			addExpression(where.eq('_id', id));
 		if (childId != null)
 			addExpression(where.eq('assignedTo', childId));
 		if (caregiverId != null)

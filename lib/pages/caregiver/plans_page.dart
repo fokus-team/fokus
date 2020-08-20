@@ -29,12 +29,11 @@ class _CaregiverPlansPageState extends State<CaregiverPlansPage> {
 				children: <Widget>[
 					AppHeader.normal(title: '$_pageKey.header.title', text: '$_pageKey.header.pageHint', headerActionButtons: [
 						HeaderActionButton.normal(Icons.add, '$_pageKey.header.addPlan',
-							() => Navigator.of(context).pushNamed(AppPage.caregiverPlanForm.name, arguments: AppFormType.create)),
+							() => Navigator.of(context).pushNamed(AppPage.caregiverPlanForm.name)),
 						HeaderActionButton.normal(Icons.calendar_today, '$_pageKey.header.calendar', 
 							() => log("Kalendarz"), Colors.amber)
 					]),
 					BlocBuilder<CaregiverPlansCubit, CaregiverPlansState>(
-						cubit: BlocProvider.of<CaregiverPlansCubit>(context),
 						builder: (context, state) {
 							if (state is CaregiverPlansInitial)
 								BlocProvider.of<CaregiverPlansCubit>(context).loadCaregiverPlans();

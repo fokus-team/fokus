@@ -10,16 +10,22 @@ extension RepeatedPassErrorTextKey on RepeatedPasswordValidationError {
 }
 
 class ConfirmedPassword extends FormzInput<String, RepeatedPasswordValidationError> {
-
 	final Password original;
 
-	const ConfirmedPassword.pure() : original = const Password.pure(), super.pure('');
+	const ConfirmedPassword.pure({Password original, String value = ''}) : original = original ?? const Password.pure(), super.pure(value);
 	const ConfirmedPassword.dirty({this.original, String value}) : super.dirty(value);
 
-	ConfirmedPassword copyWith({Password original, String value}) {
+	ConfirmedPassword copyDirty({Password original, String value}) {
 		return ConfirmedPassword.dirty(
-			original: original ?? this.original,
-			value: value ?? this.value
+				original: original ?? this.original,
+				value: value ?? this.value
+		);
+	}
+
+	ConfirmedPassword copyPure({Password original, String value}) {
+		return ConfirmedPassword.pure(
+				original: original ?? this.original,
+				value: value ?? this.value
 		);
 	}
 

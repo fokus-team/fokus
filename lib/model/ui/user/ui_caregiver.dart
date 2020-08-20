@@ -13,7 +13,7 @@ class UICaregiver extends UIUser {
   UICaregiver(ObjectId id, String name, {this.currencies, this.friends = const []}) : super(id, name, role: UserRole.caregiver);
   UICaregiver.fromDBModel(Caregiver caregiver) :
 		  friends = caregiver.friends,
-		  currencies = [UICurrency(type: CurrencyType.diamond)]..addAll(caregiver.currencies.map((currency) => UICurrency.fromDBModel(currency))),
+		  currencies = [UICurrency(type: CurrencyType.diamond)]..addAll(caregiver.currencies?.map((currency) => UICurrency.fromDBModel(currency)) ?? []),
 		  super.fromDBModel(caregiver);
 
 	@override

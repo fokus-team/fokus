@@ -69,8 +69,8 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 		user = await _dataRepository.getUser(authenticationId: event.user.id);
 		if (user == null) {
 			_logger.fine('Creating new user for ${event.user}');
-			var user = Caregiver.fromAuthUser(event.user);
-			user.id = await _dataRepository.createUser(user);
+			user = Caregiver.fromAuthUser(event.user);
+			await _dataRepository.createUser(user);
 		}
 		return _signInUser(user);
   }

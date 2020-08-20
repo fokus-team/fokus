@@ -305,6 +305,8 @@
 		"error": {
 			"incorrectData": "Incorrect e-mail or password",
 			"emailAlreadyUsed": "E-mail address is already used",
+			"emailInvalid": "E-mail address is invalid",
+			"nameEmpty": "Name can not be empty",
 			"userDisabled": "User has been disabled",
 			"invalidEmail": "Invalid e-mail address",
 			"userCodeToShort": "Code is to short",

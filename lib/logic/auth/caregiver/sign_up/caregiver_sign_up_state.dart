@@ -5,28 +5,30 @@ class CaregiverSignUpState extends CaregiverAuthStateBase {
 	final Email email;
 	final Password password;
 	final ConfirmedPassword confirmedPassword;
-	final EmailSignUpError response;
+	final EmailSignUpError signUpError;
 
 	CaregiverSignUpState({
 		this.name = const Name.pure(),
 		this.email = const Email.pure(),
 		this.password = const Password.pure(),
 		this.confirmedPassword = const ConfirmedPassword.pure(),
-		this.response,
+		this.signUpError,
+		EmailSignInError signInError,
 		FormzStatus status = FormzStatus.pure,
-	}) : super(status);
+	}) : super(status, signInError);
 
 	@override
 	List<Object> get props => [name, email, password, confirmedPassword, status];
 
-	CaregiverSignUpState copyWith({Name name, Email email, Password password, ConfirmedPassword confirmedPassword, EmailSignUpError error, FormzStatus status}) {
+	CaregiverSignUpState copyWith({Name name, Email email, Password password, ConfirmedPassword confirmedPassword, EmailSignInError signInError, EmailSignUpError signUpError, FormzStatus status}) {
 		return CaregiverSignUpState(
 			name: name ?? this.name,
 			email: email ?? this.email,
 			password: password ?? this.password,
 			confirmedPassword: confirmedPassword ?? this.confirmedPassword,
 			status: status ?? this.status,
-			response: error
+			signUpError: signUpError,
+			signInError: signInError
 		);
 	}
 }

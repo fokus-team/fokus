@@ -74,13 +74,14 @@ class _CaregiverPanelPageState extends State<CaregiverPanelPage> {
 				title: '$_pageKey.content.caregiverProfilesTitle',
 				noElementsMessage: '$_pageKey.content.noCaregiverProfilesAdded',
 				elements: <Widget>[
-					for (var friend in state.friends.values)
-						ItemCard(
-							title: friend,
-							menuItems: [
-								UIButton.ofType(ButtonType.unpair, () => {log("unpair")})
-							],
-						)
+					if (state.friends != null)
+						for (var friend in state.friends.values)
+							ItemCard(
+								title: friend,
+								menuItems: [
+									UIButton.ofType(ButtonType.unpair, () => {log("unpair")})
+								],
+							)
 				]
 			)
 		];

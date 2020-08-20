@@ -14,7 +14,7 @@ class UserCode extends FormzInput<String, UserCodeValidationError> {
 	static const int userCodeLength = 24;
 	final bool exists;
 
-	const UserCode.pure() : exists = true, super.pure('');
+	const UserCode.pure([String value = '', this.exists = true]) : super.pure(value);
 	const UserCode.dirty([String value = '', this.exists = true]) : super.dirty(value);
 
 	@override

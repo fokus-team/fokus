@@ -3,8 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:fokus/logic/auth/child/sign_up/child_sign_up_cubit.dart';
 import 'package:fokus/model/ui/ui_button.dart';
-import 'package:fokus/widgets/auth/auth_input_field.dart';
-import 'package:fokus/widgets/auth/auth_submit_button.dart';
+import 'package:fokus/services/app_locales.dart';
+import 'package:fokus/utils/theme_config.dart';
+import 'package:fokus/widgets/auth_input_field.dart';
 import 'package:fokus/model/ui/auth/user_code.dart';
 import 'package:fokus/model/ui/auth/name.dart';
 
@@ -35,8 +36,10 @@ class ChildSignUpPage extends StatelessWidget {
 				  labelKey: 'authentication.name',
 				  getErrorKey: (state) => [state.name.error.key],
 			  ),
-			  AuthenticationSubmitButton<ChildSignUpCubit, ChildSignUpState>(
-					button: UIButton.ofType(ButtonType.signUp, () => context.bloc<ChildSignUpCubit>().signUpFormSubmitted())
+			  RaisedButton(
+				  child: Text(AppLocales.of(context).translate(ButtonType.signUp.key)),
+				  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppBoxProperties.roundedCornersRadius)),
+				  onPressed: () => context.bloc<ChildSignUpCubit>().signUpFormSubmitted(),
 			  ),
 		  ],
 	  );

@@ -1,12 +1,9 @@
-import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:fokus/logic/auth/child/sign_up/child_sign_up_cubit.dart';
 import 'package:fokus/model/ui/ui_button.dart';
 import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/app_paths.dart';
 import 'package:fokus/utils/icon_sets.dart';
 import 'package:fokus/utils/theme_config.dart';
 import 'package:fokus/widgets/app_avatar.dart';
@@ -46,15 +43,31 @@ class ChildSignUpPage extends StatelessWidget {
 			cubit: BlocProvider.of<ChildSignUpCubit>(context),
 			builder: (context, state) { 
 				return AuthGroup(
-					title: 'Stwórz profil dziecka',
-					hint: 'Uzupełnij poniższy formularz aby utworzyć nowy profil dziecka',
-					content: Column(
+					title: AppLocales.of(context).translate('$_pageKey.profileAddTitle'),
+					hint: AppLocales.of(context).translate('$_pageKey.profileAddHint'),
+					content: ListView(
+						shrinkWrap: true,
 						children: <Widget>[
+							AuthenticationInputField<ChildSignUpCubit, ChildSignUpState>(
+								getField: (state) => state.caregiverCode, // temp
+								changedAction: (cubit, value) => cubit.caregiverCodeChanged(value), // temp
+								labelKey: '$_pageKey.childCode',
+								icon: Icons.screen_lock_portrait,
+								getErrorKey: (state) => [state.caregiverCode.error.key], // temp
+							),
+							AuthButton(
+								button: UIButton(
+									'$_pageKey.addProfile',
+									() => {},
+									Colors.orange
+								)
+							),
+							AuthDivider(),
 							AuthenticationInputField<ChildSignUpCubit, ChildSignUpState>(
 								getField: (state) => state.caregiverCode,
 								changedAction: (cubit, value) => cubit.caregiverCodeChanged(value),
 								labelKey: '$_pageKey.caregiverCode',
-								icon: Icons.code,
+								icon: Icons.phonelink_lock,
 								getErrorKey: (state) => [state.caregiverCode.error.key],
 							),
 							AuthenticationInputField<ChildSignUpCubit, ChildSignUpState>(
@@ -66,8 +79,8 @@ class ChildSignUpPage extends StatelessWidget {
 							),
 							_buildAvatarPicker(context),
 							AuthButton(
-								button: UIButton.ofType(
-									ButtonType.signUp,
+								button: UIButton(
+									'$_pageKey.createNewProfile',
 									() => context.bloc<ChildSignUpCubit>().signUpFormSubmitted(),
 									Colors.orange
 								)
@@ -81,8 +94,9 @@ class ChildSignUpPage extends StatelessWidget {
 
 	Widget _buildAvatarPicker(BuildContext context) {
 		return BlocBuilder<ChildSignUpCubit, ChildSignUpState>(
+			buildWhen: (oldState, newState) => oldState.avatar != newState.avatar || oldState.caregiverCode != newState.caregiverCode,
 			cubit: BlocProvider.of<ChildSignUpCubit>(context),
-			builder: (context, state) { 
+			builder: (context, state) {
 				return Padding(
 					padding: EdgeInsets.symmetric(vertical: 10.0),
 					child: SmartSelect<int>.single(
@@ -90,7 +104,9 @@ class ChildSignUpPage extends StatelessWidget {
 						builder: (context, selectState, callback) {
 							bool isInvalid = (state.status == FormzStatus.invalid && state.avatar == null);
 							return ListTile(
-								leading: FittedBox(
+								leading: SizedBox(
+									width: 56.0,
+									height: 64.0,
 									child: state.avatar != null ? AppAvatar(state.avatar) : AppAvatar.blank()
 								),
 								title: Text(AppLocales.of(context).translate('authentication.avatar')),
@@ -107,15 +123,16 @@ class ChildSignUpPage extends StatelessWidget {
 								onTap: () => callback(context)
 							);
 						},
+						value: state.avatar,
 						options: List.generate(childAvatars.length, (index) {
-								final String name = AppLocales.of(context).translate('$_pageKey.avatarGroups.${childAvatars[index].label.toString().split('.').last}');
-								return SmartSelectOption(
-									title: name,
-									group: name,
-									value: index
-								);
-							}
-						),
+							final String name = AppLocales.of(context).translate('$_pageKey.avatarGroups.${childAvatars[index].label.toString().split('.').last}');
+							return SmartSelectOption(
+								title: name,
+								group: name,
+								value: index,
+								disabled: state.takenAvatars.contains(index)
+							);
+						}),
 						choiceConfig: SmartSelectChoiceConfig(
 							glowingOverscrollIndicatorColor: Colors.teal,
 							runSpacing: 10.0,
@@ -123,15 +140,9 @@ class ChildSignUpPage extends StatelessWidget {
 							useWrap: true,
 							isGrouped: true,
 							builder: (item, checked, onChange) {
-								return Badge(
-									badgeContent: Icon(Icons.check, color: Colors.white, size: 16.0),
-									badgeColor: Colors.green,
-									animationType: BadgeAnimationType.scale,
-									showBadge: checked != null ? checked : false,
-									child: GestureDetector(
-										onTap: () => { onChange(item.value, !checked) },
-										child: AppAvatar(item.value)
-									)
+								return GestureDetector(
+									onTap: item.disabled ? null : () => { onChange(item.value, !checked) },
+									child: AppAvatar(item.value, checked: checked, disabled: item.disabled)
 								);
 							}
 						),

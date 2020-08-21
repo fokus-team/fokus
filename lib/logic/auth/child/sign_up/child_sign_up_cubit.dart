@@ -24,7 +24,7 @@ class ChildSignUpCubit extends ChildAuthCubitBase<ChildSignUpState> {
 	  emit(state.copyWith(status: FormzStatus.submissionInProgress));
 
 	  var caregiverId = getIdFromCode(state.caregiverCode.value);
-	  var child = Child.create(name: state.name.value, avatar: 0, connections: [caregiverId]);
+	  var child = Child.create(name: state.name.value, avatar: state.avatar, connections: [caregiverId]);
 	  child.id = await dataRepository.createUser(child);
 	  await dataRepository.updateUser(caregiverId, newConnections: [child.id]);
 	  appConfigRepository.saveChildProfile(child.id);
@@ -41,7 +41,9 @@ class ChildSignUpCubit extends ChildAuthCubitBase<ChildSignUpState> {
 	  emit(state.copyWith(
 		  caregiverCode: caregiverField,
 		  status: FormzStatus.pure,
-		  takenAvatars: takenAvatars
+		  takenAvatars: takenAvatars,
+			avatar: (takenAvatars.contains(state.avatar)) ? null : state.avatar,
+			clearableAvatar: true
 	  ));
   }
 

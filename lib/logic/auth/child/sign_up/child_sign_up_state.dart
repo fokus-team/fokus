@@ -18,10 +18,10 @@ class ChildSignUpState extends FormzState {
 	@override
 	List<Object> get props => [caregiverCode, name, avatar];
 
-	ChildSignUpState copyWith({UserCode caregiverCode, Name name, int avatar, Set<int> takenAvatars, FormzStatus status}) {
+	ChildSignUpState copyWith({UserCode caregiverCode, Name name, int avatar, Set<int> takenAvatars, FormzStatus status, bool clearableAvatar = false}) {
 		return ChildSignUpState(
 			caregiverCode: caregiverCode ?? this.caregiverCode,
-			avatar: avatar ?? this.avatar,
+			avatar: clearableAvatar ? avatar : (avatar ?? this.avatar),
 			name: name ?? this.name,
 			status: status ?? this.status,
 			takenAvatars: takenAvatars ?? this.takenAvatars

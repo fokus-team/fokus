@@ -32,11 +32,18 @@
 				"registerHint": "Uzupełnij poniższy formularz lub użyj konta Google"
 			},
 			"childSignIn": {
-				"childCode": "Kod dziecka",
-				"createNewProfile": "Stwórz nowy profil dziecka"
+				"addProfile": "Dodaj profil",
+				"noSavedProfiles": "Brak zapisanych profili",
+				"profileLogInTitle": "Wybierz swój profil",
+				"profileLogInHint": "Uzyskaj dostęp do swojego profilu"
 			},
 			"childSignUp": {
+				"childCode": "Kod dziecka",
 				"caregiverCode": "Kod opiekuna",
+				"profileAddTitle": "Dodaj profil",
+				"profileAddHint": "Dodaj istniejący profil za pomocą specjalnego kodu dziecka lub stwórz nowy wypełniając formularz",
+				"createNewProfile": "Stwórz nowy profil dziecka",
+				"addProfile": "Dodaj profil",
 				"avatarGroups": {
 					"boy": "Chłopak",
 					"girl": "Dziewczyna"
@@ -219,6 +226,7 @@
 				"header": {
 					"greetings": "Cześć",
 					"myPoints": "Moje punkty",
+					"noPoints": "Brak zdobytych punktów",
 					"pageHint": "Wykonuj zadania i zdobywaj punkty",
 					"garden": "Ogród"
 				},
@@ -304,7 +312,8 @@
 		"clearAll": "Wyczyść wszystkie",
 		"unpair": "Rozłącz",
 		"signIn": "Zaloguj",
-		"signUp": "Załóż konto"
+		"signUp": "Załóż konto",
+		"signOut": "Wyloguj się"
 	},
 	"authentication": {
 		"name": "Imię",
@@ -328,7 +337,7 @@
 			"passwordNotLongEnough": "Hasło musi być przynajmniej {LENGTH} znakowe",
 			"noPasswordMatch": "Hasła nie pasują",
 			"passwordEmpty": "Hasło nie może być puste",
-			"avatarEmpty": "Nalezy wybrać awatar dziecka"
+			"avatarEmpty": "Należy wybrać awatar dziecka"
 		}
 	},
 	"help": {

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:fokus/model/db/date/date.dart';
-import 'package:fokus/model/db/date_span.dart';
 import 'package:fokus/model/ui/ui_button.dart';
 import 'package:fokus/model/ui/ui_currency.dart';
 import 'package:fokus/services/app_locales.dart';

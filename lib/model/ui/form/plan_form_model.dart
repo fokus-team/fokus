@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:fokus/model/db/date/date.dart';
 import 'package:fokus/model/db/date_span.dart';
 import 'package:fokus/model/db/plan/plan.dart';
@@ -18,6 +17,7 @@ extension PlanFormRepeatabilityRageDbType on PlanFormRepeatabilityRage {
 	}[this];
 }
 
+// ignore: must_be_immutable
 class PlanFormModel extends Equatable {
 	String name;
 	List<Mongo.ObjectId> children = List<Mongo.ObjectId>();

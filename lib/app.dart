@@ -8,9 +8,9 @@ import 'package:fokus/logic/auth/caregiver/sign_in/caregiver_sign_in_cubit.dart'
 import 'package:fokus/logic/auth/caregiver/sign_up/caregiver_sign_up_cubit.dart';
 import 'package:fokus/logic/auth/child/sign_in/child_sign_in_cubit.dart';
 import 'package:fokus/logic/auth/child/sign_up/child_sign_up_cubit.dart';
-import 'package:fokus/logic/caregiver_panel/caregiver_panel_cubit.dart';
-import 'package:fokus/logic/caregiver_plans/caregiver_plans_cubit.dart';
-import 'package:fokus/logic/child_plans/child_plans_cubit.dart';
+import 'package:fokus/logic/caregiver_panel_cubit.dart';
+import 'package:fokus/logic/caregiver_plans_cubit.dart';
+import 'package:fokus/logic/child_plans_cubit.dart';
 import 'package:fokus/logic/plan_form/plan_form_cubit.dart';
 import 'package:fokus/pages/caregiver/auth/caregiver_sign_in_page.dart';
 import 'package:fokus/pages/caregiver/auth/caregiver_sign_up_page.dart';

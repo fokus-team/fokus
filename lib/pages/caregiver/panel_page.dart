@@ -2,7 +2,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:fokus/logic/caregiver_panel/caregiver_panel_cubit.dart';
+import 'package:fokus/logic/caregiver_panel_cubit.dart';
 import 'package:fokus/model/ui/ui_button.dart';
 import 'package:fokus/model/ui/user/ui_child.dart';
 import 'package:fokus/services/app_locales.dart';
@@ -33,7 +33,7 @@ class _CaregiverPanelPageState extends State<CaregiverPanelPage> {
 						HeaderActionButton.normal(Icons.add, '$_pageKey.header.addCaregiver', () => { log("Dodaj opiekuna") })
 					]),
 					LoadableBlocBuilder<CaregiverPanelCubit>(
-							builder: (context, state) => AppSegments(segments: _buildPanelSegments(state))
+						builder: (context, state) => AppSegments(segments: _buildPanelSegments(state))
 					),
 				]
 			),

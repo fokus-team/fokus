@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/logic/reloadable/reloadable_cubit.dart';
+import 'package:logging/logging.dart';
 
 class LoadableBlocBuilder<CubitType extends ReloadableCubit> extends StatelessWidget {
-	final BlocWidgetBuilder<LoadableState> builder;
+	final Logger _logger = Logger('LoadableBlocBuilder');
+
+	final BlocWidgetBuilder<DataLoadSuccess> builder;
 	final Widget loadingIndicator = Expanded(child: Center(child: CircularProgressIndicator()));
 
   LoadableBlocBuilder({this.builder});
@@ -17,7 +20,10 @@ class LoadableBlocBuilder<CubitType extends ReloadableCubit> extends StatelessWi
 			    context.bloc<CubitType>().loadData();
 		    else if (state is DataLoadSuccess)
 			    return builder(context, state);
-		    return loadingIndicator;
+		    else if (state is DataLoadInProgress)
+		      return loadingIndicator;
+		    _logger.fine('Skipping unsupported state ${state.runtimeType}');
+		    return Container();
 	    }
     );
   }

@@ -1,25 +1,22 @@
-import 'package:bloc/bloc.dart';
-import 'package:equatable/equatable.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart';
 
 import 'package:fokus/model/db/plan/plan.dart';
+import 'package:fokus/logic/reloadable/reloadable_cubit.dart';
 import 'package:fokus/model/ui/plan/ui_plan.dart';
 import 'package:fokus/model/ui/user/ui_user.dart';
 import 'package:fokus/services/data/data_repository.dart';
 import 'package:fokus/services/plan_repeatability_service.dart';
 
-part 'caregiver_plans_state.dart';
-
-class CaregiverPlansCubit extends Cubit<CaregiverPlansState> {
+class CaregiverPlansCubit extends ReloadableCubit {
 	final ActiveUserFunction _activeUser;
   final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final PlanRepeatabilityService _repeatabilityService = GetIt.I<PlanRepeatabilityService>();
 
-  CaregiverPlansCubit(this._activeUser) : super(CaregiverPlansInitial());
+  CaregiverPlansCubit(this._activeUser, ModalRoute pageRoute) : super(pageRoute);
 
-  loadCaregiverPlans() async {
-    if (!(state is CaregiverPlansInitial)) return;
-
+  @override
+	doLoadData() async {
     var getDescription = (Plan plan) => _repeatabilityService.buildPlanDescription(plan.repeatability);
     var caregiverId = _activeUser().id;
     var plans = await _dataRepository.getPlans(caregiverId: caregiverId, activeOnly: false);
@@ -30,4 +27,13 @@ class CaregiverPlansCubit extends Cubit<CaregiverPlansState> {
 		}
 		emit(CaregiverPlansLoadSuccess(uiPlans));
   }
+}
+
+class CaregiverPlansLoadSuccess extends DataLoadSuccess {
+	final List<UIPlan> plans;
+
+	CaregiverPlansLoadSuccess(this.plans);
+
+	@override
+	List<Object> get props => [plans];
 }

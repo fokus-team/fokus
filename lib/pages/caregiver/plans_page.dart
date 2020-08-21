@@ -1,7 +1,6 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/logic/caregiver_plans/caregiver_plans_cubit.dart';
 import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/ui/plan/ui_plan.dart';
@@ -11,6 +10,7 @@ import 'package:fokus/widgets/app_header.dart';
 import 'package:fokus/widgets/app_navigation_bar.dart';
 import 'package:fokus/widgets/cards/item_card.dart';
 import 'package:fokus/widgets/chips/attribute_chip.dart';
+import 'package:fokus/widgets/loadable_bloc_builder.dart';
 import 'package:fokus/widgets/segment.dart';
 
 class CaregiverPlansPage extends StatefulWidget {
@@ -33,14 +33,8 @@ class _CaregiverPlansPageState extends State<CaregiverPlansPage> {
 						HeaderActionButton.normal(Icons.calendar_today, '$_pageKey.header.calendar', 
 							() => log("Kalendarz"), Colors.amber)
 					]),
-					BlocBuilder<CaregiverPlansCubit, CaregiverPlansState>(
-						builder: (context, state) {
-							if (state is CaregiverPlansInitial)
-								BlocProvider.of<CaregiverPlansCubit>(context).loadCaregiverPlans();
-							else if (state is CaregiverPlansLoadSuccess)
-								return AppSegments(segments: _buildPanelSegments(state, context));
-							return Expanded(child: Center(child: CircularProgressIndicator()));
-						}
+					LoadableBlocBuilder<CaregiverPlansCubit>(
+						builder: (context, state) => AppSegments(segments: _buildPanelSegments(state, context))
 					)
 				]
 			),
@@ -55,14 +49,13 @@ List<Segment> _buildPanelSegments(CaregiverPlansLoadSuccess state, context) {
 		_getPlansSegment(
 			plans: activePlans,
 			title: '$_pageKey.content.addedActivePlansTitle',
-			noElementsAction: deactivatedPlans.isEmpty
-				? RaisedButton(
+			noElementsAction: deactivatedPlans.isEmpty ? RaisedButton(
 				child: Text(AppLocales.of(context).translate('$_pageKey.header.addPlan'),
 					style: Theme.of(context).textTheme.button),
 				onPressed: () => {}
-			)
-				: SizedBox.shrink(),
-			context: context),
+			) : SizedBox.shrink(),
+			context: context
+		),
 		if (deactivatedPlans.isNotEmpty)
 			_getPlansSegment(plans: deactivatedPlans, title: '$_pageKey.content.addedDeactivatedPlansTitle', context: context)
 	];

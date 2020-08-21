@@ -39,12 +39,13 @@ import 'package:fokus/utils/service_injection.dart';
 void main() {
 	WidgetsFlutterBinding.ensureInitialized();
 	var navigatorKey = GlobalKey<NavigatorState>();
-	initializeServices();
+	var routeObserver = RouteObserver<PageRoute>();
+	initializeServices(routeObserver);
 
 	Instrumentator.runAppGuarded(
 		BlocProvider<AuthenticationBloc>(
 			create: (context) => AuthenticationBloc(),
-			child: FokusApp(navigatorKey),
+			child: FokusApp(navigatorKey, routeObserver),
 		),
 		navigatorKey
 	);
@@ -52,8 +53,9 @@ void main() {
 
 class FokusApp extends StatelessWidget {
 	final GlobalKey<NavigatorState> _navigatorKey;
+	final _routeObserver;
 
-  FokusApp(this._navigatorKey);
+  FokusApp(this._navigatorKey, this._routeObserver);
 
 	@override
 	Widget build(BuildContext context) {
@@ -70,8 +72,10 @@ class FokusApp extends StatelessWidget {
 				const Locale('pl', 'PL'),
 			],
 			navigatorKey: _navigatorKey,
+			navigatorObservers: [_routeObserver],
 			initialRoute: AppPage.loadingPage.name,
 			routes: _createRoutes(),
+
 			theme: _createAppTheme(),
 			builder: _authenticationGateBuilder,
 		);
@@ -89,7 +93,8 @@ class FokusApp extends StatelessWidget {
 
 	Map<String, WidgetBuilder> _createRoutes() {
 		var getActiveUser = (BuildContext context) => () => context.bloc<AuthenticationBloc>().state.user;
-		var getParams = (BuildContext context) => ModalRoute.of(context).settings.arguments;
+		var getRoute = (BuildContext context) => ModalRoute.of(context);
+		var getParams = (BuildContext context) => getRoute(context).settings.arguments;
 		return {
 			AppPage.loadingPage.name: (context) => _createPage(LoadingPage(), context),
 			AppPage.rolesPage.name: (context) => _createPage(RolesPage(), context),
@@ -98,7 +103,7 @@ class FokusApp extends StatelessWidget {
 			AppPage.childSignInPage.name: (context) => _createPage(ChildSignInPage(), context, ChildSignInCubit(context.bloc<AuthenticationBloc>())),
 			AppPage.childSignUpPage.name: (context) => _createPage(ChildSignUpPage(), context, ChildSignUpCubit(context.bloc<AuthenticationBloc>())),
 			AppPage.caregiverPanel.name: (context) => _createPage(CaregiverPanelPage(), context, CaregiverPanelCubit(getActiveUser(context))),
-			AppPage.caregiverPlans.name: (context) => _createPage(CaregiverPlansPage(), context, CaregiverPlansCubit(getActiveUser(context))),
+			AppPage.caregiverPlans.name: (context) => _createPage(CaregiverPlansPage(), context, CaregiverPlansCubit(getActiveUser(context), getRoute(context))),
 			AppPage.caregiverPlanForm.name: (context) => _createPage(CaregiverPlanFormPage(), context, PlanFormCubit(getParams(context), getActiveUser(context))),
 			AppPage.caregiverAwards.name: (context) => _createPage(CaregiverAwardsPage(), context),
 			AppPage.caregiverStatistics.name: (context) => _createPage(CaregiverStatisticsPage(), context),

@@ -1,8 +1,8 @@
-import 'package:bloc/bloc.dart';
-import 'package:equatable/equatable.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart';
 
 import 'package:fokus/model/ui/user/ui_user.dart';
+import 'package:fokus/logic/reloadable/reloadable_cubit.dart';
 import 'package:fokus/model/db/date/date.dart';
 import 'package:fokus/model/db/plan/plan.dart';
 import 'package:fokus/model/ui/plan/ui_plan_instance.dart';
@@ -10,18 +10,14 @@ import 'package:fokus/services/data/data_repository.dart';
 import 'package:fokus/services/plan_repeatability_service.dart';
 import 'package:fokus/utils/duration_utils.dart';
 
-part 'child_plans_state.dart';
-
-class ChildPlansCubit extends Cubit<ChildPlansState> {
+class ChildPlansCubit extends ReloadableCubit {
 	final ActiveUserFunction _activeUser;
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final PlanRepeatabilityService _repeatabilityService = GetIt.I<PlanRepeatabilityService>();
 
-  ChildPlansCubit(this._activeUser) : super(ChildPlansInitial());
+  ChildPlansCubit(this._activeUser, ModalRoute pageRoute) : super(pageRoute);
 
-  void loadChildPlansForToday() async {
-	  if (!(state is ChildPlansInitial))
-		  return;
+  void doLoadData() async {
 	  var getDescription = (Plan plan, [Date instanceDate]) => _repeatabilityService.buildPlanDescription(plan.repeatability, instanceDate: instanceDate);
 	  var childId = _activeUser().id;
 
@@ -43,4 +39,13 @@ class ChildPlansCubit extends Cubit<ChildPlansState> {
 	  uiInstances.addAll(todayPlans.where((plan) => !planMap.values.contains(plan)).map((plan) => UIPlanInstance.fromDBPlanModel(plan, getDescription(plan))));
 	  emit(ChildPlansLoadSuccess(uiInstances));
   }
+}
+
+class ChildPlansLoadSuccess extends DataLoadSuccess {
+	final List<UIPlanInstance> plans;
+
+	ChildPlansLoadSuccess(this.plans);
+
+	@override
+	List<Object> get props => [plans];
 }

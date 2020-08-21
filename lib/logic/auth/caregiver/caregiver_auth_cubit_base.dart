@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:fokus/services/exception/auth_exceptions.dart';
 import 'package:formz/formz.dart';
 import 'package:get_it/get_it.dart';
 import 'package:meta/meta.dart';
@@ -18,10 +19,10 @@ class CaregiverAuthCubitBase<State extends CaregiverAuthStateBase> extends Cubit
 		try {
 			await authenticationRepository.signInWithGoogle();
 			emit(state.copyWith(status: FormzStatus.submissionSuccess));
+		} on EmailSignInFailure catch (e) {
+			emit(state.copyWith(status: FormzStatus.submissionFailure, signInError: e.reason));
 		} on Exception {
 			emit(state.copyWith(status: FormzStatus.submissionFailure));
-		} on NoSuchMethodError {
-			emit(state.copyWith(status: FormzStatus.pure));
 		}
 	}
 }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/utils/theme_config.dart';
 import 'package:fokus/widgets/auth/auth_button.dart';
@@ -10,7 +9,6 @@ import 'package:fokus/logic/auth/caregiver/sign_up/caregiver_sign_up_cubit.dart'
 import 'package:fokus/model/ui/ui_button.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/widgets/auth/auth_input_field.dart';
-import 'package:fokus/widgets/auth/auth_submit_button.dart';
 import 'package:fokus/model/ui/auth/confirmed_password.dart';
 import 'package:fokus/model/ui/auth/email.dart';
 import 'package:fokus/model/ui/auth/name.dart';
@@ -26,9 +24,9 @@ class CaregiverSignUpPage extends StatelessWidget {
 		  body: SafeArea(
 			  child: BlocListener<CaregiverSignUpCubit, CaregiverSignUpState>(
 				  listener: (context, state) {
-					  if (state.status.isSubmissionFailure && state.response != null)
+					  if (state.status.isSubmissionFailure && (state.signInError != null || state.signUpError != null))
 						  Scaffold.of(context)..hideCurrentSnackBar()..showSnackBar(
-							  SnackBar(content: Text(AppLocales.of(context).translate(state.response.key))),
+							  SnackBar(content: Text(AppLocales.of(context).translate(state.signUpError?.key ?? state.signInError.key))),
 						  );
 				  },
 					child: ListView(
@@ -39,7 +37,7 @@ class CaregiverSignUpPage extends StatelessWidget {
 							AuthFloatingButton(
 								icon: Icons.arrow_back,
 								action: () => Navigator.of(context).pop(),
-								text: AppLocales.of(context).translate('$_pageKey.backToLoginPage')
+								text: AppLocales.of(context).translate('page.loginSection.backToLoginPage')
 							)
 						]
 					)
@@ -90,7 +88,7 @@ class CaregiverSignUpPage extends StatelessWidget {
 								getErrorKey: (state) => [state.confirmedPassword.error.key],
 								hideInput: true
 							),
-							AuthenticationSubmitButton<CaregiverSignUpCubit, CaregiverSignUpState>(
+							AuthButton(
 								button: UIButton.ofType(
 									ButtonType.signUp,
 									() => context.bloc<CaregiverSignUpCubit>().signUpFormSubmitted(),
@@ -104,7 +102,7 @@ class CaregiverSignUpPage extends StatelessWidget {
 									() => context.bloc<CaregiverSignUpCubit>().logInWithGoogle()
 								)
 							)
-						],
+						]
 					)
 				);
 			}

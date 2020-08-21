@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/widgets/auth/auth_button.dart';
 import 'package:fokus/widgets/auth/auth_widgets.dart';
-import 'package:fokus/widgets/buttons/back_icon_button.dart';
 import 'package:formz/formz.dart';
 
 import 'package:fokus/logic/auth/caregiver/sign_in/caregiver_sign_in_cubit.dart';
@@ -12,7 +10,6 @@ import 'package:fokus/model/ui/ui_button.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/theme_config.dart';
 import 'package:fokus/widgets/auth/auth_input_field.dart';
-import 'package:fokus/widgets/auth/auth_submit_button.dart';
 import 'package:fokus/model/ui/auth/email.dart';
 import 'package:fokus/services/exception/auth_exceptions.dart';
 import 'package:fokus/model/ui/auth/password.dart';
@@ -26,9 +23,9 @@ class CaregiverSignInPage extends StatelessWidget {
 	    body: SafeArea(
 			  child: BlocListener<CaregiverSignInCubit, CaregiverSignInState>(
 				  listener: (context, state) {
-					  if (state.status.isSubmissionFailure && state.response != null)
+					  if (state.status.isSubmissionFailure && state.signInError != null)
 						  Scaffold.of(context)..hideCurrentSnackBar()..showSnackBar(
-							  SnackBar(content: Text(AppLocales.of(context).translate(state.response.key))),
+							  SnackBar(content: Text(AppLocales.of(context).translate(state.signInError.key))),
 						  );
 				  },
 				  child: ListView(
@@ -40,7 +37,7 @@ class CaregiverSignInPage extends StatelessWidget {
 							AuthFloatingButton(
 								icon: Icons.arrow_back,
 								action: () => Navigator.of(context).pop(),
-								text: AppLocales.of(context).translate('$_pageKey.backToStartPage')
+								text: AppLocales.of(context).translate('page.loginSection.backToStartPage')
 							)
 						]
 					)
@@ -73,9 +70,9 @@ class CaregiverSignInPage extends StatelessWidget {
 								labelKey: 'authentication.password',
 								icon: Icons.lock,
 								getErrorKey: (state) => [state.password.error.key],
-								hideInput: true,
+								hideInput: true
 							),
-							AuthenticationSubmitButton<CaregiverSignInCubit, CaregiverSignInState>(
+							AuthButton(
 								button: UIButton.ofType(
 									ButtonType.signIn,
 									() => context.bloc<CaregiverSignInCubit>().logInWithCredentials(),

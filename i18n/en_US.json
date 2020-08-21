@@ -25,11 +25,9 @@
 				"logInTitle": "Log in",
 				"logInHint": "Access your account",
 				"registerTitle": "New account",
-				"registerHint": "Create new caregiver account to use the app",
-				"backToStartPage": "Back to start page"
+				"registerHint": "Create new caregiver account to use the app"
 			},
 			"caregiverSignUp": {
-				"backToLoginPage": "Back to login page",
 				"registerTitle": "Create new account",
 				"registerHint": "Fill the form below or use your Google account"
 			},
@@ -38,8 +36,14 @@
 				"createNewProfile": "Create a new child profile"
 			},
 			"childSignUp": {
-				"caregiverCode": "Caregiver code"
-			}
+				"caregiverCode": "Caregiver code",
+				"avatarGroups": {
+					"boy": "Chłopak",
+					"girl": "Dziewczyna"
+				}
+			},
+			"backToLoginPage": "Back to login page",
+			"backToStartPage": "Back to start page"
 		},
 		"caregiverSection": {
 			"panel": {
@@ -70,16 +74,6 @@
 					"addedDeactivatedPlansTitle": "Deactivated plans",
 					"noPlansAdded": "No plans to display",
 					"tasks": "{NUM_TASKS, plural, offset:0  =1 {# task} other {# tasks}}"
-				}
-			},
-			"planInProgress": {
-				"header": {
-					"title": "In progress"
-				},
-				"content": {
-					"toDoTasks": "To-do list",
-					"additionalTasks": "Additional tasks",
-					"noTasks": "No tasks to display"
 				}
 			},
 			"planForm": {
@@ -163,7 +157,7 @@
 					},
 					"taskPoints": {
 						"valueLabel": "Points awarded",
-						"currencyLabel": "Point currency",
+						"currencyLabel": "Currency",
 						"hint": "Leave empty to not award points"
 					},
 					"taskTimer": {
@@ -240,6 +234,16 @@
 					"taskProgress": "{NUM_TASKS} out of {NUM_ALL_TASKS} tasks completed"
 				}
 			},
+			"planInProgress": {
+				"header": {
+					"title": "In progress"
+				},
+				"content": {
+					"toDoTasks": "To-do list",
+					"additionalTasks": "Additional tasks",
+					"noTasks": "No tasks to display"
+				}
+			},
 			"awards": {
 				"content": {
 					"awardsTitle": "Available awards",
@@ -264,7 +268,8 @@
 		"range": "from {FROM} to {TO}"
 	},
 	"date": {
-		"weekday": "{WEEKDAY, select, 1 {Monday} 2 {Tuesday} 3 {Wednesday} 4 {Thursday} 5 {Friday} 6 {Saturday} 7 {Sunday} other {}}"
+		"weekday": "{WEEKDAY, select, 1 {Monday} 2 {Tuesday} 3 {Wednesday} 4 {Thursday} 5 {Friday} 6 {Saturday} 7 {Sunday} other {}}",
+		"everyday": "Codziennie"
 	},
 	"alert": {
 		"noConnection": "No connection",
@@ -290,7 +295,7 @@
 		"back": "Back",
 		"next": "Next",
 		"tapToSelect": "Tap to select",
-		"selected": "Wybrano",
+		"selected": "Selected",
 		"selectAll": "Select all",
 		"deselectAll": "Deselect all",
 		"search": "Search",
@@ -305,6 +310,7 @@
 		"name": "First name",
 		"email": "E-mail address",
 		"password": "Password",
+		"avatar": "Avatar",
 		"confirmPassword": "Repeat password",
 		"googleSignIn": "Sign in with Google",
 		"googleSignUp": "Sign up with Google",
@@ -312,13 +318,17 @@
 		"error": {
 			"incorrectData": "Incorrect e-mail or password",
 			"emailAlreadyUsed": "E-mail address is already used",
+			"emailInvalid": "E-mail address is invalid",
+			"nameEmpty": "Name can not be empty",
 			"userDisabled": "User has been disabled",
 			"invalidEmail": "Invalid e-mail address",
 			"userCodeToShort": "Code is to short",
 			"userCodeToLong": "Code is to long",
 			"noSuchUser": "User does not exist",
 			"passwordNotLongEnough": "Password must have at least {LENGTH, plural, offset:0 one {# character} other {# characters}} long",
-			"noPasswordMatch": "Passwords do not match"
+			"noPasswordMatch": "Passwords do not match",
+			"passwordEmpty": "Password can not be empty",
+			"avatarEmpty": "You must pick child's avatar"
 		}
 	},
 	"help": {
@@ -327,6 +337,7 @@
 		"task_creation": "Task creation",
 		"plan_info": "Plans"
 	},
+	"points": "Points",
 	"and": "and",
 	"or": "or",
 	"hour": "hr",

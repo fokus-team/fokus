@@ -25,11 +25,9 @@
 				"logInTitle": "Zaloguj się",
 				"logInHint": "Uzyskaj dostęp do swojego konta",
 				"registerTitle": "Nowe konto",
-				"registerHint": "Załóż nowe konto opiekuna aby móc korzystać z aplikacji",
-				"backToStartPage": "Powrót do ekranu startowego"
+				"registerHint": "Załóż nowe konto opiekuna aby móc korzystać z aplikacji"
 			},
 			"caregiverSignUp": {
-				"backToLoginPage": "Powrót do ekranu logowania",
 				"registerTitle": "Stwórz nowe konto",
 				"registerHint": "Uzupełnij poniższy formularz lub użyj konta Google"
 			},
@@ -38,8 +36,14 @@
 				"createNewProfile": "Stwórz nowy profil dziecka"
 			},
 			"childSignUp": {
-				"caregiverCode": "Kod opiekuna"
-			}
+				"caregiverCode": "Kod opiekuna",
+				"avatarGroups": {
+					"boy": "Chłopak",
+					"girl": "Dziewczyna"
+				}
+			},
+			"backToLoginPage": "Powrót do ekranu logowania",
+			"backToStartPage": "Powrót do ekranu startowego"
 		},
 		"caregiverSection": {
 			"panel": {
@@ -153,7 +157,7 @@
 					},
 					"taskPoints": {
 						"valueLabel": "Nagroda punktowa",
-						"currencyLabel": "Waluta punktów",
+						"currencyLabel": "Waluta",
 						"hint": "Pozostaw puste, aby nie przyznawać punktów"
 					},
 					"taskTimer": {
@@ -264,7 +268,8 @@
 		"range": "od {FROM} do {TO}"
 	},
 	"date": {
-		"weekday": "{WEEKDAY, select, 1 {Poniedziałek} 2 {Wtorek} 3 {Środa} 4 {Czwartek} 5 {Piątek} 6 {Sobota} 7 {Niedziela} other {}}"
+		"weekday": "{WEEKDAY, select, 1 {Poniedziałek} 2 {Wtorek} 3 {Środa} 4 {Czwartek} 5 {Piątek} 6 {Sobota} 7 {Niedziela} other {}}",
+		"everyday": "Codziennie"
 	},
 	"alert": {
 		"noConnection": "Brak połączenia",
@@ -272,8 +277,8 @@
 		"connectionRetry": "Upewnij się że urządzenie ma dostęp do internetu",
 		"genericEmptyValue": "Pole nie może być puste",
 		"genericRangeOverflowValue": "Wartość musi mieścić się w zakresie {A}-{B}",
-		"unsavedProgressTitle": "Niezapisane dane",
-		"unsavedProgressMessage": "Posiadasz niezapisane dane. Czy jesteś pewien, że chcesz wyjść?",
+		"unsavedProgressTitle": "Niezapisane zmiany",
+		"unsavedProgressMessage": "Posiadasz niezapisane zmiany. Czy jesteś pewien, że chcesz wyjść?",
 		"deletePlan": "Usuwanie planu",
 		"confirmPlanDeletion": "Czy na pewno chcesz usunąć plan?"
 	},
@@ -305,6 +310,7 @@
 		"name": "Imię",
 		"email": "Adres e-mail",
 		"password": "Hasło",
+		"avatar": "Awatar",
 		"confirmPassword": "Powtórz hasło",
 		"googleSignIn": "Zaloguj się z Google",
 		"googleSignUp": "Załóż konto z Google",
@@ -312,13 +318,17 @@
 		"error": {
 			"incorrectData": "Nieprawidłowy e-mail lub hasło",
 			"emailAlreadyUsed": "Adres e-mail jest już zajęty",
+			"emailInvalid": "Adres e-mail jest nieprawidłowy",
+			"nameEmpty": "Imię nie może być puste",
 			"userDisabled": "Użytkownik został wyłączony",
 			"invalidEmail": "Nieprawidłowy adres e-mail",
 			"userCodeToShort": "Kod jest za krótki",
 			"userCodeToLong": "Kod jest za długi",
 			"noSuchUser": "Użytkownik nie istnieje",
 			"passwordNotLongEnough": "Hasło musi być przynajmniej {LENGTH} znakowe",
-			"noPasswordMatch": "Hasła nie pasują"
+			"noPasswordMatch": "Hasła nie pasują",
+			"passwordEmpty": "Hasło nie może być puste",
+			"avatarEmpty": "Nalezy wybrać awatar dziecka"
 		}
 	},
 	"help": {
@@ -327,6 +337,7 @@
 		"task_creation": "Konfiguracja zadania",
 		"plan_info": "Plany"
 	},
+	"points": "Punkty",
 	"and": "i",
 	"or": "lub",
 	"hour": "godz.",

@@ -30,15 +30,9 @@ class FirebaseAuthRepository implements AuthenticationRepository {
 		try {
 			await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
 		} catch (e) {
-			EmailSignInError reason;
-			if (e is PlatformException) {
-				if (e.code == 'ERROR_WRONG_PASSWORD' || e.code == 'ERROR_USER_NOT_FOUND')
-					reason = EmailSignInError.incorrectData;
-				else if (e.code == 'ERROR_USER_DISABLED')
-					reason = EmailSignInError.userDisabled;
-				else
-					_handleException('Sign In', e);
-			}
+			var reason = _checkForKnownError(e);
+			if (reason == null)
+				_logException('Sign In', e);
 			throw EmailSignInFailure(reason: reason);
 		}
 	}
@@ -53,12 +47,14 @@ class FirebaseAuthRepository implements AuthenticationRepository {
 			await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password).then((user) => user.user.updateProfile(updateInfo));
 		} catch (e) {
 			EmailSignUpError reason;
-			if (e is PlatformException) {
-				if (e.code == 'ERROR_EMAIL_ALREADY_IN_USE')
-					reason = EmailSignUpError.emailAlreadyUsed;
-				else
-					_handleException('Sign Up', e);
-			}
+			if (e is PlatformException)
+				for (var error in EmailSignUpError.values)
+					if (e.code == error.errorCode) {
+						reason = error;
+						break;
+					}
+			if (reason == null)
+				_logException('Sign Up', e);
 			throw EmailSignUpFailure(reason: reason);
 		}
 	}
@@ -67,6 +63,8 @@ class FirebaseAuthRepository implements AuthenticationRepository {
 	Future<void> signInWithGoogle() async {
 		try {
 			final googleUser = await _googleSignIn.signIn();
+			if (googleUser == null)
+				return;
 			final googleAuth = await googleUser.authentication;
 			final credential = GoogleAuthProvider.getCredential(
 				accessToken: googleAuth.accessToken,
@@ -74,7 +72,10 @@ class FirebaseAuthRepository implements AuthenticationRepository {
 			);
 			await _firebaseAuth.signInWithCredential(credential);
 		} catch (e) {
-			throw GoogleSignInFailure();
+			var reason = _checkForKnownError(e);
+			if (reason == null)
+				_logException('Sign In', e);
+			throw EmailSignInFailure(reason: reason);
 		}
 	}
 
@@ -90,13 +91,24 @@ class FirebaseAuthRepository implements AuthenticationRepository {
 		}
 	}
 
+	EmailSignInError _checkForKnownError(PlatformException e) {
+		EmailSignInError reason;
+		if (e is PlatformException)
+			for (var error in EmailSignInError.values)
+				if (e.code == error.errorCode) {
+					reason = error;
+					break;
+				}
+		return reason;
+	}
+
 	AuthenticatedUser _asAuthUser(FirebaseUser user) {
 	  var authUser = AuthenticatedUser(id: user.uid, email: user.email, name: user.displayName ?? signedUpUserName);
 	  signedUpUserName = null;
 	  return authUser;
 	}
 
-	void _handleException(String method, PlatformException exception) {
+	void _logException(String method, PlatformException exception) {
 		_logger.warning('Firebase $method response: ${exception.code} ${exception.message}');
 	}
 }

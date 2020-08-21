@@ -10,7 +10,7 @@ class ChildSignUpState extends FormzState {
 	ChildSignUpState({
 		this.caregiverCode = const UserCode.pure(),
 		this.name = const Name.pure(),
-		this.avatar = 0,
+		this.avatar,
 		this.takenAvatars = const {},
 		FormzStatus status = FormzStatus.pure
 	}) : super(status);

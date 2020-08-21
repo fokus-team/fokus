@@ -7,12 +7,14 @@ class AuthGroup extends StatelessWidget {
 	final String title;
 	final String hint;
 	final Widget content;
+	final EdgeInsets padding;
 	final bool isLoading;
 
 	AuthGroup({
 		this.title,
 		this.hint,
 		this.isLoading = false,
+		this.padding,
 		@required this.content
 	});
 
@@ -43,7 +45,7 @@ class AuthGroup extends StatelessWidget {
 						child: Stack(
 							children: [
 								Padding(
-									padding: EdgeInsets.all(8.0),
+									padding: padding != null ? padding : EdgeInsets.all(8.0),
 									child: content
 								),
 								Positioned.fill(

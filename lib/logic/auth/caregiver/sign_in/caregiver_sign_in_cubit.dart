@@ -13,7 +13,11 @@ class CaregiverSignInCubit extends CaregiverAuthCubitBase<CaregiverSignInState> 
   CaregiverSignInCubit() : super(CaregiverSignInState());
 
 	Future<void> logInWithCredentials() async {
-		if (!state.status.isValidated) return;
+		var state = _validateFields();
+		if (!state.status.isValidated) {
+			emit(state);
+			return;
+		}
 		emit(state.copyWith(status: FormzStatus.submissionInProgress));
 		try {
 			await authenticationRepository.signInWithEmail(
@@ -22,23 +26,20 @@ class CaregiverSignInCubit extends CaregiverAuthCubitBase<CaregiverSignInState> 
 			);
 			emit(state.copyWith(status: FormzStatus.submissionSuccess));
 		} on EmailSignInFailure catch (e) {
-			emit(state.copyWith(status: FormzStatus.submissionFailure, error: e.reason));
+			emit(state.copyWith(status: FormzStatus.submissionFailure, signInError: e.reason));
+		} on Exception {
+			emit(state.copyWith(status: FormzStatus.submissionFailure));
 		}
 	}
 
-  void emailChanged(String value) {
-	  final email = Email.dirty(value);
-	  emit(state.copyWith(
-		  email: email,
-		  status: Formz.validate([email, state.password]),
-	  ));
+  CaregiverSignInState _validateFields() {
+	  var state = this.state;
+	  state = state.copyWith(email: Email.dirty(state.email.value));
+	  state = state.copyWith(password: Password.dirty(state.password.value, false));
+	  return state.copyWith(status: Formz.validate([state.email, state.password]));
   }
 
-  void passwordChanged(String value) {
-	  final password = Password.dirty(value, false);
-	  emit(state.copyWith(
-		  password: password,
-		  status: Formz.validate([state.email, password]),
-	  ));
-  }
+  void emailChanged(String value) => emit(state.copyWith(email: Email.pure(value), status: FormzStatus.pure));
+
+  void passwordChanged(String value) => emit(state.copyWith(password: Password.pure(value, false), status: FormzStatus.pure));
 }

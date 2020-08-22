@@ -1,54 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:fokus/model/currency_type.dart';
-import 'package:fokus/model/ui/award/ui_award.dart';
-import 'package:fokus/model/ui/ui_currency.dart';
+import 'package:fokus/model/ui/award/ui_badge.dart';
 import 'package:fokus/widgets/buttons/help_icon_button.dart';
 import 'package:fokus/widgets/forms/iconpicker_field.dart';
 import 'package:fokus/widgets/forms/pointpicker_field.dart';
+import 'package:smart_select/smart_select.dart';
 
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/theme_config.dart';
 
-class CaregiverAwardFormPage extends StatefulWidget {
+class CaregiverBadgeFormPage extends StatefulWidget {
 	@override
-	_CaregiverAwardFormPageState createState() => new _CaregiverAwardFormPageState();
+	_CaregiverBadgeFormPageState createState() => new _CaregiverBadgeFormPageState();
 }
 
-class _CaregiverAwardFormPageState extends State<CaregiverAwardFormPage> {
-	static const String _pageKey = 'page.caregiverSection.awardForm';
+class _CaregiverBadgeFormPageState extends State<CaregiverBadgeFormPage> {
+	static const String _pageKey = 'page.caregiverSection.badgeForm';
 	double bottomBarHeight = 60.0;
-	GlobalKey<FormState> awardFormKey;
+	GlobalKey<FormState> badgeFormKey;
 	bool isDataChanged = false;
 
-	UIAward award;
-
-	List<UICurrency> currencies = [
-		UICurrency(type: CurrencyType.diamond, title: "Punkty"),
-		UICurrency(type: CurrencyType.ruby, title: "Klejnoty"),
-		UICurrency(type: CurrencyType.amethyst, title: "Super punkty")
-	];
+	UIBadge badge;
 
 	TextEditingController _titleController = TextEditingController();
-	TextEditingController _limitController = TextEditingController();
-	TextEditingController _pointsController = TextEditingController();
+	TextEditingController _descriptionController = TextEditingController();
 
 	@override
   void initState() {
-		awardFormKey = GlobalKey<FormState>();
-		award = UIAward();
-		award.pointCurrency = currencies[0];
+		badgeFormKey = GlobalKey<FormState>();
+		badge = UIBadge();
 		_titleController.text = '';
-		_limitController.text = '';
-		_pointsController.text = '';
+		_descriptionController.text = '';
     super.initState();
   }
 	
 	@override
   void dispose() {
 		_titleController.dispose();
-		_limitController.dispose();
-		_pointsController.dispose();
+		_descriptionController.dispose();
 		super.dispose();
 	}
 
@@ -59,9 +48,9 @@ class _CaregiverAwardFormPageState extends State<CaregiverAwardFormPage> {
 			child: Scaffold(
 				appBar: AppBar(
 					backgroundColor: AppColors.formColor,
-					title: Text(AppLocales.of(context).translate('$_pageKey.addAwardTitle')),
+					title: Text(AppLocales.of(context).translate('$_pageKey.addBadgeTitle')),
 					actions: <Widget>[
-						HelpIconButton(helpPage: 'award_creation')
+						HelpIconButton(helpPage: 'badge_creation')
 					]
 				),
 				body: Stack(
@@ -69,7 +58,7 @@ class _CaregiverAwardFormPageState extends State<CaregiverAwardFormPage> {
 						Positioned.fill(
 							bottom: bottomBarHeight,
 							child: Form(
-								key: awardFormKey,
+								key: badgeFormKey,
 								child: Material(
 									child: buildFormFields(context)
 								)
@@ -85,8 +74,8 @@ class _CaregiverAwardFormPageState extends State<CaregiverAwardFormPage> {
 		);
 	}
 
-	void saveAward(BuildContext context) {
-		if(awardFormKey.currentState.validate()) {
+	void saveBadge(BuildContext context) {
+		if(badgeFormKey.currentState.validate()) {
 			Navigator.of(context).pop();
 		}
 	}
@@ -136,9 +125,9 @@ class _CaregiverAwardFormPageState extends State<CaregiverAwardFormPage> {
 				children: <Widget>[
 					SizedBox.shrink(),
 					FlatButton(
-						onPressed: () => saveAward(context),
+						onPressed: () => saveBadge(context),
 						child: Text(
-							AppLocales.of(context).translate('$_pageKey.saveAwardButton'),
+							AppLocales.of(context).translate('$_pageKey.saveBadgeButton'),
 							style: Theme.of(context).textTheme.button.copyWith(color: AppColors.mainBackgroundColor)
 						)
 					)
@@ -152,8 +141,8 @@ class _CaregiverAwardFormPageState extends State<CaregiverAwardFormPage> {
 			shrinkWrap: true,
 			children: <Widget>[
 				buildNameField(context),
-				buildLimitField(context),
-				buildPointsFields(context),
+				buildDescriptionField(context),
+				buildLevelField(context),
 				buildIconField(context)
 			]
 		);
@@ -168,87 +157,74 @@ class _CaregiverAwardFormPageState extends State<CaregiverAwardFormPage> {
 					icon: Padding(padding: EdgeInsets.all(5.0), child: Icon(Icons.edit)),
 					contentPadding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 12.0),
 					border: OutlineInputBorder(),
-					labelText: AppLocales.of(context).translate('$_pageKey.fields.awardName.label')
+					labelText: AppLocales.of(context).translate('$_pageKey.fields.badgeName.label')
 				),
 				maxLength: 120,
 				textCapitalization: TextCapitalization.sentences,
 				validator: (value) {
-					return value.trim().isEmpty ? AppLocales.of(context).translate('$_pageKey.fields.awardName.emptyError') : null;
+					return value.trim().isEmpty ? AppLocales.of(context).translate('$_pageKey.fields.badgeName.emptyError') : null;
 				},
 				onChanged: (val) => setState(() {
-					award.name = val;
-					isDataChanged = true;
-				})
-			)
-		);
-	}
-
-	Widget buildLimitField(BuildContext context) {
-		return Padding(
-			padding: EdgeInsets.only(top: 5.0, bottom: 16.0, left: 20.0, right: 20.0),
-			child: TextFormField(
-				controller: _limitController,
-				decoration: InputDecoration(
-					icon: Padding(padding: EdgeInsets.all(5.0), child: Icon(Icons.block)),
-					contentPadding: EdgeInsets.symmetric(vertical: 14.0, horizontal: 12.0),
-					border: OutlineInputBorder(),
-					labelText: AppLocales.of(context).translate('$_pageKey.fields.awardLimit.label'),
-					hintText: '0',
-					helperText: AppLocales.of(context).translate('$_pageKey.fields.awardLimit.hint'),
-					suffixIcon: IconButton(
-						onPressed: () {
-							FocusScope.of(context).requestFocus(FocusNode());
-							_limitController.clear();
-						},
-						icon: Icon(Icons.clear)
-					)
-				),
-				keyboardType: TextInputType.numberWithOptions(signed: true, decimal: false),
-				inputFormatters: <TextInputFormatter>[
-						WhitelistingTextInputFormatter.digitsOnly
-				],
-				onChanged: (val) => setState(() {
-					award.limit = int.tryParse(val);
+					badge.name = val;
 					isDataChanged = true;
 				})
 			)
 		);
 	}
 	
-	Widget buildPointsFields(BuildContext context) {
-		return PointPickerField(
-			controller: _pointsController,
-			pickedCurrency: award.pointCurrency,
-			currencies: currencies,
-			loading: false,
-			minPoints: 1,
-			canBeEmpty: false,
-			labelValueText: AppLocales.of(context).translate('$_pageKey.fields.awardPoints.valueLabel'),
-			helperValueText: AppLocales.of(context).translate('$_pageKey.fields.awardPoints.hint'),
-			labelCurrencyText: AppLocales.of(context).translate('$_pageKey.fields.awardPoints.currencyLabel'),
-			pointValueSetter: (val) {
-				setState(() {
-					isDataChanged = award.pointValue != ((val != null) ? int.tryParse(val) : null);
-					award.pointValue = (val != null) ? int.tryParse(val) : null;
-				});
-			},
-			pointCurrencySetter: (val) {
-				setState(() {
-					isDataChanged = award.pointCurrency != val;
-					award.pointCurrency = val;
-				});
-			},
+	Widget buildDescriptionField(BuildContext context) {
+		return Padding(
+			padding: EdgeInsets.only(top: 5.0, bottom: 6.0, left: 20.0, right: 20.0),
+			child: TextFormField(
+				controller: _descriptionController,
+				decoration: InputDecoration(
+					icon: Padding(padding: EdgeInsets.all(5.0), child: Icon(Icons.description)),
+					contentPadding: EdgeInsets.symmetric(vertical: 14.0, horizontal: 12.0),
+					border: OutlineInputBorder(),
+					labelText: AppLocales.of(context).translate('$_pageKey.fields.badgeDescription.label'),
+					alignLabelWithHint: true
+				),
+				maxLength: 1000,
+				maxLines: 6,
+				minLines: 4,
+				textCapitalization: TextCapitalization.sentences,
+				onChanged: (val) => setState(() {
+					badge.description = val;
+					isDataChanged = true;
+				})
+			)
 		);
 	}
 
+	Widget buildLevelField(BuildContext context) {
+		return SmartSelect<UIBadgeLevel>.single(
+			title: AppLocales.of(context).translate('$_pageKey.fields.badgeLevel.label'),
+			value: badge.level,
+			options: [
+				for(UIBadgeLevel element in UIBadgeLevel.values)
+					SmartSelectOption(
+						title: AppLocales.of(context).translate('$_pageKey.fields.badgeLevel.options.${element.toString().split('.').last}'),
+						value: element
+					)
+			],
+			isTwoLine: true,
+			modalType: SmartSelectModalType.bottomSheet,
+			leading: Padding(padding: EdgeInsets.all(8.0), child: Icon(Icons.layers)),
+			onChange: (val) => setState(() {
+				badge.level = val;
+				isDataChanged = true;
+			})
+		);
+	}
+	
 	Widget buildIconField(BuildContext context) {
-		return IconPickerField.award(
-			title: AppLocales.of(context).translate('$_pageKey.fields.awardIcon.label'),
-			groupTextKey: '$_pageKey.fields.awardIcon.groups',
-			value: award.icon,
+		return IconPickerField.badge(
+			title: AppLocales.of(context).translate('$_pageKey.fields.badgeIcon.label'),
+			groupTextKey: '$_pageKey.fields.badgeIcon.groups',
+			value: badge.icon,
 			callback: (val) => setState(() {
 				FocusManager.instance.primaryFocus.unfocus();
-				award.icon = val;
+				badge.icon = val;
 			})
 		);
 	}

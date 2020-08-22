@@ -1,18 +1,14 @@
-import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fokus/model/currency_type.dart';
 import 'package:fokus/model/ui/award/ui_award.dart';
+import 'package:fokus/model/ui/award/ui_points.dart';
 import 'package:fokus/model/ui/ui_currency.dart';
-import 'package:fokus/utils/icon_sets.dart';
 import 'package:fokus/widgets/buttons/help_icon_button.dart';
 import 'package:fokus/widgets/forms/iconpicker_field.dart';
 import 'package:fokus/widgets/forms/pointpicker_field.dart';
-import 'package:smart_select/smart_select.dart';
 
 import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/app_paths.dart';
 import 'package:fokus/utils/theme_config.dart';
 
 class CaregiverAwardFormPage extends StatefulWidget {
@@ -42,7 +38,8 @@ class _CaregiverAwardFormPageState extends State<CaregiverAwardFormPage> {
   void initState() {
 		awardFormKey = GlobalKey<FormState>();
 		award = UIAward();
-		award.pointCurrency = currencies[0];
+		award.points = UIPoints();
+		award.points.currency = currencies[0];
 		_titleController.text = '';
 		_limitController.text = '';
 		_pointsController.text = '';
@@ -223,7 +220,7 @@ class _CaregiverAwardFormPageState extends State<CaregiverAwardFormPage> {
 	Widget buildPointsFields(BuildContext context) {
 		return PointPickerField(
 			controller: _pointsController,
-			pickedCurrency: award.pointCurrency,
+			pickedCurrency: award.points.currency,
 			currencies: currencies,
 			loading: false,
 			minPoints: 1,
@@ -233,14 +230,14 @@ class _CaregiverAwardFormPageState extends State<CaregiverAwardFormPage> {
 			labelCurrencyText: AppLocales.of(context).translate('$_pageKey.fields.awardPoints.currencyLabel'),
 			pointValueSetter: (val) {
 				setState(() {
-					isDataChanged = award.pointValue != ((val != null) ? int.tryParse(val) : null);
-					award.pointValue = (val != null) ? int.tryParse(val) : null;
+					isDataChanged = award.points.value != ((val != null) ? int.tryParse(val) : null);
+					award.points.value = (val != null) ? int.tryParse(val) : null;
 				});
 			},
 			pointCurrencySetter: (val) {
 				setState(() {
-					isDataChanged = award.pointCurrency != val;
-					award.pointCurrency = val;
+					isDataChanged = award.points.currency != val;
+					award.points.currency = val;
 				});
 			},
 		);

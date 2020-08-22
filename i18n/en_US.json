@@ -195,12 +195,12 @@
 					},
 					"awardLimit": {
 						"label": "Award limit",
-						"hint": "Leave empty to not limit"
+						"hint": "Leave empty not to limit"
 					},
 					"awardPoints": {
 						"valueLabel": "Award point cost",
 						"currencyLabel": "Point currency",
-						"hint": "How much points is needed to collect the award",
+						"hint": "How many points are needed to collect the award",
 						"emptyError": "Point cost must be at least 1"
 					},
 					"awardIcon": {

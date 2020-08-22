@@ -1,17 +1,15 @@
-import 'package:fokus/model/ui/ui_currency.dart';
+import 'package:fokus/model/ui/award/ui_points.dart';
 
 class UIAward {
 	String name;
 	int limit;
-	int pointValue;
-	UICurrency pointCurrency;
+	UIPoints points;
 	int icon;
 
 	UIAward({
 		this.name,
 		this.limit = 0,
-		this.pointValue,
-		this.pointCurrency,
+		this.points,
 		this.icon = 0
 	});
 

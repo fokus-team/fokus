@@ -2,7 +2,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:fokus/logic/caregiver_panel/caregiver_panel_cubit.dart';
+import 'package:fokus/logic/caregiver_panel_cubit.dart';
 import 'package:fokus/model/ui/ui_button.dart';
 import 'package:fokus/model/ui/user/ui_child.dart';
 import 'package:fokus/services/app_locales.dart';
@@ -11,6 +11,7 @@ import 'package:fokus/widgets/app_header.dart';
 import 'package:fokus/widgets/app_navigation_bar.dart';
 import 'package:fokus/widgets/cards/item_card.dart';
 import 'package:fokus/widgets/chips/attribute_chip.dart';
+import 'package:fokus/widgets/loadable_bloc_builder.dart';
 import 'package:fokus/widgets/segment.dart';
 
 class CaregiverPanelPage extends StatefulWidget {
@@ -31,15 +32,9 @@ class _CaregiverPanelPageState extends State<CaregiverPanelPage> {
 						HeaderActionButton.normal(Icons.add, '$_pageKey.header.addChild', () => { log("Dodaj dziecko") }),
 						HeaderActionButton.normal(Icons.add, '$_pageKey.header.addCaregiver', () => { log("Dodaj opiekuna") })
 					]),
-					BlocBuilder<CaregiverPanelCubit, CaregiverPanelState>(
-						builder: (context, state) {
-							if (state is CaregiverPanelInitial)
-								BlocProvider.of<CaregiverPanelCubit>(context).loadPanelData();
-							else if (state is CaregiverPanelLoadSuccess)
-								return AppSegments(segments: _buildPanelSegments(state));
-							return Expanded(child: Center(child: CircularProgressIndicator())); // TODO Decide what to show when loading (globally)
-						},
-					)
+					LoadableBlocBuilder<CaregiverPanelCubit>(
+						builder: (context, state) => AppSegments(segments: _buildPanelSegments(state))
+					),
 				]
 			),
 			bottomNavigationBar: AppNavigationBar.caregiverPage(currentIndex: 0)

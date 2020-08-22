@@ -2,24 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_picker/flutter_picker.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:fokus/logic/plan_form/plan_form_cubit.dart';
-import 'package:fokus/model/ui/app_page.dart';
-import 'package:fokus/widgets/forms/pointpicker_field.dart';
-import 'package:smart_select/smart_select.dart';
 
+import 'package:fokus/logic/plan_form/plan_form_cubit.dart';
 import 'package:fokus/model/currency_type.dart';
+import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/ui/form/task_form_model.dart';
 import 'package:fokus/model/ui/ui_currency.dart';
-
 import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/app_paths.dart';
 import 'package:fokus/utils/dialog_utils.dart';
 import 'package:fokus/utils/theme_config.dart';
-
-import 'package:fokus/widgets/dialogs/general_dialog.dart';
-import 'package:fokus/widgets/buttons/help_icon_button.dart';
 import 'package:fokus/widgets/buttons/back_icon_button.dart';
+import 'package:fokus/widgets/buttons/help_icon_button.dart';
+import 'package:fokus/widgets/dialogs/general_dialog.dart';
+import 'package:fokus/widgets/forms/pointpicker_field.dart';
 
 class TaskForm extends StatefulWidget {
 	final TaskFormModel task;

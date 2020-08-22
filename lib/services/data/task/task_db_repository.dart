@@ -27,21 +27,29 @@ mixin TaskDbRepository implements DbRepository {
 		return dbClient.count(Collection.taskInstance, where.eq('planInstanceID', planInstanceId).and(where.eq('status.completed', true)));
 	}
 
-	SelectorBuilder _buildTaskQuery({ObjectId planId, ObjectId planInstanceId, bool requiredOnly, bool optionalOnly}) {
+	Future createTasks(List<Task> tasks) => dbClient.insertMany(Collection.task, tasks.map((task) => task.toJson()).toList());
+	
+	Future updateTasks(List<Task> tasks) {
+		return dbClient.replaceAll(Collection.task, tasks.map((task) => _buildTaskQuery(id: task.id)).toList(), tasks.map((task) => task.toJson()).toList());
+	}
+
+	SelectorBuilder _buildTaskQuery({ObjectId id, ObjectId planId, ObjectId planInstanceId, bool requiredOnly, bool optionalOnly}) {
 		SelectorBuilder query;
 		var addExpression = (expression) => query == null ? (query = expression) : query.and(expression);
 		if (planId != null && planInstanceId != null)
 			_logger.warning("Both plan and plan instance IDs specified in task query");
-		if (requiredOnly && optionalOnly)
+		if ((requiredOnly ?? false) && (optionalOnly ?? false))
 			_logger.warning("Both required and optional only flags specified in task query");
 
+		if (id != null)
+			addExpression(where.eq('_id', id));
 		if (planId != null)
 			addExpression(where.eq('planID', planId));
 		if (planInstanceId != null)
 			addExpression(where.eq('planInstanceID', planInstanceId));
-		if (requiredOnly)
+		if (requiredOnly ?? false)
 			addExpression(where.notExists('optional').or(where.eq('optional', false)));
-		if (optionalOnly)
+		if (optionalOnly ?? false)
 			addExpression(where.eq('optional', true));
 		return query;
 	}

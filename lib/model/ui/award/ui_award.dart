@@ -1,12 +1,12 @@
 import 'package:flutter/cupertino.dart';
-import 'package:fokus/model/ui/plan/ui_plan_currency.dart';
+import 'package:fokus/model/ui/ui_currency.dart';
 
 class UIAward {
 	Key key;
 	String name;
 	int limit;
 	int pointValue;
-	UIPlanCurrency pointCurrency;
+	UICurrency pointCurrency;
 	int icon;
 
 	UIAward({

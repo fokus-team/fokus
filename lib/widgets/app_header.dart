@@ -176,6 +176,7 @@ class AppHeader extends StatelessWidget {
 	}
 
 	Widget buildGreetings(BuildContext context) {
+		// ignore: close_sinks
 		var authenticationBloc = context.bloc<AuthenticationBloc>();
 		var currentUser = authenticationBloc.state.user;
 

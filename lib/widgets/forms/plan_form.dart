@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fokus/logic/plan_form/plan_form_cubit.dart';
 import 'package:fokus/model/db/date/date.dart';
 import 'package:fokus/model/db/date_span.dart';
+import 'package:fokus/model/ui/app_page.dart';
+import 'package:fokus/model/ui/ui_button.dart';
+import 'package:fokus/widgets/buttons/bottom_sheet_bar_buttons.dart';
 import 'package:smart_select/smart_select.dart';
 import 'package:mongo_dart/mongo_dart.dart' as Mongo;
 
-import 'package:fokus/model/ui/plan/ui_plan_form.dart';
+import 'package:fokus/model/ui/form/plan_form_model.dart';
 import 'package:fokus/model/ui/user/ui_child.dart';
 
 import 'package:fokus/services/app_locales.dart';
@@ -15,7 +20,7 @@ import 'package:fokus/widgets/forms/datepicker_field.dart';
 import 'package:fokus/widgets/cards/item_card.dart';
 
 class PlanForm extends StatefulWidget {
-	final UIPlanForm plan;
+	final PlanFormModel plan;
 	final Function goNextCallback;
 
 	PlanForm({
@@ -31,18 +36,12 @@ class _PlanFormState extends State<PlanForm> {
 	static const String _pageKey = 'page.caregiverSection.planForm.fields';
 
 	double bottomBarHeight = 60.0;
+	bool fieldsValidated = false;
 
-	TextEditingController _planNameContoller = TextEditingController();
-	TextEditingController _dateOneDayOnlyContoller = TextEditingController();
-	TextEditingController _dateRageFromContoller = TextEditingController();
-	TextEditingController _dateRageToContoller = TextEditingController();
-
-	List<UIChild> children = [
-		UIChild(Mongo.ObjectId.fromHexString('5f9997f18c7472942f9979a8'), "Mateusz", avatar: 5),
-		UIChild(Mongo.ObjectId.fromHexString('f1068d375fe7b2e20ea84512'), "Gosia", avatar: 23),
-		UIChild(Mongo.ObjectId.fromHexString('72af61d19e589bad8d0fc5c5'), "Andżelika", avatar: 21),
-		UIChild(Mongo.ObjectId.fromHexString('a5b458256654875d95d19210'), "Joanna", avatar: 24)
-	]; // TODO Load children list from user
+	TextEditingController _planNameController = TextEditingController();
+	TextEditingController _dateOneDayOnlyController = TextEditingController();
+	TextEditingController _dateRageFromController = TextEditingController();
+	TextEditingController _dateRageToController = TextEditingController();
 
 	String getOnlyDatePart(DateTime date) => date != null ? date.toLocal().toString().split(' ')[0] : '';
 
@@ -55,10 +54,10 @@ class _PlanFormState extends State<PlanForm> {
 	
   @override
 	void initState() {
-		_planNameContoller.text = widget.plan.name ?? '';
-		_dateOneDayOnlyContoller.text = widget.plan.onlyOnceDate != null ? getOnlyDatePart(widget.plan.onlyOnceDate) : '';
-		_dateRageFromContoller.text = widget.plan.rangeDate.from != null ? getOnlyDatePart(widget.plan.rangeDate.from) : '';
-		_dateRageToContoller.text = widget.plan.rangeDate.to != null ? getOnlyDatePart(widget.plan.rangeDate.to) : '';
+		_planNameController.text = widget.plan.name ?? '';
+		_dateOneDayOnlyController.text = widget.plan.onlyOnceDate != null ? getOnlyDatePart(widget.plan.onlyOnceDate) : '';
+		_dateRageFromController.text = widget.plan.rangeDate.from != null ? getOnlyDatePart(widget.plan.rangeDate.from) : '';
+		_dateRageToController.text = widget.plan.rangeDate.to != null ? getOnlyDatePart(widget.plan.rangeDate.to) : '';
     super.initState();
   }
 
@@ -71,32 +70,32 @@ class _PlanFormState extends State<PlanForm> {
 					child: ListView(
 						shrinkWrap: true,
 						children: <Widget>[
-							buildPlanNameField(context),
-							buildChildrenAssignedField(context),
+							buildPlanNameField(),
+							buildChildrenAssignedField(),
 							Divider(),
-							buildRepeatabilityTypeField(context),
+							buildRepeatabilityTypeField(),
 							if(widget.plan.repeatability == PlanFormRepeatability.recurring)
-								buildRecurringFields(context)
+								buildRecurringFields()
 							else if(widget.plan.repeatability == PlanFormRepeatability.onlyOnce)
-								buildOneDayOnlyFields(context)
+								buildOneDayOnlyFields()
 							else
-								buildUntilCompletedFields(context)
+								buildUntilCompletedFields()
 						]
 					)
 				),
 				Positioned.fill(
 					top: null,
-					child: buildBottomNavigation(context)
+					child: buildBottomNavigation()
 				)
 			]
 		);
   }
 
-	Widget buildPlanNameField(BuildContext context) {
+	Widget buildPlanNameField() {
 		return Padding(
 			padding: EdgeInsets.only(top: 25.0, bottom: 10.0, left: 20.0, right: 20.0),
 			child: TextFormField(
-				controller: _planNameContoller,
+				controller: _planNameController,
 				decoration: InputDecoration(
 					icon: Padding(padding: EdgeInsets.all(5.0), child: Icon(Icons.description)),
 					contentPadding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
@@ -113,34 +112,45 @@ class _PlanFormState extends State<PlanForm> {
 		);
 	}
 
-	Widget buildChildrenAssignedField(BuildContext context) {
+	Widget buildChildrenAssignedField() {
+		return BlocBuilder<PlanFormCubit, PlanFormState>(
+		  builder: (context, state) {
+		  	if (state is PlanFormDataLoadSuccess)
+		  		return getChildrenAssignedField(state.children);
+		  	return getChildrenAssignedField([], loading: state.formType == AppFormType.create);
+			}
+		);
+	}
+
+	Widget getChildrenAssignedField(List<UIChild> children, {bool loading = false}) {
 		return SmartSelect<Mongo.ObjectId>.multiple(
 			title: AppLocales.of(context).translate('$_pageKey.assignedChildren.label'),
 			placeholder: AppLocales.of(context).translate('$_pageKey.assignedChildren.hint'),
 			value: widget.plan.children,
 			options: SmartSelectOption.listFrom<Mongo.ObjectId, UIChild>(
-				source: children, 
+				source: children,
 				value: (index, item) => item.id,
 				title: (index, item) => item.name,
 				meta: (index, item) => item
 			),
 			isTwoLine: true,
+			isLoading: loading,
+			loadingText: AppLocales.of(context).translate('loading'),
 			choiceType: SmartSelectChoiceType.chips,
 			choiceConfig: SmartSelectChoiceConfig(
-				builder: (item, checked, onChange) => 
-					Theme(
-						data: ThemeData(textTheme: Theme.of(context).textTheme),
-						child: ItemCard(
-							title: item.title,
-							subtitle: AppLocales.of(context).translate(checked ? 'actions.selected' : 'actions.tapToSelect'),
-							graphicType: GraphicAssetType.childAvatars,
-							graphic: item.meta.avatar,
-							graphicShowCheckmark: checked,
-							graphicHeight: 44.0,
-							onTapped: onChange != null ? () => onChange(item.value, !checked) : null,
-							isActive: checked
-						)
+				builder: (item, checked, onChange) => Theme(
+					data: ThemeData(textTheme: Theme.of(context).textTheme),
+					child: ItemCard(
+						title: item.title,
+						subtitle: AppLocales.of(context).translate(checked ? 'actions.selected' : 'actions.tapToSelect'),
+						graphicType: GraphicAssetType.childAvatars,
+						graphic: item.meta.avatar,
+						graphicShowCheckmark: checked,
+						graphicHeight: 44.0,
+						onTapped: onChange != null ? () => onChange(item.value, !checked) : null,
+						isActive: checked
 					)
+				)
 			),
 			modalType: SmartSelectModalType.bottomSheet,
 			modalConfig: SmartSelectModalConfig(
@@ -156,59 +166,34 @@ class _PlanFormState extends State<PlanForm> {
 		);
 	}
 
-	Widget buildBottomSheetBarButton(Color color, IconData icon, String text, Function onPressed) {
-		return Expanded(
-			child: RaisedButton(
-				shape: ContinuousRectangleBorder(),
-				padding: EdgeInsets.symmetric(vertical: 12.0),
-				color: color,
-				child: Row(
-					mainAxisAlignment: MainAxisAlignment.center,
-					children: <Widget>[
-						Padding(
-							padding: EdgeInsets.only(right: AppBoxProperties.buttonIconPadding),
-							child: Icon(icon, color: Colors.white)
-						),
-						Text(text, style: TextStyle(fontWeight: FontWeight.normal, color: Colors.white))
-					]
-				),
-				materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-				onPressed: onPressed
-			)
-		);
+	void onSelectAll(List<dynamic> sourceList, List<dynamic> valueList) {
+		// TODO Smart Select is really stuborn, fix state overwriting 
+		if(sourceList.length == valueList.length) {
+			setState(() {
+				valueList.clear();
+			});
+		} else {
+			setState(() {
+				valueList.clear();
+				valueList.addAll(sourceList);
+			});
+		}
 	}
 
 	Widget buildBottomSheetBar(BuildContext context, bool selectAllButton, List<dynamic> sourceList, List<dynamic> valueList) {
-		/* SELECT ALL
-		Function onSelectAll = () {
-			if(sourceList.length == valueList.length) {
-				setState(() => valueList.clear());
-			} else {
-				setState(() => valueList.clear());
-				List<Mongo.ObjectId> allChildren = List<Mongo.ObjectId>();
-				sourceList.forEach((element) {
-					allChildren.add(element.id);
-				});
-				setState(() => valueList = allChildren);
-			}
-		};
-		*/
-		return Row(
-			mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-			children: [
-				/* SELECT ALL
-				if(selectAllButton)
-					if(sourceList.length == valueList.length)
-						buildBottomSheetBarButton(AppColors.mainBackgroundColor, Icons.close, AppLocales.of(context).translate('actions.deselectAll'), onSelectAll)
-					else
-						buildBottomSheetBarButton(AppColors.mainBackgroundColor, Icons.playlist_add_check, AppLocales.of(context).translate('actions.selectAll'), onSelectAll),
-				*/		
-				buildBottomSheetBarButton(Colors.green, Icons.done, AppLocales.of(context).translate('actions.confirm'), () => { Navigator.pop(context) }),
+		return ButtonSheetBarButtons(
+			buttons: [
+				// if(selectAllButton)
+				// 	if(sourceList.length == valueList.length)
+				// 		UIButton('actions.deselectAll', () => onSelectAll(sourceList, valueList), AppColors.mainBackgroundColor, Icons.close)
+				// 	else
+				// 		UIButton('actions.selectAll', () => onSelectAll(sourceList, valueList), AppColors.mainBackgroundColor, Icons.playlist_add_check),
+				UIButton('actions.confirm', () => { Navigator.pop(context) }, Colors.green, Icons.done)
 			]
 		);
 	}
 
-	Widget buildRepeatabilityTypeField(BuildContext context) {
+	Widget buildRepeatabilityTypeField() {
 		return SmartSelect<PlanFormRepeatability>.single(
 			title: AppLocales.of(context).translate('$_pageKey.repeatability.label'),
 			value: widget.plan.repeatability,
@@ -226,9 +211,19 @@ class _PlanFormState extends State<PlanForm> {
 		);
 	}
 
-	Widget buildRecurringFields(BuildContext context) {
+	Widget buildRecurringFields() {
 		bool isWeekly = widget.plan.repeatabilityRage == PlanFormRepeatabilityRage.weekly;
 		List<int> dayList = List<int>.generate(isWeekly ? 7 : 31, (i) => i + 1);
+
+		String daysDisplay(List<int> values) {
+			if(values.isEmpty)
+				return AppLocales.of(context).translate('$_pageKey.days.hint');
+			if(values.length == dayList.length)
+				return AppLocales.of(context).translate('date.everyday');
+			return values.map((e) => 
+				isWeekly ? AppLocales.of(context).translate('date.weekday', {'WEEKDAY': e.toString()}) : e.toString()
+			).join(', ');
+		}
 
 		return Column(
 			children: <Widget>[
@@ -252,35 +247,46 @@ class _PlanFormState extends State<PlanForm> {
 				),
 				SmartSelect<int>.multiple(
 					title: AppLocales.of(context).translate('$_pageKey.days.label${isWeekly ? 'Weekly' : 'Monthly'}'),
-					placeholder: AppLocales.of(context).translate('$_pageKey.days.hint'),
 					value: widget.plan.days,
 					options: SmartSelectOption.listFrom<int, int>(
 						source: dayList,
 						value: (index, item) => item,
 						title: (index, item) => isWeekly ? AppLocales.of(context).translate('date.weekday', {'WEEKDAY': item.toString()}) : item.toString()
 					),
-					isTwoLine: true,
 					choiceType: SmartSelectChoiceType.chips,
 					modalType: SmartSelectModalType.bottomSheet,
 					modalConfig: SmartSelectModalConfig(
 						trailing: buildBottomSheetBar(context, true, dayList, widget.plan.days)
 					),
-					leading: Padding(padding: EdgeInsets.all(8.0), child: Icon(Icons.date_range)),
+					builder: (context, state, callback) {
+						return ListTile(
+							leading: Padding(padding: EdgeInsets.all(8.0), child: Icon(Icons.date_range)),
+							title: Text(AppLocales.of(context).translate('$_pageKey.days.label${isWeekly ? 'Weekly' : 'Monthly'}')),
+							subtitle: Text(
+								daysDisplay(state.values),
+								style: TextStyle(color: (fieldsValidated && widget.plan.days.isEmpty) ? Theme.of(context).errorColor : Colors.grey),
+								overflow: TextOverflow.ellipsis,
+								maxLines: 1
+							),
+							trailing: Icon(Icons.keyboard_arrow_right, color: Colors.grey),
+							onTap: () => callback(context)
+						);
+					},
 					onChange: (val) => setState(() => { widget.plan.days = val })
 				),
 				Divider(),
-				buildDateRangeFields(context)
+				buildDateRangeFields()
 			],
 		);
 	}
 
-	Widget buildOneDayOnlyFields(BuildContext context) {
+	Widget buildOneDayOnlyFields() {
 		return Padding(
 			padding: EdgeInsets.only(top: 8.0),
 			child: DatePickerField(
 				labelText: AppLocales.of(context).translate('$_pageKey.onlyOneDate.label'),
 				errorText: AppLocales.of(context).translate('$_pageKey.onlyOneDate.emptyError'),
-				dateController: _dateOneDayOnlyContoller, 
+				dateController: _dateOneDayOnlyController,
 				dateSetter: widget.plan.setOnlyOnceDate, 
 				callback: setDateCallback,
 				canBeEmpty: false
@@ -288,11 +294,11 @@ class _PlanFormState extends State<PlanForm> {
 		);
 	}
 
-	Widget buildUntilCompletedFields(BuildContext context) {
-		return buildDateRangeFields(context);
+	Widget buildUntilCompletedFields() {
+		return buildDateRangeFields();
 	}
 
-	Widget buildDateRangeFields(BuildContext context) {
+	Widget buildDateRangeFields() {
 		return Column(
 			crossAxisAlignment: CrossAxisAlignment.start,
 			children: <Widget>[
@@ -309,7 +315,7 @@ class _PlanFormState extends State<PlanForm> {
 						icon: Icons.event_note,
 						labelText: AppLocales.of(context).translate('$_pageKey.range.fromLabel'),
 						rangeDate: DateSpan<Date>(to: widget.plan.rangeDate.to),
-						dateController: _dateRageFromContoller, 
+						dateController: _dateRageFromController,
 						dateSetter: widget.plan.setRangeFromDate, 
 						callback: setDateCallback
 					)
@@ -321,7 +327,7 @@ class _PlanFormState extends State<PlanForm> {
 						labelText: AppLocales.of(context).translate('$_pageKey.range.toLabel'),
 						helperText: AppLocales.of(context).translate('$_pageKey.range.hint'),
 						rangeDate: DateSpan<Date>(from: widget.plan.rangeDate.from),
-						dateController: _dateRageToContoller, 
+						dateController: _dateRageToController,
 						dateSetter: widget.plan.setRangeToDate,
 						callback: setDateCallback
 					)
@@ -340,7 +346,7 @@ class _PlanFormState extends State<PlanForm> {
 		);
 	}
 
-	Widget buildBottomNavigation(BuildContext context) {
+	Widget buildBottomNavigation() {
 		return Container(
 			height: bottomBarHeight,
 			child: Stack(
@@ -358,7 +364,10 @@ class _PlanFormState extends State<PlanForm> {
 								crossAxisAlignment: CrossAxisAlignment.end,
 								children: <Widget>[
 									FlatButton(
-										onPressed: () => widget.goNextCallback(),
+										onPressed: () {
+											setState(() => fieldsValidated = true);
+											widget.goNextCallback();
+										},
 										textColor: AppColors.mainBackgroundColor,
 										child: Row(children: <Widget>[Text(AppLocales.of(context).translate('actions.next')), Icon(Icons.chevron_right)])
 									)

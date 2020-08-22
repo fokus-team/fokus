@@ -13,7 +13,6 @@ class TimerChip extends StatelessWidget {
 	@override
 	Widget build(BuildContext context) {
 		return BlocBuilder<TimerCubit, TimerState>(
-			cubit: BlocProvider.of<TimerCubit>(context),
 			builder: (context, state) {
 				return AttributeChip.withIcon(
 					icon: Icons.timer,

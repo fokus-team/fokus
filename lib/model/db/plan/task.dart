@@ -1,4 +1,5 @@
 import 'package:fokus/model/db/gamification/points.dart';
+import 'package:fokus/model/ui/form/task_form_model.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
 class Task {
@@ -12,10 +13,14 @@ class Task {
   Points points;
   int timer;
 
-  Task({this.description, this.id, this.name, this.optional, this.planID, this.points, this.subtasks, this.timer});
+  Task.fromTaskForm(TaskFormModel taskForm, ObjectId planId, ObjectId creator) : this._(name: taskForm.title, description: taskForm.description,
+		  planID: planId, optional: taskForm.optional, timer: taskForm.timer > 0 ? taskForm.timer : null, id: taskForm.id ?? ObjectId(),
+		  points: taskForm.pointsValue != null ? Points.fromUICurrency(taskForm.pointCurrency, taskForm.pointsValue, creator: creator) : null);
+
+  Task._({this.description, this.id, this.name, this.optional, this.planID, this.points, this.subtasks, this.timer});
 
   factory Task.fromJson(Map<String, dynamic> json) {
-    return json != null ? Task(
+    return json != null ? Task._(
       description: json['description'],
 	    id: json['_id'],
       name: json['name'],
@@ -29,18 +34,22 @@ class Task {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['description'] = this.description;
-    data['_id'] = this.id;
-    data['name'] = this.name;
-    data['optional'] = this.optional;
-    data['planID'] = this.planID;
-    data['timer'] = this.timer;
-    if (this.points != null) {
+    if (this.description != null)
+      data['description'] = this.description;
+    if (this.id != null)
+      data['_id'] = this.id;
+    if (this.name != null)
+      data['name'] = this.name;
+    if (this.optional != null)
+      data['optional'] = this.optional;
+    if (this.planID != null)
+      data['planID'] = this.planID;
+    if (this.timer != null)
+      data['timer'] = this.timer;
+    if (this.points != null)
       data['points'] = this.points.toJson();
-    }
-    if (this.subtasks != null) {
+    if (this.subtasks != null)
       data['subtasks'] = this.subtasks;
-    }
     return data;
   }
 }

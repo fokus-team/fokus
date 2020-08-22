@@ -16,7 +16,7 @@ class MongoDbProvider {
 			secure: true,
 			timeoutConfig: TimeoutConfig(
 				connectionTimeout: 8000,
-				socketTimeout: 4000,
+				socketTimeout: 6000,
 				keepAliveTime: 10 * 60
 			)
 		).catchError((e) => throw NoDbConnection(e));
@@ -26,9 +26,22 @@ class MongoDbProvider {
 		return _execute(() => _client.collection(collection.name).update(selector, document, multiUpdate: true));
 	}
 
+	Future replace(Collection collection, SelectorBuilder selector, Map<String, dynamic> document) {
+		return _execute(() => _client.collection(collection.name).update(selector, document));
+	}
+
+	Future replaceAll(Collection collection, List<SelectorBuilder> selectors, List<Map<String, dynamic>> documents) {
+		return _execute(() => _client.collection(collection.name).updateAll(selectors, documents, upsert: true));
+	}
+
 	Future<ObjectId> insert(Collection collection, Map<String, dynamic> document) => _execute(() {
 		document['_id'] ??= ObjectId();
-	  return _client.collection(collection.name).insert(document).then((value) => document['_id']);
+		return _execute(() => _client.collection(collection.name).insert(document)).then((_) => document['_id']);
+	});
+
+	Future<List<ObjectId>> insertMany(Collection collection, List<Map<String, dynamic>> documents) => _execute(() {
+		documents.forEach((document) => document['_id'] ??= ObjectId());
+		return _execute(() => _client.collection(collection.name).insertAll(documents)).then((_) => documents.map((document) => document['_id'] as ObjectId).toList());
 	});
 
 	Future<int> count(Collection collection, [SelectorBuilder selector]) => _execute(() => _client.collection(collection.name).count(selector));

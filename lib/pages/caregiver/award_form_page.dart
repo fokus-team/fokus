@@ -4,11 +4,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fokus/model/currency_type.dart';
 import 'package:fokus/model/ui/award/ui_award.dart';
-import 'package:fokus/model/ui/plan/ui_plan_currency.dart';
+import 'package:fokus/model/ui/ui_currency.dart';
 import 'package:fokus/utils/icon_sets.dart';
 import 'package:fokus/widgets/buttons/help_icon_button.dart';
 import 'package:smart_select/smart_select.dart';
-import 'package:mongo_dart/mongo_dart.dart' as Mongo;
 
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/app_paths.dart';
@@ -27,10 +26,10 @@ class _CaregiverAwardFormPageState extends State<CaregiverAwardFormPage> {
 
 	UIAward award;
 
-	List<UIPlanCurrency> currencies = [
-		UIPlanCurrency(id: Mongo.ObjectId.fromHexString('5f9997f18c7472942f9979a3'), type: CurrencyType.diamond, title: "Punkty"),
-		UIPlanCurrency(id: Mongo.ObjectId.fromHexString('5f9997f18c7472942f9979a2'), type: CurrencyType.ruby, title: "Klejnoty"),
-		UIPlanCurrency(id: Mongo.ObjectId.fromHexString('5f9997f18c7472942f9979a1'), type: CurrencyType.amethyst, title: "Super punkty")
+	List<UICurrency> currencies = [
+		UICurrency(type: CurrencyType.diamond, title: "Punkty"),
+		UICurrency(type: CurrencyType.ruby, title: "Klejnoty"),
+		UICurrency(type: CurrencyType.amethyst, title: "Super punkty")
 	];
 
 	TextEditingController _titleController = TextEditingController();
@@ -220,7 +219,7 @@ class _CaregiverAwardFormPageState extends State<CaregiverAwardFormPage> {
 	}
 	
 	Widget buildPointsFields(BuildContext context) {
-		return SmartSelect<UIPlanCurrency>.single(
+		return SmartSelect<UICurrency>.single(
 			builder: (context, state, function) {
 				return Padding(
 					padding: EdgeInsets.only(top: 0.0, bottom: 0.0, left: 20.0, right: 16.0),
@@ -298,7 +297,7 @@ class _CaregiverAwardFormPageState extends State<CaregiverAwardFormPage> {
 			title: AppLocales.of(context).translate('$_pageKey.fields.awardPoints.currencyLabel'),
 			value: award.pointCurrency,
 			options: [
-				for(UIPlanCurrency element in currencies)
+				for(UICurrency element in currencies)
 					SmartSelectOption(
 						title: element.title,
 						value: element
@@ -306,7 +305,7 @@ class _CaregiverAwardFormPageState extends State<CaregiverAwardFormPage> {
 			],
 			choiceConfig: SmartSelectChoiceConfig(
 				builder: (item, checked, onChange) {
-					return RadioListTile<UIPlanCurrency>(
+					return RadioListTile<UICurrency>(
 						value: item.value,
 						groupValue: award.pointCurrency,
 						onChanged: (val) => {onChange(item.value, !checked)},

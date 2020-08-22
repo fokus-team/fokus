@@ -25,6 +25,11 @@ class ChildSignInCubit extends ChildAuthCubitBase<ChildSignInState> {
   }
 
   void signInNewChild() async {
+	  var state = await _validateFields();
+	  if (!state.status.isValidated) {
+		  emit(state);
+		  return;
+	  }
 	  if (!state.status.isValidated) return;
 	  emit(state.copyWith(status: FormzStatus.submissionInProgress));
   	var childId = getIdFromCode(state.childCode.value);
@@ -33,16 +38,14 @@ class ChildSignInCubit extends ChildAuthCubitBase<ChildSignInState> {
 	  emit(state.copyWith(status: FormzStatus.submissionSuccess));
   }
 
-	void childCodeChanged(String value) async {
-		var userCode = UserCode.dirty(value);
-		var fieldState = Formz.validate([userCode]);
-		if (fieldState == FormzStatus.valid && ! (await verifyUserCode(value, UserRole.child))) {
-			userCode = UserCode.dirty(value, false);
-			fieldState = Formz.validate([userCode]);
-		}
-		emit(state.copyWith(
-			childCode: userCode,
-			status: Formz.validate([userCode]),
-		));
-	}
+  Future<ChildSignInState> _validateFields() async {
+	  var state = this.state;
+	  var caregiverField = UserCode.dirty(state.childCode.value);
+	  if (caregiverField.valid && !(await verifyUserCode(state.childCode.value, UserRole.child)))
+		  caregiverField = UserCode.dirty(state.childCode.value, false);
+	  state = state.copyWith(childCode: caregiverField);
+	  return state.copyWith(status: Formz.validate([state.childCode]));
+  }
+
+	void childCodeChanged(String value) => emit(state.copyWith(childCode: UserCode.pure(value), status: FormzStatus.pure));
 }

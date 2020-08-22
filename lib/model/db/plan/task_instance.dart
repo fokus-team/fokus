@@ -16,7 +16,7 @@ class TaskInstance {
   List<DateSpan<TimeDate>> breaks;
   List<DateSpan<TimeDate>> duration;
 
-  TaskInstance({this.id, this.taskID, this.planInstanceID, this.breaks, this.duration, this.status, bool optional, this.subtasks, this.timer});
+  TaskInstance({this.id, this.taskID, this.planInstanceID, this.breaks, this.duration, this.status, this.optional, this.subtasks, this.timer});
 
   factory TaskInstance.fromJson(Map<String, dynamic> json) {
     return json != null ? TaskInstance(

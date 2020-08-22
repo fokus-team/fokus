@@ -322,6 +322,7 @@
 		"task_creation": "Konfiguracja zadania",
 		"plan_info": "Plany"
 	},
+	"assignedTo": "Przypisane do",
 	"points": "Punkty",
 	"and": "i",
 	"hour": "godz.",

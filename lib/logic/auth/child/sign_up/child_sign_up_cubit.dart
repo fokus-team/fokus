@@ -34,9 +34,9 @@ class ChildSignUpCubit extends ChildAuthCubitBase<ChildSignUpState> {
 
   void caregiverCodeChanged(String value) async {
 	  var caregiverField = UserCode.dirty(value);
-	  Set<int> takenAvatars;
+	  Set<int> takenAvatars = {};
 	  if (caregiverField.valid && await verifyUserCode(value, UserRole.caregiver))
-			  takenAvatars = (await dataRepository.getUsers(connected: getIdFromCode(value), role: UserRole.child, fields: ['avatar'])).map((child) => child.avatar).toSet();
+			  takenAvatars = (await dataRepository.getUsers(connected: getIdFromCode(value), role: UserRole.child, fields: ['avatar']))?.map((child) => child.avatar)?.toSet() ?? {};
 	  caregiverField = UserCode.pure(value);
 	  emit(state.copyWith(
 		  caregiverCode: caregiverField,

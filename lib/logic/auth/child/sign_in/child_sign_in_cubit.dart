@@ -7,22 +7,11 @@ import 'package:fokus/logic/auth/formz_state.dart';
 import 'package:fokus/model/db/user/user_role.dart';
 import 'package:fokus/utils/id_code_transformer.dart';
 import 'package:fokus/model/ui/auth/user_code.dart';
-import 'package:fokus/model/ui/user/ui_child.dart';
 
 part 'child_sign_in_state.dart';
 
 class ChildSignInCubit extends ChildAuthCubitBase<ChildSignInState> {
   ChildSignInCubit(AuthenticationBloc authenticationBloc) : super(authenticationBloc, ChildSignInState());
-
-  void loadSavedProfiles() async {
-	  var savedIds = appConfigRepository.getSavedChildProfiles() ?? [];
-	  var children = await dataRepository.getUsers(ids: savedIds, fields: ['_id', 'name', 'avatar']);
-	  emit(ChildSignInState(savedChildren: children.map((child) => UIChild.fromDBModel(child)).toList()));
-  }
-
-  void signInWithCachedId(ObjectId childId) async {
-		authenticationBloc.add(AuthenticationChildSignInRequested(await dataRepository.getUser(id: childId)));
-  }
 
   void signInNewChild() async {
 	  var state = await _validateFields();
@@ -34,7 +23,7 @@ class ChildSignInCubit extends ChildAuthCubitBase<ChildSignInState> {
 	  emit(state.copyWith(status: FormzStatus.submissionInProgress));
   	var childId = getIdFromCode(state.childCode.value);
 	  appConfigRepository.saveChildProfile(childId);
-	  signInWithCachedId(childId);
+	  authenticationBloc.add(AuthenticationChildSignInRequested(await dataRepository.getUser(id: childId)));
 	  emit(state.copyWith(status: FormzStatus.submissionSuccess));
   }
 

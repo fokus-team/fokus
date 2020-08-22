@@ -48,6 +48,7 @@ dependencies:
     badges: ^1.1.1
     implicitly_animated_reorderable_list: ^0.2.3
     flutter_picker: ^1.1.5
+    table_calendar: ^2.2.3
 
 dependency_overrides:
     bson:

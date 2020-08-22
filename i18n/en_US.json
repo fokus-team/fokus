@@ -50,6 +50,11 @@
 					"activePlan": "1 plan currently in progress"
 				}
 			},
+			"calendar": {
+				"header": {
+					"title": "Calendar"
+				}
+			},
 			"plans": {
 				"header": {
 					"title": "Plans",

@@ -1,7 +1,7 @@
 enum AppPage {
 	loadingPage, rolesPage,
 	caregiverSignInPage, caregiverSignUpPage, childSignInPage, childSignUpPage,
-	caregiverPanel, caregiverPlans, caregiverPlanForm, caregiverAwards, caregiverStatistics,
+	caregiverPanel, caregiverPlans, caregiverCalendar, caregiverPlanForm, caregiverAwards, caregiverStatistics,
 	childPanel, childAwards, childAchievements, childPlanInProgress, caregiverPlanDetails
 
 }
@@ -16,6 +16,7 @@ extension AppPageName on AppPage {
 		AppPage.childSignUpPage: '/auth/child-sign-up-page',
 		AppPage.caregiverPanel: '/caregiver/panel-page',
 		AppPage.caregiverPlans: '/caregiver/plans-page',
+		AppPage.caregiverCalendar: '/caregiver/calendar-page',
 		AppPage.caregiverPlanForm: '/caregiver/plan-form-page',
 		AppPage.caregiverAwards: '/caregiver/awards-page',
 		AppPage.caregiverStatistics: '/caregiver/statistics-page',

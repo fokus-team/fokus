@@ -41,7 +41,7 @@ class MongoDbProvider {
 
 	Future<List<ObjectId>> insertMany(Collection collection, List<Map<String, dynamic>> documents) => _execute(() {
 		documents.forEach((document) => document['_id'] ??= ObjectId());
-		return _execute(() => _client.collection(collection.name).insertAll(documents)).then((_) => documents.map((document) => document['_id'] as ObjectId).toList();
+		return _execute(() => _client.collection(collection.name).insertAll(documents)).then((_) => documents.map((document) => document['_id'] as ObjectId).toList());
 	});
 
 	Future<int> count(Collection collection, [SelectorBuilder selector]) => _execute(() => _client.collection(collection.name).count(selector));

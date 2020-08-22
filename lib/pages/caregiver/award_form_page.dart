@@ -41,7 +41,7 @@ class _CaregiverAwardFormPageState extends State<CaregiverAwardFormPage> {
 	@override
   void initState() {
 		awardFormKey = GlobalKey<FormState>();
-		award = UIAward(key: ValueKey(DateTime.now()));
+		award = UIAward();
 		award.pointCurrency = currencies[0];
 		_titleController.text = '';
 		_limitController.text = '';

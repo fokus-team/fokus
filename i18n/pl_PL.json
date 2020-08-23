@@ -199,6 +199,40 @@
 					"5LeveledBadge": "Odznaka 5 poziomowa"
 				}
 			},
+			"awardForm": {
+				"addAwardTitle": "Dodaj nagrodę",
+				"editAwardTitle": "Edytuj nagrodę",
+				"addAwardButton": "Dodaj nagodę",
+				"saveAwardButton": "Zapisz nagodę",
+				"removeAwardButton": "Usuń nagodę",
+				"removeAwardTitle": "Usuń nagrodę",
+				"removeAwardText": "Na pewno chcesz usunąć tą nagrodę?",
+				"fields": {
+					"awardName": {
+						"label": "Nazwa nagrody",
+						"emptyError": "Nazwa nagrody nie może być pusta"
+					},
+					"awardLimit": {
+						"label": "Limit nagród",
+						"hint": "Pozostaw puste, aby nie limitować"
+					},
+					"awardPoints": {
+						"valueLabel": "Koszt punktowy",
+						"currencyLabel": "Waluta punktów",
+						"hint": "Ilość punktów potrzebna do odbioru nagrody przez dziecko",
+						"emptyError": "Koszt punktowy musi wynosić minimum 1 punkt"
+					},
+					"awardIcon": {
+						"label": "Ikona nagrody",
+						"groups": {
+							"gift": "Prezent",
+							"activity": "Aktywność",
+							"relax": "Odpoczynek",
+							"food": "Jedzenie"
+						}
+					}
+				}
+			},
 			"statistics": {
 				"header": {
 					"title": "Statystyki",
@@ -344,6 +378,7 @@
 		"first_steps": "Pierwsze kroki",
 		"plan_creation": "Tworzenie planu",
 		"task_creation": "Konfiguracja zadania",
+		"award_creation": "Tworzenie nagrody",
 		"plan_info": "Plany"
 	},
 	"points": "Punkty",

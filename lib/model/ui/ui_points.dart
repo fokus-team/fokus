@@ -1,0 +1,13 @@
+import 'package:fokus/model/currency_type.dart';
+import 'package:fokus/model/ui/ui_currency.dart';
+import 'package:mongo_dart/mongo_dart.dart';
+
+class UIPoints extends UICurrency {
+	final ObjectId createdBy;
+	final int quantity;
+
+  UIPoints({CurrencyType type, String title, this.createdBy, this.quantity}) : super(type: type, title: title);
+
+	@override
+	List<Object> get props => super.props..addAll([quantity, createdBy]);
+}

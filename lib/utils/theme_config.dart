@@ -49,7 +49,7 @@ class AppBoxProperties {
 			)
 		],
 	);
-
+	
 }
 
 class AppSectionStyle {

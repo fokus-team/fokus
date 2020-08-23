@@ -5,6 +5,7 @@ import 'package:fokus/model/ui/ui_button.dart';
 import 'package:fokus/model/ui/ui_currency.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/app_paths.dart';
+import 'package:fokus/utils/form_config.dart';
 import 'package:fokus/utils/theme_config.dart';
 import 'package:fokus/widgets/buttons/bottom_sheet_bar_buttons.dart';
 import 'package:smart_select/smart_select.dart';
@@ -59,10 +60,7 @@ class _PointPickerFieldState extends State<PointPickerField> {
 							Expanded(
 								child: TextFormField(
 									controller: widget.controller,
-									decoration: InputDecoration(
-										icon: Padding(padding: EdgeInsets.all(5.0), child: Icon(Icons.star)),
-										contentPadding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 12.0),
-										border: OutlineInputBorder(),
+									decoration: AppFormProperties.textFieldDecoration(Icons.star).copyWith(
 										hintText: "0",
 										helperMaxLines: 3,
 										errorMaxLines: 3,

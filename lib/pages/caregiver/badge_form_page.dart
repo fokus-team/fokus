@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/ui/award/ui_badge.dart';
+import 'package:fokus/utils/dialog_utils.dart';
+import 'package:fokus/utils/form_config.dart';
 import 'package:fokus/widgets/buttons/help_icon_button.dart';
 import 'package:fokus/widgets/forms/iconpicker_field.dart';
 import 'package:smart_select/smart_select.dart';
@@ -15,7 +18,7 @@ class CaregiverBadgeFormPage extends StatefulWidget {
 
 class _CaregiverBadgeFormPageState extends State<CaregiverBadgeFormPage> {
 	static const String _pageKey = 'page.caregiverSection.badgeForm';
-	double bottomBarHeight = 60.0;
+	AppFormType formType = AppFormType.create; // only create for now
 	GlobalKey<FormState> badgeFormKey;
 	bool isDataChanged = false;
 
@@ -43,11 +46,13 @@ class _CaregiverBadgeFormPageState extends State<CaregiverBadgeFormPage> {
   @override
   Widget build(BuildContext context) {
 		return WillPopScope(
-			onWillPop: () => exitForm(context, true),
+			onWillPop: () => showExitFormDialog(context, true, isDataChanged),
 			child: Scaffold(
 				appBar: AppBar(
 					backgroundColor: AppColors.formColor,
-					title: Text(AppLocales.of(context).translate('$_pageKey.addBadgeTitle')),
+					title: Text(AppLocales.of(context).translate(
+						formType == AppFormType.create ? '$_pageKey.addBadgeTitle' : '$_pageKey.editBadgeTitle'
+					)),
 					actions: <Widget>[
 						HelpIconButton(helpPage: 'badge_creation')
 					]
@@ -55,7 +60,7 @@ class _CaregiverBadgeFormPageState extends State<CaregiverBadgeFormPage> {
 				body: Stack(
 					children: [
 						Positioned.fill(
-							bottom: bottomBarHeight,
+							bottom: AppBoxProperties.standardBottomNavHeight,
 							child: Form(
 								key: badgeFormKey,
 								child: Material(
@@ -75,58 +80,36 @@ class _CaregiverBadgeFormPageState extends State<CaregiverBadgeFormPage> {
 
 	void saveBadge(BuildContext context) {
 		if(badgeFormKey.currentState.validate()) {
+			// TODO adding/saving logic
 			Navigator.of(context).pop();
 		}
 	}
 
-	Future<bool> exitForm(BuildContext context, bool isSystemPop) {
-		if (!isDataChanged) {
-			Navigator.pop(context, true);
-			return Future.value(false);
-		} else {
-			FocusManager.instance.primaryFocus.unfocus();
-			return showDialog<bool>(
-				context: context,
-				builder: (c) => AlertDialog(
-					title: Text(AppLocales.of(context).translate('alert.unsavedProgressTitle')),
-					content: Text(AppLocales.of(context).translate('alert.unsavedProgressMessage')),
-					actions: [
-						FlatButton(
-							child: Text(AppLocales.of(context).translate('actions.cancel')),
-							onPressed: () => Navigator.pop(c, false),
-						),
-						FlatButton(
-							textColor: Colors.red,
-							child: Text(AppLocales.of(context).translate('actions.exit')),
-							onPressed: () {
-								if(isSystemPop)
-									Navigator.pop(c, true);
-								else {
-									Navigator.of(context).pop();
-									Navigator.of(context).pop();
-								}
-							}
-						)
-					]
-				)
-			);
-		}
+	void removeBadge(BuildContext context) {
+		// TODO remove logic
 	}
 
 	Widget buildBottomNavigation(BuildContext context) {
 		return Container(
 			padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
 			decoration: AppBoxProperties.elevatedContainer,
-			height: bottomBarHeight,
+			height: AppBoxProperties.standardBottomNavHeight,
 			child: Row(
 				mainAxisAlignment: MainAxisAlignment.spaceBetween,
 				crossAxisAlignment: CrossAxisAlignment.end,
 				children: <Widget>[
-					SizedBox.shrink(),
+					(formType == AppFormType.edit) ?
+						FlatButton(
+							onPressed: () => removeBadge(context),
+							child: Text(
+								AppLocales.of(context).translate('$_pageKey.removeBadgeButton'),
+								style: Theme.of(context).textTheme.button.copyWith(color: Colors.red)
+							)
+						) : SizedBox.shrink(),
 					FlatButton(
 						onPressed: () => saveBadge(context),
 						child: Text(
-							AppLocales.of(context).translate('$_pageKey.saveBadgeButton'),
+							AppLocales.of(context).translate(formType == AppFormType.create ? '$_pageKey.addBadgeButton' : '$_pageKey.saveBadgeButton' ),
 							style: Theme.of(context).textTheme.button.copyWith(color: AppColors.mainBackgroundColor)
 						)
 					)
@@ -152,13 +135,10 @@ class _CaregiverBadgeFormPageState extends State<CaregiverBadgeFormPage> {
 			padding: EdgeInsets.only(top: 20.0, bottom: 6.0, left: 20.0, right: 20.0),
 			child: TextFormField(
 				controller: _titleController,
-				decoration: InputDecoration(
-					icon: Padding(padding: EdgeInsets.all(5.0), child: Icon(Icons.edit)),
-					contentPadding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 12.0),
-					border: OutlineInputBorder(),
+				decoration: AppFormProperties.textFieldDecoration(Icons.edit).copyWith(
 					labelText: AppLocales.of(context).translate('$_pageKey.fields.badgeName.label')
 				),
-				maxLength: 120,
+				maxLength: AppFormProperties.textFieldMaxLength,
 				textCapitalization: TextCapitalization.sentences,
 				validator: (value) {
 					return value.trim().isEmpty ? AppLocales.of(context).translate('$_pageKey.fields.badgeName.emptyError') : null;
@@ -176,16 +156,12 @@ class _CaregiverBadgeFormPageState extends State<CaregiverBadgeFormPage> {
 			padding: EdgeInsets.only(top: 5.0, bottom: 6.0, left: 20.0, right: 20.0),
 			child: TextFormField(
 				controller: _descriptionController,
-				decoration: InputDecoration(
-					icon: Padding(padding: EdgeInsets.all(5.0), child: Icon(Icons.description)),
-					contentPadding: EdgeInsets.symmetric(vertical: 14.0, horizontal: 12.0),
-					border: OutlineInputBorder(),
-					labelText: AppLocales.of(context).translate('$_pageKey.fields.badgeDescription.label'),
-					alignLabelWithHint: true
+				decoration: AppFormProperties.longTextFieldDecoration(Icons.description).copyWith(
+					labelText: AppLocales.of(context).translate('$_pageKey.fields.badgeDescription.label')
 				),
-				maxLength: 1000,
-				maxLines: 6,
-				minLines: 4,
+				maxLength: AppFormProperties.longTextFieldMaxLength,
+				minLines: AppFormProperties.longTextMinLines,
+				maxLines: AppFormProperties.longTextMaxLines,
 				textCapitalization: TextCapitalization.sentences,
 				onChanged: (val) => setState(() {
 					badge.description = val;

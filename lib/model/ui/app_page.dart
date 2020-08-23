@@ -1,6 +1,6 @@
 enum AppPage {
 	loadingPage, rolesPage,
-	caregiverSignInPage, caregiverSignUpPage, childSignInPage, childSignUpPage,
+	caregiverSignInPage, caregiverSignUpPage, childProfilesPage, childSignInPage,
 	caregiverPanel, caregiverPlans, caregiverPlanForm, caregiverAwards, caregiverAwardForm, caregiverStatistics,
 	childPanel, childAwards, childAchievements, childPlanInProgress, caregiverPlanDetails
 

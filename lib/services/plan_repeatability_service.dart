@@ -1,6 +1,5 @@
 import 'package:date_utils/date_utils.dart';
 import 'package:flutter/widgets.dart';
-import 'package:fokus/model/ui/form/plan_form_model.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 import 'package:mongo_dart/mongo_dart.dart';
@@ -11,44 +10,40 @@ import 'package:fokus/model/db/plan/repeatability_type.dart';
 import 'package:fokus/model/db/plan/plan_repeatability.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/string_utils.dart';
+import 'package:fokus/model/db/date_span.dart';
+import 'package:fokus/model/ui/form/plan_form_model.dart';
 
 import 'data/data_repository.dart';
 
 class PlanRepeatabilityService {
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 
-	List<Date> getRepeatabilityDatesInMonth(PlanRepeatability repeatability, Date month) {
+	/// [span] - must fit within a month (from 1'st to the end)
+	List<Date> getRepeatabilityDatesInSpan(PlanRepeatability repeatability, DateSpan<Date> span) {
 		var day = (int index) => repeatability.days[index];
-		var nextDayGap = (int index) {
-			var gap = repeatability.days[(index + 1) % repeatability.days.length] - day(index);
-			return gap > 0 ? gap : gap + 7;
-		};
 		List<Date> dates = [];
-
-		if (repeatability.type == RepeatabilityType.once) {
-			if (Utils.firstDayOfMonth(repeatability.range.from) == month)
-				dates.add(repeatability.range.from);
-		} else if (repeatability.type == RepeatabilityType.weekly) {
-			var weekdayIndex = repeatability.days.indexWhere((day) => day >= month.weekday);
-			int daysJump = day(weekdayIndex) - month.weekday;
-			if (weekdayIndex == -1) {
-				weekdayIndex = 0;
-				daysJump += 7;
+		var iterateDays = (int startDay, int baseLength) {
+			var dayIndex = repeatability.days.indexWhere((day) => day >= startDay);
+			int daysJump = day(dayIndex) - startDay;
+			if (dayIndex == -1) {
+				dayIndex = 0;
+				daysJump += baseLength;
 			}
-			var date = Date(month.year, month.month, daysJump);
-			while (date.month == month.month) {
+			var date = Date(span.from.year, span.from.month, span.from.day + daysJump);
+			while (date < span.to) {
 				dates.add(Date.fromDate(date));
-				date = Date(date.year, date.month, date.day + nextDayGap(weekdayIndex));
-				weekdayIndex = (weekdayIndex + 1) % repeatability.days.length;
+				var gap = day((dayIndex + 1) % repeatability.days.length) - day(dayIndex);
+				date = Date(date.year, date.month, date.day + (gap > 0 ? gap : gap + baseLength));
+				dayIndex = (dayIndex + 1) % repeatability.days.length;
 			}
-		} else if (repeatability.type == RepeatabilityType.monthly) {
-			for (var day in repeatability.days) {
-				var date = Date(month.year, month.month, day);
-				if (date.month > month.month)
-					break;
-				dates.add(Date(month.year, month.month, day));
-			}
-		}
+		};
+		if (repeatability.type == RepeatabilityType.once)
+			if (repeatability.range.from >= span.from && repeatability.range.from < span.to)
+				dates.add(repeatability.range.from);
+		else if (repeatability.type == RepeatabilityType.weekly)
+			iterateDays(span.from.weekday, 7);
+		else if (repeatability.type == RepeatabilityType.monthly)
+			iterateDays(span.from.day, Utils.lastDayOfMonth(span.from).day);
 		return dates;
 	}
 

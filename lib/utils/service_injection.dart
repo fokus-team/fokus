@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart';
 
 import 'package:fokus/services/data/db/db_data_repository.dart';
@@ -10,11 +11,12 @@ import 'package:fokus/services/auth/authentication_repository.dart';
 import 'package:fokus/services/auth/firebase_auth_repository.dart';
 import 'package:fokus/services/remote_config_provider.dart';
 
-void initializeServices() {
+void initializeServices(RouteObserver<PageRoute> routeObserver) {
 	GetIt.I.registerSingleton<AuthenticationRepository>(FirebaseAuthRepository());
 	GetIt.I.registerSingleton<RemoteConfigProvider>(RemoteConfigProvider()..initialize());
 	GetIt.I.registerSingleton<AppConfigRepository>(AppConfigRepository(AppSharedPreferencesProvider())..initialize());
 	GetIt.I.registerSingleton<DataRepository>(DbDataRepository());
 	GetIt.I.registerSingleton<PlanRepeatabilityService>(PlanRepeatabilityService());
 	GetIt.I.registerSingleton<OutdatedDataService>(OutdatedDataService());
+	GetIt.I.registerSingleton<RouteObserver<PageRoute>>(routeObserver);
 }

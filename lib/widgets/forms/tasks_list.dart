@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:fokus/model/ui/task/ui_task_form.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fokus/logic/plan_form/plan_form_cubit.dart';
 import 'package:fokus/widgets/cards/task_card.dart';
 import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorderable_list.dart';
 
-import 'package:fokus/model/ui/plan/ui_plan_form.dart';
+import 'package:fokus/model/ui/form/task_form_model.dart';
+import 'package:fokus/model/ui/form/plan_form_model.dart';
 
 import 'package:fokus/utils/dialog_utils.dart';
 import 'package:fokus/utils/theme_config.dart';
@@ -13,7 +15,7 @@ import 'package:fokus/widgets/dialogs/general_dialog.dart';
 import 'package:fokus/widgets/forms/task_form.dart';
 
 class TaskList extends StatefulWidget {
-	final UIPlanForm plan;
+	final PlanFormModel plan;
 	final Function goBackCallback;
 	final Function submitCallback;
 	final bool isCreateMode;
@@ -90,9 +92,16 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 		});
 	}
 
+	Widget provideCubitForRoute(Widget route) {
+		return BlocProvider.value(
+			value: context.bloc<PlanFormCubit>(),
+			child: route,
+		);
+	}
+
 	void addNewTask() {
 		Navigator.of(context).push(MaterialPageRoute(
-			builder: (context) => TaskForm(
+			builder: (context) => provideCubitForRoute(TaskForm(
 				task: null,
 				createTaskCallback: (newTask) { 
 					Future.wait([
@@ -102,15 +111,16 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 						}))
 					]);
 				}
-			)
+			))
 		));
 	}
 
-	void editTask(UITaskForm task) {
+
+	void editTask(TaskFormModel task) {
 		Navigator.of(context).push(MaterialPageRoute(
-			builder: (context) => TaskForm(
+			builder: (context) => provideCubitForRoute(TaskForm(
 				task: task,
-				saveTaskCallback: (UITaskForm updatedTask) {
+				saveTaskCallback: (TaskFormModel updatedTask) {
 					Future.wait([
 						Future(() => setState(() {
 							task.copy(updatedTask);
@@ -126,11 +136,12 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 						}))
 					]);
 				}
-			)
+			))
 		));
 	}
 
-	void onReorderFinished(List<UITaskForm> newItems) {
+
+	void onReorderFinished(List<TaskFormModel> newItems) {
     setState(() {
       inReorder = false;
 			widget.plan.tasks..retainWhere((task) => task.optional == true)..addAll(newItems);
@@ -140,7 +151,7 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 
 	Widget buildReordableTaskList(BuildContext context) {
 		final requiredTasks = widget.plan.tasks.where((element) => element.optional == false);
-		return ImplicitlyAnimatedReorderableList<UITaskForm>(
+		return ImplicitlyAnimatedReorderableList<TaskFormModel>(
 			shrinkWrap: true,
 			physics: NeverScrollableScrollPhysics(),
 			items: requiredTasks.toList(),
@@ -201,7 +212,7 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 						buildTaskListHeader(context, AppLocales.of(context).translate('$_pageKey.optionalTaskListTitle'), optionalTasks.length)
 						: SizedBox.shrink()
 				),
-				ImplicitlyAnimatedList<UITaskForm>(
+				ImplicitlyAnimatedList<TaskFormModel>(
 					shrinkWrap: true,
 					physics: NeverScrollableScrollPhysics(),
 					items: optionalTasks.toList(),
@@ -283,7 +294,8 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 		);
 	}
 
-	Widget buildTaskCard(BuildContext context, UITaskForm task, bool optional) {
+
+	Widget buildTaskCard(BuildContext context, TaskFormModel task, bool optional) {
 		int index = (widget.plan.tasks..where((element) => element.optional == optional)).indexOf(task);
 		return TaskCard(task: task, index: index, onTap: editTask);
 	}

@@ -14,7 +14,11 @@ class CaregiverSignUpCubit extends CaregiverAuthCubitBase<CaregiverSignUpState> 
   CaregiverSignUpCubit() : super(CaregiverSignUpState());
 
   Future<void> signUpFormSubmitted() async {
-	  if (!state.status.isValidated) return;
+	  var state = _validateFields();
+	  if (!state.status.isValidated) {
+		  emit(state);
+		  return;
+	  }
 	  emit(state.copyWith(status: FormzStatus.submissionInProgress));
 	  try {
 		  await authenticationRepository.signUpWithEmail(
@@ -24,41 +28,26 @@ class CaregiverSignUpCubit extends CaregiverAuthCubitBase<CaregiverSignUpState> 
 		  );
 		  emit(state.copyWith(status: FormzStatus.submissionSuccess));
 	  } on EmailSignUpFailure catch (e) {
-		  emit(state.copyWith(status: FormzStatus.submissionFailure, error: e.reason));
+		  emit(state.copyWith(status: FormzStatus.submissionFailure, signUpError: e.reason));
+	  } on Exception {
+		  emit(state.copyWith(status: FormzStatus.submissionFailure));
 	  }
   }
 
-	void nameChanged(String value) {
-		final name = Name.dirty(value);
-		emit(state.copyWith(
-			name: name,
-			status: Formz.validate([name, state.email, state.password, state.confirmedPassword]),
-		));
-	}
-
-	void emailChanged(String value) {
-		final email = Email.dirty(value);
-		emit(state.copyWith(
-			email: email,
-			status: Formz.validate([state.name, email, state.password, state.confirmedPassword]),
-		));
-	}
-
-	void passwordChanged(String value) {
-		final password = Password.dirty(value);
-		final confirmedPassword = state.confirmedPassword.copyWith(original: password);
-		emit(state.copyWith(
-			password: password,
-			confirmedPassword: confirmedPassword,
-			status: Formz.validate([state.name, state.email, password, confirmedPassword]),
-		));
-	}
-
-  void confirmedPasswordChanged(String value) {
-	  final confirmedPassword = state.confirmedPassword.copyWith(value: value);
-	  emit(state.copyWith(
-		  confirmedPassword: confirmedPassword,
-		  status: Formz.validate([state.name, state.email, state.password, confirmedPassword]),
-	  ));
+  CaregiverSignUpState _validateFields() {
+	  var state = this.state;
+	  state = state.copyWith(email: Email.dirty(state.email.value));
+	  state = state.copyWith(name: Name.dirty(state.name.value));
+	  state = state.copyWith(password: Password.dirty(state.password.value));
+	  state = state.copyWith(confirmedPassword: state.confirmedPassword.copyDirty(original: state.password));
+	  return state.copyWith(status: Formz.validate([state.email, state.password, state.name, state.confirmedPassword]));
   }
+
+	void nameChanged(String value) => emit(state.copyWith(name: Name.pure(value), status: FormzStatus.pure));
+
+  void emailChanged(String value) => emit(state.copyWith(email: Email.pure(value), status: FormzStatus.pure));
+
+  void passwordChanged(String value) => emit(state.copyWith(password: Password.pure(value), status: FormzStatus.pure));
+
+  void confirmedPasswordChanged(String value) => emit(state.copyWith(confirmedPassword: state.confirmedPassword.copyPure(value: value), status: FormzStatus.pure));
 }

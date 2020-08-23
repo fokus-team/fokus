@@ -1,13 +1,14 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:fokus/model/ui/app_page.dart';
-import 'package:fokus/model/ui/plan/ui_plan_form.dart';
+import 'package:fokus/model/ui/form/plan_form_model.dart';
 
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/dialog_utils.dart';
 import 'package:fokus/utils/theme_config.dart';
 import 'package:fokus/widgets/dialogs/general_dialog.dart';
+import 'package:fokus/logic/plan_form/plan_form_cubit.dart';
 
 import 'package:fokus/widgets/forms/tasks_list.dart';
 import 'package:fokus/widgets/forms/plan_form.dart';
@@ -23,20 +24,19 @@ class CaregiverPlanFormPage extends StatefulWidget {
 class _CaregiverPlanFormPageState extends State<CaregiverPlanFormPage> {
 	static const String _pageKey = 'page.caregiverSection.planForm';
 	final int screenTransitionDuration = 500;
+	AppFormType formType;
+	PlanFormModel plan = PlanFormModel(); // TODO Edit mode for the form
 
 	PlanFormStep currentStep = PlanFormStep.planParameters;
-	UIPlanForm plan = UIPlanForm(); // TODO Edit mode for the form
 
 	GlobalKey<FormState> formKey;
-	GlobalKey<TaskListState> taskListState;
 
 	bool isCurrentStepOne() => (currentStep == PlanFormStep.planParameters);
-	bool isCurrentModeCreate() => (ModalRoute.of(context).settings.arguments == AppFormType.create);
 
 	void next() => setState(() { currentStep = PlanFormStep.taskList; });
 	void back() => setState(() { currentStep = PlanFormStep.planParameters; });
 	void submit() {
-		if(plan.tasks.isEmpty) {
+		if (plan.tasks.isEmpty) {
 			showBasicDialog(
 				context,
 				GeneralDialog.discard(
@@ -45,45 +45,67 @@ class _CaregiverPlanFormPageState extends State<CaregiverPlanFormPage> {
 				)
 			);
 		} else {
-			log("Dodaj/edytuj plan"); /* TODO Form submit */ 
+			context.bloc<PlanFormCubit>().submitPlanForm(plan);
 		}
 	}
 
 	@override
 	Widget build(BuildContext context) {
 		formKey = GlobalKey<FormState>();
-		taskListState = GlobalKey<TaskListState>();
-    return Scaffold(
-			appBar: AppBar(
-				title: Text(isCurrentModeCreate() ?
-					AppLocales.of(context).translate('$_pageKey.createPlanTitle')
-					: AppLocales.of(context).translate('$_pageKey.editPlanTitle')
-				),
-				actions: <Widget>[
-					HelpIconButton(helpPage: 'plan_creation')
-				],
-			),
-			body: buildStepper(context)
+    return BlocConsumer<PlanFormCubit, PlanFormState>(
+			listener: (context, state) {
+				if (state is PlanFormSubmissionSuccess)
+					Navigator.of(context).pop(); // TODO also show some visual feedback?
+				else if (state is PlanFormDataLoadSuccess)
+					setState(() => plan = PlanFormModel.from(state.planForm));
+			},
+	    builder: (context, state) {
+				List<Widget> children = [Scaffold(
+					appBar: AppBar(
+						title: Text(formType == AppFormType.create ?
+						AppLocales.of(context).translate('$_pageKey.createPlanTitle')
+								: AppLocales.of(context).translate('$_pageKey.editPlanTitle')
+						),
+						actions: <Widget>[
+							HelpIconButton(helpPage: 'plan_creation')
+						],
+					),
+					body: buildStepper()
+				)];
+				if (state is PlanFormInitial) {
+					formType = state.formType; // works?
+					context.bloc<PlanFormCubit>().loadFormData();
+					if (formType == AppFormType.edit)
+						children.add(Center(child: CircularProgressIndicator()));
+				}
+				else if (state is PlanFormSubmissionInProgress)
+					children.add(Center(child: CircularProgressIndicator()));
+		    return WillPopScope(
+					onWillPop: () => showExitFormDialog(context, true, state is PlanFormDataLoadSuccess && plan != state.planForm),
+					child: Stack(
+					  children: children
+					)
+				);
+			},
     );
 	}
 
-	Widget buildStepOneContent(BuildContext context) => PlanForm(
+	Widget buildStepOneContent() => PlanForm(
 		plan: plan,
 		goNextCallback: () {
-			if(formKey.currentState.validate())
+			if(formKey.currentState.validate() && (plan.repeatability == PlanFormRepeatability.recurring && plan.days.length > 0))
 				next();
 		}
 	);
 
-	Widget buildStepTwoContent(BuildContext context) => TaskList(
+	Widget buildStepTwoContent() => TaskList(
 		plan: plan,
-		key: taskListState,
 		goBackCallback: back,
 		submitCallback: submit,
-		isCreateMode: isCurrentModeCreate(),
-	); 
+		isCreateMode: formType == AppFormType.create,
+	);
 
-	Widget buildStepper(BuildContext context) {
+	Widget buildStepper() {
 		return Column(
 			children: <Widget>[
 				Container(
@@ -164,7 +186,7 @@ class _CaregiverPlanFormPageState extends State<CaregiverPlanFormPage> {
 							key: ValueKey(currentStep),
 							child: Form(
 								key: formKey,
-								child: isCurrentStepOne() ? buildStepOneContent(context) : buildStepTwoContent(context)
+								child: isCurrentStepOne() ? buildStepOneContent() : buildStepTwoContent()
 							)
 						)
 					)

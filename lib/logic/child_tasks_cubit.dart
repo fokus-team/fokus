@@ -20,4 +20,21 @@ class ChildTasksCubit extends Cubit<ChildTasksState> {
   	List<UITaskInstance> uiInstances = await TaskInstancesService().getTaskInstanceListfromDb(allTasksInstances);
   	emit(ChildTasksLoadSuccess(uiInstances));
 	}
+
+
+	class ChildTasksLoadSuccess extends ChildTasksState {
+	final List<UITaskInstance> tasks;
+
+	ChildTasksLoadSuccess(this.tasks);
+
+	@override
+	List<Object> get props => [tasks];
+
+	@override
+	String toString() {
+	return 'ChildTasksLoadSuccess{tasks: $tasks}';
+	}
+	}
+
 }
+

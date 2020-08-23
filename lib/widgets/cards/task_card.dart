@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:fokus/model/ui/task/ui_task_form.dart';
+import 'package:fokus/model/ui/form/task_form_model.dart';
 import 'package:fokus/services/app_locales.dart';
 import '../chips/attribute_chip.dart';
 
 class TaskCard extends StatelessWidget {
-	final UITaskForm task;
+	final TaskFormModel task;
 	final int index;
 	final Function onTap;
 
@@ -48,7 +48,7 @@ class TaskCard extends StatelessWidget {
 													child: Hero(
 													tag: task.key,
 													child: Text(
-														task.name,
+														task.title,
 														style: Theme.of(context).textTheme.bodyText2.copyWith(fontSize: 17.0),
 														maxLines: 3,
 														overflow: TextOverflow.ellipsis

@@ -12,7 +12,7 @@ class Password extends FormzInput<String, PasswordValidationError> {
 	static const int minPasswordLength = 8;
 	final bool validate;
 
-	const Password.pure([this.validate = true]) : super.pure('');
+	const Password.pure([String value = '', this.validate = true]) : super.pure(value);
 	const Password.dirty([String value = '', this.validate = true]) : super.dirty(value);
 
 	static final _lengthRegExp = RegExp(r'^[A-Za-z\d]{' + '$minPasswordLength' + r',}$');

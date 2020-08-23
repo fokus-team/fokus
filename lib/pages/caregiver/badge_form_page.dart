@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:fokus/model/ui/award/ui_badge.dart';
 import 'package:fokus/widgets/buttons/help_icon_button.dart';
 import 'package:fokus/widgets/forms/iconpicker_field.dart';
-import 'package:fokus/widgets/forms/pointpicker_field.dart';
 import 'package:smart_select/smart_select.dart';
 
 import 'package:fokus/services/app_locales.dart';

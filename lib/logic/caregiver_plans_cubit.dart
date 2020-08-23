@@ -20,7 +20,7 @@ class CaregiverPlansCubit extends ReloadableCubit {
     var getDescription = (Plan plan) => _repeatabilityService.buildPlanDescription(plan.repeatability);
     var caregiverId = _activeUser().id;
     var plans = await _dataRepository.getPlans(caregiverId: caregiverId, activeOnly: false);
-		emit(CaregiverPlansLoadSuccess(plans.map((plan) => UIPlan.fromDBModel(plan, getDescription(plan)))));
+		emit(CaregiverPlansLoadSuccess(plans.map((plan) => UIPlan.fromDBModel(plan, getDescription(plan))).toList()));
   }
 }
 

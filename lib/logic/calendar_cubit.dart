@@ -1,10 +1,12 @@
 import 'package:bloc/bloc.dart';
+import 'package:date_utils/date_utils.dart';
 import 'package:equatable/equatable.dart';
 import 'package:fokus/model/db/date_span.dart';
 import 'package:fokus/model/db/plan/plan.dart';
 import 'package:fokus/model/db/plan/plan_instance.dart';
 import 'package:fokus/model/ui/user/ui_caregiver.dart';
 import 'package:fokus/services/app_locales.dart';
+import 'package:fokus/services/plan_repeatability_service.dart';
 import 'package:fokus/utils/collection_utils.dart';
 import 'package:fokus/utils/string_utils.dart';
 import 'package:get_it/get_it.dart';
@@ -21,6 +23,7 @@ class CalendarCubit extends Cubit<CalendarState> {
 	Map<ObjectId, String> _children;
 
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
+	final PlanRepeatabilityService _repeatabilityService = GetIt.I<PlanRepeatabilityService>();
 
   CalendarCubit(this._activeUser) : super(CalendarState());
 
@@ -32,8 +35,7 @@ class CalendarCubit extends Cubit<CalendarState> {
 	    _plans = Map.fromEntries((await _dataRepository.getPlans(caregiverId: activeUser.id, activeOnly: false)).map((plan) => MapEntry(plan.id, plan)));
 	  if (_children == null)
 	  	_children = await _dataRepository.getUserNames(activeUser.connections);
-	  var currentMonth = Date.now();
-	  currentMonth = Date(currentMonth.year, currentMonth.month, 1);
+	  var currentMonth = Date.fromDate(Utils.firstDayOfMonth(Date.now()));
 	  if (month < currentMonth)
 	  	loadPastMonthData(month);
 	  else if (month > currentMonth)
@@ -45,7 +47,7 @@ class CalendarCubit extends Cubit<CalendarState> {
 		var instances = await _dataRepository.getPlanInstances(planIDs: _plans.keys.toList(), between: dateSpan);
 		var dateMap = groupBy<Date, PlanInstance>(instances, (plan) => plan.date);
 
-	  Map<Date, List<UIPlan>> events;
+	  Map<Date, List<UIPlan>> events = {};
 		for (var entry in dateMap.entries) {
 			var planMap = groupBy<ObjectId, PlanInstance>(entry.value, (plan) => plan.planID);
 			events[entry.key] = planMap.keys.map((planId) => UIPlan.fromDBModel(_plans[planId], getDescription(planMap[planId]))).toList();
@@ -53,8 +55,14 @@ class CalendarCubit extends Cubit<CalendarState> {
 		emit(state.copyWith(month, events));
 	}
 
-	void loadFutureMonthData(Date month) async {
-
+	void loadFutureMonthData(Date month) {
+		Map<Date, List<UIPlan>> events = {};
+		for (var plan in _plans.entries) {
+			var dates = _repeatabilityService.getRepeatabilityDatesInMonth(plan.value.repeatability, month);
+			for (var date in dates)
+				(events[date] ??= []).add(UIPlan.fromDBModel(plan.value, getAssignedToDescription(plan.value.assignedTo.map((child) => _children[child]).toList())));
+		}
+		emit(state.copyWith(month, events));
 	}
 
 	TranslateFunc getDescription(List<PlanInstance> plans) {

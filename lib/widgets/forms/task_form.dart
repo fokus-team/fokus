@@ -10,6 +10,7 @@ import 'package:fokus/model/ui/form/task_form_model.dart';
 import 'package:fokus/model/ui/gamification/ui_currency.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/dialog_utils.dart';
+import 'package:fokus/utils/form_config.dart';
 import 'package:fokus/utils/theme_config.dart';
 import 'package:fokus/widgets/buttons/back_icon_button.dart';
 import 'package:fokus/widgets/buttons/help_icon_button.dart';
@@ -36,7 +37,6 @@ class TaskForm extends StatefulWidget {
 class _TaskFormState extends State<TaskForm> {
 	static const String _pageKeyTaskForm = 'page.caregiverSection.taskForm';
 	static const String _pageKeyPlanForm = 'page.caregiverSection.planForm';
-	double bottomBarHeight = 60.0;
 
 	GlobalKey<FormState> taskFormKey;
 	bool isDataChanged = false;
@@ -83,7 +83,7 @@ class _TaskFormState extends State<TaskForm> {
 				body: Stack(
 					children: [
 						Positioned.fill(
-							bottom: bottomBarHeight,
+							bottom: AppBoxProperties.standardBottomNavHeight,
 							child: Form(
 								key: taskFormKey,
 								child: Material(
@@ -138,7 +138,6 @@ class _TaskFormState extends State<TaskForm> {
 			Navigator.of(context).pop();
 		}
 	}
-
 
 	Widget buildCustomHeader() {
 		bool hasTitle = !formModeIsCreate() && task.title != null && task.title.length > 0;
@@ -201,7 +200,7 @@ class _TaskFormState extends State<TaskForm> {
 		return Container(
 			padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
 			decoration: AppBoxProperties.elevatedContainer,
-			height: bottomBarHeight,
+			height: AppBoxProperties.standardBottomNavHeight,
 			child: Row(
 				mainAxisAlignment: MainAxisAlignment.spaceBetween,
 				crossAxisAlignment: CrossAxisAlignment.end,
@@ -259,13 +258,10 @@ class _TaskFormState extends State<TaskForm> {
 			child: TextFormField(
 				autofocus: formModeIsCreate(),
 				controller: _titleController,
-				decoration: InputDecoration(
-					icon: Padding(padding: EdgeInsets.all(5.0), child: Icon(Icons.edit)),
-					contentPadding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 12.0),
-					border: OutlineInputBorder(),
+				decoration: AppFormProperties.textFieldDecoration(Icons.edit).copyWith(
 					labelText: AppLocales.of(context).translate('$_pageKeyTaskForm.fields.taskName.label')
 				),
-				maxLength: 120,
+				maxLength: AppFormProperties.textFieldMaxLength,
 				textCapitalization: TextCapitalization.sentences,
 				validator: (value) {
 					return value.trim().isEmpty ? AppLocales.of(context).translate('alert.genericEmptyValue') : null;
@@ -283,16 +279,12 @@ class _TaskFormState extends State<TaskForm> {
 			padding: EdgeInsets.only(top: 5.0, bottom: 6.0, left: 20.0, right: 20.0),
 			child: TextFormField(
 				controller: _descriptionController,
-				decoration: InputDecoration(
-					icon: Padding(padding: EdgeInsets.all(5.0), child: Icon(Icons.description)),
-					contentPadding: EdgeInsets.symmetric(vertical: 14.0, horizontal: 12.0),
-					border: OutlineInputBorder(),
-					labelText: AppLocales.of(context).translate('$_pageKeyTaskForm.fields.taskDescription.label'),
-					alignLabelWithHint: true
+				decoration: AppFormProperties.longTextFieldDecoration(Icons.description).copyWith(
+					labelText: AppLocales.of(context).translate('$_pageKeyTaskForm.fields.taskDescription.label')
 				),
-				maxLength: 1000,
-				maxLines: 6,
-				minLines: 4,
+				maxLength: AppFormProperties.longTextFieldMaxLength,
+				minLines: AppFormProperties.longTextMinLines,
+				maxLines: AppFormProperties.longTextMaxLines,
 				textCapitalization: TextCapitalization.sentences,
 				onChanged: (val) => setState(() {
 					isDataChanged = task.description != val;

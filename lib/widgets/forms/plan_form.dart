@@ -5,6 +5,7 @@ import 'package:fokus/model/db/date/date.dart';
 import 'package:fokus/model/db/date_span.dart';
 import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/ui/ui_button.dart';
+import 'package:fokus/utils/form_config.dart';
 import 'package:fokus/widgets/buttons/bottom_sheet_bar_buttons.dart';
 import 'package:smart_select/smart_select.dart';
 import 'package:mongo_dart/mongo_dart.dart' as Mongo;
@@ -35,7 +36,6 @@ class PlanForm extends StatefulWidget {
 class _PlanFormState extends State<PlanForm> {
 	static const String _pageKey = 'page.caregiverSection.planForm.fields';
 
-	double bottomBarHeight = 60.0;
 	bool fieldsValidated = false;
 
 	TextEditingController _planNameController = TextEditingController();
@@ -66,7 +66,7 @@ class _PlanFormState extends State<PlanForm> {
     return Stack(
 			children: [
 				Positioned.fill(
-					bottom: bottomBarHeight,
+					bottom: AppBoxProperties.standardBottomNavHeight,
 					child: ListView(
 						shrinkWrap: true,
 						children: <Widget>[
@@ -96,13 +96,10 @@ class _PlanFormState extends State<PlanForm> {
 			padding: EdgeInsets.only(top: 25.0, bottom: 10.0, left: 20.0, right: 20.0),
 			child: TextFormField(
 				controller: _planNameController,
-				decoration: InputDecoration(
-					icon: Padding(padding: EdgeInsets.all(5.0), child: Icon(Icons.description)),
-					contentPadding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
-					border: OutlineInputBorder(),
+				decoration: AppFormProperties.textFieldDecoration(Icons.edit).copyWith(
 					labelText: AppLocales.of(context).translate('$_pageKey.planName.label')
 				),
-				maxLength: 120,
+				maxLength: AppFormProperties.textFieldMaxLength,
 				textCapitalization: TextCapitalization.sentences,
 				validator: (value) {
 					return value.trim().isEmpty ? AppLocales.of(context).translate('$_pageKey.planName.emptyError') : null;
@@ -348,7 +345,7 @@ class _PlanFormState extends State<PlanForm> {
 
 	Widget buildBottomNavigation() {
 		return Container(
-			height: bottomBarHeight,
+			height: AppBoxProperties.standardBottomNavHeight,
 			child: Stack(
 				children: [
 					Positioned(
@@ -358,7 +355,7 @@ class _PlanFormState extends State<PlanForm> {
 						child: Container(
 							padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
 							decoration: AppBoxProperties.elevatedContainer,
-							height: bottomBarHeight,
+							height: AppBoxProperties.standardBottomNavHeight,
 							child: Row(
 								mainAxisAlignment: MainAxisAlignment.end,
 								crossAxisAlignment: CrossAxisAlignment.end,

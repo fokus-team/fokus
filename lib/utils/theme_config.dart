@@ -37,6 +37,7 @@ class AppBoxProperties {
   static final double containerPadding = 10.0;
   static final double columnChildrenPadding = 5.0;
   static final double sectionPadding = 15.0;
+	static final double standardBottomNavHeight = 60.0;
 
 	static final BoxDecoration elevatedContainer = BoxDecoration(
 		color: Colors.white,

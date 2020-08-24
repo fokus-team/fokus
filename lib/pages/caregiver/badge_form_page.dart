@@ -172,11 +172,11 @@ class _CaregiverBadgeFormPageState extends State<CaregiverBadgeFormPage> {
 	}
 
 	Widget buildLevelField(BuildContext context) {
-		return SmartSelect<UIBadgeLevel>.single(
+		return SmartSelect<UIBadgeMaxLevel>.single(
 			title: AppLocales.of(context).translate('$_pageKey.fields.badgeLevel.label'),
-			value: badge.level,
+			value: badge.maxLevel,
 			options: [
-				for(UIBadgeLevel element in UIBadgeLevel.values)
+				for(UIBadgeMaxLevel element in UIBadgeMaxLevel.values)
 					SmartSelectOption(
 						title: AppLocales.of(context).translate('$_pageKey.fields.badgeLevel.options.${element.toString().split('.').last}'),
 						value: element
@@ -186,7 +186,7 @@ class _CaregiverBadgeFormPageState extends State<CaregiverBadgeFormPage> {
 			modalType: SmartSelectModalType.bottomSheet,
 			leading: Padding(padding: EdgeInsets.all(8.0), child: Icon(Icons.layers)),
 			onChange: (val) => setState(() {
-				badge.level = val;
+				badge.maxLevel = val;
 				isDataChanged = true;
 			})
 		);

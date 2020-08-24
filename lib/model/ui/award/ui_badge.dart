@@ -1,16 +1,31 @@
 
-enum UIBadgeLevel { one, three, five }
+enum UIBadgeMaxLevel { one, three, five }
+
+extension UIBadgeMaxLevelExtension on UIBadgeMaxLevel {
+  int get value {
+    switch (this) {
+      case UIBadgeMaxLevel.one:
+        return 1;
+      case UIBadgeMaxLevel.three:
+        return 3;
+      case UIBadgeMaxLevel.five:
+        return 5;
+      default:
+        return null;
+    }
+  }
+}
 
 class UIBadge {
 	String name;
 	String description;
-	UIBadgeLevel level;
+	UIBadgeMaxLevel maxLevel;
 	int icon;
 
 	UIBadge({
 		this.name,
 		this.description,
-		this.level = UIBadgeLevel.one,
+		this.maxLevel = UIBadgeMaxLevel.one,
 		this.icon = 0
 	});
 

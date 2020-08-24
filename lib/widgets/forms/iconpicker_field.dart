@@ -11,7 +11,7 @@ enum IconPickerType { award, badge }
 class IconPickerField extends StatefulWidget {
 	final String title;
 	final String groupTextKey;
-	final Function callback;
+	final Function(int) callback;
 	final int value;
 	final IconPickerType type;
 
@@ -26,14 +26,14 @@ class IconPickerField extends StatefulWidget {
 	IconPickerField.award({
 		String title,
 		String groupTextKey,
-		Function callback,
+		Function(int) callback,
 		int value
 	}) : this(title: title, groupTextKey: groupTextKey, callback: callback, value: value, type: IconPickerType.award);
 
 	IconPickerField.badge({
 		String title,
 		String groupTextKey,
-		Function callback,
+		Function(int) callback,
 		int value
 	}) : this(title: title, groupTextKey: groupTextKey, callback: callback, value: value, type: IconPickerType.badge);
 

@@ -140,7 +140,6 @@ class _TaskFormState extends State<TaskForm> {
 	}
 
 
-
 	Widget buildCustomHeader() {
 		bool hasTitle = !formModeIsCreate() && task.title != null && task.title.length > 0;
 		double appBarVerticalPadding = hasTitle ? 8.0 : 12.0;

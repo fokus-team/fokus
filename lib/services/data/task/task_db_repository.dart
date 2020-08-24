@@ -16,6 +16,13 @@ mixin TaskDbRepository implements DbRepository {
 		return dbClient.queryTyped(Collection.task, query, (json) => Task.fromJson(json));
 	}
 
+	Future<Task> getTask({ObjectId taskId, bool requiredOnly = false, bool optionalOnly = false, List<String> fields}) {
+		var query = _buildTaskQuery(id: taskId, optionalOnly: optionalOnly, requiredOnly: requiredOnly);
+		if (fields != null)
+			query.fields(fields);
+		return dbClient.queryOneTyped(Collection.task, query, (json) => Task.fromJson(json));
+	}
+
 	Future<List<TaskInstance>> getTaskInstances({ObjectId planInstanceId, bool requiredOnly = false, bool optionalOnly = false, List<String> fields}) {
 		var query = _buildTaskQuery(planInstanceId: planInstanceId, requiredOnly: requiredOnly, optionalOnly: optionalOnly);
 		if (fields != null)

@@ -101,7 +101,7 @@ class _ChildPanelPageState extends State<ChildPanelPage> {
 						  icon: icon,
 						  color: color,
 						  disabled: plan.state == PlanInstanceState.completed,
-						  onTapped: () => Navigator.of(context).pushNamed(AppPage.childPlanInProgress.name, arguments: plan)
+						  onTapped: () => Navigator.of(context).pushNamed(AppPage.childPlanInProgress.name, arguments: plan.id)
 						),
 					  title: plan.name,
 					  subtitle: plan.description(context),

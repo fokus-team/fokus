@@ -24,7 +24,7 @@ class ChildSignUpCubit extends ChildAuthCubitBase<ChildSignUpState> {
 	  emit(state.copyWith(status: FormzStatus.submissionInProgress));
 
 	  var caregiverId = getIdFromCode(state.caregiverCode.value);
-	  var child = Child.create(name: state.name.value, avatar: 0, connections: [caregiverId]);
+	  var child = Child.create(name: state.name.value, avatar: state.avatar, connections: [caregiverId]);
 	  child.id = await dataRepository.createUser(child);
 	  await dataRepository.updateUser(caregiverId, newConnections: [child.id]);
 	  appConfigRepository.saveChildProfile(child.id);
@@ -34,14 +34,16 @@ class ChildSignUpCubit extends ChildAuthCubitBase<ChildSignUpState> {
 
   void caregiverCodeChanged(String value) async {
 	  var caregiverField = UserCode.dirty(value);
-	  Set<int> takenAvatars;
+	  Set<int> takenAvatars = {};
 	  if (caregiverField.valid && await verifyUserCode(value, UserRole.caregiver))
-			  takenAvatars = (await dataRepository.getUsers(connected: getIdFromCode(value), role: UserRole.child, fields: ['avatar'])).map((child) => child.avatar).toSet();
+			  takenAvatars = (await dataRepository.getUsers(connected: getIdFromCode(value), role: UserRole.child, fields: ['avatar']))?.map((child) => child.avatar)?.toSet() ?? {};
 	  caregiverField = UserCode.pure(value);
 	  emit(state.copyWith(
 		  caregiverCode: caregiverField,
 		  status: FormzStatus.pure,
-		  takenAvatars: takenAvatars
+		  takenAvatars: takenAvatars,
+			avatar: (takenAvatars.contains(state.avatar)) ? null : state.avatar,
+			clearableAvatar: true
 	  ));
   }
 
@@ -52,8 +54,14 @@ class ChildSignUpCubit extends ChildAuthCubitBase<ChildSignUpState> {
 		  caregiverField = UserCode.dirty(state.caregiverCode.value, false);
 	  state = state.copyWith(caregiverCode: caregiverField);
 	  state = state.copyWith(name: Name.dirty(state.name.value));
-	  return state.copyWith(status: Formz.validate([state.name, state.caregiverCode]));
+	  state = state.copyWith(avatar: state.avatar);
+		var status = Formz.validate([state.name, state.caregiverCode]);
+		if(state.avatar == null)
+			status = FormzStatus.invalid;
+	  return state.copyWith(status: status);
   }
 
   void nameChanged(String value) => emit(state.copyWith(name: Name.pure(value), status: FormzStatus.pure));
+
+  void avatarChanged(int value) => emit(state.copyWith(avatar: value));
 }

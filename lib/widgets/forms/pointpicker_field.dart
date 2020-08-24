@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fokus/model/ui/ui_button.dart';
-import 'package:fokus/model/ui/ui_currency.dart';
+import 'package:fokus/model/ui/gamification/ui_currency.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/app_paths.dart';
 import 'package:fokus/utils/theme_config.dart';
@@ -18,8 +18,8 @@ class PointPickerField extends StatefulWidget {
 	final int minPoints;
 	final int maxPoints;
 
-	final Function pointValueSetter;
-	final Function pointCurrencySetter;
+	final Function(String) pointValueSetter;
+	final Function(UICurrency) pointCurrencySetter;
 
 	final String labelValueText;
 	final String helperValueText;

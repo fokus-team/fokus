@@ -163,7 +163,7 @@
 					},
 					"taskPoints": {
 						"valueLabel": "Nagroda punktowa",
-						"currencyLabel": "Waluta punktów",
+						"currencyLabel": "Waluta",
 						"hint": "Pozostaw puste, aby nie przyznawać punktów"
 					},
 					"taskTimer": {
@@ -196,6 +196,40 @@
 					"noLeveledBadge": "Odznaka przyznawana jednorazowo",
 					"3LeveledBadge": "Odznaka 3 poziomowa",
 					"5LeveledBadge": "Odznaka 5 poziomowa"
+				}
+			},
+			"awardForm": {
+				"addAwardTitle": "Dodaj nagrodę",
+				"editAwardTitle": "Edytuj nagrodę",
+				"addAwardButton": "Dodaj nagodę",
+				"saveAwardButton": "Zapisz nagodę",
+				"removeAwardButton": "Usuń nagodę",
+				"removeAwardTitle": "Usuń nagrodę",
+				"removeAwardText": "Na pewno chcesz usunąć tą nagrodę?",
+				"fields": {
+					"awardName": {
+						"label": "Nazwa nagrody",
+						"emptyError": "Nazwa nagrody nie może być pusta"
+					},
+					"awardLimit": {
+						"label": "Limit nagród",
+						"hint": "Pozostaw puste, aby nie limitować"
+					},
+					"awardPoints": {
+						"valueLabel": "Koszt punktowy",
+						"currencyLabel": "Waluta punktów",
+						"hint": "Ilość punktów potrzebna do odbioru nagrody przez dziecko",
+						"emptyError": "Koszt punktowy musi wynosić minimum 1 punkt"
+					},
+					"awardIcon": {
+						"label": "Ikona nagrody",
+						"groups": {
+							"gift": "Prezent",
+							"activity": "Aktywność",
+							"relax": "Odpoczynek",
+							"food": "Jedzenie"
+						}
+					}
 				}
 			},
 			"statistics": {
@@ -274,7 +308,8 @@
 		"range": "od {FROM} do {TO}"
 	},
 	"date": {
-		"weekday": "{WEEKDAY, select, 1 {Poniedziałek} 2 {Wtorek} 3 {Środa} 4 {Czwartek} 5 {Piątek} 6 {Sobota} 7 {Niedziela} other {}}"
+		"weekday": "{WEEKDAY, select, 1 {Poniedziałek} 2 {Wtorek} 3 {Środa} 4 {Czwartek} 5 {Piątek} 6 {Sobota} 7 {Niedziela} other {}}",
+		"everyday": "Codziennie"
 	},
 	"alert": {
 		"noConnection": "Brak połączenia",
@@ -282,8 +317,8 @@
 		"connectionRetry": "Upewnij się że urządzenie ma dostęp do internetu",
 		"genericEmptyValue": "Pole nie może być puste",
 		"genericRangeOverflowValue": "Wartość musi mieścić się w zakresie {A}-{B}",
-		"unsavedProgressTitle": "Niezapisane dane",
-		"unsavedProgressMessage": "Posiadasz niezapisane dane. Czy jesteś pewien, że chcesz wyjść?",
+		"unsavedProgressTitle": "Niezapisane zmiany",
+		"unsavedProgressMessage": "Posiadasz niezapisane zmiany. Czy jesteś pewien, że chcesz wyjść?",
 		"deletePlan": "Usuwanie planu",
 		"confirmPlanDeletion": "Czy na pewno chcesz usunąć plan?"
 	},
@@ -322,6 +357,8 @@
 		"error": {
 			"incorrectData": "Nieprawidłowy e-mail lub hasło",
 			"emailAlreadyUsed": "Adres e-mail jest już zajęty",
+			"emailInvalid": "Adres e-mail jest nieprawidłowy",
+			"nameEmpty": "Imię nie może być puste",
 			"userDisabled": "Użytkownik został wyłączony",
 			"invalidEmail": "Nieprawidłowy adres e-mail",
 			"userCodeToShort": "Kod jest za krótki",
@@ -335,8 +372,11 @@
 		"first_steps": "Pierwsze kroki",
 		"plan_creation": "Tworzenie planu",
 		"task_creation": "Konfiguracja zadania",
+		"award_creation": "Tworzenie nagrody",
 		"plan_info": "Plany"
 	},
+	"assignedTo": "Przypisane do",
+	"points": "Punkty",
 	"and": "i",
 	"hour": "godz.",
 	"minute": "min"

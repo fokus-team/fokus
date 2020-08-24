@@ -14,7 +14,7 @@ class Caregiver extends User {
   List<Badge> badges;
   List<ObjectId> friends;
 
-  Caregiver.fromAuthUser(AuthenticatedUser authUser) : this._(authenticationId: authUser.id, email: authUser.email, name: authUser.name);
+  Caregiver.fromAuthUser(AuthenticatedUser authUser) : this._(authenticationId: authUser.id, email: authUser.email, name: authUser.name, id: ObjectId());
 
   Caregiver._({ObjectId id, String name, this.badges, this.email, this.friends, this.authenticationId, this.currencies}) : super(id: id, name: name, role: UserRole.caregiver);
 

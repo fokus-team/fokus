@@ -1,9 +1,12 @@
+import 'package:fokus/logic/auth/formz_state.dart';
+import 'package:fokus/services/exception/auth_exceptions.dart';
 import 'package:formz/formz.dart';
 
-import '../formz_state.dart';
 
 abstract class CaregiverAuthStateBase extends FormzState {
-  CaregiverAuthStateBase(FormzStatus status) : super(status);
+	final EmailSignInError signInError;
 
-	CaregiverAuthStateBase copyWith({FormzStatus status});
+  CaregiverAuthStateBase(FormzStatus status, [this.signInError]) : super(status);
+
+	CaregiverAuthStateBase copyWith({FormzStatus status, EmailSignInError signInError});
 }

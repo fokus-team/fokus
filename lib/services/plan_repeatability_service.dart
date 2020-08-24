@@ -1,3 +1,4 @@
+import 'package:date_utils/date_utils.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
@@ -9,11 +10,42 @@ import 'package:fokus/model/db/plan/repeatability_type.dart';
 import 'package:fokus/model/db/plan/plan_repeatability.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/string_utils.dart';
+import 'package:fokus/model/db/date_span.dart';
+import 'package:fokus/model/ui/form/plan_form_model.dart';
 
 import 'data/data_repository.dart';
 
 class PlanRepeatabilityService {
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
+
+	/// [span] - must fit within a month (from 1'st to the end)
+	List<Date> getRepeatabilityDatesInSpan(PlanRepeatability repeatability, DateSpan<Date> span) {
+		var day = (int index) => repeatability.days[index];
+		List<Date> dates = [];
+		var iterateDays = (int startDay, int baseLength) {
+			var dayIndex = repeatability.days.indexWhere((day) => day >= startDay);
+			int daysJump = day(dayIndex) - startDay;
+			if (dayIndex == -1) {
+				dayIndex = 0;
+				daysJump += baseLength;
+			}
+			var date = Date(span.from.year, span.from.month, span.from.day + daysJump);
+			while (date < span.to) {
+				dates.add(Date.fromDate(date));
+				var gap = day((dayIndex + 1) % repeatability.days.length) - day(dayIndex);
+				date = Date(date.year, date.month, date.day + (gap > 0 ? gap : gap + baseLength));
+				dayIndex = (dayIndex + 1) % repeatability.days.length;
+			}
+		};
+		if (repeatability.type == RepeatabilityType.once)
+			if (repeatability.range.from >= span.from && repeatability.range.from < span.to)
+				dates.add(repeatability.range.from);
+		else if (repeatability.type == RepeatabilityType.weekly)
+			iterateDays(span.from.weekday, 7);
+		else if (repeatability.type == RepeatabilityType.monthly)
+			iterateDays(span.from.day, Utils.lastDayOfMonth(span.from).day);
+		return dates;
+	}
 
 	Future<List<Plan>> getPlansByDate(ObjectId childId, Date date, {bool activeOnly = true}) async {
 		return filterPlansByDate(await _dataRepository.getPlans(childId: childId, activeOnly: activeOnly), date);
@@ -23,9 +55,21 @@ class PlanRepeatabilityService {
 		return plans.where((plan) => _planInstanceExistsByDate(plan, date)).toList();
 	}
 
+	PlanRepeatability mapRepeatabilityModel(PlanFormModel planForm) {
+		RepeatabilityType type = planForm.repeatability == PlanFormRepeatability.recurring ? planForm.repeatabilityRage.dbType : RepeatabilityType.once;
+		var untilCompleted = planForm.repeatability == PlanFormRepeatability.untilCompleted;
+		return PlanRepeatability(type: type, untilCompleted: untilCompleted, range: planForm.rangeDate, days: planForm.days);
+	}
+
+	static PlanFormRepeatability getFormRepeatability(PlanRepeatability repeatability) {
+		if (repeatability.type == RepeatabilityType.once)
+			return PlanFormRepeatability.onlyOnce;
+		return repeatability.untilCompleted ? PlanFormRepeatability.untilCompleted : PlanFormRepeatability.recurring;
+	}
+
   bool _planInstanceExistsByDate(Plan plan, Date date) {
   	var rules = plan.repeatability;
-	  if (rules.range.from > date)
+	  if (rules.range?.from != null && rules.range.from > date)
 		  return false;
   	if (rules.type == RepeatabilityType.once && rules.range.from == date)
   		return true;

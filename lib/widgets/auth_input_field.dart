@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import 'package:fokus/services/app_locales.dart';
 import 'package:formz/formz.dart';
 
-class AuthenticationInputField<Bloc extends Cubit<State>, State> extends StatelessWidget {
+import 'package:fokus/services/app_locales.dart';
+import 'package:fokus/logic/auth/formz_state.dart';
+
+class AuthenticationInputField<Bloc extends Cubit<State>, State extends FormzState> extends StatelessWidget {
 	final List<dynamic> Function(State) getErrorKey;
 	final FormzInput Function(State) getField;
 	final Function(Bloc, String) changedAction;
@@ -19,7 +20,7 @@ class AuthenticationInputField<Bloc extends Cubit<State>, State> extends Statele
   @override
   Widget build(BuildContext context) {
 	  return BlocBuilder<Bloc, State>(
-		  buildWhen: (previous, current) => getField(previous) != getField(current),
+		  buildWhen: (previous, current) => getField(previous).status != getField(current).status,
 		  builder: (context, state) {
 			  return Padding(
 			    padding: const EdgeInsets.all(8.0),

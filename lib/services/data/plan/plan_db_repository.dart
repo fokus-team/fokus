@@ -8,8 +8,16 @@ import 'package:fokus/model/db/plan/plan_instance.dart';
 import 'package:fokus/model/db/date/time_date.dart';
 import 'package:fokus/model/db/plan/plan_instance_state.dart';
 import 'package:fokus/services/data/data_repository.dart';
+import 'package:fokus/model/db/date_span.dart';
 
 mixin PlanDbRepository implements DbRepository {
+	Future<Plan> getPlan({ObjectId id, List<String> fields}) {
+		var query = _buildPlanQuery(id: id);
+		if (fields != null)
+			query.fields(fields);
+		return dbClient.queryOneTyped(Collection.plan, query, (json) => Plan.fromJson(json));
+	}
+
 	Future<List<Plan>> getPlans({ObjectId caregiverId, ObjectId childId, bool activeOnly = true, bool oneDayOnly = false, List<String> fields}) {
 		var query = _buildPlanQuery(caregiverId: caregiverId, childId: childId, activeOnly: activeOnly);
 		if (oneDayOnly)
@@ -19,7 +27,7 @@ mixin PlanDbRepository implements DbRepository {
 		return dbClient.queryTyped(Collection.plan, query, (json) => Plan.fromJson(json));
 	}
 
-	Future<List<PlanInstance>> getPlanInstances({ObjectId childId, PlanInstanceState state, List<ObjectId> planIDs, Date date}) {
+	Future<List<PlanInstance>> getPlanInstances({ObjectId childId, PlanInstanceState state, List<ObjectId> planIDs, Date date, DateSpan<Date> between}) {
 		var query = _buildPlanQuery(childId: childId, state: state, date: date);
 		return dbClient.queryTyped(Collection.planInstance, query, (json) => PlanInstance.fromJson(json));
 	}
@@ -50,9 +58,15 @@ mixin PlanDbRepository implements DbRepository {
 		return dbClient.update(Collection.planInstance, where.eq('_id', instanceId), document);
 	}
 
-	SelectorBuilder _buildPlanQuery({ObjectId caregiverId, ObjectId childId, ObjectId planId, PlanInstanceState state, Date date, bool activeOnly = false}) {
+	Future updatePlan(Plan plan) => dbClient.replace(Collection.plan, _buildPlanQuery(id: plan.id), plan.toJson());
+	Future createPlan(Plan plan) => dbClient.insert(Collection.plan, plan.toJson());
+
+	SelectorBuilder _buildPlanQuery({ObjectId id, ObjectId caregiverId, ObjectId childId, ObjectId planId,
+			PlanInstanceState state, Date date, DateSpan<Date> between, bool activeOnly = false}) {
 		SelectorBuilder query;
 		var addExpression = (expression) => query == null ? (query = expression) : query.and(expression);
+		if (id != null)
+			addExpression(where.eq('_id', id));
 		if (childId != null)
 			addExpression(where.eq('assignedTo', childId));
 		if (caregiverId != null)
@@ -63,8 +77,13 @@ mixin PlanDbRepository implements DbRepository {
 			addExpression(where.eq('state', state.index));
 		if (planId != null)
 			addExpression(where.eq('planID', planId));
+
 		if (date != null)
 			addExpression(where.eq('date', date));
+		if (between?.from != null)
+			addExpression(where.gte('date', between.from));
+		if (between?.to != null)
+			addExpression(where.lt('date', between.to));
 		return query;
 	}
 }

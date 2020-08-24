@@ -17,6 +17,6 @@ class TimeDate extends DateBase {
   @override
   int get hashCode => combine(combine(combine(super.hashCode, hour.hashCode), minute.hashCode), second.hashCode);
 
-  bool operator >=(DateBase other) => super>=(other) && hour >= other.hour && minute >= other.minute && second >= other.second;
-  bool operator <=(DateBase other) => super>=(other) && hour <= other.hour && minute <= other.minute && second <= other.second;
+  bool operator >(DateBase other) => super>=(other) && (hour > other.hour || (hour == other.hour && (minute > other.minute || (minute == other.minute && second > other.second))));
+  bool operator <(DateBase other) => super>=(other) && (hour < other.hour || (hour == other.hour && (minute < other.minute || (minute == other.minute && second < other.second))));
 }

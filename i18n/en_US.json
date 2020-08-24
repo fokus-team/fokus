@@ -82,16 +82,6 @@
 					"tasks": "{NUM_TASKS, plural, offset:0  =1 {# task} other {# tasks}}"
 				}
 			},
-			"planInProgress": {
-				"header": {
-					"title": "In progress"
-				},
-				"content": {
-					"toDoTasks": "To-do list",
-					"additionalTasks": "Additional tasks",
-					"noTasks": "No tasks to display"
-				}
-			},
 			"planForm": {
 				"createPlanTitle": "Creating new plan",
 				"editPlanTitle": "Editing existing plan",
@@ -173,7 +163,7 @@
 					},
 					"taskPoints": {
 						"valueLabel": "Points awarded",
-						"currencyLabel": "Point currency",
+						"currencyLabel": "Currency",
 						"hint": "Leave empty to not award points"
 					},
 					"taskTimer": {
@@ -206,6 +196,40 @@
 					"noLeveledBadge": "One-time badge",
 					"3LeveledBadge": "3-leveled badge",
 					"5LeveledBadge": "5-leveled badge"
+				}
+			},
+			"awardForm": {
+				"addAwardTitle": "Add award",
+				"editAwardTitle": "Edit award",
+				"addAwardButton": "Add award",
+				"saveAwardButton": "Save award",
+				"removeAwardButton": "Remove award",
+				"removeAwardTitle": "Remove award",
+				"removeAwardText": "Are you sure you want to remove this wawrd?",
+				"fields": {
+					"awardName": {
+						"label": "Award name",
+						"emptyError": "Award name can't be empty"
+					},
+					"awardLimit": {
+						"label": "Award limit",
+						"hint": "Leave empty not to limit"
+					},
+					"awardPoints": {
+						"valueLabel": "Award point cost",
+						"currencyLabel": "Point currency",
+						"hint": "How many points are needed to collect the award",
+						"emptyError": "Point cost must be at least 1"
+					},
+					"awardIcon": {
+						"label": "Award icon",
+						"groups": {
+							"gift": "Gift",
+							"activity": "Activity",
+							"relax": "Relax",
+							"food": "Food"
+						}
+					}
 				}
 			},
 			"statistics": {
@@ -250,6 +274,16 @@
 					"taskProgress": "{NUM_TASKS} out of {NUM_ALL_TASKS} tasks completed"
 				}
 			},
+			"planInProgress": {
+				"header": {
+					"title": "In progress"
+				},
+				"content": {
+					"toDoTasks": "To-do list",
+					"additionalTasks": "Additional tasks",
+					"noTasks": "No tasks to display"
+				}
+			},
 			"awards": {
 				"content": {
 					"awardsTitle": "Available awards",
@@ -274,7 +308,8 @@
 		"range": "from {FROM} to {TO}"
 	},
 	"date": {
-		"weekday": "{WEEKDAY, select, 1 {Monday} 2 {Tuesday} 3 {Wednesday} 4 {Thursday} 5 {Friday} 6 {Saturday} 7 {Sunday} other {}}"
+		"weekday": "{WEEKDAY, select, 1 {Monday} 2 {Tuesday} 3 {Wednesday} 4 {Thursday} 5 {Friday} 6 {Saturday} 7 {Sunday} other {}}",
+		"everyday": "Codziennie"
 	},
 	"alert": {
 		"noConnection": "No connection",
@@ -300,7 +335,7 @@
 		"back": "Back",
 		"next": "Next",
 		"tapToSelect": "Tap to select",
-		"selected": "Wybrano",
+		"selected": "Selected",
 		"selectAll": "Select all",
 		"deselectAll": "Deselect all",
 		"search": "Search",
@@ -322,6 +357,8 @@
 		"error": {
 			"incorrectData": "Incorrect e-mail or password",
 			"emailAlreadyUsed": "E-mail address is already used",
+			"emailInvalid": "E-mail address is invalid",
+			"nameEmpty": "Name can not be empty",
 			"userDisabled": "User has been disabled",
 			"invalidEmail": "Invalid e-mail address",
 			"userCodeToShort": "Code is to short",
@@ -335,8 +372,11 @@
 		"first_steps": "First steps",
 		"plan_creation": "Plan creation",
 		"task_creation": "Task creation",
+		"award_creation": "Award creation",
 		"plan_info": "Plans"
 	},
+	"assignedTo": "Assigned to",
+	"points": "Points",
 	"and": "and",
 	"hour": "hr",
 	"minute": "min"

@@ -7,10 +7,11 @@ enum ButtonType { exit, ok, retry, close, details, edit, delete, unpair, signIn,
 class UIButton {
 	final String textKey;
 	final Color color;
+	final IconData icon;
 	final void Function() action;
 
-	UIButton(this.textKey, this.action, [this.color]);
-	UIButton.ofType(ButtonType type, this.action, [this.color]) : textKey = type.key;
+	UIButton(this.textKey, this.action, [this.color, this.icon]);
+	UIButton.ofType(ButtonType type, this.action, [this.color, this.icon]) : textKey = type.key;
 
   Widget getWidget(BuildContext context) {
     return FlatButton(

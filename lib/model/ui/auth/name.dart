@@ -1,17 +1,17 @@
 import 'package:formz/formz.dart';
 
-enum NameValidationError { invalid }
+enum NameValidationError { empty }
 
 extension NameValidationErrorTextKey on NameValidationError {
 	String get key => const {
-		NameValidationError.invalid: '',
+		NameValidationError.empty: 'authentication.error.nameEmpty',
 	}[this];
 }
 
 class Name extends FormzInput<String, NameValidationError> {
-	const Name.pure() : super.pure('');
+	const Name.pure([String value = '']) : super.pure(value);
 	const Name.dirty([String value = '']) : super.dirty(value);
 
 	@override
-	NameValidationError validator(String value) => null;
+	NameValidationError validator(String value) => value.isEmpty ? NameValidationError.empty : null;
 }

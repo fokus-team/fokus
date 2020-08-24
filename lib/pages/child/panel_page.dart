@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:fokus/logic/child_plans/child_plans_cubit.dart';
+import 'package:fokus/logic/child_plans_cubit.dart';
 import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/logic/timer/timer_cubit.dart';
 import 'package:fokus/model/db/plan/plan_instance_state.dart';
@@ -16,6 +16,7 @@ import 'package:fokus/widgets/chips/attribute_chip.dart';
 import 'package:fokus/widgets/chips/timer_chip.dart';
 import 'package:fokus/widgets/cards/item_card.dart';
 import 'package:fokus/widgets/buttons/rounded_button.dart';
+import 'package:fokus/widgets/loadable_bloc_builder.dart';
 import 'package:fokus/widgets/segment.dart';
 
 
@@ -34,16 +35,9 @@ class _ChildPanelPageState extends State<ChildPanelPage> {
 	      crossAxisAlignment: CrossAxisAlignment.start,
 	      children: [
 	        ChildCustomHeader(),
-	        BlocBuilder<ChildPlansCubit, ChildPlansState>(
-	          cubit: BlocProvider.of<ChildPlansCubit>(context),
-	          builder: (context, state) {
-	            if (state is ChildPlansInitial)
-	              BlocProvider.of<ChildPlansCubit>(context).loadChildPlansForToday();
-	            else if (state is ChildPlansLoadSuccess)
-	              return AppSegments(segments: _buildPanelSegments(state));
-	            return Expanded(child: Center(child: CircularProgressIndicator()));
-	          }
-	        ),
+		      LoadableBlocBuilder<ChildPlansCubit>(
+				    builder: (context, state) => AppSegments(segments: _buildPanelSegments(state))
+		      ),
 	        Row(
 						mainAxisAlignment: MainAxisAlignment.end,
 	          children: <Widget>[

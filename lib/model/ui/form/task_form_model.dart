@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:fokus/model/currency_type.dart';
 import 'package:fokus/model/db/plan/task.dart';
-import 'package:fokus/model/ui/ui_currency.dart';
+import 'package:fokus/model/ui/gamification/ui_currency.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
 

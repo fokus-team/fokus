@@ -35,6 +35,7 @@ dependencies:
 
     equatable: ^1.1.0
     meta: ^1.1.6
+    date_utils: ^0.1.0+3
     logging: ^0.11.4
     intl: ^0.16.1
     formz: ^0.3.0
@@ -73,10 +74,10 @@ flutter:
     assets:
         - i18n/pl_PL.json
         - i18n/en_US.json
-        - assets/animation/sunflower_with_title.json
-        - assets/animation/sunflower_with_title_rotate_only.json
+        - assets/animation/
         - assets/image/sunflower_logo.svg
         - assets/image/sunflower_logo.png
+        - assets/image/google_logo.png
         - assets/help/en/
         - assets/help/pl/
         - assets/image/avatar/

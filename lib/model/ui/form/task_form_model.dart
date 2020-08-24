@@ -6,6 +6,7 @@ import 'package:fokus/model/ui/ui_currency.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
 
+// ignore: must_be_immutable
 class TaskFormModel extends Equatable {
 	ObjectId id;
 	Key key;

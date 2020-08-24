@@ -1,9 +1,8 @@
 import 'package:bson/bson.dart';
 import 'package:fokus/model/db/plan/task.dart';
-import 'package:fokus/model/ui/award/ui_points.dart';
+import 'package:fokus/model/ui/gamification/ui_points.dart';
 import 'package:fokus/model/ui/task/ui_task_base.dart';
 
-import '../ui_currency.dart';
 
 class UITask extends UITaskBase {
 	final UIPoints points;
@@ -11,7 +10,7 @@ class UITask extends UITaskBase {
 	final ObjectId planId;
 
   UITask(ObjectId id, String name, bool optional, String description, this.points, this.timer, this.planId) : super(id, name, optional, description);
-  UITask.fromDBModel(Task task) : this(task.id, task.name, task.optional, task.description, UIPoints(value: task.points.quantity, currency: UICurrency(type: task.points.icon, title: task.points.name)),  task.timer, task.planID);
+  UITask.fromDBModel(Task task) : this(task.id, task.name, task.optional, task.description, UIPoints(quantity: task.points.quantity, type: task.points.icon, title: task.points.name),  task.timer, task.planID);
 
 	@override
 	List<Object> get props => super.props..addAll([points, timer, planId]);

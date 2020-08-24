@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fokus/model/db/plan/task_instance.dart';
-import 'package:fokus/model/ui/award/ui_points.dart';
+import 'package:fokus/model/ui/gamification/ui_points.dart';
 import 'package:fokus/model/ui/task/ui_task_instance.dart';
-import 'package:fokus/model/ui/ui_currency.dart';
 import 'package:fokus/utils/duration_utils.dart';
 import 'package:get_it/get_it.dart';
 
@@ -24,9 +23,9 @@ class TaskInstanceService {
 			var task = await _dataRepository.getTask(taskId: taskInstances[i].taskID);
 			if(taskUiTypes[i] == TaskUIType.currentlyPerformed || taskUiTypes[i] == TaskUIType.inBreak) {
 				var elapsedTimePassed = () =>  taskUiTypes[i] == TaskUIType.currentlyPerformed ? sumDurations(taskInstances[i].duration).inSeconds : sumDurations(taskInstances[i].breaks).inSeconds;
-				uiTaskInstances.add(UITaskInstance.listFromDBModel(taskInstances[i], task.name, task.description, UIPoints(value: task.points.quantity, currency: UICurrency(type: task.points.icon, title: task.points.name)), taskUiTypes[i], elapsedTimePassed: elapsedTimePassed));
+				uiTaskInstances.add(UITaskInstance.listFromDBModel(taskInstances[i], task.name, task.description, UIPoints(quantity: task.points.quantity, type: task.points.icon, title: task.points.name), taskUiTypes[i], elapsedTimePassed: elapsedTimePassed));
 			}
-			else uiTaskInstances.add(UITaskInstance.listFromDBModel(taskInstances[i], task.name, task.description, UIPoints(value: task.points.quantity, currency: UICurrency(type: task.points.icon, title: task.points.name)), taskUiTypes[i]));
+			else uiTaskInstances.add(UITaskInstance.listFromDBModel(taskInstances[i], task.name, task.description, UIPoints(quantity: task.points.quantity, type: task.points.icon, title: task.points.name), taskUiTypes[i]));
 		}
 		return uiTaskInstances;
 	}

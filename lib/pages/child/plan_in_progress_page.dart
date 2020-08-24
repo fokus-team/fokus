@@ -82,7 +82,7 @@ class _ChildPlanInProgressPageState extends State<ChildPlanInProgressPage> {
 							subtitle: task.description,
 							chips:<Widget>[
 								if (task.timer > 0) getTimeChip(task),
-								if (task.points.value != 0) getCurrencyChip(task)
+								if (task.points.quantity != 0) getCurrencyChip(task)
 							],
 							actionButton:	ItemCardActionButton(color: Colors.teal, icon: Icons.play_arrow, onTapped: () => log("tapped start task")),
 						)
@@ -94,7 +94,7 @@ class _ChildPlanInProgressPageState extends State<ChildPlanInProgressPage> {
 									getDurationChip(task),
 									getBreaksChip(task),
 									if (task.timer > 0) getTimeChip(task),
-									if (task.points.value != 0) getCurrencyChip(task)
+									if (task.points.quantity != 0) getCurrencyChip(task)
 								],
 								actionButton:	ItemCardActionButton(color: Colors.teal, icon: Icons.play_arrow, onTapped: () => log("tapped start task")),
 							)
@@ -134,7 +134,7 @@ class _ChildPlanInProgressPageState extends State<ChildPlanInProgressPage> {
 							subtitle: task.description,
 							chips: <Widget>[
 								if (task.timer > 0) getTimeChip(task),
-								if (task.points.value != 0) getCurrencyChip(task)
+								if (task.points.quantity != 0) getCurrencyChip(task)
 							],
 							actionButton: ItemCardActionButton(color: Colors.grey, icon: Icons.keyboard_arrow_up),
 						)
@@ -192,7 +192,7 @@ class _ChildPlanInProgressPageState extends State<ChildPlanInProgressPage> {
 							color: AppColors.chipRatingColors[task.status.rating],
 							tooltip:'$_pageKey.content.taskTimer.break',
 						),
-						if (task.points.value != 0) getCurrencyChip(task, pointsAwarded: true),
+						if (task.points.quantity != 0) getCurrencyChip(task, pointsAwarded: true),
 					]
 				else if(task.status.state == TaskState.rejected)
 					AttributeChip.withIcon(
@@ -209,7 +209,7 @@ class _ChildPlanInProgressPageState extends State<ChildPlanInProgressPage> {
 								color: Colors.amber,
 								tooltip:'$_pageKey.content.chips.notEvaluatedTooltip',
 							),
-							if (task.points.value != 0) getCurrencyChip(task, tooltip: '$_pageKey.content.chips.pointsPossible')
+							if (task.points.quantity != 0) getCurrencyChip(task, tooltip: '$_pageKey.content.chips.pointsPossible')
 						]
 			],
 			actionButton: ItemCardActionButton(
@@ -220,8 +220,8 @@ class _ChildPlanInProgressPageState extends State<ChildPlanInProgressPage> {
 
 	AttributeChip getCurrencyChip(UITaskInstance task, {String tooltip, bool pointsAwarded = false}) {
   	return AttributeChip.withCurrency(
-			content: pointsAwarded ? task.status.pointsAwarded.toString() : task.points.value.toString(),
-			currencyType: task.points.currency.type,
+			content: pointsAwarded ? task.status.pointsAwarded.toString() : task.points.quantity.toString(),
+			currencyType: task.points.type,
 			tooltip: tooltip
 		);
 	}

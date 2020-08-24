@@ -2,7 +2,7 @@ import 'package:bson/bson.dart';
 
 import 'package:fokus/model/currency_type.dart';
 import 'package:fokus/model/db/user/user_role.dart';
-import 'package:fokus/model/ui/ui_currency.dart';
+import 'package:fokus/model/ui/gamification/ui_currency.dart';
 import 'package:fokus/model/ui/user/ui_user.dart';
 import 'package:fokus/model/db/user/caregiver.dart';
 

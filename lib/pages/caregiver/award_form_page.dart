@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fokus/model/currency_type.dart';
-import 'package:fokus/model/ui/award/ui_award.dart';
-import 'package:fokus/model/ui/award/ui_points.dart';
-import 'package:fokus/model/ui/ui_currency.dart';
+import 'package:fokus/model/ui/gamification/ui_award.dart';
+import 'package:fokus/model/ui/gamification/ui_points.dart';
+import 'package:fokus/model/ui/gamification/ui_currency.dart';
 import 'package:fokus/widgets/buttons/help_icon_button.dart';
 import 'package:fokus/widgets/forms/iconpicker_field.dart';
 import 'package:fokus/widgets/forms/pointpicker_field.dart';
@@ -37,9 +37,7 @@ class _CaregiverAwardFormPageState extends State<CaregiverAwardFormPage> {
 	@override
   void initState() {
 		awardFormKey = GlobalKey<FormState>();
-		award = UIAward();
-		award.points = UIPoints();
-		award.points.currency = currencies[0];
+		award = UIAward(points: UIPoints(type: currencies[0].type, title: currencies[0].title));
 		_titleController.text = '';
 		_limitController.text = '';
 		_pointsController.text = '';
@@ -178,7 +176,7 @@ class _CaregiverAwardFormPageState extends State<CaregiverAwardFormPage> {
 					return value.trim().isEmpty ? AppLocales.of(context).translate('$_pageKey.fields.awardName.emptyError') : null;
 				},
 				onChanged: (val) => setState(() {
-					award.name = val;
+					award = award.copyWith(name: val);
 					isDataChanged = true;
 				})
 			)
@@ -210,7 +208,7 @@ class _CaregiverAwardFormPageState extends State<CaregiverAwardFormPage> {
 						WhitelistingTextInputFormatter.digitsOnly
 				],
 				onChanged: (val) => setState(() {
-					award.limit = int.tryParse(val);
+					award = award.copyWith(limit: int.tryParse(val));
 					isDataChanged = true;
 				})
 			)
@@ -220,7 +218,7 @@ class _CaregiverAwardFormPageState extends State<CaregiverAwardFormPage> {
 	Widget buildPointsFields(BuildContext context) {
 		return PointPickerField(
 			controller: _pointsController,
-			pickedCurrency: award.points.currency,
+			pickedCurrency: award.points,
 			currencies: currencies,
 			loading: false,
 			minPoints: 1,
@@ -230,14 +228,14 @@ class _CaregiverAwardFormPageState extends State<CaregiverAwardFormPage> {
 			labelCurrencyText: AppLocales.of(context).translate('$_pageKey.fields.awardPoints.currencyLabel'),
 			pointValueSetter: (val) {
 				setState(() {
-					isDataChanged = award.points.value != ((val != null) ? int.tryParse(val) : null);
-					award.points.value = (val != null) ? int.tryParse(val) : null;
+					isDataChanged = award.points.quantity != ((val != null) ? int.tryParse(val) : null);
+					award = award.copyWith(points: award.points.copyWith(quantity: (val != null) ? int.tryParse(val) : null));
 				});
 			},
 			pointCurrencySetter: (val) {
 				setState(() {
-					isDataChanged = award.points.currency != val;
-					award.points.currency = val;
+					isDataChanged = award.points.type != val.type;
+					award = award.copyWith(points: award.points.copyWith(type: val.type, title: val.title));
 				});
 			},
 		);
@@ -250,7 +248,7 @@ class _CaregiverAwardFormPageState extends State<CaregiverAwardFormPage> {
 			value: award.icon,
 			callback: (val) => setState(() {
 				FocusManager.instance.primaryFocus.unfocus();
-				award.icon = val;
+				award = award.copyWith(icon: val);
 			})
 		);
 	}

@@ -7,7 +7,7 @@ import 'package:fokus/logic/plan_form/plan_form_cubit.dart';
 import 'package:fokus/model/currency_type.dart';
 import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/ui/form/task_form_model.dart';
-import 'package:fokus/model/ui/ui_currency.dart';
+import 'package:fokus/model/ui/gamification/ui_currency.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/dialog_utils.dart';
 import 'package:fokus/utils/theme_config.dart';

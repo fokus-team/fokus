@@ -5,7 +5,7 @@ import 'package:get_it/get_it.dart';
 
 import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/db/user/user_role.dart';
-import 'package:fokus/model/ui/ui_currency.dart';
+import 'package:fokus/model/ui/gamification/ui_currency.dart';
 import 'package:fokus/model/ui/user/ui_caregiver.dart';
 import 'package:fokus/model/ui/user/ui_child.dart';
 import 'package:fokus/model/ui/form/plan_form_model.dart';

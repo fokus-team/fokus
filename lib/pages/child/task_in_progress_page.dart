@@ -95,7 +95,8 @@ class _TaskInProgressPageState extends State<TaskInProgressPage> {
 
               ],
               ),
-            ),
+            ]),
+    ),
             back: Container(
               
             ),

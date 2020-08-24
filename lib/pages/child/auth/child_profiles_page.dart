@@ -12,7 +12,7 @@ import 'package:fokus/widgets/auth/auth_button.dart';
 import 'package:fokus/widgets/auth/auth_widgets.dart';
 
 class ChildProfilesPage extends StatelessWidget {
-	static const String _pageKey = 'page.loginSection.childSignIn';
+	static const String _pageKey = 'page.loginSection.childProfiles';
 
   @override
   Widget build(BuildContext context) {

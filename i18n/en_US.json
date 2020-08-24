@@ -31,13 +31,13 @@
 				"registerTitle": "Create new account",
 				"registerHint": "Fill the form below or use your Google account"
 			},
-			"childSignIn": {
+			"childProfiles": {
 				"addProfile": "Add profile",
 				"noSavedProfiles": "No saved profiles",
 				"profileLogInTitle": "Pick your profile",
 				"profileLogInHint": "Log in to your profile"
 			},
-			"childSignUp": {
+			"childSignIn": {
 				"childCode": "Child code",
 				"caregiverCode": "Caregiver code",
 				"profileAddTitle": "Add profile",

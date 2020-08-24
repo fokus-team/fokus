@@ -14,11 +14,10 @@ import 'package:fokus/widgets/auth/auth_input_field.dart';
 import 'package:fokus/model/ui/auth/user_code.dart';
 import 'package:fokus/model/ui/auth/name.dart';
 import 'package:fokus/widgets/auth/auth_widgets.dart';
-import 'package:fokus/logic/auth/auth_bloc/authentication_bloc.dart';
 import 'package:fokus/logic/auth/child/sign_in/child_sign_in_cubit.dart';
 
 class ChildSignInPage extends StatelessWidget {
-	static const String _pageKey = 'page.loginSection.childSignUp';
+	static const String _pageKey = 'page.loginSection.childSignIn';
 	
   @override
   Widget build(BuildContext context) {

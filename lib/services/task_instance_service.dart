@@ -7,12 +7,6 @@ import 'package:get_it/get_it.dart';
 
 import 'data/data_repository.dart';
 
-enum TaskUIType {completed, available, inBreak, stopped, currentlyPerformed, queued, notCompletedUndefined}
-
-extension TaskUITypeGroups on TaskUIType {
-	bool get inProgress => this == TaskUIType.inBreak || this == TaskUIType.stopped || this == TaskUIType.currentlyPerformed;
-}
-
 class TaskInstanceService {
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 
@@ -23,9 +17,9 @@ class TaskInstanceService {
 			var task = await _dataRepository.getTask(taskId: taskInstances[i].taskID);
 			if(taskUiTypes[i] == TaskUIType.currentlyPerformed || taskUiTypes[i] == TaskUIType.inBreak) {
 				var elapsedTimePassed = () =>  taskUiTypes[i] == TaskUIType.currentlyPerformed ? sumDurations(taskInstances[i].duration).inSeconds : sumDurations(taskInstances[i].breaks).inSeconds;
-				uiTaskInstances.add(UITaskInstance.listFromDBModel(taskInstances[i], task.name, task.description, UIPoints(quantity: task.points.quantity, type: task.points.icon, title: task.points.name), taskUiTypes[i], elapsedTimePassed: elapsedTimePassed));
+				uiTaskInstances.add(UITaskInstance.listFromDBModel(task: taskInstances[i], name: task.name, description: task.description, points: UIPoints(quantity: task.points.quantity, type: task.points.icon, title: task.points.name), type: taskUiTypes[i], elapsedTimePassed: elapsedTimePassed));
 			}
-			else uiTaskInstances.add(UITaskInstance.listFromDBModel(taskInstances[i], task.name, task.description, UIPoints(quantity: task.points.quantity, type: task.points.icon, title: task.points.name), taskUiTypes[i]));
+			else uiTaskInstances.add(UITaskInstance.listFromDBModel(task: taskInstances[i], name: task.name, description: task.description, points: UIPoints(quantity: task.points.quantity, type: task.points.icon, title: task.points.name), type: taskUiTypes[i]));
 		}
 		return uiTaskInstances;
 	}

@@ -7,6 +7,12 @@ import 'package:fokus/model/ui/gamification/ui_points.dart';
 import 'package:fokus/model/ui/task/ui_task_base.dart';
 import 'package:fokus/services/task_instance_service.dart';
 
+enum TaskUIType {completed, available, inBreak, stopped, currentlyPerformed, queued, notCompletedUndefined}
+
+extension TaskUITypeGroups on TaskUIType {
+	bool get inProgress => this == TaskUIType.inBreak || this == TaskUIType.stopped || this == TaskUIType.currentlyPerformed;
+}
+
 class UITaskInstance extends UITaskBase {
 	final int timer;
 	final List<DateSpan<TimeDate>> duration;
@@ -18,9 +24,9 @@ class UITaskInstance extends UITaskBase {
 	final TaskStatus status;
 	final int Function() elapsedTimePassed;
 
-  UITaskInstance(ObjectId id, String name, bool optional, String description, this.timer, this.duration, this.breaks, this.planInstanceId, this.points, this.taskId, this.taskUiType, this.status, this.elapsedTimePassed) : super(id, name, optional, description);
-	UITaskInstance.singleFromDBModel(TaskInstance task, String name, String description, UIPoints points, {int Function() elapsedTimePassed}) : this(task.id, name, task.optional, description, task.timer, task.duration, task.breaks, task.planInstanceID, points, task.taskID, TaskInstanceService.getSingleTaskInstanceStatus(task: task), task.status, elapsedTimePassed = _defElapsedTime);
-	UITaskInstance.listFromDBModel(TaskInstance task, String name, String description, UIPoints points, TaskUIType type, {int Function() elapsedTimePassed}) : this(task.id, name, task.optional, description, task.timer, task.duration, task.breaks, task.planInstanceID, points, task.taskID, type, task.status, elapsedTimePassed = _defElapsedTime);
+  UITaskInstance({ObjectId id, String name, bool optional, String description, this.timer, this.duration, this.breaks, this.planInstanceId, this.points, this.taskId, this.taskUiType, this.status, this.elapsedTimePassed}) : super(id, name, optional, description);
+	UITaskInstance.singleFromDBModel({TaskInstance task, String name, String description, UIPoints points, int Function() elapsedTimePassed}) : this(id: task.id, name: name, optional: task.optional, description: description, timer: task.timer, duration: task.duration, breaks: task.breaks, planInstanceId: task.planInstanceID, points: points, taskId: task.taskID, taskUiType: TaskInstanceService.getSingleTaskInstanceStatus(task: task), status: task.status, elapsedTimePassed: elapsedTimePassed = _defElapsedTime);
+	UITaskInstance.listFromDBModel({TaskInstance task, String name, String description, UIPoints points, TaskUIType type, int Function() elapsedTimePassed}) : this(id: task.id, name: name, optional: task.optional, description: description, timer: task.timer, duration: task.duration, breaks: task.breaks, planInstanceId: task.planInstanceID, points: points, taskId: task.taskID, taskUiType: type, status: task.status, elapsedTimePassed: elapsedTimePassed = _defElapsedTime);
 
 
 	@override

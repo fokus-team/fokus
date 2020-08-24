@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/logic/child_tasks_cubit.dart';
-import 'package:fokus/logic/reloadable/reloadable_cubit.dart';
 
 import 'package:fokus/logic/timer/timer_cubit.dart';
 import 'package:fokus/model/db/plan/plan_instance_state.dart';
@@ -11,7 +10,6 @@ import 'package:fokus/model/db/plan/task_status.dart';
 import 'package:fokus/model/ui/plan/ui_plan_instance.dart';
 import 'package:fokus/model/ui/task/ui_task_instance.dart';
 import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/services/task_instance_service.dart';
 import 'package:fokus/utils/duration_utils.dart';
 import 'package:fokus/utils/theme_config.dart';
 import 'package:fokus/widgets/app_header.dart';
@@ -36,13 +34,7 @@ class _ChildPlanInProgressPageState extends State<ChildPlanInProgressPage> {
 				crossAxisAlignment: CrossAxisAlignment.start,
 				children: [
 					LoadableBlocBuilder<ChildTasksCubit>(
-						builder: (context, state) {
-							if(state is DataLoadInitial)
-								BlocProvider.of<ChildTasksCubit>(context).doLoadData();
-							else if (state is ChildTasksLoadSuccess)
-								return AppSegments(segments: _buildPanelSegments(state));
-							return Expanded(child: Center(child: CircularProgressIndicator()));
-						},
+						builder: (context, state) => AppSegments(segments: _buildPanelSegments(state))
 					)
 				],
 			)
@@ -100,7 +92,7 @@ class _ChildPlanInProgressPageState extends State<ChildPlanInProgressPage> {
 							)
 					else if(task.taskUiType.inProgress)
 						BlocProvider<TimerCubit>(
-							create: (_) => TimerCubit(() => task.taskUiType == TaskUIType.currentlyPerformed ? sumDurations(task.duration).inSeconds : sumDurations(task.breaks).inSeconds)..startTimer(),
+							create: (_) => TimerCubit(task.elapsedTimePassed)..startTimer(),
 							child:	ItemCard(
 								title: task.name,
 								subtitle: task.description,

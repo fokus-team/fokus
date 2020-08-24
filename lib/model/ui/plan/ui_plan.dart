@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
 import 'package:fokus/model/db/plan/plan.dart';
@@ -20,8 +19,8 @@ class UIPlan extends UIPlanBase {
   @override
   List<Object> get props => super.props..addAll([taskCount, assignedTo, isActive]);
 
-  String print(BuildContext context) {
-    return 'UIPlan{name: $name, repeatabilityDescription: ${description(context)}, taskCount: $taskCount, isActive: $isActive}';
+	@override
+  String toString() {
+    return 'UIPlan{name: $name, taskCount: $taskCount, isActive: $isActive}';
   }
-
 }

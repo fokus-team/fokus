@@ -12,21 +12,21 @@ import 'package:get_it/get_it.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
 class ChildTasksCubit extends ReloadableCubit {
-	final DataRepository _dataRepository = GetIt.I<DataRepository>();
+	final  DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final TaskInstanceService _taskInstancesService = GetIt.I<TaskInstanceService>();
 	final PlanRepeatabilityService _repeatabilityService = GetIt.I<PlanRepeatabilityService>();
-	final ObjectId planInstanceId;
-	ChildTasksCubit(this.planInstanceId, ModalRoute modalRoute) : super(modalRoute);
+	final ObjectId _planInstanceId;
+	ChildTasksCubit(this._planInstanceId, ModalRoute modalRoute) : super(modalRoute);
 
 	@override
 	void doLoadData() async {
 		var getDescription = (Plan plan, [Date instanceDate]) => _repeatabilityService.buildPlanDescription(plan.repeatability, instanceDate: instanceDate);
-		var planInstance = await _dataRepository.getPlanInstance(id: planInstanceId);
+		var planInstance = await _dataRepository.getPlanInstance(id: _planInstanceId);
 		var plan = await _dataRepository.getPlan(id: planInstance.planID);
 		var elapsedTime = () => sumDurations(planInstance.duration).inSeconds;
 		var completedTasks = await _dataRepository.getCompletedTaskCount(planInstance.id);
 		var uiPlanInstance = UIPlanInstance.fromDBModel(planInstance, plan.name, completedTasks, elapsedTime, getDescription(plan, planInstance.date));
-		var allTasksInstances = await _dataRepository.getTaskInstances(planInstanceId: planInstanceId);
+		var allTasksInstances = await _dataRepository.getTaskInstances(planInstanceId: _planInstanceId);
 
 		List<UITaskInstance> uiInstances = await _taskInstancesService.mapToUIModels(allTasksInstances);
 		emit(ChildTasksLoadSuccess(uiInstances, uiPlanInstance));

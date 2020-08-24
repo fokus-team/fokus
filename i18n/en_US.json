@@ -50,6 +50,24 @@
 					"activePlan": "1 plan currently in progress"
 				}
 			},
+			"childDashboard": {
+				"header": {
+					"title": "Child details",
+					"childCode": "Child code",
+					"assignPlanButton": "Assign plan",
+					"assignBadgeButton": "Award badge",
+					"tabs": {
+						"plans": "Plans",
+						"awards": "Awards",
+						"achievements": "Achievements"
+					}
+				},
+				"content": {
+					"plansTitle": "Today's plans",
+					"awardsTitle": "Claimed awards",
+					"achievementsTitle": "Awarded badges"
+				}
+			},
 			"plans": {
 				"header": {
 					"title": "Plans",

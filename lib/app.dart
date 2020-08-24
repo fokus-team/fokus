@@ -16,6 +16,7 @@ import 'package:fokus/logic/plan_form/plan_form_cubit.dart';
 import 'package:fokus/pages/caregiver/auth/caregiver_sign_in_page.dart';
 import 'package:fokus/pages/caregiver/auth/caregiver_sign_up_page.dart';
 import 'package:fokus/pages/caregiver/awards_page.dart';
+import 'package:fokus/pages/caregiver/child_dashboard_page.dart';
 import 'package:fokus/pages/caregiver/panel_page.dart';
 import 'package:fokus/pages/caregiver/plan_details_page.dart';
 import 'package:fokus/pages/caregiver/plan_form_page.dart';
@@ -104,6 +105,7 @@ class FokusApp extends StatelessWidget {
 			AppPage.childSignInPage.name: (context) => _createPage(ChildSignInPage(), context, ChildSignInCubit(context.bloc<AuthenticationBloc>())),
 			AppPage.childSignUpPage.name: (context) => _createPage(ChildSignUpPage(), context, ChildSignUpCubit(context.bloc<AuthenticationBloc>())),
 			AppPage.caregiverPanel.name: (context) => _createPage(CaregiverPanelPage(), context, CaregiverPanelCubit(getActiveUser(context), getRoute(context))),
+			AppPage.caregiverChildDashboard.name: (context) => _createPage(CaregiverChildDashboardPage(), context),
 			AppPage.caregiverPlans.name: (context) => _createPage(CaregiverPlansPage(), context, CaregiverPlansCubit(getActiveUser(context), getRoute(context))),
 			AppPage.caregiverPlanForm.name: (context) => _createPage(CaregiverPlanFormPage(), context, PlanFormCubit(getParams(context), getActiveUser(context))),
 			AppPage.caregiverAwards.name: (context) => _createPage(CaregiverAwardsPage(), context),

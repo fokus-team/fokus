@@ -39,8 +39,9 @@ class AppHeader extends StatelessWidget {
 	final Widget appHeaderWidget;
 	final String helpPage;
 	final Widget popupMenuWidget;
+	final TabBar tabs;
 
-	AppHeader({this.title, this.text, this.headerActionButtons, this.headerType, this.appHeaderWidget, this.helpPage, this.popupMenuWidget});
+	AppHeader({this.title, this.text, this.headerActionButtons, this.headerType, this.appHeaderWidget, this.helpPage, this.popupMenuWidget, this.tabs});
 	AppHeader.greetings({String text, List<HeaderActionButton> headerActionButtons}) : this(
 		text: text,
 		headerActionButtons: headerActionButtons,
@@ -52,14 +53,15 @@ class AppHeader extends StatelessWidget {
 		headerActionButtons: headerActionButtons,
 		headerType: AppHeaderType.normal
 	);
-	AppHeader.widget({String title, String text, List<HeaderActionButton> headerActionButtons, Widget appHeaderWidget, String helpPage, Widget popupMenuWidget}) : this(
+	AppHeader.widget({String title, String text, List<HeaderActionButton> headerActionButtons, Widget appHeaderWidget, String helpPage, Widget popupMenuWidget, TabBar tabs}) : this(
 		title: title,
 		text: text,
 		headerActionButtons: headerActionButtons,
 		headerType: AppHeaderType.widget,
 		appHeaderWidget: appHeaderWidget,
 		helpPage: helpPage,
-		popupMenuWidget: popupMenuWidget
+		popupMenuWidget: popupMenuWidget,
+		tabs: tabs
 	);
 
 	@override
@@ -264,7 +266,7 @@ class AppHeader extends StatelessWidget {
 							Expanded(
 								child: ListTile(
 									dense: true,
-									contentPadding: EdgeInsets.symmetric(horizontal: 4.0),
+									contentPadding: EdgeInsets.symmetric(horizontal: 4.0).copyWith(top: tabs != null ? 6.0 : 0.0),
 									trailing: Row(
 										mainAxisSize: MainAxisSize.min,
 										mainAxisAlignment: MainAxisAlignment.end,
@@ -288,10 +290,12 @@ class AppHeader extends StatelessWidget {
 							)
 						]
 					),
-					appHeaderWidget
+					appHeaderWidget,
+					if(tabs != null)
+						tabs
 				]
 			),
-			verticalEdge: 6.0,
+			verticalEdge: tabs != null ? 0.0 : 6.0,
 			horizontalEdge: 0.0
 		);
 	 }

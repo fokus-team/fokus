@@ -50,6 +50,24 @@
 					"activePlan": "1 plan w trakcie wykonywania"
 				}
 			},
+			"childDashboard": {
+				"header": {
+					"title": "Szczegóły dziecka",
+					"childCode": "Kod dziecka",
+					"assignPlanButton": "Przypisz plan",
+					"assignBadgeButton": "Przyznaj odznakę",
+					"tabs": {
+						"plans": "Plany",
+						"awards": "Nagrody",
+						"achievements": "Osiągnięcia"
+					}
+				},
+				"content": {
+					"plansTitle": "Dzisiejsze plany",
+					"awardsTitle": "Odebrane nagrody",
+					"achievementsTitle": "Przyznane odznaki"
+				}
+			},
 			"plans": {
 				"header": {
 					"title": "Plany",

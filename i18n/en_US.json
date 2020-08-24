@@ -263,7 +263,26 @@
 				"content": {
 					"toDoTasks": "To-do list",
 					"additionalTasks": "Additional tasks",
-					"noTasks": "No tasks to display"
+					"noTasks": "No tasks",
+					"tasks": "{NUM_TASKS, plural, offset:0  one {# task} other {# tasks}}",
+					"taskTimer": {
+						"label": "Time to complete the task",
+						"notSet": "Unlimited",
+						"set": "Limited to",
+						"format": "{HOURS_NUM, plural, offset:0 zero {} other {# hr }}{MINUTES_NUM} min",
+						"duration": "Total time to complete the task",
+						"formatDuration": "Time: {TIME_NUM}",
+						"formatBreak": "Break: {TIME_NUM}",
+						"break": "Total breaks time"
+					},
+					"chips" : {
+						"rejected" : "Rejected",
+						"notEvaluated" : "Not evaluated",
+						"rating" : "{RATING}/5",
+						"rejectedTooltip" : "Task has been rejected by caregiver",
+						"notEvaluatedTooltip" : "Ask caregiver to rate task",
+						"pointsPossible" : "Max points to earn"
+					}
 				}
 			},
 			"awards": {

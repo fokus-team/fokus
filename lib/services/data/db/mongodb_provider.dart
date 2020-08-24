@@ -31,7 +31,7 @@ class MongoDbProvider {
 	}
 
 	Future replaceAll(Collection collection, List<SelectorBuilder> selectors, List<Map<String, dynamic>> documents) {
-		return _execute(() => _client.collection(collection.name).updateAll(selectors, documents, upsert: true));
+		return _execute(() => _client.collection(collection.name).update(selectors, documents, upsert: true));
 	}
 
 	Future<ObjectId> insert(Collection collection, Map<String, dynamic> document) => _execute(() {

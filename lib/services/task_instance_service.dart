@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:fokus/model/db/date/time_date.dart';
-import 'package:fokus/model/db/date_span.dart';
 import 'package:fokus/model/db/plan/task_instance.dart';
 import 'package:fokus/model/ui/award/ui_points.dart';
 import 'package:fokus/model/ui/task/ui_task_instance.dart';
 import 'package:fokus/model/ui/ui_currency.dart';
+import 'package:fokus/utils/duration_utils.dart';
 import 'package:get_it/get_it.dart';
 
 import 'data/data_repository.dart';
@@ -15,7 +14,7 @@ extension TaskUITypeGroups on TaskUIType {
 	bool get inProgress => this == TaskUIType.inBreak || this == TaskUIType.stopped || this == TaskUIType.currentlyPerformed;
 }
 
-class TaskInstancesService {
+class TaskInstanceService {
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 
 	Future<List<UITaskInstance>> mapToUIModels(List<TaskInstance> taskInstances) async {
@@ -23,7 +22,11 @@ class TaskInstancesService {
 		List<UITaskInstance> uiTaskInstances = [];
 		for(int i=0; i<taskInstances.length; i++) {
 			var task = await _dataRepository.getTask(taskId: taskInstances[i].taskID);
-			uiTaskInstances.add(UITaskInstance.listFromDBModel(taskInstances[i], task.name, task.description, UIPoints(value: task.points.quantity, currency: UICurrency(type: task.points.icon, title: task.points.name)), taskUiTypes[i]));
+			if(taskUiTypes[i] == TaskUIType.currentlyPerformed || taskUiTypes[i] == TaskUIType.inBreak) {
+				var elapsedTimePassed = () =>  taskUiTypes[i] == TaskUIType.currentlyPerformed ? sumDurations(taskInstances[i].duration).inSeconds : sumDurations(taskInstances[i].breaks).inSeconds;
+				uiTaskInstances.add(UITaskInstance.listFromDBModel(taskInstances[i], task.name, task.description, UIPoints(value: task.points.quantity, currency: UICurrency(type: task.points.icon, title: task.points.name)), taskUiTypes[i], elapsedTimePassed: elapsedTimePassed));
+			}
+			else uiTaskInstances.add(UITaskInstance.listFromDBModel(taskInstances[i], task.name, task.description, UIPoints(value: task.points.quantity, currency: UICurrency(type: task.points.icon, title: task.points.name)), taskUiTypes[i]));
 		}
 		return uiTaskInstances;
 	}

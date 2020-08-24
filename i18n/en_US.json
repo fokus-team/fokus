@@ -39,9 +39,9 @@
 			},
 			"content": {
 				"caregiver": {
-					"receivedAward": "received the award",
-					"finishedTask": "finished the task",
-					"unfinishedPlan": "didn't finish the plan",
+					"receivedAward": "{CHILD_NAME} received the award",
+					"finishedTask": "{CHILD_NAME} finished the task",
+					"unfinishedPlan": "{CHILD_NAME} didn't finish the plan",
 					"gradeTask": "Grade task",
 					"graded": "Graded"
 				},

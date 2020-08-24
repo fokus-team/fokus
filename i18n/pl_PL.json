@@ -39,9 +39,9 @@
 			},
 			"content": {
 				"caregiver": {
-					"receivedAward": "odebrał(a) nagrodę",
-					"finishedTask": "wykonał(a) zadanie",
-					"unfinishedPlan": "nie skończył(a) planu",
+					"receivedAward": "{CHILD_NAME} odebrał(a) nagrodę",
+					"finishedTask": "{CHILD_NAME} wykonał(a) zadanie",
+					"unfinishedPlan": "{CHILD_NAME} nie skończył(a) planu",
 					"gradeTask": "Oceń zadanie",
 					"graded": "Oceniono"
 				},

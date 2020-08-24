@@ -26,10 +26,10 @@ extension NotificationTypeExtension on NotificationType {
   static const String _pageKey = 'page.notifications.content';
 
   String title(BuildContext context, String childName) => {
-    NotificationType.caregiver_receivedAward: childName + " " + AppLocales.of(context).translate("$_pageKey.caregiver.receivedAward"),
-    NotificationType.caregiver_finishedTaskUngraded: childName + " " + AppLocales.of(context).translate("$_pageKey.caregiver.finishedTask"),
-    NotificationType.caregiver_finishedTaskGraded: childName + " " + AppLocales.of(context).translate("$_pageKey.caregiver.finishedTask"),
-    NotificationType.caregiver_unfinishedPlan: childName + " " + AppLocales.of(context).translate("$_pageKey.caregiver.unfinishedPlan"),
+    NotificationType.caregiver_receivedAward: AppLocales.of(context).translate("$_pageKey.caregiver.receivedAward", {'CHILD_NAME' : childName}),
+    NotificationType.caregiver_finishedTaskUngraded: AppLocales.of(context).translate("$_pageKey.caregiver.finishedTask", {'CHILD_NAME' : childName}),
+    NotificationType.caregiver_finishedTaskGraded: AppLocales.of(context).translate("$_pageKey.caregiver.finishedTask", {'CHILD_NAME' : childName}),
+    NotificationType.caregiver_unfinishedPlan: AppLocales.of(context).translate("$_pageKey.caregiver.unfinishedPlan", {'CHILD_NAME' : childName}),
     NotificationType.child_taskGraded: AppLocales.of(context).translate("$_pageKey.child.taskGraded"),
     NotificationType.child_receivedBadge: AppLocales.of(context).translate("$_pageKey.child.receivedBadge")
   }[this];
@@ -37,10 +37,10 @@ extension NotificationTypeExtension on NotificationType {
   Icon get icon => Icon(
     const {
       NotificationType.caregiver_receivedAward : Icons.star,
-      NotificationType.caregiver_finishedTaskUngraded : Icons.view_headline,
-      NotificationType.caregiver_finishedTaskGraded : Icons.view_headline,
-      NotificationType.caregiver_unfinishedPlan : Icons.cancel,
-      NotificationType.child_taskGraded : Icons.view_headline,
+      NotificationType.caregiver_finishedTaskUngraded : Icons.assignment_turned_in,
+      NotificationType.caregiver_finishedTaskGraded : Icons.assignment_turned_in,
+      NotificationType.caregiver_unfinishedPlan : Icons.assignment_late,
+      NotificationType.child_taskGraded : Icons.assignment_turned_in,
       NotificationType.child_receivedBadge : Icons.star
     }[this],
     color: Colors.grey
@@ -100,11 +100,11 @@ class NotificationCard extends ItemCard {
     this.dateTime,
     this.currencyType,
     this.currencyValue = 0,
-    title,
-    subtitle,
-    graphicType,
-    graphic,
-    chips
+    String title,
+    String subtitle,
+    GraphicAssetType graphicType,
+    int graphic,
+    List<Widget> chips
   }) : super(
     title: title,
     subtitle: subtitle,
@@ -162,7 +162,7 @@ class NotificationCard extends ItemCard {
                         ),
                       if(dateTime != null)
                         Text(
-                          "${DateFormat.yMd(Localizations.localeOf(context).toString()).format(dateTime)} ${DateFormat.Hm(Localizations.localeOf(context).toString()).format(dateTime)}",
+                          "${DateFormat.yMd(Localizations.localeOf(context).toString()).add_Hm().format(dateTime)}",
                           style: Theme.of(context).textTheme.subtitle2,
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,

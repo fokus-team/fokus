@@ -17,7 +17,7 @@ class AppColors {
   static const Color childBackgroundColor = Colors.lightGreen;
   static final Color childButtonColor = Colors.orange;
   static final Color childActionColor = Colors.amber;
-
+	static final List<Color> chipRatingColors = [Colors.pink, Colors.red, Colors.deepOrange, Colors.amber, Colors.lightGreen, Colors.green];
   // Currency colors
 	static final Map<CurrencyType, Color> currencyColor = {
 		CurrencyType.diamond: Color.fromARGB(255, 3, 169, 244),
@@ -37,6 +37,7 @@ class AppBoxProperties {
   static final double containerPadding = 10.0;
   static final double columnChildrenPadding = 5.0;
   static final double sectionPadding = 15.0;
+	static final double standardBottomNavHeight = 60.0;
 
 	static final BoxDecoration elevatedContainer = BoxDecoration(
 		color: Colors.white,

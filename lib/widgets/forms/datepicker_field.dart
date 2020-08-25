@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fokus/model/db/date/date.dart';
 import 'package:fokus/model/db/date_span.dart';
 import 'package:fokus/services/app_locales.dart';
+import 'package:fokus/utils/form_config.dart';
 
 class DatePickerField extends StatefulWidget {
 	final String labelText;
@@ -83,10 +84,7 @@ class _DatePickerFieldState extends State<DatePickerField> {
 						onTap: () => _selectDate(context).then((value) => widget.callback(value, widget.dateSetter, widget.dateController)),
 						controller: widget.dateController,
 						readOnly: true,
-						decoration: InputDecoration(
-							icon: Padding(padding: EdgeInsets.all(5.0), child: Icon(widget.icon)),
-							contentPadding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
-							border: OutlineInputBorder(),
+						decoration: AppFormProperties.textFieldDecoration(widget.icon).copyWith(
 							labelText: widget.labelText,
 							hintText: AppLocales.of(context).translate('actions.tapToSelect'),
 							helperText: widget.helperText

@@ -22,16 +22,35 @@
 				"help": "Potrzebuję pomocy"
 			},
 			"caregiverSignIn": {
+				"logInTitle": "Zaloguj się",
+				"logInHint": "Uzyskaj dostęp do swojego konta",
+				"registerTitle": "Nowe konto",
+				"registerHint": "Załóż nowe konto opiekuna aby móc korzystać z aplikacji"
 			},
 			"caregiverSignUp": {
+				"registerTitle": "Stwórz nowe konto",
+				"registerHint": "Uzupełnij poniższy formularz lub użyj konta Google"
+			},
+			"childProfiles": {
+				"addProfile": "Dodaj profil",
+				"noSavedProfiles": "Brak zapisanych profili",
+				"profileLogInTitle": "Wybierz swój profil",
+				"profileLogInHint": "Uzyskaj dostęp do swojego profilu"
 			},
 			"childSignIn": {
 				"childCode": "Kod dziecka",
-				"createNewProfile": "Stwórz nowy profil dziecka"
+				"caregiverCode": "Kod opiekuna",
+				"profileAddTitle": "Dodaj profil",
+				"profileAddHint": "Dodaj istniejący profil za pomocą specjalnego kodu dziecka lub stwórz nowy wypełniając formularz",
+				"createNewProfile": "Stwórz nowy profil dziecka",
+				"addProfile": "Dodaj profil",
+				"avatarGroups": {
+					"boy": "Chłopak",
+					"girl": "Dziewczyna"
+				}
 			},
-			"childSignUp": {
-				"caregiverCode": "Kod opiekuna"
-			}
+			"backToLoginPage": "Powrót do ekranu logowania",
+			"backToStartPage": "Powrót do ekranu startowego"
 		},
 		"notifications": {
 			"header": {
@@ -232,6 +251,40 @@
 					}
 				}
 			},
+			"badgeForm": {
+				"addBadgeTitle": "Dodaj odznakę",
+				"editBadgeTitle": "Edytuj odznakę",
+				"addBadgeButton": "Dodaj odznakę",
+				"saveBadgeButton": "Zapisz odznakę",
+				"removeBadgeButton": "Usuń odznakę",
+				"removeBadgeTitle": "Usuń odznakę",
+				"removeBadgeText": "Na pewno chcesz usunąć tą odznakę?",
+				"fields": {
+					"badgeName": {
+						"label": "Nazwa odznaki",
+						"emptyError": "Nazwa odznaki nie może być pusta"
+					},
+					"badgeDescription": {
+						"label": "Opis odznaki"
+					},
+					"badgeLevel": {
+						"label": "Typ odznaki",
+						"options": {
+							"one": "Jednorazowa",
+							"three": "3 poziomy",
+							"five": "5 poziomów"
+						}
+					},
+					"badgeIcon": {
+						"label": "Ikona odznaki",
+						"groups": {
+							"praise": "Pochwała",
+							"medal": "Medal",
+							"trophy": "Trofeum"
+						}
+					}
+				}
+			},
 			"statistics": {
 				"header": {
 					"title": "Statystyki",
@@ -259,6 +312,7 @@
 				"header": {
 					"greetings": "Cześć",
 					"myPoints": "Moje punkty",
+					"noPoints": "Brak zdobytych punktów",
 					"pageHint": "Wykonuj zadania i zdobywaj punkty",
 					"garden": "Ogród"
 				},
@@ -281,7 +335,26 @@
 				"content": {
 					"toDoTasks": "Zadania do wykonania",
 					"additionalTasks": "Zadania dodatkowe",
-					"noTasks": "Brak zadań"
+					"noTasks": "Brak zadań",
+					"tasks": "{NUM_TASKS, plural, offset:0  zero {# zadań} one {# zadanie} two {# zadania} few {# zadania} other {# zadań}}",
+					"taskTimer": {
+						"label": "Czas na wykonanie zadania",
+						"notSet": "Nieograniczony",
+						"set": "Ustawiony na",
+						"duration": "Łączny czas wykonywania zadania",
+						"formatDuration": "Czas: {TIME_NUM}",
+						"formatBreak": "Przerwa: {TIME_NUM}",
+						"format": "{HOURS_NUM, plural, offset:0 zero {} other {# godz. }}{MINUTES_NUM} min",
+						"break": "Łączny czas przerw"
+					},
+					"chips" : {
+						"rating" : "{RATING}/5",
+						"rejected" : "Odrzucone",
+						"notEvaluated" : "Nieocenione",
+						"rejectedTooltip" : "Zadanie odrzucone przez opiekuna",
+						"notEvaluatedTooltip" : "Poproś opiekuna o ocenę",
+						"pointsPossible" : "Możliwe do zdobycia"
+					}
 				}
 			},
 			"awards": {
@@ -344,12 +417,14 @@
 		"clearAll": "Wyczyść wszystkie",
 		"unpair": "Rozłącz",
 		"signIn": "Zaloguj",
-		"signUp": "Załóż konto"
+		"signUp": "Załóż konto",
+		"signOut": "Wyloguj się"
 	},
 	"authentication": {
 		"name": "Imię",
 		"email": "Adres e-mail",
 		"password": "Hasło",
+		"avatar": "Awatar",
 		"confirmPassword": "Powtórz hasło",
 		"googleSignIn": "Zaloguj się z Google",
 		"googleSignUp": "Załóż konto z Google",
@@ -365,7 +440,9 @@
 			"userCodeToLong": "Kod jest za długi",
 			"noSuchUser": "Użytkownik nie istnieje",
 			"passwordNotLongEnough": "Hasło musi być przynajmniej {LENGTH} znakowe",
-			"noPasswordMatch": "Hasła nie pasują"
+			"noPasswordMatch": "Hasła nie pasują",
+			"passwordEmpty": "Hasło nie może być puste",
+			"avatarEmpty": "Należy wybrać awatar dziecka"
 		}
 	},
 	"help": {
@@ -373,11 +450,13 @@
 		"plan_creation": "Tworzenie planu",
 		"task_creation": "Konfiguracja zadania",
 		"award_creation": "Tworzenie nagrody",
+		"badge_creation": "Tworzenie odznaki",
 		"plan_info": "Plany"
 	},
 	"assignedTo": "Przypisane do",
 	"points": "Punkty",
 	"and": "i",
+	"or": "lub",
 	"hour": "godz.",
 	"minute": "min"
 }

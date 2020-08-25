@@ -5,8 +5,6 @@ import 'package:fokus/logic/reloadable/reloadable_cubit.dart';
 import 'package:logging/logging.dart';
 
 class LoadableBlocBuilder<CubitType extends ReloadableCubit> extends StatelessWidget {
-	final Logger _logger = Logger('LoadableBlocBuilder');
-
 	final BlocWidgetBuilder<DataLoadSuccess> builder;
 	final Widget loadingIndicator = Expanded(child: Center(child: CircularProgressIndicator()));
 
@@ -22,7 +20,6 @@ class LoadableBlocBuilder<CubitType extends ReloadableCubit> extends StatelessWi
 			    return builder(context, state);
 		    else if (state is DataLoadInProgress)
 		      return loadingIndicator;
-		    _logger.fine('Skipping unsupported state ${state.runtimeType}');
 		    return Container();
 	    }
     );

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fokus/utils/dialog_utils.dart';
+import 'package:fokus/utils/form_config.dart';
 import 'package:fokus/model/currency_type.dart';
+import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/ui/gamification/ui_award.dart';
 import 'package:fokus/model/ui/gamification/ui_points.dart';
 import 'package:fokus/model/ui/gamification/ui_currency.dart';
@@ -18,7 +21,7 @@ class CaregiverAwardFormPage extends StatefulWidget {
 
 class _CaregiverAwardFormPageState extends State<CaregiverAwardFormPage> {
 	static const String _pageKey = 'page.caregiverSection.awardForm';
-	double bottomBarHeight = 60.0;
+	AppFormType formType = AppFormType.create; // only create for now
 	GlobalKey<FormState> awardFormKey;
 	bool isDataChanged = false;
 
@@ -55,11 +58,13 @@ class _CaregiverAwardFormPageState extends State<CaregiverAwardFormPage> {
   @override
   Widget build(BuildContext context) {
 		return WillPopScope(
-			onWillPop: () => exitForm(context, true),
+			onWillPop: () => showExitFormDialog(context, true, isDataChanged),
 			child: Scaffold(
 				appBar: AppBar(
 					backgroundColor: AppColors.formColor,
-					title: Text(AppLocales.of(context).translate('$_pageKey.addAwardTitle')),
+					title: Text(AppLocales.of(context).translate(
+						formType == AppFormType.create ? '$_pageKey.addAwardTitle' : '$_pageKey.editAwardTitle'
+					)),
 					actions: <Widget>[
 						HelpIconButton(helpPage: 'award_creation')
 					]
@@ -67,7 +72,7 @@ class _CaregiverAwardFormPageState extends State<CaregiverAwardFormPage> {
 				body: Stack(
 					children: [
 						Positioned.fill(
-							bottom: bottomBarHeight,
+							bottom: AppBoxProperties.standardBottomNavHeight,
 							child: Form(
 								key: awardFormKey,
 								child: Material(
@@ -87,58 +92,36 @@ class _CaregiverAwardFormPageState extends State<CaregiverAwardFormPage> {
 
 	void saveAward(BuildContext context) {
 		if(awardFormKey.currentState.validate()) {
+			// TODO adding/saving logic
 			Navigator.of(context).pop();
 		}
 	}
 
-	Future<bool> exitForm(BuildContext context, bool isSystemPop) {
-		if (!isDataChanged) {
-			Navigator.pop(context, true);
-			return Future.value(false);
-		} else {
-			FocusManager.instance.primaryFocus.unfocus();
-			return showDialog<bool>(
-				context: context,
-				builder: (c) => AlertDialog(
-					title: Text(AppLocales.of(context).translate('alert.unsavedProgressTitle')),
-					content: Text(AppLocales.of(context).translate('alert.unsavedProgressMessage')),
-					actions: [
-						FlatButton(
-							child: Text(AppLocales.of(context).translate('actions.cancel')),
-							onPressed: () => Navigator.pop(c, false),
-						),
-						FlatButton(
-							textColor: Colors.red,
-							child: Text(AppLocales.of(context).translate('actions.exit')),
-							onPressed: () {
-								if(isSystemPop)
-									Navigator.pop(c, true);
-								else {
-									Navigator.of(context).pop();
-									Navigator.of(context).pop();
-								}
-							}
-						)
-					]
-				)
-			);
-		}
+	void removeAward(BuildContext context) {
+		// TODO remove logic
 	}
 
 	Widget buildBottomNavigation(BuildContext context) {
 		return Container(
 			padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
 			decoration: AppBoxProperties.elevatedContainer,
-			height: bottomBarHeight,
+			height: AppBoxProperties.standardBottomNavHeight,
 			child: Row(
 				mainAxisAlignment: MainAxisAlignment.spaceBetween,
 				crossAxisAlignment: CrossAxisAlignment.end,
 				children: <Widget>[
-					SizedBox.shrink(),
+					(formType == AppFormType.edit) ?
+						FlatButton(
+							onPressed: () => removeAward(context),
+							child: Text(
+								AppLocales.of(context).translate('$_pageKey.removeAwardButton'),
+								style: Theme.of(context).textTheme.button.copyWith(color: Colors.red)
+							)
+						) : SizedBox.shrink(),
 					FlatButton(
 						onPressed: () => saveAward(context),
 						child: Text(
-							AppLocales.of(context).translate('$_pageKey.saveAwardButton'),
+							AppLocales.of(context).translate(formType == AppFormType.create ? '$_pageKey.addAwardButton' : '$_pageKey.saveAwardButton' ),
 							style: Theme.of(context).textTheme.button.copyWith(color: AppColors.mainBackgroundColor)
 						)
 					)
@@ -164,13 +147,10 @@ class _CaregiverAwardFormPageState extends State<CaregiverAwardFormPage> {
 			padding: EdgeInsets.only(top: 20.0, bottom: 6.0, left: 20.0, right: 20.0),
 			child: TextFormField(
 				controller: _titleController,
-				decoration: InputDecoration(
-					icon: Padding(padding: EdgeInsets.all(5.0), child: Icon(Icons.edit)),
-					contentPadding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 12.0),
-					border: OutlineInputBorder(),
+				decoration: AppFormProperties.textFieldDecoration(Icons.edit).copyWith(
 					labelText: AppLocales.of(context).translate('$_pageKey.fields.awardName.label')
 				),
-				maxLength: 120,
+				maxLength: AppFormProperties.textFieldMaxLength,
 				textCapitalization: TextCapitalization.sentences,
 				validator: (value) {
 					return value.trim().isEmpty ? AppLocales.of(context).translate('$_pageKey.fields.awardName.emptyError') : null;
@@ -188,10 +168,7 @@ class _CaregiverAwardFormPageState extends State<CaregiverAwardFormPage> {
 			padding: EdgeInsets.only(top: 5.0, bottom: 16.0, left: 20.0, right: 20.0),
 			child: TextFormField(
 				controller: _limitController,
-				decoration: InputDecoration(
-					icon: Padding(padding: EdgeInsets.all(5.0), child: Icon(Icons.block)),
-					contentPadding: EdgeInsets.symmetric(vertical: 14.0, horizontal: 12.0),
-					border: OutlineInputBorder(),
+				decoration: AppFormProperties.textFieldDecoration(Icons.block).copyWith(
 					labelText: AppLocales.of(context).translate('$_pageKey.fields.awardLimit.label'),
 					hintText: '0',
 					helperText: AppLocales.of(context).translate('$_pageKey.fields.awardLimit.hint'),
@@ -205,7 +182,8 @@ class _CaregiverAwardFormPageState extends State<CaregiverAwardFormPage> {
 				),
 				keyboardType: TextInputType.numberWithOptions(signed: true, decimal: false),
 				inputFormatters: <TextInputFormatter>[
-						WhitelistingTextInputFormatter.digitsOnly
+						WhitelistingTextInputFormatter.digitsOnly,
+						LengthLimitingTextInputFormatter(9),
 				],
 				onChanged: (val) => setState(() {
 					award = award.copyWith(limit: int.tryParse(val));

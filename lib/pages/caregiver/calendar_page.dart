@@ -1,6 +1,9 @@
 import 'package:badges/badges.dart';
+import 'package:date_utils/date_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fokus/model/db/date/date.dart';
+import 'package:fokus/model/ui/plan/ui_plan.dart';
 import 'package:smart_select/smart_select.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:mongo_dart/mongo_dart.dart' as Mongo;
@@ -23,7 +26,6 @@ class CaregiverCalendarPage extends StatefulWidget {
 class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> {
 	static const String _pageKey = 'page.caregiverSection.calendar';
 	CalendarController _calendarController;
-	List<Mongo.ObjectId> filteredChildren;
 
 	List<Color> markerColors = [
 		Colors.green,
@@ -40,7 +42,6 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> {
 	void initState() {
 		super.initState();
 		_calendarController = CalendarController();
-		filteredChildren = List<Mongo.ObjectId>();
 	}
 
 	@override
@@ -78,38 +79,10 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> {
 					AppSegments(segments: [
 						Padding(
 							padding: EdgeInsets.symmetric(horizontal: AppBoxProperties.screenEdgePadding),
-							child: TableCalendar(
-								calendarController: _calendarController,
-								locale: AppLocales.of(context).locale.toString(),
-								startingDayOfWeek: StartingDayOfWeek.monday,
-								initialCalendarFormat: CalendarFormat.month,
-								headerStyle: HeaderStyle(
-									centerHeaderTitle: true,
-									formatButtonVisible: false
-								),
-								calendarStyle: CalendarStyle(
-									selectedColor: AppColors.caregiverBackgroundColor,
-									todayColor: Colors.grey,
-									markersMaxAmount: 8,
-									canEventMarkersOverflow: true
-								),
-								events: {
-									DateTime(2020, 8, 18): [
-										"a"
-									]
+							child: BlocBuilder<CalendarCubit, CalendarState>(
+								builder: (context, state) {
+									return buildCalendar(state.events);
 								},
-								builders: CalendarBuilders(
-									markersBuilder: (context, date, events, holidays) {
-										final children = <Widget>[];
-										if (events.isNotEmpty) {
-											for(var event in events)
-												children.add(
-													Badge(badgeColor: Colors.green)
-												);
-										}
-										return children;
-									}
-								)
 							)
 						)
 					])
@@ -118,11 +91,49 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> {
 		);
 	}
 
+	TableCalendar buildCalendar(Map<Date, List<UIPlan>> events) {
+	  return TableCalendar(
+			calendarController: _calendarController,
+			locale: AppLocales.of(context).locale.toString(),
+			startingDayOfWeek: StartingDayOfWeek.monday,
+			initialCalendarFormat: CalendarFormat.month,
+			headerStyle: HeaderStyle(
+				centerHeaderTitle: true,
+				formatButtonVisible: false
+			),
+			calendarStyle: CalendarStyle(
+				selectedColor: AppColors.caregiverBackgroundColor,
+				todayColor: Colors.grey,
+				markersMaxAmount: 8,
+				canEventMarkersOverflow: true
+			),
+			events: events,
+			onCalendarCreated: onMonthChanged,
+			onVisibleDaysChanged: onMonthChanged,
+			builders: CalendarBuilders(
+				markersBuilder: (context, date, events, holidays) {
+					final children = <Widget>[];
+					if (events.isNotEmpty) {
+						for(var event in events)
+							children.add(
+								Badge(badgeColor: Colors.green)
+							);
+					}
+					return children;
+				}
+			)
+		);
+	}
+
+	void onMonthChanged(DateTime first, DateTime last, CalendarFormat format) {
+		return context.bloc<CalendarCubit>().monthChanged(Date.fromDate(Utils.firstDayOfMonth(_calendarController.focusedDay)));
+	}
+
 	SmartSelect<Mongo.ObjectId> buildChildPicker({Map<UIChild, bool> children = const {}, bool loading = false}) {
 	  return SmartSelect<Mongo.ObjectId>.multiple(
 	    title: 'Filtruj wyświetlane plany',
 	    isLoading: loading,
-	    value: filteredChildren,
+	    value: children.keys.where((child) => children[child]).map((child) => child.id).toList(),
 	    builder: (context, state, callback) {
 	      int markerIndex = 0;
 	      return InkWell(
@@ -184,11 +195,13 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> {
 	    modalConfig: SmartSelectModalConfig(
 	      searchBarHint: AppLocales.of(context).translate('actions.search')
 	    ),
-	    onChange: (val) => setState(() {
+	    onChange: (val) {
 	      FocusManager.instance.primaryFocus.unfocus();
-	      filteredChildren.clear();
-	      filteredChildren = val;
-	    })
+	      Map<UIChild, bool> filter = {};
+	      for (var child in children.keys)
+	      	filter[child] = val.contains(child.id);
+	      context.bloc<CalendarCubit>().childFilterChanged(filter);
+	    }
 	  );
 	}
 }

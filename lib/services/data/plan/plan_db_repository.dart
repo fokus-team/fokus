@@ -36,7 +36,7 @@ mixin PlanDbRepository implements DbRepository {
 	}
 
 	Future<List<PlanInstance>> getPlanInstances({ObjectId childId, PlanInstanceState state, List<ObjectId> planIDs, Date date, DateSpan<Date> between}) {
-		var query = _buildPlanQuery(childId: childId, state: state, date: date);
+		var query = _buildPlanQuery(childId: childId, state: state, date: date, between: between);
 		return dbClient.queryTyped(Collection.planInstance, query, (json) => PlanInstance.fromJson(json));
 	}
 

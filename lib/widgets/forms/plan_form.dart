@@ -113,13 +113,13 @@ class _PlanFormState extends State<PlanForm> {
 		return BlocBuilder<PlanFormCubit, PlanFormState>(
 		  builder: (context, state) {
 		  	if (state is PlanFormDataLoadSuccess)
-		  		return getChildrenAssignedField(state.children);
-		  	return getChildrenAssignedField([], loading: state.formType == AppFormType.create);
+		  		return getChildrenAssignedField(children: state.children);
+		  	return getChildrenAssignedField(loading: state.formType == AppFormType.create);
 			}
 		);
 	}
 
-	Widget getChildrenAssignedField(List<UIChild> children, {bool loading = false}) {
+	Widget getChildrenAssignedField({List<UIChild> children = const [], bool loading = false}) {
 		return SmartSelect<Mongo.ObjectId>.multiple(
 			title: AppLocales.of(context).translate('$_pageKey.assignedChildren.label'),
 			placeholder: AppLocales.of(context).translate('$_pageKey.assignedChildren.hint'),

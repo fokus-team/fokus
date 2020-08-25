@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:date_utils/date_utils.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart';
@@ -20,7 +22,7 @@ class PlanRepeatabilityService {
 
 	/// [span] - must fit within a month (from 1'st to the end)
 	List<Date> getRepeatabilityDatesInSpan(PlanRepeatability repeatability, DateSpan<Date> span) {
-		var day = (int index) => repeatability.days[index];
+		var day = (int index) => repeatability.days[max(index, 0)];
 		List<Date> dates = [];
 		var iterateDays = (int startDay, int baseLength) {
 			var dayIndex = repeatability.days.indexWhere((day) => day >= startDay);
@@ -37,10 +39,10 @@ class PlanRepeatabilityService {
 				dayIndex = (dayIndex + 1) % repeatability.days.length;
 			}
 		};
-		if (repeatability.type == RepeatabilityType.once)
+		if (repeatability.type == RepeatabilityType.once) {
 			if (repeatability.range.from >= span.from && repeatability.range.from < span.to)
 				dates.add(repeatability.range.from);
-		else if (repeatability.type == RepeatabilityType.weekly)
+		} else if (repeatability.type == RepeatabilityType.weekly)
 			iterateDays(span.from.weekday, 7);
 		else if (repeatability.type == RepeatabilityType.monthly)
 			iterateDays(span.from.day, Utils.lastDayOfMonth(span.from).day);
@@ -58,7 +60,7 @@ class PlanRepeatabilityService {
 	PlanRepeatability mapRepeatabilityModel(PlanFormModel planForm) {
 		RepeatabilityType type = planForm.repeatability == PlanFormRepeatability.recurring ? planForm.repeatabilityRage.dbType : RepeatabilityType.once;
 		var untilCompleted = planForm.repeatability == PlanFormRepeatability.untilCompleted;
-		return PlanRepeatability(type: type, untilCompleted: untilCompleted, range: planForm.rangeDate, days: planForm.days);
+		return PlanRepeatability(type: type, untilCompleted: untilCompleted, range: planForm.rangeDate, days: planForm.days..sort());
 	}
 
 	static PlanFormRepeatability getFormRepeatability(PlanRepeatability repeatability) {

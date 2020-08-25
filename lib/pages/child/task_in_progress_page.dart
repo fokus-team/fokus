@@ -7,12 +7,12 @@ import 'package:fokus/widgets/buttons/square_button.dart';
 import 'package:fokus/widgets/cards/item_card.dart';
 import 'package:fokus/widgets/chips/attribute_chip.dart';
 
-class TaskInProgressPage extends StatefulWidget {
+class ChildTaskInProgressPage extends StatefulWidget {
   @override
-  _TaskInProgressPageState createState() => _TaskInProgressPageState();
+  _ChildTaskInProgressPageState createState() => _ChildTaskInProgressPageState();
 }
 
-class _TaskInProgressPageState extends State<TaskInProgressPage> {
+class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> {
   final String _pageKey = 'page.childSection.taskInProgress';
 
   @override

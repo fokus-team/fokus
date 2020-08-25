@@ -29,6 +29,7 @@ import 'package:fokus/pages/child/auth/child_sign_up_page.dart';
 import 'package:fokus/pages/child/awards_page.dart';
 import 'package:fokus/pages/child/panel_page.dart';
 import 'package:fokus/pages/child/plan_in_progress_page.dart';
+import 'package:fokus/pages/child/task_in_progress_page.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/services/instrumentator.dart';
 import 'package:fokus/utils/theme_config.dart';
@@ -115,7 +116,8 @@ class FokusApp extends StatelessWidget {
 			AppPage.childAwards.name: (context) => _createPage(ChildAwardsPage(), context),
 			AppPage.childAchievements.name: (context) => _createPage(ChildAchievementsPage(), context),
 			AppPage.caregiverPlanDetails.name: (context) => _createPage(CaregiverPlanDetailsPage(), context),
-			AppPage.childPlanInProgress.name: (context) => _createPage(ChildPlanInProgressPage(), context, ChildTasksCubit(getParams(context), getRoute(context)))
+			AppPage.childPlanInProgress.name: (context) => _createPage(ChildPlanInProgressPage(), context, ChildTasksCubit(getParams(context), getRoute(context))),
+			AppPage.childTaskInProgress.name: (context) => _createPage(ChildTaskInProgressPage(), context)
 		};
 	}
 

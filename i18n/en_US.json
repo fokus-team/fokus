@@ -211,7 +211,7 @@
 				"saveAwardButton": "Save award",
 				"removeAwardButton": "Remove award",
 				"removeAwardTitle": "Remove award",
-				"removeAwardText": "Are you sure you want to remove this wawrd?",
+				"removeAwardText": "Are you sure you want to remove this award?",
 				"fields": {
 					"awardName": {
 						"label": "Award name",
@@ -234,6 +234,40 @@
 							"activity": "Activity",
 							"relax": "Relax",
 							"food": "Food"
+						}
+					}
+				}
+			},
+			"badgeForm": {
+				"addBadgeTitle": "Add badge",
+				"editBadgeTitle": "Edit badge",
+				"addBadgeButton": "Add badge",
+				"saveBadgeButton": "Save badge",
+				"removeBadgeButton": "Remove badge",
+				"removeBadgeTitle": "Remove badge",
+				"removeBadgeText": "Are you sure you want to remove this badge?",
+				"fields": {
+					"badgeName": {
+						"label": "Badge name",
+						"emptyError": "Badge name can't be empty"
+					},
+					"badgeDescription": {
+						"label": "Badge description"
+					},
+					"badgeLevel": {
+						"label": "Badge type",
+						"options": {
+							"one": "Assigned once",
+							"three": "3 levels",
+							"five": "5 levels"
+						}
+					},
+					"badgeIcon": {
+						"label": "Badge icon",
+						"groups": {
+							"praise": "Praise",
+							"medal": "Medal",
+							"trophy": "Trophy"
 						}
 					}
 				}
@@ -403,6 +437,7 @@
 		"plan_creation": "Plan creation",
 		"task_creation": "Task creation",
 		"award_creation": "Award creation",
+		"badge_creation": "Badge creation",
 		"plan_info": "Plans"
 	},
 	"assignedTo": "Assigned to",

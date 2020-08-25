@@ -238,6 +238,40 @@
 					}
 				}
 			},
+			"badgeForm": {
+				"addBadgeTitle": "Dodaj odznakę",
+				"editBadgeTitle": "Edytuj odznakę",
+				"addBadgeButton": "Dodaj odznakę",
+				"saveBadgeButton": "Zapisz odznakę",
+				"removeBadgeButton": "Usuń odznakę",
+				"removeBadgeTitle": "Usuń odznakę",
+				"removeBadgeText": "Na pewno chcesz usunąć tą odznakę?",
+				"fields": {
+					"badgeName": {
+						"label": "Nazwa odznaki",
+						"emptyError": "Nazwa odznaki nie może być pusta"
+					},
+					"badgeDescription": {
+						"label": "Opis odznaki"
+					},
+					"badgeLevel": {
+						"label": "Typ odznaki",
+						"options": {
+							"one": "Jednorazowa",
+							"three": "3 poziomy",
+							"five": "5 poziomów"
+						}
+					},
+					"badgeIcon": {
+						"label": "Ikona odznaki",
+						"groups": {
+							"praise": "Pochwała",
+							"medal": "Medal",
+							"trophy": "Trofeum"
+						}
+					}
+				}
+			},
 			"statistics": {
 				"header": {
 					"title": "Statystyki",
@@ -403,6 +437,7 @@
 		"plan_creation": "Tworzenie planu",
 		"task_creation": "Konfiguracja zadania",
 		"award_creation": "Tworzenie nagrody",
+		"badge_creation": "Tworzenie odznaki",
 		"plan_info": "Plany"
 	},
 	"assignedTo": "Przypisane do",

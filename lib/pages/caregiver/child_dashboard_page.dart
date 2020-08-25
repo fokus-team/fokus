@@ -1,12 +1,8 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/icon_sets.dart';
 import 'package:fokus/utils/theme_config.dart';
-import 'package:fokus/widgets/buttons/rounded_button.dart';
-import 'package:fokus/widgets/chips/timer_chip.dart';
+import 'package:fokus/widgets/app_alert.dart';
 import 'package:fokus/widgets/segment.dart';
 import 'package:mongo_dart/mongo_dart.dart' as Mongo;
 
@@ -96,7 +92,12 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 					)
 				]
 			),
-			bottomNavigationBar: _buildBottomNavigation(),
+			bottomNavigationBar: AnimatedContainer(
+				duration: bottomBarDuration,
+				height: _currentIndex == 1 ? 0 : customBottomBarHeight,
+				decoration: AppBoxProperties.elevatedContainer,
+				child: SizedBox.shrink()
+			),
 			floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
 			floatingActionButton: AnimatedSwitcher(
 				duration: bottomBarDuration,
@@ -117,10 +118,18 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 					elevation: 4.0,
 					icon: Icon(_currentIndex == 0 ? Icons.description : Icons.star),
 					label: Text(AppLocales.of(context).translate('$_pageKey.header.${_currentIndex == 0 ? 'assignPlanButton': 'assignBadgeButton'}')),
-					onPressed: () { }
+					onPressed: () => _currentIndex == 0 ? _assignPlan() : _assignBadge()
 				) : SizedBox.shrink()
 			)
 		);
+	}
+
+	void _assignPlan() {
+		
+	}
+
+	void _assignBadge() {
+		
 	}
 
 	Widget _buildPlansTab() {
@@ -128,38 +137,10 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 			padding: EdgeInsets.zero,
 			physics: BouncingScrollPhysics(),
 			children: <Widget>[
-				Container(
-					margin: EdgeInsets.symmetric(vertical: 12.0, horizontal: AppBoxProperties.screenEdgePadding).copyWith(bottom: 2.0),
-					decoration: BoxDecoration(
-						color: Colors.pink,
-						borderRadius: BorderRadius.all(Radius.circular(AppBoxProperties.roundedCornersRadius))
-					),
-					child: Material(
-						type: MaterialType.transparency,
-						child: InkWell(
-							onTap: () => {},
-							splashColor: Colors.pink[600],
-							borderRadius: BorderRadius.all(Radius.circular(AppBoxProperties.roundedCornersRadius)),
-							child: Padding(
-								padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-								child: Row(
-									children: [
-										Icon(Icons.warning, color: Colors.white),
-										Expanded(
-											child: Padding(
-												padding: EdgeInsets.symmetric(horizontal: 16.0),
-												child: Text(
-													'Istnieją nieocenione zadania. Odwiedź stronę oceniania, aby przynać punkty za wykonane zadania.',
-													style: TextStyle(color: Colors.white)
-												)
-											)
-										),
-										Icon(Icons.arrow_forward, color: Colors.red[900])
-									],
-								)
-							)
-						)
-					)
+				// Show only if there are not rated tasks
+				AppAlert(
+					text: 'Istnieją nieocenione zadania. Odwiedź stronę oceniania, aby przynać punkty za wykonane zadania.',
+					onTap: () => { /* Go to rating page */ },
 				),
 				Segment(
 					title: '$_pageKey.content.plansTitle',
@@ -167,6 +148,13 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 						ItemCard(
 							title: 'Sprzątanie pokoju',
 							subtitle: 'Rozpoczęty',
+							chips: [
+								AttributeChip.withIcon(
+									content: 'Wykonano 2/3',
+									color: Colors.lightGreen,
+									icon: Icons.layers
+								)
+							],
 							isActive: true,
 							progressPercentage: 0.33
 						),
@@ -186,6 +174,11 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 			padding: EdgeInsets.zero,
 			physics: BouncingScrollPhysics(),
 			children: <Widget>[
+				// Show only if there are no awards child can buy
+				AppAlert(
+					text: 'Lista możliwych do kupienia nagród jest pusta. Dodaj nagrodę, aby dziecko mogo ją zdobyć.',
+					onTap: () => { /* Go to award/badge list page */ },
+				),
 				Segment(
 					title: '$_pageKey.content.awardsTitle',
 					elements: [
@@ -209,6 +202,11 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 			padding: EdgeInsets.zero,
 			physics: BouncingScrollPhysics(),
 			children: <Widget>[
+				// Show only if there are no badges child can get
+				AppAlert(
+					text: 'Lista możliwych do przyznania odznak jest pusta. Dodaj odznakę, aby móc przydzielić ją dziecku.',
+					onTap: () => { /* Go to award/badge list page */ },
+				),
 				Segment(
 					title: '$_pageKey.content.achievementsTitle',
 					elements: [
@@ -222,15 +220,6 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 					]
 				)
 			]
-		);
-	}
-
-	Widget _buildBottomNavigation() {
-		return AnimatedContainer(
-			duration: bottomBarDuration,
-			height: _currentIndex == 1 ? 0 : customBottomBarHeight,
-			decoration: AppBoxProperties.elevatedContainer,
-			child: SizedBox.shrink()
 		);
 	}
 

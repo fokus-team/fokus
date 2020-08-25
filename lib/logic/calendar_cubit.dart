@@ -13,6 +13,7 @@ import 'package:fokus/model/db/plan/plan.dart';
 import 'package:fokus/model/db/plan/plan_instance.dart';
 import 'package:fokus/model/ui/user/ui_caregiver.dart';
 import 'package:fokus/services/app_locales.dart';
+import 'package:fokus/model/ui/user/ui_child.dart';
 import 'package:fokus/services/plan_repeatability_service.dart';
 import 'package:fokus/utils/collection_utils.dart';
 import 'package:fokus/utils/string_utils.dart';
@@ -27,12 +28,21 @@ class CalendarCubit extends Cubit<CalendarState> {
 	final PlanRepeatabilityService _repeatabilityService = GetIt.I<PlanRepeatabilityService>();
 
   CalendarCubit(this._activeUser) : super(CalendarState());
+
+  void loadInitialData() async {
+	  var activeUser = _activeUser() as UICaregiver;
+	  _plans = Map.fromEntries((await _dataRepository.getPlans(caregiverId: activeUser.id, activeOnly: false)).map((plan) => MapEntry(plan.id, plan)));
+
+	  var children = await _dataRepository.getUsers(ids: activeUser.connections);
+	  _childNames = Map.fromEntries(children.map((child) => MapEntry(child.id, child.name)));
+	  emit(state.copyWith(children: Map.fromEntries(children.map((child) => MapEntry(UIChild.fromDBModel(child), true)))));
+  }
   
-  void childFilterChanged(Map<UIUser, bool> filter) async => emit(state.copyWith(children: filter, events: await _filterData(filter, state.month)));
+  void childFilterChanged(Map<UIChild, bool> filter) async => emit(state.copyWith(children: filter, events: await _filterData(filter, state.month)));
 
   void monthChanged(Date month) async => emit(state.copyWith(month: month, events: await _filterData(state.children, month)));
 
-	Future<Map<Date, List<UIPlan>>> _filterData(Map<UIUser, bool> filter, Date month) async {
+	Future<Map<Date, List<UIPlan>>> _filterData(Map<UIChild, bool> filter, Date month) async {
 		var ids = filter.keys.map((child) => child.id).toSet();
 		Map<Date, List<UIPlan>> events = {};
 		if (ids.length > 0) {
@@ -49,17 +59,8 @@ class CalendarCubit extends Cubit<CalendarState> {
 	}
 
 	Future<Map<Date, List<UIPlan>>> _loadDataForMonth(Date month) async {
-	  var activeUser = _activeUser() as UICaregiver;
 	  if (_allEvents.containsKey(month))
 	  	return _allEvents[month];
-	  if (_plans == null)
-	    _plans = Map.fromEntries((await _dataRepository.getPlans(caregiverId: activeUser.id, activeOnly: false)).map((plan) => MapEntry(plan.id, plan)));
-	  var state = this.state;
-	  if (_childNames == null) {
-	  	var children = await _dataRepository.getUsers(ids: activeUser.connections);
-	  	state = state.copyWith(children: Map.fromEntries(children.map((child) => MapEntry(UIUser.fromDBModel(child), true))));
-		  _childNames = Map.fromEntries(children.map((child) => MapEntry(child.id, child.name)));
-	  }
 	  var currentMonth = Date.fromDate(Utils.firstDayOfMonth(Date.now()));
 
 	  Map<Date, List<UIPlan>> events = {};
@@ -110,13 +111,13 @@ class CalendarCubit extends Cubit<CalendarState> {
 }
 
 class CalendarState extends Equatable {
-	final Map<UIUser, bool> children;
+	final Map<UIChild, bool> children;
 	final Date month;
 	final Map<Date, List<UIPlan>> events;
 
 	const CalendarState({this.month, this.children, this.events});
 
-	CalendarState copyWith({Map<UIUser, bool> children, Map<Date, List<UIPlan>> events, Date month}) {
+	CalendarState copyWith({Map<UIChild, bool> children, Map<Date, List<UIPlan>> events, Date month}) {
 	  return CalendarState(
 		  children: children ?? this.children,
 		  events: events ?? this.events,

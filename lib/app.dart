@@ -10,7 +10,7 @@ import 'package:fokus/logic/auth/child/prev_profiles_cubit.dart';
 import 'package:fokus/logic/auth/child/sign_in/child_sign_in_cubit.dart';
 import 'package:fokus/logic/auth/child/sign_up/child_sign_up_cubit.dart';
 import 'package:fokus/logic/child_tasks_cubit.dart';
-
+import 'package:fokus/logic/calendar_cubit.dart';
 import 'package:fokus/pages/caregiver/award_form_page.dart';
 import 'package:fokus/logic/caregiver_panel_cubit.dart';
 import 'package:fokus/logic/caregiver_plans_cubit.dart';
@@ -19,8 +19,8 @@ import 'package:fokus/logic/plan_form/plan_form_cubit.dart';
 import 'package:fokus/pages/caregiver/auth/caregiver_sign_in_page.dart';
 import 'package:fokus/pages/caregiver/auth/caregiver_sign_up_page.dart';
 import 'package:fokus/pages/caregiver/awards_page.dart';
+import 'package:fokus/pages/caregiver/calendar_page.dart';
 import 'package:fokus/pages/caregiver/badge_form_page.dart';
-import 'package:fokus/pages/caregiver/calendar.dart';
 import 'package:fokus/pages/caregiver/panel_page.dart';
 import 'package:fokus/pages/caregiver/plan_details_page.dart';
 import 'package:fokus/pages/caregiver/plan_form_page.dart';
@@ -111,7 +111,7 @@ class FokusApp extends StatelessWidget {
 			AppPage.childSignInPage.name: (context) => _createPage(_wrapWithCubit(ChildSignInPage(), ChildSignInCubit(authBloc(context))), context, ChildSignUpCubit(authBloc(context))),
 			AppPage.caregiverPanel.name: (context) => _createPage(CaregiverPanelPage(), context, CaregiverPanelCubit(getActiveUser(context), getRoute(context))),
 			AppPage.caregiverPlans.name: (context) => _createPage(CaregiverPlansPage(), context, CaregiverPlansCubit(getActiveUser(context), getRoute(context))),
-			AppPage.caregiverCalendar.name: (context) => _createPage(CaregiverCalendarPage(), context),
+			AppPage.caregiverCalendar.name: (context) => _createPage(CaregiverCalendarPage(), context, CalendarCubit(getActiveUser(context))),
 			AppPage.caregiverPlanForm.name: (context) => _createPage(CaregiverPlanFormPage(), context, PlanFormCubit(getParams(context), getActiveUser(context))),
 			AppPage.caregiverAwards.name: (context) => _createPage(CaregiverAwardsPage(), context),
 			AppPage.caregiverAwardForm.name: (context) => _createPage(CaregiverAwardFormPage(), context),

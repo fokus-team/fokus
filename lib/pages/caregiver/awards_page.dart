@@ -30,7 +30,8 @@ class _CaregiverAwardsPageState extends State<CaregiverAwardsPage> {
 					AppHeader.normal(title: '$_pageKey.header.title', text: '$_pageKey.header.pageHint', headerActionButtons: [
 						HeaderActionButton.normal(Icons.add, '$_pageKey.header.addAward', 
 						() => Navigator.of(context).pushNamed(AppPage.caregiverAwardForm.name, arguments: AppFormType.create)),
-						HeaderActionButton.normal(Icons.add, '$_pageKey.header.addBadge', () => { log("Dodaj odznakę") })
+						HeaderActionButton.normal(Icons.add, '$_pageKey.header.addBadge', 
+						() => Navigator.of(context).pushNamed(AppPage.caregiverBadgeForm.name, arguments: AppFormType.create))
 					]),
 					AppSegments(
 						segments: [

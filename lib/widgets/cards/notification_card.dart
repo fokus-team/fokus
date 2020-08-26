@@ -13,6 +13,8 @@ import 'package:fokus/widgets/cards/item_card.dart';
 
 import 'package:intl/intl.dart';
 
+const String _pageKey = "page.notifications.content";
+
 enum NotificationType{
   caregiver_receivedAward,
   caregiver_finishedTaskUngraded,
@@ -58,7 +60,7 @@ extension NotificationTypeExtension on NotificationType {
       GestureDetector(
         onTap: () => {log("open the grading page")},
         child: AttributeChip.withIcon(
-          content: AppLocales.of(context).translate("page.notifications.content.caregiver.gradeTask"),
+          content: AppLocales.of(context).translate("$_pageKey.caregiver.gradeTask"),
           color: Colors.red,
           icon: Icons.assignment
         )
@@ -66,7 +68,7 @@ extension NotificationTypeExtension on NotificationType {
     ],
     NotificationType.caregiver_finishedTaskGraded: [
       AttributeChip.withIcon(
-        content: AppLocales.of(context).translate("page.notifications.content.caregiver.graded"),
+        content: AppLocales.of(context).translate("$_pageKey.caregiver.graded"),
         color: Colors.grey[750],
         icon: Icons.check
       )
@@ -89,7 +91,7 @@ class NotificationCard extends ItemCard {
   final CurrencyType currencyType;
   final int currencyValue;
 
-  String getTitle(BuildContext context) => title ?? AppLocales.of(context).translate("page.notifications.content.${notificationType.title}", {'CHILD_NAME' : childName});
+  String getTitle(BuildContext context) => title ?? AppLocales.of(context).translate("$_pageKey.${notificationType.title}", {'CHILD_NAME' : childName});
   List<Widget> getChips(BuildContext context) => chips ?? notificationType.chips(context, currencyType, currencyValue);
 
   NotificationCard({

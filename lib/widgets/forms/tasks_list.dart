@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/logic/plan_form/plan_form_cubit.dart';
 import 'package:fokus/widgets/cards/task_card.dart';
+import 'package:fokus/widgets/general/app_hero.dart';
 import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorderable_list.dart';
 
 import 'package:fokus/model/ui/form/task_form_model.dart';
@@ -266,34 +267,13 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 				return FadeTransition(child: child, opacity: delayedAnimation);
 			},
 			child: (widget.plan.tasks.isEmpty) ?
-			Center(
-				child: Padding(
-					padding: EdgeInsets.only(top: 50.0),
-					child: Column(
-						children: <Widget>[
-							Padding(
-								padding: EdgeInsets.only(bottom: 10.0),
-								child: Icon(
-									Icons.local_florist,
-									size: 65.0,
-									color: Colors.grey[400]
-								)
-							),
-							Text(
-								AppLocales.of(context).translate('$_pageKey.noTasksMessage'), 
-								style: TextStyle(
-									fontSize: 16.0,
-									color: Colors.grey[400]
-								)
-							)
-						]
-					)
+				AppHero(
+					title: AppLocales.of(context).translate('$_pageKey.noTasksMessage'),
+					icon: Icons.local_florist
 				)
-			)
-			: SizedBox.shrink()
+				: SizedBox.shrink()
 		);
 	}
-
 
 	Widget buildTaskCard(BuildContext context, TaskFormModel task, bool optional) {
 		int index = (widget.plan.tasks..where((element) => element.optional == optional)).indexOf(task);

@@ -13,7 +13,7 @@ import 'package:fokus/utils/icon_sets.dart';
 import 'package:fokus/utils/theme_config.dart';
 import 'package:fokus/widgets/buttons/popup_menu_list.dart';
 import 'package:fokus/widgets/chips/attribute_chip.dart';
-import 'package:fokus/widgets/app_avatar.dart';
+import 'package:fokus/widgets/general/app_avatar.dart';
 import 'package:fokus/widgets/buttons/help_icon_button.dart';
 import 'package:fokus/widgets/buttons/back_icon_button.dart';
 

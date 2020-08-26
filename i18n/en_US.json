@@ -83,8 +83,12 @@
 				},
 				"content": {
 					"plansTitle": "Today's plans",
+					"noPlansText": "No actions planned for today",
+					"openCalendarButton": "Open calendar",
 					"awardsTitle": "Claimed awards",
-					"achievementsTitle": "Awarded badges"
+					"noAwardsText": "No claimed awards to display",
+					"achievementsTitle": "Awarded badges",
+					"noachievementsText": "No awarded badges to display"
 				}
 			},
 			"plans": {

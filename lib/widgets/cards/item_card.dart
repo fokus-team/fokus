@@ -1,10 +1,11 @@
+import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fokus/model/ui/ui_button.dart';
 import 'package:fokus/utils/app_paths.dart';
 import 'package:fokus/utils/icon_sets.dart';
 import 'package:fokus/utils/theme_config.dart';
-import 'package:fokus/widgets/app_avatar.dart';
+import 'package:fokus/widgets/general/app_avatar.dart';
 import 'package:fokus/widgets/buttons/popup_menu_list.dart';
 
 class ItemCardActionButton {
@@ -27,6 +28,7 @@ class ItemCard extends StatelessWidget {
 	// Element's content
 	final String title;
 	final String subtitle;
+	final Widget icon;
 	final GraphicAssetType graphicType;
 	final int graphic;
 	final double graphicHeight;
@@ -50,6 +52,7 @@ class ItemCard extends StatelessWidget {
 	ItemCard({
 		@required this.title, 
 		this.subtitle,
+		this.icon,
 		this.graphicType,
 		this.graphic,
 		this.graphicHeight = defaultImageHeight,
@@ -73,7 +76,12 @@ class ItemCard extends StatelessWidget {
 				return SvgPicture.asset(awardIconSvgPath(graphic), height: graphicHeight);
 			break;
 			case GraphicAssetType.badgeIcons:
-				return SvgPicture.asset(badgeIconSvgPath(graphic), height: graphicHeight);
+				return Badge(
+					showBadge: graphicShowCheckmark,
+					badgeColor: Colors.green,
+					badgeContent: Icon(Icons.check, color: Colors.white, size: 16.0),
+					child: SvgPicture.asset(badgeIconSvgPath(graphic), height: graphicHeight)
+				);
 			break;
 			default:
 				return Image.asset('assets/image/sunflower_logo.png', height: graphicHeight);
@@ -149,10 +157,10 @@ class ItemCard extends StatelessWidget {
 			mainAxisAlignment: MainAxisAlignment.start,
 			crossAxisAlignment: CrossAxisAlignment.start,
 			children: <Widget>[
-				if(graphic != null)
+				if(graphic != null || icon != null)
 					Padding(
 						padding: EdgeInsets.all(6.0),
-						child: headerImage()
+						child: icon != null ? icon : headerImage()
 					),
 				Expanded(
 					flex: 1, 

@@ -5,6 +5,8 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:fokus/model/ui/ui_button.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/app_paths.dart';
+import 'package:fokus/utils/theme_config.dart';
+import 'package:fokus/widgets/general/app_loader.dart';
 
 class HelpDialog extends StatelessWidget {
   final String helpPage;
@@ -29,7 +31,7 @@ class HelpDialog extends StatelessWidget {
       decoration: new BoxDecoration(
         color: Colors.white,
         shape: BoxShape.rectangle,
-        borderRadius: BorderRadius.circular(4.0)
+        borderRadius: BorderRadius.circular(AppBoxProperties.roundedCornersRadius)
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -38,7 +40,7 @@ class HelpDialog extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Padding(
-                padding: EdgeInsets.only(left: 8.0, right: 10.0, top: 2.0),
+                padding: EdgeInsets.only(left: 8.0, right: 10.0),
                 child: Icon(Icons.help_outline)
               ),
               Text(AppLocales.of(context).translate('help.' + helpPage), style: Theme.of(context).textTheme.headline2)
@@ -60,7 +62,7 @@ class HelpDialog extends StatelessWidget {
                   data: snapshot.data
                 );
               }
-              return Center(child: Padding(padding: EdgeInsets.all(10.0), child: CircularProgressIndicator()));
+              return Center(child: Padding(padding: EdgeInsets.all(10.0), child: AppLoader()));
             }
           ),
           SizedBox(height: 4.0),

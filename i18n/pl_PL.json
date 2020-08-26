@@ -83,8 +83,12 @@
 				},
 				"content": {
 					"plansTitle": "Dzisiejsze plany",
+					"noPlansText": "Brak zaplanowanych działań na dziś",
+					"openCalendarButton": "Otwórz kalendarz",
 					"awardsTitle": "Odebrane nagrody",
-					"achievementsTitle": "Przyznane odznaki"
+					"noAwardsText": "Brak odebranych nagród",
+					"achievementsTitle": "Przyznane odznaki",
+					"noAchievementsText": "Brak przyznanych odznak"
 				}
 			},
 			"plans": {

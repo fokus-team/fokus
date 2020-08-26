@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/utils/theme_config.dart';
+import 'package:fokus/widgets/auth/auth_button.dart';
+import 'package:fokus/widgets/auth/auth_widgets.dart';
 import 'package:formz/formz.dart';
 
 import 'package:fokus/logic/auth/caregiver/sign_up/caregiver_sign_up_cubit.dart';
 import 'package:fokus/model/ui/ui_button.dart';
 import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/widgets/auth_input_field.dart';
+import 'package:fokus/widgets/auth/auth_input_field.dart';
 import 'package:fokus/model/ui/auth/confirmed_password.dart';
 import 'package:fokus/model/ui/auth/email.dart';
 import 'package:fokus/model/ui/auth/name.dart';
@@ -28,52 +29,84 @@ class CaregiverSignUpPage extends StatelessWidget {
 							  SnackBar(content: Text(AppLocales.of(context).translate(state.signUpError?.key ?? state.signInError.key))),
 						  );
 				  },
-				  child: _buildSignUpForm(context),
+					child: ListView(
+						padding: EdgeInsets.symmetric(vertical: AppBoxProperties.screenEdgePadding),
+						shrinkWrap: true,
+						children: [
+							_buildSignUpForm(context),
+							AuthFloatingButton(
+								icon: Icons.arrow_back,
+								action: () => Navigator.of(context).pop(),
+								text: AppLocales.of(context).translate('page.loginSection.backToLoginPage')
+							)
+						]
+					)
 			  )
 		  ),
 	  );
   }
 
   Widget _buildSignUpForm(BuildContext context) {
-	  return Column(
-		  children: <Widget>[
-			  AuthenticationInputField<CaregiverSignUpCubit, CaregiverSignUpState>(
-					getField: (state) => state.name,
-					changedAction: (cubit, value) => cubit.nameChanged(value),
-					labelKey: 'authentication.name',
-					getErrorKey: (state) => [state.name.error.key],
-			  ),
-			  AuthenticationInputField<CaregiverSignUpCubit, CaregiverSignUpState>(
-					getField: (state) => state.email,
-					changedAction: (cubit, value) => cubit.emailChanged(value),
-					labelKey: 'authentication.email',
-					getErrorKey: (state) => [state.email.error.key],
-					inputType: TextInputType.emailAddress
-			  ),
-			  AuthenticationInputField<CaregiverSignUpCubit, CaregiverSignUpState>(
-					getField: (state) => state.password,
-					changedAction: (cubit, value) => cubit.passwordChanged(value),
-					labelKey: 'authentication.password',
-					getErrorKey: (state) => [state.password.error.key, {'LENGTH': Password.minPasswordLength}],
-					hideInput: true
-			  ),
-			  AuthenticationInputField<CaregiverSignUpCubit, CaregiverSignUpState>(
-					getField: (state) => state.confirmedPassword,
-					changedAction: (cubit, value) => cubit.confirmedPasswordChanged(value),
-					labelKey: 'authentication.confirmPassword',
-					getErrorKey: (state) => [state.confirmedPassword.error.key],
-					hideInput: true
-			  ),
-			  RaisedButton(
-				  child: Text(AppLocales.of(context).translate(ButtonType.signUp.key)),
-				  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppBoxProperties.roundedCornersRadius)),
-				  onPressed: () => context.bloc<CaregiverSignUpCubit>().signUpFormSubmitted(),
-			  ),
-			  GoogleSignInButton(
-					onPressed: () => context.bloc<CaregiverSignUpCubit>().logInWithGoogle(),
-				  text: AppLocales.of(context).translate('authentication.googleSignUp'),
-			  )
-		  ],
-	  );
-  }
+	  return BlocBuilder<CaregiverSignUpCubit, CaregiverSignUpState>(
+			cubit: BlocProvider.of<CaregiverSignUpCubit>(context),
+			builder: (context, state) { 
+				return AuthGroup(
+					title: AppLocales.of(context).translate('$_pageKey.registerTitle'),
+					hint: AppLocales.of(context).translate('$_pageKey.registerHint'),
+					isLoading: state.status.isSubmissionInProgress,
+					content: Column(
+						children: <Widget>[
+							AuthenticationInputField<CaregiverSignUpCubit, CaregiverSignUpState>(
+								getField: (state) => state.name,
+								changedAction: (cubit, value) => cubit.nameChanged(value),
+								labelKey: 'authentication.name',
+								icon: Icons.person,
+								getErrorKey: (state) => [state.name.error.key],
+								inputType: TextInputType.name
+							),
+							AuthenticationInputField<CaregiverSignUpCubit, CaregiverSignUpState>(
+								getField: (state) => state.email,
+								changedAction: (cubit, value) => cubit.emailChanged(value),
+								labelKey: 'authentication.email',
+								icon: Icons.email,
+								getErrorKey: (state) => [state.email.error.key],
+								inputType: TextInputType.emailAddress
+							),
+							AuthenticationInputField<CaregiverSignUpCubit, CaregiverSignUpState>(
+								getField: (state) => state.password,
+								changedAction: (cubit, value) => cubit.passwordChanged(value),
+								labelKey: 'authentication.password',
+								icon: Icons.lock,
+								getErrorKey: (state) => [state.password.error.key, {'LENGTH': Password.minPasswordLength}],
+								hideInput: true
+							),
+							AuthenticationInputField<CaregiverSignUpCubit, CaregiverSignUpState>(
+								getField: (state) => state.confirmedPassword,
+								changedAction: (cubit, value) => cubit.confirmedPasswordChanged(value),
+								labelKey: 'authentication.confirmPassword',
+								icon: Icons.lock,
+								getErrorKey: (state) => [state.confirmedPassword.error.key],
+								hideInput: true
+							),
+							AuthButton(
+								button: UIButton.ofType(
+									ButtonType.signUp,
+									() => context.bloc<CaregiverSignUpCubit>().signUpFormSubmitted(),
+									Colors.teal
+								)
+							),
+							AuthDivider(),
+							AuthButton.google(
+								UIButton(
+									'authentication.googleSignUp',
+									() => context.bloc<CaregiverSignUpCubit>().logInWithGoogle()
+								)
+							)
+						]
+					)
+				);
+			}
+		);
+	}
+
 }

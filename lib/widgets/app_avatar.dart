@@ -9,7 +9,11 @@ class AppAvatar extends StatelessWidget {
 	final double size;
 	final Color color;
 	final bool checked;
+	final bool disabled;
+	final bool blankAvatar;
 	//final UserType type; // in case of caregivers having avatars
+
+	static final Color greyOut = Colors.grey[100];
 
 	AppAvatar(
 		this.avatar,
@@ -17,9 +21,13 @@ class AppAvatar extends StatelessWidget {
 			//this.type = UserType.child,
 			this.size = 64,
 			this.color,
-			this.checked
+			this.checked,
+			this.disabled = false,
+			this.blankAvatar = false
 		}
 	);
+
+	AppAvatar.blank({double size}) : this(0, size: size, color: greyOut, blankAvatar: true);
 
 	@override
   Widget build(BuildContext context) {
@@ -32,10 +40,16 @@ class AppAvatar extends StatelessWidget {
 				child: Container(
 					width: size,
 					height: size,
+					foregroundDecoration: disabled ? BoxDecoration(
+						color: greyOut,
+						backgroundBlendMode: BlendMode.saturation
+					) : null,
 					color: (color != null) ? color : childAvatars[this.avatar].color,
 					child: Transform.translate(
 						offset: const Offset(0.0, 8.0),
-						child: SvgPicture.asset(childAvatarSvgPath(avatar), fit: BoxFit.contain)
+						child: blankAvatar ? 
+						SvgPicture.asset('assets/image/avatar/default.svg', fit: BoxFit.fitHeight)
+						: SvgPicture.asset(childAvatarSvgPath(avatar), fit: BoxFit.fitHeight)
 					)
 				)
 			)

@@ -6,37 +6,42 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:fokus/logic/auth/auth_bloc/authentication_bloc.dart';
 import 'package:fokus/logic/auth/caregiver/sign_in/caregiver_sign_in_cubit.dart';
 import 'package:fokus/logic/auth/caregiver/sign_up/caregiver_sign_up_cubit.dart';
+import 'package:fokus/logic/auth/child/prev_profiles_cubit.dart';
 import 'package:fokus/logic/auth/child/sign_in/child_sign_in_cubit.dart';
 import 'package:fokus/logic/auth/child/sign_up/child_sign_up_cubit.dart';
-import 'package:fokus/pages/caregiver/award_form_page.dart';
+import 'package:fokus/logic/child_tasks_cubit.dart';
 import 'package:fokus/logic/caregiver_panel_cubit.dart';
 import 'package:fokus/logic/caregiver_plans_cubit.dart';
 import 'package:fokus/logic/child_plans_cubit.dart';
 import 'package:fokus/logic/plan_form/plan_form_cubit.dart';
+
+import 'package:fokus/pages/loading_page.dart';
+import 'package:fokus/pages/roles_page.dart';
 import 'package:fokus/pages/caregiver/auth/caregiver_sign_in_page.dart';
 import 'package:fokus/pages/caregiver/auth/caregiver_sign_up_page.dart';
 import 'package:fokus/pages/caregiver/awards_page.dart';
 import 'package:fokus/pages/caregiver/child_dashboard_page.dart';
+import 'package:fokus/pages/caregiver/award_form_page.dart';
+import 'package:fokus/pages/caregiver/badge_form_page.dart';
 import 'package:fokus/pages/caregiver/panel_page.dart';
 import 'package:fokus/pages/caregiver/plan_details_page.dart';
 import 'package:fokus/pages/caregiver/plan_form_page.dart';
 import 'package:fokus/pages/caregiver/plans_page.dart';
 import 'package:fokus/pages/caregiver/statistics_page.dart';
-import 'package:fokus/pages/child/achievements_page.dart';
+import 'package:fokus/pages/child/auth/child_profiles_page.dart';
 import 'package:fokus/pages/child/auth/child_sign_in_page.dart';
-import 'package:fokus/pages/child/auth/child_sign_up_page.dart';
 import 'package:fokus/pages/child/awards_page.dart';
 import 'package:fokus/pages/child/panel_page.dart';
 import 'package:fokus/pages/child/plan_in_progress_page.dart';
+import 'package:fokus/pages/child/achievements_page.dart';
+
+import 'package:fokus/model/ui/app_page.dart';
+import 'package:fokus/model/db/user/user_role.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/services/instrumentator.dart';
 import 'package:fokus/utils/theme_config.dart';
-import 'package:fokus/pages/loading_page.dart';
-import 'package:fokus/pages/roles_page.dart';
-import 'package:fokus/widgets/page_theme.dart';
-import 'package:fokus/model/ui/app_page.dart';
-import 'package:fokus/model/db/user/user_role.dart';
 import 'package:fokus/utils/service_injection.dart';
+import 'package:fokus/widgets/page_theme.dart';
 
 void main() {
 	WidgetsFlutterBinding.ensureInitialized();
@@ -97,34 +102,33 @@ class FokusApp extends StatelessWidget {
 		var getActiveUser = (BuildContext context) => () => context.bloc<AuthenticationBloc>().state.user;
 		var getRoute = (BuildContext context) => ModalRoute.of(context);
 		var getParams = (BuildContext context) => getRoute(context).settings.arguments;
+		var authBloc = (BuildContext context) => context.bloc<AuthenticationBloc>();
 		return {
 			AppPage.loadingPage.name: (context) => _createPage(LoadingPage(), context),
 			AppPage.rolesPage.name: (context) => _createPage(RolesPage(), context),
 			AppPage.caregiverSignInPage.name: (context) => _createPage(CaregiverSignInPage(), context, CaregiverSignInCubit()),
 			AppPage.caregiverSignUpPage.name: (context) => _createPage(CaregiverSignUpPage(), context, CaregiverSignUpCubit()),
-			AppPage.childSignInPage.name: (context) => _createPage(ChildSignInPage(), context, ChildSignInCubit(context.bloc<AuthenticationBloc>())),
-			AppPage.childSignUpPage.name: (context) => _createPage(ChildSignUpPage(), context, ChildSignUpCubit(context.bloc<AuthenticationBloc>())),
+			AppPage.childProfilesPage.name: (context) => _createPage(ChildProfilesPage(), context, PreviousProfilesCubit(authBloc(context), getRoute(context))),
+			AppPage.childSignInPage.name: (context) => _createPage(_wrapWithCubit(ChildSignInPage(), ChildSignInCubit(authBloc(context))), context, ChildSignUpCubit(authBloc(context))),
 			AppPage.caregiverPanel.name: (context) => _createPage(CaregiverPanelPage(), context, CaregiverPanelCubit(getActiveUser(context), getRoute(context))),
 			AppPage.caregiverChildDashboard.name: (context) => _createPage(CaregiverChildDashboardPage(), context),
 			AppPage.caregiverPlans.name: (context) => _createPage(CaregiverPlansPage(), context, CaregiverPlansCubit(getActiveUser(context), getRoute(context))),
 			AppPage.caregiverPlanForm.name: (context) => _createPage(CaregiverPlanFormPage(), context, PlanFormCubit(getParams(context), getActiveUser(context))),
 			AppPage.caregiverAwards.name: (context) => _createPage(CaregiverAwardsPage(), context),
 			AppPage.caregiverAwardForm.name: (context) => _createPage(CaregiverAwardFormPage(), context),
+			AppPage.caregiverBadgeForm.name: (context) => _createPage(CaregiverBadgeFormPage(), context),
 			AppPage.caregiverStatistics.name: (context) => _createPage(CaregiverStatisticsPage(), context),
 			AppPage.childPanel.name: (context) => _createPage(ChildPanelPage(), context, ChildPlansCubit(getActiveUser(context), getRoute(context))),
 			AppPage.childAwards.name: (context) => _createPage(ChildAwardsPage(), context),
 			AppPage.childAchievements.name: (context) => _createPage(ChildAchievementsPage(), context),
 			AppPage.caregiverPlanDetails.name: (context) => _createPage(CaregiverPlanDetailsPage(), context),
-			AppPage.childPlanInProgress.name: (context) => _createPage(ChildPlanInProgressPage(), context)
+			AppPage.childPlanInProgress.name: (context) => _createPage(ChildPlanInProgressPage(), context, ChildTasksCubit(getParams(context), getRoute(context)))
 		};
 	}
 
 	Widget _createPage<CubitType extends Cubit>(Widget page, BuildContext context, [CubitType pageCubit]) {
 		if (pageCubit != null)
-			page = BlocProvider<CubitType>(
-				create: (context) => pageCubit,
-				child: page,
-			);
+			page = _wrapWithCubit(page, pageCubit);
 		var authState = context.bloc<AuthenticationBloc>().state;
 		if (authState.status == AuthenticationStatus.authenticated)
 			return PageTheme.parametrizedRoleSection(
@@ -132,6 +136,13 @@ class FokusApp extends StatelessWidget {
 				child: page
 			);
 		return PageTheme.loginSection(child: page);
+	}
+
+	Widget _wrapWithCubit<CubitType extends Cubit>(Widget page, CubitType pageCubit) {
+		return BlocProvider<CubitType>(
+			create: (context) => pageCubit,
+			child: page,
+		);
 	}
 
 	ThemeData _createAppTheme() {

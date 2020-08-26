@@ -68,8 +68,7 @@ class MongoDbProvider {
 
 	Future<T> _execute<T>(Future<T> Function() query) async {
 		try {
-			if (_client == null || _client.state != State.OPEN)
-				await initialize();
+			await initialize();
 			return await query();
 		} on TimeoutException { // Keep alive disconnected
 			await initialize();

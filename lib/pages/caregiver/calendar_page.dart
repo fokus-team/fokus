@@ -26,6 +26,7 @@ class CaregiverCalendarPage extends StatefulWidget {
 class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> {
 	static const String _pageKey = 'page.caregiverSection.calendar';
 	CalendarController _calendarController;
+	List<UIPlan> _selectedPlans = [];
 
 	List<Color> markerColors = [
 		Colors.green,
@@ -108,6 +109,7 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> {
 				canEventMarkersOverflow: true
 			),
 			events: events,
+			onDaySelected: (day, events) => setState(() => _selectedPlans = events),
 			onCalendarCreated: onMonthChanged,
 			onVisibleDaysChanged: onMonthChanged,
 			builders: CalendarBuilders(

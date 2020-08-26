@@ -3,6 +3,7 @@ import 'package:fokus/model/db/date/time_date.dart';
 import 'package:fokus/model/db/date_span.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
+import 'plan.dart';
 import 'plan_instance_state.dart';
 
 class PlanInstance {
@@ -17,10 +18,12 @@ class PlanInstance {
 	List<ObjectId> addedTasks;
   List<ObjectId> taskInstances;
 
-  PlanInstance({this.id, this.taskInstances, this.planID, this.assignedTo, this.date, this.state, this.duration, this.tasks, this.addedTasks});
+	PlanInstance.fromPlan(Plan plan, {ObjectId assignedTo, Date date, PlanInstanceState state}) : this._(id: ObjectId(),
+			tasks: plan.tasks, planID: plan.id, date: date ?? Date.now(), state: state ?? PlanInstanceState.notStarted, assignedTo: assignedTo);
+  PlanInstance._({this.id, this.taskInstances, this.planID, this.assignedTo, this.date, this.state, this.duration, this.tasks, this.addedTasks});
 
   factory PlanInstance.fromJson(Map<String, dynamic> json) {
-    return json != null ? PlanInstance(
+    return json != null ? PlanInstance._(
 	    id: json['_id'],
 	    state: json['state'] != null ? PlanInstanceState.values[json['state']] : null,
 	    planID: json['planID'],
@@ -35,23 +38,24 @@ class PlanInstance {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['_id'] = this.id;
-    data['planID'] = this.planID;
-    data['state'] = this.state.index;
-    data['assignedTo'] = this.assignedTo;
-    data['date'] = this.date.toDBDate();
-    if (this.duration != null) {
+    if (id != null)
+	    data['_id'] = this.id;
+    if (planID != null)
+	    data['planID'] = this.planID;
+    if (state != null)
+      data['state'] = this.state.index;
+    if (assignedTo != null)
+      data['assignedTo'] = this.assignedTo;
+    if (date != null)
+      data['date'] = this.date.toDBDate();
+    if (this.duration != null)
 	    data['duration'] = this.duration.map((v) => v.toJson()).toList();
-    }
-    if (this.taskInstances != null) {
+    if (this.taskInstances != null)
       data['taskInstances'] = this.taskInstances;
-    }
-    if (this.addedTasks != null) {
+    if (this.addedTasks != null)
 	    data['addedTasks'] = this.addedTasks;
-    }
-    if (this.tasks != null) {
+    if (this.tasks != null)
 	    data['tasks'] = this.tasks;
-    }
     return data;
   }
 }

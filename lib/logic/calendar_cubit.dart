@@ -53,7 +53,7 @@ class CalendarCubit extends Cubit<CalendarState> {
 	  if (_allEvents.containsKey(month))
 	  	return _allEvents[month];
 	  if (_plans == null)
-	    _plans = Map.fromEntries((await _dataRepository.getPlans(caregiverId: activeUser.id, activeOnly: false)).map((plan) => MapEntry(plan.id, plan)));
+	    _plans = Map.fromEntries((await _dataRepository.getPlans(caregiverId: activeUser.id)).map((plan) => MapEntry(plan.id, plan)));
 	  var state = this.state;
 	  if (_childNames == null) {
 	  	var children = await _dataRepository.getUsers(ids: activeUser.connections);

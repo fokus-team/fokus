@@ -18,8 +18,8 @@ mixin PlanDbRepository implements DbRepository {
 		return dbClient.queryOneTyped(Collection.plan, query, (json) => Plan.fromJson(json));
 	}
 
-	Future<List<Plan>> getPlans({ObjectId caregiverId, ObjectId childId, bool activeOnly = true, bool oneDayOnly = false, List<String> fields}) {
-		var query = _buildPlanQuery(caregiverId: caregiverId, childId: childId, activeOnly: activeOnly);
+	Future<List<Plan>> getPlans({ObjectId caregiverId, ObjectId childId, bool active, bool oneDayOnly = false, List<String> fields}) {
+		var query = _buildPlanQuery(caregiverId: caregiverId, childId: childId, active: active);
 		if (oneDayOnly)
 			query.and(where.ne('repeatability.untilCompleted', true));
 		if (fields != null)
@@ -56,7 +56,7 @@ mixin PlanDbRepository implements DbRepository {
 			query.fields(fields);
 		return dbClient.queryTyped(Collection.planInstance, query, (json) => PlanInstance.fromJson(json));
 	}
-	
+
 	Future updatePlanInstances(ObjectId instanceId, {PlanInstanceState state, DateSpanUpdate<TimeDate> durationChange}) {
 		var document = modify;
 		if (state != null)
@@ -66,11 +66,12 @@ mixin PlanDbRepository implements DbRepository {
 		return dbClient.update(Collection.planInstance, where.eq('_id', instanceId), document);
 	}
 
+	Future createPlanInstances(List<PlanInstance> plans) => dbClient.insertMany(Collection.planInstance, plans.map((plan) => plan.toJson()).toList());
 	Future updatePlan(Plan plan) => dbClient.replace(Collection.plan, _buildPlanQuery(id: plan.id), plan.toJson());
 	Future createPlan(Plan plan) => dbClient.insert(Collection.plan, plan.toJson());
 
 	SelectorBuilder _buildPlanQuery({ObjectId id, ObjectId caregiverId, ObjectId childId, ObjectId planId,
-			PlanInstanceState state, Date date, DateSpan<Date> between, bool activeOnly = false}) {
+			PlanInstanceState state, Date date, DateSpan<Date> between, bool active}) {
 		SelectorBuilder query;
 		var addExpression = (expression) => query == null ? (query = expression) : query.and(expression);
 		if (id != null)
@@ -79,8 +80,8 @@ mixin PlanDbRepository implements DbRepository {
 			addExpression(where.eq('assignedTo', childId));
 		if (caregiverId != null)
 			addExpression(where.eq('createdBy', caregiverId));
-		if (activeOnly)
-			addExpression(where.eq('active', true));
+		if (active != null)
+			addExpression(where.eq('active', active));
 		if (state != null)
 			addExpression(where.eq('state', state.index));
 		if (planId != null)

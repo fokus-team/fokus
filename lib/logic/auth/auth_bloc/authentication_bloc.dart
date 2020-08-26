@@ -12,7 +12,7 @@ import 'package:fokus/model/db/user/caregiver.dart';
 import 'package:fokus/model/db/user/user_role.dart';
 import 'package:fokus/model/db/user/user.dart';
 import 'package:fokus/services/data/data_repository.dart';
-import 'package:fokus/services/outdated_data_service.dart';
+import 'package:fokus/services/plan_keeper_service.dart';
 import 'package:fokus/services/auth/authentication_repository.dart';
 import 'package:fokus/services/app_config/app_config_repository.dart';
 
@@ -25,7 +25,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 	AuthenticationRepository _authenticationRepository = GetIt.I<AuthenticationRepository>();
 	AppConfigRepository _appConfigRepository = GetIt.I<AppConfigRepository>();
 	DataRepository _dataRepository = GetIt.I<DataRepository>();
-	final OutdatedDataService _outdatedDataService = GetIt.I<OutdatedDataService>();
+	final PlanKeeperService _outdatedDataService = GetIt.I<PlanKeeperService>();
 
 	StreamSubscription<AuthenticatedUser> _userSubscription;
 
@@ -40,7 +40,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 	  else if (event is AuthenticationChildSignInRequested) {
 			_appConfigRepository.signInChild(event.child.id);
 			_outdatedDataService.onUserSignOut();
-			yield _signInUser(event.child);
+			yield await _signInUser(event.child);
 	  } else if (event is AuthenticationSignOutRequested) {
 	  	_outdatedDataService.onUserSignOut();
 		  _logger.fine('Signing out user ${state.user}');
@@ -75,8 +75,8 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 		return _signInUser(user);
   }
 
-	AuthenticationState _signInUser(User user) {
-	  _outdatedDataService.onUserSignIn(user.id, user.role);
+	Future<AuthenticationState> _signInUser(User user) async {
+	  await _outdatedDataService.onUserSignIn(user.id, user.role);
 	  return AuthenticationState.authenticated(UIUser.typedFromDBModel(user));
   }
 

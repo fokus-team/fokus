@@ -6,11 +6,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/logic/auth/auth_bloc/authentication_bloc.dart';
 import 'package:fokus/model/db/user/user_role.dart';
 import 'package:fokus/model/ui/app_page.dart';
+import 'package:fokus/model/ui/ui_button.dart';
 import 'package:fokus/model/ui/user/ui_child.dart';
 import 'package:fokus/model/ui/user/ui_user.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/icon_sets.dart';
 import 'package:fokus/utils/theme_config.dart';
+import 'package:fokus/widgets/buttons/popup_menu_list.dart';
 import 'package:fokus/widgets/chips/attribute_chip.dart';
 import 'package:fokus/widgets/app_avatar.dart';
 import 'package:fokus/widgets/buttons/help_icon_button.dart';
@@ -214,10 +216,15 @@ class AppHeader extends StatelessWidget {
 					Row(
 						children: <Widget>[
 							headerIconButton(Icons.notifications, () => Navigator.of(context).pushNamed(AppPage.notificationsPage.name)),
-							headerIconButton(
-								Icons.more_vert,
-								() => authenticationBloc.add(AuthenticationSignOutRequested())
-							),
+							PopupMenuList(
+								lightTheme: true,
+									items: [
+									UIButton(
+										'actions.signOut',
+										() => authenticationBloc.add(AuthenticationSignOutRequested())
+									)
+								]
+							)
 						],
 					)
 				]
@@ -317,10 +324,12 @@ class ChildCustomHeader extends StatelessWidget {
 									padding: EdgeInsets.only(left: 4.0),
 									child: AttributeChip.withCurrency(content: '${currency.value}', currencyType: currency.key)
 								),
+							if((currentUser as UIChild).points.entries.isEmpty)
+								Text(AppLocales.of(context).translate('page.childSection.panel.header.noPoints'))
 						]
 					)
 				),
-					() => { log('Child detailed wallet popup') },
+				() => { log('Child detailed wallet popup') },
 				Colors.white
 			),
 			//HeaderActionButton.normal(Icons.local_florist, 'page.childSection.panel.header.garden', () => { log("Ogród") })

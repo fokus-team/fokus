@@ -62,10 +62,9 @@ class _CaregiverPlanFormPageState extends State<CaregiverPlanFormPage> {
 	    builder: (context, state) {
 				List<Widget> children = [Scaffold(
 					appBar: AppBar(
-						title: Text(formType == AppFormType.create ?
-						AppLocales.of(context).translate('$_pageKey.createPlanTitle')
-								: AppLocales.of(context).translate('$_pageKey.editPlanTitle')
-						),
+						title: Text(AppLocales.of(context).translate(
+							formType == AppFormType.create ? '$_pageKey.createPlanTitle' : '$_pageKey.editPlanTitle'
+						)),
 						actions: <Widget>[
 							HelpIconButton(helpPage: 'plan_creation')
 						],

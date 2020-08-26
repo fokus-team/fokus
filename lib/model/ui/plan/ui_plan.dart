@@ -16,6 +16,11 @@ class UIPlan extends UIPlanBase {
 		return UIPlan(id ?? this.id, name ?? this.name, isActive ?? this.isActive, taskCount ?? this.taskCount, assignedTo ?? this.assignedTo, description ?? this.description);
 	}
 
-	@override
+  @override
   List<Object> get props => super.props..addAll([taskCount, assignedTo, isActive]);
+
+	@override
+  String toString() {
+    return 'UIPlan{name: $name, taskCount: $taskCount, isActive: $isActive}';
+  }
 }

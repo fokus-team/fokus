@@ -69,10 +69,6 @@ class _NotificationsPageState extends State<NotificationsPage> {
 
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-            icon: Icon(Icons.keyboard_arrow_left, size: 32, color: Colors.white),
-            onPressed: () => {Navigator.of(context).pop()}
-        ),
         title: Text(
             AppLocales.of(context).translate("page.notifications.header.title"),
             style: Theme.of(context).textTheme.headline1.copyWith(color: Colors.white)

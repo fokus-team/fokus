@@ -23,15 +23,13 @@ enum NotificationType{
 }
 
 extension NotificationTypeExtension on NotificationType {
-  static const String _pageKey = 'page.notifications.content';
-
-  String title(BuildContext context, String childName) => {
-    NotificationType.caregiver_receivedAward: AppLocales.of(context).translate("$_pageKey.caregiver.receivedAward", {'CHILD_NAME' : childName}),
-    NotificationType.caregiver_finishedTaskUngraded: AppLocales.of(context).translate("$_pageKey.caregiver.finishedTask", {'CHILD_NAME' : childName}),
-    NotificationType.caregiver_finishedTaskGraded: AppLocales.of(context).translate("$_pageKey.caregiver.finishedTask", {'CHILD_NAME' : childName}),
-    NotificationType.caregiver_unfinishedPlan: AppLocales.of(context).translate("$_pageKey.caregiver.unfinishedPlan", {'CHILD_NAME' : childName}),
-    NotificationType.child_taskGraded: AppLocales.of(context).translate("$_pageKey.child.taskGraded"),
-    NotificationType.child_receivedBadge: AppLocales.of(context).translate("$_pageKey.child.receivedBadge")
+  String get title => {
+    NotificationType.caregiver_receivedAward: "caregiver.receivedAward",
+    NotificationType.caregiver_finishedTaskUngraded: "caregiver.finishedTask",
+    NotificationType.caregiver_finishedTaskGraded: "caregiver.finishedTask",
+    NotificationType.caregiver_unfinishedPlan: "caregiver.unfinishedPlan",
+    NotificationType.child_taskGraded: "child.taskGraded",
+    NotificationType.child_receivedBadge: "child.receivedBadge"
   }[this];
 
   Icon get icon => Icon(
@@ -60,7 +58,7 @@ extension NotificationTypeExtension on NotificationType {
       GestureDetector(
         onTap: () => {log("open the grading page")},
         child: AttributeChip.withIcon(
-          content: AppLocales.of(context).translate("$_pageKey.caregiver.gradeTask"),
+          content: AppLocales.of(context).translate("page.notifications.content.caregiver.gradeTask"),
           color: Colors.red,
           icon: Icons.assignment
         )
@@ -68,7 +66,7 @@ extension NotificationTypeExtension on NotificationType {
     ],
     NotificationType.caregiver_finishedTaskGraded: [
       AttributeChip.withIcon(
-        content: AppLocales.of(context).translate("$_pageKey.caregiver.graded"),
+        content: AppLocales.of(context).translate("page.notifications.content.caregiver.graded"),
         color: Colors.grey[750],
         icon: Icons.check
       )
@@ -91,7 +89,7 @@ class NotificationCard extends ItemCard {
   final CurrencyType currencyType;
   final int currencyValue;
 
-  String getTitle(BuildContext context) => title ?? notificationType.title(context, childName);
+  String getTitle(BuildContext context) => title ?? AppLocales.of(context).translate("page.notifications.content.${notificationType.title}", {'CHILD_NAME' : childName});
   List<Widget> getChips(BuildContext context) => chips ?? notificationType.chips(context, currencyType, currencyValue);
 
   NotificationCard({

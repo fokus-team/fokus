@@ -115,6 +115,7 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 		));
 	}
 
+
 	void editTask(TaskFormModel task) {
 		Navigator.of(context).push(MaterialPageRoute(
 			builder: (context) => provideCubitForRoute(TaskForm(
@@ -138,6 +139,7 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 			))
 		));
 	}
+
 
 	void onReorderFinished(List<TaskFormModel> newItems) {
     setState(() {
@@ -291,6 +293,7 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 			: SizedBox.shrink()
 		);
 	}
+
 
 	Widget buildTaskCard(BuildContext context, TaskFormModel task, bool optional) {
 		int index = (widget.plan.tasks..where((element) => element.optional == optional)).indexOf(task);

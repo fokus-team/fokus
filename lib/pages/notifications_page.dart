@@ -69,10 +69,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-            AppLocales.of(context).translate("page.notifications.header.title"),
-            style: Theme.of(context).textTheme.headline1.copyWith(color: Colors.white)
-        )
+        title: Text(AppLocales.of(context).translate("page.notifications.header.title"))
       ),
 			body: Column(
 				crossAxisAlignment: CrossAxisAlignment.start,

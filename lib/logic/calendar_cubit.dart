@@ -1,6 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:date_utils/date_utils.dart';
 import 'package:equatable/equatable.dart';
+import 'package:fokus/model/db/user/child.dart';
+import 'package:fokus/model/db/user/user_role.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 import 'package:get_it/get_it.dart';
 
@@ -30,12 +32,20 @@ class CalendarCubit extends Cubit<CalendarState> {
   CalendarCubit(this._activeUser) : super(CalendarState());
 
   void loadInitialData() async {
-	  var activeUser = _activeUser() as UICaregiver;
-	  _plans = Map.fromEntries((await _dataRepository.getPlans(caregiverId: activeUser.id, activeOnly: false)).map((plan) => MapEntry(plan.id, plan)));
+	  var activeUser = _activeUser();
+	  var getRoleId = (UserRole paramRole) => paramRole == activeUser.role ? activeUser.id : null;
+	  _plans = Map.fromEntries((await _dataRepository.getPlans(caregiverId: getRoleId(UserRole.caregiver),
+			  childId: getRoleId(UserRole.child))).map((plan) => MapEntry(plan.id, plan)));
 
-	  var children = await _dataRepository.getUsers(ids: activeUser.connections);
-	  _childNames = Map.fromEntries(children.map((child) => MapEntry(child.id, child.name)));
-	  var filter = Map.fromEntries(children.map((child) => MapEntry(UIChild.fromDBModel(child), true)));
+	  Map<UIChild, bool> filter;
+	  if (activeUser.role == UserRole.caregiver) {
+		  var children = await _dataRepository.getUsers(ids: (activeUser as UICaregiver).connections);
+		  _childNames = Map.fromEntries(children.map((child) => MapEntry(child.id, child.name)));
+		  filter = Map.fromEntries(children.map((child) => MapEntry(UIChild.fromDBModel(child), true)));
+	  } else {
+		  _childNames = {activeUser.id: activeUser.name};
+		  filter = {activeUser: true};
+	  }
 	  var events = await _filterData(filter, state.month);
 	  emit(state.copyWith(children: filter, events: events));
   }
@@ -83,7 +93,7 @@ class CalendarCubit extends Cubit<CalendarState> {
 
   /// [span] - must fit within a month (from 1'st to the end)
 	Future<Map<Date, List<UIPlan>>> _loadPastData(DateSpan<Date> span) async {
-		var instances = await _dataRepository.getPlanInstances(planIDs: _plans.keys.toList(), between: span);
+		var instances = await _dataRepository.getPlanInstances(planIDs: _plans.keys.toList(), childIDs: _childNames.keys.toList(), between: span);
 		var dateMap = groupBy<Date, PlanInstance>(instances, (plan) => plan.date);
 
 	  Map<Date, List<UIPlan>> events = {};

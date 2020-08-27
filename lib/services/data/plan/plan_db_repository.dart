@@ -66,8 +66,16 @@ mixin PlanDbRepository implements DbRepository {
 		return dbClient.update(Collection.planInstance, where.eq('_id', instanceId), document);
 	}
 
-	Future createPlanInstances(List<PlanInstance> plans) => dbClient.insertMany(Collection.planInstance, plans.map((plan) => plan.toJson()).toList());
-	Future updatePlan(Plan plan) => dbClient.replace(Collection.plan, _buildPlanQuery(id: plan.id), plan.toJson());
+	Future createPlanInstances(List<PlanInstance> plans) {
+		var query = (PlanInstance plan) => where.allEq({
+			'planID': plan.planID,
+			'assignedTo': plan.assignedTo,
+			'date': plan.date
+		});
+		var insert = (PlanInstance plan) => modify.setAllOnInsert(plan.toJson());
+	  return dbClient.updateAll(Collection.planInstance, plans.map((plan) => query(plan)).toList(), plans.map((plan) => insert(plan)).toList());
+	}
+	Future updatePlan(Plan plan) => dbClient.update(Collection.plan, _buildPlanQuery(id: plan.id), plan.toJson(), multiUpdate: false);
 	Future createPlan(Plan plan) => dbClient.insert(Collection.plan, plan.toJson());
 
 	SelectorBuilder _buildPlanQuery({ObjectId id, ObjectId caregiverId, ObjectId childId, ObjectId planId,

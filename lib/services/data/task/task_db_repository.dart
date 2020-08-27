@@ -37,7 +37,7 @@ mixin TaskDbRepository implements DbRepository {
 	Future createTasks(List<Task> tasks) => dbClient.insertMany(Collection.task, tasks.map((task) => task.toJson()).toList());
 	
 	Future updateTasks(List<Task> tasks) {
-		return dbClient.replaceAll(Collection.task, tasks.map((task) => _buildTaskQuery(id: task.id)).toList(), tasks.map((task) => task.toJson()).toList());
+		return dbClient.updateAll(Collection.task, tasks.map((task) => _buildTaskQuery(id: task.id)).toList(), tasks.map((task) => task.toJson()).toList(), multiUpdate: false);
 	}
 
 	SelectorBuilder _buildTaskQuery({ObjectId id, ObjectId planId, ObjectId planInstanceId, bool requiredOnly, bool optionalOnly}) {

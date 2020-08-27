@@ -22,16 +22,12 @@ class MongoDbProvider {
 		).catchError((e) => throw NoDbConnection(e));
 	}
 
-	Future update(Collection collection, SelectorBuilder selector, ModifierBuilder document) {
-		return _execute(() => _client.collection(collection.name).update(selector, document, multiUpdate: true));
+	Future update(Collection collection, SelectorBuilder selector, dynamic document, {bool multiUpdate = true, bool upsert = true}) {
+		return _execute(() => _client.collection(collection.name).update(selector, document, multiUpdate: multiUpdate, upsert: upsert));
 	}
 
-	Future replace(Collection collection, SelectorBuilder selector, Map<String, dynamic> document) {
-		return _execute(() => _client.collection(collection.name).update(selector, document));
-	}
-
-	Future replaceAll(Collection collection, List<SelectorBuilder> selectors, List<Map<String, dynamic>> documents) {
-		return _execute(() => _client.collection(collection.name).updateAll(selectors, documents, upsert: true));
+	Future updateAll(Collection collection, List<SelectorBuilder> selectors, List<dynamic> documents, {bool multiUpdate = true, bool upsert = true}) {
+		return _execute(() => _client.collection(collection.name).updateAll(selectors, documents, multiUpdate: multiUpdate, upsert: upsert));
 	}
 
 	Future<ObjectId> insert(Collection collection, Map<String, dynamic> document) => _execute(() {

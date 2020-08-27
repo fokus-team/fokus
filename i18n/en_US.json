@@ -357,6 +357,16 @@
 					}
 				}
 			},
+			"taskInProgress": {
+				"header": {
+					"title": "Plan performation"
+				},
+				"content": {
+					"reject": "REJECT",
+					"break": "BREAK",
+					"done": "DONE"
+				}
+			},
 			"awards": {
 				"content": {
 					"awardsTitle": "Available awards",

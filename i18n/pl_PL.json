@@ -357,6 +357,16 @@
 					}
 				}
 			},
+			"taskInProgress": {
+				"header": {
+					"title": "Wykonywanie planu"
+				},
+				"content": {
+					"reject": "ODRZUĆ",
+					"break": "PRZERWA",
+					"done": "ZROBIONE"
+				}
+			},
 			"awards": {
 				"content": {
 					"awardsTitle": "Nagrody do zdobycia",

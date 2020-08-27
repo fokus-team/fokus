@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
 import 'package:fokus/services/app_locales.dart';
@@ -40,71 +42,95 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> {
 						),
 						helpPage: 'plan_info'
 					),
-					FlipCard(
-						front: Container(
-							decoration: BoxDecoration(
-								color: AppColors.childActionColor
-							),
-							child: Column(
-								children: [
-									IconButton(
-										icon: Icon(Icons.clear),
-										onPressed: null,
-									),
-									ListView(
-										children: [
-											Expanded(
-												child: Text("xd"),
+					Expanded(
+					  child: FlipCard(
+					  	front: Container(
+					  		decoration: BoxDecoration(
+					  			color: Colors.white
+					  		),
+					  		child: Stack(
+					  		  children: [
+										Padding(
+											padding: const EdgeInsets.all(14.0),
+											child: Align(
+												alignment: Alignment.topRight,
+												child: IconButton(
+													icon: Icon(Icons.cancel, color: Colors.red,),
+													onPressed: null,
+												),
 											),
-											Expanded(
-												child: Text("xDddd"),
-											),
-											Row(
+										),
+										Column(
+											mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+											children: [
+												SingleChildScrollView(
+													child: Column(
+														children: [
+															Text("xd"),
+															Text("xDddd"),
+														]
+													),
+												),
+												Row(
+													mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+													children: [
+														SquareButton(
+															'$_pageKey.content.reject',
+															Icons.cancel,
+															() => log("XD")
+														),
+														SquareButton(
+															'$_pageKey.content.reject',
+															Icons.hourglass_full,
+															null,
+															isVertical: true,
+														)
+													],
+												),
+											]
+										),
+										Align(
+											alignment: FractionalOffset.bottomCenter,
+										  child: Container(
+										  	decoration: AppBoxProperties.elevatedContainer.copyWith(color: Colors.white),
+										  	height: 84,
+										  ),
+										),
+										Positioned(
+											right: 0,
+											left: 0,
+											bottom: 55,
+											child: Row(
+												mainAxisAlignment: MainAxisAlignment.spaceEvenly,
 												children: [
 													SquareButton(
-														"xd",
-														Icons.clear,
-														null
+														'$_pageKey.content.reject',
+														Icons.cancel,
+														() => log("XD"),
+														backgroundColor: Colors.red,
 													),
 													SquareButton(
-														"xd",
-														Icons.clear,
-														null
+														'$_pageKey.content.break',
+														Icons.hourglass_empty,
+														() => log("XD"),
+														backgroundColor: Colors.blue,
+													),
+													SquareButton(
+														'$_pageKey.content.done',
+														Icons.check,
+															() => log("XD"),
+														backgroundColor: Colors.green,
 													)
 												],
-											)
-										]
-									),
-									Positioned(
-										right: 0,
-										left: 0,
-										bottom: 0,
-										child: Row(
-											children: [
-												SquareButton(
-													"xd",
-													Icons.clear,
-													null
-												),
-												SquareButton(
-													"xd",
-													Icons.clear,
-													null
-												),
-												SquareButton(
-													"xd",
-													Icons.clear,
-													null
-												)
-											],
-										),
-									),
-								]
-							),
-						),
-						back: Container(
+											),
+										)
+									]
+					  		),
+					  	),
+					  	back: Container(
 
-						),
+					  	),
+					  ),
 					)
 				]
 			)

@@ -34,7 +34,7 @@ class CaregiverSignInCubit extends CaregiverAuthCubitBase<CaregiverSignInState> 
 
   CaregiverSignInState _validateFields() {
 	  var state = this.state;
-	  state = state.copyWith(email: Email.dirty(state.email.value));
+	  state = state.copyWith(email: Email.dirty(state.email.value.trim()));
 	  state = state.copyWith(password: Password.dirty(state.password.value, false));
 	  return state.copyWith(status: Formz.validate([state.email, state.password]));
   }

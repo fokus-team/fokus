@@ -1,5 +1,4 @@
 import 'package:formz/formz.dart';
-import 'package:mongo_dart/mongo_dart.dart';
 
 import 'package:fokus/logic/auth/auth_bloc/authentication_bloc.dart';
 import 'package:fokus/logic/auth/child/child_auth_cubit_base.dart';
@@ -29,9 +28,9 @@ class ChildSignInCubit extends ChildAuthCubitBase<ChildSignInState> {
 
   Future<ChildSignInState> _validateFields() async {
 	  var state = this.state;
-	  var caregiverField = UserCode.dirty(state.childCode.value);
-	  if (caregiverField.valid && !(await verifyUserCode(state.childCode.value, UserRole.child)))
-		  caregiverField = UserCode.dirty(state.childCode.value, false);
+	  var caregiverField = UserCode.dirty(state.childCode.value.trim());
+	  if (caregiverField.valid && !(await verifyUserCode(state.childCode.value.trim(), UserRole.child)))
+		  caregiverField = UserCode.dirty(state.childCode.value.trim(), false);
 	  state = state.copyWith(childCode: caregiverField);
 	  return state.copyWith(status: Formz.validate([state.childCode]));
   }

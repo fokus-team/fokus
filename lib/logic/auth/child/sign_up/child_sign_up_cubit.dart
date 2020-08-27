@@ -49,11 +49,11 @@ class ChildSignUpCubit extends ChildAuthCubitBase<ChildSignUpState> {
 
   Future<ChildSignUpState> _validateFields() async {
 	  var state = this.state;
-	  var caregiverField = UserCode.dirty(state.caregiverCode.value);
-	  if (caregiverField.valid && !(await verifyUserCode(state.caregiverCode.value, UserRole.caregiver)))
-		  caregiverField = UserCode.dirty(state.caregiverCode.value, false);
+	  var caregiverField = UserCode.dirty(state.caregiverCode.value.trim());
+	  if (caregiverField.valid && !(await verifyUserCode(state.caregiverCode.value.trim(), UserRole.caregiver)))
+		  caregiverField = UserCode.dirty(state.caregiverCode.value.trim(), false);
 	  state = state.copyWith(caregiverCode: caregiverField);
-	  state = state.copyWith(name: Name.dirty(state.name.value));
+	  state = state.copyWith(name: Name.dirty(state.name.value.trim()));
 	  state = state.copyWith(avatar: state.avatar);
 		var status = Formz.validate([state.name, state.caregiverCode]);
 		if(state.avatar == null)

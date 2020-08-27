@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart';
+import 'package:logging/logging.dart';
 
 import 'package:fokus/model/ui/user/ui_user.dart';
 import 'package:fokus/logic/reloadable/reloadable_cubit.dart';
@@ -11,6 +12,8 @@ import 'package:fokus/services/plan_repeatability_service.dart';
 import 'package:fokus/utils/duration_utils.dart';
 
 class ChildPlansCubit extends ReloadableCubit {
+	final Logger _logger = Logger('ChildPlansCubit');
+
 	final ActiveUserFunction _activeUser;
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final PlanRepeatabilityService _repeatabilityService = GetIt.I<PlanRepeatabilityService>();
@@ -36,7 +39,9 @@ class ChildPlansCubit extends ReloadableCubit {
 		  var completedTasks = await _dataRepository.getCompletedTaskCount(instance.id);
 		  uiInstances.add(UIPlanInstance.fromDBModel(instance, planMap[instance].name, completedTasks, elapsedTime, getDescription(planMap[instance], instance.date)));
 	  }
-	  uiInstances.addAll(todayPlans.where((plan) => !planMap.values.contains(plan)).map((plan) => UIPlanInstance.fromDBPlanModel(plan, getDescription(plan))));
+	  var noInstancePlans = todayPlans.where((plan) => !planMap.values.contains(plan)).toList();
+	  if (noInstancePlans.isNotEmpty)
+	  	_logger.warning('${noInstancePlans.length} plans have no instances: ' + noInstancePlans.map((plan) => plan.name).join(', '));
 	  emit(ChildPlansLoadSuccess(uiInstances));
   }
 }

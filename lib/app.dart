@@ -31,6 +31,7 @@ import 'package:fokus/pages/child/auth/child_profiles_page.dart';
 import 'package:fokus/pages/child/auth/child_sign_in_page.dart';
 import 'package:fokus/pages/child/awards_page.dart';
 import 'package:fokus/pages/child/panel_page.dart';
+import 'package:fokus/pages/notifications_page.dart';
 import 'package:fokus/pages/child/plan_in_progress_page.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/services/instrumentator.dart';
@@ -105,6 +106,7 @@ class FokusApp extends StatelessWidget {
 		return {
 			AppPage.loadingPage.name: (context) => _createPage(LoadingPage(), context),
 			AppPage.rolesPage.name: (context) => _createPage(RolesPage(), context),
+      AppPage.notificationsPage.name: (context) => _createPage(NotificationsPage(), context),
 			AppPage.caregiverSignInPage.name: (context) => _createPage(CaregiverSignInPage(), context, CaregiverSignInCubit()),
 			AppPage.caregiverSignUpPage.name: (context) => _createPage(CaregiverSignUpPage(), context, CaregiverSignUpCubit()),
 			AppPage.childProfilesPage.name: (context) => _createPage(ChildProfilesPage(), context, PreviousProfilesCubit(authBloc(context), getRoute(context))),

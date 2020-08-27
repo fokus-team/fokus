@@ -54,7 +54,6 @@ class PlanKeeperService {
 
 		return Future.wait([
 			_createPlansForToday(plans, childrenIDs),
-			_createOutdatedPlans(plans, childrenIDs),
 			_updateOutdatedData(plans.map((plan) => plan.id).toList(), childrenIDs)
 		]);
 	}
@@ -65,10 +64,6 @@ class PlanKeeperService {
 			var instances = childrenIDs.where(plan.assignedTo.contains).map((child) => PlanInstance.fromPlan(plan, assignedTo: child)).toList();
 			await _dataRepository.createPlanInstances(instances);
 		}
-	}
-
-	Future _createOutdatedPlans(List<Plan> plans, List<ObjectId> childrenIDs) async {
-
 	}
 
 	Future _updateOutdatedData(List<ObjectId> plans, List<ObjectId> childrenIDs) async {

@@ -191,18 +191,18 @@ class AppHeader extends StatelessWidget {
 						children: <Widget>[
 							Padding(
 								padding: EdgeInsets.only(left: 4.0, right: 8.0),
-								child: headerImage(currentUser)
+								child: currentUser != null ? headerImage(currentUser) : Container()
 							),
 							Column(
 								crossAxisAlignment: CrossAxisAlignment.start,
 								children: <Widget>[
 									RichText(
 										text: TextSpan(
-											text: '${AppLocales.of(context).translate('page.${currentUser.role.name}Section.panel.header.greetings')},\n',
+											text: '${AppLocales.of(context).translate('page.${currentUser?.role?.name}Section.panel.header.greetings')},\n',
 											style: TextStyle(color: Colors.white, fontSize: 20),
 											children: <TextSpan>[
 												TextSpan(
-													text: currentUser.name,
+													text: currentUser?.name ?? '',
 													style: Theme.of(context).textTheme.headline1.copyWith(color: Colors.white, height: 1.1)
 												)
 											]
@@ -307,7 +307,8 @@ class AppHeader extends StatelessWidget {
 class ChildCustomHeader extends StatelessWidget {
 	@override
 	Widget build(BuildContext context) {
-		var currentUser = context.bloc<AuthenticationBloc>().state.user;
+		UIChild currentUser = context.bloc<AuthenticationBloc>().state.user;
+		var points = currentUser?.points ?? {};
 
 		return AppHeader.greetings(text: 'page.childSection.panel.header.pageHint', headerActionButtons: [
 			HeaderActionButton.custom(
@@ -318,12 +319,12 @@ class ChildCustomHeader extends StatelessWidget {
 								'${AppLocales.of(context).translate('page.childSection.panel.header.myPoints')}: ',
 								style: Theme.of(context).textTheme.button.copyWith(color: AppColors.darkTextColor)
 							),
-							for (var currency in (currentUser as UIChild).points.entries)
+							for (var currency in points.entries)
 								Padding(
 									padding: EdgeInsets.only(left: 4.0),
 									child: AttributeChip.withCurrency(content: '${currency.value}', currencyType: currency.key)
 								),
-							if((currentUser as UIChild).points.entries.isEmpty)
+							if(points.entries.isEmpty)
 								Text(AppLocales.of(context).translate('page.childSection.panel.header.noPoints'))
 						]
 					)

@@ -41,23 +41,22 @@ mixin TaskDbRepository implements DbRepository {
 	}
 
 	SelectorBuilder _buildTaskQuery({ObjectId id, ObjectId planId, ObjectId planInstanceId, bool requiredOnly, bool optionalOnly}) {
-		SelectorBuilder query;
-		var addExpression = (expression) => query == null ? (query = expression) : query.and(expression);
+		SelectorBuilder query = where;
 		if (planId != null && planInstanceId != null)
 			_logger.warning("Both plan and plan instance IDs specified in task query");
 		if ((requiredOnly ?? false) && (optionalOnly ?? false))
 			_logger.warning("Both required and optional only flags specified in task query");
 
 		if (id != null)
-			addExpression(where.eq('_id', id));
+			query.eq('_id', id);
 		if (planId != null)
-			addExpression(where.eq('planID', planId));
+			query.eq('planID', planId);
 		if (planInstanceId != null)
-			addExpression(where.eq('planInstanceID', planInstanceId));
+			query.eq('planInstanceID', planInstanceId);
 		if (requiredOnly ?? false)
-			addExpression(where.notExists('optional').or(where.eq('optional', false)));
+			query.notExists('optional').or(where.eq('optional', false));
 		if (optionalOnly ?? false)
-			addExpression(where.eq('optional', true));
+			query.eq('optional', true);
 		return query;
 	}
 }

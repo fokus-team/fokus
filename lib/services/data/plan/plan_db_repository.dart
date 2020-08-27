@@ -80,27 +80,26 @@ mixin PlanDbRepository implements DbRepository {
 
 	SelectorBuilder _buildPlanQuery({ObjectId id, ObjectId caregiverId, ObjectId childId, ObjectId planId,
 			PlanInstanceState state, Date date, DateSpan<Date> between, bool active}) {
-		SelectorBuilder query;
-		var addExpression = (expression) => query == null ? (query = expression) : query.and(expression);
+		SelectorBuilder query = where;
 		if (id != null)
-			addExpression(where.eq('_id', id));
+			query.eq('_id', id);
 		if (childId != null)
-			addExpression(where.eq('assignedTo', childId));
+			query.eq('assignedTo', childId);
 		if (caregiverId != null)
-			addExpression(where.eq('createdBy', caregiverId));
+			query.eq('createdBy', caregiverId);
 		if (active != null)
-			addExpression(where.eq('active', active));
+			query.eq('active', active);
 		if (state != null)
-			addExpression(where.eq('state', state.index));
+			query.eq('state', state.index);
 		if (planId != null)
-			addExpression(where.eq('planID', planId));
+			query.eq('planID', planId);
 
 		if (date != null)
-			addExpression(where.eq('date', date));
+			query.eq('date', date);
 		if (between?.from != null)
-			addExpression(where.gte('date', between.from));
+			query.gte('date', between.from);
 		if (between?.to != null)
-			addExpression(where.lt('date', between.to));
+			query.lt('date', between.to);
 		return query;
 	}
 }

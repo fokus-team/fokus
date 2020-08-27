@@ -75,10 +75,10 @@ flutter:
     assets:
         - i18n/pl_PL.json
         - i18n/en_US.json
-        - assets/animation/sunflower_with_title.json
-        - assets/animation/sunflower_with_title_rotate_only.json
+        - assets/animation/
         - assets/image/sunflower_logo.svg
         - assets/image/sunflower_logo.png
+        - assets/image/google_logo.png
         - assets/help/en/
         - assets/help/pl/
         - assets/image/avatar/

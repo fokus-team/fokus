@@ -22,16 +22,35 @@
 				"help": "I need help"
 			},
 			"caregiverSignIn": {
+				"logInTitle": "Log in",
+				"logInHint": "Access your account",
+				"registerTitle": "New account",
+				"registerHint": "Create new caregiver account to use the app"
 			},
 			"caregiverSignUp": {
+				"registerTitle": "Create new account",
+				"registerHint": "Fill the form below or use your Google account"
+			},
+			"childProfiles": {
+				"addProfile": "Add profile",
+				"noSavedProfiles": "No saved profiles",
+				"profileLogInTitle": "Pick your profile",
+				"profileLogInHint": "Log in to your profile"
 			},
 			"childSignIn": {
 				"childCode": "Child code",
-				"createNewProfile": "Create a new child profile"
+				"caregiverCode": "Caregiver code",
+				"profileAddTitle": "Add profile",
+				"profileAddHint": "Add existing profile using special child code or create a new profile by filling the form",
+				"createNewProfile": "Create a new child profile",
+				"addProfile": "Add profile",
+				"avatarGroups": {
+					"boy": "Chłopak",
+					"girl": "Dziewczyna"
+				}
 			},
-			"childSignUp": {
-				"caregiverCode": "Caregiver code"
-			}
+			"backToLoginPage": "Back to login page",
+			"backToStartPage": "Back to start page"
 		},
 		"caregiverSection": {
 			"panel": {
@@ -187,7 +206,7 @@
 				"saveAwardButton": "Save award",
 				"removeAwardButton": "Remove award",
 				"removeAwardTitle": "Remove award",
-				"removeAwardText": "Are you sure you want to remove this wawrd?",
+				"removeAwardText": "Are you sure you want to remove this award?",
 				"fields": {
 					"awardName": {
 						"label": "Award name",
@@ -210,6 +229,40 @@
 							"activity": "Activity",
 							"relax": "Relax",
 							"food": "Food"
+						}
+					}
+				}
+			},
+			"badgeForm": {
+				"addBadgeTitle": "Add badge",
+				"editBadgeTitle": "Edit badge",
+				"addBadgeButton": "Add badge",
+				"saveBadgeButton": "Save badge",
+				"removeBadgeButton": "Remove badge",
+				"removeBadgeTitle": "Remove badge",
+				"removeBadgeText": "Are you sure you want to remove this badge?",
+				"fields": {
+					"badgeName": {
+						"label": "Badge name",
+						"emptyError": "Badge name can't be empty"
+					},
+					"badgeDescription": {
+						"label": "Badge description"
+					},
+					"badgeLevel": {
+						"label": "Badge type",
+						"options": {
+							"one": "Assigned once",
+							"three": "3 levels",
+							"five": "5 levels"
+						}
+					},
+					"badgeIcon": {
+						"label": "Badge icon",
+						"groups": {
+							"praise": "Praise",
+							"medal": "Medal",
+							"trophy": "Trophy"
 						}
 					}
 				}
@@ -241,6 +294,7 @@
 				"header": {
 					"greetings": "Hello",
 					"myPoints": "My points",
+					"noPoints": "No earned points yet",
 					"pageHint": "Complete tasks and earn points",
 					"garden": "Garden"
 				},
@@ -345,12 +399,14 @@
 		"clearAll": "Clear all",
 		"unpair": "Unpair",
 		"signIn": "Login",
-		"signUp": "Sign up"
+		"signUp": "Sign up",
+		"signOut": "Sign out"
 	},
 	"authentication": {
 		"name": "First name",
 		"email": "E-mail address",
 		"password": "Password",
+		"avatar": "Avatar",
 		"confirmPassword": "Repeat password",
 		"googleSignIn": "Sign in with Google",
 		"googleSignUp": "Sign up with Google",
@@ -366,7 +422,9 @@
 			"userCodeToLong": "Code is to long",
 			"noSuchUser": "User does not exist",
 			"passwordNotLongEnough": "Password must have at least {LENGTH, plural, offset:0 one {# character} other {# characters}} long",
-			"noPasswordMatch": "Passwords do not match"
+			"noPasswordMatch": "Passwords do not match",
+			"passwordEmpty": "Password can not be empty",
+			"avatarEmpty": "You must pick child's avatar"
 		}
 	},
 	"help": {
@@ -374,11 +432,13 @@
 		"plan_creation": "Plan creation",
 		"task_creation": "Task creation",
 		"award_creation": "Award creation",
+		"badge_creation": "Badge creation",
 		"plan_info": "Plans"
 	},
 	"assignedTo": "Assigned to",
 	"points": "Points",
 	"and": "and",
+	"or": "or",
 	"hour": "hr",
 	"minute": "min"
 }

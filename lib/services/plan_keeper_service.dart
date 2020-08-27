@@ -48,13 +48,13 @@ class PlanKeeperService {
 	Future _updateData() async {
 		var getRoleId = (UserRole paramRole) => paramRole == _role ? _userId : null;
 		var plans = await _dataRepository.getPlans(caregiverId: getRoleId(UserRole.caregiver),
-				childId: getRoleId(UserRole.child), fields: ['_id', 'repeatability', 'active', 'assignedTo'], oneDayOnly: true);
+				childId: getRoleId(UserRole.child), fields: ['_id', 'repeatability', 'active', 'assignedTo']);
 		var children = await _dataRepository.getUsers(role: UserRole.child, connected: _userId, fields: ['_id']);
 		var childrenIDs = _role == UserRole.caregiver ? children.map((child) => child.id).toList() : [_userId];
 
 		return Future.wait([
 			_createPlansForToday(plans, childrenIDs),
-			_updateOutdatedData(plans.map((plan) => plan.id).toList(), childrenIDs)
+			_updateOutdatedData(plans, childrenIDs)
 		]);
 	}
 
@@ -66,8 +66,9 @@ class PlanKeeperService {
 		}
 	}
 
-	Future _updateOutdatedData(List<ObjectId> plans, List<ObjectId> childrenIDs) async {
-		var instances = await _dataRepository.getPastNotCompletedPlanInstances(childrenIDs, plans, Date.now(), fields: ['_id', 'date', 'duration', 'state']);
+	Future _updateOutdatedData(List<Plan> plans, List<ObjectId> childrenIDs) async {
+		var planIDs = plans.where((plan) => !plan.repeatability.untilCompleted).map((plan) => plan.id).toList();
+		var instances = await _dataRepository.getPastNotCompletedPlanInstances(childrenIDs, planIDs, Date.now(), fields: ['_id', 'date', 'duration', 'state']);
 		var getEndTime = (Date date) => TimeDate.fromDate(date.add(Duration(days: 1)));
 
 		List<Future> updates = [];

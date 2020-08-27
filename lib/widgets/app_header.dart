@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:fokus/logic/auth/auth_bloc/authentication_bloc.dart';
 import 'package:fokus/model/db/user/user_role.dart';
+import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/ui/ui_button.dart';
 import 'package:fokus/model/ui/user/ui_child.dart';
 import 'package:fokus/model/ui/user/ui_user.dart';
@@ -214,7 +215,7 @@ class AppHeader extends StatelessWidget {
 					),
 					Row(
 						children: <Widget>[
-							headerIconButton(Icons.notifications, () => { log("Powiadomienia") }),
+							headerIconButton(Icons.notifications, () => Navigator.of(context).pushNamed(AppPage.notificationsPage.name)),
 							PopupMenuList(
 								lightTheme: true,
 									items: [
@@ -246,7 +247,7 @@ class AppHeader extends StatelessWidget {
 					),
 					Row(
 						children: <Widget>[
-							headerIconButton(Icons.notifications, () => { log("Powiadomienia") }),
+							headerIconButton(Icons.notifications, () => Navigator.of(context).pushNamed(AppPage.notificationsPage.name)),
 							headerIconButton(
 								Icons.more_vert,
 								() => context.bloc<AuthenticationBloc>().add(AuthenticationSignOutRequested())

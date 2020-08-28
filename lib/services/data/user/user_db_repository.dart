@@ -44,21 +44,20 @@ mixin UserDbRepository implements DbRepository {
 	}
 
 	SelectorBuilder _buildUserQuery({List<ObjectId> ids, ObjectId id, ObjectId connected, String authenticationId, UserRole role}) {
-		SelectorBuilder query;
-		var addExpression = (expression) => query == null ? (query = expression) : query.and(expression);
+		SelectorBuilder query = where;
 		if (ids != null && id != null)
 			_logger.warning("Both ID and ID list specified in user query");
 
 		if (ids != null)
-			addExpression(where.oneFrom('_id', ids));
+			query.oneFrom('_id', ids);
 		if (id != null)
-			addExpression(where.eq('_id', id));
+			query.eq('_id', id);
 		if (authenticationId != null)
-			addExpression(where.eq('authenticationID', authenticationId));
+			query.eq('authenticationID', authenticationId);
 		if (connected != null)
-			addExpression(where.eq('connections', connected));
+			query.eq('connections', connected);
 		if (role != null)
-			addExpression(where.eq('role', role.index));
+			query.eq('role', role.index);
 		return query;
 	}
 }

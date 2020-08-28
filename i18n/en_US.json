@@ -52,6 +52,24 @@
 			"backToLoginPage": "Back to login page",
 			"backToStartPage": "Back to start page"
 		},
+		"notifications": {
+			"header": {
+				"title": "Notifications"
+			},
+			"content": {
+				"caregiver": {
+					"receivedAward": "{CHILD_NAME} received the award",
+					"finishedTask": "{CHILD_NAME} finished the task",
+					"unfinishedPlan": "{CHILD_NAME} didn't finish the plan",
+					"gradeTask": "Grade task",
+					"graded": "Graded"
+				},
+				"child": {
+					"taskGraded": "You received points for a task!",
+					"receivedBadge": "You received a badge!"
+				}
+			}
+		},
 		"caregiverSection": {
 			"panel": {
 				"header": {

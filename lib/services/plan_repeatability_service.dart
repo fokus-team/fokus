@@ -47,8 +47,8 @@ class PlanRepeatabilityService {
 		return dates;
 	}
 
-	Future<List<Plan>> getPlansByDate(ObjectId childId, Date date, {bool activeOnly = true}) async {
-		return filterPlansByDate(await _dataRepository.getPlans(childId: childId, activeOnly: activeOnly), date);
+	Future<List<Plan>> getPlansByDate(ObjectId childId, Date date) async {
+		return filterPlansByDate(await _dataRepository.getPlans(childId: childId), date);
 	}
 
 	Future<List<Plan>> filterPlansByDate(List<Plan> plans, Date date, {bool activeOnly = true}) async {

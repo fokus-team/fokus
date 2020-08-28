@@ -52,6 +52,24 @@
 			"backToLoginPage": "Powrót do ekranu logowania",
 			"backToStartPage": "Powrót do ekranu startowego"
 		},
+		"notifications": {
+			"header": {
+				"title": "Powiadomienia"
+			},
+			"content": {
+				"caregiver": {
+					"receivedAward": "{CHILD_NAME} odebrał(a) nagrodę",
+					"finishedTask": "{CHILD_NAME} wykonał(a) zadanie",
+					"unfinishedPlan": "{CHILD_NAME} nie skończył(a) planu",
+					"gradeTask": "Oceń zadanie",
+					"graded": "Oceniono"
+				},
+				"child": {
+					"taskGraded": "Nowe punkty za zadanie!",
+					"receivedBadge": "Nowa odznaka!"
+				}
+			}
+		},
 		"caregiverSection": {
 			"panel": {
 				"header": {

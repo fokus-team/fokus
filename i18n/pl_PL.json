@@ -364,7 +364,8 @@
 				"content": {
 					"reject": "ODRZUĆ",
 					"break": "PRZERWA",
-					"done": "ZROBIONE"
+					"done": "ZROBIONE",
+					"timeLeft": "Pozostały czas:"
 				}
 			},
 			"awards": {

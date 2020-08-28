@@ -364,7 +364,8 @@
 				"content": {
 					"reject": "REJECT",
 					"break": "BREAK",
-					"done": "DONE"
+					"done": "DONE",
+					"timeLeft": "Time left:"
 				}
 			},
 			"awards": {

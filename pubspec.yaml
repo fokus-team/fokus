@@ -49,7 +49,7 @@ dependencies:
     badges: ^1.1.1
     implicitly_animated_reorderable_list: ^0.2.3
     flutter_picker: ^1.1.5
-    flip_card: ^0.4.4
+    auto_size_text: ^2.1.0
 
 dependency_overrides:
     bson:

@@ -1,4 +1,3 @@
-import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:fokus/model/ui/award/ui_badge.dart';
 import 'package:fokus/model/ui/plan/ui_plan.dart';
@@ -30,21 +29,23 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 	static const String _pageKey = 'page.caregiverSection.childDashboard';
 	TabController _tabController;
 	int _currentIndex = 0;
-	double customBottomBarHeight = 40;
-	Duration bottomBarDuration = Duration(milliseconds: 300);
+
+	double customBottomBarHeight = 40.0;
+	Duration bottomBarAnimationDuration = Duration(milliseconds: 400);
 
 	// Mock-ups
 	List<UIPlan> plans = [
-		UIPlan(Mongo.ObjectId.fromHexString('fa7462a054295e915a20755d'), "Sprzątanie pokoju", true, 4, [], null),
-		UIPlan(Mongo.ObjectId.fromHexString('30e8cf66a27822d4ea56f383'), "Odrabianie pracy domowej", true, 1, [], null),
-		UIPlan(Mongo.ObjectId.fromHexString('c2248a28572d9f90a4f958f6'), "Inne bardzo długie zadanie, tekst tekst i tak dalej", true, 2, [], null)
+		// UIPlan(Mongo.ObjectId.fromHexString('fa7462a054295e915a20755d'), "Sprzątanie pokoju", true, 4, [], null),
+		// UIPlan(Mongo.ObjectId.fromHexString('30e8cf66a27822d4ea56f383'), "Odrabianie pracy domowej", true, 1, [], null),
+		// UIPlan(Mongo.ObjectId.fromHexString('c2248a28572d9f90a4f958f6'), "Inne bardzo długie zadanie, tekst tekst i tak dalej", true, 2, [], null)
 	];
 	List<UIPlan> pickedPlans = List<UIPlan>();
 
+  // only not-assigned badges
 	List<UIBadge> badges = [
-		UIBadge(name: "Król czegośtam", icon: 0),
-		UIBadge(name: "ehhhhh", icon: 5),
-		UIBadge(name: "Puchar planowicza", icon: 12),
+		// UIBadge(name: "Król czegośtam", icon: 0),
+		// UIBadge(name: "ehhhhh", icon: 5),
+		// UIBadge(name: "Puchar planowicza", icon: 12),
 	];
 	List<UIBadge> pickedBadges = List<UIBadge>();
 
@@ -66,6 +67,16 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
     super.dispose();
   }
 
+	void showCodeDialog(String code) {
+		// TODO show popup with QR
+		showBasicDialog(context,
+			GeneralDialog.discard(
+				title: AppLocales.of(context).translate('$_pageKey.header.childCode'),
+				content: code
+			)
+		);
+	}
+
   @override
   Widget build(BuildContext context) {
 		return Scaffold(
@@ -75,6 +86,7 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 					AppHeader.widget(
 						title: '$_pageKey.header.title',
 						appHeaderWidget: ItemCard(
+							// classic child card from caregiver panel
 							title: 'Maciek',
 							subtitle: '2 plany na dziś',
 							graphicType: GraphicAssetType.childAvatars,
@@ -86,9 +98,9 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 						popupMenuWidget: PopupMenuList(
 							lightTheme: true,
 							items: [
-								UIButton('$_pageKey.header.childCode', () => {}),
-								UIButton.ofType(ButtonType.edit, () => {}),
-								UIButton.ofType(ButtonType.unpair, () => {})
+								UIButton('$_pageKey.header.childCode', () => showCodeDialog('fa7462a054295e915a20755d')),
+								UIButton.ofType(ButtonType.edit, () => {}), // TODO edit name/awatar logic (form in pop-up?)
+								UIButton.ofType(ButtonType.unpair, () => {}) // TODO unpair logic (with dialog confirmation)
 							],
 						),
 						tabs: TabBar(
@@ -114,39 +126,49 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 					)
 				]
 			),
-			bottomNavigationBar: AnimatedContainer(
-				duration: bottomBarDuration,
-				height: _currentIndex == 1 ? 0 : customBottomBarHeight,
-				decoration: AppBoxProperties.elevatedContainer,
-				child: SizedBox.shrink()
-			),
+			bottomNavigationBar: _buildBottomBar(),
 			floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-			floatingActionButton: AnimatedSwitcher(
-				duration: bottomBarDuration,
-				switchOutCurve: Curves.easeInOut,
-				transitionBuilder: (child, animation) {
-					return ScaleTransition(
-						scale: animation,
-						child: FadeTransition(
-							opacity: animation,
-							child: child
-						)
-					);
-				},
-				child: _currentIndex != 1 ? (_currentIndex == 0 ? _assignPlan() : _assignBadge()) : SizedBox.shrink()
-			)
+			floatingActionButton: _buildFloatingButtonAnimation()
+		);
+	}
+
+	Widget _buildBottomBar() {
+		return AnimatedContainer(
+			duration: bottomBarAnimationDuration,
+			height: _currentIndex == 1 ? 0 : customBottomBarHeight,
+			decoration: AppBoxProperties.elevatedContainer,
+			child: SizedBox.shrink()
+		);
+	}
+
+	Widget _buildFloatingButtonAnimation() {
+		return AnimatedSwitcher(
+			duration: bottomBarAnimationDuration,
+			switchOutCurve: Curves.easeInOut,
+			transitionBuilder: (child, animation) {
+				return ScaleTransition(
+					scale: animation,
+					child: FadeTransition(
+						opacity: animation,
+						child: child
+					)
+				);
+			},
+			child: _currentIndex != 1 ?
+				(_currentIndex == 0 ? _assignPlan() : _assignBadge())
+				: SizedBox.shrink()
 		);
 	}
 	
 	Widget _buildFloatingButtonPicker<T>({
-		String label, IconData buttonIcon, String disabledDialogTitle, String disabledDialogText,
-		List<T> pickedValues, List<T> options,
-		Function builder, Function(List<T>) onChange, Function(T) getName
+		String buttonLabel, IconData buttonIcon, String disabledDialogTitle, String disabledDialogText,
+		String pickerTitle, List<T> pickedValues, List<T> options,
+		Function builder, Function(List<T>) onChange, Function(T) getName, Function onConfirm
 	}) {
 		bool buttonDisabled = options.isEmpty;
 		return SmartSelect<T>.multiple(
 			value: pickedValues,
-			title: label,
+			title: pickerTitle,
 			options: [
 				for(T element in options)
 					SmartSelectOption(
@@ -160,7 +182,7 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 			modalConfig: SmartSelectModalConfig(
 				trailing: ButtonSheetBarButtons(
 					buttons: [
-						UIButton('actions.confirm', () => { Navigator.pop(context) }, Colors.green, Icons.done)
+						UIButton('actions.confirm', () { onConfirm(); Navigator.pop(context); }, Colors.green, Icons.done)
 					],
 				)
 			),
@@ -171,7 +193,7 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 					backgroundColor: buttonDisabled ? Colors.grey : AppColors.formColor,
 					elevation: 4.0,
 					icon: Icon(buttonIcon),
-					label: Text(label),
+					label: Text(buttonLabel),
 					onPressed: () => buttonDisabled ?
 						showBasicDialog(context,
 							GeneralDialog.discard(
@@ -186,15 +208,19 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 
 	Widget _assignPlan() {
 		return _buildFloatingButtonPicker<UIPlan>(
-			label: AppLocales.of(context).translate('$_pageKey.header.assignPlanButton'),
+			buttonLabel: AppLocales.of(context).translate('$_pageKey.header.assignPlanButton'),
 			buttonIcon: Icons.description,
 			disabledDialogTitle: AppLocales.of(context).translate('$_pageKey.header.assignPlanButton'),
-			disabledDialogText: 'Nie dodano jeszcze żadnego planu. Dodaj plan, aby móc przypisać go dziecku.',
+			disabledDialogText: AppLocales.of(context).translate('$_pageKey.content.alerts.noPlansAdded'),
+			pickerTitle: AppLocales.of(context).translate('$_pageKey.header.assignPlanTitle'),
 			pickedValues: pickedPlans,
 			options: plans,
 			onChange: (val) => setState(() {
 				pickedPlans = val;
 			}),
+			onConfirm: () => {
+				// new state is saved and ready for database query
+			},
 			getName: (plan) => plan.name,
 			builder: (item, checked, onChange) {
 				return Theme(
@@ -220,15 +246,19 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 
 	Widget _assignBadge() {
 		return _buildFloatingButtonPicker<UIBadge>(
-			label: AppLocales.of(context).translate('$_pageKey.header.assignBadgeButton'),
+			buttonLabel: AppLocales.of(context).translate('$_pageKey.header.assignBadgeButton'),
 			buttonIcon: Icons.star,
 			disabledDialogTitle: AppLocales.of(context).translate('$_pageKey.header.assignBadgeButton'),
-			disabledDialogText: 'Lista możliwych do przyznania odznak jest pusta. Dodaj odznakę, aby móc przydzielić ją dziecku.',
+			disabledDialogText: AppLocales.of(context).translate('$_pageKey.header.noBadgesToAssignText'),
+			pickerTitle: AppLocales.of(context).translate('$_pageKey.header.assignBadgeTitle'),
 			pickedValues: pickedBadges,
 			options: badges,
 			onChange: (val) => setState(() {
 				pickedBadges = val;
 			}),
+			onConfirm: () => {
+				// new state is saved and ready for database query
+			},
 			getName: (badge) => badge.name,
 			builder: (item, checked, onChange) {
 				return Theme(
@@ -248,19 +278,25 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 		);
 	}
 
-	Widget _buildPlansTab() {
+	Widget _buildTabContent({List<Widget> children}) {
 		return ListView(
 			padding: EdgeInsets.zero,
 			physics: BouncingScrollPhysics(),
+			children: children
+		);
+	}
+
+	Widget _buildPlansTab() {
+		return _buildTabContent(
 			children: <Widget>[
 				// Show only if there are not rated tasks
 				AppAlert(
-					text: 'Istnieją nieocenione zadania. Odwiedź stronę oceniania, aby przynać punkty za wykonane zadania.',
+					text: AppLocales.of(context).translate('$_pageKey.content.alerts.unratedTasksExist'),
 					onTap: () { /* Go to rating page */ },
 				),
 				// Show only if there are no plans added
 				AppAlert(
-					text: 'Nie dodano jeszcze żadnego planu. Dodaj plan, aby móc przypisać go dziecku.',
+					text: AppLocales.of(context).translate('$_pageKey.content.alerts.noPlansAdded'),
 					onTap: () { /* Go to plans page */ },
 				),
 				Segment(
@@ -299,13 +335,11 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 	}
 
 	Widget _buildAwardsTab() {
-		return ListView(
-			padding: EdgeInsets.zero,
-			physics: BouncingScrollPhysics(),
+		return _buildTabContent(
 			children: <Widget>[
 				// Show only if there are no awards child can buy
 				AppAlert(
-					text: 'Lista możliwych do kupienia nagród jest pusta. Dodaj nagrodę, aby dziecko mogo ją zdobyć.',
+					text: AppLocales.of(context).translate('$_pageKey.content.alerts.noAwardsAdded'),
 					onTap: () => { /* Go to award/badge list page */ },
 				),
 				Segment(
@@ -328,13 +362,11 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 	}
 
 	Widget _buildAchievementsTab() {
-		return ListView(
-			padding: EdgeInsets.zero,
-			physics: BouncingScrollPhysics(),
+		return _buildTabContent(
 			children: <Widget>[
 				// Show only if there are no badges child can get
 				AppAlert(
-					text: 'Lista możliwych do przyznania odznak jest pusta. Dodaj odznakę, aby móc przydzielić ją dziecku.',
+					text: AppLocales.of(context).translate('$_pageKey.content.alerts.noBadgesAdded'),
 					onTap: () => { /* Go to award/badge list page */ },
 				),
 				Segment(

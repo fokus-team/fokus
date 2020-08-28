@@ -77,7 +77,7 @@ class ItemCard extends StatelessWidget {
 			break;
 			case GraphicAssetType.badgeIcons:
 				return Badge(
-					showBadge: graphicShowCheckmark,
+					showBadge: graphicShowCheckmark ?? false,
 					badgeColor: Colors.green,
 					badgeContent: Icon(Icons.check, color: Colors.white, size: 16.0),
 					child: SvgPicture.asset(badgeIconSvgPath(graphic), height: graphicHeight)

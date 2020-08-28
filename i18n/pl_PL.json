@@ -73,8 +73,11 @@
 				"header": {
 					"title": "Szczegóły dziecka",
 					"childCode": "Kod dziecka",
-					"assignPlanButton": "Przypisz plan",
+					"assignPlanButton": "Zarządzaj planami",
+					"assignPlanTitle": "Wybierz plany do przypisania",
 					"assignBadgeButton": "Przyznaj odznakę",
+					"assignBadgeTitle": "Wybierz odznaki do przyznania",
+					"noBadgesToAssignText": "Brak dostępnych odznak do przyznania",
 					"tabs": {
 						"plans": "Plany",
 						"awards": "Nagrody",
@@ -88,7 +91,13 @@
 					"awardsTitle": "Odebrane nagrody",
 					"noAwardsText": "Brak odebranych nagród",
 					"achievementsTitle": "Przyznane odznaki",
-					"noAchievementsText": "Brak przyznanych odznak"
+					"noAchievementsText": "Brak przyznanych odznak",
+					"alerts": {
+						"noPlansAdded": "Nie dodano jeszcze żadnego planu. Dodaj plan, aby móc przypisać go dziecku.",
+						"unratedTasksExist": "Istnieją nieocenione zadania. Odwiedź stronę oceniania, aby przynać punkty za wykonane zadania.",
+						"noAwardsAdded": "Lista możliwych do kupienia nagród jest pusta. Dodaj nagrodę, aby dziecko mogo ją zdobyć.",
+						"noBadgesAdded": "Lista możliwych do przyznania odznak jest pusta. Dodaj odznakę, aby móc przydzielić ją dziecku."
+					}
 				}
 			},
 			"plans": {

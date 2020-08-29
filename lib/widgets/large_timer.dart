@@ -8,15 +8,17 @@ import 'package:fokus/utils/duration_utils.dart';
 class LargeTimer extends StatelessWidget {
 	final Color textColor;
 	final String title;
+	final CrossAxisAlignment align;
 
-	LargeTimer({this.textColor,  this.title});
+	LargeTimer({this.textColor,  this.title, this.align = CrossAxisAlignment.start});
 
 	@override
 	Widget build(BuildContext context) {
 		return BlocBuilder<TimerCubit, TimerState>(
 			builder: (context, state) {
 				return Column(
-					mainAxisAlignment: MainAxisAlignment.center,
+					mainAxisAlignment: MainAxisAlignment.start,
+					crossAxisAlignment: align,
 					children: [
 						Text(
 							AppLocales.of(context).translate(title),

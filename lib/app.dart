@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -42,8 +43,9 @@ import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/db/user/user_role.dart';
 import 'package:fokus/utils/service_injection.dart';
 
-void main() {
+void main() async {
 	WidgetsFlutterBinding.ensureInitialized();
+	await Firebase.initializeApp();
 	var navigatorKey = GlobalKey<NavigatorState>();
 	var routeObserver = RouteObserver<PageRoute>();
 	initializeServices(routeObserver);

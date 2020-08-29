@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:fokus/services/notification_service.dart';
 import 'package:fokus/services/task_instance_service.dart';
 import 'package:get_it/get_it.dart';
 
@@ -20,5 +21,6 @@ void initializeServices(RouteObserver<PageRoute> routeObserver) {
 	GetIt.I.registerSingleton<PlanRepeatabilityService>(PlanRepeatabilityService());
 	GetIt.I.registerSingleton<PlanKeeperService>(PlanKeeperService());
 	GetIt.I.registerSingleton<TaskInstanceService>(TaskInstanceService());
+	GetIt.I.registerSingleton<NotificationService>(NotificationService());
 	GetIt.I.registerSingleton<RouteObserver<PageRoute>>(routeObserver);
 }

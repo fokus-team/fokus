@@ -21,11 +21,12 @@ dependencies:
     mongo_dart:
         git: https://github.com/fokus-team/mongo_dart.git
 
-    firebase_core: ^0.4.0+9
-    firebase_analytics: ^5.0.11
+    firebase_core: ^0.5.0
+    firebase_analytics: ^6.0.0
     firebase_crashlytics: ^0.1.4+1
-    firebase_remote_config: ^0.3.0+3
-    firebase_auth: ^0.16.1
+    firebase_remote_config: ^0.4.0
+    firebase_messaging: ^7.0.0
+    firebase_auth: ^0.18.0+1
     google_sign_in: ^4.5.1
 
     get_it: ^4.0.2

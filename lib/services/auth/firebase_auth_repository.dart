@@ -19,7 +19,7 @@ class FirebaseAuthRepository implements AuthenticationRepository {
 
 	@override
 	Stream<AuthenticatedUser> get user {
-		return _firebaseAuth.onAuthStateChanged.map((firebaseUser) {
+		return _firebaseAuth.authStateChanges().map((firebaseUser) {
 			return firebaseUser == null ? AuthenticatedUser.empty : _asAuthUser(firebaseUser);
 		});
 	}
@@ -41,10 +41,8 @@ class FirebaseAuthRepository implements AuthenticationRepository {
 	Future<void> signUpWithEmail({@required String email, @required String password, String name = ''}) async {
 		assert(email != null && password != null);
 		signedUpUserName = name;
-		var updateInfo = UserUpdateInfo();
-		updateInfo.displayName = name;
 		try {
-			await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password).then((user) => user.user.updateProfile(updateInfo));
+			await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password).then((user) => user.user.updateProfile(displayName: name));
 		} catch (e) {
 			EmailSignUpError reason;
 			if (e is PlatformException)
@@ -66,7 +64,7 @@ class FirebaseAuthRepository implements AuthenticationRepository {
 			if (googleUser == null)
 				return;
 			final googleAuth = await googleUser.authentication;
-			final credential = GoogleAuthProvider.getCredential(
+			final credential = GoogleAuthProvider.credential(
 				accessToken: googleAuth.accessToken,
 				idToken: googleAuth.idToken,
 			);
@@ -102,7 +100,7 @@ class FirebaseAuthRepository implements AuthenticationRepository {
 		return reason;
 	}
 
-	AuthenticatedUser _asAuthUser(FirebaseUser user) {
+	AuthenticatedUser _asAuthUser(User user) {
 	  var authUser = AuthenticatedUser(id: user.uid, email: user.email, name: user.displayName ?? signedUpUserName);
 	  signedUpUserName = null;
 	  return authUser;

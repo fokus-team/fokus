@@ -10,37 +10,39 @@ import 'package:fokus/logic/auth/child/prev_profiles_cubit.dart';
 import 'package:fokus/logic/auth/child/sign_in/child_sign_in_cubit.dart';
 import 'package:fokus/logic/auth/child/sign_up/child_sign_up_cubit.dart';
 import 'package:fokus/logic/child_tasks_cubit.dart';
-
-import 'package:fokus/pages/caregiver/award_form_page.dart';
 import 'package:fokus/logic/caregiver_panel_cubit.dart';
 import 'package:fokus/logic/caregiver_plans_cubit.dart';
 import 'package:fokus/logic/child_plans_cubit.dart';
 import 'package:fokus/logic/plan_form/plan_form_cubit.dart';
+
+import 'package:fokus/pages/loading_page.dart';
+import 'package:fokus/pages/roles_page.dart';
 import 'package:fokus/pages/caregiver/auth/caregiver_sign_in_page.dart';
 import 'package:fokus/pages/caregiver/auth/caregiver_sign_up_page.dart';
 import 'package:fokus/pages/caregiver/awards_page.dart';
+import 'package:fokus/pages/caregiver/child_dashboard_page.dart';
+import 'package:fokus/pages/caregiver/award_form_page.dart';
 import 'package:fokus/pages/caregiver/badge_form_page.dart';
 import 'package:fokus/pages/caregiver/panel_page.dart';
 import 'package:fokus/pages/caregiver/plan_details_page.dart';
 import 'package:fokus/pages/caregiver/plan_form_page.dart';
 import 'package:fokus/pages/caregiver/plans_page.dart';
 import 'package:fokus/pages/caregiver/statistics_page.dart';
-import 'package:fokus/pages/child/achievements_page.dart';
 import 'package:fokus/pages/child/auth/child_profiles_page.dart';
 import 'package:fokus/pages/child/auth/child_sign_in_page.dart';
 import 'package:fokus/pages/child/awards_page.dart';
 import 'package:fokus/pages/child/panel_page.dart';
 import 'package:fokus/pages/notifications_page.dart';
 import 'package:fokus/pages/child/plan_in_progress_page.dart';
+import 'package:fokus/pages/child/achievements_page.dart';
+
+import 'package:fokus/model/ui/app_page.dart';
+import 'package:fokus/model/db/user/user_role.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/services/instrumentator.dart';
 import 'package:fokus/utils/theme_config.dart';
-import 'package:fokus/pages/loading_page.dart';
-import 'package:fokus/pages/roles_page.dart';
-import 'package:fokus/widgets/page_theme.dart';
-import 'package:fokus/model/ui/app_page.dart';
-import 'package:fokus/model/db/user/user_role.dart';
 import 'package:fokus/utils/service_injection.dart';
+import 'package:fokus/widgets/page_theme.dart';
 
 void main() {
 	WidgetsFlutterBinding.ensureInitialized();
@@ -111,6 +113,7 @@ class FokusApp extends StatelessWidget {
 			AppPage.childProfilesPage.name: (context) => _createPage(ChildProfilesPage(), context, PreviousProfilesCubit(authBloc(context), getRoute(context))),
 			AppPage.childSignInPage.name: (context) => _createPage(_wrapWithCubit(ChildSignInPage(), ChildSignInCubit(authBloc(context))), context, ChildSignUpCubit(authBloc(context))),
 			AppPage.caregiverPanel.name: (context) => _createPage(CaregiverPanelPage(), context, CaregiverPanelCubit(getActiveUser(context), getRoute(context))),
+			AppPage.caregiverChildDashboard.name: (context) => _createPage(CaregiverChildDashboardPage(), context),
 			AppPage.caregiverPlans.name: (context) => _createPage(CaregiverPlansPage(), context, CaregiverPlansCubit(getActiveUser(context), getRoute(context))),
 			AppPage.caregiverPlanForm.name: (context) => _createPage(CaregiverPlanFormPage(), context, PlanFormCubit(getParams(context), getActiveUser(context))),
 			AppPage.caregiverAwards.name: (context) => _createPage(CaregiverAwardsPage(), context),

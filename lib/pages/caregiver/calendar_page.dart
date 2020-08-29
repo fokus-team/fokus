@@ -3,7 +3,11 @@ import 'package:date_utils/date_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/model/db/date/date.dart';
+import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/ui/plan/ui_plan.dart';
+import 'package:fokus/model/ui/ui_button.dart';
+import 'package:fokus/widgets/buttons/bottom_sheet_bar_buttons.dart';
+import 'package:intl/intl.dart';
 import 'package:smart_select/smart_select.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:mongo_dart/mongo_dart.dart' as Mongo;
@@ -23,19 +27,24 @@ class CaregiverCalendarPage extends StatefulWidget {
 	_CaregiverCalendarPageState createState() => new _CaregiverCalendarPageState();
 }
 
-class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> {
+class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with TickerProviderStateMixin {
 	static const String _pageKey = 'page.caregiverSection.calendar';
+	AnimationController _animationController;
 	CalendarController _calendarController;
+
+	DateTime _selectedDate = Date.now();
 	List<UIPlan> _selectedPlans = [];
+	Map<UIChild, Color> _childrenColors = {};
+	List<UIChild> _selectedChildren = [];
 
 	List<Color> markerColors = [
 		Colors.green,
-		Colors.deepPurple,
-		Colors.red,
-		Colors.orange,
-		Colors.purple,
 		Colors.pink,
+		Colors.deepPurple,
 		Colors.teal,
+		Colors.orange,
+		Colors.red,
+		Colors.purple,
 		Colors.brown
 	];
 
@@ -43,11 +52,14 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> {
 	void initState() {
 		super.initState();
 		_calendarController = CalendarController();
+		_animationController = AnimationController(vsync: this, duration: Duration(milliseconds: 250));
+		_animationController.forward();
 	}
 
 	@override
 	void dispose() {
 		_calendarController.dispose();
+		_animationController.dispose();
 		super.dispose();
 	}
 
@@ -70,6 +82,12 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> {
 											  context.bloc<CalendarCubit>().loadInitialData();
 											  return buildChildPicker(loading: true);
 										  }
+											int markerIndex = 0;
+											for(var child in state.children.keys) {
+												if(markerIndex == markerColors.length)
+													markerIndex = 0;
+												_childrenColors[child] = markerColors[markerIndex++];
+											}
 									    return buildChildPicker(children: state.children);
 									  },
 								  ),
@@ -77,16 +95,43 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> {
 							)
 						)
 					),
-					AppSegments(segments: [
-						Padding(
-							padding: EdgeInsets.symmetric(horizontal: AppBoxProperties.screenEdgePadding),
-							child: BlocBuilder<CalendarCubit, CalendarState>(
-								builder: (context, state) {
-									return buildCalendar(state.events);
-								},
+					AppSegments(
+						segments: [
+							Padding(
+								padding: EdgeInsets.symmetric(horizontal: AppBoxProperties.screenEdgePadding),
+								child: BlocBuilder<CalendarCubit, CalendarState>(
+									builder: (context, state) {
+										// if(state.events != null && state.events.isNotEmpty)
+										// 	_calendarController.setSelectedDay(_selectedDate.add(Duration(days: 1)), runCallback: true);
+										return buildCalendar(state.events);
+									},
+								)
+							),
+							Padding(
+								padding: EdgeInsets.only(top: 8.0),
+								child: Segment(
+									title: '$_pageKey.content.plansOnDateTitle',
+									titleArgs: {'DATE': DateFormat.yMd(Localizations.localeOf(context).toString()).format(_selectedDate).toString()},
+									noElementsMessage: '$_pageKey.content.noPlansOnDateTitle',
+									elements: [
+										for(UIPlan plan in _selectedPlans)
+											ItemCard(
+												title: plan.name,
+												onTapped: () => Navigator.pushNamed(context, AppPage.caregiverPlanDetails.name, arguments: {'planID': plan.id}),
+												subtitle: AppLocales.of(context).translate('$_pageKey.content.planAssignedToSubTitle'),
+												chips: plan.assignedTo.map((childID) {
+													var child = _childrenColors.keys.firstWhere((element) => element.id == childID);
+													return AttributeChip(
+														content: child.name,
+														color: _childrenColors[child]
+													);
+												}).toList()
+											)
+									]
+								)
 							)
-						)
-					])
+						]
+					)
 				]
 			)
 		);
@@ -96,6 +141,7 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> {
 	  return TableCalendar(
 			calendarController: _calendarController,
 			locale: AppLocales.of(context).locale.toString(),
+			availableGestures: AvailableGestures.horizontalSwipe,
 			startingDayOfWeek: StartingDayOfWeek.monday,
 			initialCalendarFormat: CalendarFormat.month,
 			headerStyle: HeaderStyle(
@@ -103,23 +149,90 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> {
 				formatButtonVisible: false
 			),
 			calendarStyle: CalendarStyle(
-				selectedColor: AppColors.caregiverBackgroundColor,
+				selectedColor: Colors.white,
+				selectedStyle: TextStyle(color: AppColors.darkTextColor),
 				todayColor: Colors.grey,
-				markersMaxAmount: 8,
-				canEventMarkersOverflow: true
+				contentPadding: EdgeInsets.all(5.0)
 			),
 			events: events,
-			onDaySelected: (day, events) => setState(() => _selectedPlans = events),
+			onDaySelected: (day, events) {
+				setState(() {
+					_selectedDate = day;
+					_selectedPlans = events.isNotEmpty ? events : [];
+				});
+				_animationController.forward(from: 0.0);
+			},
 			onCalendarCreated: onMonthChanged,
 			onVisibleDaysChanged: onMonthChanged,
 			builders: CalendarBuilders(
+				selectedDayBuilder: (context, date, _) {
+          return FadeTransition(
+            opacity: Tween(begin: 0.0, end: 1.0).animate(_animationController),
+            child: Container(
+              margin: const EdgeInsets.all(4.0),
+							decoration: BoxDecoration(
+								shape: BoxShape.circle,
+								color: AppColors.caregiverBackgroundColor,
+								boxShadow: [
+									BoxShadow(color: Colors.black26, blurRadius: 8.0)
+								]
+							),
+							width: 100,
+							height: 100,
+              child: Center(
+								child: Text(
+									'${date.day}',
+									textAlign: TextAlign.start,
+                	style: TextStyle().copyWith(fontSize: 17.0, color: Colors.white, fontWeight: FontWeight.bold)
+								)
+							)
+            )
+          );
+        },
+        todayDayBuilder: (context, date, _) {
+          return Container(
+            margin: const EdgeInsets.all(4.0),
+            decoration: BoxDecoration(
+							border: Border.all(color: Colors.grey[400], width: 1.0),
+								shape: BoxShape.circle,
+						),
+            width: 100,
+            height: 100,
+						child: Center(
+							child: Text(
+								'${date.day}',
+								textAlign: TextAlign.start,
+								style: TextStyle().copyWith(fontSize: 15.0)
+							)
+						)
+          );
+        },
 				markersBuilder: (context, date, events, holidays) {
 					final children = <Widget>[];
 					if (events.isNotEmpty) {
-						for(var event in events)
-							children.add(
-								Badge(badgeColor: Colors.green)
-							);
+						Set<Color> childrenMarkers = {};
+						events.forEach((plan) {
+							plan.assignedTo.forEach((childID) {
+								childrenMarkers.add(_childrenColors[_childrenColors.keys.firstWhere((element) => element.id == childID)]);
+							});
+						});
+						children.add(
+							Positioned(
+								left: 6.0,
+								right: 6.0,
+								bottom: 0,
+								child: Wrap(
+									alignment: WrapAlignment.center,
+									spacing: 2.0,
+									children: childrenMarkers.take(4).map((marker) => Badge(
+										badgeColor: marker,
+										elevation: 0,
+										padding: EdgeInsets.all(3.6),
+										animationType: BadgeAnimationType.scale
+									)).toList()
+								)
+							)
+						);
 					}
 					return children;
 				}
@@ -128,16 +241,15 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> {
 	}
 
 	void onMonthChanged(DateTime first, DateTime last, CalendarFormat format) {
-		return context.bloc<CalendarCubit>().monthChanged(Date.fromDate(Utils.firstDayOfMonth(_calendarController.focusedDay)));
+		context.bloc<CalendarCubit>().monthChanged(Date.fromDate(Utils.firstDayOfMonth(_calendarController.focusedDay)));
 	}
 
-	SmartSelect<Mongo.ObjectId> buildChildPicker({Map<UIChild, bool> children = const {}, bool loading = false}) {
-	  return SmartSelect<Mongo.ObjectId>.multiple(
-	    title: 'Filtruj wyświetlane plany',
-	    isLoading: loading,
-	    value: children.keys.where((child) => children[child]).map((child) => child.id).toList(),
+	SmartSelect<UIChild> buildChildPicker({Map<UIChild, bool> children = const {}, bool loading = false}) {
+	  return SmartSelect<UIChild>.multiple(
+	    title: AppLocales.of(context).translate('$_pageKey.header.filterPlansTitle'),
+	    isLoading: loading, // Add AppLoader to builder
+	    value: _selectedChildren,
 	    builder: (context, state, callback) {
-	      int markerIndex = 0;
 	      return InkWell(
 	        onTap: () {
 	          FocusManager.instance.primaryFocus.unfocus();
@@ -147,33 +259,44 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> {
 	          crossAxisAlignment: CrossAxisAlignment.start,
 	          children: [
 	            ListTile(
-	              title: Text(state.values.isNotEmpty ? 'Wyświetlaj plany przypisane do' : 'Filtruj wyświetlane plany'),
+	              title: Text(
+									AppLocales.of(context).translate(state.values.isNotEmpty ? '$_pageKey.header.showPlansForTitle' : '$_pageKey.header.filterPlansTitle')
+								),
 	              trailing: Icon(Icons.keyboard_arrow_right, color: Colors.grey)
 	            ),
-	            if(state.values.isNotEmpty)
-	              Padding(
-	                padding: EdgeInsets.symmetric(horizontal: 12.0).copyWith(bottom: 10.0),
-	                child: Wrap(
-	                  spacing: 4.0,
-	                  runSpacing: 4.0,
-	                  children: state.values.map((id) {
-	                    final UIChild child = children.keys.firstWhere((element) => element.id == id);
-	                    if(markerIndex == markerColors.length)
-	                      markerIndex = 0;
-	                    return AttributeChip(
-	                      content: child.name,
-	                      color: markerColors[markerIndex++],
-	                    );
-	                  }).toList(),
-	                )
-	              )
+							AnimatedSwitcher(
+								duration: Duration(milliseconds: 250),
+								switchInCurve: Curves.easeIn,
+								switchOutCurve: Curves.easeOut,
+								transitionBuilder: (child, animation) {
+									return SizeTransition(
+										sizeFactor: animation,
+										axis: Axis.vertical,
+										child: child
+									);
+								},
+								child: state.values.isNotEmpty ?
+									Padding(
+										padding: EdgeInsets.symmetric(horizontal: 12.0).copyWith(bottom: 10.0),
+										child: Wrap(
+											spacing: 4.0,
+											runSpacing: 4.0,
+											children: state.values.map((child) {
+												return AttributeChip(
+													content: child.name,
+													color: _childrenColors[child]
+												);
+											}).toList(),
+										)
+									) : SizedBox.shrink()
+							)
 	          ]
 	        )
 	      );
 	    },
-	    options: SmartSelectOption.listFrom<Mongo.ObjectId, UIChild>(
+	    options: SmartSelectOption.listFrom(
 	      source: children.keys.toList(),
-	      value: (index, item) => item.id,
+	      value: (index, item) => item,
 	      title: (index, item) => item.name,
 	      meta: (index, item) => item
 	    ),
@@ -194,14 +317,18 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> {
 	      )
 	    ),
 	    modalType: SmartSelectModalType.bottomSheet,
-	    modalConfig: SmartSelectModalConfig(
-	      searchBarHint: AppLocales.of(context).translate('actions.search')
-	    ),
+			modalConfig: SmartSelectModalConfig(
+				trailing: ButtonSheetBarButtons(
+					buttons: [
+						UIButton('actions.confirm', () { Navigator.pop(context); }, Colors.green, Icons.done)
+					],
+				)
+			),
 	    onChange: (val) {
-	      FocusManager.instance.primaryFocus.unfocus();
+				setState(() { _selectedChildren = val; });
 	      Map<UIChild, bool> filter = {};
-	      for (var child in children.keys)
-	      	filter[child] = val.contains(child.id);
+				for(var child in children.keys)
+					filter[child] = val.isEmpty ? true : val.contains(child);
 	      context.bloc<CalendarCubit>().childFilterChanged(filter);
 	    }
 	  );

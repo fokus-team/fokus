@@ -89,7 +89,14 @@
 			},
 			"calendar": {
 				"header": {
-					"title": "Kalendarz planów"
+					"title": "Kalendarz planów",
+					"filterPlansTitle": "Filtruj wyświetlane plany",
+					"showPlansForTitle": "Wyświetlaj plany przypisane do"
+				},
+				"content": {
+					"plansOnDateTitle": "Plany na dzień {DATE}",
+					"noPlansOnDateTitle": "Brak aktywnych planów na ten dzień",
+					"planAssignedToSubTitle": "Przypisany do"
 				}
 			},
 			"plans": {

@@ -365,7 +365,8 @@
 					"reject": "ODRZUĆ",
 					"break": "PRZERWA",
 					"done": "ZROBIONE",
-					"timeLeft": "Pozostały czas:"
+					"timeLeft": "Pozostały czas:",
+					"breakTime": "Czas przerwy:"
 				}
 			},
 			"awards": {

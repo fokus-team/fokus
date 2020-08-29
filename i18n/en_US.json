@@ -359,13 +359,14 @@
 			},
 			"taskInProgress": {
 				"header": {
-					"title": "Plan performation"
+					"title": "Plan completion"
 				},
 				"content": {
 					"reject": "REJECT",
 					"break": "BREAK",
 					"done": "DONE",
-					"timeLeft": "Time left:"
+					"timeLeft": "Time left:",
+					"breakTime": "Break duration:"
 				}
 			},
 			"awards": {

@@ -109,11 +109,11 @@
 					"awardsTitle": "Claimed awards",
 					"noAwardsText": "No claimed awards to display",
 					"achievementsTitle": "Awarded badges",
-					"noachievementsText": "No awarded badges to display",
+					"noAchievementsText": "No awarded badges to display",
 					"alerts": {
 						"noPlansAdded": "No plan added yet. Add a plan to be able to assign it to a child.",
 						"unratedTasksExist": "There are unrated tasks. Visit the rating page to assign points for completed tasks.",
-						"noAwardsAdded": "The list of awards available for purchase is empty. Add an award for a child to earn.",
+						"noAwardsAdded": "The list of awards available for purchase is empty. Add an award for a child to claim.",
 						"noBadgesAdded": "The list of badges is empty. Add a badge to be able to assign it to a child."
 					}
 				}

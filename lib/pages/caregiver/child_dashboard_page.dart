@@ -30,22 +30,22 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 	TabController _tabController;
 	int _currentIndex = 0;
 
-	double customBottomBarHeight = 40.0;
-	Duration bottomBarAnimationDuration = Duration(milliseconds: 400);
+	final double customBottomBarHeight = 40.0;
+	final Duration bottomBarAnimationDuration = Duration(milliseconds: 400);
 
 	// Mock-ups
 	List<UIPlan> plans = [
-		// UIPlan(Mongo.ObjectId.fromHexString('fa7462a054295e915a20755d'), "Sprzątanie pokoju", true, 4, [], null),
-		// UIPlan(Mongo.ObjectId.fromHexString('30e8cf66a27822d4ea56f383'), "Odrabianie pracy domowej", true, 1, [], null),
-		// UIPlan(Mongo.ObjectId.fromHexString('c2248a28572d9f90a4f958f6'), "Inne bardzo długie zadanie, tekst tekst i tak dalej", true, 2, [], null)
+		UIPlan(Mongo.ObjectId.fromHexString('fa7462a054295e915a20755d'), "Sprzątanie pokoju", true, 4, [], null),
+		UIPlan(Mongo.ObjectId.fromHexString('30e8cf66a27822d4ea56f383'), "Odrabianie pracy domowej", true, 1, [], null),
+		UIPlan(Mongo.ObjectId.fromHexString('c2248a28572d9f90a4f958f6'), "Inne bardzo długie zadanie, tekst tekst i tak dalej", true, 2, [], null)
 	];
 	List<UIPlan> pickedPlans = List<UIPlan>();
 
   // only not-assigned badges
 	List<UIBadge> badges = [
-		// UIBadge(name: "Król czegośtam", icon: 0),
-		// UIBadge(name: "ehhhhh", icon: 5),
-		// UIBadge(name: "Puchar planowicza", icon: 12),
+		UIBadge(name: "Król czegośtam", icon: 0),
+		UIBadge(name: "ehhhhh", icon: 5),
+		UIBadge(name: "Puchar planowicza", icon: 12),
 	];
 	List<UIBadge> pickedBadges = List<UIBadge>();
 

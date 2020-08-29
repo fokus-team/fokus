@@ -76,8 +76,8 @@ class PlanKeeperService {
 			updates.add(_dataRepository.updatePlanInstances(
 				instance.id,
 				state: await _determineFinalPlanState(instance),
-				durationChange: DateSpanUpdate<TimeDate>(getEndTime(instance.date), SpanDateType.end, instance.duration.length - 1))
-			);
+				durationChange: instance.duration.isNotEmpty ? DateSpanUpdate<TimeDate>(getEndTime(instance.date), SpanDateType.end, instance.duration.length - 1) : null
+			));
 		return Future.wait(updates);
 		// TODO there are also 'to' fields in task instance last 'duration' and 'breaks' objects that could be left missing here - handle here or inside statistics code
 	}

@@ -49,6 +49,7 @@ dependencies:
     implicitly_animated_reorderable_list: ^0.2.3
     flutter_picker: ^1.1.5
     auto_size_text: ^2.1.0
+    confetti: ^0.5.4+1
 
 dependency_overrides:
     bson:

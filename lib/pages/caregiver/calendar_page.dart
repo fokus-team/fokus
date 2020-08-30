@@ -106,36 +106,67 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 								)
 							),
 							Padding(
-								padding: EdgeInsets.only(top: 8.0),
-								child: BlocBuilder<CalendarCubit, CalendarState>(
-									builder: (context, state) {
-										return Segment(
-											title: '$_pageKey.content.plansOnDateTitle',
-											titleArgs: {'DATE': DateFormat.yMd(Localizations.localeOf(context).toString()).format(state.day).toString()},
-											noElementsMessage: '$_pageKey.content.noPlansOnDateTitle',
-											elements: [
-												if(state.events != null && state.events[state.day] != null)
-													for(UIPlan plan in state.events[state.day])
-														ItemCard(
-															title: plan.name,
-															onTapped: () => Navigator.pushNamed(context, AppPage.caregiverPlanDetails.name, arguments: {'planID': plan.id}),
-															subtitle: AppLocales.of(context).translate('$_pageKey.content.planAssignedToSubTitle'),
-															chips: plan.assignedTo != null ? plan.assignedTo.map((childID) {
-																var child = state.children.keys.firstWhere((element) => element.id == childID, orElse: () => null);
-																return child != null ? AttributeChip(
-																	content: child.name,
-																	color: _childrenColors[childID]
-																) : SizedBox.shrink();
-															}).toList() : []
-														)
-											]
-										);
-									}
-								)
+								padding: EdgeInsets.only(top: AppBoxProperties.sectionPadding),
+								child: buildPlanList()
 							)
 						]
 					)
 				]
+			)
+		);
+	}
+
+	Widget buildPlanList(){
+		return BlocBuilder<CalendarCubit, CalendarState>(
+			builder: (context, state) {
+				return Segment(
+					title: '$_pageKey.content.plansOnDateTitle',
+					titleArgs: {'DATE': DateFormat.yMd(Localizations.localeOf(context).toString()).format(state.day).toString()},
+					noElementsMessage: '$_pageKey.content.noPlansOnDateTitle',
+					noElementsIcon: Icons.description,
+					elements: [
+						if(state.events != null && state.events[state.day] != null)
+							for(UIPlan plan in state.events[state.day])
+								ItemCard(
+									title: plan.name,
+									onTapped: () => Navigator.pushNamed(context, AppPage.caregiverPlanDetails.name, arguments: {'planID': plan.id}),
+									subtitle: AppLocales.of(context).translate('$_pageKey.content.planAssignedToSubTitle'),
+									chips: plan.assignedTo != null ? plan.assignedTo.map((childID) {
+										var child = state.children.keys.firstWhere((element) => element.id == childID, orElse: () => null);
+										return child != null ? AttributeChip(
+											content: child.name,
+											color: _childrenColors[childID]
+										) : SizedBox.shrink();
+									}).toList() : []
+								)
+					]
+				);
+			}
+		);
+	}
+
+	Widget buildTableCalendarCell(DateTime date, {bool isCellSelected = false}) {
+		return Container(
+			margin: const EdgeInsets.all(4.0),
+			decoration: BoxDecoration(
+				shape: BoxShape.circle,
+				color: isCellSelected ? AppColors.caregiverBackgroundColor : Colors.transparent,
+				border: isCellSelected ? Border.all(width: 0) : Border.all(color: Colors.grey[400], width: 1.0),
+				boxShadow: [
+					if(isCellSelected)
+						BoxShadow(color: Colors.black26, blurRadius: 8.0)
+				]
+			),
+			width: 100,
+			height: 100,
+			child: Center(
+				child: Text(
+					'${date.day}',
+					textAlign: TextAlign.start,
+					style: isCellSelected ?
+						TextStyle().copyWith(fontSize: 17.0, color: Colors.white, fontWeight: FontWeight.bold)
+						: TextStyle().copyWith(fontSize: 15.0)
+				)
 			)
 		);
 	}
@@ -152,9 +183,6 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 				formatButtonVisible: false
 			),
 			calendarStyle: CalendarStyle(
-				selectedColor: Colors.white,
-				selectedStyle: TextStyle(color: AppColors.darkTextColor),
-				todayColor: Colors.grey,
 				contentPadding: EdgeInsets.all(5.0)
 			),
 			events: events,
@@ -162,48 +190,12 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 			onCalendarCreated: onMonthChanged,
 			onVisibleDaysChanged: onMonthChanged,
 			builders: CalendarBuilders(
-				selectedDayBuilder: (context, date, _) {
-          return FadeTransition(
+				selectedDayBuilder: (context, date, _) =>
+          FadeTransition(
             opacity: Tween(begin: 0.0, end: 1.0).animate(_animationController),
-            child: Container(
-              margin: const EdgeInsets.all(4.0),
-							decoration: BoxDecoration(
-								shape: BoxShape.circle,
-								color: AppColors.caregiverBackgroundColor,
-								boxShadow: [
-									BoxShadow(color: Colors.black26, blurRadius: 8.0)
-								]
-							),
-							width: 100,
-							height: 100,
-              child: Center(
-								child: Text(
-									'${date.day}',
-									textAlign: TextAlign.start,
-                	style: TextStyle().copyWith(fontSize: 17.0, color: Colors.white, fontWeight: FontWeight.bold)
-								)
-							)
-            )
-          );
-        },
-        todayDayBuilder: (context, date, _) {
-          return Container(
-            margin: const EdgeInsets.all(4.0),
-            decoration: BoxDecoration(
-							border: Border.all(color: Colors.grey[400], width: 1.0),
-								shape: BoxShape.circle,
-						),
-            width: 100,
-            height: 100,
-						child: Center(
-							child: Text(
-								'${date.day}',
-								textAlign: TextAlign.start,
-								style: TextStyle().copyWith(fontSize: 15.0)
-							)
-						)
-          );
-        },
+            child: buildTableCalendarCell(date, isCellSelected: true)
+					),
+        todayDayBuilder: (context, date, _) => buildTableCalendarCell(date),
 				markersBuilder: (context, date, events, holidays) {
 					final children = <Widget>[];
 					if (events.isNotEmpty) {
@@ -250,22 +242,35 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 	SmartSelect<UIChild> buildChildPicker({Map<UIChild, bool> children = const {}, bool loading = false}) {
 	  return SmartSelect<UIChild>.multiple(
 	    title: AppLocales.of(context).translate('$_pageKey.header.filterPlansTitle'),
-	    isLoading: loading, // Add AppLoader to builder
 	    value: _selectedChildren,
 	    builder: (context, state, callback) {
 	      return InkWell(
 	        onTap: () {
 	          FocusManager.instance.primaryFocus.unfocus();
-	          callback(context);
+	          if(!loading)
+							callback(context);
 	        },
 	        child: Column(
 	          crossAxisAlignment: CrossAxisAlignment.start,
 	          children: [
 	            ListTile(
-	              title: Text(
-									AppLocales.of(context).translate(state.values.isNotEmpty ? '$_pageKey.header.showPlansForTitle' : '$_pageKey.header.filterPlansTitle')
-								),
-	              trailing: Icon(Icons.keyboard_arrow_right, color: Colors.grey)
+	              title: Text(AppLocales.of(context).translate(state.values.isNotEmpty ?
+									'$_pageKey.header.showPlansForTitle'
+									: '$_pageKey.header.filterPlansTitle'
+								)),
+	              trailing: loading ?
+									Padding(
+										padding: EdgeInsets.only(left: 2.0, top: 2.0),
+										child: SizedBox(
+											child: CircularProgressIndicator(
+												valueColor: AlwaysStoppedAnimation<Color>(Colors.black45),
+												strokeWidth: 1.5,
+											),
+											height: 16.0,
+											width: 16.0,
+										)
+									)
+									: Icon(Icons.keyboard_arrow_right, color: Colors.grey)
 	            ),
 							AnimatedSwitcher(
 								duration: _animationDuration,

@@ -26,7 +26,10 @@ class CaregiverPanelCubit extends ReloadableCubit {
 		  var plans = await _repeatabilityService.getPlansByDate(child.id, Date.now());
 		  childList.add(UIChild.fromDBModel(child, todayPlanCount: plans.length, hasActivePlan: await _dataRepository.getActiveChildPlanInstance(child.id)));
 	  }
-	  emit(CaregiverPanelLoadSuccess(childList, await _dataRepository.getUserNames((activeUser as UICaregiver).friends)));
+	  Map<ObjectId, String> friends;
+	  if ((activeUser as UICaregiver).friends != null && (activeUser as UICaregiver).friends.isNotEmpty)
+		  friends = await _dataRepository.getUserNames((activeUser as UICaregiver).friends);
+	  emit(CaregiverPanelLoadSuccess(childList, friends));
   }
 }
 

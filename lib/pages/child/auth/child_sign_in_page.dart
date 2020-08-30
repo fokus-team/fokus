@@ -8,7 +8,7 @@ import 'package:fokus/model/ui/ui_button.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/icon_sets.dart';
 import 'package:fokus/utils/theme_config.dart';
-import 'package:fokus/widgets/app_avatar.dart';
+import 'package:fokus/widgets/general/app_avatar.dart';
 import 'package:fokus/widgets/auth/auth_button.dart';
 import 'package:fokus/widgets/auth/auth_input_field.dart';
 import 'package:fokus/model/ui/auth/user_code.dart';

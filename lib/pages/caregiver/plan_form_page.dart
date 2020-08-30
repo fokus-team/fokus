@@ -13,6 +13,7 @@ import 'package:fokus/logic/plan_form/plan_form_cubit.dart';
 import 'package:fokus/widgets/forms/tasks_list.dart';
 import 'package:fokus/widgets/forms/plan_form.dart';
 import 'package:fokus/widgets/buttons/help_icon_button.dart';
+import 'package:fokus/widgets/general/app_loader.dart';
 
 enum PlanFormStep { planParameters, taskList }
 
@@ -75,10 +76,10 @@ class _CaregiverPlanFormPageState extends State<CaregiverPlanFormPage> {
 					formType = state.formType; // works?
 					context.bloc<PlanFormCubit>().loadFormData();
 					if (formType == AppFormType.edit)
-						children.add(Center(child: CircularProgressIndicator()));
+						children.add(Center(child: AppLoader()));
 				}
 				else if (state is PlanFormSubmissionInProgress)
-					children.add(Center(child: CircularProgressIndicator()));
+					children.add(Center(child: AppLoader()));
 		    return WillPopScope(
 					onWillPop: () => showExitFormDialog(context, true, state is PlanFormDataLoadSuccess && plan != state.planForm),
 					child: Stack(
@@ -92,8 +93,11 @@ class _CaregiverPlanFormPageState extends State<CaregiverPlanFormPage> {
 	Widget buildStepOneContent() => PlanForm(
 		plan: plan,
 		goNextCallback: () {
-			if(formKey.currentState.validate() && (plan.repeatability == PlanFormRepeatability.recurring && plan.days.length > 0))
-				next();
+			if(formKey.currentState.validate())
+				if(plan.repeatability == PlanFormRepeatability.onlyOnce ||
+					plan.repeatability == PlanFormRepeatability.untilCompleted ||
+					(plan.repeatability == PlanFormRepeatability.recurring && plan.days.length > 0))
+					next();
 		}
 	);
 

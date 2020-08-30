@@ -12,6 +12,7 @@ import 'package:fokus/widgets/cards/item_card.dart';
 import 'package:fokus/widgets/chips/attribute_chip.dart';
 import 'package:fokus/widgets/loadable_bloc_builder.dart';
 import 'package:fokus/widgets/segment.dart';
+import 'package:mongo_dart/mongo_dart.dart' as Mongo;
 
 class CaregiverPlansPage extends StatefulWidget {
 	@override
@@ -31,7 +32,7 @@ class _CaregiverPlansPageState extends State<CaregiverPlansPage> {
 						HeaderActionButton.normal(Icons.add, '$_pageKey.header.addPlan',
 							() => Navigator.of(context).pushNamed(AppPage.caregiverPlanForm.name)),
 						HeaderActionButton.normal(Icons.calendar_today, '$_pageKey.header.calendar', 
-							() => Navigator.of(context).pushNamed(AppPage.caregiverCalendar.name), Colors.amber)
+							() => Navigator.of(context).pushNamed(AppPage.caregiverCalendar.name, arguments: Mongo.ObjectId.fromHexString('5f380c0f613aebcefc9a5de5')), Colors.amber)
 					]),
 					LoadableBlocBuilder<CaregiverPlansCubit>(
 						builder: (context, state) => AppSegments(segments: _buildPanelSegments(state, context))

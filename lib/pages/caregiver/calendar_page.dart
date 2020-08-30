@@ -83,6 +83,11 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 											  return buildChildPicker(loading: true);
 										  }
 											int markerIndex = 0;
+											_selectedChildren = [];
+											state.children.forEach((key, value) {
+												if(value)
+													_selectedChildren.add(key);
+											});
 											for(var child in state.children.keys) {
 												if(markerIndex == markerColors.length)
 													markerIndex = 0;
@@ -202,7 +207,8 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 						Set<Color> childrenMarkers = {};
 						events.forEach((plan) {
 							plan.assignedTo.forEach((childID) {
-								childrenMarkers.add(_childrenColors[childID]);
+								if(_selectedChildren.isEmpty || _selectedChildren.firstWhere((element) => element.id == childID, orElse: () => null) != null)
+									childrenMarkers.add(_childrenColors[childID]);
 							});
 						});
 						children.add(
@@ -336,7 +342,7 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 				setState(() { _selectedChildren = val; });
 	      Map<UIChild, bool> filter = {};
 				for(var child in children.keys)
-					filter[child] = val.isEmpty ? true : val.contains(child);
+					filter[child] = val.contains(child);
 	      context.bloc<CalendarCubit>().childFilterChanged(filter);
 	    }
 	  );

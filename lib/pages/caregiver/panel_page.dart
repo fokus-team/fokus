@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 
 import 'package:fokus/logic/caregiver_panel_cubit.dart';
+import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/ui/ui_button.dart';
 import 'package:fokus/model/ui/user/ui_child.dart';
 import 'package:fokus/services/app_locales.dart';
@@ -50,11 +51,7 @@ class _CaregiverPanelPageState extends State<CaregiverPanelPage> {
 						ItemCard(
 							title: child.name,
 							subtitle: getChildCardSubtitle(context, child),
-							menuItems: [
-								UIButton.ofType(ButtonType.details, () => {log("details")}),
-								UIButton.ofType(ButtonType.edit, () => {log("edit")}),
-								UIButton.ofType(ButtonType.unpair, () => {log("unpair")})
-							],
+							onTapped: () => Navigator.of(context).pushNamed(AppPage.caregiverChildDashboard.name),
 							graphicType: GraphicAssetType.childAvatars,
 							graphic: child.avatar,
 							chips: <Widget>[

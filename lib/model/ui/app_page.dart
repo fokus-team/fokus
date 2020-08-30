@@ -1,8 +1,29 @@
 enum AppPage {
-	loadingPage, rolesPage, notificationsPage,
-	caregiverSignInPage, caregiverSignUpPage, childProfilesPage, childSignInPage,
-	caregiverPanel, caregiverPlans, caregiverPlanForm, caregiverAwards, caregiverAwardForm, caregiverBadgeForm, caregiverStatistics,
-	childPanel, childAwards, childAchievements, childPlanInProgress, caregiverPlanDetails, childTaskInProgress
+	// Shared
+	loadingPage,
+	rolesPage,
+	notificationsPage,
+	// Auth
+	caregiverSignInPage,
+	caregiverSignUpPage,
+	childProfilesPage,
+	childSignInPage,
+	// Caregiver
+	caregiverPanel,
+	caregiverChildDashboard,
+	caregiverPlans,
+	caregiverPlanForm,
+	caregiverPlanDetails,
+	caregiverAwards,
+	caregiverAwardForm,
+	caregiverBadgeForm,
+	caregiverStatistics,
+	// Child
+	childPanel,
+	childAwards,
+	childAchievements,
+	childPlanInProgress,
+	childTaskInProgress
 }
 
 extension AppPageName on AppPage {
@@ -15,8 +36,10 @@ extension AppPageName on AppPage {
 		AppPage.childProfilesPage: '/auth/child-profiles-page',
 		AppPage.childSignInPage: '/auth/child-sign-in-page',
 		AppPage.caregiverPanel: '/caregiver/panel-page',
+		AppPage.caregiverChildDashboard: '/caregiver/child-dashboard',
 		AppPage.caregiverPlans: '/caregiver/plans-page',
 		AppPage.caregiverPlanForm: '/caregiver/plan-form-page',
+		AppPage.caregiverPlanDetails: '/caregiver/plan-details',
 		AppPage.caregiverAwards: '/caregiver/awards-page',
 		AppPage.caregiverAwardForm: '/caregiver/awards-form-page',
 		AppPage.caregiverBadgeForm: '/caregiver/badges-form-page',
@@ -24,7 +47,6 @@ extension AppPageName on AppPage {
 		AppPage.childPanel: '/child/panel-page',
 		AppPage.childAwards: '/child/awards-page',
 		AppPage.childAchievements: '/child/achievements-page',
-		AppPage.caregiverPlanDetails: '/caregiver/plan-details',
 		AppPage.childPlanInProgress: '/child/plan-in-progress-page',
 		AppPage.childTaskInProgress: '/child/task-in-progress-page'
 	}[this];

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/theme_config.dart';
-import 'package:lottie/lottie.dart';
+import 'package:fokus/widgets/general/app_loader.dart';
 
 class AuthGroup extends StatelessWidget {
 	final String title;
@@ -52,20 +52,7 @@ class AuthGroup extends StatelessWidget {
 									child: AnimatedSwitcher(
 										duration: Duration(milliseconds: 500),
 										switchOutCurve: Curves.fastOutSlowIn,
-										child: isLoading ?
-											Container(
-												decoration: BoxDecoration(
-													color: Colors.black26,
-													borderRadius: BorderRadius.all(Radius.circular(AppBoxProperties.roundedCornersRadius))
-												),
-												alignment: Alignment.center,
-												child: SizedBox(
-													width: 80.0,
-													height: 80.0,
-													child: Lottie.asset('assets/animation/sunflower.json')
-												)
-											)
-											: SizedBox.shrink()
+										child: isLoading ? AppLoader(hasOverlay: true): SizedBox.shrink()
 									)
 								)
 							]

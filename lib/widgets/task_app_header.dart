@@ -178,10 +178,16 @@ class SizedAppHeaderState extends State<SizedAppHeader> with TickerProviderState
 							shouldLoop: true,
 							blastDirection: 0,
 							confettiController: _confetti,
+							numberOfParticles: 5,
+							maxBlastForce: 30,
+							minBlastForce: 2,
 						),
 						ConfettiWidget(
 							shouldLoop: true,
 							confettiController: _confetti,
+							numberOfParticles: 5,
+							maxBlastForce: 30,
+							minBlastForce: 2,
 						),
 					],
 				)

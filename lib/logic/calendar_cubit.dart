@@ -29,7 +29,7 @@ class CalendarCubit extends Cubit<CalendarState> {
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final PlanRepeatabilityService _repeatabilityService = GetIt.I<PlanRepeatabilityService>();
 
-  CalendarCubit(this._activeUser) : super(CalendarState());
+  CalendarCubit(this._activeUser) : super(CalendarState(day: Date.now()));
 
   void loadInitialData() async {
 	  var activeUser = _activeUser();
@@ -46,15 +46,18 @@ class CalendarCubit extends Cubit<CalendarState> {
 		  _childNames = {activeUser.id: activeUser.name};
 		  filter = {activeUser: true};
 	  }
-	  var events = await _filterData(filter, state.month);
+	  var events = await _filterData(filter, state.day);
 	  emit(state.copyWith(children: filter, events: events));
   }
   
-  void childFilterChanged(Map<UIChild, bool> filter) async => emit(state.copyWith(children: filter, events: await _filterData(filter, state.month)));
+  void childFilterChanged(Map<UIChild, bool> filter) async => emit(state.copyWith(children: filter, events: await _filterData(filter, state.day)));
 
-  void monthChanged(Date month) async => emit(state.copyWith(month: month, events: await _filterData(state.children, month)));
+  void dayChanged(Date day) async => emit(state.copyWith(day: day));
 
-	Future<Map<Date, List<UIPlan>>> _filterData(Map<UIChild, bool> filter, Date month) async {
+  void monthChanged(Date month) async => emit(state.copyWith(day: month, events: await _filterData(state.children, month)));
+
+	Future<Map<Date, List<UIPlan>>> _filterData(Map<UIChild, bool> filter, Date date) async {
+		Date month = Date.fromDate(Utils.firstDayOfMonth(date));
 		if (filter == null)
 			return {};
 		var ids = filter.keys.where((child) => filter[child]).map((child) => child.id).toSet();
@@ -127,19 +130,19 @@ class CalendarCubit extends Cubit<CalendarState> {
 
 class CalendarState extends Equatable {
 	final Map<UIChild, bool> children;
-	final Date month;
+	final Date day;
 	final Map<Date, List<UIPlan>> events;
 
-	const CalendarState({this.month, this.children, this.events});
+	const CalendarState({this.day, this.children, this.events});
 
-	CalendarState copyWith({Map<UIChild, bool> children, Map<Date, List<UIPlan>> events, Date month}) {
+	CalendarState copyWith({Map<UIChild, bool> children, Map<Date, List<UIPlan>> events, Date day}) {
 	  return CalendarState(
 		  children: children ?? this.children,
 		  events: events ?? this.events,
-		  month: month ?? this.month
+		  day: day ?? this.day
 	  );
 	}
 
 	@override
-	List<Object> get props => [events, children, month];
+	List<Object> get props => [events, children, day];
 }

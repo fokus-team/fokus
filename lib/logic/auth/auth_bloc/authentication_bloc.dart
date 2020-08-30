@@ -12,6 +12,8 @@ import 'package:fokus/model/db/user/caregiver.dart';
 import 'package:fokus/model/db/user/user_role.dart';
 import 'package:fokus/model/db/user/user.dart';
 import 'package:fokus/services/data/data_repository.dart';
+import 'package:fokus/services/active_user_observer.dart';
+import 'package:fokus/services/notification_service.dart';
 import 'package:fokus/services/plan_keeper_service.dart';
 import 'package:fokus/services/auth/authentication_repository.dart';
 import 'package:fokus/services/app_config/app_config_repository.dart';
@@ -22,14 +24,16 @@ part 'authentication_state.dart';
 class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
 	final Logger _logger = Logger('AuthenticationBloc');
 
-	AuthenticationRepository _authenticationRepository = GetIt.I<AuthenticationRepository>();
-	AppConfigRepository _appConfigRepository = GetIt.I<AppConfigRepository>();
-	DataRepository _dataRepository = GetIt.I<DataRepository>();
-	final PlanKeeperService _outdatedDataService = GetIt.I<PlanKeeperService>();
+	final AuthenticationRepository _authenticationRepository = GetIt.I<AuthenticationRepository>();
+	final AppConfigRepository _appConfigRepository = GetIt.I<AppConfigRepository>();
+	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 
 	StreamSubscription<AuthenticatedUser> _userSubscription;
+	List<ActiveUserObserver> _userObservers = [];
 
   AuthenticationBloc() : super(AuthenticationState.unknown()) {
+	  observeUserChanges(GetIt.I<PlanKeeperService>());
+	  observeUserChanges(GetIt.I<NotificationService>());
 	  _userSubscription = _authenticationRepository.user.listen((user) => add(AuthenticationUserChanged(user)));
   }
 
@@ -39,10 +43,10 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 		  yield await _processUserChangedEvent(event);
 	  else if (event is AuthenticationChildSignInRequested) {
 			_appConfigRepository.signInChild(event.child.id);
-			_outdatedDataService.onUserSignOut();
+			_onUserSignOut(event.child);
 			yield await _signInUser(event.child);
 	  } else if (event is AuthenticationSignOutRequested) {
-	  	_outdatedDataService.onUserSignOut();
+	  	_onUserSignOut(state.user.toDBModel());
 		  if (state.user.role == UserRole.caregiver)
 		    _authenticationRepository.signOut();
 		  else {
@@ -75,7 +79,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
   }
 
 	Future<AuthenticationState> _signInUser(User user) async {
-	  await _outdatedDataService.onUserSignIn(user.id, user.role);
+	  _onUserSignIn(user);
 	  return AuthenticationState.authenticated(UIUser.typedFromDBModel(user));
   }
 
@@ -84,4 +88,8 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 		_userSubscription?.cancel();
 		return super.close();
 	}
+
+	void observeUserChanges(ActiveUserObserver observer) => _userObservers.add(observer);
+  void _onUserSignIn(User user) => _userObservers.forEach((observer) => observer.onUserSignIn(user));
+  void _onUserSignOut(User user) => _userObservers.forEach((observer) => observer.onUserSignOut(user));
 }

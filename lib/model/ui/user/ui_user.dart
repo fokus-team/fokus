@@ -20,6 +20,8 @@ class UIUser extends Equatable {
 
 	factory UIUser.typedFromDBModel(User user) => user.role == UserRole.caregiver ? UICaregiver.fromDBModel(user) : UIChild.fromDBModel(user);
 
+	User toDBModel() => User(id: id, name: name, role: role, avatar: avatar);
+
 	@override
   List<Object> get props => [id, name, avatar];
 

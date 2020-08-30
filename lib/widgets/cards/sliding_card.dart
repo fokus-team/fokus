@@ -17,48 +17,40 @@ class SlidingCardState extends State<SlidingCard> with SingleTickerProviderState
 
 	@override
   Widget build(BuildContext context) {
-    return Padding(
-			padding: const EdgeInsets.only(top: 325),
-			child: SlideTransition(
-				position: _offsetAnimation,
-				child: NotificationListener<OverscrollIndicatorNotification>(
-					onNotification: (overscroll) {
-						overscroll.disallowGlow();
-						return false;
-					},
-					child: Padding(
-						padding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 0),
-						child: ConstrainedBox(
-							constraints: BoxConstraints(
-								maxHeight: MediaQuery.of(context).size.height*0.39
-							),
-							child: ListView(
-								shrinkWrap: false,
-								controller: _scrollController,
-								physics: ClampingScrollPhysics(),
-								padding: EdgeInsets.all(0),
-								children: [
-									Container(
-										decoration: AppBoxProperties.elevatedContainer.copyWith(color: this.widget.cardColor, borderRadius: BorderRadius.vertical(bottom: Radius.circular(4))),
-										child: Padding(
-											padding: const EdgeInsets.all(12.0),
-											child: Column(
-												children: [
-													...this.widget.content
-												],
-											),
-										),
-									),
-									SizedBox(
-										height: 60,
-									)
-								]
-							),
-						),
-					),
-				),
-			),
-		);
+    return SlideTransition(
+    	position: _offsetAnimation,
+    	child: NotificationListener<OverscrollIndicatorNotification>(
+    		onNotification: (overscroll) {
+    			overscroll.disallowGlow();
+    			return false;
+    		},
+    		child: Padding(
+    			padding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 0, top: 0),
+    			child: ListView(
+    				shrinkWrap: false,
+    				controller: _scrollController,
+    				physics: ClampingScrollPhysics(),
+    				padding: EdgeInsets.all(0),
+    				children: [
+    					Container(
+    						decoration: AppBoxProperties.elevatedContainer.copyWith(color: this.widget.cardColor, borderRadius: BorderRadius.vertical(bottom: Radius.circular(4))),
+    						child: Padding(
+    							padding: const EdgeInsets.all(12.0),
+    							child: Column(
+    								children: [
+    									...this.widget.content
+    								],
+    							),
+    						),
+    					),
+    					SizedBox(
+    						height: 60,
+    					)
+    				]
+    			),
+    		),
+    	),
+    );
   }
 
   @override
@@ -94,6 +86,10 @@ class SlidingCardState extends State<SlidingCard> with SingleTickerProviderState
 			curve: Curves.easeInOutQuint
 		);
 		_slideController.forward();
+	}
+
+	void jumpToEnd() {
+		_scrollController.jumpTo(_scrollController.position.maxScrollExtent);
 	}
 
 	@override

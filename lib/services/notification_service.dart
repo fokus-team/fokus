@@ -9,7 +9,7 @@ import 'package:logging/logging.dart';
 import 'active_user_observer.dart';
 
 class NotificationService implements ActiveUserObserver {
-	final Logger _logger = Logger('ChildPlansCubit');
+	static Logger _logger = Logger('ChildPlansCubit');
 
 	final _firebaseMessaging = FirebaseMessaging();
 	static var _notificationPlugin = FlutterLocalNotificationsPlugin();
@@ -52,19 +52,13 @@ class NotificationService implements ActiveUserObserver {
 	}
 
 	static Future<dynamic> _bgMessageHandler(Map<String, dynamic> message) async {
-		if (message.containsKey('data')) {
-			final data = message['data'];
-
-			final title = data['title'];
-			final body = data['message'];
-
-			await _showNotification(title, body);
+		Map<dynamic, dynamic> content;
+		if (!message.containsKey('notification')) {
+			content = message['data'];
+		} else {
+			content = message['notification'];
 		}
-		if (message.containsKey('notification')) {
-			// Handle notification message
-			final dynamic notification = message['notification'];
-		}
-		// Or do other work.
+		await _showNotification(content['title'], content['body']);
 	}
 
 	static Future _showNotification(String title, String message) async {

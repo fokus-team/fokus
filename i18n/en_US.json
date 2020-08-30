@@ -87,6 +87,37 @@
 					"activePlan": "1 plan currently in progress"
 				}
 			},
+			"childDashboard": {
+				"header": {
+					"title": "Child details",
+					"childCode": "Child code",
+					"assignPlanButton": "Manage plans",
+					"assignPlanTitle": "Choose plans to assign",
+					"assignBadgeButton": "Award badge",
+					"assignBadgeTitle": "Choose badges to award",
+					"noBadgesToAssignText": "No available badges to award",
+					"tabs": {
+						"plans": "Plans",
+						"awards": "Awards",
+						"achievements": "Achievements"
+					}
+				},
+				"content": {
+					"plansTitle": "Today's plans",
+					"noPlansText": "No actions planned for today",
+					"openCalendarButton": "Open calendar",
+					"awardsTitle": "Claimed awards",
+					"noAwardsText": "No claimed awards to display",
+					"achievementsTitle": "Awarded badges",
+					"noAchievementsText": "No awarded badges to display",
+					"alerts": {
+						"noPlansAdded": "No plan added yet. Add a plan to be able to assign it to a child.",
+						"unratedTasksExist": "There are unrated tasks. Visit the rating page to assign points for completed tasks.",
+						"noAwardsAdded": "The list of awards available for purchase is empty. Add an award for a child to claim.",
+						"noBadgesAdded": "The list of badges is empty. Add a badge to be able to assign it to a child."
+					}
+				}
+			},
 			"plans": {
 				"header": {
 					"title": "Plans",

@@ -1,10 +1,13 @@
 import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' as flutter;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:fokus/model/db/user/user.dart';
+import 'package:googleapis/fcm/v1.dart';
+import 'package:googleapis_auth/auth.dart';
+import 'package:googleapis_auth/auth_io.dart';
 import 'package:logging/logging.dart';
+import 'package:fokus/model/db/user/user.dart';
 
 import 'active_user_observer.dart';
 
@@ -13,11 +16,21 @@ class NotificationService implements ActiveUserObserver {
 
 	final _firebaseMessaging = FirebaseMessaging();
 	static var _notificationPlugin = FlutterLocalNotificationsPlugin();
+	ProjectsMessagesResourceApi _messagesApi;
 
 	NotificationService() {
 		_configureNotificationPlugin();
 		_configureMessageHandler();
+		//_configureFCMApi();
 		_printToken();
+	}
+
+	void _configureFCMApi() {
+		final credentials = ServiceAccountCredentials.fromJson('');
+		final scopes = const ['https://www.googleapis.com/auth/firebase.messaging'];
+		clientViaServiceAccount(credentials, scopes).then((httpClient) {
+			_messagesApi = new FcmApi(httpClient).projects.messages;
+		});
 	}
 
 	void _configureNotificationPlugin() async {
@@ -62,7 +75,7 @@ class NotificationService implements ActiveUserObserver {
 	}
 
 	static Future _showNotification(String title, String message) async {
-		var androidPlatformChannelSpecifics = AndroidNotificationDetails('fcm_default_channel', 'Miscellaneous', '', color: Color(0xfdbf00));
+		var androidPlatformChannelSpecifics = AndroidNotificationDetails('fcm_default_channel', 'Miscellaneous', '', color: flutter.Color(0xfdbf00));
 		var iOSPlatformChannelSpecifics = IOSNotificationDetails();
 		var platformChannelSpecifics = NotificationDetails(androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
 		await _notificationPlugin.show(0, title, message, platformChannelSpecifics);

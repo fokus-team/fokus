@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:badges/badges.dart';
 import 'package:date_utils/date_utils.dart';
 import 'package:flutter/material.dart';
@@ -36,6 +38,7 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 	List<UIChild> _selectedChildren = [];
 
 	final Duration _animationDuration = Duration(milliseconds: 250);
+	final Color notAssignedPlanMarkerColor = Colors.grey[400];
 
 	List<Color> markerColors = [
 		Colors.green,
@@ -77,10 +80,11 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 								onTap: () => {},
 								child: Container(
 								  child: BlocBuilder<CalendarCubit, CalendarState>(
+                    buildWhen: (oldState, newState) => oldState.children != newState.children,
 									  builder: (context, state) {
 										  if (state.children == null) {
 											  context.bloc<CalendarCubit>().loadInitialData();
-											  return buildChildPicker(loading: true);
+											  return _buildChildPicker(loading: true);
 										  }
 											int markerIndex = 0;
 											_selectedChildren = [];
@@ -93,7 +97,8 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 													markerIndex = 0;
 												_childrenColors[child.id] = markerColors[markerIndex++];
 											}
-									    return buildChildPicker(children: state.children);
+											context.bloc<CalendarCubit>().setChildrenColorsReady();
+									    return _buildChildPicker(children: state.children);
 									  },
 								  ),
 								)
@@ -106,13 +111,13 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 								padding: EdgeInsets.symmetric(horizontal: AppBoxProperties.screenEdgePadding),
 								child: BlocBuilder<CalendarCubit, CalendarState>(
 									builder: (context, state) {
-										return buildCalendar(state.events);
+										return _buildCalendar(state.events);
 									},
 								)
 							),
 							Padding(
 								padding: EdgeInsets.only(top: AppBoxProperties.sectionPadding),
-								child: buildPlanList()
+								child: _buildPlanList()
 							)
 						]
 					)
@@ -121,7 +126,7 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 		);
 	}
 
-	Widget buildPlanList(){
+	Widget _buildPlanList(){
 		return BlocBuilder<CalendarCubit, CalendarState>(
 			builder: (context, state) {
 				return Segment(
@@ -130,13 +135,16 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 					noElementsMessage: '$_pageKey.content.noPlansOnDateTitle',
 					noElementsIcon: Icons.description,
 					elements: [
-						if(state.events != null && state.events[state.day] != null)
+						if(state.events != null && state.childrenColorsReady && state.events[state.day] != null)
 							for(UIPlan plan in state.events[state.day])
 								ItemCard(
 									title: plan.name,
-									onTapped: () => Navigator.pushNamed(context, AppPage.caregiverPlanDetails.name, arguments: {'planID': plan.id}),
-									subtitle: AppLocales.of(context).translate('$_pageKey.content.planAssignedToSubTitle'),
-									chips: plan.assignedTo != null ? plan.assignedTo.map((childID) {
+									onTapped: () => Navigator.pushNamed(context, AppPage.caregiverPlanDetails.name, arguments: plan.id),
+									subtitle: AppLocales.of(context).translate(
+										'$_pageKey.content.${plan.assignedTo.isNotEmpty ? 'planAssignedToSubtitle' : 'planNotAssignedToSubtitle'}'
+									),
+									isActive: plan.assignedTo.isNotEmpty,
+									chips: plan.assignedTo.isNotEmpty ? plan.assignedTo.map((childID) {
 										var child = state.children.keys.firstWhere((element) => element.id == childID, orElse: () => null);
 										return child != null ? AttributeChip(
 											content: child.name,
@@ -150,7 +158,7 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 		);
 	}
 
-	Widget buildTableCalendarCell(DateTime date, {bool isCellSelected = false}) {
+	Widget _buildTableCalendarCell(DateTime date, {bool isCellSelected = false}) {
 		return Container(
 			margin: const EdgeInsets.all(4.0),
 			decoration: BoxDecoration(
@@ -176,7 +184,7 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 		);
 	}
 
-	TableCalendar buildCalendar(Map<Date, List<UIPlan>> events) {
+	TableCalendar _buildCalendar(Map<Date, List<UIPlan>> events) {
 	  return TableCalendar(
 			calendarController: _calendarController,
 			locale: AppLocales.of(context).locale.toString(),
@@ -192,23 +200,26 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 			),
 			events: events,
 			onDaySelected: onDayChanged,
-			onCalendarCreated: onMonthChanged,
+			onCalendarCreated: onCalendarCreated,
 			onVisibleDaysChanged: onMonthChanged,
 			builders: CalendarBuilders(
 				selectedDayBuilder: (context, date, _) =>
           FadeTransition(
             opacity: Tween(begin: 0.0, end: 1.0).animate(_animationController),
-            child: buildTableCalendarCell(date, isCellSelected: true)
+            child: _buildTableCalendarCell(date, isCellSelected: true)
 					),
-        todayDayBuilder: (context, date, _) => buildTableCalendarCell(date),
+        todayDayBuilder: (context, date, _) => _buildTableCalendarCell(date),
 				markersBuilder: (context, date, events, holidays) {
 					final children = <Widget>[];
 					if (events.isNotEmpty) {
 						Set<Color> childrenMarkers = {};
 						events.forEach((plan) {
-							plan.assignedTo.forEach((childID) {
-								if(_selectedChildren.isEmpty || _selectedChildren.firstWhere((element) => element.id == childID, orElse: () => null) != null)
-									childrenMarkers.add(_childrenColors[childID]);
+							if(plan.assignedTo.isEmpty)
+								childrenMarkers.add(notAssignedPlanMarkerColor);
+							else
+								plan.assignedTo.forEach((childID) {
+									if(_selectedChildren.isEmpty || _selectedChildren.firstWhere((element) => element.id == childID, orElse: () => null) != null)
+										childrenMarkers.add(_childrenColors[childID]);
 							});
 						});
 						children.add(
@@ -240,12 +251,16 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 		_animationController.forward(from: 0.0);
 	}
 
-	void onMonthChanged(DateTime first, DateTime last, CalendarFormat format) {
+	void onCalendarCreated(DateTime first, DateTime last, CalendarFormat format) {
 		context.bloc<CalendarCubit>().monthChanged(Date.fromDate(_calendarController.focusedDay));
+	}
+
+	void onMonthChanged(DateTime first, DateTime last, CalendarFormat format) {
+		onCalendarCreated(first, last, format);
 		_calendarController.setSelectedDay(Date.fromDate(Utils.firstDayOfMonth(_calendarController.focusedDay)));
 	}
 
-	SmartSelect<UIChild> buildChildPicker({Map<UIChild, bool> children = const {}, bool loading = false}) {
+	SmartSelect<UIChild> _buildChildPicker({Map<UIChild, bool> children = const {}, bool loading = false}) {
 	  return SmartSelect<UIChild>.multiple(
 	    title: AppLocales.of(context).translate('$_pageKey.header.filterPlansTitle'),
 	    value: _selectedChildren,

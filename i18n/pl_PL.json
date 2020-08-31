@@ -127,7 +127,8 @@
 				"content": {
 					"plansOnDateTitle": "Plany na dzień {DATE}",
 					"noPlansOnDateTitle": "Brak aktywnych planów na ten dzień",
-					"planAssignedToSubTitle": "Przypisany do"
+					"planAssignedToSubtitle": "Przypisany do",
+					"planNotAssignedToSubtitle": "Plan nieprzypisany"
 				}
 			},
 			"plans": {

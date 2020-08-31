@@ -14,11 +14,9 @@ import 'package:fokus/model/db/date_span.dart';
 import 'package:fokus/model/db/plan/plan.dart';
 import 'package:fokus/model/db/plan/plan_instance.dart';
 import 'package:fokus/model/ui/user/ui_caregiver.dart';
-import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/model/ui/user/ui_child.dart';
 import 'package:fokus/services/plan_repeatability_service.dart';
 import 'package:fokus/utils/collection_utils.dart';
-import 'package:fokus/utils/string_utils.dart';
 
 class CalendarCubit extends Cubit<CalendarState> {
 	final ActiveUserFunction _activeUser;
@@ -30,7 +28,7 @@ class CalendarCubit extends Cubit<CalendarState> {
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final PlanRepeatabilityService _repeatabilityService = GetIt.I<PlanRepeatabilityService>();
 
-  CalendarCubit(this._childSetByID, this._activeUser) : super(CalendarState(day: Date.now()));
+  CalendarCubit(this._childSetByID, this._activeUser) : super(CalendarState(day: Date.now(), childrenColorsReady: false));
 
   void loadInitialData() async {
 	  var activeUser = _activeUser();
@@ -69,21 +67,24 @@ class CalendarCubit extends Cubit<CalendarState> {
 		Date month = Date.fromDate(Utils.firstDayOfMonth(date));
 		if (filter == null)
 			return {};
-		var ids = filter.values.every((element) => element == false) ?
+
+		bool filterNotApplied = filter.values.every((element) => element == false);
+		var ids = filterNotApplied ?
 			filter.keys.map((child) => child.id).toSet()
 			: filter.keys.where((child) => filter[child]).map((child) => child.id).toSet();
+
 		Map<Date, List<UIPlan>> events = {};
-		if (ids.length > 0) {
+		//if (ids.length > 0) {
 			var monthEvents = _allEvents[month] ?? await _loadDataForMonth(month);
 			for (var day in monthEvents.entries) {
 				List<UIPlan> plans = [];
 				for (var plan in day.value) {
-					if (ids.any(plan.assignedTo.contains))
-						plans.add(plan.copyWith(description: _getDescription(plan.assignedTo.where(ids.contains))));
+					if (filterNotApplied || (!filterNotApplied && ids.any(plan.assignedTo.contains)))
+						plans.add(plan/*.copyWith(description: _getDescription(plan.assignedTo.where(ids.contains)))*/);
 				}
 				events[day.key] = plans;
 			}
-		}
+		//}
 		return events;
 	}
 
@@ -130,30 +131,27 @@ class CalendarCubit extends Cubit<CalendarState> {
 
 	DateSpan<Date> _getMonthSpan(Date month) => DateSpan(from: month, to: Date.fromDate(Utils.nextMonth(month)));
 
-	TranslateFunc _getDescription(Iterable<ObjectId> children) {
-		return _getAssignedToDescription(children.map((id) => _childNames[id]).toList());
-	}
+  void setChildrenColorsReady() async => emit(state.copyWith(childrenColorsReady: true));
 
-	TranslateFunc _getAssignedToDescription(List<String> children) {
-		return (context) => AppLocales.of(context).translate('assignedTo') + ': ' + displayJoin(children, AppLocales.of(context).translate('and'));
-	}
 }
 
 class CalendarState extends Equatable {
 	final Map<UIChild, bool> children;
 	final Date day;
 	final Map<Date, List<UIPlan>> events;
+	final bool childrenColorsReady;
 
-	const CalendarState({this.day, this.children, this.events});
+	const CalendarState({this.day, this.children, this.events, this.childrenColorsReady});
 
-	CalendarState copyWith({Map<UIChild, bool> children, Map<Date, List<UIPlan>> events, Date day}) {
+	CalendarState copyWith({Map<UIChild, bool> children, Map<Date, List<UIPlan>> events, Date day, bool childrenColorsReady}) {
 	  return CalendarState(
 		  children: children ?? this.children,
 		  events: events ?? this.events,
-		  day: day ?? this.day
+		  day: day ?? this.day,
+			childrenColorsReady: childrenColorsReady ?? this.childrenColorsReady
 	  );
 	}
 
 	@override
-	List<Object> get props => [events, children, day];
+	List<Object> get props => [events, children, day, childrenColorsReady];
 }

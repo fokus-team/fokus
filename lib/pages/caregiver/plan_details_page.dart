@@ -29,9 +29,7 @@ class _CaregiverPlanDetailsPageState extends State<CaregiverPlanDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
-		Map<String, Mongo.ObjectId> args = ModalRoute.of(context).settings.arguments;
-		if(args != null)
-			planID = args['planID'];
+		Mongo.ObjectId planID = ModalRoute.of(context).settings.arguments;
 
 		return Scaffold(
 			body: Column(

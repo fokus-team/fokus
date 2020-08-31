@@ -1,4 +1,3 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -30,14 +29,14 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 	final GlobalKey<SlidingCardState> completingCard = GlobalKey<SlidingCardState>();
 	final GlobalKey<SlidingCardState> rejectCard = GlobalKey<SlidingCardState>();
 	final GlobalKey<SlidingCardState> doneCard = GlobalKey<SlidingCardState>();
-	final GlobalKey<SizedAppHeaderState> header = GlobalKey<SizedAppHeaderState>();
+	final GlobalKey<TaskAppHeaderState> header = GlobalKey<TaskAppHeaderState>();
 
 
 
 	@override
   Widget build(BuildContext context) {
   	return Scaffold(
-			appBar: SizedAppHeader.widget(
+			appBar: TaskAppHeader(
 				height: 330,
 				title: '$_pageKey.header.title',
 				appHeaderWidget: ItemCard(
@@ -57,7 +56,6 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 					],
 				),
 				helpPage: 'plan_info',
-				timerCubitTitle: '$_pageKey.content.timeLeft',
 				key: header,
 				breakPerformingTransition: _breakPerformingTransition,
 				isBreak: false
@@ -96,7 +94,7 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 								child: Lottie.asset('assets/animation/meditating_little_man.json')
 							),
 							Text(
-								"Trwa przerwa, odpocznij chwilę!",
+								AppLocales.of(context).translate('$_pageKey.cards.break.title'),
 								style: Theme.of(context).textTheme.headline1.copyWith(color: Colors.white),
 								textAlign: TextAlign.center
 							),
@@ -122,14 +120,14 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 								child: Lottie.asset('assets/animation/cheering_little_man.json')
 							),
 							Text(
-								"Zadanie wykonane!",
+								AppLocales.of(context).translate('$_pageKey.cards.done.title'),
 								style: Theme.of(context).textTheme.headline1.copyWith(color: Colors.white),
 								textAlign: TextAlign.center
 							),
 							Padding(
 								padding: const EdgeInsets.only(top: 24.0),
 								child: Text(
-									"Punkty otrzymasz po zatwierdzeniu przez opiekuna.",
+									AppLocales.of(context).translate('$_pageKey.cards.done.content1'),
 									style: Theme.of(context).textTheme.subtitle1.copyWith(color: Colors.white),
 									textAlign: TextAlign.justify,
 								)
@@ -137,7 +135,7 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 							Padding(
 								padding: const EdgeInsets.only(top: 16.0),
 								child: Text(
-									"Kontynuuj wykonywanie zadań!",
+									AppLocales.of(context).translate('$_pageKey.cards.done.content2'),
 									style: Theme.of(context).textTheme.subtitle2.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
 									textAlign: TextAlign.justify,
 								)
@@ -153,14 +151,14 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 								child: Icon(Icons.close, size: 100, color: Colors.white,)
 							),
 							Text(
-								"Zadanie anulowane",
+								AppLocales.of(context).translate('$_pageKey.cards.rejected.title'),
 								style: Theme.of(context).textTheme.headline1.copyWith(color: Colors.white),
 								textAlign: TextAlign.center
 							),
 							Padding(
 								padding: const EdgeInsets.only(top: 24.0),
 								child: Text(
-									"Możesz ponownie wykonać to zadanie \nlub przejść do następnego!",
+									AppLocales.of(context).translate('$_pageKey.cards.rejected.content1'),
 									style: Theme.of(context).textTheme.subtitle1.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
 									textAlign: TextAlign.center,
 								)
@@ -181,7 +179,7 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 			  		  padding: const EdgeInsets.symmetric(horizontal: 84.0),
 			  		  child: Center(
 			  		    child: Text(
-			  		    	"Wykonano zadanie?",
+			  		    	AppLocales.of(context).translate('$_pageKey.content.isCompleted'),
 			  		    	textAlign: TextAlign.center,),
 			  		  ),
 			  		),
@@ -215,7 +213,7 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 					  				Icon(Icons.format_list_bulleted,),
 					  		    Padding(
 					  		      padding: const EdgeInsets.only(left: 8.0),
-					  		      child: AutoSizeText("Powrót"),
+					  		      child: Text(AppLocales.of(context).translate('actions.return')),
 					  		    ),
 					  		  ],
 					  		),

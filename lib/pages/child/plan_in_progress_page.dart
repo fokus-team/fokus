@@ -26,8 +26,10 @@ class ChildPlanInProgressPage extends StatefulWidget {
 
 class _ChildPlanInProgressPageState extends State<ChildPlanInProgressPage> {
 	final String _pageKey = 'page.childSection.planInProgress';
+	final Function navigate = (BuildContext context, UITaskInstance task) => Navigator.of(context).pushNamed(AppPage.childTaskInProgress.name, arguments: task.id);
 
-  @override
+
+	@override
   Widget build(BuildContext context) {
 		return Scaffold(
 			body: Column(
@@ -76,7 +78,7 @@ class _ChildPlanInProgressPageState extends State<ChildPlanInProgressPage> {
 								if (task.timer > 0) getTimeChip(task),
 								if (task.points.quantity != 0) getCurrencyChip(task)
 							],
-							actionButton:	ItemCardActionButton(color: Colors.teal, icon: Icons.play_arrow, onTapped: () => Navigator.of(context).pushNamed(AppPage.childTaskInProgress.name, arguments: task.id)),
+							actionButton:	ItemCardActionButton(color: Colors.teal, icon: Icons.play_arrow, onTapped: () => navigate(context, task)),
 						)
 					else if(task.taskUiType == TaskUIType.stopped)
 							ItemCard(
@@ -88,7 +90,7 @@ class _ChildPlanInProgressPageState extends State<ChildPlanInProgressPage> {
 									if (task.timer > 0) getTimeChip(task),
 									if (task.points.quantity != 0) getCurrencyChip(task)
 								],
-								actionButton:	ItemCardActionButton(color: Colors.teal, icon: Icons.play_arrow, onTapped: () => Navigator.of(context).pushNamed(AppPage.childTaskInProgress.name, arguments: task.id)),
+								actionButton:	ItemCardActionButton(color: Colors.teal, icon: Icons.play_arrow, onTapped: () => navigate(context, task)),
 							)
 					else if(task.taskUiType.inProgress)
 						BlocProvider<TimerCubit>(
@@ -115,9 +117,7 @@ class _ChildPlanInProgressPageState extends State<ChildPlanInProgressPage> {
 											),
 										]
 								],
-								actionButton: ItemCardActionButton(
-									color: AppColors.childActionColor, icon: Icons.launch, onTapped: () => Navigator.of(context).pushNamed(AppPage.childTaskInProgress.name, arguments: task.id)
-								),
+								actionButton: ItemCardActionButton(color: AppColors.childActionColor, icon: Icons.launch, onTapped: () => navigate(context, task)),
 							)
 						)
 					else if(task.taskUiType == TaskUIType.queued)

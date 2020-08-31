@@ -414,7 +414,7 @@
 					},
 					"rejected": {
 						"title": "Task cancelled",
-						"content1": "You can perform the task again \nor move to the next one!"
+						"content1": "You can redo the task \nor move to the next one!"
 					}
 				}
 			},

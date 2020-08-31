@@ -37,9 +37,7 @@ class SlidingCardState extends State<SlidingCard> with SingleTickerProviderState
     						child: Padding(
     							padding: const EdgeInsets.all(12.0),
     							child: Column(
-    								children: [
-    									...this.widget.content
-    								],
+    								children: this.widget.content
     							),
     						),
     					),

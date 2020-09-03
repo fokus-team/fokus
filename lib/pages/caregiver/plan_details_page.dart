@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:mongo_dart/mongo_dart.dart' as Mongo;
+import 'package:fokus/logic/caregiver_tasks_cubit.dart';
+import 'package:fokus/model/ui/plan/ui_plan.dart';
+import 'package:fokus/model/ui/task/ui_task.dart';
+import 'package:fokus/widgets/loadable_bloc_builder.dart';
 
-import 'package:fokus/model/currency_type.dart';
 import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/ui/gamification/ui_currency.dart';
 import 'package:fokus/model/ui/form/task_form_model.dart';
@@ -32,131 +34,110 @@ class _CaregiverPlanDetailsPageState extends State<CaregiverPlanDetailsPage> {
 			body: Column(
 				crossAxisAlignment: CrossAxisAlignment.start,
 				children: [
-					AppHeader.widget(
-						title: '$_pageKey.header.title',
-						appHeaderWidget: ItemCard(
-							title: "Sprzątanie pokoju",
-							subtitle: "Co każdy poniedziałek, środę, czwartek i piątek",
-							chips:
-							<Widget>[
-								AttributeChip.withIcon(
-									content: AppLocales.of(context).translate('page.caregiverSection.plans.content.tasks', {'NUM_TASKS': 1}),
-									color: Colors.indigo,
-									icon: Icons.layers
-								)
-							],
-						),
-						helpPage: 'plan_info',
-						popupMenuWidget: PopupMenuList(
-							lightTheme: true,
-							items: [
-								UIButton.ofType(ButtonType.edit, () => Navigator.of(context).pushNamed(AppPage.caregiverPlanForm.name, arguments: Mongo.ObjectId.parse('5f3ad3cf4ea005fba95da86b'))),
-								UIButton.ofType(ButtonType.delete, () => showBasicDialog(
-									context,
-									GeneralDialog.confirm(
-										title: AppLocales.of(context).translate('alert.deletePlan'),
-										content: AppLocales.of(context).translate('alert.confirmPlanDeletion'),
-										confirmText: 'actions.delete',
-										confirmAction: () => Navigator.of(context).pop(),
-										confirmColor: Colors.red
-									)
-								))
-							],
-						)
-					),
-					AppSegments(segments: _buildPanelSegments())
+					LoadableBlocBuilder<CaregiverTasksCubit>(
+						builder: (context, state) => AppSegments(segments: _buildPanelSegments(state)),
+					)
 				],
 			),
 		);
 
 	}
 
-	List<Segment> _buildPanelSegments() {
+	List<Widget> _buildPanelSegments(CaregiverTasksLoadSuccess state) {
+  	UIPlan uiPlan = state.uiPlan;
+  	List<UITask> mandatoryTasks = state.tasks.where((task) => task.optional == false).toList();
+		List<UITask> optionalTasks = state.tasks.where((task) => task.optional == true).toList();
+
 		return [
+			_getCardHeader(uiPlan),
 			_getTasksSegment(
-				title: '$_pageKey.content.mandatoryTasks'
+				title: '$_pageKey.content.mandatoryTasks',
+				tasks: mandatoryTasks
 			),
 			_getAdditionalTasksSegment(
-				title: '$_pageKey.content.additionalTasks'
+				title: '$_pageKey.content.additionalTasks',
+				tasks: optionalTasks
 			)
 		];
 	}
 
-	Segment _getTasksSegment({String title, String noElementsMessage}) {
+	Segment _getTasksSegment({String title, String noElementsMessage, List<UITask> tasks}) {
 		return Segment(
 			title: title,
 			noElementsMessage: '$_pageKey.content.noTasks',
 			elements: <Widget>[
-				Padding(
-					padding: EdgeInsets.symmetric(horizontal: AppBoxProperties.screenEdgePadding),
-					child: TaskCard(
-						index: 0,
-						task: TaskFormModel(
-							key: ValueKey(DateTime.now()),
-							title: "Opróżnij plecak",
-							timer: 568,
-							pointsValue: 80,
-							pointCurrency: UICurrency(type: CurrencyType.diamond, title: "Punkty")
+				for (var task in tasks)
+					Padding(
+						padding: EdgeInsets.symmetric(horizontal: AppBoxProperties.screenEdgePadding),
+						child: TaskCard(
+							index: tasks.indexOf(task),
+							task: TaskFormModel(
+								key: ValueKey(DateTime.now()),
+								title: task.name,
+								timer: task.timer,
+								pointsValue: task.points != null ? task.points.quantity : null,
+								pointCurrency:  task.points != null ? UICurrency(type: task.points.type, title: task.points.title) : null
+							)
 						)
 					)
-				),
-				Padding(
-					padding: EdgeInsets.symmetric(horizontal: AppBoxProperties.screenEdgePadding),
-					child: TaskCard(
-						index: 1,
-						task: TaskFormModel(
-							key: ValueKey(DateTime.now()),
-							title: "Przygotuj książki i zeszyty na kolejny dzień według bardzo długiego planu zajęć",
-							timer: 60,
-							pointsValue: 100,
-							pointCurrency: UICurrency(type: CurrencyType.diamond, title: "Punkty")
-						)
-					)
-				),
-				Padding(
-					padding: EdgeInsets.symmetric(horizontal: AppBoxProperties.screenEdgePadding),
-					child: TaskCard(
-						index: 2,
-						task: TaskFormModel(
-							key: ValueKey(DateTime.now()),
-							title: "Spakuj potrzebne rzeczy"
-						)
-					)
-				),
-				Padding(
-					padding: EdgeInsets.symmetric(horizontal: AppBoxProperties.screenEdgePadding),
-					child: TaskCard(
-						index: 3,
-						task: TaskFormModel(
-							key: ValueKey(DateTime.now()),
-							title: "Spakuj potrzebne rzeczy part 2",
-							timer: 20
-						)
-					)
-				)
 			]
 		);
 	}
 
-	Segment _getAdditionalTasksSegment({String title, String noElementsMessage}) {
+	Segment _getAdditionalTasksSegment({String title, String noElementsMessage, List<UITask> tasks}) {
 		return Segment(
 			title: title,
 			noElementsMessage: '$_pageKey.content.noTasks',
 			elements: <Widget>[
-				Padding(
-					padding: EdgeInsets.symmetric(horizontal: AppBoxProperties.screenEdgePadding),
-					child: TaskCard(
-						task: TaskFormModel(
-							key: ValueKey(DateTime.now()),
-							title: "Opcjonalne zadanko",
-							timer: 20,
-							optional: true,
-							pointsValue: 300,
-							pointCurrency: UICurrency(type: CurrencyType.ruby, title: "Klejnoty")
+				for (var task in tasks)
+					Padding(
+						padding: EdgeInsets.symmetric(horizontal: AppBoxProperties.screenEdgePadding),
+						child: TaskCard(
+							task: TaskFormModel(
+								key: ValueKey(DateTime.now()),
+								title: task.name,
+								timer: task.timer,
+								optional: true,
+								pointsValue: task.points != null ? task.points.quantity : null,
+								pointCurrency:  task.points != null ? UICurrency(type: task.points.type, title: task.points.title) : null
+							)
 						)
 					)
-				)
 			]
+		);
+	}
+
+	Widget _getCardHeader(UIPlan plan) {
+		return AppHeader.widget(
+			title: '$_pageKey.header.title',
+			appHeaderWidget: ItemCard(
+				title: plan.name,
+				subtitle: plan.description(context),
+				chips: <Widget>[
+					AttributeChip.withIcon(
+						content: AppLocales.of(context).translate('page.caregiverSection.plans.content.tasks', {'NUM_TASKS': plan.taskCount}),
+						color: Colors.indigo,
+						icon: Icons.layers
+					)
+				]
+			),
+			helpPage: 'plan_info',
+			popupMenuWidget: PopupMenuList(
+				lightTheme: true,
+				items: [
+					UIButton.ofType(ButtonType.edit, () => Navigator.of(context).pushNamed(AppPage.caregiverPlanForm.name, arguments: plan.id)),
+					UIButton.ofType(ButtonType.delete, () => showBasicDialog(
+						context,
+						GeneralDialog.confirm(
+							title: AppLocales.of(context).translate('alert.deletePlan'),
+							content: AppLocales.of(context).translate('alert.confirmPlanDeletion'),
+							confirmText: 'actions.delete',
+							confirmAction: () => Navigator.of(context).pop(),
+							confirmColor: Colors.red
+						)
+					))
+				],
+			)
 		);
 	}
 }

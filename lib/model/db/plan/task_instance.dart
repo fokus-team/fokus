@@ -1,5 +1,6 @@
 import 'package:fokus/model/db/date/time_date.dart';
 import 'package:fokus/model/db/date_span.dart';
+import 'package:fokus/model/db/plan/task.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
 import 'task_status.dart';
@@ -17,6 +18,8 @@ class TaskInstance {
   List<DateSpan<TimeDate>> duration;
 
   TaskInstance({this.id, this.taskID, this.planInstanceID, this.breaks, this.duration, this.status, this.optional, this.subtasks, this.timer});
+	TaskInstance.fromTask(Task task, ObjectId planInstanceId) : this(id: ObjectId(), taskID: task.id, planInstanceID: planInstanceId, breaks: [],
+		duration: [], status: TaskStatus(completed: false, state: TaskState.notEvaluated, pointsAwarded: 0, rating: 0), optional: task.optional, timer: task.timer);
 
   factory TaskInstance.fromJson(Map<String, dynamic> json) {
     return json != null ? TaskInstance(

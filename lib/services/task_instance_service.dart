@@ -17,9 +17,9 @@ class TaskInstanceService {
 			var task = await _dataRepository.getTask(taskId: taskInstances[i].taskID);
 			if(taskUiTypes[i] == TaskUIType.currentlyPerformed || taskUiTypes[i] == TaskUIType.inBreak) {
 				var elapsedTimePassed = () =>  taskUiTypes[i] == TaskUIType.currentlyPerformed ? sumDurations(taskInstances[i].duration).inSeconds : sumDurations(taskInstances[i].breaks).inSeconds;
-				uiTaskInstances.add(UITaskInstance.listFromDBModel(task: taskInstances[i], name: task.name, description: task.description, points: UIPoints(quantity: task.points.quantity, type: task.points.icon, title: task.points.name), type: taskUiTypes[i], elapsedTimePassed: elapsedTimePassed));
+				uiTaskInstances.add(UITaskInstance.listFromDBModel(task: taskInstances[i], name: task.name, description: task.description, points: task.points != null ? UIPoints(quantity: task.points.quantity, type: task.points.icon, title: task.points.name) : null, type: taskUiTypes[i], elapsedTimePassed: elapsedTimePassed));
 			}
-			else uiTaskInstances.add(UITaskInstance.listFromDBModel(task: taskInstances[i], name: task.name, description: task.description, points: UIPoints(quantity: task.points.quantity, type: task.points.icon, title: task.points.name), type: taskUiTypes[i]));
+			else uiTaskInstances.add(UITaskInstance.listFromDBModel(task: taskInstances[i], name: task.name, description: task.description, points: task.points != null ? UIPoints(quantity: task.points.quantity, type: task.points.icon, title: task.points.name) : null, type: taskUiTypes[i]));
 		}
 		return uiTaskInstances;
 	}

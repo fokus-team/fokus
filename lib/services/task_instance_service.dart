@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fokus/model/db/plan/task_instance.dart';
+import 'package:fokus/model/db/plan/task_status.dart';
 import 'package:fokus/model/ui/gamification/ui_points.dart';
 import 'package:fokus/model/ui/task/ui_task_instance.dart';
 import 'package:fokus/utils/duration_utils.dart';
@@ -30,14 +31,17 @@ class TaskInstanceService {
 		bool isAnyInProgress = false;
 		for(var task in tasks) {
 			var taskStatus;
-			if(task.status.completed) taskStatus = TaskUIType.completed;
-			else if((task.optional&&!isAnyInProgress) || prevTaskStatus == null || prevTaskStatus == TaskUIType.completed) {
+			if(task.status.completed) {
+				if(task.status.state == TaskState.rejected) taskStatus = TaskUIType.rejected;
+				else taskStatus = TaskUIType.completed;
+			}
+			else if((task.optional&&!isAnyInProgress) || prevTaskStatus == null || prevTaskStatus == TaskUIType.completed || prevTaskStatus == TaskUIType.rejected) {
 				if(task.breaks.length > 0 && task.breaks.last.to == null) taskStatus = TaskUIType.inBreak;
 				else if(task.duration.length > 0)
 					if(task.duration.last.to == null) taskStatus = TaskUIType.currentlyPerformed;
-					else taskStatus = TaskUIType.stopped;
+					else taskStatus = TaskUIType.rejected;
 				else taskStatus = TaskUIType.available;
-				if(taskStatus != TaskUIType.stopped) isAnyInProgress = true;
+				if(taskStatus != TaskUIType.rejected && taskStatus != TaskUIType.available) isAnyInProgress = true;
 			}
 			else taskStatus = TaskUIType.queued;
 			taskStatuses.add(taskStatus);

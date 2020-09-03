@@ -77,7 +77,7 @@ class _ChildPlanInProgressPageState extends State<ChildPlanInProgressPage> {
 							],
 							actionButton:	ItemCardActionButton(color: Colors.teal, icon: Icons.play_arrow, onTapped: () => log("tapped start task")),
 						)
-					else if(task.taskUiType == TaskUIType.stopped)
+					else if(task.taskUiType == TaskUIType.rejected)
 							ItemCard(
 								title: task.name,
 								subtitle: task.description,
@@ -87,7 +87,7 @@ class _ChildPlanInProgressPageState extends State<ChildPlanInProgressPage> {
 									if (task.timer != null && task.timer > 0) getTimeChip(task),
 									if (task.points != null && task.points.quantity != 0) getCurrencyChip(task)
 								],
-								actionButton:	ItemCardActionButton(color: Colors.teal, icon: Icons.play_arrow, onTapped: () => log("tapped start task")),
+								actionButton:	ItemCardActionButton(color: AppColors.childActionColor, icon: Icons.play_arrow, onTapped: () => log("tapped start task")),
 							)
 					else if(task.taskUiType.inProgress)
 						BlocProvider<TimerCubit>(
@@ -234,7 +234,7 @@ class _ChildPlanInProgressPageState extends State<ChildPlanInProgressPage> {
 				'TIME_NUM': formatDuration(Duration(seconds: sumDurations(task.duration).inSeconds))
 			}),
 			icon: Icons.access_time,
-			color: task.timer > sumDurations(task.duration).inMinutes ? Colors.lightGreen : Colors.deepOrange,
+			color: task.timer == null || task.timer > sumDurations(task.duration).inMinutes ? Colors.lightGreen : Colors.deepOrange,
 			tooltip: '$_pageKey.content.taskTimer.duration',
 		);
 	}

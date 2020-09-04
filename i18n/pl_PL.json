@@ -1,4 +1,5 @@
 {
+	"fokus": "Fokus",
 	"loading": "Ładowanie",
 	"navigation": {
 		"caregiver": {
@@ -11,7 +12,8 @@
 			"plans": "Plany",
 			"awards": "Nagrody",
 			"achievements": "Osiągnięcia"
-		}
+		},
+		"settings": "Ustawienia"
 	},
 	"page": {
 		"loginSection": {
@@ -67,6 +69,28 @@
 				"child": {
 					"taskGraded": "Nowe punkty za zadanie!",
 					"receivedBadge": "Nowa odznaka!"
+				}
+			}
+		},
+		"settings": {
+			"header": {
+				"title": "Ustawienia"
+			},
+			"content": {
+				"myProfileTitle": "Mój profil",
+				"myProfileHint": "Edytuj szczegóły swojego profilu",
+				"changeAppLanguage": "Język aplikacji",
+				"manageAppNotifications": "Powiadomienia",
+				"showAppInfo": "O aplikacji",
+				"appInfoVersion": "Wersja",
+				"appInfoDescription": "Fokus to aplikacja mobilna pomagająca dzieciom i ich opiekunom w realizacji codziennych zadań. Aplikacja powstała w ramach projektu grupowego realizowanego na Politechnice Gdańskiej.",
+				"appInfoCreatedBy": "Autorzy",
+				"appInfoLicences": "Licencje",
+				"goToProjectPage": "Strona projektu",
+				"showPrivacyPolicy": "Polityka prywatności",
+				"languages": {
+					"pl": "Polski",
+					"en": "Angielski"
 				}
 			}
 		},

@@ -1,4 +1,5 @@
 {
+	"fokus": "Fokus",
 	"loading": "Loading",
 	"navigation": {
 		"caregiver": {
@@ -11,7 +12,8 @@
 			"plans": "Plans",
 			"awards": "Awards",
 			"achievements": "Achievements"
-		}
+		},
+		"settings": "Settings"
 	},
 	"page": {
 		"loginSection": {
@@ -67,6 +69,28 @@
 				"child": {
 					"taskGraded": "You received points for a task!",
 					"receivedBadge": "You received a badge!"
+				}
+			}
+		},
+		"settings": {
+			"header": {
+				"title": "Settings"
+			},
+			"content": {
+				"myProfileTitle": "My profile",
+				"myProfileHint": "Edit the details of my profile",
+				"changeAppLanguage": "Change app language",
+				"manageAppNotifications": "App notifications",
+				"showAppInfo": "About the app",
+				"appInfoVersion": "Version",
+				"appInfoDescription": "Fokus is a mobile application that helps kids complete their daily tasks under parental control. The app was created as part of a group project at Gdansk University of Technology.",
+				"appInfoCreatedBy": "Created by",
+				"appInfoLicences": "Licences",
+				"goToProjectPage": "Go to project page",
+				"showPrivacyPolicy": "Privacy Policy",
+				"languages": {
+					"pl": "Polish",
+					"en": "English"
 				}
 			}
 		},

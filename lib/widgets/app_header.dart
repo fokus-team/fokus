@@ -220,7 +220,11 @@ class AppHeader extends StatelessWidget {
 							headerIconButton(Icons.notifications, () => Navigator.of(context).pushNamed(AppPage.notificationsPage.name)),
 							PopupMenuList(
 								lightTheme: true,
-									items: [
+								items: [
+									UIButton(
+										'navigation.settings',
+										() => Navigator.of(context).pushNamed(AppPage.settingsPage.name)
+									),
 									UIButton(
 										'actions.signOut',
 										() => authenticationBloc.add(AuthenticationSignOutRequested())

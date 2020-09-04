@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:fokus/services/app_locales.dart';
+import 'package:fokus/widgets/dialogs/app_info_dialog.dart';
 import 'package:fokus/widgets/dialogs/general_dialog.dart';
 import 'package:fokus/model/ui/ui_button.dart';
 import 'package:fokus/widgets/dialogs/dialog.dart';
@@ -78,3 +79,10 @@ void showHelpDialog(BuildContext context, String helpPage) {
 			);
 		}
 	}
+
+void showAppInfoDialog(BuildContext context) {
+	showDialog(
+		context: context,
+		builder: (context) => AppInfoDialog()
+	);
+}

@@ -401,6 +401,36 @@
 					}
 				}
 			},
+			"taskInProgress": {
+				"header": {
+					"title": "Plan completion"
+				},
+				"content": {
+					"reject": "REJECT",
+					"break": "BREAK",
+					"done": "DONE",
+					"timeLeft": "Time left:",
+					"breakTime": "Break duration:",
+					"isCompleted": "Task completed?",
+					"breakButton": "Break",
+					"resumeButton": "Resume",
+					"pointsToGet": "To earn:"
+				},
+				"cards" : {
+					"break": {
+						"title": "Break time,\n rest awhile!"
+					},
+					"done": {
+						"title": "Task completed!",
+						"content1": "You will receive points after approval from the caregiver.",
+						"content2": "Continue with your tasks!"
+					},
+					"rejected": {
+						"title": "Task cancelled",
+						"content1": "You can redo the task \nor move to the next one!"
+					}
+				}
+			},
 			"awards": {
 				"content": {
 					"awardsTitle": "Available awards",
@@ -462,7 +492,8 @@
 		"unpair": "Unpair",
 		"signIn": "Login",
 		"signUp": "Sign up",
-		"signOut": "Sign out"
+		"signOut": "Sign out",
+		"return": "Return"
 	},
 	"authentication": {
 		"name": "First name",

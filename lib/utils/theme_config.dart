@@ -8,6 +8,8 @@ class AppColors {
   static final Color darkTextColor = Colors.black87;
   static final Color mainBackgroundColor = Color.fromARGB(255, 30, 121, 233);
 	static final Color formColor = Colors.teal;
+	static final Color negativeColor = Colors.red;
+	static final Color positiveColor = Colors.lightGreen;
 
   // Caregiver colors
   static final Color caregiverBackgroundColor = Color.fromARGB(255, 30, 121, 233);
@@ -18,6 +20,10 @@ class AppColors {
   static final Color childButtonColor = Colors.orange;
   static final Color childActionColor = Colors.amber;
 	static final List<Color> chipRatingColors = [Colors.pink, Colors.red, Colors.deepOrange, Colors.amber, Colors.lightGreen, Colors.green];
+	static final Color childTaskFiller = Colors.white;
+	static final Color childBreakColor = Colors.blueGrey;
+	static final Color childTaskColor = Colors.lightBlue;
+
   // Currency colors
 	static final Map<CurrencyType, Color> currencyColor = {
 		CurrencyType.diamond: Color.fromARGB(255, 3, 169, 244),

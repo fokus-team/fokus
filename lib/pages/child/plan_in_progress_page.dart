@@ -26,7 +26,7 @@ class ChildPlanInProgressPage extends StatefulWidget {
 
 class _ChildPlanInProgressPageState extends State<ChildPlanInProgressPage> {
 	final String _pageKey = 'page.childSection.planInProgress';
-	final Function navigate = (BuildContext context, UITaskInstance task) => Navigator.of(context).pushNamed(AppPage.childTaskInProgress.name, arguments: task.id);
+	final Function(BuildContext, UITaskInstance) navigate = (context, task) => Navigator.of(context).pushNamed(AppPage.childTaskInProgress.name, arguments: task.id);
 
 
 	@override

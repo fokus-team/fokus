@@ -138,78 +138,64 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 
   List<Widget> _getAllCards() {
 		return [
-			_slidingCardFactory(TaskInProgressPageState.currentlyCompleting),
-			_slidingCardFactory(TaskInProgressPageState.inBreak),
-			_slidingCardFactory(TaskInProgressPageState.rejected),
-			_slidingCardFactory(TaskInProgressPageState.done)
-		];
-	}
-
-  SlidingCard _slidingCardFactory(TaskInProgressPageState type) {
-		Key key;
-		List<Widget> content = [];
-		Color cardColor;
-		if(type == TaskInProgressPageState.done) {
-			key = _doneCard;
-			cardColor = AppColors.childBackgroundColor;
-			content = [
-				_getAnimation('assets/animation/cheering_little_man.json'),
-				_getTitle('$_pageKey.cards.done.title'),
-				_getSubtitle('$_pageKey.cards.done.content1'),
-				Padding(
-					padding: const EdgeInsets.only(top: 16.0),
-					child: Text(
-						AppLocales.of(context).translate('$_pageKey.cards.done.content2'),
-						style: Theme.of(context).textTheme.subtitle2.copyWith(color: AppColors.lightTextColor, fontWeight: FontWeight.bold),
-						textAlign: TextAlign.center,
-					)
-				)
-			];
-		}
-		else if(type == TaskInProgressPageState.currentlyCompleting) {
-			key = _completingCard;
-			cardColor = AppColors.childTaskColor;
-			content = [
-				_getAnimation('assets/animation/jumping_little_man.json'),
-				_getTitle("Tytuł zadania", translate: false),
-				_getSubtitle("oszdfdfdfdfdfdfdfdfdfdfdsfdsffdsdfsfdsfsfdsfsdsadddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddfsfsfsdfsdfsfsfdsoszdfdfdfdfdfdfdfdfdfdfdsfdsffdsdfsfdsfsfdsfsdsadddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddfsfsfsdfsdfsfsfdsoszdfdfdfdfdfdfdfdfdfdfdsfdsffdsdfsfdsfsfdsfsdsadddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddfsfsfsdfsdfsfsfdsoszdfdfdfdfdfdfdfdfdfdfdsfdsffdsdfsfdsfsfdsfsdsadddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddfsfsfsdfsdfsfsfds",alignment: TextAlign.justify, translate: false, topPadding: 8),
-			];
-		}
-		else if (type == TaskInProgressPageState.inBreak) {
-			key = _breakCard;
-			cardColor = AppColors.childBreakColor;
-			content = [
-				_getAnimation('assets/animation/meditating_little_man.json'),
-				_getTitle('$_pageKey.cards.break.title'),
-				Padding(
-					padding: const EdgeInsets.only(top: 8.0),
-					child: BlocProvider<TimerCubit>(
-						create: (_) => TimerCubit(() => 0)..startTimer(),
-						child:LargeTimer(
-							textColor: AppColors.lightTextColor,
-							title: '$_pageKey.content.breakTime',
-							align: CrossAxisAlignment.center,
+			SlidingCard(
+				key: _completingCard,
+				cardColor: AppColors.childTaskColor,
+				content: [
+					_getAnimation('assets/animation/jumping_little_man.json'),
+					_getTitle("Tytuł zadania", translate: false),
+					_getSubtitle("oszdfdfdfdfdfdfdfdfdfdfdsfdsffdsdfsfdsfsfdsfsdsadddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddfsfsfsdfsdfsfsfdsoszdfdfdfdfdfdfdfdfdfdfdsfdsffdsdfsfdsfsfdsfsdsadddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddfsfsfsdfsdfsfsfdsoszdfdfdfdfdfdfdfdfdfdfdsfdsffdsdfsfdsfsfdsfsdsadddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddfsfsfsdfsdfsfsfdsoszdfdfdfdfdfdfdfdfdfdfdsfdsffdsdfsfdsfsfdsfsdsadddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddfsfsfsdfsdfsfsfds",alignment: TextAlign.justify, translate: false, topPadding: 8),
+				]
+			),
+			SlidingCard(
+				key: _breakCard,
+				cardColor: AppColors.childBreakColor,
+				content: [
+					_getAnimation('assets/animation/meditating_little_man.json'),
+					_getTitle('$_pageKey.cards.break.title'),
+					Padding(
+						padding: const EdgeInsets.only(top: 8.0),
+						child: BlocProvider<TimerCubit>(
+							create: (_) => TimerCubit(() => 0)..startTimer(),
+							child:LargeTimer(
+								textColor: AppColors.lightTextColor,
+								title: '$_pageKey.content.breakTime',
+								align: CrossAxisAlignment.center,
+							),
 						),
+					)
+				]
+			),
+			SlidingCard(
+				key: _rejectCard,
+				cardColor: AppColors.childActionColor,
+				content: [
+					SizedBox(
+							height: 100,
+							child: Icon(Icons.close, size: 100, color: AppColors.childTaskFiller,)
 					),
-				)
-			];
-		} else {
-			key = _rejectCard;
-			cardColor = AppColors.childActionColor;
-			content = [
-				SizedBox(
-					height: 100,
-					child: Icon(Icons.close, size: 100, color: AppColors.childTaskFiller,)
-				),
-				_getTitle('$_pageKey.cards.rejected.title'),
-				_getSubtitle('$_pageKey.cards.rejected.content1'),
-			];
-		}
-		return SlidingCard(
-			key: key,
-			cardColor: cardColor,
-			content: content
-		);
+					_getTitle('$_pageKey.cards.rejected.title'),
+					_getSubtitle('$_pageKey.cards.rejected.content1'),
+				]
+			),
+			SlidingCard(
+				key: _doneCard,
+				cardColor: AppColors.childBackgroundColor,
+				content: [
+					_getAnimation('assets/animation/cheering_little_man.json'),
+					_getTitle('$_pageKey.cards.done.title'),
+					_getSubtitle('$_pageKey.cards.done.content1'),
+					Padding(
+							padding: const EdgeInsets.only(top: 16.0),
+							child: Text(
+								AppLocales.of(context).translate('$_pageKey.cards.done.content2'),
+								style: Theme.of(context).textTheme.subtitle2.copyWith(color: AppColors.lightTextColor, fontWeight: FontWeight.bold),
+								textAlign: TextAlign.center,
+							)
+					)
+				]
+			)
+		];
 	}
 
 	Widget _getAnimation(String data) {

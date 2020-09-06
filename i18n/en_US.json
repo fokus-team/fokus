@@ -409,7 +409,7 @@
 					},
 					"done": {
 						"title": "Task completed!",
-						"content1": "You will receive points after approval by the caregiver.",
+						"content1": "You will receive points after approval from the caregiver.",
 						"content2": "Continue with your tasks!"
 					},
 					"rejected": {

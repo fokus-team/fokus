@@ -20,7 +20,7 @@ import 'package:fokus/utils/collection_utils.dart';
 
 class CalendarCubit extends Cubit<CalendarState> {
 	final ActiveUserFunction _activeUser;
-	final ObjectId _childSetByID;
+	final ObjectId _initialFilter;
 	Map<ObjectId, Plan> _plans;
 	Map<ObjectId, String> _childNames;
 	Map<Date, Map<Date, List<UIPlan>>> _allEvents = {};
@@ -28,7 +28,7 @@ class CalendarCubit extends Cubit<CalendarState> {
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final PlanRepeatabilityService _repeatabilityService = GetIt.I<PlanRepeatabilityService>();
 
-  CalendarCubit(this._childSetByID, this._activeUser) : super(CalendarState(day: Date.now(), childrenColorsReady: false));
+  CalendarCubit(this._initialFilter, this._activeUser) : super(CalendarState(day: Date.now(), childrenColorsReady: false));
 
   void loadInitialData() async {
 	  var activeUser = _activeUser();
@@ -37,18 +37,16 @@ class CalendarCubit extends Cubit<CalendarState> {
 			  childId: getRoleId(UserRole.child))).map((plan) => MapEntry(plan.id, plan)));
 
 	  Map<UIChild, bool> filter;
-		bool isChildSetByID = _childSetByID != null;
 	  if (activeUser.role == UserRole.caregiver) {
 		  var children = await _dataRepository.getUsers(ids: (activeUser as UICaregiver).connections);
 		  _childNames = Map.fromEntries(children.map((child) => MapEntry(child.id, child.name)));
 		  filter = Map.fromEntries(children.map((child) => MapEntry(UIChild.fromDBModel(child), false)));
 
-			if(isChildSetByID) {
-				UIChild childSetByID = UIChild.fromDBModel(children.firstWhere((element) => element.id == _childSetByID, orElse: () => null));
+			if(_initialFilter != null) {
+				UIChild childSetByID = UIChild.fromDBModel(children.firstWhere((element) => element.id == _initialFilter, orElse: () => null));
 				if(childSetByID != null)
 					filter[childSetByID] = true;
 			}
-
 	  } else {
 		  _childNames = {activeUser.id: activeUser.name};
 		  filter = {activeUser: true};
@@ -74,17 +72,15 @@ class CalendarCubit extends Cubit<CalendarState> {
 			: filter.keys.where((child) => filter[child]).map((child) => child.id).toSet();
 
 		Map<Date, List<UIPlan>> events = {};
-		//if (ids.length > 0) {
-			var monthEvents = _allEvents[month] ?? await _loadDataForMonth(month);
-			for (var day in monthEvents.entries) {
-				List<UIPlan> plans = [];
-				for (var plan in day.value) {
-					if (filterNotApplied || (!filterNotApplied && ids.any(plan.assignedTo.contains)))
-						plans.add(plan/*.copyWith(description: _getDescription(plan.assignedTo.where(ids.contains)))*/);
-				}
-				events[day.key] = plans;
+		var monthEvents = _allEvents[month] ?? await _loadDataForMonth(month);
+		for (var day in monthEvents.entries) {
+			List<UIPlan> plans = [];
+			for (var plan in day.value) {
+				if (filterNotApplied || (!filterNotApplied && ids.any(plan.assignedTo.contains)))
+					plans.add(plan);
 			}
-		//}
+			events[day.key] = plans;
+		}
 		return events;
 	}
 

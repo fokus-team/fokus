@@ -34,7 +34,6 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 	AnimationController _animationController;
 	CalendarController _calendarController;
 
-	Map<Mongo.ObjectId, Color> _childrenColors = {};
 	List<UIChild> _selectedChildren = [];
 
 	final Duration _animationDuration = Duration(milliseconds: 250);
@@ -66,6 +65,11 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 		super.dispose();
 	}
 
+	Color _getChildColor(Map<UIChild, bool> children, Mongo.ObjectId childID) {
+		int childIndex = children.keys.toList().indexWhere((element) => element.id == childID);
+		return (childIndex != -1) ? markerColors[childIndex % markerColors.length] : Colors.cyan;
+	}
+
 	@override
 	Widget build(BuildContext context) {
 		return Scaffold(
@@ -86,18 +90,6 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 											  context.bloc<CalendarCubit>().loadInitialData();
 											  return _buildChildPicker(loading: true);
 										  }
-											int markerIndex = 0;
-											_selectedChildren = [];
-											state.children.forEach((key, value) {
-												if(value)
-													_selectedChildren.add(key);
-											});
-											for(var child in state.children.keys) {
-												if(markerIndex == markerColors.length)
-													markerIndex = 0;
-												_childrenColors[child.id] = markerColors[markerIndex++];
-											}
-											context.bloc<CalendarCubit>().setChildrenColorsReady();
 									    return _buildChildPicker(children: state.children);
 									  },
 								  ),
@@ -111,7 +103,7 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 								padding: EdgeInsets.symmetric(horizontal: AppBoxProperties.screenEdgePadding),
 								child: BlocBuilder<CalendarCubit, CalendarState>(
 									builder: (context, state) {
-										return _buildCalendar(state.events);
+										return _buildCalendar(state.events, state.children);
 									},
 								)
 							),
@@ -135,7 +127,7 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 					noElementsMessage: '$_pageKey.content.noPlansOnDateTitle',
 					noElementsIcon: Icons.description,
 					elements: [
-						if(state.events != null && state.childrenColorsReady && state.events[state.day] != null)
+						if(state.events != null && state.events[state.day] != null)
 							for(UIPlan plan in state.events[state.day])
 								ItemCard(
 									title: plan.name,
@@ -148,7 +140,7 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 										var child = state.children.keys.firstWhere((element) => element.id == childID, orElse: () => null);
 										return child != null ? AttributeChip(
 											content: child.name,
-											color: _childrenColors[childID]
+											color: _getChildColor(state.children, childID)
 										) : SizedBox.shrink();
 									}).toList() : []
 								)
@@ -184,7 +176,7 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 		);
 	}
 
-	TableCalendar _buildCalendar(Map<Date, List<UIPlan>> events) {
+	TableCalendar _buildCalendar(Map<Date, List<UIPlan>> events, Map<UIChild, bool> children) {
 	  return TableCalendar(
 			calendarController: _calendarController,
 			locale: AppLocales.of(context).locale.toString(),
@@ -210,7 +202,7 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 					),
         todayDayBuilder: (context, date, _) => _buildTableCalendarCell(date),
 				markersBuilder: (context, date, events, holidays) {
-					final children = <Widget>[];
+					final markers = <Widget>[];
 					if (events.isNotEmpty) {
 						Set<Color> childrenMarkers = {};
 						events.forEach((plan) {
@@ -219,10 +211,10 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 							else
 								plan.assignedTo.forEach((childID) {
 									if(_selectedChildren.isEmpty || _selectedChildren.firstWhere((element) => element.id == childID, orElse: () => null) != null)
-										childrenMarkers.add(_childrenColors[childID]);
+										childrenMarkers.add(_getChildColor(children, childID));
 							});
 						});
-						children.add(
+						markers.add(
 							Positioned(
 								left: 6.0,
 								right: 6.0,
@@ -240,7 +232,7 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 							)
 						);
 					}
-					return children;
+					return markers;
 				}
 			)
 		);
@@ -313,7 +305,7 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 											children: state.values.map((child) {
 												return AttributeChip(
 													content: child.name,
-													color: _childrenColors[child.id]
+													color: _getChildColor(children, child.id)
 												);
 											}).toList(),
 										)

@@ -1,7 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:date_utils/date_utils.dart';
 import 'package:equatable/equatable.dart';
-import 'package:fokus/model/db/user/child.dart';
 import 'package:fokus/model/db/user/user_role.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 import 'package:get_it/get_it.dart';
@@ -28,7 +27,7 @@ class CalendarCubit extends Cubit<CalendarState> {
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final PlanRepeatabilityService _repeatabilityService = GetIt.I<PlanRepeatabilityService>();
 
-  CalendarCubit(this._initialFilter, this._activeUser) : super(CalendarState(day: Date.now(), childrenColorsReady: false));
+  CalendarCubit(this._initialFilter, this._activeUser) : super(CalendarState(day: Date.now()));
 
   void loadInitialData() async {
 	  var activeUser = _activeUser();
@@ -127,27 +126,23 @@ class CalendarCubit extends Cubit<CalendarState> {
 
 	DateSpan<Date> _getMonthSpan(Date month) => DateSpan(from: month, to: Date.fromDate(Utils.nextMonth(month)));
 
-  void setChildrenColorsReady() async => emit(state.copyWith(childrenColorsReady: true));
-
 }
 
 class CalendarState extends Equatable {
 	final Map<UIChild, bool> children;
 	final Date day;
 	final Map<Date, List<UIPlan>> events;
-	final bool childrenColorsReady;
 
-	const CalendarState({this.day, this.children, this.events, this.childrenColorsReady});
+	const CalendarState({this.day, this.children, this.events});
 
-	CalendarState copyWith({Map<UIChild, bool> children, Map<Date, List<UIPlan>> events, Date day, bool childrenColorsReady}) {
+	CalendarState copyWith({Map<UIChild, bool> children, Map<Date, List<UIPlan>> events, Date day}) {
 	  return CalendarState(
 		  children: children ?? this.children,
 		  events: events ?? this.events,
-		  day: day ?? this.day,
-			childrenColorsReady: childrenColorsReady ?? this.childrenColorsReady
+		  day: day ?? this.day
 	  );
 	}
 
 	@override
-	List<Object> get props => [events, children, day, childrenColorsReady];
+	List<Object> get props => [events, children, day];
 }

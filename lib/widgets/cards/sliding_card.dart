@@ -25,7 +25,7 @@ class SlidingCardState extends State<SlidingCard> with SingleTickerProviderState
     			return false;
     		},
     		child: Padding(
-    			padding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 0, top: 0),
+    			padding: const EdgeInsets.only(left: 20.0, right: 20.0, bottom: 0, top: 0),
     			child: ListView(
     				shrinkWrap: false,
     				controller: _scrollController,
@@ -42,7 +42,7 @@ class SlidingCardState extends State<SlidingCard> with SingleTickerProviderState
     						),
     					),
     					SizedBox(
-    						height: 60,
+    						height: 100,
     					)
     				]
     			),

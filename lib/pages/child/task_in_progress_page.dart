@@ -37,9 +37,13 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
   Widget build(BuildContext context) {
   	return Scaffold(
 			appBar: _getHeader(),
-			body: Stack(
-				children: _getAllCards()
+			body: Padding(
+				padding: EdgeInsets.only(bottom: 0.0),
+				child: Stack(
+					children: _getAllCards()
+				)
 			),
+			extendBody: true,
 			bottomNavigationBar: _getBottomNavBar(),
 			floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
 			floatingActionButton: Row(
@@ -144,7 +148,7 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 				content: [
 					_getAnimation('assets/animation/jumping_little_man.json'),
 					_getTitle("Tytuł zadania", translate: false),
-					_getSubtitle("oszdfdfdfdfdfdfdfdfdfdfdsfdsffdsdfsfdsfsfdsfsdsadddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddfsfsfsdfsdfsfsfdsoszdfdfdfdfdfdfdfdfdfdfdsfdsffdsdfsfdsfsfdsfsdsadddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddfsfsfsdfsdfsfsfdsoszdfdfdfdfdfdfdfdfdfdfdsfdsffdsdfsfdsfsfdsfsdsadddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddfsfsfsdfsdfsfsfdsoszdfdfdfdfdfdfdfdfdfdfdsfdsffdsdfsfdsfsfdsfsdsadddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddfsfsfsdfsdfsfsfds",alignment: TextAlign.justify, translate: false, topPadding: 8),
+					_getSubtitle("Możliwy opcjonalny opis zadania z listą kroków dla dziecka",alignment: TextAlign.justify, translate: false, topPadding: 8),
 				]
 			),
 			SlidingCard(
@@ -154,7 +158,7 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 					_getAnimation('assets/animation/meditating_little_man.json'),
 					_getTitle('$_pageKey.cards.break.title'),
 					Padding(
-						padding: const EdgeInsets.only(top: 8.0),
+						padding: const EdgeInsets.symmetric(horizontal: 8.0),
 						child: BlocProvider<TimerCubit>(
 							create: (_) => TimerCubit(() => 0)..startTimer(),
 							child:LargeTimer(
@@ -168,11 +172,11 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 			),
 			SlidingCard(
 				key: _rejectCard,
-				cardColor: AppColors.childActionColor,
+				cardColor: Colors.red,
 				content: [
 					SizedBox(
-							height: 100,
-							child: Icon(Icons.close, size: 100, color: AppColors.childTaskFiller,)
+						height: 100,
+						child: Icon(Icons.close, size: 80, color: AppColors.childTaskFiller,)
 					),
 					_getTitle('$_pageKey.cards.rejected.title'),
 					_getSubtitle('$_pageKey.cards.rejected.content1'),

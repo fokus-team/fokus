@@ -22,7 +22,8 @@ enum AppPage {
 	childPanel,
 	childAwards,
 	childAchievements,
-	childPlanInProgress
+	childPlanInProgress,
+	childTaskInProgress
 }
 
 extension AppPageName on AppPage {
@@ -46,7 +47,8 @@ extension AppPageName on AppPage {
 		AppPage.childPanel: '/child/panel-page',
 		AppPage.childAwards: '/child/awards-page',
 		AppPage.childAchievements: '/child/achievements-page',
-		AppPage.childPlanInProgress: '/child/plan-in-progress-page'
+		AppPage.childPlanInProgress: '/child/plan-in-progress-page',
+		AppPage.childTaskInProgress: '/child/task-in-progress-page'
 	}[this];
 }
 

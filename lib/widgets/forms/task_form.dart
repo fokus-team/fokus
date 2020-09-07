@@ -299,13 +299,13 @@ class _TaskFormState extends State<TaskForm> {
 			cubit: context.bloc<PlanFormCubit>(),
 			builder: (context, state) {
 				if (state is PlanFormDataLoadSuccess)
-					return getPointsFields(state.currencies);
-				return getPointsFields([UICurrency(type: CurrencyType.diamond)], loading: state.formType == AppFormType.create);
+					return getPointsFields(currencies: state.currencies);
+				return getPointsFields(currencies: [UICurrency(type: CurrencyType.diamond)], loading: state.formType == AppFormType.create);
 			}
 		);
 	}
 	
-	Widget getPointsFields(List<UICurrency> currencies, {bool loading = false}) {
+	Widget getPointsFields({List<UICurrency> currencies = const [], bool loading = false}) {
 		return PointPickerField(
 			controller: _pointsController,
 			pickedCurrency: task.pointCurrency,

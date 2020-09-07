@@ -14,7 +14,7 @@ abstract class PlanRepository {
 	Future<List<Plan>> getPlans({ObjectId caregiverId, ObjectId childId, bool active, bool oneDayOnly = false, List<String> fields});
 
 	Future<PlanInstance> getPlanInstance({ObjectId id, List<String> fields});
-	Future<List<PlanInstance>> getPlanInstances({ObjectId childId, PlanInstanceState state, List<ObjectId> planIDs, Date date, DateSpan<Date> between});
+	Future<List<PlanInstance>> getPlanInstances({List<ObjectId> childIDs, PlanInstanceState state, List<ObjectId> planIDs, Date date, DateSpan<Date> between});
 
 	Future<bool> getActiveChildPlanInstance(ObjectId childId);
 	Future<List<PlanInstance>> getPlanInstancesForPlans(ObjectId childId, List<ObjectId> planIDs, [Date date]);

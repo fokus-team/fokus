@@ -6,6 +6,7 @@ import 'package:fokus/logic/child_tasks_cubit.dart';
 import 'package:fokus/logic/timer/timer_cubit.dart';
 import 'package:fokus/model/db/plan/plan_instance_state.dart';
 import 'package:fokus/model/db/plan/task_status.dart';
+import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/ui/plan/ui_plan_instance.dart';
 import 'package:fokus/model/ui/task/ui_task_instance.dart';
 import 'package:fokus/services/app_locales.dart';
@@ -25,8 +26,10 @@ class ChildPlanInProgressPage extends StatefulWidget {
 
 class _ChildPlanInProgressPageState extends State<ChildPlanInProgressPage> {
 	final String _pageKey = 'page.childSection.planInProgress';
+	final Function(BuildContext, UITaskInstance) navigate = (context, task) => Navigator.of(context).pushNamed(AppPage.childTaskInProgress.name, arguments: task.id);
 
-  @override
+
+	@override
   Widget build(BuildContext context) {
 		return Scaffold(
 			body: Column(
@@ -75,7 +78,7 @@ class _ChildPlanInProgressPageState extends State<ChildPlanInProgressPage> {
 								if (task.timer > 0) getTimeChip(task),
 								if (task.points.quantity != 0) getCurrencyChip(task)
 							],
-							actionButton:	ItemCardActionButton(color: Colors.teal, icon: Icons.play_arrow, onTapped: () => log("tapped start task")),
+							actionButton:	ItemCardActionButton(color: Colors.teal, icon: Icons.play_arrow, onTapped: () => navigate(context, task)),
 						)
 					else if(task.taskUiType == TaskUIType.stopped)
 							ItemCard(
@@ -87,7 +90,7 @@ class _ChildPlanInProgressPageState extends State<ChildPlanInProgressPage> {
 									if (task.timer > 0) getTimeChip(task),
 									if (task.points.quantity != 0) getCurrencyChip(task)
 								],
-								actionButton:	ItemCardActionButton(color: Colors.teal, icon: Icons.play_arrow, onTapped: () => log("tapped start task")),
+								actionButton:	ItemCardActionButton(color: Colors.teal, icon: Icons.play_arrow, onTapped: () => navigate(context, task)),
 							)
 					else if(task.taskUiType.inProgress)
 						BlocProvider<TimerCubit>(
@@ -114,9 +117,7 @@ class _ChildPlanInProgressPageState extends State<ChildPlanInProgressPage> {
 											),
 										]
 								],
-								actionButton: ItemCardActionButton(
-									color: AppColors.childActionColor, icon: Icons.launch, onTapped: () => log("Tapped finished activity")
-								),
+								actionButton: ItemCardActionButton(color: AppColors.childActionColor, icon: Icons.launch, onTapped: () => navigate(context, task)),
 							)
 						)
 					else if(task.taskUiType == TaskUIType.queued)

@@ -7,6 +7,7 @@ import 'package:fokus/widgets/general/app_hero.dart';
 
 class Segment extends StatelessWidget {
 	final String title;
+	final Map<String, Object> titleArgs;
 	final String subtitle;
 	final String helpPage;
 	final String noElementsMessage;
@@ -16,6 +17,7 @@ class Segment extends StatelessWidget {
 
 	Segment({
 		@required this.title, 
+		this.titleArgs,
 		this.subtitle, 
 		this.helpPage, 
 		@required this.elements,
@@ -39,7 +41,7 @@ class Segment extends StatelessWidget {
 							crossAxisAlignment: CrossAxisAlignment.start,
 							children: <Widget>[
 								Text(
-									AppLocales.of(context).translate(title),
+									AppLocales.of(context).translate(title, titleArgs),
 									style: Theme.of(context).textTheme.headline2,
 									overflow: TextOverflow.clip,
 									maxLines: 2

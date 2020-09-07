@@ -11,6 +11,8 @@ class MongoDbProvider {
 	Db _client;
 
 	Future initialize() async {
+		if (_client != null && _client.state == State.OPEN)
+			return;
 		_client = new Db(await GetIt.I<RemoteConfigProvider>().dbAccessString);
 		return _client.open(
 			secure: true,
@@ -62,8 +64,7 @@ class MongoDbProvider {
 
 	Future<T> _execute<T>(Future<T> Function() query) async {
 		try {
-			if (_client == null || _client.state != State.OPEN)
-				await initialize();
+			await initialize();
 			return await query();
 		} on TimeoutException { // Keep alive disconnected
 			await initialize();
@@ -72,6 +73,7 @@ class MongoDbProvider {
 			await initialize();
 			return query();
 		} on MongoQueryTimeout { // Query timeout, retry
+			await initialize();
 			return query();
 		} catch(e) { // TODO Handle double MongoQueryTimeout
 			if (e is NoDbConnection)

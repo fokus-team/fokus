@@ -25,9 +25,12 @@ class CaregiverPlanDetailsPage extends StatefulWidget {
 
 class _CaregiverPlanDetailsPageState extends State<CaregiverPlanDetailsPage> {
 	static const String _pageKey = 'page.caregiverSection.planDetails';
+	Mongo.ObjectId planID;
 
   @override
   Widget build(BuildContext context) {
+		Mongo.ObjectId planID = ModalRoute.of(context).settings.arguments;
+
 		return Scaffold(
 			body: Column(
 				crossAxisAlignment: CrossAxisAlignment.start,
@@ -35,7 +38,7 @@ class _CaregiverPlanDetailsPageState extends State<CaregiverPlanDetailsPage> {
 					AppHeader.widget(
 						title: '$_pageKey.header.title',
 						appHeaderWidget: ItemCard(
-							title: "Sprzątanie pokoju",
+							title: planID != null ? planID.toString() : "Sprzątanie pokoju",
 							subtitle: "Co każdy poniedziałek, środę, czwartek i piątek",
 							chips:
 							<Widget>[

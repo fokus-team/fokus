@@ -1,4 +1,5 @@
 {
+	"fokus": "Fokus",
 	"loading": "Loading",
 	"navigation": {
 		"caregiver": {
@@ -11,7 +12,8 @@
 			"plans": "Plans",
 			"awards": "Awards",
 			"achievements": "Achievements"
-		}
+		},
+		"settings": "Settings"
 	},
 	"page": {
 		"loginSection": {
@@ -67,6 +69,39 @@
 				"child": {
 					"taskGraded": "You received points for a task!",
 					"receivedBadge": "You received a badge!"
+				}
+			}
+		},
+		"settings": {
+			"header": {
+				"title": "Settings"
+			},
+			"content": {
+				"profile": {
+					"header": "Profile",
+					"editNameLabel": "Change your name",
+					"changePasswordLabel": "Change your password",
+					"deleteAccountLabel": "Delete your account",
+					"deleteAccountHint": "Delete your and children's accounts",
+					"deleteAccountConfirmation": "Are you sure you want to delete your account with all children profiles? This action cannot be undone!"
+				},
+				"appSettings": {
+					"header": "App settings",
+					"changeLanguageLabel": "App language",
+					"languages": {
+						"default": "System (default)",
+						"pl": "Polish",
+						"en": "English"
+					},
+					"showAppInfoLabel": "About the app",
+					"appInfo": {
+						"version": "Version",
+						"description": "Fokus is a mobile application that helps kids complete their daily tasks under parental control. It was created as part of a team project at Gdansk University of Technology.",
+						"creators": "Created by",
+						"licences": "Licences",
+						"projectPage": "Project page",
+						"terms": "Terms of service"
+					}
 				}
 			}
 		},
@@ -459,6 +494,7 @@
 		"everyday": "Codziennie"
 	},
 	"alert": {
+		"errorOccurred": "Error occurred",
 		"noConnection": "No connection",
 		"connectionRetry": "Ensure the device has access to the internet",
 		"noHint": "No hint",
@@ -499,6 +535,8 @@
 		"name": "First name",
 		"email": "E-mail address",
 		"password": "Password",
+		"currentPassword": "Current password",
+		"newPassword": "New password",
 		"avatar": "Avatar",
 		"confirmPassword": "Repeat password",
 		"googleSignIn": "Sign in with Google",

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/theme_config.dart';
 import 'package:fokus/widgets/general/app_loader.dart';
-import 'package:lottie/lottie.dart';
 
 class AuthGroup extends StatelessWidget {
 	final String title;

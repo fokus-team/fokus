@@ -37,7 +37,7 @@ class PlanFormCubit extends Cubit<PlanFormState> {
 		var userId = _activeUser().id;
 
 		var plan = Plan.fromPlanForm(planForm, userId, _repeatabilityService.mapRepeatabilityModel(planForm), state.planId);
-		var tasks = planForm.tasks.map((task) => Task.fromTaskForm(task, state.planId, userId)).toList();
+		var tasks = planForm.tasks.map((task) => Task.fromTaskForm(task, plan.id, userId)).toList();
 		plan.tasks = tasks.map((task) => task.id).toList();
 
 		List<Future> updates;

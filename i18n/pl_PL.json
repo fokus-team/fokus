@@ -412,6 +412,36 @@
 					}
 				}
 			},
+			"taskInProgress": {
+				"header": {
+					"title": "Wykonywanie planu"
+				},
+				"content": {
+					"reject": "ODRZUĆ",
+					"break": "PRZERWA",
+					"done": "ZROBIONE",
+					"timeLeft": "Pozostały czas:",
+					"breakTime": "Czas przerwy:",
+					"isCompleted": "Wykonano zadanie?",
+					"breakButton": "Przerwa",
+					"resumeButton": "Wznów",
+					"pointsToGet": "Do zdobycia:"
+				},
+				"cards" : {
+					"break": {
+						"title": "Trwa przerwa, \nodpocznij chwilę!"
+					},
+					"done": {
+						"title": "Zadanie wykonane!",
+						"content1": "Punkty otrzymasz po zatwierdzeniu przez opiekuna.",
+						"content2": "Kontynuuj wykonywanie zadań!"
+					},
+					"rejected": {
+						"title": "Zadanie anulowane",
+						"content1": "Możesz ponownie wykonać to zadanie \nlub przejść do następnego!"
+					}
+				}
+			},
 			"awards": {
 				"content": {
 					"awardsTitle": "Nagrody do zdobycia",
@@ -473,7 +503,8 @@
 		"unpair": "Rozłącz",
 		"signIn": "Zaloguj",
 		"signUp": "Załóż konto",
-		"signOut": "Wyloguj się"
+		"signOut": "Wyloguj się",
+		"return": "Powrót"
 	},
 	"authentication": {
 		"name": "Imię",

@@ -34,6 +34,7 @@ class HeaderActionButton {
 		: this(null, null, customContent, action, backgroundColor);
 }
 
+
 class AppHeader extends StatelessWidget {
 	final String title;
 	final String text;
@@ -43,8 +44,9 @@ class AppHeader extends StatelessWidget {
 	final String helpPage;
 	final Widget popupMenuWidget;
 	final TabBar tabs;
+	final bool isConstrained;
 
-	AppHeader({this.title, this.text, this.headerActionButtons, this.headerType, this.appHeaderWidget, this.helpPage, this.popupMenuWidget, this.tabs});
+	AppHeader({this.title, this.text, this.headerActionButtons, this.headerType, this.appHeaderWidget, this.helpPage, this.popupMenuWidget, this.tabs, this.isConstrained = false});
 	AppHeader.greetings({String text, List<HeaderActionButton> headerActionButtons}) : this(
 		text: text,
 		headerActionButtons: headerActionButtons,
@@ -56,7 +58,7 @@ class AppHeader extends StatelessWidget {
 		headerActionButtons: headerActionButtons,
 		headerType: AppHeaderType.normal
 	);
-	AppHeader.widget({String title, String text, List<HeaderActionButton> headerActionButtons, Widget appHeaderWidget, String helpPage, Widget popupMenuWidget, TabBar tabs}) : this(
+	AppHeader.widget({String title, String text, List<HeaderActionButton> headerActionButtons, Widget appHeaderWidget, String helpPage, Widget popupMenuWidget, TabBar tabs, bool isConstrained = false}) : this(
 		title: title,
 		text: text,
 		headerActionButtons: headerActionButtons,
@@ -64,7 +66,8 @@ class AppHeader extends StatelessWidget {
 		appHeaderWidget: appHeaderWidget,
 		helpPage: helpPage,
 		popupMenuWidget: popupMenuWidget,
-		tabs: tabs
+		tabs: tabs,
+		isConstrained: isConstrained
 	);
 
 	@override
@@ -145,7 +148,7 @@ class AppHeader extends StatelessWidget {
 			child: Text(
 				AppLocales.of(context).translate(text),
 				textAlign: TextAlign.left,
-				style: Theme.of(context).textTheme.bodyText1
+				style: Theme.of(context).textTheme.bodyText1,
 			)
 		);
 	}
@@ -295,7 +298,7 @@ class AppHeader extends StatelessWidget {
 											AppLocales.of(context).translate(title), 
 											style: Theme.of(context).textTheme.headline3.copyWith(color: Colors.white, fontSize: 20.0),
 											overflow: TextOverflow.ellipsis,
-											maxLines: 2
+											maxLines: isConstrained ? 1 : 2
 										)
 									)
 								)

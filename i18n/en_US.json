@@ -79,7 +79,7 @@
 			"content": {
 				"profile": {
 					"header": "Profile",
-					"editNameLabel": "Edit your name",
+					"editNameLabel": "Change your name",
 					"changePasswordLabel": "Change your password",
 					"deleteAccountLabel": "Delete your account",
 					"deleteAccountHint": "Delete your and children's accounts",

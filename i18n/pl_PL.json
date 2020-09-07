@@ -79,7 +79,7 @@
 			"content": {
 				"profile": {
 					"header": "Profil",
-					"editNameLabel": "Edytuj imię",
+					"editNameLabel": "Zmień imię",
 					"changePasswordLabel": "Zmień hasło",
 					"deleteAccountLabel": "Usuń konto",
 					"deleteAccountHint": "Trwale usuń konto i profile dzieci",

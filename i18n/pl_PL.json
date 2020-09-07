@@ -349,6 +349,40 @@
 					"additionalTasks": "Zadania dodatkowe",
 					"noTasks": "Brak zadań"
 				}
+			},
+			"rating":  {
+				"header": {
+					"title": "Ocena zadań"
+				},
+				"content": {
+					"noTasksToRate": "Brak zadań do oceny",
+					"rateTaskButton": "Oceń zadanie",
+					"taskRatedLabel": "Zadanie ocenione",
+					"previousTaskButton": "Poprzednie",
+					"nextTaskButton": "Następne",
+					"raportCard": {
+						"carriedOutBy": "Wykonawca zadania",
+						"raportDate": "Data wykonania zadania",
+						"raportTime": "Czas wykonywania zadania",
+						"raportBreaks": "Wykorzystane przerwy",
+						"breakCount": "{NUM_BREAKS, plural, offset:0 zero {Brak przerw} one {# przerwa} few {# przerwy} other {# przerw}}",
+						"totalBreakTime": "całkowity czas"
+					},
+					"form": {
+						"ratingLabel": "Ocena zadania",
+						"ratedOnlabel": "Oceniono na",
+						"pointsAssigned": "Dziecko otrzyma {NUM_POINTS, plural, offset:0 one {# punkt} few {# punkty} other {# punktów}}",
+						"ratingLevels": {
+							"5": "Idealnie",
+							"4": "Bardzo dobrze",
+							"3": "Dobrze",
+							"2": "OK",
+							"1": "Dopuszczalnie"
+						},
+						"markTaskAsNotDone": "Oznacz zadanie jako nie wykonane",
+						"rateCommentLabel": "Komentarz do zadania"
+					}
+				}
 			}
 		},
 		"childSection": {

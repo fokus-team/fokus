@@ -349,6 +349,40 @@
 					"additionalTasks": "Additional tasks",
 					"noTasks": "No tasks"
 				}
+			},
+			"rating":  {
+				"header": {
+					"title": "Task rating"
+				},
+				"content": {
+					"noTasksToRate": "No tasks to rate",
+					"rateTaskButton": "Rate task",
+					"taskRatedLabel": "Task rated",
+					"previousTaskButton": "Previous",
+					"nextTaskButton": "Next",
+					"raportCard": {
+						"carriedOutBy": "Task carried out by",
+						"raportDate": "Task date",
+						"raportTime": "Task time",
+						"raportBreaks": "Used breaks",
+						"breakCount": "{NUM_BREAKS, plural, offset:0 zero {No breaks} one {# break} other {# breaks}}",
+						"totalBreakTime": "time total"
+					},
+					"form": {
+						"ratingLabel": "Task rating",
+						"ratedOnlabel": "Rated",
+						"pointsAssigned": "{NUM_POINTS, plural, offset:0 one {# point} other {# points}} for child",
+						"ratingLevels": {
+							"5": "Perfect",
+							"4": "Very good",
+							"3": "Good",
+							"2": "OK",
+							"1": "Acceptable"
+						},
+						"markTaskAsNotDone": "Mark task as not done",
+						"rateCommentLabel": "Task feedback"
+					}
+				}
 			}
 		},
 		"childSection": {

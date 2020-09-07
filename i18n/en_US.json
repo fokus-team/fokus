@@ -118,6 +118,19 @@
 					}
 				}
 			},
+			"calendar": {
+				"header": {
+					"title": "Plan calendar",
+					"filterPlansTitle": "Filter displayed plans",
+					"showPlansForTitle": "Show plans assigned to"
+				},
+				"content": {
+					"plansOnDateTitle": "Plans on {DATE}",
+					"noPlansOnDateTitle": "No active plans on this day",
+					"planAssignedToSubtitle": "Assigned to",
+					"planNotAssignedToSubtitle": "Plan not assigned yet"
+				}
+			},
 			"plans": {
 				"header": {
 					"title": "Plans",

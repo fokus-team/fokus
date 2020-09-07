@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:date_utils/date_utils.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart';
@@ -20,7 +22,9 @@ class PlanRepeatabilityService {
 
 	/// [span] - must fit within a month (from 1'st to the end)
 	List<Date> getRepeatabilityDatesInSpan(PlanRepeatability repeatability, DateSpan<Date> span) {
-		var day = (int index) => repeatability.days[index];
+		if ((repeatability.range?.from != null && repeatability.range.from >= span.to) || (repeatability.range?.to != null && repeatability.range.to < span.from))
+			return [];
+		var day = (int index) => repeatability.days[max(index, 0)];
 		List<Date> dates = [];
 		var iterateDays = (int startDay, int baseLength) {
 			var dayIndex = repeatability.days.indexWhere((day) => day >= startDay);
@@ -30,17 +34,18 @@ class PlanRepeatabilityService {
 				daysJump += baseLength;
 			}
 			var date = Date(span.from.year, span.from.month, span.from.day + daysJump);
-			while (date < span.to) {
-				dates.add(Date.fromDate(date));
+			while (date < span.to && (repeatability.range?.to == null || date <= repeatability.range.to)) {
+				if ((repeatability.range?.from == null || date >= repeatability.range?.from))
+					dates.add(Date.fromDate(date));
 				var gap = day((dayIndex + 1) % repeatability.days.length) - day(dayIndex);
 				date = Date(date.year, date.month, date.day + (gap > 0 ? gap : gap + baseLength));
 				dayIndex = (dayIndex + 1) % repeatability.days.length;
 			}
 		};
-		if (repeatability.type == RepeatabilityType.once)
-			if (repeatability.range.from >= span.from && repeatability.range.from < span.to)
+		if (repeatability.type == RepeatabilityType.once) {
+			if (span.contains(repeatability.range.from, includeTo: false))
 				dates.add(repeatability.range.from);
-		else if (repeatability.type == RepeatabilityType.weekly)
+		} else if (repeatability.type == RepeatabilityType.weekly)
 			iterateDays(span.from.weekday, 7);
 		else if (repeatability.type == RepeatabilityType.monthly)
 			iterateDays(span.from.day, Utils.lastDayOfMonth(span.from).day);
@@ -61,7 +66,7 @@ class PlanRepeatabilityService {
 		var range = DateSpan.from(planForm.rangeDate);
 		if (type == RepeatabilityType.once)
 			range.from = planForm.onlyOnceDate;
-		return PlanRepeatability(type: type, untilCompleted: untilCompleted, range: range, days: planForm.days);
+		return PlanRepeatability(type: type, untilCompleted: untilCompleted, range: range, days: planForm.days..sort());
 	}
 
 	static PlanFormRepeatability getFormRepeatability(PlanRepeatability repeatability) {

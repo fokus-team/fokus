@@ -40,39 +40,31 @@ class TaskAppHeaderState extends State<TaskAppHeader> with TickerProviderStateMi
 
   @override
   Widget build(BuildContext context) {
-		return Column(
-			mainAxisAlignment: MainAxisAlignment.spaceBetween,
-			children: [
-				AppHeader.widget(
-					title: this.widget.title,
-					text: this.widget.text,
-					appHeaderWidget: this.widget.appHeaderWidget,
-					helpPage: this.widget.helpPage,
-					isConstrained: true,
-				),
-				_getTimerButtonSection(),
-				Expanded(
-				  child: Container(
-				  	decoration: BoxDecoration(
-							border: Border.all(color: Colors.white),
-				  		color: Colors.white,
-				  	),
-				  ),
-				),
-				_getCurrencyBar(),
-				_getConfettiCanons()
-			],
+		return Container(
+			color: Colors.grey[50],
+			child: Column(
+				mainAxisAlignment: MainAxisAlignment.spaceBetween,
+				mainAxisSize: MainAxisSize.min,
+				children: [
+					AppHeader.widget(
+						title: this.widget.title,
+						text: this.widget.text,
+						appHeaderWidget: this.widget.appHeaderWidget,
+						helpPage: this.widget.helpPage,
+						isConstrained: true,
+					),
+					_getTimerButtonSection(),
+					_getCurrencyBar(),
+					_getConfettiCanons()
+				],
+			)
 		);
   }
 
   Widget _getTimerButtonSection() {
   	return Container(
-			decoration: BoxDecoration(
-				color: AppColors.childTaskFiller,
-				border: Border.all(color: AppColors.childTaskFiller),
-			),
 			child: Padding(
-				padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16),
+				padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
 				child: Row(
 					mainAxisAlignment: MainAxisAlignment.spaceBetween,
 					children: [
@@ -90,40 +82,35 @@ class TaskAppHeaderState extends State<TaskAppHeader> with TickerProviderStateMi
 						SlideTransition(
 							position: _offsetAnimation,
 							child: _getButtonWidget()
-						),
-					],
-				),
-			),
+						)
+					]
+				)
+			)
 		);
 	}
 
 	Widget _getCurrencyBar() {
 		return Container(
-			decoration: BoxDecoration(
-				color: AppColors.childTaskFiller,
-				border: Border.all(color: AppColors.childTaskFiller),
-			),
+			color: AppColors.childTaskFiller,
 			child: Padding(
-				padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 0),
+				padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 0),
 				child: Container(
-					decoration: AppBoxProperties.elevatedContainer.copyWith(borderRadius: BorderRadius.vertical(top: Radius.circular(4))),
+					decoration: AppBoxProperties.elevatedContainer.copyWith(borderRadius: BorderRadius.vertical(top: Radius.circular(4.0))),
 					child: Padding(
-						padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+						padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
 						child: Row(
 							mainAxisAlignment: MainAxisAlignment.spaceBetween,
 							children: [
-								Text(
-									AppLocales.of(context).translate('$_pageKey.content.pointsToGet'),
-								),
+								Text(AppLocales.of(context).translate('$_pageKey.content.pointsToGet')),
 								AttributeChip.withCurrency(
 									content: "+30",
 									currencyType: CurrencyType.diamond
 								)
-							],
-						),
-					),
-				),
-			),
+							]
+						)
+					)
+				)
+			)
 		);
 	}
 
@@ -138,6 +125,8 @@ class TaskAppHeaderState extends State<TaskAppHeader> with TickerProviderStateMi
 					numberOfParticles: 5,
 					maxBlastForce: 30,
 					minBlastForce: 2,
+					maximumSize: const Size(16, 8),
+					minimumSize: const Size(8, 5)
 				),
 				ConfettiWidget(
 					shouldLoop: true,
@@ -145,21 +134,18 @@ class TaskAppHeaderState extends State<TaskAppHeader> with TickerProviderStateMi
 					numberOfParticles: 5,
 					maxBlastForce: 30,
 					minBlastForce: 2,
-				),
-			],
+					maximumSize: const Size(16, 8),
+					minimumSize: const Size(8, 5)
+				)
+			]
 		);
 	}
 
 	Widget _getButtonWidget() {
 		return RaisedButton(
-			padding: EdgeInsets.all(0),
+			color: !isBreakNow ? AppColors.childBreakColor : AppColors.childTaskColor,
+			padding: EdgeInsets.zero,
 			child: AnimatedContainer(
-				decoration: ShapeDecoration(
-					shape: RoundedRectangleBorder(
-						borderRadius: BorderRadius.circular(4)
-					),
-					color: !isBreakNow ? AppColors.childBreakColor : AppColors.childTaskColor,
-				),
 				duration: Duration(milliseconds: 1500),
 				child: Padding(
 					padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
@@ -179,12 +165,12 @@ class TaskAppHeaderState extends State<TaskAppHeader> with TickerProviderStateMi
 									!isBreakNow ? AppLocales.of(context).translate('$_pageKey.content.breakButton') : AppLocales.of(context).translate('$_pageKey.content.resumeButton'),
 									style: Theme.of(context).textTheme.headline2.copyWith(color: AppColors.lightTextColor),
 									maxLines: 1,
-									softWrap: false,
-								),
+									softWrap: false
+								)
 							)
-						],
-					),
-				),
+						]
+					)
+				)
 			),
 			onPressed: () => this.widget.breakPerformingTransition(),
 			elevation: 4.0
@@ -196,7 +182,7 @@ class TaskAppHeaderState extends State<TaskAppHeader> with TickerProviderStateMi
   	isBreakNow = this.widget.isBreak;
 		_buttonController = AnimationController(duration: Duration(milliseconds: 450), vsync: this);
 		_confetti = ConfettiController(
-			duration: Duration(seconds: 10)
+			duration: Duration(seconds: 10),
 		);
 		_slideController = AnimationController(
 			duration: const Duration(seconds: 1),

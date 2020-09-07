@@ -33,6 +33,10 @@ class DateSpan<D extends DateBase> {
     return data;
   }
 
+  bool contains(D date, {bool includeFrom = true, bool includeTo = true}) {
+  	return (date >= from && (includeFrom || date != from)) && (date <= to && (includeTo || date != to));
+  }
+
   @override
   bool operator ==(Object other) => identical(this, other) || other is DateSpan && runtimeType == other.runtimeType && from == other.from && to == other.to;
 

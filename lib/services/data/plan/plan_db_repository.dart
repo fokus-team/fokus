@@ -35,8 +35,8 @@ mixin PlanDbRepository implements DbRepository {
 		return dbClient.queryOneTyped(Collection.planInstance, query, (json) => PlanInstance.fromJson(json));
 	}
 
-	Future<List<PlanInstance>> getPlanInstances({ObjectId childId, PlanInstanceState state, List<ObjectId> planIDs, Date date, DateSpan<Date> between}) {
-		var query = _buildPlanQuery(childId: childId, state: state, date: date);
+	Future<List<PlanInstance>> getPlanInstances({List<ObjectId> childIDs, PlanInstanceState state, List<ObjectId> planIDs, Date date, DateSpan<Date> between}) {
+		var query = _buildPlanQuery(childIDs: childIDs, state: state, date: date, between: between);
 		return dbClient.queryTyped(Collection.planInstance, query, (json) => PlanInstance.fromJson(json));
 	}
 
@@ -79,12 +79,14 @@ mixin PlanDbRepository implements DbRepository {
 	Future createPlan(Plan plan) => dbClient.insert(Collection.plan, plan.toJson());
 
 	SelectorBuilder _buildPlanQuery({ObjectId id, ObjectId caregiverId, ObjectId childId, ObjectId planId,
-			PlanInstanceState state, Date date, DateSpan<Date> between, bool active}) {
+			PlanInstanceState state, Date date, DateSpan<Date> between, bool active, List<ObjectId> childIDs}) {
 		SelectorBuilder query = where;
 		if (id != null)
 			query.eq('_id', id);
 		if (childId != null)
 			query.eq('assignedTo', childId);
+		if (childIDs != null)
+			query.oneFrom('assignedTo', childIDs);
 		if (caregiverId != null)
 			query.eq('createdBy', caregiverId);
 		if (active != null)

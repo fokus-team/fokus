@@ -5,11 +5,18 @@ import 'package:fokus/utils/theme_config.dart';
 import 'package:fokus/widgets/dialogs/general_dialog.dart';
 import 'package:lottie/lottie.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:package_info/package_info.dart';
 
-class AppInfoDialog extends StatelessWidget {
+class AppInfoDialog extends StatefulWidget {
+	@override
+	_AppInfoDialogState createState() => new _AppInfoDialogState();
+}
+
+class _AppInfoDialogState extends State<AppInfoDialog> {
 	final String _settingsKey = 'page.settings.content.appSettings.appInfo';
 
-	final String version = '0.0.1';
+	PackageInfo _packageInfo = PackageInfo();
+
 	final String creators = 'Stanisław Góra, Mateusz Janicki,\nMikołaj Mirko, Jan Czubiak';
 	final String githubURL = 'https://github.com/fokus-team/fokus';
 	final String termsURL = 'https://github.com/fokus-team/fokus'; // TODO Write and direct to terms of use
@@ -21,12 +28,25 @@ class AppInfoDialog extends StatelessWidget {
 			showBasicDialog(
 				context,
 				GeneralDialog.discard(
-					title: AppLocales.of(context).translate('alert.errorOccured'),
+					title: AppLocales.of(context).translate('alert.errorOccurred'),
 					content: AppLocales.of(context).translate('alert.noConnection')
 				)
 			);
 		}
 	}
+
+	@override
+	void initState() {
+		super.initState();
+		_initPackageInfo();
+	}
+
+  Future<void> _initPackageInfo() async {
+    final PackageInfo info = await PackageInfo.fromPlatform();
+    setState(() {
+      _packageInfo = info;
+    });
+  }
 
 	@override
 	Widget build(BuildContext context) {
@@ -44,12 +64,12 @@ class AppInfoDialog extends StatelessWidget {
 										child: Center(child: Lottie.asset('assets/animation/sunflower.json', width: 140.0))
 									),
 									Text(
-										AppLocales.of(context).translate('fokus'),
+										_packageInfo.appName ?? AppLocales.of(context).translate('fokus'),
 										style: Theme.of(context).textTheme.headline1,
 										textAlign: TextAlign.center,
 									),
 									Text(
-										'${AppLocales.of(context).translate('$_settingsKey.version')} $version',
+										'${AppLocales.of(context).translate('$_settingsKey.version')} ${_packageInfo.version ?? ''}',
 										style: Theme.of(context).textTheme.caption,
 										textAlign: TextAlign.center,
 									),

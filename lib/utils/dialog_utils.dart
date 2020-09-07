@@ -51,34 +51,33 @@ Future<bool> showExitFormDialog(BuildContext context, bool isSystemPop, bool isD
 	if (!isDataChanged) {
 		Navigator.pop(context, true);
 		return Future.value(false);
-	} else {
-		FocusManager.instance.primaryFocus.unfocus();
-		return showDialog<bool>(
-			context: context,
-			builder: (c) => AlertDialog(
-				title: Text(AppLocales.of(context).translate('alert.unsavedProgressTitle')),
-				content: Text(AppLocales.of(context).translate('alert.unsavedProgressMessage')),
-				actions: [
-					FlatButton(
-						child: Text(AppLocales.of(context).translate('actions.cancel')),
-						onPressed: () => Navigator.pop(c, false),
-					),
-					FlatButton(
-						textColor: Colors.red,
-						child: Text(AppLocales.of(context).translate('actions.exit')),
-						onPressed: () {
-							if(isSystemPop)
-								Navigator.pop(c, true);
-							else {
-								Navigator.of(context).pop();
-								Navigator.of(context).pop();
-							}
-						}
-					)
-				]
-			)
-		);
 	}
+	FocusManager.instance.primaryFocus.unfocus();
+	return showDialog<bool>(
+		context: context,
+		builder: (c) => AlertDialog(
+			title: Text(AppLocales.of(context).translate('alert.unsavedProgressTitle')),
+			content: Text(AppLocales.of(context).translate('alert.unsavedProgressMessage')),
+			actions: [
+				FlatButton(
+					child: Text(AppLocales.of(context).translate('actions.cancel')),
+					onPressed: () => Navigator.pop(c, false),
+				),
+				FlatButton(
+					textColor: Colors.red,
+					child: Text(AppLocales.of(context).translate('actions.exit')),
+					onPressed: () {
+						if(isSystemPop)
+							Navigator.pop(c, true);
+						else {
+							Navigator.of(context).pop();
+							Navigator.of(context).pop();
+						}
+					}
+				)
+			]
+		)
+	);
 }
 
 void showAppInfoDialog(BuildContext context) {

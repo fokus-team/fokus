@@ -96,7 +96,7 @@
 					"showAppInfoLabel": "O aplikacji",
 					"appInfo": {
 						"version": "Wersja",
-						"description": "Fokus to aplikacja mobilna pomagająca dzieciom i ich opiekunom w realizacji codziennych zadań. Aplikacja powstała w ramach projektu grupowego realizowanego na Politechnice Gdańskiej.",
+						"description": "Fokus to aplikacja mobilna pomagająca dzieciom w realizacji codziennych zadań pod kontrolą opiekunów. Powstała w ramach projektu grupowego realizowanego na Politechnice Gdańskiej.",
 						"creators": "Autorzy",
 						"licences": "Licencje",
 						"projectPage": "Strona projektu",
@@ -481,7 +481,7 @@
 		"everyday": "Codziennie"
 	},
 	"alert": {
-		"errorOccured": "Wystąpił błąd",
+		"errorOccurred": "Wystąpił błąd",
 		"noConnection": "Brak połączenia",
 		"noHint": "Brak podpowiedzi",
 		"connectionRetry": "Upewnij się że urządzenie ma dostęp do internetu",

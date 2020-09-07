@@ -96,7 +96,7 @@
 					"showAppInfoLabel": "About the app",
 					"appInfo": {
 						"version": "Version",
-						"description": "Fokus is a mobile application that helps kids complete their daily tasks under parental control. The app was created as part of a group project at Gdansk University of Technology.",
+						"description": "Fokus is a mobile application that helps kids complete their daily tasks under parental control. It was created as part of a team project at Gdansk University of Technology.",
 						"creators": "Created by",
 						"licences": "Licences",
 						"projectPage": "Project page",
@@ -481,7 +481,7 @@
 		"everyday": "Codziennie"
 	},
 	"alert": {
-		"errorOccured": "Error occured",
+		"errorOccurred": "Error occurred",
 		"noConnection": "No connection",
 		"connectionRetry": "Ensure the device has access to the internet",
 		"noHint": "No hint",

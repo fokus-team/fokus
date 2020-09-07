@@ -77,20 +77,31 @@
 				"title": "Ustawienia"
 			},
 			"content": {
-				"myProfileTitle": "Mój profil",
-				"myProfileHint": "Edytuj szczegóły swojego profilu",
-				"changeAppLanguage": "Język aplikacji",
-				"manageAppNotifications": "Powiadomienia",
-				"showAppInfo": "O aplikacji",
-				"appInfoVersion": "Wersja",
-				"appInfoDescription": "Fokus to aplikacja mobilna pomagająca dzieciom i ich opiekunom w realizacji codziennych zadań. Aplikacja powstała w ramach projektu grupowego realizowanego na Politechnice Gdańskiej.",
-				"appInfoCreatedBy": "Autorzy",
-				"appInfoLicences": "Licencje",
-				"goToProjectPage": "Strona projektu",
-				"showPrivacyPolicy": "Polityka prywatności",
-				"languages": {
-					"pl": "Polski",
-					"en": "Angielski"
+				"profile": {
+					"header": "Profil",
+					"editNameLabel": "Edytuj imię",
+					"changePasswordLabel": "Zmień hasło",
+					"deleteAccountLabel": "Usuń konto",
+					"deleteAccountHint": "Trwale usuń konto i profile dzieci",
+					"deleteAccountConfirmation": "Czy na pewno chcesz usunąć swoje konto wraz z wszystkimi profilami dzieci? Tej akcji nie mozna cofnąć!"
+				},
+				"appSettings": {
+					"header": "Ustawienia aplikacji",
+					"changeLanguageLabel": "Język aplikacji",
+					"languages": {
+						"default": "Systemowy (domyślny)",
+						"pl": "Polski",
+						"en": "Angielski"
+					},
+					"showAppInfoLabel": "O aplikacji",
+					"appInfo": {
+						"version": "Wersja",
+						"description": "Fokus to aplikacja mobilna pomagająca dzieciom i ich opiekunom w realizacji codziennych zadań. Aplikacja powstała w ramach projektu grupowego realizowanego na Politechnice Gdańskiej.",
+						"creators": "Autorzy",
+						"licences": "Licencje",
+						"projectPage": "Strona projektu",
+						"terms": "Warunki usługi"
+					}
 				}
 			}
 		},
@@ -470,6 +481,7 @@
 		"everyday": "Codziennie"
 	},
 	"alert": {
+		"errorOccured": "Wystąpił błąd",
 		"noConnection": "Brak połączenia",
 		"noHint": "Brak podpowiedzi",
 		"connectionRetry": "Upewnij się że urządzenie ma dostęp do internetu",
@@ -510,6 +522,8 @@
 		"name": "Imię",
 		"email": "Adres e-mail",
 		"password": "Hasło",
+		"currentPassword": "Aktualne hasło",
+		"newPassword": "Nowe hasło",
 		"avatar": "Awatar",
 		"confirmPassword": "Powtórz hasło",
 		"googleSignIn": "Zaloguj się z Google",

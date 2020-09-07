@@ -77,20 +77,31 @@
 				"title": "Settings"
 			},
 			"content": {
-				"myProfileTitle": "My profile",
-				"myProfileHint": "Edit the details of my profile",
-				"changeAppLanguage": "Change app language",
-				"manageAppNotifications": "App notifications",
-				"showAppInfo": "About the app",
-				"appInfoVersion": "Version",
-				"appInfoDescription": "Fokus is a mobile application that helps kids complete their daily tasks under parental control. The app was created as part of a group project at Gdansk University of Technology.",
-				"appInfoCreatedBy": "Created by",
-				"appInfoLicences": "Licences",
-				"goToProjectPage": "Go to project page",
-				"showPrivacyPolicy": "Privacy Policy",
-				"languages": {
-					"pl": "Polish",
-					"en": "English"
+				"profile": {
+					"header": "Profile",
+					"editNameLabel": "Edit your name",
+					"changePasswordLabel": "Change your password",
+					"deleteAccountLabel": "Delete your account",
+					"deleteAccountHint": "Delete your and children's accounts",
+					"deleteAccountConfirmation": "Are you sure you want to delete your account with all children profiles? This action cannot be undone!"
+				},
+				"appSettings": {
+					"header": "App settings",
+					"changeLanguageLabel": "App language",
+					"languages": {
+						"default": "System (default)",
+						"pl": "Polish",
+						"en": "English"
+					},
+					"showAppInfoLabel": "About the app",
+					"appInfo": {
+						"version": "Version",
+						"description": "Fokus is a mobile application that helps kids complete their daily tasks under parental control. The app was created as part of a group project at Gdansk University of Technology.",
+						"creators": "Created by",
+						"licences": "Licences",
+						"projectPage": "Project page",
+						"terms": "Terms of service"
+					}
 				}
 			}
 		},
@@ -470,6 +481,7 @@
 		"everyday": "Codziennie"
 	},
 	"alert": {
+		"errorOccured": "Error occured",
 		"noConnection": "No connection",
 		"connectionRetry": "Ensure the device has access to the internet",
 		"noHint": "No hint",
@@ -510,6 +522,8 @@
 		"name": "First name",
 		"email": "E-mail address",
 		"password": "Password",
+		"currentPassword": "Current password",
+		"newPassword": "New password",
 		"avatar": "Avatar",
 		"confirmPassword": "Repeat password",
 		"googleSignIn": "Sign in with Google",

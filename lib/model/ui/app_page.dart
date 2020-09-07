@@ -3,6 +3,7 @@ enum AppPage {
 	loadingPage,
 	rolesPage,
 	notificationsPage,
+	settingsPage,
 	// Auth
 	caregiverSignInPage,
 	caregiverSignUpPage,
@@ -32,6 +33,7 @@ extension AppPageName on AppPage {
 		AppPage.loadingPage: '/loading-page',
 		AppPage.rolesPage: '/roles-page',
     AppPage.notificationsPage: '/notifications-page',
+    AppPage.settingsPage: '/settings-page',
 		AppPage.caregiverSignInPage: '/auth/caregiver-sign-in-page',
 		AppPage.caregiverSignUpPage: '/auth/caregiver-sign-up-page',
 		AppPage.childProfilesPage: '/auth/child-profiles-page',

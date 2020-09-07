@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:fokus/logic/caregiver_plans_cubit.dart';
 import 'package:fokus/model/ui/app_page.dart';
@@ -12,7 +10,6 @@ import 'package:fokus/widgets/cards/item_card.dart';
 import 'package:fokus/widgets/chips/attribute_chip.dart';
 import 'package:fokus/widgets/loadable_bloc_builder.dart';
 import 'package:fokus/widgets/segment.dart';
-import 'package:mongo_dart/mongo_dart.dart' as Mongo;
 
 class CaregiverPlansPage extends StatefulWidget {
 	@override

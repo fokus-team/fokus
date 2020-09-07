@@ -32,6 +32,7 @@ dependencies:
     bloc: ^6.0.1
     flutter_bloc: ^6.0.1
 
+    package_info: '>=0.4.3 <2.0.0'
     equatable: ^1.1.0
     meta: ^1.1.6
     date_utils: ^0.1.0+3
@@ -39,6 +40,7 @@ dependencies:
     intl: ^0.16.1
     formz: ^0.3.0
     shared_preferences: ^0.5.8
+    url_launcher: ^5.5.2
 
     cupertino_icons: ^0.1.2
     lottie: ^0.4.0+1

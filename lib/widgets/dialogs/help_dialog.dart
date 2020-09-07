@@ -21,11 +21,11 @@ class HelpDialog extends StatelessWidget {
       shape: RoundedRectangleBorder(),
       elevation: 0.0,
       backgroundColor: Colors.transparent,
-      child: dialogContent(context)
+      child: _buildDialogContent(context)
     );
   }
 
-  Widget dialogContent(BuildContext context) {
+  Widget _buildDialogContent(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 12.0),
       decoration: new BoxDecoration(

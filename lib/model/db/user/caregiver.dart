@@ -1,7 +1,7 @@
-import 'package:fokus/model/auth_user.dart';
 import 'package:fokus/model/db/gamification/badge.dart';
 import 'package:fokus/model/db/gamification/currency.dart';
 import 'package:fokus/model/db/user/user_role.dart';
+import 'package:fokus_auth/fokus_auth.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
 import 'user.dart';

@@ -16,11 +16,10 @@ class TaskInstanceService {
 		List<UITaskInstance> uiTaskInstances = [];
 		for(int i=0; i<taskInstances.length; i++) {
 			var task = await _dataRepository.getTask(taskId: taskInstances[i].taskID);
-			if(taskUiTypes[i] == TaskUIType.currentlyPerformed || taskUiTypes[i] == TaskUIType.inBreak) {
-				var elapsedTimePassed = () =>  taskUiTypes[i] == TaskUIType.currentlyPerformed ? sumDurations(taskInstances[i].duration).inSeconds : sumDurations(taskInstances[i].breaks).inSeconds;
-				uiTaskInstances.add(UITaskInstance.listFromDBModel(task: taskInstances[i], name: task.name, description: task.description, points: task.points != null ? UIPoints(quantity: task.points.quantity, type: task.points.icon, title: task.points.name) : null, type: taskUiTypes[i], elapsedTimePassed: elapsedTimePassed));
-			}
-			else uiTaskInstances.add(UITaskInstance.listFromDBModel(task: taskInstances[i], name: task.name, description: task.description, points: task.points != null ? UIPoints(quantity: task.points.quantity, type: task.points.icon, title: task.points.name) : null, type: taskUiTypes[i]));
+			int Function() elapsedTimePassed;
+			if(taskUiTypes[i] == TaskUIType.currentlyPerformed || taskUiTypes[i] == TaskUIType.inBreak)
+				elapsedTimePassed = () => taskUiTypes[i] == TaskUIType.currentlyPerformed ? sumDurations(taskInstances[i].duration).inSeconds : sumDurations(taskInstances[i].breaks).inSeconds;
+			uiTaskInstances.add(UITaskInstance.listFromDBModel(task: taskInstances[i], name: task.name, description: task.description, points: task.points != null ? UIPoints(quantity: task.points.quantity, type: task.points.icon, title: task.points.name) : null, type: taskUiTypes[i], elapsedTimePassed: elapsedTimePassed));
 		}
 		return uiTaskInstances;
 	}
@@ -32,16 +31,18 @@ class TaskInstanceService {
 		for(var task in tasks) {
 			var taskStatus;
 			if(task.status.completed) {
-				if(task.status.state == TaskState.rejected) taskStatus = TaskUIType.rejected;
-				else taskStatus = TaskUIType.completed;
+				task.status.state == TaskState.rejected ? taskStatus = TaskUIType.rejected
+					: taskStatus = TaskUIType.completed;
 			}
-			else if((task.optional&&!isAnyInProgress) || prevTaskStatus == null || prevTaskStatus == TaskUIType.completed || prevTaskStatus == TaskUIType.rejected) {
-				if(task.breaks.length > 0 && task.breaks.last.to == null) taskStatus = TaskUIType.inBreak;
+			else if((task.optional&&!isAnyInProgress) || prevTaskStatus == null || prevTaskStatus.wasInProgress) {
+				if(task.breaks.length > 0 && task.breaks.last.to == null)
+					taskStatus = TaskUIType.inBreak;
 				else if(task.duration.length > 0)
-					if(task.duration.last.to == null) taskStatus = TaskUIType.currentlyPerformed;
-					else taskStatus = TaskUIType.rejected;
+					task.duration.last.to == null ? taskStatus = TaskUIType.currentlyPerformed
+						: taskStatus = TaskUIType.rejected;
 				else taskStatus = TaskUIType.available;
-				if(taskStatus != TaskUIType.rejected && taskStatus != TaskUIType.available) isAnyInProgress = true;
+				if(taskStatus != TaskUIType.rejected && taskStatus != TaskUIType.available)
+					isAnyInProgress = true;
 			}
 			else taskStatus = TaskUIType.queued;
 			taskStatuses.add(taskStatus);

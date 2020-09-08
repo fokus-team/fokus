@@ -10,7 +10,8 @@ import 'package:fokus/services/task_instance_service.dart';
 enum TaskUIType {completed, available, inBreak, currentlyPerformed, rejected, queued, notCompletedUndefined}
 
 extension TaskUITypeGroups on TaskUIType {
-	bool get inProgress => this == TaskUIType.inBreak || this == TaskUIType.rejected || this == TaskUIType.currentlyPerformed;
+	bool get inProgress => this == TaskUIType.inBreak || this == TaskUIType.currentlyPerformed;
+	bool get wasInProgress => this == TaskUIType.rejected || this == TaskUIType.completed;
 }
 
 class UITaskInstance extends UITaskBase {

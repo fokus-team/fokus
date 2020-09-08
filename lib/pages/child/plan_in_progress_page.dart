@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fokus/logic/child_tasks_cubit.dart';
+import 'package:fokus/logic/plan_instance_cubit.dart';
 import 'package:fokus/logic/timer/timer_cubit.dart';
 import 'package:fokus/model/db/plan/plan_instance_state.dart';
 import 'package:fokus/model/db/plan/task_status.dart';
@@ -35,7 +35,7 @@ class _ChildPlanInProgressPageState extends State<ChildPlanInProgressPage> {
 			body: Column(
 				crossAxisAlignment: CrossAxisAlignment.start,
 				children: [
-					LoadableBlocBuilder<ChildTasksCubit>(
+					LoadableBlocBuilder<PlanInstanceCubit>(
 						builder: (context, state) => AppSegments(segments: _buildPanelSegments(state))
 					)
 				],

@@ -12,13 +12,13 @@ import 'package:fokus/utils/duration_utils.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
-class ChildTasksCubit extends ReloadableCubit {
+class PlanInstanceCubit extends ReloadableCubit {
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final TaskInstanceService _taskInstancesService = GetIt.I<TaskInstanceService>();
 	final PlanRepeatabilityService _repeatabilityService = GetIt.I<PlanRepeatabilityService>();
 	final ObjectId _planInstanceId;
 	final TaskKeeperService _taskKeeperService = GetIt.I<TaskKeeperService>();
-	ChildTasksCubit(this._planInstanceId, ModalRoute modalRoute) : super(modalRoute);
+	PlanInstanceCubit(this._planInstanceId, ModalRoute modalRoute) : super(modalRoute);
 
 	@override
 	void doLoadData() async {

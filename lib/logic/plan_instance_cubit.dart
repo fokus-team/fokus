@@ -25,7 +25,7 @@ class PlanInstanceCubit extends ReloadableCubit {
 		var getDescription = (Plan plan, [Date instanceDate]) => _repeatabilityService.buildPlanDescription(plan.repeatability, instanceDate: instanceDate);
 		var planInstance = await _dataRepository.getPlanInstance(id: _planInstanceId);
 		if(planInstance.taskInstances == null || planInstance.taskInstances.isEmpty)
-			_taskKeeperService.onPlanInstanceOpen(planInstance);
+			_taskKeeperService.createTaskInstances(planInstance);
 		var plan = await _dataRepository.getPlan(id: planInstance.planID);
 		var elapsedTime = () => sumDurations(planInstance.duration).inSeconds;
 		var completedTasks = await _dataRepository.getCompletedTaskCount(planInstance.id);

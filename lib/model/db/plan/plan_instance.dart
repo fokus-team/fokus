@@ -30,7 +30,7 @@ class PlanInstance {
       assignedTo: json['assignedTo'],
       date: Date.parseDBDate(json['date']),
 	    duration: json['duration'] != null ? (json['duration'] as List).map((i) => DateSpan.fromJson<TimeDate>(i)).toList() : [],
-      taskInstances: json['instances'] != null ? new List<ObjectId>.from(json['taskInstances']) : [],
+      taskInstances: json['taskInstances'] != null ? new List<ObjectId>.from(json['taskInstances']) : [],
 	    tasks: json['tasks'] != null ? new List<ObjectId>.from(json['tasks']) : [],
 	    addedTasks: json['addedTasks'] != null ? new List<ObjectId>.from(json['addedTasks']) : [],
     ) : null;

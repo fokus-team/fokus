@@ -1,4 +1,5 @@
 {
+	"fokus": "Fokus",
 	"loading": "Ładowanie",
 	"navigation": {
 		"caregiver": {
@@ -11,7 +12,8 @@
 			"plans": "Plany",
 			"awards": "Nagrody",
 			"achievements": "Osiągnięcia"
-		}
+		},
+		"settings": "Ustawienia"
 	},
 	"page": {
 		"loginSection": {
@@ -70,6 +72,39 @@
 				}
 			}
 		},
+		"settings": {
+			"header": {
+				"title": "Ustawienia"
+			},
+			"content": {
+				"profile": {
+					"header": "Profil",
+					"editNameLabel": "Zmień imię",
+					"changePasswordLabel": "Zmień hasło",
+					"deleteAccountLabel": "Usuń konto",
+					"deleteAccountHint": "Trwale usuń konto i profile dzieci",
+					"deleteAccountConfirmation": "Czy na pewno chcesz usunąć swoje konto wraz z wszystkimi profilami dzieci? Tej akcji nie mozna cofnąć!"
+				},
+				"appSettings": {
+					"header": "Ustawienia aplikacji",
+					"changeLanguageLabel": "Język aplikacji",
+					"languages": {
+						"default": "Systemowy (domyślny)",
+						"pl": "Polski",
+						"en": "Angielski"
+					},
+					"showAppInfoLabel": "O aplikacji",
+					"appInfo": {
+						"version": "Wersja",
+						"description": "Fokus to aplikacja mobilna pomagająca dzieciom w realizacji codziennych zadań pod kontrolą opiekunów. Powstała w ramach projektu grupowego realizowanego na Politechnice Gdańskiej.",
+						"creators": "Autorzy",
+						"licences": "Licencje",
+						"projectPage": "Strona projektu",
+						"terms": "Warunki usługi"
+					}
+				}
+			}
+		},
 		"caregiverSection": {
 			"panel": {
 				"header": {
@@ -116,6 +151,19 @@
 						"noAwardsAdded": "Lista możliwych do kupienia nagród jest pusta. Dodaj nagrodę, aby dziecko mogo ją zdobyć.",
 						"noBadgesAdded": "Lista możliwych do przyznania odznak jest pusta. Dodaj odznakę, aby móc przydzielić ją dziecku."
 					}
+				}
+			},
+			"calendar": {
+				"header": {
+					"title": "Kalendarz planów",
+					"filterPlansTitle": "Filtruj wyświetlane plany",
+					"showPlansForTitle": "Wyświetlaj plany przypisane do"
+				},
+				"content": {
+					"plansOnDateTitle": "Plany na dzień {DATE}",
+					"noPlansOnDateTitle": "Brak aktywnych planów na ten dzień",
+					"planAssignedToSubtitle": "Przypisany do",
+					"planNotAssignedToSubtitle": "Plan nieprzypisany"
 				}
 			},
 			"plans": {
@@ -446,6 +494,7 @@
 		"everyday": "Codziennie"
 	},
 	"alert": {
+		"errorOccurred": "Wystąpił błąd",
 		"noConnection": "Brak połączenia",
 		"noHint": "Brak podpowiedzi",
 		"connectionRetry": "Upewnij się że urządzenie ma dostęp do internetu",
@@ -486,6 +535,8 @@
 		"name": "Imię",
 		"email": "Adres e-mail",
 		"password": "Hasło",
+		"currentPassword": "Aktualne hasło",
+		"newPassword": "Nowe hasło",
 		"avatar": "Awatar",
 		"confirmPassword": "Powtórz hasło",
 		"googleSignIn": "Zaloguj się z Google",

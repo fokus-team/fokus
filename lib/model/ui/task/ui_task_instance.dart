@@ -7,10 +7,11 @@ import 'package:fokus/model/ui/gamification/ui_points.dart';
 import 'package:fokus/model/ui/task/ui_task_base.dart';
 import 'package:fokus/services/task_instance_service.dart';
 
-enum TaskUIType {completed, available, inBreak, stopped, currentlyPerformed, queued, notCompletedUndefined}
+enum TaskUIType {completed, available, inBreak, currentlyPerformed, rejected, queued, notCompletedUndefined}
 
 extension TaskUITypeGroups on TaskUIType {
-	bool get inProgress => this == TaskUIType.inBreak || this == TaskUIType.stopped || this == TaskUIType.currentlyPerformed;
+	bool get inProgress => this == TaskUIType.inBreak || this == TaskUIType.currentlyPerformed;
+	bool get wasInProgress => this == TaskUIType.rejected || this == TaskUIType.completed;
 }
 
 class UITaskInstance extends UITaskBase {

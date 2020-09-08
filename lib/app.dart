@@ -10,7 +10,8 @@ import 'package:fokus/logic/auth/child/prev_profiles_cubit.dart';
 import 'package:fokus/logic/auth/child/sign_in/child_sign_in_cubit.dart';
 import 'package:fokus/logic/auth/child/sign_up/child_sign_up_cubit.dart';
 import 'package:fokus/logic/caregiver_tasks_cubit.dart';
-import 'package:fokus/logic/child_tasks_cubit.dart';
+import 'package:fokus/logic/plan_instance_cubit.dart';
+import 'package:fokus/logic/calendar_cubit.dart';
 import 'package:fokus/logic/caregiver_panel_cubit.dart';
 import 'package:fokus/logic/caregiver_plans_cubit.dart';
 import 'package:fokus/logic/child_plans_cubit.dart';
@@ -18,9 +19,12 @@ import 'package:fokus/logic/plan_form/plan_form_cubit.dart';
 
 import 'package:fokus/pages/loading_page.dart';
 import 'package:fokus/pages/roles_page.dart';
+import 'package:fokus/pages/notifications_page.dart';
+import 'package:fokus/pages/settings_page.dart';
 import 'package:fokus/pages/caregiver/auth/caregiver_sign_in_page.dart';
 import 'package:fokus/pages/caregiver/auth/caregiver_sign_up_page.dart';
 import 'package:fokus/pages/caregiver/awards_page.dart';
+import 'package:fokus/pages/caregiver/calendar_page.dart';
 import 'package:fokus/pages/caregiver/child_dashboard_page.dart';
 import 'package:fokus/pages/caregiver/award_form_page.dart';
 import 'package:fokus/pages/caregiver/badge_form_page.dart';
@@ -33,7 +37,6 @@ import 'package:fokus/pages/child/auth/child_profiles_page.dart';
 import 'package:fokus/pages/child/auth/child_sign_in_page.dart';
 import 'package:fokus/pages/child/awards_page.dart';
 import 'package:fokus/pages/child/panel_page.dart';
-import 'package:fokus/pages/notifications_page.dart';
 import 'package:fokus/pages/child/plan_in_progress_page.dart';
 import 'package:fokus/pages/child/task_in_progress_page.dart';
 import 'package:fokus/pages/child/achievements_page.dart';
@@ -110,6 +113,7 @@ class FokusApp extends StatelessWidget {
 			AppPage.loadingPage.name: (context) => _createPage(LoadingPage(), context),
 			AppPage.rolesPage.name: (context) => _createPage(RolesPage(), context),
       AppPage.notificationsPage.name: (context) => _createPage(NotificationsPage(), context),
+			AppPage.settingsPage.name:  (context) => _createPage(SettingsPage(), context),
 			AppPage.caregiverSignInPage.name: (context) => _createPage(CaregiverSignInPage(), context, CaregiverSignInCubit()),
 			AppPage.caregiverSignUpPage.name: (context) => _createPage(CaregiverSignUpPage(), context, CaregiverSignUpCubit()),
 			AppPage.childProfilesPage.name: (context) => _createPage(ChildProfilesPage(), context, PreviousProfilesCubit(authBloc(context), getRoute(context))),
@@ -117,6 +121,7 @@ class FokusApp extends StatelessWidget {
 			AppPage.caregiverPanel.name: (context) => _createPage(CaregiverPanelPage(), context, CaregiverPanelCubit(getActiveUser(context), getRoute(context))),
 			AppPage.caregiverChildDashboard.name: (context) => _createPage(CaregiverChildDashboardPage(), context),
 			AppPage.caregiverPlans.name: (context) => _createPage(CaregiverPlansPage(), context, CaregiverPlansCubit(getActiveUser(context), getRoute(context))),
+			AppPage.caregiverCalendar.name: (context) => _createPage(CaregiverCalendarPage(), context, CalendarCubit(getParams(context), getActiveUser(context))),
 			AppPage.caregiverPlanForm.name: (context) => _createPage(CaregiverPlanFormPage(), context, PlanFormCubit(getParams(context), getActiveUser(context))),
 			AppPage.caregiverAwards.name: (context) => _createPage(CaregiverAwardsPage(), context),
 			AppPage.caregiverAwardForm.name: (context) => _createPage(CaregiverAwardFormPage(), context),
@@ -126,7 +131,7 @@ class FokusApp extends StatelessWidget {
 			AppPage.childAwards.name: (context) => _createPage(ChildAwardsPage(), context),
 			AppPage.childAchievements.name: (context) => _createPage(ChildAchievementsPage(), context),
 			AppPage.caregiverPlanDetails.name: (context) => _createPage(CaregiverPlanDetailsPage(), context, CaregiverTasksCubit(getParams(context), getRoute(context))),
-			AppPage.childPlanInProgress.name: (context) => _createPage(ChildPlanInProgressPage(), context, ChildTasksCubit(getParams(context), getRoute(context))),
+			AppPage.childPlanInProgress.name: (context) => _createPage(ChildPlanInProgressPage(), context, PlanInstanceCubit(getParams(context), getRoute(context))),
 			AppPage.childTaskInProgress.name: (context) => _createPage(ChildTaskInProgressPage(), context)
 		};
 	}
@@ -166,4 +171,5 @@ class FokusApp extends StatelessWidget {
 			),
 		);
 	}
+	
 }

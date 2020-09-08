@@ -37,18 +37,7 @@ class _ChildPanelPageState extends State<ChildPanelPage> {
 	        ChildCustomHeader(),
 		      LoadableBlocBuilder<ChildPlansCubit>(
 				    builder: (context, state) => AppSegments(segments: _buildPanelSegments(state))
-		      ),
-	        Row(
-						mainAxisAlignment: MainAxisAlignment.end,
-	          children: <Widget>[
-	            RoundedButton(
-		            icon: Icons.calendar_today,
-		            text: AppLocales.of(context).translate('$_pageKey.content.futurePlans'),
-		            color: AppColors.childButtonColor,
-								onPressed: () => { log("przyszłe plany") }
-		          )
-	          ]
-	        )
+		      )
 	      ]
       ),
       bottomNavigationBar: AppNavigationBar.childPage(currentIndex: 0)
@@ -87,6 +76,17 @@ class _ChildPanelPageState extends State<ChildPanelPage> {
 			    color: AppColors.childBackgroundColor,
 			    title: '$_pageKey.content.completedPlans'
 		    ),
+				Row(
+					mainAxisAlignment: MainAxisAlignment.end,
+					children: <Widget>[
+						RoundedButton(
+							icon: Icons.calendar_today,
+							text: AppLocales.of(context).translate('$_pageKey.content.futurePlans'),
+							color: AppColors.childButtonColor,
+							onPressed: () => { log("przyszłe plany") }
+						)
+					]
+				)
     ];
   }
 

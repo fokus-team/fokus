@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:fokus/services/task_instance_service.dart';
+import 'package:fokus/services/task_keeper_service.dart';
 import 'package:get_it/get_it.dart';
 
 import 'package:fokus/services/data/db/db_data_repository.dart';
@@ -20,5 +21,6 @@ void initializeServices(RouteObserver<PageRoute> routeObserver) {
 	GetIt.I.registerSingleton<PlanRepeatabilityService>(PlanRepeatabilityService());
 	GetIt.I.registerSingleton<PlanKeeperService>(PlanKeeperService());
 	GetIt.I.registerSingleton<TaskInstanceService>(TaskInstanceService());
+	GetIt.I.registerSingleton<TaskKeeperService>(TaskKeeperService());
 	GetIt.I.registerSingleton<RouteObserver<PageRoute>>(routeObserver);
 }

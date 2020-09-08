@@ -3,7 +3,6 @@ import 'package:fokus/logic/caregiver_tasks_cubit.dart';
 import 'package:fokus/model/ui/plan/ui_plan.dart';
 import 'package:fokus/model/ui/task/ui_task.dart';
 import 'package:fokus/widgets/loadable_bloc_builder.dart';
-
 import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/ui/gamification/ui_currency.dart';
 import 'package:fokus/model/ui/form/task_form_model.dart';
@@ -27,6 +26,7 @@ class CaregiverPlanDetailsPage extends StatefulWidget {
 
 class _CaregiverPlanDetailsPageState extends State<CaregiverPlanDetailsPage> {
 	static const String _pageKey = 'page.caregiverSection.planDetails';
+
 
   @override
   Widget build(BuildContext context) {

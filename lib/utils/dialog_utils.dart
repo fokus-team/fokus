@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
 import 'package:fokus/services/app_locales.dart';
+import 'package:fokus/widgets/dialogs/app_info_dialog.dart';
 import 'package:fokus/widgets/dialogs/general_dialog.dart';
 import 'package:fokus/model/ui/ui_button.dart';
 import 'package:fokus/widgets/dialogs/dialog.dart';
 import 'package:fokus/widgets/dialogs/help_dialog.dart';
+import 'package:fokus/widgets/dialogs/form_dialogs.dart';
 
 void showNoConnectionDialog(BuildContext context, void Function() action) {
 	showDialog(
@@ -45,36 +47,56 @@ void showHelpDialog(BuildContext context, String helpPage) {
 	);
 }
 
-	Future<bool> showExitFormDialog(BuildContext context, bool isSystemPop, bool isDataChanged) {
-		if (!isDataChanged) {
-			Navigator.pop(context, true);
-			return Future.value(false);
-		} else {
-			FocusManager.instance.primaryFocus.unfocus();
-			return showDialog<bool>(
-				context: context,
-				builder: (c) => AlertDialog(
-					title: Text(AppLocales.of(context).translate('alert.unsavedProgressTitle')),
-					content: Text(AppLocales.of(context).translate('alert.unsavedProgressMessage')),
-					actions: [
-						FlatButton(
-							child: Text(AppLocales.of(context).translate('actions.cancel')),
-							onPressed: () => Navigator.pop(c, false),
-						),
-						FlatButton(
-							textColor: Colors.red,
-							child: Text(AppLocales.of(context).translate('actions.exit')),
-							onPressed: () {
-								if(isSystemPop)
-									Navigator.pop(c, true);
-								else {
-									Navigator.of(context).pop();
-									Navigator.of(context).pop();
-								}
-							}
-						)
-					]
-				)
-			);
-		}
+Future<bool> showExitFormDialog(BuildContext context, bool isSystemPop, bool isDataChanged) {
+	if (!isDataChanged) {
+		Navigator.pop(context, true);
+		return Future.value(false);
 	}
+	FocusManager.instance.primaryFocus.unfocus();
+	return showDialog<bool>(
+		context: context,
+		builder: (c) => AlertDialog(
+			title: Text(AppLocales.of(context).translate('alert.unsavedProgressTitle')),
+			content: Text(AppLocales.of(context).translate('alert.unsavedProgressMessage')),
+			actions: [
+				FlatButton(
+					child: Text(AppLocales.of(context).translate('actions.cancel')),
+					onPressed: () => Navigator.pop(c, false),
+				),
+				FlatButton(
+					textColor: Colors.red,
+					child: Text(AppLocales.of(context).translate('actions.exit')),
+					onPressed: () {
+						if(isSystemPop)
+							Navigator.pop(c, true);
+						else {
+							Navigator.of(context).pop();
+							Navigator.of(context).pop();
+						}
+					}
+				)
+			]
+		)
+	);
+}
+
+void showAppInfoDialog(BuildContext context) {
+	showDialog(
+		context: context,
+		builder: (context) => AppInfoDialog()
+	);
+}
+
+void showNameEditDialog(BuildContext context) {
+	showDialog(
+		context: context,
+		builder: (context) => NameEditDialog()
+	);
+}
+
+void showPasswordChangeDialog(BuildContext context) {
+	showDialog(
+		context: context,
+		builder: (context) => PasswordChangeDialog()
+	);
+}

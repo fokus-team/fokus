@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:fokus/logic/caregiver_plans_cubit.dart';
 import 'package:fokus/model/ui/app_page.dart';
@@ -31,7 +29,7 @@ class _CaregiverPlansPageState extends State<CaregiverPlansPage> {
 						HeaderActionButton.normal(Icons.add, '$_pageKey.header.addPlan',
 							() => Navigator.of(context).pushNamed(AppPage.caregiverPlanForm.name)),
 						HeaderActionButton.normal(Icons.calendar_today, '$_pageKey.header.calendar', 
-							() => log("Kalendarz"), Colors.amber)
+							() => Navigator.of(context).pushNamed(AppPage.caregiverCalendar.name), Colors.amber)
 					]),
 					LoadableBlocBuilder<CaregiverPlansCubit>(
 						builder: (context, state) => AppSegments(segments: _buildPanelSegments(state, context))

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fokus/model/db/plan/task_instance.dart';
+import 'package:fokus/model/db/plan/task_status.dart';
 import 'package:fokus/model/ui/gamification/ui_points.dart';
 import 'package:fokus/model/ui/task/ui_task_instance.dart';
 import 'package:fokus/utils/duration_utils.dart';
@@ -15,11 +16,10 @@ class TaskInstanceService {
 		List<UITaskInstance> uiTaskInstances = [];
 		for(int i=0; i<taskInstances.length; i++) {
 			var task = await _dataRepository.getTask(taskId: taskInstances[i].taskID);
-			if(taskUiTypes[i] == TaskUIType.currentlyPerformed || taskUiTypes[i] == TaskUIType.inBreak) {
-				var elapsedTimePassed = () =>  taskUiTypes[i] == TaskUIType.currentlyPerformed ? sumDurations(taskInstances[i].duration).inSeconds : sumDurations(taskInstances[i].breaks).inSeconds;
-				uiTaskInstances.add(UITaskInstance.listFromDBModel(task: taskInstances[i], name: task.name, description: task.description, points: UIPoints(quantity: task.points.quantity, type: task.points.icon, title: task.points.name), type: taskUiTypes[i], elapsedTimePassed: elapsedTimePassed));
-			}
-			else uiTaskInstances.add(UITaskInstance.listFromDBModel(task: taskInstances[i], name: task.name, description: task.description, points: UIPoints(quantity: task.points.quantity, type: task.points.icon, title: task.points.name), type: taskUiTypes[i]));
+			int Function() elapsedTimePassed;
+			if(taskUiTypes[i] == TaskUIType.currentlyPerformed || taskUiTypes[i] == TaskUIType.inBreak)
+				elapsedTimePassed = () => taskUiTypes[i] == TaskUIType.currentlyPerformed ? sumDurations(taskInstances[i].duration).inSeconds : sumDurations(taskInstances[i].breaks).inSeconds;
+			uiTaskInstances.add(UITaskInstance.listFromDBModel(task: taskInstances[i], name: task.name, description: task.description, points: task.points != null ? UIPoints(quantity: task.points.quantity, type: task.points.icon, title: task.points.name) : null, type: taskUiTypes[i], elapsedTimePassed: elapsedTimePassed));
 		}
 		return uiTaskInstances;
 	}
@@ -30,14 +30,20 @@ class TaskInstanceService {
 		bool isAnyInProgress = false;
 		for(var task in tasks) {
 			var taskStatus;
-			if(task.status.completed) taskStatus = TaskUIType.completed;
-			else if((task.optional&&!isAnyInProgress) || prevTaskStatus == null || prevTaskStatus == TaskUIType.completed) {
-				if(task.breaks.length > 0 && task.breaks.last.to == null) taskStatus = TaskUIType.inBreak;
+			if(task.status.completed) {
+				task.status.state == TaskState.rejected ? taskStatus = TaskUIType.rejected
+					: taskStatus = TaskUIType.completed;
+			}
+			else if((task.optional && !isAnyInProgress) || prevTaskStatus == null || prevTaskStatus.wasInProgress) {
+				if(task.breaks.length > 0 && task.breaks.last.to == null)
+					taskStatus = TaskUIType.inBreak;
 				else if(task.duration.length > 0)
-					if(task.duration.last.to == null) taskStatus = TaskUIType.currentlyPerformed;
-					else taskStatus = TaskUIType.stopped;
-				else taskStatus = TaskUIType.available;
-				if(taskStatus != TaskUIType.stopped) isAnyInProgress = true;
+					task.duration.last.to == null ? taskStatus = TaskUIType.currentlyPerformed
+						: taskStatus = TaskUIType.rejected;
+				else
+					taskStatus = TaskUIType.available;
+				if(taskStatus != TaskUIType.rejected && taskStatus != TaskUIType.available)
+					isAnyInProgress = true;
 			}
 			else taskStatus = TaskUIType.queued;
 			taskStatuses.add(taskStatus);

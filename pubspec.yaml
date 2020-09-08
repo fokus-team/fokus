@@ -10,13 +10,17 @@ repository: https://github.com/fokus-team/fokus
 version: 0.1.0-dev
 
 environment:
-    sdk: ">=2.6.0 <3.0.0"
+    sdk: ">=2.7.0 <3.0.0"
+    flutter: ">=1.17.0 <2.0.0"
 
 dependencies:
     flutter:
         sdk: flutter
     flutter_localizations:
         sdk: flutter
+
+    fokus_auth:
+        path: fokus_auth
 
     mongo_dart:
         git: https://github.com/fokus-team/mongo_dart.git
@@ -48,7 +52,7 @@ dependencies:
     shared_preferences: ^0.5.8
     url_launcher: ^5.5.2
 
-    cupertino_icons: ^0.1.2
+    cupertino_icons: ^1.0.0
     lottie: ^0.4.0+1
     flutter_svg: ^0.18.0
     flutter_markdown: ^0.3.4

@@ -34,6 +34,10 @@ mixin TaskDbRepository implements DbRepository {
 		return dbClient.count(Collection.taskInstance, where.eq('planInstanceID', planInstanceId).and(where.eq('status.completed', true)));
 	}
 
+	Future createTaskInstances(List<TaskInstance> taskInstances) {
+		return dbClient.insertMany(Collection.taskInstance, taskInstances.map((taskInstance) => taskInstance.toJson()).toList());
+	}
+
 	Future createTasks(List<Task> tasks) => dbClient.insertMany(Collection.task, tasks.map((task) => task.toJson()).toList());
 	
 	Future updateTasks(List<Task> tasks) {

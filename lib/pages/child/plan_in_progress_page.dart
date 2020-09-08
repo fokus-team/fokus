@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fokus/logic/child_tasks_cubit.dart';
+import 'package:fokus/logic/plan_instance_cubit.dart';
 import 'package:fokus/logic/timer/timer_cubit.dart';
 import 'package:fokus/model/db/plan/plan_instance_state.dart';
 import 'package:fokus/model/db/plan/task_status.dart';
@@ -35,7 +35,7 @@ class _ChildPlanInProgressPageState extends State<ChildPlanInProgressPage> {
 			body: Column(
 				crossAxisAlignment: CrossAxisAlignment.start,
 				children: [
-					LoadableBlocBuilder<ChildTasksCubit>(
+					LoadableBlocBuilder<PlanInstanceCubit>(
 						builder: (context, state) => AppSegments(segments: _buildPanelSegments(state))
 					)
 				],
@@ -75,22 +75,22 @@ class _ChildPlanInProgressPageState extends State<ChildPlanInProgressPage> {
 							title: task.name,
 							subtitle: task.description,
 							chips:<Widget>[
-								if (task.timer > 0) getTimeChip(task),
-								if (task.points.quantity != 0) getCurrencyChip(task)
+								if (task.timer != null && task.timer > 0) getTimeChip(task),
+								if (task.points != null && task.points.quantity != 0) getCurrencyChip(task)
 							],
 							actionButton:	ItemCardActionButton(color: Colors.teal, icon: Icons.play_arrow, onTapped: () => navigate(context, task)),
 						)
-					else if(task.taskUiType == TaskUIType.stopped)
+					else if(task.taskUiType == TaskUIType.rejected)
 							ItemCard(
 								title: task.name,
 								subtitle: task.description,
 								chips:<Widget>[
 									getDurationChip(task),
 									getBreaksChip(task),
-									if (task.timer > 0) getTimeChip(task),
-									if (task.points.quantity != 0) getCurrencyChip(task)
+									if (task.timer != null && task.timer > 0) getTimeChip(task),
+									if (task.points != null && task.points.quantity != 0) getCurrencyChip(task)
 								],
-								actionButton:	ItemCardActionButton(color: Colors.teal, icon: Icons.play_arrow, onTapped: () => navigate(context, task)),
+				actionButton:	ItemCardActionButton(color: AppColors.childActionColor, icon: Icons.play_arrow, onTapped: () => navigate(context, task)),
 							)
 					else if(task.taskUiType.inProgress)
 						BlocProvider<TimerCubit>(
@@ -125,8 +125,8 @@ class _ChildPlanInProgressPageState extends State<ChildPlanInProgressPage> {
 							title: task.name,
 							subtitle: task.description,
 							chips: <Widget>[
-								if (task.timer > 0) getTimeChip(task),
-								if (task.points.quantity != 0) getCurrencyChip(task)
+								if (task.timer != null && task.timer > 0) getTimeChip(task),
+								if (task.points != null && task.points.quantity != 0) getCurrencyChip(task)
 							],
 							actionButton: ItemCardActionButton(color: Colors.grey, icon: Icons.keyboard_arrow_up),
 						)
@@ -184,7 +184,7 @@ class _ChildPlanInProgressPageState extends State<ChildPlanInProgressPage> {
 							color: AppColors.chipRatingColors[task.status.rating],
 							tooltip:'$_pageKey.content.taskTimer.break',
 						),
-						if (task.points.quantity != 0) getCurrencyChip(task, pointsAwarded: true),
+						if (task.points != null && task.points.quantity != 0) getCurrencyChip(task, pointsAwarded: true),
 					]
 				else if(task.status.state == TaskState.rejected)
 					AttributeChip.withIcon(
@@ -201,7 +201,7 @@ class _ChildPlanInProgressPageState extends State<ChildPlanInProgressPage> {
 								color: Colors.amber,
 								tooltip:'$_pageKey.content.chips.notEvaluatedTooltip',
 							),
-							if (task.points.quantity != 0) getCurrencyChip(task, tooltip: '$_pageKey.content.chips.pointsPossible')
+							if (task.points != null && task.points.quantity != 0) getCurrencyChip(task, tooltip: '$_pageKey.content.chips.pointsPossible')
 						]
 			],
 			actionButton: ItemCardActionButton(
@@ -235,7 +235,7 @@ class _ChildPlanInProgressPageState extends State<ChildPlanInProgressPage> {
 				'TIME_NUM': formatDuration(Duration(seconds: sumDurations(task.duration).inSeconds))
 			}),
 			icon: Icons.access_time,
-			color: task.timer > sumDurations(task.duration).inMinutes ? Colors.lightGreen : Colors.deepOrange,
+			color: task.timer == null || task.timer > sumDurations(task.duration).inMinutes ? Colors.lightGreen : Colors.deepOrange,
 			tooltip: '$_pageKey.content.taskTimer.duration',
 		);
 	}

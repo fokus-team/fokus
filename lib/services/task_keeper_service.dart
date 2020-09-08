@@ -9,17 +9,13 @@ class TaskKeeperService {
 
 
 	Future onPlanInstanceOpen(PlanInstance planInstance) async {
-		await _createTasksForPlan(planInstance);
-	}
-
-  Future _createTasksForPlan(PlanInstance planInstance) async {
 		List<Task> tasks = await _dataRepository.getTasks(planId: planInstance.planID);
 		var taskInstances = tasks.map((task) => TaskInstance.fromTask(task, planInstance.id)).toList();
-		Future.wait(
+		return Future.wait(
 			[
 				_dataRepository.createTaskInstances(taskInstances),
 				_dataRepository.updatePlanInstances(planInstance.id, taskInstances: taskInstances.map((taskInstance) => taskInstance.id).toList())
 			]
-			);
+		);
 	}
 }

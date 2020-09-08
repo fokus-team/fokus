@@ -34,13 +34,14 @@ class TaskInstanceService {
 				task.status.state == TaskState.rejected ? taskStatus = TaskUIType.rejected
 					: taskStatus = TaskUIType.completed;
 			}
-			else if((task.optional&&!isAnyInProgress) || prevTaskStatus == null || prevTaskStatus.wasInProgress) {
+			else if((task.optional && !isAnyInProgress) || prevTaskStatus == null || prevTaskStatus.wasInProgress) {
 				if(task.breaks.length > 0 && task.breaks.last.to == null)
 					taskStatus = TaskUIType.inBreak;
 				else if(task.duration.length > 0)
 					task.duration.last.to == null ? taskStatus = TaskUIType.currentlyPerformed
 						: taskStatus = TaskUIType.rejected;
-				else taskStatus = TaskUIType.available;
+				else
+					taskStatus = TaskUIType.available;
 				if(taskStatus != TaskUIType.rejected && taskStatus != TaskUIType.available)
 					isAnyInProgress = true;
 			}

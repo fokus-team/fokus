@@ -29,8 +29,10 @@ class _CaregiverPanelPageState extends State<CaregiverPanelPage> {
 				mainAxisAlignment: MainAxisAlignment.start,
 				children: <Widget>[
 					AppHeader.greetings(text: '$_pageKey.header.pageHint', headerActionButtons: [
-						HeaderActionButton.normal(Icons.add, '$_pageKey.header.addChild', () => { log("Dodaj dziecko") }),
-						HeaderActionButton.normal(Icons.add, '$_pageKey.header.addCaregiver', () => { log("Dodaj opiekuna") })
+						HeaderActionButton.normal(Icons.add, '$_pageKey.header.addChild', 
+							() => { log("Dodaj dziecko") }),
+						HeaderActionButton.normal(Icons.rate_review, '$_pageKey.header.rateTasks',
+							() => { Navigator.of(context).pushNamed(AppPage.caregiverRatingPage.name) }, Colors.lightBlue)
 					]),
 					LoadableBlocBuilder<CaregiverPanelCubit>(
 						builder: (context, state) => AppSegments(segments: _buildPanelSegments(state))

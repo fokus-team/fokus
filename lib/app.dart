@@ -32,6 +32,7 @@ import 'package:fokus/pages/caregiver/plan_details_page.dart';
 import 'package:fokus/pages/caregiver/plan_form_page.dart';
 import 'package:fokus/pages/caregiver/plans_page.dart';
 import 'package:fokus/pages/caregiver/statistics_page.dart';
+import 'package:fokus/pages/caregiver/rating_page.dart';
 import 'package:fokus/pages/child/auth/child_profiles_page.dart';
 import 'package:fokus/pages/child/auth/child_sign_in_page.dart';
 import 'package:fokus/pages/child/awards_page.dart';
@@ -126,6 +127,7 @@ class FokusApp extends StatelessWidget {
 			AppPage.caregiverAwardForm.name: (context) => _createPage(CaregiverAwardFormPage(), context),
 			AppPage.caregiverBadgeForm.name: (context) => _createPage(CaregiverBadgeFormPage(), context),
 			AppPage.caregiverStatistics.name: (context) => _createPage(CaregiverStatisticsPage(), context),
+			AppPage.caregiverRatingPage.name: (context) => _createPage(CaregiverRatingPage(), context),
 			AppPage.childPanel.name: (context) => _createPage(ChildPanelPage(), context, ChildPlansCubit(getActiveUser(context), getRoute(context))),
 			AppPage.childAwards.name: (context) => _createPage(ChildAwardsPage(), context),
 			AppPage.childAchievements.name: (context) => _createPage(ChildAchievementsPage(), context),

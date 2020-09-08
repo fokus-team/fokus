@@ -24,11 +24,11 @@ class AppNavigationBar extends StatefulWidget {
 			icon: Icon(Icons.stars),
 			title: 'navigation.caregiver.awards',
 		),
-		AppBottomNavigationItem(
-			navigationRoute: AppPage.caregiverStatistics,
-			icon: Icon(Icons.insert_chart),
-			title: 'navigation.caregiver.statistics',
-		),
+		// AppBottomNavigationItem(
+		// 	navigationRoute: AppPage.caregiverStatistics,
+		// 	icon: Icon(Icons.insert_chart),
+		// 	title: 'navigation.caregiver.statistics',
+		// ),
 	];
 
 	static final List<AppBottomNavigationItem> childNavigationItems = [

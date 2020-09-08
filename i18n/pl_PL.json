@@ -111,6 +111,7 @@
 					"greetings": "Witaj",
 					"addChild": "Dodaj dziecko",
 					"addCaregiver": "Dodaj opiekuna",
+					"rateTasks": "Oceń zadania",
 					"pageHint": "Zarządzaj profilami dzieci i powiązanymi kontami opiekunów"
 				},
 				"content": {
@@ -392,7 +393,6 @@
 				"content": {
 					"noTasksToRate": "Brak zadań do oceny",
 					"rateTaskButton": "Oceń zadanie",
-					"taskRatedLabel": "Zadanie ocenione",
 					"previousTaskButton": "Poprzednie",
 					"nextTaskButton": "Następne",
 					"raportCard": {
@@ -400,21 +400,28 @@
 						"raportDate": "Data wykonania zadania",
 						"raportTime": "Czas wykonywania zadania",
 						"raportBreaks": "Wykorzystane przerwy",
-						"breakCount": "{NUM_BREAKS, plural, offset:0 zero {Brak przerw} one {# przerwa} few {# przerwy} other {# przerw}}",
-						"totalBreakTime": "całkowity czas"
+						"breakCount": "{BREAKS_NUM, plural, offset:0 zero {Brak przerw} one {# przerwa} two {# przerwy} few {# przerwy} other {# przerw}}",
+						"totalBreakTime": "czas",
+						"timeFormat": "{HOURS_NUM, plural, offset:0 zero {} other {# godz. }}{MINUTES_NUM} min",
+						"ratedOnLabel": "Oceniono na {STARS_NUM}/5",
+						"ratedOnHint": "Dziecko otrzymało {POINTS_NUM, plural, offset:0 one {# punkt} two {# punkty} few {# punkty} other {# punktów}}",
+						"rejectedLabel": "Oznaczono jako niewykonane",
+						"rejectedHint": "Dziecko musi powtórzyć zadanie"
 					},
 					"form": {
-						"ratingLabel": "Ocena zadania",
-						"ratedOnlabel": "Oceniono na",
-						"pointsAssigned": "Dziecko otrzyma {NUM_POINTS, plural, offset:0 one {# punkt} few {# punkty} other {# punktów}}",
+						"rateButton": "Oceń",
+						"ratingLabel": "Ocena",
+						"pointsAssigned": "Przyznawane punkty",
 						"ratingLevels": {
-							"5": "Idealnie",
-							"4": "Bardzo dobrze",
-							"3": "Dobrze",
-							"2": "OK",
-							"1": "Dopuszczalnie"
+							"rated5": "Idealnie",
+							"rated4": "Bardzo dobrze",
+							"rated3": "Dobrze",
+							"rated2": "OK",
+							"rated1": "Dopuszczalnie",
+							"rejected": "Zadanie odrzucone"
 						},
-						"markTaskAsNotDone": "Oznacz zadanie jako nie wykonane",
+						"markTaskAsNotDone": "Oznacz jako niewykonane",
+						"markTaskAsNotDoneHint": "Dziecko musi ponownie wykonać zadanie, aby zdobyć punkty",
 						"rateCommentLabel": "Komentarz do zadania"
 					}
 				}

@@ -392,6 +392,7 @@
 				},
 				"content": {
 					"noTasksToRate": "Brak zadań do oceny",
+					"notRatedTasksLeft": "{TASKS_NUM, plural, offset:0 zero {Wszystkie zadania ocenione!} one {# nieocenione zadanie} two {# nieocenione zadania} few {# nieocenione zadania} other {# nieocenionych zadań}}",
 					"rateTaskButton": "Oceń zadanie",
 					"previousTaskButton": "Poprzednie",
 					"nextTaskButton": "Następne",
@@ -409,7 +410,6 @@
 						"rejectedHint": "Dziecko musi powtórzyć zadanie"
 					},
 					"form": {
-						"rateButton": "Oceń",
 						"ratingLabel": "Ocena",
 						"pointsAssigned": "Przyznawane punkty",
 						"ratingLevels": {

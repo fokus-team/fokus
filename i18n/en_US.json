@@ -392,6 +392,7 @@
 				},
 				"content": {
 					"noTasksToRate": "No tasks to rate",
+					"notRatedTasksLeft": "{TASKS_NUM, plural, offset:0 zero {All tasks rated!} one {# not rated task} other {# not rated tasks}}",
 					"rateTaskButton": "Rate task",
 					"previousTaskButton": "Previous",
 					"nextTaskButton": "Next",
@@ -409,7 +410,6 @@
 						"rejectedHint": "Child must repeat this task"
 					},
 					"form": {
-						"rateButton": "Rate",
 						"ratingLabel": "Rating",
 						"pointsAssigned": "Points assigned",
 						"ratingLevels": {

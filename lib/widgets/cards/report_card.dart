@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fokus/model/ui/task/ui_task_report.dart';
-import 'package:fokus/model/ui/user/ui_child.dart';
 import 'package:fokus/services/app_locales.dart';
+import 'package:fokus/utils/string_utils.dart';
 import 'package:fokus/utils/theme_config.dart';
 import 'package:fokus/widgets/forms/report_form.dart';
 import 'package:fokus/widgets/general/app_avatar.dart';
@@ -20,11 +20,6 @@ class ReportCard extends StatefulWidget {
 class _ReportCardState extends State<ReportCard> {
 	static const String _pageKey = 'page.caregiverSection.rating.content';
 	final Radius defaultRadius = Radius.circular(AppBoxProperties.roundedCornersRadius);
-
-	@override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,13 +59,6 @@ class _ReportCardState extends State<ReportCard> {
 				]
 			)
 		);
-	}
-
-	String getChildCardSubtitle(BuildContext context, UIChild child) {
-		String key = 'page.caregiverSection.panel.content';
-		if (child.hasActivePlan)
-			return AppLocales.of(context).translate('$key.activePlan');
-		return AppLocales.of(context).translate('$key.todayPlans', {'NUM_PLANS': '${child.todayPlanCount}'});
 	}
 	
 	Widget _buildReportDetails(BuildContext context) {
@@ -210,7 +198,9 @@ class _ReportCardState extends State<ReportCard> {
 					subtitle: Text(
 						isRejected ?
 							AppLocales.of(context).translate('$_pageKey.raportCard.rejectedHint')
-							: AppLocales.of(context).translate('$_pageKey.raportCard.ratedOnHint', {'POINTS_NUM': (widget.report.ratingMark.value*widget.report.task.points.quantity/5.0).toString()})
+							: AppLocales.of(context).translate('$_pageKey.raportCard.ratedOnHint', {
+                'POINTS_NUM': (widget.report.ratingMark.value*widget.report.task.points.quantity/5.0).round().toString()
+              })
 					),
 					visualDensity: VisualDensity.compact,
 					contentPadding: EdgeInsets.zero

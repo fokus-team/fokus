@@ -25,10 +25,6 @@ extension UITaskReportMarkExtension on UITaskReportMark {
         return null;
     }
   }
-
-	static UITaskReportMark fromValue(int value) {
-		return UITaskReportMark.values.firstWhere((element) => element.value == value);
-	}
 }
 
 class UITaskReport {
@@ -51,7 +47,7 @@ class UITaskReport {
 		this.breakCount,
 		this.breakTimer,
 		this.taskDate,
-		this.ratingMark,
+		this.ratingMark = UITaskReportMark.notRated,
 		this.ratingComment
 	});
 

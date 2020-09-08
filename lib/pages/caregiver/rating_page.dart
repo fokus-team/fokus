@@ -95,7 +95,7 @@ class _CaregiverRatingPageState extends State<CaregiverRatingPage> {
 			taskTimer: 110,
 			breakCount: 0,
 			breakTimer: 0,
-		),
+		)
 	];
 
 	@override
@@ -132,8 +132,17 @@ class _CaregiverRatingPageState extends State<CaregiverRatingPage> {
 	}
 
 	Widget _buildCarousel() {
+		int notRatedCount = reports.where((element) => element.ratingMark == UITaskReportMark.notRated).length;
 		return Column(
 			children: [
+				SizedBox(height: 8.0),
+				Text(
+					AppLocales.of(context).translate('$_pageKey.content.notRatedTasksLeft', {
+						'TASKS_NUM': notRatedCount.toString()
+					}),
+					style: TextStyle(color: Colors.white54, fontWeight: FontWeight.bold),
+				),
+				SizedBox(height: 4.0),
 				if(reports.length > 1)
 					Row(
 						mainAxisAlignment: MainAxisAlignment.center,
@@ -152,13 +161,12 @@ class _CaregiverRatingPageState extends State<CaregiverRatingPage> {
 										alignment: WrapAlignment.center,
 										children: List.generate(reports.length, (index) => index).map((index) =>
 											Container(
-												width: 10.0,
-												height: 10.0,
 												margin: EdgeInsets.symmetric(vertical: 2.0, horizontal: 2.0),
-												decoration: BoxDecoration(
-													shape: BoxShape.circle,
+												child: Icon(
+													reports[index].ratingMark != UITaskReportMark.notRated ? Icons.check_circle : Icons.lens,
 													color: _currentRaport == index ? Colors.white : Colors.white38,
-												),
+													size: 16.0
+												)
 											)
 										).toList()
 									)

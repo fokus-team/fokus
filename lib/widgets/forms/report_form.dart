@@ -90,7 +90,7 @@ class _ReportFormState extends State<ReportForm> {
 			backgroundColor: AppColors.formColor,
 			elevation: 4.0,
 			icon: Icon(Icons.done),
-			label: Text(AppLocales.of(context).translate('$_pageKey.rateButton')),
+			label: Text(AppLocales.of(context).translate('actions.confirm')),
 			onPressed: () {
 				widget.saveCallback(isRejected ? UITaskReportMark.rejected : mark, _commentController.value.text);
 				Navigator.of(context).pop();
@@ -121,7 +121,7 @@ class _ReportFormState extends State<ReportForm> {
 				_buildRateField(),
 				_buildRejectField(),
 				_buildCommentField(),
-				SizedBox(height: 50.0)
+				SizedBox(height: 30.0)
 			]
 		);
 	}
@@ -204,9 +204,9 @@ class _ReportFormState extends State<ReportForm> {
 			activeColor: Colors.red,
 			secondary: Padding(padding: EdgeInsets.only(left: 8.0), child: Icon(Icons.block, color: Colors.red)),
 			value: isRejected,
-			onChanged: (val) => {
-				setState(() { isRejected = val; })
-			}
+			onChanged: (val) => setState(() {
+				isRejected = val;
+			})
 		);
 	}
 

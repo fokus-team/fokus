@@ -3,9 +3,8 @@ import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart' as flutter;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:fokus_auth/fokus_auth.dart';
 import 'package:googleapis/fcm/v1.dart';
-import 'package:googleapis_auth/auth.dart';
-import 'package:googleapis_auth/auth_io.dart';
 import 'package:logging/logging.dart';
 import 'package:fokus/model/db/user/user.dart';
 
@@ -25,13 +24,7 @@ class NotificationService implements ActiveUserObserver {
 		_printToken();
 	}
 
-	void _configureFCMApi() {
-		final credentials = ServiceAccountCredentials.fromJson('');
-		final scopes = const ['https://www.googleapis.com/auth/firebase.messaging'];
-		clientViaServiceAccount(credentials, scopes).then((httpClient) {
-			_messagesApi = new FcmApi(httpClient).projects.messages;
-		});
-	}
+	Future _configureFCMApi() async => _messagesApi = (await FcmAuthenticator.authenticate()).projects.messages;
 
 	void _configureNotificationPlugin() async {
 		var initializationSettingsAndroid = AndroidInitializationSettings('ic_stat_name');

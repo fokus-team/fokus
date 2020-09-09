@@ -1,10 +1,9 @@
 import 'dart:async';
-import 'package:get_it/get_it.dart';
+import 'package:fokus_auth/fokus_auth.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
 import 'package:fokus/model/db/collection.dart';
 import 'package:fokus/services/exception/db_exceptions.dart';
-import 'package:fokus/services/remote_config_provider.dart';
 
 
 class MongoDbProvider {
@@ -13,9 +12,7 @@ class MongoDbProvider {
 	Future initialize() async {
 		if (_client != null && _client.state == State.OPEN)
 			return;
-		_client = new Db(await GetIt.I<RemoteConfigProvider>().dbAccessString);
-		return _client.open(
-			secure: true,
+		_client = await MongoDBAuthenticator.authenticate(
 			timeoutConfig: TimeoutConfig(
 				connectionTimeout: 8000,
 				socketTimeout: 6000,

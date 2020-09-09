@@ -469,13 +469,19 @@
 			"awards": {
 				"content": {
 					"awardsTitle": "Nagrody do zdobycia",
-					"noAwardsMessage": "Brak nagród do wyświetlenia"
+					"noAwardsMessage": "Brak nagród do wyświetlenia",
+					"claimedAwardsTitle": "Odebrane nagrody",
+					"claimAwardTitle": "Odbierz nagrodę",
+					"claimCostLabel": "Koszt nagrody",
+					"claimButton": "Odbierz"
 				}
 			},
 			"achievements": {
 				"content": {
-					"achievementsTitle": "Osiągnięcia",
-					"noAchievementsMessage": "Brak osiągnięć do wyświetlenia"
+					"achievementsTitle": "Moje osiągnięcia",
+					"noAchievementsMessage": "Brak osiągnięć do wyświetlenia",
+					"earnedBadgeTitle": "Zdobyta odznaka",
+					"earnedBadgeDate": "Data zdobycia"
 				}
 			}
 		}

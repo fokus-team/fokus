@@ -469,13 +469,19 @@
 			"awards": {
 				"content": {
 					"awardsTitle": "Available awards",
-					"noAwardsMessage": "No available awards to display"
+					"noAwardsMessage": "No available awards to display",
+					"claimedAwardsTitle": "Claimed awards",
+					"claimAwardTitle": "Claim award",
+					"claimCostLabel": "Award cost",
+					"claimButton": "Claim"
 				}
 			},
 			"achievements": {
 				"content": {
 					"achievementsTitle": "Achievements",
-					"noAchievementsMessage": "No achievements to display"
+					"noAchievementsMessage": "No achievements to display",
+					"earnedBadgeTitle": "Earned badge",
+					"earnedBadgeDate": "Earning date"
 				}
 			}
 		}

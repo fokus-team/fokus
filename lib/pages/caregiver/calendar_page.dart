@@ -1,4 +1,3 @@
-import 'package:badges/badges.dart';
 import 'package:date_utils/date_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,6 +5,7 @@ import 'package:fokus/model/db/date/date.dart';
 import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/ui/plan/ui_plan.dart';
 import 'package:fokus/model/ui/ui_button.dart';
+import 'package:fokus/utils/calendar_utils.dart';
 import 'package:fokus/widgets/buttons/bottom_sheet_bar_buttons.dart';
 import 'package:intl/intl.dart';
 import 'package:smart_select/smart_select.dart';
@@ -148,57 +148,16 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 		);
 	}
 
-	Widget _buildTableCalendarCell(DateTime date, {bool isCellSelected = false}) {
-		return Container(
-			margin: const EdgeInsets.all(4.0),
-			decoration: BoxDecoration(
-				shape: BoxShape.circle,
-				color: isCellSelected ? AppColors.caregiverBackgroundColor : Colors.transparent,
-				border: isCellSelected ? Border.all(width: 0) : Border.all(color: Colors.grey[400], width: 1.0),
-				boxShadow: [
-					if(isCellSelected)
-						BoxShadow(color: Colors.black26, blurRadius: 8.0)
-				]
-			),
-			width: 100,
-			height: 100,
-			child: Center(
-				child: Text(
-					'${date.day}',
-					textAlign: TextAlign.start,
-					style: isCellSelected ?
-						TextStyle().copyWith(fontSize: 17.0, color: Colors.white, fontWeight: FontWeight.bold)
-						: TextStyle().copyWith(fontSize: 15.0)
-				)
-			)
-		);
-	}
-
 	TableCalendar _buildCalendar(Map<Date, List<UIPlan>> events, Map<UIChild, bool> children) {
-	  return TableCalendar(
-			calendarController: _calendarController,
-			locale: AppLocales.of(context).locale.toString(),
-			availableGestures: AvailableGestures.horizontalSwipe,
-			startingDayOfWeek: StartingDayOfWeek.monday,
-			initialCalendarFormat: CalendarFormat.month,
-			headerStyle: HeaderStyle(
-				centerHeaderTitle: true,
-				formatButtonVisible: false
-			),
-			calendarStyle: CalendarStyle(
-				contentPadding: EdgeInsets.all(5.0)
-			),
-			events: events,
-			onDaySelected: onDayChanged,
-			onCalendarCreated: onCalendarCreated,
-			onVisibleDaysChanged: onMonthChanged,
-			builders: CalendarBuilders(
+	  return buildCalendar(
+			_calendarController, context, events, onDayChanged, onCalendarCreated, onMonthChanged,
+			CalendarBuilders(
 				selectedDayBuilder: (context, date, _) =>
           FadeTransition(
             opacity: Tween(begin: 0.0, end: 1.0).animate(_animationController),
-            child: _buildTableCalendarCell(date, isCellSelected: true)
+            child: buildTableCalendarCell(date, AppColors.caregiverBackgroundColor, isCellSelected: true)
 					),
-        todayDayBuilder: (context, date, _) => _buildTableCalendarCell(date),
+        todayDayBuilder: (context, date, _) => buildTableCalendarCell(date, Colors.transparent),
 				markersBuilder: (context, date, events, holidays) {
 					final markers = <Widget>[];
 					if (events.isNotEmpty) {
@@ -212,23 +171,7 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 										childrenMarkers.add(_getChildColor(children, childID));
 							});
 						});
-						markers.add(
-							Positioned(
-								left: 6.0,
-								right: 6.0,
-								bottom: 0,
-								child: Wrap(
-									alignment: WrapAlignment.center,
-									spacing: 2.0,
-									children: childrenMarkers.take(4).map((marker) => Badge(
-										badgeColor: marker,
-										elevation: 0,
-										padding: EdgeInsets.all(3.6),
-										animationType: BadgeAnimationType.scale
-									)).toList()
-								)
-							)
-						);
+						markers.add(buildMarker(colorSet: childrenMarkers));
 					}
 					return markers;
 				}

@@ -2,12 +2,14 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fokus/logic/auth/auth_bloc/authentication_bloc.dart';
 
 import 'package:fokus/logic/child_plans_cubit.dart';
 import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/logic/timer/timer_cubit.dart';
 import 'package:fokus/model/db/plan/plan_instance_state.dart';
 import 'package:fokus/model/ui/plan/ui_plan_instance.dart';
+import 'package:fokus/model/ui/user/ui_child.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/theme_config.dart';
 import 'package:fokus/widgets/app_header.dart';
@@ -45,6 +47,7 @@ class _ChildPanelPageState extends State<ChildPanelPage> {
   }
 
   List<Widget> _buildPanelSegments(ChildPlansLoadSuccess state) {
+		UIChild currentUser = context.bloc<AuthenticationBloc>().state.user;
   	var activePlan = state.plans.firstWhere((plan) => plan.state == PlanInstanceState.active, orElse: () => null);
   	var otherPlans = state.plans.where((plan) => (activePlan == null || plan.id != activePlan.id) && plan.state != PlanInstanceState.completed).toList();
   	var completedPlans = state.plans.where((plan) => plan.state == PlanInstanceState.completed).toList();
@@ -83,7 +86,7 @@ class _ChildPanelPageState extends State<ChildPanelPage> {
 							icon: Icons.calendar_today,
 							text: AppLocales.of(context).translate('$_pageKey.content.futurePlans'),
 							color: AppColors.childButtonColor,
-							onPressed: () => { log("przyszłe plany") }
+							onPressed: () => Navigator.of(context).pushNamed(AppPage.childCalendar.name, arguments: currentUser.id)
 						)
 					]
 				)

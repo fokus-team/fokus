@@ -466,6 +466,15 @@
 					}
 				}
 			},
+			"calendar": {
+				"header": {
+					"title": "Plan calendar"
+				},
+				"content": {
+					"plansOnDateTitle": "Plans on {DATE}",
+					"noPlansOnDateTitle": "No plans on this day"
+				}
+			},
 			"awards": {
 				"content": {
 					"awardsTitle": "Available awards",

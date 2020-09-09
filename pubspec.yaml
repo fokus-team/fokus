@@ -87,7 +87,7 @@ flutter:
         - assets/image/avatar/
         - assets/image/avatar/child/
         - assets/image/award/
-        - assets/image/award_level/
+        - assets/image/badge_level/
         - assets/image/badge/
         - assets/image/currency/
 

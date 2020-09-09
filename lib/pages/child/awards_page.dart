@@ -31,6 +31,7 @@ class _ChildAwardsPageState extends State<ChildAwardsPage> {
 						segments: [
 							Segment(
 								title: '$_pageKey.awardsTitle',
+								subtitle: '$_pageKey.awardsHint',
 								noElementsMessage: '$_pageKey.noAwardsMessage',
 								elements: <Widget>[
 									ItemCard(
@@ -78,7 +79,7 @@ class _ChildAwardsPageState extends State<ChildAwardsPage> {
 							),
 							// TODO Show only if there are any claimed awards
 							Segment(
-								title: '$_pageKey.content.claimedAwardsTitle',
+								title: '$_pageKey.claimedAwardsTitle',
 								elements: <Widget>[
 									ItemCard(
 										title: '1 godzina gry na konsoli',

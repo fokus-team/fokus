@@ -469,6 +469,7 @@
 			"awards": {
 				"content": {
 					"awardsTitle": "Nagrody do zdobycia",
+					"awardsHint": "Zdobyte punkty możesz wymienić na nagrody",
 					"noAwardsMessage": "Brak nagród do wyświetlenia",
 					"claimedAwardsTitle": "Odebrane nagrody",
 					"claimAwardTitle": "Odbierz nagrodę",
@@ -479,6 +480,7 @@
 			"achievements": {
 				"content": {
 					"achievementsTitle": "Moje osiągnięcia",
+					"achievementsHint": "Dotknij odznakę, aby zobaczyć szczegóły",
 					"noAchievementsMessage": "Brak osiągnięć do wyświetlenia",
 					"earnedBadgeTitle": "Zdobyta odznaka",
 					"earnedBadgeDate": "Data zdobycia"

@@ -469,6 +469,7 @@
 			"awards": {
 				"content": {
 					"awardsTitle": "Available awards",
+					"awardsHint": "You can spend your points to get awards",
 					"noAwardsMessage": "No available awards to display",
 					"claimedAwardsTitle": "Claimed awards",
 					"claimAwardTitle": "Claim award",
@@ -479,6 +480,7 @@
 			"achievements": {
 				"content": {
 					"achievementsTitle": "Achievements",
+					"achievementsHint": "Click on the badge to show details",
 					"noAchievementsMessage": "No achievements to display",
 					"earnedBadgeTitle": "Earned badge",
 					"earnedBadgeDate": "Earning date"

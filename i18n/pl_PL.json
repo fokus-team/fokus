@@ -111,6 +111,7 @@
 					"greetings": "Witaj",
 					"addChild": "Dodaj dziecko",
 					"addCaregiver": "Dodaj opiekuna",
+					"rateTasks": "Oceń zadania",
 					"pageHint": "Zarządzaj profilami dzieci i powiązanymi kontami opiekunów"
 				},
 				"content": {
@@ -383,6 +384,46 @@
 					"mandatoryTasks": "Zadania obowiązkowe",
 					"additionalTasks": "Zadania dodatkowe",
 					"noTasks": "Brak zadań"
+				}
+			},
+			"rating":  {
+				"header": {
+					"title": "Ocena zadań"
+				},
+				"content": {
+					"noTasksToRate": "Brak zadań do oceny",
+					"notRatedTasksLeft": "{TASKS_NUM, plural, offset:0 zero {Wszystkie zadania ocenione!} one {# nieocenione zadanie} two {# nieocenione zadania} few {# nieocenione zadania} other {# nieocenionych zadań}}",
+					"rateTaskButton": "Oceń zadanie",
+					"previousTaskButton": "Poprzednie",
+					"nextTaskButton": "Następne",
+					"raportCard": {
+						"carriedOutBy": "Wykonawca zadania",
+						"raportDate": "Data wykonania zadania",
+						"raportTime": "Czas wykonywania zadania",
+						"raportBreaks": "Wykorzystane przerwy",
+						"breakCount": "{BREAKS_NUM, plural, offset:0 zero {Brak przerw} one {# przerwa} two {# przerwy} few {# przerwy} other {# przerw}}",
+						"totalBreakTime": "czas",
+						"timeFormat": "{HOURS_NUM, plural, offset:0 zero {} other {# godz. }}{MINUTES_NUM} min",
+						"ratedOnLabel": "Oceniono na {STARS_NUM}/5",
+						"ratedOnHint": "Dziecko otrzymało {POINTS_NUM, plural, offset:0 one {# punkt} two {# punkty} few {# punkty} other {# punktów}}",
+						"rejectedLabel": "Oznaczono jako niewykonane",
+						"rejectedHint": "Dziecko musi powtórzyć zadanie"
+					},
+					"form": {
+						"ratingLabel": "Ocena",
+						"pointsAssigned": "Przyznawane punkty",
+						"ratingLevels": {
+							"rated5": "Idealnie",
+							"rated4": "Bardzo dobrze",
+							"rated3": "Dobrze",
+							"rated2": "OK",
+							"rated1": "Dopuszczalnie",
+							"rejected": "Zadanie odrzucone"
+						},
+						"markTaskAsNotDone": "Oznacz jako niewykonane",
+						"markTaskAsNotDoneHint": "Dziecko musi ponownie wykonać zadanie, aby zdobyć punkty",
+						"rateCommentLabel": "Komentarz do zadania"
+					}
 				}
 			}
 		},

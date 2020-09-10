@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fokus/model/ui/app_page.dart';
-import 'package:fokus/model/ui/award/ui_badge.dart';
+import 'package:fokus/model/ui/gamification/ui_badge.dart';
 import 'package:fokus/utils/dialog_utils.dart';
 import 'package:fokus/utils/form_config.dart';
 import 'package:fokus/widgets/buttons/help_icon_button.dart';

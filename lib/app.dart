@@ -19,6 +19,7 @@ import 'package:fokus/logic/plan_form/plan_form_cubit.dart';
 import 'package:fokus/pages/child/calendar_page.dart';
 
 import 'package:fokus/pages/loading_page.dart';
+import 'package:fokus/pages/plan_details_page.dart';
 import 'package:fokus/pages/roles_page.dart';
 import 'package:fokus/pages/notifications_page.dart';
 import 'package:fokus/pages/settings_page.dart';
@@ -30,7 +31,6 @@ import 'package:fokus/pages/caregiver/child_dashboard_page.dart';
 import 'package:fokus/pages/caregiver/award_form_page.dart';
 import 'package:fokus/pages/caregiver/badge_form_page.dart';
 import 'package:fokus/pages/caregiver/panel_page.dart';
-import 'file:///D:/Fokus/fokus/lib/pages/plan_details_page.dart';
 import 'package:fokus/pages/caregiver/plan_form_page.dart';
 import 'package:fokus/pages/caregiver/plans_page.dart';
 import 'package:fokus/pages/caregiver/statistics_page.dart';

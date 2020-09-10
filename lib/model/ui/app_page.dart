@@ -23,6 +23,7 @@ enum AppPage {
 	caregiverRatingPage,
 	// Child
 	childPanel,
+	childCalendar,
 	childAwards,
 	childAchievements,
 	childPlanInProgress,
@@ -51,6 +52,7 @@ extension AppPageName on AppPage {
 		AppPage.caregiverStatistics: '/caregiver/statistics-page',
 		AppPage.caregiverRatingPage: '/caregiver/rating-page',
 		AppPage.childPanel: '/child/panel-page',
+		AppPage.childCalendar: '/child/calendar-page',
 		AppPage.childAwards: '/child/awards-page',
 		AppPage.childAchievements: '/child/achievements-page',
 		AppPage.childPlanInProgress: '/child/plan-in-progress-page',

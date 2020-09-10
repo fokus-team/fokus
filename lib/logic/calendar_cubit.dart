@@ -109,7 +109,8 @@ class CalendarCubit extends Cubit<CalendarState> {
 	  Map<Date, List<UIPlan>> events = {};
 		for (var entry in dateMap.entries) {
 			var planMap = groupBy<ObjectId, PlanInstance>(entry.value, (plan) => plan.planID);
-			events[entry.key] = planMap.keys.map((planId) => UIPlan.fromDBModel(_plans[planId])).toList();
+			var getDescription = (Plan plan) => _repeatabilityService.buildPlanDescription(plan.repeatability);
+			events[entry.key] = planMap.keys.map((planId) => UIPlan.fromDBModel(_plans[planId], getDescription(_plans[planId]))).toList();
 		}
 		return events;
 	}
@@ -117,9 +118,10 @@ class CalendarCubit extends Cubit<CalendarState> {
 	Map<Date, List<UIPlan>> _loadFutureData(DateSpan<Date> span) {
 		Map<Date, List<UIPlan>> events = {};
 		for (var plan in _plans.entries) {
+			var getDescription = (Plan plan) => _repeatabilityService.buildPlanDescription(plan.repeatability);
 			var dates = _repeatabilityService.getRepeatabilityDatesInSpan(plan.value.repeatability, span);
 			for (var date in dates)
-				(events[date] ??= []).add(UIPlan.fromDBModel(plan.value));
+				(events[date] ??= []).add(UIPlan.fromDBModel(plan.value, getDescription(plan.value)));
 		}
 		return events;
 	}

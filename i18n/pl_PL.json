@@ -507,6 +507,15 @@
 					}
 				}
 			},
+			"calendar": {
+				"header": {
+					"title": "Kalendarz planów"
+				},
+				"content": {
+					"plansOnDateTitle": "Plany na dzień {DATE}",
+					"noPlansOnDateTitle": "Brak planów na ten dzień"
+				}
+			},
 			"awards": {
 				"content": {
 					"awardsTitle": "Nagrody do zdobycia",

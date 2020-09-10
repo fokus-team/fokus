@@ -471,8 +471,8 @@
 					"title": "Plan calendar"
 				},
 				"content": {
-					"plansOnDateTitle": "Plans on {DATE}",
-					"noPlansOnDateTitle": "No plans on this day"
+					"plansOnDateTitle": "Plans for {DATE}",
+					"noPlansOnDateTitle": "No plans for this day"
 				}
 			},
 			"awards": {

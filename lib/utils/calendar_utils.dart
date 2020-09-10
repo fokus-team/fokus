@@ -6,7 +6,7 @@ import 'package:fokus/model/db/date/date.dart';
 import 'package:fokus/model/ui/plan/ui_plan.dart';
 import 'package:fokus/services/app_locales.dart';
 
-Widget buildCalendar(
+Widget buildCalendar({
 	CalendarController controller,
 	BuildContext context,
 	Map<Date, List<UIPlan>> events,
@@ -14,7 +14,7 @@ Widget buildCalendar(
 	Function(DateTime, DateTime, CalendarFormat) onCalendarCreated,
 	Function(DateTime, DateTime, CalendarFormat) onVisibleDaysChanged,
 	CalendarBuilders builders
-) {
+}) {
 	return TableCalendar(
 			calendarController: controller,
 			locale: AppLocales.of(context).locale.toString(),

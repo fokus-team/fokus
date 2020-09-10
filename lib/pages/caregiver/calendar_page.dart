@@ -150,8 +150,13 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 
 	TableCalendar _buildCalendar(Map<Date, List<UIPlan>> events, Map<UIChild, bool> children) {
 	  return buildCalendar(
-			_calendarController, context, events, onDayChanged, onCalendarCreated, onMonthChanged,
-			CalendarBuilders(
+			controller: _calendarController, 
+			context: context,
+			events: events,
+			onDaySelected: onDayChanged,
+			onCalendarCreated: onCalendarCreated,
+			onVisibleDaysChanged: onMonthChanged,
+			builders: CalendarBuilders(
 				selectedDayBuilder: (context, date, _) =>
           FadeTransition(
             opacity: Tween(begin: 0.0, end: 1.0).animate(_animationController),

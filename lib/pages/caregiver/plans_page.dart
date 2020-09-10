@@ -29,7 +29,7 @@ class _CaregiverPlansPageState extends State<CaregiverPlansPage> {
 						HeaderActionButton.normal(Icons.add, '$_pageKey.header.addPlan',
 							() => Navigator.of(context).pushNamed(AppPage.caregiverPlanForm.name)),
 						HeaderActionButton.normal(Icons.calendar_today, '$_pageKey.header.calendar', 
-							() => Navigator.of(context).pushNamed(AppPage.caregiverCalendar.name), Colors.amber)
+							() => Navigator.of(context).pushNamed(AppPage.caregiverCalendar.name), Colors.lightBlue)
 					]),
 					LoadableBlocBuilder<CaregiverPlansCubit>(
 						builder: (context, state) => AppSegments(segments: _buildPanelSegments(state, context))

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:fokus/model/ui/award/ui_badge.dart';
+import 'package:fokus/model/ui/app_page.dart';
+import 'package:fokus/model/ui/gamification/ui_badge.dart';
 import 'package:fokus/model/ui/plan/ui_plan.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/dialog_utils.dart';
@@ -292,7 +293,7 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 				// Show only if there are not rated tasks
 				AppAlert(
 					text: AppLocales.of(context).translate('$_pageKey.content.alerts.unratedTasksExist'),
-					onTap: () { /* Go to rating page */ },
+					onTap: () => Navigator.of(context).pushNamed(AppPage.caregiverRatingPage.name),
 				),
 				// Show only if there are no plans added
 				AppAlert(

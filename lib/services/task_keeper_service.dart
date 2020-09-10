@@ -7,7 +7,6 @@ import 'package:get_it/get_it.dart';
 class TaskKeeperService {
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 
-
 	Future createTaskInstances(PlanInstance planInstance) async {
 		List<Task> tasks = await _dataRepository.getTasks(planId: planInstance.planID);
 		var taskInstances = tasks.map((task) => TaskInstance.fromTask(task, planInstance.id)).toList();

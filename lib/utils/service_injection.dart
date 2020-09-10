@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:fokus/services/task_keeper_service.dart';
 import 'package:fokus_auth/fokus_auth.dart';
 import 'package:get_it/get_it.dart';
 
@@ -19,5 +20,6 @@ void initializeServices(RouteObserver<PageRoute> routeObserver) {
 	GetIt.I.registerSingleton<PlanKeeperService>(PlanKeeperService());
 	GetIt.I.registerSingleton<TaskInstanceService>(TaskInstanceService());
 	GetIt.I.registerSingleton<NotificationService>(NotificationService());
+	GetIt.I.registerSingleton<TaskKeeperService>(TaskKeeperService());
 	GetIt.I.registerSingleton<RouteObserver<PageRoute>>(routeObserver);
 }

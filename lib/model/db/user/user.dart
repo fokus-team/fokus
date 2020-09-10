@@ -8,16 +8,18 @@ class User {
   ObjectId id;
   final UserRole role;
   String name;
+  List<String> notificationIDs;
 
   List<int> accessCode;
   int avatar;
   List<ObjectId> connections;
 
-  User({this.id, this.role, this.name, this.avatar, this.connections, this.accessCode});
+  User({this.id, this.role, this.name, this.avatar, this.connections, this.notificationIDs, this.accessCode});
 
   @protected
   void fromJson(Map<String, dynamic> json) {
     name = json['name'];
+    notificationIDs = json['notificationIDs'];
     accessCode = json['accessCode'] != null ? new List<int>.from(json['accessCode']) : [];
     avatar = json['avatar'];
     connections = json['connections'] != null ? new List<ObjectId>.from(json['connections']) : [];
@@ -36,6 +38,8 @@ class User {
 	    data['role'] = this.role.index;
     if (this.accessCode != null)
       data['accessCode'] = this.accessCode;
+    if (this.notificationIDs != null)
+	    data['notificationIDs'] = this.notificationIDs;
     if (this.connections != null)
       data['connections'] = this.connections;
     return data;

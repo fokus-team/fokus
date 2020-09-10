@@ -7,7 +7,6 @@ import 'package:mongo_dart/mongo_dart.dart';
 import 'user.dart';
 
 class Caregiver extends User {
-  List<String> notificationIDs;
   String authenticationId;
 
   List<Currency> currencies;
@@ -16,12 +15,12 @@ class Caregiver extends User {
 
   Caregiver.fromAuthUser(AuthenticatedUser authUser) : this._(authenticationId: authUser.id, name: authUser.name, id: ObjectId());
 
-  Caregiver._({ObjectId id, String name, this.badges, this.notificationIDs, this.friends, this.authenticationId, this.currencies}) : super(id: id, name: name, role: UserRole.caregiver);
+  Caregiver._({ObjectId id, String name, List<String> notificationIDs, this.badges, this.friends, this.authenticationId, this.currencies}) :
+			  super(id: id, name: name, role: UserRole.caregiver, notificationIDs: notificationIDs);
 
   factory Caregiver.fromJson(Map<String, dynamic> json) {
     return json != null ? (Caregiver._(
 	    id: json['_id'],
-	    notificationIDs: json['notificationIDs'] ?? [],
       friends: json['friends'] != null ? new List<ObjectId>.from(json['friends']) : [],
 	    badges: json['badges'] != null ? (json['badges'] as List).map((i) => Badge.fromJson(i)).toList() : [],
 	    currencies: json['currencies'] != null ? (json['currencies'] as List).map((i) => Currency.fromJson(i)).toList() : [],
@@ -31,8 +30,6 @@ class Caregiver extends User {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = super.toJson();
-    if (this.notificationIDs != null)
-	    data['notificationIDs'] = this.notificationIDs;
     if (this.authenticationId != null)
 	    data['authenticationID'] = this.authenticationId;
     if (this.badges != null)

@@ -34,7 +34,9 @@ class NotificationService implements ActiveUserObserver {
 	}
 
 	void _configureMessageHandler() async {
-		if (Platform.isIOS) await _requestIOSPermissions();
+		if (Platform.isIOS)
+			await _requestIOSPermissions();
+		_firebaseMessaging.onTokenRefresh.listen(onTokenChanged);
 		_firebaseMessaging.configure(
 			onMessage: (Map<String, dynamic> message) async {
 				_logger.fine("onMessage: $message");
@@ -75,6 +77,10 @@ class NotificationService implements ActiveUserObserver {
 	}
 
 	void _printToken() async => _logger.info(await _firebaseMessaging.getToken());
+
+	void onTokenChanged(String token) {
+
+	}
 
   @override
   void onUserSignIn(User user) {

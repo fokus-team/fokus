@@ -9,4 +9,5 @@ abstract class TaskRepository {
 	Future<Task> getTask({ObjectId taskId, bool requiredOnly = false, bool optionalOnly = false, List<String> fields});
 	Future createTasks(List<Task> tasks);
 	Future updateTasks(List<Task> tasks);
+	Future createTaskInstances(List<TaskInstance> taskInstances);
 }

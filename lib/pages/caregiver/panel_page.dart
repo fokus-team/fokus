@@ -4,9 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:fokus/logic/caregiver_panel_cubit.dart';
 import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/ui/ui_button.dart';
-import 'package:fokus/model/ui/user/ui_child.dart';
-import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/icon_sets.dart';
+import 'package:fokus/utils/string_utils.dart';
 import 'package:fokus/widgets/app_header.dart';
 import 'package:fokus/widgets/app_navigation_bar.dart';
 import 'package:fokus/widgets/cards/item_card.dart';
@@ -29,8 +28,10 @@ class _CaregiverPanelPageState extends State<CaregiverPanelPage> {
 				mainAxisAlignment: MainAxisAlignment.start,
 				children: <Widget>[
 					AppHeader.greetings(text: '$_pageKey.header.pageHint', headerActionButtons: [
-						HeaderActionButton.normal(Icons.add, '$_pageKey.header.addChild', () => { log("Dodaj dziecko") }),
-						HeaderActionButton.normal(Icons.add, '$_pageKey.header.addCaregiver', () => { log("Dodaj opiekuna") })
+						HeaderActionButton.normal(Icons.add, '$_pageKey.header.addChild', 
+							() => { log("Dodaj dziecko") }),
+						HeaderActionButton.normal(Icons.rate_review, '$_pageKey.header.rateTasks',
+							() => { Navigator.of(context).pushNamed(AppPage.caregiverRatingPage.name) }, Colors.lightBlue)
 					]),
 					LoadableBlocBuilder<CaregiverPanelCubit>(
 						builder: (context, state) => AppSegments(segments: _buildPanelSegments(state))
@@ -78,10 +79,4 @@ class _CaregiverPanelPageState extends State<CaregiverPanelPage> {
 		];
 	}
 
-	String getChildCardSubtitle(BuildContext context, UIChild child) {
-		String key = '$_pageKey.content';
-		if (child.hasActivePlan)
-			return AppLocales.of(context).translate('$key.activePlan');
-		return AppLocales.of(context).translate('$key.todayPlans', {'NUM_PLANS': '${child.todayPlanCount}'});
-	}
 }

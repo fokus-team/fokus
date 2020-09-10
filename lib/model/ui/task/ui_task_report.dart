@@ -51,6 +51,4 @@ class UITaskReport {
 		this.ratingComment
 	});
 
-	List<Object> get props => [planName, task, child, taskTimer, breakCount, breakTimer, taskDate];
-
 }

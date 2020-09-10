@@ -32,6 +32,17 @@ class AppColors {
 		CurrencyType.ruby: Color.fromARGB(255, 220, 0, 89)
 	};
 
+	static final List<Color> markerColors = [
+		Colors.green,
+		Colors.pink,
+		Colors.deepPurple,
+		Colors.teal,
+		Colors.orange,
+		Colors.red,
+		Colors.purple,
+		Colors.brown
+	];
+
 }
 
 class AppBoxProperties {

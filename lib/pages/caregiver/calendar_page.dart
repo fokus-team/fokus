@@ -37,16 +37,6 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 	final Duration _animationDuration = Duration(milliseconds: 250);
 	final Color notAssignedPlanMarkerColor = Colors.grey[400];
 
-	List<Color> markerColors = [
-		Colors.green,
-		Colors.pink,
-		Colors.deepPurple,
-		Colors.teal,
-		Colors.orange,
-		Colors.red,
-		Colors.purple,
-		Colors.brown
-	];
 
 	@override
 	void initState() {
@@ -65,7 +55,7 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 
 	Color _getChildColor(Map<UIChild, bool> children, Mongo.ObjectId childID) {
 		int childIndex = children.keys.toList().indexWhere((element) => element.id == childID);
-		return (childIndex != -1) ? markerColors[childIndex % markerColors.length] : Colors.cyan;
+		return (childIndex != -1) ? AppColors.markerColors[childIndex % AppColors.markerColors.length] : Colors.cyan;
 	}
 
 	@override

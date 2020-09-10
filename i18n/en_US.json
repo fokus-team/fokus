@@ -377,7 +377,8 @@
 			},
 			"planDetails": {
 				"header": {
-					"title": "Plan details"
+					"title": "Plan details",
+					"noChildren": "Not assigned"
 				},
 				"content": {
 					"mandatoryTasks": "Mandatory tasks",

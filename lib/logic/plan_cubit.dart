@@ -9,27 +9,29 @@ import 'package:fokus/services/plan_repeatability_service.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
-class CaregiverTasksCubit extends ReloadableCubit{
+class PlanCubit extends ReloadableCubit{
 	final ObjectId _planId;
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final PlanRepeatabilityService _repeatabilityService = GetIt.I<PlanRepeatabilityService>();
 
-  CaregiverTasksCubit( this._planId, ModalRoute pageRoute) : super(pageRoute);
+  PlanCubit( this._planId, ModalRoute pageRoute) : super(pageRoute);
 
   @override
   doLoadData() async {
 		var getDescription = (Plan plan) => _repeatabilityService.buildPlanDescription(plan.repeatability);
 		Plan plan = await _dataRepository.getPlan(id: _planId);
+		var children = await _dataRepository.getUserNames(plan.assignedTo);
 		List<Task> tasks = await _dataRepository.getTasks(planId: _planId);
-		emit(CaregiverTasksLoadSuccess(UIPlan.fromDBModel(plan, getDescription(plan)), tasks.map((task) => UITask.fromDBModel(task: task)).toList()));
+		emit(CaregiverTasksLoadSuccess(UIPlan.fromDBModel(plan, getDescription(plan)), tasks.map((task) => UITask.fromDBModel(task: task)).toList(), children));
 	}
 
 }
 	class CaregiverTasksLoadSuccess extends DataLoadSuccess{
 		final UIPlan uiPlan;
 		final List<UITask> tasks;
+		final Map<ObjectId, String> children;
 
-  CaregiverTasksLoadSuccess(this.uiPlan, this.tasks);
+  CaregiverTasksLoadSuccess(this.uiPlan, this.tasks, this.children);
 
   @override
   List<Object> get props => [uiPlan, tasks];

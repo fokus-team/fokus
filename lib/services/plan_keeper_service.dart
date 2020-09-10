@@ -48,7 +48,7 @@ class PlanKeeperService {
 	Future _updateData() async {
 		var getRoleId = (UserRole paramRole) => paramRole == _role ? _userId : null;
 		var plans = await _dataRepository.getPlans(caregiverId: getRoleId(UserRole.caregiver),
-				childId: getRoleId(UserRole.child), fields: ['_id', 'repeatability', 'active', 'assignedTo']);
+				childId: getRoleId(UserRole.child), fields: ['_id', 'repeatability', 'active', 'assignedTo', 'tasks']);
 		var children = await _dataRepository.getUsers(role: UserRole.child, connected: _userId, fields: ['_id']);
 		var childrenIDs = _role == UserRole.caregiver ? children.map((child) => child.id).toList() : [_userId];
 

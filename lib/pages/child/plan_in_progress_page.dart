@@ -32,26 +32,30 @@ class _ChildPlanInProgressPageState extends State<ChildPlanInProgressPage> {
 	@override
   Widget build(BuildContext context) {
 		return Scaffold(
-			body: Column(
-				crossAxisAlignment: CrossAxisAlignment.start,
-				children: [
-					LoadableBlocBuilder<PlanInstanceCubit>(
-						builder: (context, state) => AppSegments(segments: _buildPanelSegments(state))
-					)
-				],
+			body: LoadableBlocBuilder<PlanInstanceCubit>(
+				builder: (context, state) => _getView(state)
 			)
 		);
   }
+
+  Column _getView(ChildTasksLoadSuccess state) {
+		return Column(
+			crossAxisAlignment: CrossAxisAlignment.start,
+			children: [
+				AppHeader.widget(
+					title: '$_pageKey.header.title',
+					appHeaderWidget: getCardHeader(state.planInstance),
+					helpPage: 'plan_info'
+				),
+				AppSegments(segments: _buildPanelSegments(state))
+			],
+		);
+	}
 
   List<Widget> _buildPanelSegments(ChildTasksLoadSuccess state) {
   	var mandatoryTasks = state.tasks.where((task) => task.optional == false).toList();
   	var optionalTasks = state.tasks.where((task) => task.optional == true).toList();
     return [
-			AppHeader.widget(
-				title: '$_pageKey.header.title',
-				appHeaderWidget: getCardHeader(state.planInstance),
-				helpPage: 'plan_info'
-			),
     	if(mandatoryTasks.isNotEmpty)
       _getTasksSegment(
 				tasks: mandatoryTasks,

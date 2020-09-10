@@ -378,7 +378,8 @@
 			},
 			"planDetails":  {
 				"header": {
-					"title": "Szczegóły planu"
+					"title": "Szczegóły planu",
+					"noChildren": "Nie przypisano"
 				},
 				"content": {
 					"mandatoryTasks": "Zadania obowiązkowe",

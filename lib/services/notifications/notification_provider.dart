@@ -7,38 +7,37 @@ import 'package:fokus_auth/fokus_auth.dart';
 import 'package:get_it/get_it.dart';
 import 'package:googleapis/fcm/v1.dart';
 import 'package:logging/logging.dart';
+
 import 'package:fokus/model/db/user/user.dart';
+import 'package:fokus/services/active_user_observer.dart';
+import 'package:fokus/services/data/data_repository.dart';
 
-import 'active_user_observer.dart';
-import 'data/data_repository.dart';
 
-class NotificationService implements ActiveUserObserver {
+class NotificationProvider implements ActiveUserObserver {
 	static Logger _logger = Logger('ChildPlansCubit');
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 
 	final _firebaseMessaging = FirebaseMessaging();
-	static var _notificationPlugin = FlutterLocalNotificationsPlugin();
-	ProjectsMessagesResourceApi _messagesApi;
+	static var _localNotifications = FlutterLocalNotificationsPlugin();
+	ProjectsMessagesResourceApi notificationApi;
 
 	User _activeUser;
 
-	NotificationService() {
-		_configureNotificationPlugin();
-		_configureMessageHandler();
-		//_configureFCMApi();
+	NotificationProvider() {
+		_configureLocalNotifications();
+		_configureFirebaseMessaging();
+		_configureFCMApi();
 		_printToken();
 	}
 
-	Future _configureFCMApi() async => _messagesApi = (await FcmAuthenticator.authenticate()).projects.messages;
-
-	void _configureNotificationPlugin() async {
+	void _configureLocalNotifications() async {
 		var initializationSettingsAndroid = AndroidInitializationSettings('ic_stat_name');
 		var initializationSettingsIOS = IOSInitializationSettings();
 		var initializationSettings = InitializationSettings(initializationSettingsAndroid, initializationSettingsIOS);
-		await _notificationPlugin.initialize(initializationSettings);
+		await _localNotifications.initialize(initializationSettings);
 	}
 
-	void _configureMessageHandler() async {
+	void _configureFirebaseMessaging() async {
 		if (Platform.isIOS)
 			await _requestIOSPermissions();
 		_firebaseMessaging.onTokenRefresh.listen(onTokenChanged);
@@ -56,6 +55,8 @@ class NotificationService implements ActiveUserObserver {
 			},
 		);
 	}
+
+	Future _configureFCMApi() async => notificationApi = (await FcmAuthenticator.authenticate()).projects.messages;
 
 	Future<bool> _requestIOSPermissions() {
 		_firebaseMessaging.onIosSettingsRegistered.listen((IosNotificationSettings settings) {
@@ -78,7 +79,7 @@ class NotificationService implements ActiveUserObserver {
 		var androidPlatformChannelSpecifics = AndroidNotificationDetails('fcm_default_channel', 'Miscellaneous', '', color: flutter.Color(0xfdbf00));
 		var iOSPlatformChannelSpecifics = IOSNotificationDetails();
 		var platformChannelSpecifics = NotificationDetails(androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
-		await _notificationPlugin.show(0, title, message, platformChannelSpecifics);
+		await _localNotifications.show(0, title, message, platformChannelSpecifics);
 	}
 
 	void _printToken() async => _logger.info(await _firebaseMessaging.getToken());

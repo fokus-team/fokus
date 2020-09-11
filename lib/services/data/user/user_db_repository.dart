@@ -9,8 +9,8 @@ import 'package:fokus/services/data/db/db_repository.dart';
 mixin UserDbRepository implements DbRepository {
 	final Logger _logger = Logger('UserDbRepository');
 
-	Future<User> getUser({ObjectId id, ObjectId connected, String authenticationId, UserRole role, List<String> fields}) {
-		var query = _buildUserQuery(id: id, connected: connected, authenticationId: authenticationId, role: role);
+	Future<User> getUser({ObjectId id, ObjectId connected, String authenticationId, String notificationId, UserRole role, List<String> fields}) {
+		var query = _buildUserQuery(id: id, connected: connected, authenticationId: authenticationId, notificationId: notificationId, role: role);
 		if (fields != null && !fields.contains('role'))
 			fields.add('role');
 		if (fields != null)
@@ -43,8 +43,8 @@ mixin UserDbRepository implements DbRepository {
 		return dbClient.update(Collection.user, where.eq('_id', userId), document);
 	}
 
-	Future insertNotificationID(ObjectId userId, String notificationID) {
-		return dbClient.update(Collection.user, _buildUserQuery(id: userId), modify.addToSet('notificationIDs', notificationID));
+	Future insertNotificationID(ObjectId userId, String notificationId) {
+		return dbClient.update(Collection.user, _buildUserQuery(id: userId), modify.addToSet('notificationIDs', notificationId));
 	}
 	Future removeNotificationID(String notificationID, {ObjectId userId}) {
 		return dbClient.update(Collection.user, _buildUserQuery(id: userId), modify.pull('notificationIDs', notificationID));

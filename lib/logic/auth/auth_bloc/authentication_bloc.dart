@@ -13,7 +13,7 @@ import 'package:fokus/model/db/user/user_role.dart';
 import 'package:fokus/model/db/user/user.dart';
 import 'package:fokus/services/data/data_repository.dart';
 import 'package:fokus/services/active_user_observer.dart';
-import 'package:fokus/services/notification_service.dart';
+import 'package:fokus/services/notifications/notification_provider.dart';
 import 'package:fokus/services/plan_keeper_service.dart';
 import 'package:fokus/services/app_config/app_config_repository.dart';
 
@@ -32,7 +32,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 
   AuthenticationBloc() : super(AuthenticationState.unknown()) {
 	  observeUserChanges(GetIt.I<PlanKeeperService>());
-	  observeUserChanges(GetIt.I<NotificationService>());
+	  observeUserChanges(GetIt.I<NotificationProvider>());
 	  _userSubscription = _authenticationProvider.user.listen((user) => add(AuthenticationUserChanged(user)));
   }
 

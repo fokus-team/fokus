@@ -1,6 +1,4 @@
 import 'package:flutter/widgets.dart';
-import 'package:fokus/services/task_keeper_service.dart';
-import 'package:fokus_auth/fokus_auth.dart';
 import 'package:get_it/get_it.dart';
 
 import 'package:fokus/services/data/db/db_data_repository.dart';
@@ -9,8 +7,11 @@ import 'package:fokus/services/app_config/app_shared_preferences_provider.dart';
 import 'package:fokus/services/data/data_repository.dart';
 import 'package:fokus/services/plan_repeatability_service.dart';
 import 'package:fokus/services/plan_keeper_service.dart';
-import 'package:fokus/services/notification_service.dart';
 import 'package:fokus/services/task_instance_service.dart';
+import 'package:fokus/services/notifications/firebase_notification_service.dart';
+import 'package:fokus/services/notifications/notification_service.dart';
+import 'package:fokus/services/task_keeper_service.dart';
+import 'package:fokus_auth/fokus_auth.dart';
 
 void initializeServices(RouteObserver<PageRoute> routeObserver) {
 	GetIt.I.registerSingleton<AuthenticationProvider>(AuthenticationProvider.instance);
@@ -19,7 +20,7 @@ void initializeServices(RouteObserver<PageRoute> routeObserver) {
 	GetIt.I.registerSingleton<PlanRepeatabilityService>(PlanRepeatabilityService());
 	GetIt.I.registerSingleton<PlanKeeperService>(PlanKeeperService());
 	GetIt.I.registerSingleton<TaskInstanceService>(TaskInstanceService());
-	GetIt.I.registerSingleton<NotificationService>(NotificationService());
+	GetIt.I.registerSingleton<NotificationService>(FirebaseNotificationService());
 	GetIt.I.registerSingleton<TaskKeeperService>(TaskKeeperService());
 	GetIt.I.registerSingleton<RouteObserver<PageRoute>>(routeObserver);
 }

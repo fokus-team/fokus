@@ -4,18 +4,23 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart' as flutter;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fokus_auth/fokus_auth.dart';
+import 'package:get_it/get_it.dart';
 import 'package:googleapis/fcm/v1.dart';
 import 'package:logging/logging.dart';
 import 'package:fokus/model/db/user/user.dart';
 
 import 'active_user_observer.dart';
+import 'data/data_repository.dart';
 
 class NotificationService implements ActiveUserObserver {
 	static Logger _logger = Logger('ChildPlansCubit');
+	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 
 	final _firebaseMessaging = FirebaseMessaging();
 	static var _notificationPlugin = FlutterLocalNotificationsPlugin();
 	ProjectsMessagesResourceApi _messagesApi;
+
+	User _activeUser;
 
 	NotificationService() {
 		_configureNotificationPlugin();
@@ -79,16 +84,24 @@ class NotificationService implements ActiveUserObserver {
 	void _printToken() async => _logger.info(await _firebaseMessaging.getToken());
 
 	void onTokenChanged(String token) {
-
+		if (_activeUser != null)
+			_addUserToken(token);
 	}
 
   @override
-  void onUserSignIn(User user) {
-
+  void onUserSignIn(User user) async {
+		_activeUser = user;
+		_addUserToken(await _firebaseMessaging.getToken());
   }
 
   @override
-  void onUserSignOut(User user) {
+  void onUserSignOut(User user) async {
+	  _dataRepository.removeNotificationID(await _firebaseMessaging.getToken(), userId: _activeUser.id);
+		_activeUser = null;
+  }
 
+  void _addUserToken(String token) async {
+	  _dataRepository.removeNotificationID(token);
+    _dataRepository.insertNotificationID(_activeUser.id, token);
   }
 }

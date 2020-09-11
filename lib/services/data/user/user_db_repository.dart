@@ -43,7 +43,14 @@ mixin UserDbRepository implements DbRepository {
 		return dbClient.update(Collection.user, where.eq('_id', userId), document);
 	}
 
-	SelectorBuilder _buildUserQuery({List<ObjectId> ids, ObjectId id, ObjectId connected, String authenticationId, UserRole role}) {
+	Future insertNotificationID(ObjectId userId, String notificationID) {
+		return dbClient.update(Collection.user, _buildUserQuery(id: userId), modify.addToSet('notificationIDs', notificationID));
+	}
+	Future removeNotificationID(String notificationID, {ObjectId userId}) {
+		return dbClient.update(Collection.user, _buildUserQuery(id: userId), modify.pull('notificationIDs', notificationID));
+	}
+
+	SelectorBuilder _buildUserQuery({List<ObjectId> ids, ObjectId id, ObjectId connected, String authenticationId, String notificationId, UserRole role}) {
 		SelectorBuilder query = where;
 		if (ids != null && id != null)
 			_logger.warning("Both ID and ID list specified in user query");
@@ -52,12 +59,16 @@ mixin UserDbRepository implements DbRepository {
 			query.oneFrom('_id', ids);
 		if (id != null)
 			query.eq('_id', id);
+		if (notificationId != null)
+			query.eq('notificationIDs', notificationId);
 		if (authenticationId != null)
 			query.eq('authenticationID', authenticationId);
 		if (connected != null)
 			query.eq('connections', connected);
 		if (role != null)
 			query.eq('role', role.index);
+		if (query.map.isEmpty)
+			return null;
 		return query;
 	}
 }

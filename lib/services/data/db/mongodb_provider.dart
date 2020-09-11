@@ -21,7 +21,7 @@ class MongoDbProvider {
 		).catchError((e) => throw NoDbConnection(e));
 	}
 
-	Future update(Collection collection, SelectorBuilder selector, dynamic document, {bool multiUpdate = true, bool upsert = true}) {
+	Future update(Collection collection, dynamic selector, dynamic document, {bool multiUpdate = true, bool upsert = true}) {
 		return _execute(() => _client.collection(collection.name).update(selector, document, multiUpdate: multiUpdate, upsert: upsert));
 	}
 

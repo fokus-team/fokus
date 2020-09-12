@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:ui';
+import 'package:fokus/services/observers/current_locale_observer.dart';
 import 'package:intl/message_format.dart';
 import 'package:logging/logging.dart';
 
@@ -18,9 +19,8 @@ class AppLocalesDelegate extends LocalizationsDelegate<AppLocales> {
 
 	@override
 	Future<AppLocales> load(Locale locale) async {
-		AppLocales localizations = new AppLocales(locale);
-		await localizations.load();
-		return localizations;
+		await AppLocales.instance.load(locale);
+		return AppLocales.instance;
 	}
 
 	@override
@@ -29,22 +29,21 @@ class AppLocalesDelegate extends LocalizationsDelegate<AppLocales> {
 
 class AppLocales {
 	final Logger _logger = Logger('AppLocales');
+	Locale locale;
+	List<CurrentLocaleObserver> _localeObservers = [];
 
-	final Locale locale;
-
-	AppLocales(this.locale);
-
-	static AppLocales of(BuildContext context) {
-		return Localizations.of<AppLocales>(context, AppLocales);
-	}
+	static AppLocales instance = AppLocales();
+	static AppLocales of(BuildContext context) => Localizations.of<AppLocales>(context, AppLocales);
 
 	static const LocalizationsDelegate<AppLocales> delegate = AppLocalesDelegate();
 
 	Map<String, dynamic> _jsonMap;
 
-	Future<bool> load() async {
+	Future<bool> load(Locale locale) async {
+		this.locale = locale;
 		String jsonString = await rootBundle.loadString('i18n/${locale.languageCode}_${locale.countryCode}.json');
 		_jsonMap = json.decode(jsonString);
+		_localeObservers.forEach((observer) => observer.onLocaleSet(locale));
 		return true;
 	}
 
@@ -62,4 +61,6 @@ class AppLocales {
 			return '';
 		}
 	}
+
+	void observeLocaleChanges(CurrentLocaleObserver observer) => _localeObservers.add(observer);
 }

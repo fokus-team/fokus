@@ -57,14 +57,13 @@ void main() async {
 	await Firebase.initializeApp();
 	var navigatorKey = GlobalKey<NavigatorState>();
 	var routeObserver = RouteObserver<PageRoute>();
-	initializeServices(routeObserver);
+	registerServices(navigatorKey, routeObserver);
 
 	Instrumentator.runAppGuarded(
 		BlocProvider<AuthenticationBloc>(
 			create: (context) => AuthenticationBloc(),
 			child: FokusApp(navigatorKey, routeObserver),
-		),
-		navigatorKey
+		)
 	);
 }
 

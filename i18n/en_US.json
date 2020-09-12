@@ -609,6 +609,20 @@
 			"avatarEmpty": "You must pick child's avatar"
 		}
 	},
+	"notificationChannel": {
+		"name": {
+			"general": "General",
+			"prizes": "Prizes",
+			"grades": "Grades",
+			"plans": "Plans"
+		},
+		"description": {
+			"general": "General notifications",
+			"prizes": "Child prizes updates",
+			"grades": "Task grading updates",
+			"plans": "Plan updates"
+		}
+	},
 	"help": {
 		"first_steps": "First steps",
 		"plan_creation": "Plan creation",

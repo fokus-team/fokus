@@ -12,9 +12,9 @@ import 'package:fokus/model/db/user/caregiver.dart';
 import 'package:fokus/model/db/user/user_role.dart';
 import 'package:fokus/model/db/user/user.dart';
 import 'package:fokus/services/data/data_repository.dart';
-import 'package:fokus/services/active_user_observer.dart';
-import 'package:fokus/services/notifications/notification_provider.dart';
+import 'package:fokus/services/observers/active_user_observer.dart';
 import 'package:fokus/services/plan_keeper_service.dart';
+import 'package:fokus/services/notifications/notification_service.dart';
 import 'package:fokus/services/app_config/app_config_repository.dart';
 
 part 'authentication_event.dart';
@@ -32,7 +32,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 
   AuthenticationBloc() : super(AuthenticationState.unknown()) {
 	  observeUserChanges(GetIt.I<PlanKeeperService>());
-	  observeUserChanges(GetIt.I<NotificationProvider>());
+	  observeUserChanges(GetIt.I<NotificationService>());
 	  _userSubscription = _authenticationProvider.user.listen((user) => add(AuthenticationUserChanged(user)));
   }
 
@@ -42,7 +42,6 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 		  yield await _processUserChangedEvent(event);
 	  else if (event is AuthenticationChildSignInRequested) {
 			_appConfigRepository.signInChild(event.child.id);
-			_onUserSignOut(event.child);
 			yield await _signInUser(event.child);
 	  } else if (event is AuthenticationSignOutRequested) {
 	  	_onUserSignOut(state.user.toDBModel());

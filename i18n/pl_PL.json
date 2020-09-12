@@ -609,6 +609,20 @@
 			"avatarEmpty": "Należy wybrać awatar dziecka"
 		}
 	},
+	"notificationChannel": {
+		"name": {
+			"general": "Ogólne",
+			"prizes": "Nagrody",
+			"grades": "Oceny",
+			"plans": "Plany"
+		},
+		"description": {
+			"general": "Ogólne powiadomienia",
+			"prizes": "Informacje o nagrodach",
+			"grades": "Informacje o ocenach zadań",
+			"plans": "Informacje o planach"
+		}
+	},
 	"help": {
 		"first_steps": "Pierwsze kroki",
 		"plan_creation": "Tworzenie planu",

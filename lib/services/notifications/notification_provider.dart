@@ -2,18 +2,21 @@ import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart' as flutter;
+import 'package:flutter/widgets.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:fokus_auth/fokus_auth.dart';
+import 'package:fokus/services/app_locales.dart';
+import 'package:fokus/services/observers/current_locale_observer.dart';
 import 'package:get_it/get_it.dart';
 import 'package:googleapis/fcm/v1.dart';
 import 'package:logging/logging.dart';
+import 'package:fokus_auth/fokus_auth.dart';
 
 import 'package:fokus/model/db/user/user.dart';
-import 'package:fokus/services/active_user_observer.dart';
+import 'package:fokus/services/observers/active_user_observer.dart';
 import 'package:fokus/services/data/data_repository.dart';
+import 'package:fokus/model/ui/notification_channel.dart';
 
-
-class NotificationProvider implements ActiveUserObserver {
+class NotificationProvider implements ActiveUserObserver, CurrentLocaleObserver {
 	static Logger _logger = Logger('ChildPlansCubit');
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 
@@ -35,6 +38,19 @@ class NotificationProvider implements ActiveUserObserver {
 		var initializationSettingsIOS = IOSInitializationSettings();
 		var initializationSettings = InitializationSettings(initializationSettingsAndroid, initializationSettingsIOS);
 		await _localNotifications.initialize(initializationSettings);
+		if (Platform.isAndroid)
+			AppLocales.instance.observeLocaleChanges(this);
+	}
+
+	@override
+	void onLocaleSet(flutter.Locale locale) {
+		var androidPlugin = _localNotifications.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
+		var translate = (String key) => AppLocales.instance.translate(key);
+		for (var channelType in NotificationChannel.values) {
+			var androidChannel = AndroidNotificationChannel(channelType.id, translate(channelType.nameKey),
+					translate(channelType.descriptionKey), channelAction: AndroidNotificationChannelAction.Update);
+			androidPlugin.createNotificationChannel(androidChannel);
+		}
 	}
 
 	void _configureFirebaseMessaging() async {
@@ -44,7 +60,7 @@ class NotificationProvider implements ActiveUserObserver {
 		_firebaseMessaging.configure(
 			onMessage: (Map<String, dynamic> message) async {
 				_logger.fine("onMessage: $message");
-				await _showNotification(message['notification']['title'], message['notification']['body']);
+				await _showNotification(message['notification']['title'], message['notification']['body'], message['data']['channel']);
 			},
 			onBackgroundMessage: _bgMessageHandler,
 			onLaunch: (Map<String, dynamic> message) async {
@@ -72,11 +88,15 @@ class NotificationProvider implements ActiveUserObserver {
 		} else {
 			content = message['notification'];
 		}
-		await _showNotification(content['title'], content['body']);
+		await _showNotification(content['title'], content['body'], message['data']['channel']);
 	}
 
-	static Future _showNotification(String title, String message) async {
-		var androidPlatformChannelSpecifics = AndroidNotificationDetails('fcm_default_channel', 'Miscellaneous', '', color: flutter.Color(0xfdbf00));
+	static Future _showNotification(String title, String message, String channelIndex) async {
+		var channel = NotificationChannel.general;
+		if (channelIndex != null)
+			channel = NotificationChannel.values[int.parse(channelIndex)];
+		var translate = (String key) => AppLocales.instance.translate(key);
+		var androidPlatformChannelSpecifics = AndroidNotificationDetails(channel.id, translate(channel.nameKey), translate(channel.descriptionKey), color: flutter.Color(0xfdbf00));
 		var iOSPlatformChannelSpecifics = IOSNotificationDetails();
 		var platformChannelSpecifics = NotificationDetails(androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
 		await _localNotifications.show(0, title, message, platformChannelSpecifics);

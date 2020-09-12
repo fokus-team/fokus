@@ -13,7 +13,7 @@ import 'package:fokus/services/notifications/notification_service.dart';
 import 'package:fokus/services/task_keeper_service.dart';
 import 'package:fokus_auth/fokus_auth.dart';
 
-void initializeServices(RouteObserver<PageRoute> routeObserver) {
+void registerServices(GlobalKey<NavigatorState> navigatorKey, RouteObserver<PageRoute> routeObserver) {
 	GetIt.I.registerSingleton<AuthenticationProvider>(AuthenticationProvider.instance);
 	GetIt.I.registerSingleton<AppConfigRepository>(AppConfigRepository(AppSharedPreferencesProvider())..initialize());
 	GetIt.I.registerSingleton<DataRepository>(DbDataRepository());
@@ -22,5 +22,8 @@ void initializeServices(RouteObserver<PageRoute> routeObserver) {
 	GetIt.I.registerSingleton<TaskInstanceService>(TaskInstanceService());
 	GetIt.I.registerSingleton<NotificationService>(FirebaseNotificationService());
 	GetIt.I.registerSingleton<TaskKeeperService>(TaskKeeperService());
+
+	// Semi-services needed for context and navigation state sharing
+	GetIt.I.registerSingleton<GlobalKey<NavigatorState>>(navigatorKey);
 	GetIt.I.registerSingleton<RouteObserver<PageRoute>>(routeObserver);
 }

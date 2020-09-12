@@ -10,6 +10,7 @@ import 'package:fokus/logic/auth/caregiver/sign_up/caregiver_sign_up_cubit.dart'
 import 'package:fokus/logic/auth/child/prev_profiles_cubit.dart';
 import 'package:fokus/logic/auth/child/sign_in/child_sign_in_cubit.dart';
 import 'package:fokus/logic/auth/child/sign_up/child_sign_up_cubit.dart';
+import 'package:fokus/logic/plan_cubit.dart';
 import 'package:fokus/logic/plan_instance_cubit.dart';
 import 'package:fokus/logic/calendar_cubit.dart';
 import 'package:fokus/logic/caregiver_panel_cubit.dart';
@@ -19,6 +20,7 @@ import 'package:fokus/logic/plan_form/plan_form_cubit.dart';
 import 'package:fokus/pages/child/calendar_page.dart';
 
 import 'package:fokus/pages/loading_page.dart';
+import 'package:fokus/pages/plan_details_page.dart';
 import 'package:fokus/pages/roles_page.dart';
 import 'package:fokus/pages/notifications_page.dart';
 import 'package:fokus/pages/settings_page.dart';
@@ -30,7 +32,6 @@ import 'package:fokus/pages/caregiver/child_dashboard_page.dart';
 import 'package:fokus/pages/caregiver/award_form_page.dart';
 import 'package:fokus/pages/caregiver/badge_form_page.dart';
 import 'package:fokus/pages/caregiver/panel_page.dart';
-import 'package:fokus/pages/caregiver/plan_details_page.dart';
 import 'package:fokus/pages/caregiver/plan_form_page.dart';
 import 'package:fokus/pages/caregiver/plans_page.dart';
 import 'package:fokus/pages/caregiver/statistics_page.dart';
@@ -135,7 +136,7 @@ class FokusApp extends StatelessWidget {
 			AppPage.childCalendar.name: (context) => _createPage(ChildCalendarPage(), context, CalendarCubit(getParams(context), getActiveUser(context))),
 			AppPage.childAwards.name: (context) => _createPage(ChildAwardsPage(), context),
 			AppPage.childAchievements.name: (context) => _createPage(ChildAchievementsPage(), context),
-			AppPage.caregiverPlanDetails.name: (context) => _createPage(CaregiverPlanDetailsPage(), context),
+			AppPage.caregiverPlanDetails.name: (context) => _createPage(CaregiverPlanDetailsPage(), context, PlanCubit(getParams(context), getRoute(context))),
 			AppPage.childPlanInProgress.name: (context) => _createPage(ChildPlanInProgressPage(), context, PlanInstanceCubit(getParams(context), getRoute(context))),
 			AppPage.childTaskInProgress.name: (context) => _createPage(ChildTaskInProgressPage(), context)
 		};

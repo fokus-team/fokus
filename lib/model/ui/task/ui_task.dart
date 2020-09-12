@@ -10,7 +10,7 @@ class UITask extends UITaskBase {
 	final ObjectId planId;
 
   UITask({ObjectId id, String name, bool optional, String description, this.points, this.timer, this.planId}) : super(id, name, optional, description);
-  UITask.fromDBModel({Task task}) : this(id: task.id, name: task.name, optional: task.optional, description: task.description, points: UIPoints(quantity: task.points.quantity, type: task.points.icon, title: task.points.name),  timer: task.timer, planId: task.planID);
+  UITask.fromDBModel({Task task}) : this(id: task.id, name: task.name, optional: task.optional, description: task.description, points: task.points != null ? UIPoints(quantity: task.points.quantity, type: task.points.icon, title: task.points.name) : null,  timer: task.timer ?? 0, planId: task.planID);
 
 	@override
 	List<Object> get props => super.props..addAll([points, timer, planId]);

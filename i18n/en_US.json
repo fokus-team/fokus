@@ -378,7 +378,8 @@
 			},
 			"planDetails": {
 				"header": {
-					"title": "Plan details"
+					"title": "Plan details",
+					"noChildren": "Not assigned"
 				},
 				"content": {
 					"mandatoryTasks": "Mandatory tasks",
@@ -405,7 +406,7 @@
 						"totalBreakTime": "time total",
 						"timeFormat": "{HOURS_NUM, plural, offset:0 zero {} other {# hr }}{MINUTES_NUM} min",
 						"ratedOnLabel": "Rated {STARS_NUM} out of 5",
-						"ratedOnHint": "Child recived {POINTS_NUM, plural, offset:0 one {# point} other {# points}",
+						"ratedOnHint": "Child received {POINTS_NUM, plural, offset:0 one {# point} other {# points}}",
 						"rejectedLabel": "Marked as not done",
 						"rejectedHint": "Child must repeat this task"
 					},

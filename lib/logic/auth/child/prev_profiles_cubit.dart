@@ -8,6 +8,7 @@ import 'package:mongo_dart/mongo_dart.dart';
 import 'package:fokus/services/data/data_repository.dart';
 import 'package:fokus/model/ui/user/ui_child.dart';
 
+
 class PreviousProfilesCubit extends ReloadableCubit {
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final AppConfigRepository _appConfigRepository = GetIt.I<AppConfigRepository>();

@@ -1,21 +1,22 @@
 import 'package:bson/bson.dart';
-import 'package:fokus/model/ui/localized_text.dart';
 import 'package:get_it/get_it.dart';
 import 'package:logging/logging.dart';
 import 'package:googleapis/fcm/v1.dart';
 
 import 'package:fokus/services/data/data_repository.dart';
-import 'package:fokus/services/notifications/notification_provider.dart';
+import 'package:fokus/services/notifications/firebase/firebase_notification_provider.dart';
 import 'package:fokus/services/notifications/notification_service.dart';
-import 'package:fokus/model/db/user/user.dart';
 import 'package:fokus/model/ui/notification_channel.dart';
 import 'package:fokus/widgets/cards/notification_card.dart';
 import 'package:fokus/services/app_locales.dart';
+import 'package:fokus/model/ui/localized_text.dart';
 
-class FirebaseNotificationService implements NotificationService {
+class FirebaseNotificationService extends NotificationService {
 	final Logger _logger = Logger('FirebaseNotificationService');
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
-	final NotificationProvider _provider = NotificationProvider();
+
+	@override
+	FirebaseNotificationProvider provider = FirebaseNotificationProvider();
 
 	static final String _projectId = 'projects/fokus-application';
 
@@ -52,13 +53,7 @@ class FirebaseNotificationService implements NotificationService {
 		});
 		for (var token in tokens) {
 			request.message.token = token;
-			_provider.notificationApi.send(request, _projectId);
+			provider.notificationApi.send(request, _projectId);
 		}
   }
-
-  @override
-  void onUserSignIn(User user) => _provider.onUserSignIn(user);
-
-  @override
-  void onUserSignOut(User user) => _provider.onUserSignOut(user);
 }

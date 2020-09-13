@@ -8,7 +8,7 @@ import 'package:fokus/services/data/data_repository.dart';
 import 'package:fokus/services/plan_repeatability_service.dart';
 import 'package:fokus/services/plan_keeper_service.dart';
 import 'package:fokus/services/task_instance_service.dart';
-import 'package:fokus/services/notifications/firebase_notification_service.dart';
+import 'package:fokus/services/notifications/onesignal/onesignal_notification_service.dart';
 import 'package:fokus/services/notifications/notification_service.dart';
 import 'package:fokus/services/task_keeper_service.dart';
 import 'package:fokus_auth/fokus_auth.dart';
@@ -20,7 +20,7 @@ void registerServices(GlobalKey<NavigatorState> navigatorKey, RouteObserver<Page
 	GetIt.I.registerSingleton<PlanRepeatabilityService>(PlanRepeatabilityService());
 	GetIt.I.registerSingleton<PlanKeeperService>(PlanKeeperService());
 	GetIt.I.registerSingleton<TaskInstanceService>(TaskInstanceService());
-	GetIt.I.registerSingleton<NotificationService>(FirebaseNotificationService());
+	GetIt.I.registerSingleton<NotificationService>(OneSignalNotificationService());
 	GetIt.I.registerSingleton<TaskKeeperService>(TaskKeeperService());
 
 	// Semi-services needed for context and navigation state sharing

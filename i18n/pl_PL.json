@@ -491,7 +491,8 @@
 					"isCompleted": "Wykonano zadanie?",
 					"breakButton": "Przerwa",
 					"resumeButton": "Wznów",
-					"pointsToGet": "Do zdobycia:"
+					"pointsToGet": "Do zdobycia:",
+					"motivate": "Wykonuj zadania!"
 				},
 				"cards" : {
 					"break": {

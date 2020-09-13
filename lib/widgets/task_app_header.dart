@@ -2,7 +2,7 @@ import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/logic/timer/timer_cubit.dart';
-import 'package:fokus/model/currency_type.dart';
+import 'package:fokus/model/ui/task/ui_task_instance.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/services/ticker.dart';
 import 'package:fokus/utils/theme_config.dart';
@@ -19,8 +19,9 @@ class TaskAppHeader extends StatefulWidget with PreferredSizeWidget {
 	final String helpPage;
 	final Function breakPerformingTransition;
 	final bool isBreak;
+	final UITaskInstance uiTaskInstance;
 
-	TaskAppHeader({Key key, @required this.height, this.title, this.text, this.appHeaderWidget, this.helpPage,this.breakPerformingTransition, this.isBreak}) : super(key: key);
+	TaskAppHeader({Key key, @required this.height, @required this.uiTaskInstance, this.title, this.text, this.appHeaderWidget, this.helpPage,this.breakPerformingTransition, this.isBreak}) : super(key: key);
 
 	@override
 	Size get preferredSize => Size.fromHeight(height);
@@ -71,7 +72,7 @@ class TaskAppHeaderState extends State<TaskAppHeader> with TickerProviderStateMi
 						Align(
 							alignment: Alignment.center,
 							child: BlocProvider<TimerCubit>(
-								create: (_) => TimerCubit(() => 620, CountDirection.down)..startTimer(),
+								create: (_) => TimerCubit(this.widget.uiTaskInstance.elapsedTimePassed, CountDirection.down)..startTimer(),
 								child: LargeTimer(
 									textColor: AppColors.darkTextColor,
 									title: '$_pageKey.content.timeLeft',
@@ -101,11 +102,11 @@ class TaskAppHeaderState extends State<TaskAppHeader> with TickerProviderStateMi
 						child: Row(
 							mainAxisAlignment: MainAxisAlignment.spaceBetween,
 							children: [
-								Text(AppLocales.of(context).translate('$_pageKey.content.pointsToGet')),
-								AttributeChip.withCurrency(
-									content: "+30",
-									currencyType: CurrencyType.diamond
-								)
+								Text(AppLocales.of(context).translate(this.widget.uiTaskInstance.points != null ? '$_pageKey.content.pointsToGet' : '$_pageKey.content.motivate')),
+								this.widget.uiTaskInstance.points != null ? AttributeChip.withCurrency(
+									content: "+" + this.widget.uiTaskInstance.points.quantity.toString(),
+									currencyType: this.widget.uiTaskInstance.points.type
+								) : SizedBox.shrink()
 							]
 						)
 					)

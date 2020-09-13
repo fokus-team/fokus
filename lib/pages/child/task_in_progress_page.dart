@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fokus/logic/task_instance/task_instance_cubit.dart';
 import 'package:fokus/logic/timer/timer_cubit.dart';
+import 'package:fokus/model/ui/task/ui_task_instance.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/theme_config.dart';
 import 'package:fokus/widgets/buttons/double_circular_notched_button.dart';
@@ -21,7 +23,7 @@ class ChildTaskInProgressPage extends StatefulWidget {
 
 class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with TickerProviderStateMixin {
   final String _pageKey = 'page.childSection.taskInProgress';
-  TaskInProgressPageState _state = TaskInProgressPageState.currentlyCompleting;
+  TaskInProgressPageState _state;
 	Animation<Offset> _offsetAnimation;
 	Animation<Offset> _taskListFabAnimation;
 	AnimationController _bottomBarController;
@@ -35,54 +37,66 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 
 	@override
   Widget build(BuildContext context) {
-  	return Scaffold(
-			appBar: _getHeader(),
-			body: Padding(
-				padding: EdgeInsets.only(bottom: 0.0),
-				child: Stack(
-					children: _getAllCards()
-				)
-			),
-			extendBody: true,
-			bottomNavigationBar: _getBottomNavBar(),
-			floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-			floatingActionButton: Row(
-				mainAxisAlignment: MainAxisAlignment.spaceBetween,
-				children: <Widget>[
-					_getFab(true),
-					SlideTransition(
-						position: _taskListFabAnimation,
-					  child: FloatingActionButton.extended(
-					  	label:
-					  		Row(
-					  		  children: [
-					  				Icon(Icons.format_list_bulleted,),
-					  		    Padding(
-					  		      padding: const EdgeInsets.only(left: 8.0),
-					  		      child: Text(AppLocales.of(context).translate('actions.return')),
-					  		    ),
-					  		  ],
-					  		),
-					  	onPressed: () => Navigator.of(context).pop(),
-					  	heroTag: "fabTasks",
-					  	backgroundColor: AppColors.childTaskColor,
-					  ),
+		return BlocBuilder<TaskInstanceCubit, TaskInstanceState>(
+			builder: (context, state) {
+				if(state is TaskInstanceStateInitial) {
+					BlocProvider.of<TaskInstanceCubit>(context).loadTaskInstance();
+					return SizedBox.shrink();
+				}
+				else if(state is TaskInstanceStateLoadSuccess)
+					state.taskInstance.taskUiType == TaskUIType.currentlyPerformed ? _state = TaskInProgressPageState.currentlyCompleting :
+						_state = TaskInProgressPageState.inBreak;
+				return  Scaffold(
+					appBar: _getHeader(state),
+					body: Padding(
+						padding: EdgeInsets.only(bottom: 0.0),
+						child: Stack(
+							children: _getAllCards(state)
+						)
 					),
-					_getFab(false)
-				],
-			),
+					extendBody: true,
+					bottomNavigationBar: _getBottomNavBar(),
+					floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+					floatingActionButton: Row(
+						mainAxisAlignment: MainAxisAlignment.spaceBetween,
+						children: <Widget>[
+							_getFab(true),
+							SlideTransition(
+								position: _taskListFabAnimation,
+								child: FloatingActionButton.extended(
+									label:
+									Row(
+										children: [
+											Icon(Icons.format_list_bulleted,),
+											Padding(
+												padding: const EdgeInsets.only(left: 8.0),
+												child: Text(AppLocales.of(context).translate('actions.return')),
+											),
+										],
+									),
+									onPressed: () => Navigator.of(context).pop(),
+									heroTag: "fabTasks",
+									backgroundColor: AppColors.childTaskColor,
+								),
+							),
+							_getFab(false)
+						],
+					),
+				);
+
+			}
 		);
   }
 
-  Widget _getHeader() {
+  Widget _getHeader(TaskInstanceProvider state) {
 		return TaskAppHeader(
 			height: 330,
 			title: '$_pageKey.header.title',
 			appHeaderWidget: ItemCard(
-				title: "Sprzątanie pokoju",
-				subtitle: "Co każdy poniedziałek, środę, czwartek i piątek",
+				title: state.planInstance.name,
+				subtitle: state.planInstance.description(context),
 				isActive: true,
-				progressPercentage: 0.4,
+				progressPercentage: state.planInstance.completedTaskCount.ceilToDouble() / state.planInstance.taskCount.ceilToDouble(),
 				activeProgressBarColor: AppColors.childActionColor,
 				textMaxLines: 2,
 				chips:
@@ -90,14 +104,15 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 					AttributeChip.withIcon(
 						icon: Icons.description,
 						color: AppColors.childBackgroundColor,
-						content: AppLocales.of(context).translate('page.childSection.panel.content.taskProgress', {'NUM_TASKS': 2, 'NUM_ALL_TASKS': 5})
+						content: AppLocales.of(context).translate('page.childSection.panel.content.taskProgress', {'NUM_TASKS': state.planInstance.completedTaskCount, 'NUM_ALL_TASKS': state.planInstance.taskCount})
 					)
 				],
 			),
 			helpPage: 'plan_info',
 			key: _header,
 			breakPerformingTransition: _breakPerformingTransition,
-			isBreak: false
+			isBreak: false,
+			uiTaskInstance: state.taskInstance
 		);
 	}
 
@@ -140,16 +155,17 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 		);
 	}
 
-  List<Widget> _getAllCards() {
+  List<Widget> _getAllCards(TaskInstanceProvider state) {
 		return [
 			SlidingCard(
 				key: _completingCard,
 				cardColor: AppColors.childTaskColor,
 				content: [
 					_getAnimation('assets/animation/jumping_little_man.json'),
-					_getTitle("Tytuł zadania", translate: false),
-					_getSubtitle("Możliwy opcjonalny opis zadania z listą kroków dla dziecka",alignment: TextAlign.justify, translate: false, topPadding: 8),
-				]
+					_getTitle(state.taskInstance.name, translate: false),
+					_getSubtitle(state.taskInstance.description,alignment: TextAlign.justify, translate: false, topPadding: 8),
+				],
+				showFirst: _state == TaskInProgressPageState.currentlyCompleting,
 			),
 			SlidingCard(
 				key: _breakCard,
@@ -160,7 +176,7 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 					Padding(
 						padding: const EdgeInsets.symmetric(horizontal: 8.0),
 						child: BlocProvider<TimerCubit>(
-							create: (_) => TimerCubit(() => 0)..startTimer(),
+							create: (_) => TimerCubit(state.taskInstance.elapsedTimePassed)..startTimer(),
 							child:LargeTimer(
 								textColor: AppColors.lightTextColor,
 								title: '$_pageKey.content.breakTime',
@@ -168,7 +184,8 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 							),
 						),
 					)
-				]
+				],
+				showFirst: _state == TaskInProgressPageState.inBreak,
 			),
 			SlidingCard(
 				key: _rejectCard,
@@ -249,15 +266,6 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 			parent: _bottomBarController,
 			curve: Curves.easeInOutQuint,
 		));
-		WidgetsBinding.instance.addPostFrameCallback((_) {
-			_completingCard.currentState.jumpToEnd();
-			_breakCard.currentState.jumpToEnd();
-			_doneCard.currentState.jumpToEnd();
-			_rejectCard.currentState.jumpToEnd();
-			if(_state == TaskInProgressPageState.currentlyCompleting)
-				_completingCard.currentState.openCard();
-			else _breakCard.currentState.openCard();
-		});
 	}
 
  void _breakPerformingTransition() {
@@ -267,11 +275,13 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
   			_breakCard.currentState.openCard();
   			_state = TaskInProgressPageState.inBreak;
   			this._header.currentState.animateButton();
+				BlocProvider.of<TaskInstanceCubit>(context).switchToBreak();
 			}
   		else if(_state == TaskInProgressPageState.inBreak) {
 				_breakCard.currentState.closeCard();
 				_completingCard.currentState.openCard();
 				_state = TaskInProgressPageState.currentlyCompleting;
+				BlocProvider.of<TaskInstanceCubit>(context).switchToProgress();
 				this._header.currentState.animateButton();
 			}
   	});
@@ -280,6 +290,7 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
   void _onCompletion() {
 		if(_state != TaskInProgressPageState.rejected && _state != TaskInProgressPageState.done)
 			setState(() {
+				BlocProvider.of<TaskInstanceCubit>(context).markAsDone();
 				_closeWidgetsOnFinish();
 				_state = TaskInProgressPageState.done;
 				_doneCard.currentState.openCard();
@@ -291,6 +302,7 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 	void _onRejection() {
 		if(_state != TaskInProgressPageState.rejected && _state != TaskInProgressPageState.done)
 			setState(() {
+				BlocProvider.of<TaskInstanceCubit>(context).markAsRejected();
 				_closeWidgetsOnFinish();
 				_state = TaskInProgressPageState.rejected;
 				_rejectCard.currentState.openCard();

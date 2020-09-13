@@ -491,7 +491,8 @@
 					"isCompleted": "Task completed?",
 					"breakButton": "Break",
 					"resumeButton": "Resume",
-					"pointsToGet": "To earn:"
+					"pointsToGet": "To earn:",
+					"motivate": "Complete tasks!"
 				},
 				"cards" : {
 					"break": {

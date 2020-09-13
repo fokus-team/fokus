@@ -144,7 +144,7 @@ class _ChildPlanInProgressPageState extends State<ChildPlanInProgressPage> {
 			title: _planInstance.name,
 			subtitle: _planInstance.description(context),
 			isActive: _planInstance.state != PlanInstanceState.completed,
-			progressPercentage: _planInstance.state.inProgress ? _planInstance.completedTaskCount / _planInstance.taskCount : null,
+			progressPercentage: _planInstance.state.inProgress ? _planInstance.completedTaskCount.ceilToDouble() / _planInstance.taskCount.ceilToDouble() : null,
 			chips: [
 				if(_planInstance.state == PlanInstanceState.active)
 				...[

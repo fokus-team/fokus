@@ -68,6 +68,12 @@ mixin PlanDbRepository implements DbRepository {
 		return dbClient.update(Collection.planInstance, where.eq('_id', instanceId), document);
 	}
 
+	Future updatePlanInstance(PlanInstance planInstance) => dbClient.update(Collection.planInstance, _buildPlanQuery(id: planInstance.id), planInstance.toJson(), multiUpdate: false);
+
+	Future updateMultiplePlanInstances(List<PlanInstance> planInstances) {
+		return dbClient.updateAll(Collection.planInstance, planInstances.map((planInstance) => _buildPlanQuery(id: planInstance.id)).toList(), planInstances.map((planInstance) => planInstance.toJson()).toList(), multiUpdate: false);
+	}
+
 	Future createPlanInstances(List<PlanInstance> plans) {
 		var query = (PlanInstance plan) => where.allEq({
 			'planID': plan.planID,
@@ -77,6 +83,7 @@ mixin PlanDbRepository implements DbRepository {
 		var insert = (PlanInstance plan) => modify.setAllOnInsert(plan.toJson());
 	  return dbClient.updateAll(Collection.planInstance, plans.map((plan) => query(plan)).toList(), plans.map((plan) => insert(plan)).toList());
 	}
+
 	Future updatePlan(Plan plan) => dbClient.update(Collection.plan, _buildPlanQuery(id: plan.id), plan.toJson(), multiUpdate: false);
 	Future createPlan(Plan plan) => dbClient.insert(Collection.plan, plan.toJson());
 

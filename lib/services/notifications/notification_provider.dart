@@ -2,10 +2,8 @@ import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart' as flutter;
-import 'package:flutter/widgets.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/services/observers/current_locale_observer.dart';
+import 'package:fokus/model/ui/localized_text.dart';
 import 'package:get_it/get_it.dart';
 import 'package:googleapis/fcm/v1.dart';
 import 'package:logging/logging.dart';
@@ -15,9 +13,11 @@ import 'package:fokus/model/db/user/user.dart';
 import 'package:fokus/services/observers/active_user_observer.dart';
 import 'package:fokus/services/data/data_repository.dart';
 import 'package:fokus/model/ui/notification_channel.dart';
+import 'package:fokus/services/app_locales.dart';
+import 'package:fokus/services/observers/current_locale_observer.dart';
 
 class NotificationProvider implements ActiveUserObserver, CurrentLocaleObserver {
-	static Logger _logger = Logger('ChildPlansCubit');
+	static Logger _logger = Logger('NotificationProvider');
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 
 	final _firebaseMessaging = FirebaseMessaging();
@@ -60,7 +60,7 @@ class NotificationProvider implements ActiveUserObserver, CurrentLocaleObserver 
 		_firebaseMessaging.configure(
 			onMessage: (Map<String, dynamic> message) async {
 				_logger.fine("onMessage: $message");
-				await _showNotification(message['notification']['title'], message['notification']['body'], message['data']['channel']);
+				await _showNotification(message);
 			},
 			onBackgroundMessage: _bgMessageHandler,
 			onLaunch: (Map<String, dynamic> message) async {
@@ -88,18 +88,27 @@ class NotificationProvider implements ActiveUserObserver, CurrentLocaleObserver 
 		} else {
 			content = message['notification'];
 		}
-		await _showNotification(content['title'], content['body'], message['data']['channel']);
+		//await _showNotification(content['title'], content['body'], message['data']['channel']);
 	}
 
-	static Future _showNotification(String title, String message, String channelIndex) async {
-		var channel = NotificationChannel.general;
-		if (channelIndex != null)
-			channel = NotificationChannel.values[int.parse(channelIndex)];
+	static Future _showNotification(Map<String, dynamic> message) async {
 		var translate = (String key) => AppLocales.instance.translate(key);
+		var locTranslate = (LocalizedText text) => AppLocales.instance.translate(text.key, text.arguments);
+
+		var channel = NotificationChannel.general;
+		if (message['data']['channel'] != null)
+			channel = NotificationChannel.values[int.parse(message['data']['channel'])];
+
+		String parse(String field) {
+			var text = message['notification'][field];
+			if (message['data']['${field}Key'] != null)
+				text = locTranslate(LocalizedText.fromJson(field, message['data']));
+			return text;
+		}
 		var androidPlatformChannelSpecifics = AndroidNotificationDetails(channel.id, translate(channel.nameKey), translate(channel.descriptionKey), color: flutter.Color(0xfdbf00));
 		var iOSPlatformChannelSpecifics = IOSNotificationDetails();
 		var platformChannelSpecifics = NotificationDetails(androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
-		await _localNotifications.show(0, title, message, platformChannelSpecifics);
+		await _localNotifications.show(0, parse('title'), parse('body'), platformChannelSpecifics);
 	}
 
 	void _printToken() async => _logger.info(await _firebaseMessaging.getToken());

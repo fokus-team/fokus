@@ -24,6 +24,8 @@ class AppColors {
 	static final Color childBreakColor = Colors.blueGrey;
 	static final Color childTaskColor = Colors.lightBlue;
 
+  static final Color notificationAccentColor = Color(0xfdbf00);
+
   // Currency colors
 	static final Map<CurrencyType, Color> currencyColor = {
 		CurrencyType.diamond: Color.fromARGB(255, 3, 169, 244),

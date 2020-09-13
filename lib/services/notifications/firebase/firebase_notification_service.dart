@@ -1,9 +1,6 @@
 import 'package:bson/bson.dart';
-import 'package:get_it/get_it.dart';
-import 'package:logging/logging.dart';
 import 'package:googleapis/fcm/v1.dart';
 
-import 'package:fokus/services/data/data_repository.dart';
 import 'package:fokus/services/notifications/firebase/firebase_notification_provider.dart';
 import 'package:fokus/services/notifications/notification_service.dart';
 import 'package:fokus/model/ui/notification_channel.dart';
@@ -12,19 +9,15 @@ import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/model/ui/localized_text.dart';
 
 class FirebaseNotificationService extends NotificationService {
-	final Logger _logger = Logger('FirebaseNotificationService');
-	final DataRepository _dataRepository = GetIt.I<DataRepository>();
-
 	@override
 	FirebaseNotificationProvider provider = FirebaseNotificationProvider();
-
 	static final String _projectId = 'projects/fokus-application';
 
   @override
   Future sendNotification(NotificationType type, ObjectId userId, {LocalizedText locTitle, String title, LocalizedText locBody, String body}) async {
-  	var tokens = (await _dataRepository.getUser(id: userId, fields: ['notificationIDs'])).notificationIDs;
+  	var tokens = await getUserTokens(userId);
   	if (tokens == null || tokens.isEmpty) {
-			_logger.info('Could not send a notification to user with ID ${userId.toHexString()}, there is no notification ID assigned');
+		  logNoUserToken(userId);
 		  return;
 	  }
 	  var translate = (LocalizedText text) => AppLocales.instance.translate(text.key, text.arguments);

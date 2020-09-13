@@ -4,6 +4,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart' as flutter;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fokus/model/ui/localized_text.dart';
+import 'package:fokus/utils/theme_config.dart';
 import 'package:googleapis/fcm/v1.dart';
 import 'package:fokus_auth/fokus_auth.dart';
 
@@ -81,7 +82,7 @@ class FirebaseNotificationProvider extends NotificationProvider {
 				text = locTranslate(LocalizedText.fromJson(field, message['data']));
 			return text;
 		}
-		var androidPlatformChannelSpecifics = AndroidNotificationDetails(channel.id, translate(channel.nameKey), translate(channel.descriptionKey), color: flutter.Color(0xfdbf00));
+		var androidPlatformChannelSpecifics = AndroidNotificationDetails(channel.id, translate(channel.nameKey), translate(channel.descriptionKey), color: AppColors.notificationAccentColor);
 		var iOSPlatformChannelSpecifics = IOSNotificationDetails();
 		var platformChannelSpecifics = NotificationDetails(androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
 		await NotificationProvider.localNotifications.show(0, parse('title'), parse('body'), platformChannelSpecifics);

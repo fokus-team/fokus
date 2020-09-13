@@ -10,11 +10,16 @@ import 'package:flutter/widgets.dart';
 typedef TranslateFunc = String Function(BuildContext);
 
 class AppLocalesDelegate extends LocalizationsDelegate<AppLocales> {
+	static List<Locale> supportedLocales = [
+		const Locale('en', 'US'),
+		const Locale('pl', 'PL')
+	];
+
 	const AppLocalesDelegate();
 
 	@override
 	bool isSupported(Locale locale) {
-		return ['en', 'pl'].contains(locale.languageCode);
+		return supportedLocales.contains(locale);
 	}
 
 	@override
@@ -37,29 +42,39 @@ class AppLocales {
 
 	static const LocalizationsDelegate<AppLocales> delegate = AppLocalesDelegate();
 
-	Map<String, dynamic> _jsonMap;
+	Map<Locale, Map<String, dynamic>> _translations = {};
 
 	Future<bool> load(Locale locale) async {
 		this.locale = locale;
-		String jsonString = await rootBundle.loadString('i18n/${locale.languageCode}_${locale.countryCode}.json');
-		_jsonMap = json.decode(jsonString);
+		if (_translations.isEmpty)
+			for (var locale in AppLocalesDelegate.supportedLocales) {
+				String localeTranslations = await rootBundle.loadString('i18n/$locale.json');
+				_translations[locale] = json.decode(localeTranslations);
+			}
 		_localeObservers.forEach((observer) => observer.onLocaleSet(locale));
 		return true;
 	}
 
-	String translate(String keyPath, [Map<String, Object> args]) {
+	String translate(String key, [Map<String, Object> args]) {
 		try {
-			var string = keyPath.split('.').fold(_jsonMap, (object, key) => object[key]) as String;
+			var string = key.split('.').fold(_translations[locale], (object, key) => object[key]) as String;
 			if (args == null)
 				return string;
 			return MessageFormat(string, locale: locale.toString()).format(args);
 		} on NoSuchMethodError {
-			_logger.warning('Key $keyPath has no localized string in language ${locale.languageCode}');
+			_logger.warning('Key $key has no localized string in language ${locale.languageCode}');
 			return '';
 		} on Error catch (e) {
 			_logger.severe('$e');
 			return '';
 		}
+	}
+
+	Map<String, String> getTranslations(String key, [Map<String, Object> args]) {
+		Map<String, String> translations = {};
+		for (var locale in AppLocalesDelegate.supportedLocales)
+			translations[locale.languageCode] = translate(key, args);
+		return translations;
 	}
 
 	void observeLocaleChanges(CurrentLocaleObserver observer) => _localeObservers.add(observer);

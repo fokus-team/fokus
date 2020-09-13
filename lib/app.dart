@@ -83,10 +83,7 @@ class FokusApp extends StatelessWidget {
 				GlobalWidgetsLocalizations.delegate,
 				GlobalCupertinoLocalizations.delegate,
 			],
-			supportedLocales: [
-				const Locale('en', 'US'),
-				const Locale('pl', 'PL'),
-			],
+			supportedLocales: AppLocalesDelegate.supportedLocales,
 			navigatorKey: _navigatorKey,
 			navigatorObservers: [_routeObserver],
 			initialRoute: AppPage.loadingPage.name,

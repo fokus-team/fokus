@@ -520,13 +520,21 @@
 			"rewards": {
 				"content": {
 					"rewardsTitle": "Nagrody do zdobycia",
-					"noRewardsMessage": "Brak nagród do wyświetlenia"
+					"noRewardsMessage": "Brak nagród do wyświetlenia",
+					"rewardsHint": "Zdobyte punkty możesz wymienić na nagrody",
+					"claimedRewardsTitle": "Odebrane nagrody",
+					"claimRewardTitle": "Odbierz nagrodę",
+					"claimCostLabel": "Koszt nagrody",
+					"claimButton": "Odbierz"
 				}
 			},
 			"achievements": {
 				"content": {
-					"achievementsTitle": "Osiągnięcia",
-					"noAchievementsMessage": "Brak osiągnięć do wyświetlenia"
+					"achievementsTitle": "Moje osiągnięcia",
+					"achievementsHint": "Dotknij odznakę, aby zobaczyć szczegóły",
+					"noAchievementsMessage": "Brak osiągnięć do wyświetlenia",
+					"earnedBadgeTitle": "Zdobyta odznaka",
+					"earnedBadgeDate": "Data zdobycia"
 				}
 			}
 		}

@@ -520,13 +520,21 @@
 			"rewards": {
 				"content": {
 					"rewardsTitle": "Available rewards",
-					"noRewardsMessage": "No available rewards to display"
+					"noRewardsMessage": "No available rewards to display",
+					"rewardsHint": "You can exchange your points for rewards",
+					"claimedRewardsTitle": "Claimed rewards",
+					"claimRewardTitle": "Claim reward",
+					"claimCostLabel": "Reward cost",
+					"claimButton": "Claim"
 				}
 			},
 			"achievements": {
 				"content": {
 					"achievementsTitle": "Achievements",
-					"noAchievementsMessage": "No achievements to display"
+					"achievementsHint": "Click on the badge to show details",
+					"noAchievementsMessage": "No achievements to display",
+					"earnedBadgeTitle": "Earned badge",
+					"earnedBadgeDate": "Earning date"
 				}
 			}
 		}

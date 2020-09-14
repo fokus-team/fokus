@@ -40,7 +40,7 @@ class _CaregiverAwardFormPageState extends State<CaregiverAwardFormPage> {
 	@override
   void initState() {
 		awardFormKey = GlobalKey<FormState>();
-		award = UIAward(points: UIPoints(type: currencies[0].type, title: currencies[0].title));
+		award = UIAward(cost: UIPoints(type: currencies[0].type, title: currencies[0].title));
 		_titleController.text = '';
 		_limitController.text = '';
 		_pointsController.text = '';
@@ -196,7 +196,7 @@ class _CaregiverAwardFormPageState extends State<CaregiverAwardFormPage> {
 	Widget buildPointsFields(BuildContext context) {
 		return PointPickerField(
 			controller: _pointsController,
-			pickedCurrency: award.points,
+			pickedCurrency: award.cost,
 			currencies: currencies,
 			loading: false,
 			minPoints: 1,
@@ -206,14 +206,14 @@ class _CaregiverAwardFormPageState extends State<CaregiverAwardFormPage> {
 			labelCurrencyText: AppLocales.of(context).translate('$_pageKey.fields.awardPoints.currencyLabel'),
 			pointValueSetter: (val) {
 				setState(() {
-					isDataChanged = award.points.quantity != ((val != null) ? int.tryParse(val) : null);
-					award = award.copyWith(points: award.points.copyWith(quantity: (val != null) ? int.tryParse(val) : null));
+					isDataChanged = award.cost.quantity != ((val != null) ? int.tryParse(val) : null);
+					award = award.copyWith(cost: award.cost.copyWith(quantity: (val != null) ? int.tryParse(val) : null));
 				});
 			},
 			pointCurrencySetter: (val) {
 				setState(() {
-					isDataChanged = award.points.type != val.type;
-					award = award.copyWith(points: award.points.copyWith(type: val.type, title: val.title));
+					isDataChanged = award.cost.type != val.type;
+					award = award.copyWith(cost: award.cost.copyWith(type: val.type, title: val.title));
 				});
 			},
 		);

@@ -1,10 +1,11 @@
 import 'package:fokus/model/db/date/date_base.dart';
 import 'package:fokus/model/db/date_span.dart';
+import 'package:fokus/services/data/award/award_repository.dart';
 import 'package:fokus/services/data/plan/plan_repository.dart';
 import 'package:fokus/services/data/task/task_repository.dart';
 import 'package:fokus/services/data/user/user_repository.dart';
 
-abstract class DataRepository implements UserRepository, PlanRepository, TaskRepository {
+abstract class DataRepository implements UserRepository, PlanRepository, TaskRepository, AwardRepository {
 	Future initialize();
 }
 

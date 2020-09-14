@@ -4,7 +4,7 @@ import 'package:fokus/model/db/gamification/reward.dart';
 import 'package:fokus/services/data/db/db_repository.dart';
 
 mixin AwardDbRepository implements DbRepository {
-	Future<List<Reward>> getAwards({ObjectId caregiverId}) {
+	Future<List<Reward>> getRewards({ObjectId caregiverId}) {
 		var query = _buildAwardQuery(caregiverId: caregiverId);
 		return dbClient.queryTyped(Collection.reward, query, (json) => Reward.fromJson(json));
 	}

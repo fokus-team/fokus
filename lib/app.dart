@@ -29,7 +29,7 @@ import 'package:fokus/pages/caregiver/auth/caregiver_sign_up_page.dart';
 import 'package:fokus/pages/caregiver/awards_page.dart';
 import 'package:fokus/pages/caregiver/calendar_page.dart';
 import 'package:fokus/pages/caregiver/child_dashboard_page.dart';
-import 'package:fokus/pages/caregiver/award_form_page.dart';
+import 'package:fokus/pages/caregiver/reward_form_page.dart';
 import 'package:fokus/pages/caregiver/badge_form_page.dart';
 import 'package:fokus/pages/caregiver/panel_page.dart';
 import 'package:fokus/pages/caregiver/plan_form_page.dart';
@@ -38,7 +38,7 @@ import 'package:fokus/pages/caregiver/statistics_page.dart';
 import 'package:fokus/pages/caregiver/rating_page.dart';
 import 'package:fokus/pages/child/auth/child_profiles_page.dart';
 import 'package:fokus/pages/child/auth/child_sign_in_page.dart';
-import 'package:fokus/pages/child/awards_page.dart';
+import 'package:fokus/pages/child/rewards_page.dart';
 import 'package:fokus/pages/child/panel_page.dart';
 import 'package:fokus/pages/child/plan_in_progress_page.dart';
 import 'package:fokus/pages/child/task_in_progress_page.dart';
@@ -127,13 +127,13 @@ class FokusApp extends StatelessWidget {
 			AppPage.caregiverCalendar.name: (context) => _createPage(CaregiverCalendarPage(), context, CalendarCubit(getParams(context), getActiveUser(context))),
 			AppPage.caregiverPlanForm.name: (context) => _createPage(CaregiverPlanFormPage(), context, PlanFormCubit(getParams(context), getActiveUser(context))),
 			AppPage.caregiverAwards.name: (context) => _createPage(CaregiverAwardsPage(), context, CaregiverAwardsCubit(getActiveUser(context), getRoute(context))),
-			AppPage.caregiverAwardForm.name: (context) => _createPage(CaregiverAwardFormPage(), context),
+			AppPage.caregiverRewardForm.name: (context) => _createPage(CaregiverRewardFormPage(), context),
 			AppPage.caregiverBadgeForm.name: (context) => _createPage(CaregiverBadgeFormPage(), context),
 			AppPage.caregiverStatistics.name: (context) => _createPage(CaregiverStatisticsPage(), context),
 			AppPage.caregiverRatingPage.name: (context) => _createPage(CaregiverRatingPage(), context),
 			AppPage.childPanel.name: (context) => _createPage(ChildPanelPage(), context, ChildPlansCubit(getActiveUser(context), getRoute(context))),
 			AppPage.childCalendar.name: (context) => _createPage(ChildCalendarPage(), context, CalendarCubit(getParams(context), getActiveUser(context))),
-			AppPage.childAwards.name: (context) => _createPage(ChildAwardsPage(), context),
+			AppPage.childRewards.name: (context) => _createPage(ChildRewardsPage(), context),
 			AppPage.childAchievements.name: (context) => _createPage(ChildAchievementsPage(), context),
 			AppPage.caregiverPlanDetails.name: (context) => _createPage(CaregiverPlanDetailsPage(), context, PlanCubit(getParams(context), getRoute(context))),
 			AppPage.childPlanInProgress.name: (context) => _createPage(ChildPlanInProgressPage(), context, PlanInstanceCubit(getParams(context), getRoute(context))),

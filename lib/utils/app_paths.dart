@@ -18,11 +18,11 @@ String childAvatarSvgPath(int avatar) {
 		return 'assets/image/avatar/default.svg';
 }
 
-String awardIconSvgPath(int icon) {
-	if(graphicAssets[GraphicAssetType.awardsIcons][icon] != null)
-		return 'assets/image/award/${graphicAssets[GraphicAssetType.awardsIcons][icon].filename}.svg';
+String rewardIconSvgPath(int icon) {
+	if(graphicAssets[GraphicAssetType.rewardsIcons][icon] != null)
+		return 'assets/image/reward/${graphicAssets[GraphicAssetType.rewardsIcons][icon].filename}.svg';
 	else
-		return 'assets/image/award/default.svg';
+		return 'assets/image/reward/default.svg';
 }
 
 String badgeIconSvgPath(int icon) {

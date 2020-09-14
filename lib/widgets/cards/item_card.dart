@@ -72,8 +72,8 @@ class ItemCard extends StatelessWidget {
 			case GraphicAssetType.childAvatars:
 				return AppAvatar(graphic, size: graphicHeight, color: childAvatars[graphic].color, checked: graphicShowCheckmark);
 			break;
-			case GraphicAssetType.awardsIcons:
-				return SvgPicture.asset(awardIconSvgPath(graphic), height: graphicHeight);
+			case GraphicAssetType.rewardsIcons:
+				return SvgPicture.asset(rewardIconSvgPath(graphic), height: graphicHeight);
 			break;
 			case GraphicAssetType.badgeIcons:
 				return Badge(

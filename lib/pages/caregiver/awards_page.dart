@@ -29,8 +29,8 @@ class _CaregiverAwardsPageState extends State<CaregiverAwardsPage> {
 				crossAxisAlignment: CrossAxisAlignment.start,
 				children: <Widget>[
 					AppHeader.normal(title: '$_pageKey.header.title', text: '$_pageKey.header.pageHint', headerActionButtons: [
-						HeaderActionButton.normal(Icons.add, '$_pageKey.header.addAward', 
-						() => Navigator.of(context).pushNamed(AppPage.caregiverAwardForm.name, arguments: AppFormType.create)),
+						HeaderActionButton.normal(Icons.add, '$_pageKey.header.addReward', 
+						() => Navigator.of(context).pushNamed(AppPage.caregiverRewardForm.name, arguments: AppFormType.create)),
 						HeaderActionButton.normal(Icons.add, '$_pageKey.header.addBadge', 
 						() => Navigator.of(context).pushNamed(AppPage.caregiverBadgeForm.name, arguments: AppFormType.create))
 					]),
@@ -44,34 +44,34 @@ class _CaregiverAwardsPageState extends State<CaregiverAwardsPage> {
 	}
 	
 	List<Segment> _buildPanelSegments(CaregiverAwardsLoadSuccess state, context) {
-		var awards = state.awards;
+		var rewards = state.rewards;
 
 		return [
 			Segment(
-				title: '$_pageKey.content.addedAwardsTitle',
-				noElementsMessage: '$_pageKey.content.noAwardsAdded',
+				title: '$_pageKey.content.addedRewardsTitle',
+				noElementsMessage: '$_pageKey.content.noRewardsAdded',
 				noElementsAction: RaisedButton(
 					child: Text(
-						AppLocales.of(context).translate('$_pageKey.header.addAward'),
+						AppLocales.of(context).translate('$_pageKey.header.addReward'),
 						style: Theme.of(context).textTheme.button
 					),
-					onPressed: () => { Navigator.of(context).pushNamed(AppPage.caregiverAwardForm.name) }
+					onPressed: () => { Navigator.of(context).pushNamed(AppPage.caregiverRewardForm.name) }
 				),
 				elements: <Widget>[
-					for (var award in awards)
+					for (var reward in rewards)
 						ItemCard(
-							title: award.name, 
-							subtitle: AppLocales.of(context).translate((award.limit != null || award.limit == 0 ) ? 
-								'$_pageKey.content.limitedAward' : '$_pageKey.content.unlimitedAward', {'AWARD_LIMIT': award.limit.toString()}),
+							title: reward.name, 
+							subtitle: AppLocales.of(context).translate((reward.limit != null || reward.limit == 0 ) ? 
+								'$_pageKey.content.limitedReward' : '$_pageKey.content.unlimitedReward', {'REWARD_LIMIT': reward.limit.toString()}),
 							menuItems: [
 								UIButton.ofType(ButtonType.edit, () => {log("edit")}),
 								UIButton.ofType(ButtonType.delete, () => {log("delete")})
 							],
-							graphicType: GraphicAssetType.awardsIcons,
-							graphic: award.icon,
+							graphicType: GraphicAssetType.rewardsIcons,
+							graphic: reward.icon,
 							chips: <Widget>[
-								if(award.cost != null)
-									AttributeChip.withCurrency(content: award.cost.quantity.toString(), currencyType: award.cost.type, tooltip: '$_pageKey.content.pointCost')
+								if(reward.cost != null)
+									AttributeChip.withCurrency(content: reward.cost.quantity.toString(), currencyType: reward.cost.type, tooltip: '$_pageKey.content.pointCost')
 							],
 						)
 				]

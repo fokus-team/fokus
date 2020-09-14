@@ -18,7 +18,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
   var _caregiverNotificationsMock = [
     NotificationCard(
         childName: "Aleksandrittobuonaserra",
-        notificationType: NotificationType.caregiver_receivedAward,
+        notificationType: NotificationType.caregiver_receivedReward,
         dateTime: DateTime.now(),
         subtitle: "1 godzina gry na konsoli",
         graphic: 10

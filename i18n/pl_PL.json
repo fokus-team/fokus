@@ -10,7 +10,7 @@
 		},
 		"child": {
 			"plans": "Plany",
-			"awards": "Nagrody",
+			"rewards": "Nagrody",
 			"achievements": "Osiągnięcia"
 		},
 		"settings": "Ustawienia"
@@ -60,7 +60,7 @@
 			},
 			"content": {
 				"caregiver": {
-					"receivedAward": "{CHILD_NAME} odebrał(a) nagrodę",
+					"receivedReward": "{CHILD_NAME} odebrał(a) nagrodę",
 					"finishedTask": "{CHILD_NAME} wykonał(a) zadanie",
 					"unfinishedPlan": "{CHILD_NAME} nie skończył(a) planu",
 					"gradeTask": "Oceń zadanie",
@@ -134,7 +134,7 @@
 					"noBadgesToAssignText": "Brak dostępnych odznak do przyznania",
 					"tabs": {
 						"plans": "Plany",
-						"awards": "Nagrody",
+						"rewards": "Nagrody",
 						"achievements": "Osiągnięcia"
 					}
 				},
@@ -142,14 +142,14 @@
 					"plansTitle": "Dzisiejsze plany",
 					"noPlansText": "Brak zaplanowanych działań na dziś",
 					"openCalendarButton": "Otwórz kalendarz",
-					"awardsTitle": "Odebrane nagrody",
-					"noAwardsText": "Brak odebranych nagród",
+					"rewardsTitle": "Odebrane nagrody",
+					"noRewardsText": "Brak odebranych nagród",
 					"achievementsTitle": "Przyznane odznaki",
 					"noAchievementsText": "Brak przyznanych odznak",
 					"alerts": {
 						"noPlansAdded": "Nie dodano jeszcze żadnego planu. Dodaj plan, aby móc przypisać go dziecku.",
 						"unratedTasksExist": "Istnieją nieocenione zadania. Odwiedź stronę oceniania, aby przynać punkty za wykonane zadania.",
-						"noAwardsAdded": "Lista możliwych do kupienia nagród jest pusta. Dodaj nagrodę, aby dziecko mogo ją zdobyć.",
+						"noRewardsAdded": "Lista możliwych do kupienia nagród jest pusta. Dodaj nagrodę, aby dziecko mogo ją zdobyć.",
 						"noBadgesAdded": "Lista możliwych do przyznania odznak jest pusta. Dodaj odznakę, aby móc przydzielić ją dziecku."
 					}
 				}
@@ -280,47 +280,47 @@
 			"awards": {
 				"header": {
 					"title": "Nagrody",
-					"addAward": "Dodaj nagrodę",
+					"addReward": "Dodaj nagrodę",
 					"addBadge": "Dodaj odznakę",
 					"pageHint": "Zwiększ motywację do wykonywania planów używając punktów, nagród i odznak"
 				},
 				"content": {
-					"addedAwardsTitle": "Zdefiniowane nagrody",
-					"noAwardsAdded": "Brak zdefiniowanych nagród, dodaj pierwszą teraz",
+					"addedRewardsTitle": "Zdefiniowane nagrody",
+					"noRewardsAdded": "Brak zdefiniowanych nagród, dodaj pierwszą teraz",
 					"addedBadgesTitle": "Zdefiniowane odznaki",
 					"noBadgesAdded": "Brak zdefiniowanych odznak, dodaj pierwszą teraz",
 					"pointCost": "Koszt punktowy nagrody",
-					"unlimitedAward": "Nagroda nielimitowana",
-					"limitedAward": "Limit {AWARD_LIMIT, plural, offset:0 one {jednej nagrody} other {# nagród}} na dziecko",
+					"unlimitedReward": "Nagroda nielimitowana",
+					"limitedReward": "Limit {REWARD_LIMIT, plural, offset:0 one {jednej nagrody} other {# nagród}} na dziecko",
 					"noLeveledBadge": "Odznaka przyznawana jednorazowo",
 					"3LeveledBadge": "Odznaka 3 poziomowa",
 					"5LeveledBadge": "Odznaka 5 poziomowa"
 				}
 			},
-			"awardForm": {
-				"addAwardTitle": "Dodaj nagrodę",
-				"editAwardTitle": "Edytuj nagrodę",
-				"addAwardButton": "Dodaj nagodę",
-				"saveAwardButton": "Zapisz nagodę",
-				"removeAwardButton": "Usuń nagodę",
-				"removeAwardTitle": "Usuń nagrodę",
-				"removeAwardText": "Na pewno chcesz usunąć tą nagrodę?",
+			"rewardForm": {
+				"addRewardTitle": "Dodaj nagrodę",
+				"editRewardTitle": "Edytuj nagrodę",
+				"addRewardButton": "Dodaj nagodę",
+				"saveRewardButton": "Zapisz nagodę",
+				"removeRewardButton": "Usuń nagodę",
+				"removeRewardTitle": "Usuń nagrodę",
+				"removeRewardText": "Na pewno chcesz usunąć tą nagrodę?",
 				"fields": {
-					"awardName": {
+					"rewardName": {
 						"label": "Nazwa nagrody",
 						"emptyError": "Nazwa nagrody nie może być pusta"
 					},
-					"awardLimit": {
+					"rewardLimit": {
 						"label": "Limit nagród",
 						"hint": "Pozostaw puste, aby nie limitować"
 					},
-					"awardPoints": {
+					"rewardPoints": {
 						"valueLabel": "Koszt punktowy",
 						"currencyLabel": "Waluta punktów",
 						"hint": "Ilość punktów potrzebna do odbioru nagrody przez dziecko",
 						"emptyError": "Koszt punktowy musi wynosić minimum 1 punkt"
 					},
-					"awardIcon": {
+					"rewardIcon": {
 						"label": "Ikona nagrody",
 						"groups": {
 							"gift": "Prezent",
@@ -517,10 +517,10 @@
 					"noPlansOnDateTitle": "Brak planów na ten dzień"
 				}
 			},
-			"awards": {
+			"rewards": {
 				"content": {
-					"awardsTitle": "Nagrody do zdobycia",
-					"noAwardsMessage": "Brak nagród do wyświetlenia"
+					"rewardsTitle": "Nagrody do zdobycia",
+					"noRewardsMessage": "Brak nagród do wyświetlenia"
 				}
 			},
 			"achievements": {
@@ -613,7 +613,7 @@
 		"first_steps": "Pierwsze kroki",
 		"plan_creation": "Tworzenie planu",
 		"task_creation": "Konfiguracja zadania",
-		"award_creation": "Tworzenie nagrody",
+		"reward_creation": "Tworzenie nagrody",
 		"badge_creation": "Tworzenie odznaki",
 		"plan_info": "Plany"
 	},

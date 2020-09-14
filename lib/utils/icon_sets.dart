@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-enum GraphicAssetType { childAvatars, awardsIcons, badgeIcons }
+enum GraphicAssetType { childAvatars, rewardsIcons, badgeIcons }
 
 enum ChildAvatarAssetLabel { boy, girl }
-enum AwardsIconsAssetLabel { gift, relax, activity, food }
+enum RewardsIconsAssetLabel { gift, relax, activity, food }
 enum BadgeIconsAssetLabel { praise, medal, trophy }
 
 class GraphicAsset<GraphicLabel> {
@@ -16,7 +16,7 @@ class GraphicAsset<GraphicLabel> {
 
 Map<GraphicAssetType, Map<int, GraphicAsset>> graphicAssets = {
 	GraphicAssetType.childAvatars: childAvatars,
-	GraphicAssetType.awardsIcons: awardIcons,
+	GraphicAssetType.rewardsIcons: rewardIcons,
 	GraphicAssetType.badgeIcons: badgeIcons
 };
 
@@ -63,27 +63,27 @@ Map<int, GraphicAsset<ChildAvatarAssetLabel>> childAvatars = {
 	39: GraphicAsset('girl-19', ChildAvatarAssetLabel.girl, Colors.pink[400])
 };
 
-Map<int, GraphicAsset<AwardsIconsAssetLabel>> awardIcons = {
-	0: GraphicAsset('gift', AwardsIconsAssetLabel.gift),
-	1: GraphicAsset('backpack', AwardsIconsAssetLabel.activity),
-	2: GraphicAsset('basketball', AwardsIconsAssetLabel.activity),
-	3: GraphicAsset('board-games', AwardsIconsAssetLabel.activity),
-	4: GraphicAsset('bowling', AwardsIconsAssetLabel.activity),
-	5: GraphicAsset('cooking', AwardsIconsAssetLabel.activity),
-	6: GraphicAsset('disco', AwardsIconsAssetLabel.relax),
-	7: GraphicAsset('food', AwardsIconsAssetLabel.food),
-	8: GraphicAsset('ice-cream', AwardsIconsAssetLabel.food),
-	9: GraphicAsset('joystick', AwardsIconsAssetLabel.relax),
-	10: GraphicAsset('movie', AwardsIconsAssetLabel.relax),
-	11: GraphicAsset('park', AwardsIconsAssetLabel.relax),
-	12: GraphicAsset('pizza', AwardsIconsAssetLabel.food),
-	13: GraphicAsset('shopping', AwardsIconsAssetLabel.activity),
-	14: GraphicAsset('sofa', AwardsIconsAssetLabel.relax),
-	15: GraphicAsset('tea', AwardsIconsAssetLabel.food),
-	16: GraphicAsset('ticket', AwardsIconsAssetLabel.relax),
-	17: GraphicAsset('time-planning', AwardsIconsAssetLabel.relax),
-	18: GraphicAsset('walking', AwardsIconsAssetLabel.activity),
-	19: GraphicAsset('woods', AwardsIconsAssetLabel.activity)
+Map<int, GraphicAsset<RewardsIconsAssetLabel>> rewardIcons = {
+	0: GraphicAsset('gift', RewardsIconsAssetLabel.gift),
+	1: GraphicAsset('backpack', RewardsIconsAssetLabel.activity),
+	2: GraphicAsset('basketball', RewardsIconsAssetLabel.activity),
+	3: GraphicAsset('board-games', RewardsIconsAssetLabel.activity),
+	4: GraphicAsset('bowling', RewardsIconsAssetLabel.activity),
+	5: GraphicAsset('cooking', RewardsIconsAssetLabel.activity),
+	6: GraphicAsset('disco', RewardsIconsAssetLabel.relax),
+	7: GraphicAsset('food', RewardsIconsAssetLabel.food),
+	8: GraphicAsset('ice-cream', RewardsIconsAssetLabel.food),
+	9: GraphicAsset('joystick', RewardsIconsAssetLabel.relax),
+	10: GraphicAsset('movie', RewardsIconsAssetLabel.relax),
+	11: GraphicAsset('park', RewardsIconsAssetLabel.relax),
+	12: GraphicAsset('pizza', RewardsIconsAssetLabel.food),
+	13: GraphicAsset('shopping', RewardsIconsAssetLabel.activity),
+	14: GraphicAsset('sofa', RewardsIconsAssetLabel.relax),
+	15: GraphicAsset('tea', RewardsIconsAssetLabel.food),
+	16: GraphicAsset('ticket', RewardsIconsAssetLabel.relax),
+	17: GraphicAsset('time-planning', RewardsIconsAssetLabel.relax),
+	18: GraphicAsset('walking', RewardsIconsAssetLabel.activity),
+	19: GraphicAsset('woods', RewardsIconsAssetLabel.activity)
 };
 
 Map<int, GraphicAsset<BadgeIconsAssetLabel>> badgeIcons = {

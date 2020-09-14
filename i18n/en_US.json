@@ -469,7 +469,7 @@
 			"awards": {
 				"content": {
 					"awardsTitle": "Available awards",
-					"awardsHint": "You can spend your points to get awards",
+					"awardsHint": "You can exchange your points for awards",
 					"noAwardsMessage": "No available awards to display",
 					"claimedAwardsTitle": "Claimed awards",
 					"claimAwardTitle": "Claim award",

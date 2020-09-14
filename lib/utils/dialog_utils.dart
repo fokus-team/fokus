@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:fokus/model/ui/award/ui_badge.dart';
+import 'package:fokus/model/ui/gamification/ui_award.dart';
 
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/widgets/dialogs/app_info_dialog.dart';
+import 'package:fokus/widgets/dialogs/award_dialog.dart';
+import 'package:fokus/widgets/dialogs/badge_dialog.dart';
 import 'package:fokus/widgets/dialogs/general_dialog.dart';
 import 'package:fokus/model/ui/ui_button.dart';
 import 'package:fokus/widgets/dialogs/dialog.dart';
@@ -98,5 +102,19 @@ void showPasswordChangeDialog(BuildContext context) {
 	showDialog(
 		context: context,
 		builder: (context) => PasswordChangeDialog()
+	);
+}
+
+void showAwardDialog(BuildContext context, UIAward award) {
+	showDialog(
+		context: context,
+		builder: (context) => AwardDialog(award: award)
+	);
+}
+
+void showBadgeDialog(BuildContext context, UIBadge badge) {
+	showDialog(
+		context: context,
+		builder: (context) => BadgeDialog(badge: badge)
 	);
 }

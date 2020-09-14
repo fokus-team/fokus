@@ -83,12 +83,13 @@ flutter:
         - assets/image/sunflower_logo.svg
         - assets/image/sunflower_logo.png
         - assets/image/google_logo.png
+        - assets/image/sunrays.svg
         - assets/help/en/
         - assets/help/pl/
         - assets/image/avatar/
         - assets/image/avatar/child/
         - assets/image/award/
-        - assets/image/award_level/
+        - assets/image/badge_level/
         - assets/image/badge/
         - assets/image/currency/
 

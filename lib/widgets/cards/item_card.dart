@@ -227,9 +227,10 @@ class ItemCard extends StatelessWidget {
 			if(actionButton.disabled) {
 				return FlatButton(
 					onPressed: null,
+					disabledColor: inactiveProgressBar,
 					shape: RoundedRectangleBorder(borderRadius: BorderRadius.horizontal(right: Radius.circular(AppBoxProperties.roundedCornersRadius))),
 					child: Center(
-						child: Icon(actionButton.icon, color: actionButton.color, size: actionButton.size),
+						child: Icon(actionButton.icon, color: Colors.white, size: actionButton.size),
 					)
 				);
 			} else {

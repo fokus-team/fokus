@@ -21,12 +21,14 @@ class UIBadge {
 	String description;
 	UIBadgeMaxLevel maxLevel;
 	int icon;
+	DateTime date;
 
 	UIBadge({
 		this.name,
 		this.description,
 		this.maxLevel = UIBadgeMaxLevel.one,
-		this.icon = 0
+		this.icon = 0,
+		this.date
 	});
 
 }

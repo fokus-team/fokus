@@ -14,16 +14,18 @@ class Segment extends StatelessWidget {
 	final IconData noElementsIcon;
 	final Widget noElementsAction;
 	final List<Widget> elements;
+	final Widget customContent;
 
 	Segment({
 		@required this.title, 
 		this.titleArgs,
 		this.subtitle, 
 		this.helpPage, 
-		@required this.elements,
+		this.elements,
 		this.noElementsMessage,
 		this.noElementsIcon,
-		this.noElementsAction
+		this.noElementsAction,
+		this.customContent
 	});
 
 	Widget buildSectionHeader(BuildContext context) {
@@ -71,7 +73,9 @@ class Segment extends StatelessWidget {
 			physics: BouncingScrollPhysics(),
 			children: <Widget>[
 				buildSectionHeader(context),
-				if(elements.length > 0)
+				if(customContent != null)
+					customContent
+				else if(elements.length > 0)
 					...elements
 				else if(noElementsMessage != null)
 					AppHero(

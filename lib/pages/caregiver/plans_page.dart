@@ -29,7 +29,7 @@ class _CaregiverPlansPageState extends State<CaregiverPlansPage> {
 						HeaderActionButton.normal(Icons.add, '$_pageKey.header.addPlan',
 							() => Navigator.of(context).pushNamed(AppPage.caregiverPlanForm.name)),
 						HeaderActionButton.normal(Icons.calendar_today, '$_pageKey.header.calendar', 
-							() => Navigator.of(context).pushNamed(AppPage.caregiverCalendar.name), Colors.amber)
+							() => Navigator.of(context).pushNamed(AppPage.caregiverCalendar.name), Colors.lightBlue)
 					]),
 					LoadableBlocBuilder<CaregiverPlansCubit>(
 						builder: (context, state) => AppSegments(segments: _buildPanelSegments(state, context))
@@ -70,7 +70,7 @@ Segment _getPlansSegment({List<UIPlan> plans, String title, String noElementsMes
 					title: plan.name,
 					subtitle: plan.description(context),
 					actionButton: ItemCardActionButton(
-						color: Colors.teal, icon: Icons.keyboard_arrow_right, onTapped: () => {Navigator.of(context).pushNamed(AppPage.caregiverPlanDetails.name)}),
+						color: Colors.teal, icon: Icons.keyboard_arrow_right, onTapped: () => {Navigator.of(context).pushNamed(AppPage.caregiverPlanDetails.name, arguments: plan.id)}),
 					chips: <Widget>[
 						AttributeChip.withIcon(
 							content: AppLocales.of(context).translate('$_pageKey.content.tasks', {'NUM_TASKS': plan.taskCount}),

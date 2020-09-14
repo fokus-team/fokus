@@ -218,24 +218,7 @@ class AppHeader extends StatelessWidget {
 							),
 						]
 					),
-					Row(
-						children: <Widget>[
-							headerIconButton(Icons.notifications, () => Navigator.of(context).pushNamed(AppPage.notificationsPage.name)),
-							PopupMenuList(
-								lightTheme: true,
-								items: [
-									UIButton(
-										'navigation.settings',
-										() => Navigator.of(context).pushNamed(AppPage.settingsPage.name)
-									),
-									UIButton(
-										'actions.signOut',
-										() => authenticationBloc.add(AuthenticationSignOutRequested())
-									)
-								]
-							)
-						],
-					)
+					_userHeaderIcons(context),
 				]
 			)
 		);
@@ -254,15 +237,7 @@ class AppHeader extends StatelessWidget {
 							style: Theme.of(context).textTheme.headline1.copyWith(color: Colors.white)
 						)
 					),
-					Row(
-						children: <Widget>[
-							headerIconButton(Icons.notifications, () => Navigator.of(context).pushNamed(AppPage.notificationsPage.name)),
-							headerIconButton(
-								Icons.more_vert,
-								() => context.bloc<AuthenticationBloc>().add(AuthenticationSignOutRequested())
-							),
-						],
-					)
+					_userHeaderIcons(context),
 				]
 			)
 		);
@@ -312,6 +287,21 @@ class AppHeader extends StatelessWidget {
 			),
 			verticalEdge: tabs != null ? 0.0 : 6.0,
 			horizontalEdge: 0.0
+		);
+	 }
+
+	 Widget _userHeaderIcons(BuildContext context) {
+		return Row(
+			children: <Widget>[
+				headerIconButton(Icons.notifications, () => Navigator.of(context).pushNamed(AppPage.notificationsPage.name)),
+				PopupMenuList(
+					lightTheme: true,
+					items: [
+						UIButton('actions.signOut', () => context.bloc<AuthenticationBloc>().add(AuthenticationSignOutRequested())),
+						UIButton('navigation.settings', () => Navigator.of(context).pushNamed(AppPage.settingsPage.name)),
+					]
+				),
+			],
 		);
 	 }
 }

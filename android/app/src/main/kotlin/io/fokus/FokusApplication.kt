@@ -19,6 +19,6 @@ class FokusApplication : FlutterApplication(), PluginRegistrantCallback {
 	}
 
 	override fun registerWith(registry: PluginRegistry) {
-		FirebaseCloudMessagingPluginRegistrant.registerWith(registry);
+		//FirebaseCloudMessagingPluginRegistrant.registerWith(registry);
 	}
 }

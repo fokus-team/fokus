@@ -1,3 +1,4 @@
+import 'package:fokus/model/db/gamification/badge.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 import 'package:fokus/model/db/gamification/reward.dart';
 

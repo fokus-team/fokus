@@ -1,4 +1,6 @@
+import 'package:fokus/model/ui/gamification/ui_badge.dart';
 import 'package:fokus/model/ui/gamification/ui_reward.dart';
+import 'package:fokus/model/ui/user/ui_caregiver.dart';
 import 'package:get_it/get_it.dart';
 
 import 'package:fokus/logic/reloadable/reloadable_cubit.dart';
@@ -13,18 +15,23 @@ class CaregiverAwardsCubit extends ReloadableCubit {
 
   @override
 	doLoadData() async {
-    var caregiverId = _activeUser().id;
-    var rewards = await _dataRepository.getRewards(caregiverId: caregiverId);
-		emit(CaregiverAwardsLoadSuccess(rewards.map((reward) => UIReward.fromDBModel(reward)).toList()));
+    var user = _activeUser();
+    var rewards = await _dataRepository.getRewards(caregiverId: user.id);
+		
+		emit(CaregiverAwardsLoadSuccess(
+			rewards.map((reward) => UIReward.fromDBModel(reward)).toList(),
+			(user as UICaregiver).badges
+		));
   }
 }
 
 class CaregiverAwardsLoadSuccess extends DataLoadSuccess {
 	final List<UIReward> rewards;
+	final List<UIBadge> badges;
 
-	CaregiverAwardsLoadSuccess(this.rewards);
+	CaregiverAwardsLoadSuccess(this.rewards, this.badges);
 
 	@override
-	List<Object> get props => [rewards];
+	List<Object> get props => [rewards, badges];
 }
 

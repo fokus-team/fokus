@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:fokus/logic/caregiver_awards_cubit.dart';
 import 'package:fokus/model/ui/app_page.dart';
+import 'package:fokus/model/ui/gamification/ui_badge.dart';
 import 'package:fokus/model/ui/ui_button.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/icon_sets.dart';
@@ -43,9 +44,23 @@ class _CaregiverAwardsPageState extends State<CaregiverAwardsPage> {
     );
 	}
 	
-	List<Segment> _buildPanelSegments(CaregiverAwardsLoadSuccess state, context) {
-		var rewards = state.rewards;
+	String _getBadgeMaxLevel(UIBadgeMaxLevel maxLevel) {
+		String _textKey;
+		switch(maxLevel) {
+		  case UIBadgeMaxLevel.one:
+		    _textKey = 'noLeveledBadge';
+		    break;
+		  case UIBadgeMaxLevel.three:
+		    _textKey = '3LeveledBadge';
+		    break;
+		  case UIBadgeMaxLevel.five:
+		    _textKey = '5LeveledBadge';
+		    break;
+		}
+		return AppLocales.of(context).translate('$_pageKey.content.$_textKey');
+	}
 
+	List<Segment> _buildPanelSegments(CaregiverAwardsLoadSuccess state, context) {
 		return [
 			Segment(
 				title: '$_pageKey.content.addedRewardsTitle',
@@ -58,7 +73,7 @@ class _CaregiverAwardsPageState extends State<CaregiverAwardsPage> {
 					onPressed: () => { Navigator.of(context).pushNamed(AppPage.caregiverRewardForm.name) }
 				),
 				elements: <Widget>[
-					for (var reward in rewards)
+					for (var reward in state.rewards)
 						ItemCard(
 							title: reward.name, 
 							subtitle: AppLocales.of(context).translate((reward.limit != null || reward.limit == 0 ) ? 
@@ -87,17 +102,18 @@ class _CaregiverAwardsPageState extends State<CaregiverAwardsPage> {
 					onPressed: () => { Navigator.of(context).pushNamed(AppPage.caregiverBadgeForm.name) }
 				),
 				elements: <Widget>[
-					ItemCard(
-						title: "Super planista", 
-						subtitle: AppLocales.of(context).translate('$_pageKey.content.3LeveledBadge'),
-						menuItems: [
-							UIButton.ofType(ButtonType.edit, () => {log("edit")}),
-							UIButton.ofType(ButtonType.delete, () => {log("delete")})
-						],
-						graphicType: GraphicAssetType.badgeIcons,
-						graphic: 3,
-						graphicHeight: 44.0,
-					)
+					for (var badge in state.badges)
+						ItemCard(
+							title: badge.name, 
+							subtitle: _getBadgeMaxLevel(badge.maxLevel),
+							menuItems: [
+								UIButton.ofType(ButtonType.edit, () => {log("edit")}),
+								UIButton.ofType(ButtonType.delete, () => {log("delete")})
+							],
+							graphicType: GraphicAssetType.badgeIcons,
+							graphic: badge.icon,
+							graphicHeight: 44.0
+						)
 				]
 			)
 		];

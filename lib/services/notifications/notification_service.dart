@@ -1,5 +1,6 @@
 import 'package:fokus/model/db/user/user.dart';
 import 'package:fokus/model/ui/localized_text.dart';
+import 'package:fokus/model/ui/notifications/notification_button.dart';
 import 'package:fokus/services/data/data_repository.dart';
 import 'package:fokus/services/notifications/notification_provider.dart';
 import 'package:fokus/services/observers/active_user_observer.dart';
@@ -16,7 +17,7 @@ abstract class NotificationService implements ActiveUserObserver {
 	@protected
 	final Logger logger = Logger('NotificationService');
 
-	void sendNotification(NotificationType type, ObjectId user, {LocalizedText locTitle, String title, LocalizedText locBody, String body});
+	void sendNotification(NotificationType type, ObjectId user, {LocalizedText locTitle, String title, LocalizedText locBody, String body, List<NotificationButton> buttons = const []});
 
 	@protected
 	Future<List<String>> getUserTokens(ObjectId userId) async => (await dataRepository.getUser(id: userId, fields: ['notificationIDs'])).notificationIDs;

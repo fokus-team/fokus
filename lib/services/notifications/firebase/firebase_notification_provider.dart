@@ -8,7 +8,7 @@ import 'package:fokus/utils/theme_config.dart';
 import 'package:googleapis/fcm/v1.dart';
 import 'package:fokus_auth/fokus_auth.dart';
 
-import 'package:fokus/model/ui/notification_channel.dart';
+import 'package:fokus/model/ui/notifications/notification_channel.dart';
 import 'package:fokus/services/app_locales.dart';
 
 import '../notification_provider.dart';

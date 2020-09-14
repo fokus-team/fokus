@@ -4,7 +4,7 @@ enum NotificationChannel {
 	general, prizes, grades, plans
 }
 
-const String _key = 'notificationChannel';
+const String _key = 'notification.hannel';
 
 extension NotificationChannelInfo on NotificationChannel {
 	String get id => const {

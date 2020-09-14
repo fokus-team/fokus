@@ -1,9 +1,10 @@
 import 'package:bson/bson.dart';
+import 'package:fokus/model/ui/notifications/notification_button.dart';
 import 'package:googleapis/fcm/v1.dart';
 
 import 'package:fokus/services/notifications/firebase/firebase_notification_provider.dart';
 import 'package:fokus/services/notifications/notification_service.dart';
-import 'package:fokus/model/ui/notification_channel.dart';
+import 'package:fokus/model/ui/notifications/notification_channel.dart';
 import 'package:fokus/widgets/cards/notification_card.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/model/ui/localized_text.dart';
@@ -14,7 +15,8 @@ class FirebaseNotificationService extends NotificationService {
 	static final String _projectId = 'projects/fokus-application';
 
   @override
-  Future sendNotification(NotificationType type, ObjectId userId, {LocalizedText locTitle, String title, LocalizedText locBody, String body}) async {
+  Future sendNotification(NotificationType type, ObjectId userId, {LocalizedText locTitle,
+	    String title, LocalizedText locBody, String body, List<NotificationButton> buttons = const []}) async {
   	var tokens = await getUserTokens(userId);
   	if (tokens == null || tokens.isEmpty) {
 		  logNoUserToken(userId);

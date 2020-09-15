@@ -8,7 +8,7 @@ enum AssetPathType { flutter, drawable }
 extension GraphicAssetPaths on AssetType {
 	String get category => const {
 		AssetType.childAvatars: 'avatar',
-		AssetType.awardsIcons: 'reward',
+		AssetType.rewardsIcons: 'reward',
 		AssetType.badgeIcons: 'badge',
 		AssetType.currencyIcons: 'currency',
 	}[this];

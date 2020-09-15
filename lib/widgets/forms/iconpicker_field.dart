@@ -91,5 +91,5 @@ class _IconPickerFieldState extends State<IconPickerField> {
 		);
   }
 
-  String getPicturePath(bool isAwardType, int value) => isAwardType ? AssetType.awardsIcons.getPath(value) : AssetType.badgeIcons.getPath(value);
+  String getPicturePath(bool isAwardType, int value) => isAwardType ? AssetType.rewardsIcons.getPath(value) : AssetType.badgeIcons.getPath(value);
 }

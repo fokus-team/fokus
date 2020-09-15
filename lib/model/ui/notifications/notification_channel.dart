@@ -32,7 +32,7 @@ extension NotificationTypeExtension on NotificationType {
 		NotificationType.caregiver_finishedTaskGraded: NotificationChannel.grades,
 		NotificationType.caregiver_finishedTaskUngraded: NotificationChannel.grades,
 		NotificationType.child_taskGraded: NotificationChannel.grades,
-		NotificationType.caregiver_receivedAward: NotificationChannel.prizes,
+		NotificationType.caregiver_receivedReward: NotificationChannel.prizes,
 		NotificationType.child_receivedBadge: NotificationChannel.prizes,
 		NotificationType.caregiver_unfinishedPlan: NotificationChannel.plans,
 	}[this];

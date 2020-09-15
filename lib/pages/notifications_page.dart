@@ -64,6 +64,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
 	
 	@override
 	Widget build(BuildContext context) {
+    // ignore: close_sinks
     var authenticationBloc = context.bloc<AuthenticationBloc>();
     var currentUser = authenticationBloc.state.user;
 

@@ -7,7 +7,6 @@ import 'package:fokus/model/ui/notifications/notification_channel.dart';
 import 'package:fokus/model/ui/notifications/notification_button.dart';
 import 'package:fokus/model/ui/notifications/notification_icon.dart';
 import 'package:fokus/widgets/cards/notification_card.dart';
-import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/model/ui/notifications/notification_text.dart';
 
 class FirebaseNotificationService extends NotificationService {

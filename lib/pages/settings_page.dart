@@ -25,6 +25,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
+	  // ignore: close_sinks
     var authenticationBloc = context.bloc<AuthenticationBloc>();
     var isCurrentUserCaregiver = authenticationBloc.state.user.role == UserRole.caregiver;
 

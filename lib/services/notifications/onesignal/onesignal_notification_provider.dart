@@ -5,8 +5,6 @@ import 'package:onesignal_flutter/onesignal_flutter.dart';
 class OneSignalNotificationProvider extends NotificationProvider {
 	final String appId = 'ed3ee23f-aa7a-4fc7-91ab-9967fa7712e5';
 
-	Future<String> _tokenAssigned;
-
 	OneSignalNotificationProvider() {
 		_configureOneSignal();
 		_configureNotificationHandlers();

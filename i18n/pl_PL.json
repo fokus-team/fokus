@@ -610,10 +610,10 @@
 		}
 	},
 	"notification": {
+		"button": {
+			"rate": "Oceń"
+		},
 		"channel": {
-			"button": {
-				"rate": "Oceń"
-			},
 			"name": {
 				"general": "Ogólne",
 				"prizes": "Nagrody",

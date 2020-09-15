@@ -1,14 +1,16 @@
-import 'package:fokus/model/db/user/user.dart';
-import 'package:fokus/model/ui/localized_text.dart';
-import 'package:fokus/model/ui/notifications/notification_button.dart';
-import 'package:fokus/services/data/data_repository.dart';
-import 'package:fokus/services/notifications/notification_provider.dart';
-import 'package:fokus/services/observers/active_user_observer.dart';
-import 'package:fokus/widgets/cards/notification_card.dart';
 import 'package:get_it/get_it.dart';
 import 'package:logging/logging.dart';
 import 'package:meta/meta.dart';
 import 'package:mongo_dart/mongo_dart.dart';
+
+import 'package:fokus/model/db/user/user.dart';
+import 'package:fokus/model/ui/notifications/notification_text.dart';
+import 'package:fokus/model/ui/notifications/notification_button.dart';
+import 'package:fokus/model/ui/notifications/notification_icon.dart';
+import 'package:fokus/services/data/data_repository.dart';
+import 'package:fokus/services/notifications/notification_provider.dart';
+import 'package:fokus/services/observers/active_user_observer.dart';
+import 'package:fokus/widgets/cards/notification_card.dart';
 
 abstract class NotificationService implements ActiveUserObserver {
 	NotificationProvider get provider;
@@ -17,7 +19,10 @@ abstract class NotificationService implements ActiveUserObserver {
 	@protected
 	final Logger logger = Logger('NotificationService');
 
-	void sendNotification(NotificationType type, ObjectId user, {LocalizedText locTitle, String title, LocalizedText locBody, String body, List<NotificationButton> buttons = const []});
+	Future sendNotification(NotificationType type, ObjectId user, {NotificationText title,
+		NotificationText body, NotificationIcon icon, List<NotificationButton> buttons = const []});
+
+	//Future sendTaskCompletedNotification(ObjectId caregiver);
 
 	@protected
 	Future<List<String>> getUserTokens(ObjectId userId) async => (await dataRepository.getUser(id: userId, fields: ['notificationIDs'])).notificationIDs;

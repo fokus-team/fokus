@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart' as flutter;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:fokus/model/ui/localized_text.dart';
+import 'package:fokus/model/ui/notifications/notification_text.dart';
 import 'package:fokus/utils/theme_config.dart';
 import 'package:googleapis/fcm/v1.dart';
 import 'package:fokus_auth/fokus_auth.dart';
@@ -70,7 +70,7 @@ class FirebaseNotificationProvider extends NotificationProvider {
 
 	static Future _showNotification(Map<String, dynamic> message) async {
 		var translate = (String key) => AppLocales.instance.translate(key);
-		var locTranslate = (LocalizedText text) => AppLocales.instance.translate(text.key, text.arguments);
+		var locTranslate = (NotificationText text) => AppLocales.instance.translate(text.key, text.arguments);
 
 		var channel = NotificationChannel.general;
 		if (message['data']['channel'] != null)
@@ -79,7 +79,7 @@ class FirebaseNotificationProvider extends NotificationProvider {
 		String parse(String field) {
 			var text = message['notification'][field];
 			if (message['data']['${field}Key'] != null)
-				text = locTranslate(LocalizedText.fromJson(field, message['data']));
+				text = locTranslate(NotificationText.fromJson(field, message['data']));
 			return text;
 		}
 		var androidPlatformChannelSpecifics = AndroidNotificationDetails(channel.id, translate(channel.nameKey), translate(channel.descriptionKey), color: AppColors.notificationAccentColor);

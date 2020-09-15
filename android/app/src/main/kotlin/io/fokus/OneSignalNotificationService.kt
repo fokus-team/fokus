@@ -30,7 +30,7 @@ class OneSignalNotificationService : NotificationExtenderService() {
 					val intent = Intent(this, MainActivity::class.java)
 					intent.action = button.optString("id")
 					val pendingIntent = PendingIntent.getActivity(this, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-					val text = button.opt("text") as JSONObject
+					val text = JSONObject(button.optString("text"))
 					var buttonText = text.optString(lang, null)
 					if (buttonText == null)
 						buttonText = text.optString("en")

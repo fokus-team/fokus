@@ -1,3 +1,7 @@
+import 'dart:convert';
+
+import 'package:fokus/services/app_locales.dart';
+
 enum NotificationButton {
 	rate
 }
@@ -11,4 +15,9 @@ extension NotificationButtonInfo on NotificationButton {
 	String get nameKey => const {
 		NotificationButton.rate: '$_key.rate',
 	}[this];
+
+	Map<String, dynamic> toJson() => {
+		'id': action,
+		'text': json.encode(AppLocales.instance.getTranslations(nameKey))
+	};
 }

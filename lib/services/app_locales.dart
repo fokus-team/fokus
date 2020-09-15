@@ -55,7 +55,8 @@ class AppLocales {
 		return true;
 	}
 
-	String translate(String key, [Map<String, Object> args]) {
+	String translate(String key, [Map<String, Object> args, Locale locale]) {
+		locale ??= this.locale;
 		try {
 			var string = key.split('.').fold(_translations[locale], (object, key) => object[key]) as String;
 			if (args == null)
@@ -70,10 +71,10 @@ class AppLocales {
 		}
 	}
 
-	Map<String, String> getTranslations(String key, [Map<String, Object> args]) {
+	Map<String, dynamic> getTranslations(String key, [Map<String, Object> args]) {
 		Map<String, String> translations = {};
 		for (var locale in AppLocalesDelegate.supportedLocales)
-			translations[locale.languageCode] = translate(key, args);
+			translations[locale.languageCode] = translate(key, args, locale);
 		return translations;
 	}
 

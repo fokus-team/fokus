@@ -60,7 +60,7 @@ class _BadgeDialogState extends State<BadgeDialog> with SingleTickerProviderStat
 									),
 									Padding(
 										padding: EdgeInsets.only(top: 10.0),
-										child: SvgPicture.asset(AssetType.badgeIcons.getPath(widget.badge.icon), height: MediaQuery.of(context).size.width*0.3)
+										child: SvgPicture.asset(AssetType.badges.getPath(widget.badge.icon), height: MediaQuery.of(context).size.width*0.3)
 									)
 								]
 							),

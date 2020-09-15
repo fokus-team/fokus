@@ -140,7 +140,7 @@ class _PlanFormState extends State<PlanForm> {
 					child: ItemCard(
 						title: item.title,
 						subtitle: AppLocales.of(context).translate(checked ? 'actions.selected' : 'actions.tapToSelect'),
-						graphicType: AssetType.childAvatars,
+						graphicType: AssetType.avatars,
 						graphic: item.meta.avatar,
 						graphicShowCheckmark: checked,
 						graphicHeight: 44.0,

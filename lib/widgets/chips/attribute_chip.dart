@@ -36,7 +36,7 @@ class AttributeChip extends StatelessWidget {
 	}) : this(
 		content: content,
 		color: AppColors.currencyColor[currencyType],
-		icon: SvgPicture.asset(AssetType.currencyIcons.getPath(currencyType.index), width: 22, fit: BoxFit.cover),
+		icon: SvgPicture.asset(AssetType.currencies.getPath(currencyType.index), width: 22, fit: BoxFit.cover),
 		tooltip: tooltip
 	);
 

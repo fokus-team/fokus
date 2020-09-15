@@ -20,7 +20,7 @@ class _SettingsPageState extends State<SettingsPage> {
 	static const String _pageKey = 'page.settings.content';
 	static const String _defaultLanguageKey = 'default';
 
-	List<String> languages = [_defaultLanguageKey, 'en', 'pl'];
+	List<String> languages = [_defaultLanguageKey, ...AppLocalesDelegate.supportedLocales.map((locale) => locale.languageCode)];
 	String pickedLanguage;
 
   @override

@@ -36,7 +36,7 @@ class UIBadge {
 		description:
 		badge.description,
 		icon: badge.icon,
-		maxLevel: badge.maxLevel == 5 ? UIBadgeMaxLevel.five : (badge.maxLevel == 3 ? UIBadgeMaxLevel.three : UIBadgeMaxLevel.one)
+		maxLevel: UIBadgeMaxLevel.values.firstWhere((level) => level.value == badge.maxLevel, orElse: () => UIBadgeMaxLevel.one)
 	);
 
 }

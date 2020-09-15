@@ -69,13 +69,13 @@ class ItemCard extends StatelessWidget {
 	
 	Widget headerImage() {
 		switch(graphicType) {
-			case AssetType.childAvatars:
+			case AssetType.avatars:
 				return AppAvatar(graphic, size: graphicHeight, color: childAvatars[graphic].color, checked: graphicShowCheckmark);
 			break;
-			case AssetType.rewardsIcons:
+			case AssetType.rewards:
 				return SvgPicture.asset(graphicType.getPath(graphic), height: graphicHeight);
 			break;
-			case AssetType.badgeIcons:
+			case AssetType.badges:
 				return Badge(
 					showBadge: graphicShowCheckmark ?? false,
 					badgeColor: Colors.green,

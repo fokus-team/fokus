@@ -47,12 +47,12 @@ extension NotificationTypeExtension on NotificationType {
   );
 
   AssetType get graphicType => const {
-    NotificationType.caregiver_receivedReward: AssetType.childAvatars,
-    NotificationType.caregiver_finishedTaskUngraded: AssetType.childAvatars,
-    NotificationType.caregiver_finishedTaskGraded: AssetType.childAvatars,
-    NotificationType.caregiver_unfinishedPlan: AssetType.childAvatars,
-    NotificationType.child_taskGraded: AssetType.badgeIcons, // actually currency icon
-    NotificationType.child_receivedBadge: AssetType.badgeIcons
+    NotificationType.caregiver_receivedReward: AssetType.avatars,
+    NotificationType.caregiver_finishedTaskUngraded: AssetType.avatars,
+    NotificationType.caregiver_finishedTaskGraded: AssetType.avatars,
+    NotificationType.caregiver_unfinishedPlan: AssetType.avatars,
+    NotificationType.child_taskGraded: AssetType.badges, // actually currency icon
+    NotificationType.child_receivedBadge: AssetType.badges
   }[this];
 
   List<Widget> chips(BuildContext context, CurrencyType currencyType, int currencyValue) => {
@@ -121,7 +121,7 @@ class NotificationCard extends ItemCard {
     if(currencyType == null)
       return super.headerImage();
     else
-      return SvgPicture.asset(AssetType.currencyIcons.getPath(currencyType.index), height: graphicHeight);
+      return SvgPicture.asset(AssetType.currencies.getPath(currencyType.index), height: graphicHeight);
   }
 
   @override

@@ -90,7 +90,7 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 							// classic child card from caregiver panel
 							title: 'Maciek',
 							subtitle: '2 plany na dziś',
-							graphicType: AssetType.childAvatars,
+							graphicType: AssetType.avatars,
 							graphic: 16,
 							chips: <Widget>[
 								AttributeChip.withCurrency(content: '69420', currencyType: CurrencyType.amethyst)
@@ -268,7 +268,7 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 						title: item.title,
 						subtitle: AppLocales.of(context).translate(checked ? 'actions.selected' : 'actions.tapToSelect'),
 						graphic: item.value.icon,
-						graphicType: AssetType.badgeIcons,
+						graphicType: AssetType.badges,
 						graphicShowCheckmark: checked,
 						graphicHeight: 40.0,
 						onTapped: onChange != null ? () => onChange(item.value, !checked) : null,
@@ -350,7 +350,7 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 						ItemCard(
 							title: "Wycieczka do Zoo", 
 							subtitle: "Odebrano dnia 25.08.2020 18:34",
-							graphicType: AssetType.rewardsIcons,
+							graphicType: AssetType.rewards,
 							graphic: 16,
 							chips: <Widget>[
 								AttributeChip.withCurrency(content: "30", currencyType: CurrencyType.diamond)

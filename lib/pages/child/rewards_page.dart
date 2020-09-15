@@ -38,7 +38,7 @@ class _ChildRewardsPageState extends State<ChildRewardsPage> {
 										title: '1 godzina gry na konsoli',
 										subtitle: AppLocales.of(context).translate('$_pageKey.claimCostLabel') + ':',
 										graphic: 9,
-										graphicType: AssetType.rewardsIcons,
+										graphicType: AssetType.rewards,
 										graphicHeight: 44.0,
 										progressPercentage: 1,
 										activeProgressBarColor: AppColors.childActionColor,
@@ -58,7 +58,7 @@ class _ChildRewardsPageState extends State<ChildRewardsPage> {
 										title: 'Zakupomania',
 										subtitle: AppLocales.of(context).translate('$_pageKey.claimCostLabel') + ':',
 										graphic: 13,
-										graphicType: AssetType.rewardsIcons,
+										graphicType: AssetType.rewards,
 										graphicHeight: 44.0,
 										progressPercentage: 0.1,
 										activeProgressBarColor: AppColors.childActionColor,
@@ -85,7 +85,7 @@ class _ChildRewardsPageState extends State<ChildRewardsPage> {
 										title: '1 godzina gry na konsoli',
 										subtitle: 'Odebrano 09.08.2020',
 										graphic: 9,
-										graphicType: AssetType.rewardsIcons,
+										graphicType: AssetType.rewards,
 										graphicHeight: 44.0,
 										isActive: false
 									)

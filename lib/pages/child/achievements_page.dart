@@ -168,7 +168,7 @@ class _ChildAchievementsPageState extends State<ChildAchievementsPage> {
 										child: GestureDetector(
 											onTap: () => showBadgeDialog(context, badge),
 											child: SvgPicture.asset(
-												AssetType.badgeIcons.getPath(badge.icon),
+												AssetType.badges.getPath(badge.icon),
 												width: (MediaQuery.of(context).size.width - 2 * AppBoxProperties.screenEdgePadding)/badgesPerShelf - 2 * badgeMargin
 											)
 										)

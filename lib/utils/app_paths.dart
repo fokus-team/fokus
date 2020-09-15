@@ -7,24 +7,20 @@ enum AssetPathType { flutter, drawable }
 
 extension GraphicAssetPaths on AssetType {
 	String get category => const {
-		AssetType.childAvatars: 'avatar',
-		AssetType.rewardsIcons: 'reward',
-		AssetType.badgeIcons: 'badge',
-		AssetType.currencyIcons: 'currency',
+		AssetType.avatars: 'avatar',
+		AssetType.rewards: 'reward',
+		AssetType.badges: 'badge',
+		AssetType.currencies: 'currency',
 	}[this];
 
 	String getPath(int index, [AssetPathType pathType = AssetPathType.flutter]) {
 		String assetId;
-		if (this == AssetType.currencyIcons) {
+		if (this == AssetType.currencies) {
 			if (index == null)
 				index = 0;
 			assetId = CurrencyType.values[index].name;
-		} else {
-			if (index == null || graphicAssets[this][index] == null)
-				assetId = pathType == AssetPathType.flutter ? 'default' : 'base';
-			else 
-				assetId = graphicAssets[this][index].filename;
-		}
+		} else
+			assetId = index == null || graphicAssets[this][index] == null ? 'default' : graphicAssets[this][index].filename;
 		if (pathType == AssetPathType.drawable)
 			return '${category}_${assetId.replaceAll(RegExp('-'), '_')}';
 		else

@@ -66,7 +66,7 @@ class _CaregiverAwardsPageState extends State<CaregiverAwardsPage> {
 								UIButton.ofType(ButtonType.edit, () => {log("edit")}),
 								UIButton.ofType(ButtonType.delete, () => {log("delete")})
 							],
-							graphicType: AssetType.rewardsIcons,
+							graphicType: AssetType.rewards,
 							graphic: reward.icon,
 							chips: <Widget>[
 								if(reward.cost != null)
@@ -94,7 +94,7 @@ class _CaregiverAwardsPageState extends State<CaregiverAwardsPage> {
 								UIButton.ofType(ButtonType.edit, () => {log("edit")}),
 								UIButton.ofType(ButtonType.delete, () => {log("delete")})
 							],
-							graphicType: AssetType.badgeIcons,
+							graphicType: AssetType.badges,
 							graphic: badge.icon,
 							graphicHeight: 44.0
 						)

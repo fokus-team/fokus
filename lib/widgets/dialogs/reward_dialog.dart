@@ -60,7 +60,7 @@ class _RewardDialogState extends State<RewardDialog> with SingleTickerProviderSt
 									),
 									Padding(
 										padding: EdgeInsets.only(top: 10.0),
-										child: SvgPicture.asset(AssetType.rewardsIcons.getPath(widget.reward.icon), height: MediaQuery.of(context).size.width*0.3)
+										child: SvgPicture.asset(AssetType.rewards.getPath(widget.reward.icon), height: MediaQuery.of(context).size.width*0.3)
 									)
 								]
 							),

@@ -174,5 +174,5 @@ class _PointPickerFieldState extends State<PointPickerField> {
 		);
   }
 
-  String getIconPath(CurrencyType type) => AssetType.currencyIcons.getPath(type.index);
+  String getIconPath(CurrencyType type) => AssetType.currencies.getPath(type.index);
 }

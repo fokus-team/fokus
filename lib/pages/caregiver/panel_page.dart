@@ -53,7 +53,7 @@ class _CaregiverPanelPageState extends State<CaregiverPanelPage> {
 							title: child.name,
 							subtitle: getChildCardSubtitle(context, child),
 							onTapped: () => Navigator.of(context).pushNamed(AppPage.caregiverChildDashboard.name),
-							graphicType: GraphicAssetType.childAvatars,
+							graphicType: AssetType.childAvatars,
 							graphic: child.avatar,
 							chips: <Widget>[
 								for (var currency in child.points.entries)

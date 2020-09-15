@@ -30,7 +30,8 @@ dependencies:
     firebase_crashlytics: ^0.1.4+1
 
     firebase_messaging: ^6.0.16
-    onesignal_flutter: ^2.6.1
+    onesignal_flutter:
+        git: https://github.com/fokus-team/OneSignal-Flutter-SDK.git
     flutter_local_notifications:
         git:
             url: https://github.com/fokus-team/flutter_local_notifications.git

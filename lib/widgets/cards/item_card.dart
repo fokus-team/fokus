@@ -29,7 +29,7 @@ class ItemCard extends StatelessWidget {
 	final String title;
 	final String subtitle;
 	final Widget icon;
-	final GraphicAssetType graphicType;
+	final AssetType graphicType;
 	final int graphic;
 	final double graphicHeight;
 	final bool graphicShowCheckmark;
@@ -69,18 +69,18 @@ class ItemCard extends StatelessWidget {
 	
 	Widget headerImage() {
 		switch(graphicType) {
-			case GraphicAssetType.childAvatars:
+			case AssetType.childAvatars:
 				return AppAvatar(graphic, size: graphicHeight, color: childAvatars[graphic].color, checked: graphicShowCheckmark);
 			break;
-			case GraphicAssetType.awardsIcons:
-				return SvgPicture.asset(awardIconSvgPath(graphic), height: graphicHeight);
+			case AssetType.awardsIcons:
+				return SvgPicture.asset(graphicType.getPath(graphic), height: graphicHeight);
 			break;
-			case GraphicAssetType.badgeIcons:
+			case AssetType.badgeIcons:
 				return Badge(
 					showBadge: graphicShowCheckmark ?? false,
 					badgeColor: Colors.green,
 					badgeContent: Icon(Icons.check, color: Colors.white, size: 16.0),
-					child: SvgPicture.asset(badgeIconSvgPath(graphic), height: graphicHeight)
+					child: SvgPicture.asset(graphicType.getPath(graphic), height: graphicHeight)
 				);
 			break;
 			default:

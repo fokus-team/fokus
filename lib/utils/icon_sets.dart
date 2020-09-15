@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-enum GraphicAssetType { childAvatars, awardsIcons, badgeIcons }
+enum AssetType { childAvatars, awardsIcons, badgeIcons, currencyIcons }
 
 enum ChildAvatarAssetLabel { boy, girl }
 enum AwardsIconsAssetLabel { gift, relax, activity, food }
@@ -14,10 +14,10 @@ class GraphicAsset<GraphicLabel> {
 	GraphicAsset(this.filename, this.label, [this.color]);
 }
 
-Map<GraphicAssetType, Map<int, GraphicAsset>> graphicAssets = {
-	GraphicAssetType.childAvatars: childAvatars,
-	GraphicAssetType.awardsIcons: awardIcons,
-	GraphicAssetType.badgeIcons: badgeIcons
+Map<AssetType, Map<int, GraphicAsset>> graphicAssets = {
+	AssetType.childAvatars: childAvatars,
+	AssetType.awardsIcons: awardIcons,
+	AssetType.badgeIcons: badgeIcons
 };
 
 Map<int, GraphicAsset<ChildAvatarAssetLabel>> childAvatars = {

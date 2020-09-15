@@ -53,7 +53,7 @@ class _CaregiverAwardsPageState extends State<CaregiverAwardsPage> {
 											UIButton.ofType(ButtonType.edit, () => {log("edit")}),
 											UIButton.ofType(ButtonType.delete, () => {log("delete")})
 										],
-										graphicType: GraphicAssetType.awardsIcons,
+										graphicType: AssetType.awardsIcons,
 										graphic: 16,
 										chips: <Widget>[
 											AttributeChip.withCurrency(content: "30", currencyType: CurrencyType.diamond, tooltip: '$_pageKey.content.pointCost')
@@ -79,7 +79,7 @@ class _CaregiverAwardsPageState extends State<CaregiverAwardsPage> {
 											UIButton.ofType(ButtonType.edit, () => {log("edit")}),
 											UIButton.ofType(ButtonType.delete, () => {log("delete")})
 										],
-										graphicType: GraphicAssetType.badgeIcons,
+										graphicType: AssetType.badgeIcons,
 										graphic: 3,
 										graphicHeight: 44.0,
 									)

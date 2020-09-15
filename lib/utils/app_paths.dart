@@ -3,31 +3,37 @@ import 'package:fokus/model/currency_type.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/icon_sets.dart';
 
+enum AssetPathType { flutter, drawable }
+
+extension GraphicAssetPaths on AssetType {
+	String get category => const {
+		AssetType.childAvatars: 'avatar',
+		AssetType.awardsIcons: 'reward',
+		AssetType.badgeIcons: 'badge',
+		AssetType.currencyIcons: 'currency',
+	}[this];
+
+	String getPath(int index, [AssetPathType pathType = AssetPathType.flutter]) {
+		String assetId;
+		if (this == AssetType.currencyIcons) {
+			if (index == null)
+				index = 0;
+			assetId = CurrencyType.values[index].name;
+		} else {
+			if (index == null || graphicAssets[this][index] == null)
+				assetId = pathType == AssetPathType.flutter ? 'default' : 'base';
+			else 
+				assetId = graphicAssets[this][index].filename;
+		}
+		if (pathType == AssetPathType.drawable)
+			return '${category}_${assetId.replaceAll(RegExp('-'), '_')}';
+		else {
+			String folder = this == AssetType.awardsIcons ? 'award' : category; //temp
+			return 'assets/image/$folder/$assetId.svg';
+		}
+	}
+}
+
 String helpPagePath(BuildContext context, String helpPage) {
 	return 'assets/help/${AppLocales.of(context).locale.languageCode}/$helpPage.md';
-}
-
-String currencySvgPath(CurrencyType currencyType) {
-	return 'assets/image/currency/${currencyType.toString().split('.').last}.svg';
-}
-
-String childAvatarSvgPath(int avatar) {
-	if(graphicAssets[GraphicAssetType.childAvatars][avatar] != null)
-		return 'assets/image/avatar/child/${graphicAssets[GraphicAssetType.childAvatars][avatar].filename}.svg';
-	else
-		return 'assets/image/avatar/default.svg';
-}
-
-String awardIconSvgPath(int icon) {
-	if(graphicAssets[GraphicAssetType.awardsIcons][icon] != null)
-		return 'assets/image/award/${graphicAssets[GraphicAssetType.awardsIcons][icon].filename}.svg';
-	else
-		return 'assets/image/award/default.svg';
-}
-
-String badgeIconSvgPath(int icon) {
-	if(graphicAssets[GraphicAssetType.badgeIcons][icon] != null)
-		return 'assets/image/badge/${graphicAssets[GraphicAssetType.badgeIcons][icon].filename}.svg';
-	else
-		return 'assets/image/badge/default.svg';
 }

@@ -46,13 +46,13 @@ extension NotificationTypeExtension on NotificationType {
     color: Colors.grey
   );
 
-  GraphicAssetType get graphicType => const {
-    NotificationType.caregiver_receivedAward: GraphicAssetType.childAvatars,
-    NotificationType.caregiver_finishedTaskUngraded: GraphicAssetType.childAvatars,
-    NotificationType.caregiver_finishedTaskGraded: GraphicAssetType.childAvatars,
-    NotificationType.caregiver_unfinishedPlan: GraphicAssetType.childAvatars,
-    NotificationType.child_taskGraded: GraphicAssetType.badgeIcons, // actually currency icon
-    NotificationType.child_receivedBadge: GraphicAssetType.badgeIcons
+  AssetType get graphicType => const {
+    NotificationType.caregiver_receivedAward: AssetType.childAvatars,
+    NotificationType.caregiver_finishedTaskUngraded: AssetType.childAvatars,
+    NotificationType.caregiver_finishedTaskGraded: AssetType.childAvatars,
+    NotificationType.caregiver_unfinishedPlan: AssetType.childAvatars,
+    NotificationType.child_taskGraded: AssetType.badgeIcons, // actually currency icon
+    NotificationType.child_receivedBadge: AssetType.badgeIcons
   }[this];
 
   List<Widget> chips(BuildContext context, CurrencyType currencyType, int currencyValue) => {
@@ -102,7 +102,7 @@ class NotificationCard extends ItemCard {
     this.currencyValue = 0,
     String title,
     String subtitle,
-    GraphicAssetType graphicType,
+    AssetType graphicType,
     int graphic,
     List<Widget> chips
   }) : super(
@@ -121,7 +121,7 @@ class NotificationCard extends ItemCard {
     if(currencyType == null)
       return super.headerImage();
     else
-      return SvgPicture.asset(currencySvgPath(currencyType), height: graphicHeight);
+      return SvgPicture.asset(AssetType.currencyIcons.getPath(currencyType.index), height: graphicHeight);
   }
 
   @override

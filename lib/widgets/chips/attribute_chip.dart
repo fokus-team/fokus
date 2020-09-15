@@ -4,6 +4,7 @@ import 'package:fokus/model/currency_type.dart';
 
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/app_paths.dart';
+import 'package:fokus/utils/icon_sets.dart';
 import 'package:fokus/utils/theme_config.dart';
 
 class AttributeChip extends StatelessWidget {
@@ -35,7 +36,7 @@ class AttributeChip extends StatelessWidget {
 	}) : this(
 		content: content,
 		color: AppColors.currencyColor[currencyType],
-		icon: SvgPicture.asset(currencySvgPath(currencyType), width: 22, fit: BoxFit.cover),
+		icon: SvgPicture.asset(AssetType.currencyIcons.getPath(currencyType.index), width: 22, fit: BoxFit.cover),
 		tooltip: tooltip
 	);
 

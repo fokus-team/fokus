@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fokus/model/db/date/time_date.dart';
-import 'package:fokus/model/ui/award/ui_badge.dart';
+import 'package:fokus/model/ui/gamification/ui_badge.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/app_paths.dart';
 import 'package:fokus/utils/dialog_utils.dart';

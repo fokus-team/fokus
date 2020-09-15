@@ -292,7 +292,7 @@
 					"pointCost": "Koszt punktowy nagrody",
 					"unlimitedReward": "Nagroda nielimitowana",
 					"limitedReward": "Limit {REWARD_LIMIT, plural, offset:0 one {jednej nagrody} other {# nagród}} na dziecko",
-					"noLeveledBadge": "Odznaka przyznawana jednorazowo",
+					"1LeveledBadge": "Odznaka przyznawana jednorazowo",
 					"3LeveledBadge": "Odznaka 3 poziomowa",
 					"5LeveledBadge": "Odznaka 5 poziomowa"
 				}

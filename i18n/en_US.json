@@ -292,7 +292,7 @@
 					"pointCost": "Reward's point cost",
 					"unlimitedReward": "Unlimited reward",
 					"limitedReward": "Limited {REWARD_LIMIT, plural, offset:0 one {one reward} other {# rewards}} per child",
-					"noLeveledBadge": "One-time badge",
+					"1LeveledBadge": "One-time badge",
 					"3LeveledBadge": "3-leveled badge",
 					"5LeveledBadge": "5-leveled badge"
 				}

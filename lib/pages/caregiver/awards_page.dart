@@ -43,22 +43,6 @@ class _CaregiverAwardsPageState extends State<CaregiverAwardsPage> {
 			bottomNavigationBar: AppNavigationBar.caregiverPage(currentIndex: 2)
     );
 	}
-	
-	String _getBadgeMaxLevel(UIBadgeMaxLevel maxLevel) {
-		String _textKey;
-		switch(maxLevel) {
-		  case UIBadgeMaxLevel.one:
-		    _textKey = 'noLeveledBadge';
-		    break;
-		  case UIBadgeMaxLevel.three:
-		    _textKey = '3LeveledBadge';
-		    break;
-		  case UIBadgeMaxLevel.five:
-		    _textKey = '5LeveledBadge';
-		    break;
-		}
-		return AppLocales.of(context).translate('$_pageKey.content.$_textKey');
-	}
 
 	List<Segment> _buildPanelSegments(CaregiverAwardsLoadSuccess state, context) {
 		return [
@@ -105,7 +89,7 @@ class _CaregiverAwardsPageState extends State<CaregiverAwardsPage> {
 					for (var badge in state.badges)
 						ItemCard(
 							title: badge.name, 
-							subtitle: _getBadgeMaxLevel(badge.maxLevel),
+							subtitle: badge.maxLevel != null ? AppLocales.of(context).translate('$_pageKey.content.${badge.maxLevel.value}LeveledBadge') : '',
 							menuItems: [
 								UIButton.ofType(ButtonType.edit, () => {log("edit")}),
 								UIButton.ofType(ButtonType.delete, () => {log("delete")})

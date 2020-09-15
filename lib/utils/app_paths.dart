@@ -27,10 +27,8 @@ extension GraphicAssetPaths on AssetType {
 		}
 		if (pathType == AssetPathType.drawable)
 			return '${category}_${assetId.replaceAll(RegExp('-'), '_')}';
-		else {
-			String folder = this == AssetType.awardsIcons ? 'award' : category; //temp
-			return 'assets/image/$folder/$assetId.svg';
-		}
+		else
+			return 'assets/image/$category/$assetId.svg';
 	}
 }
 

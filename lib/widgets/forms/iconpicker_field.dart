@@ -6,7 +6,7 @@ import 'package:fokus/utils/app_paths.dart';
 import 'package:fokus/utils/icon_sets.dart';
 import 'package:smart_select/smart_select.dart';
 
-enum IconPickerType { award, badge }
+enum IconPickerType { reward, badge }
 
 class IconPickerField extends StatefulWidget {
 	final String title;
@@ -20,15 +20,15 @@ class IconPickerField extends StatefulWidget {
 		@required this.groupTextKey,
 		@required this.callback,
 		@required this.value,
-		this.type = IconPickerType.award
+		this.type = IconPickerType.reward
 	});
 
-	IconPickerField.award({
+	IconPickerField.reward({
 		String title,
 		String groupTextKey,
 		Function(int) callback,
 		int value
-	}) : this(title: title, groupTextKey: groupTextKey, callback: callback, value: value, type: IconPickerType.award);
+	}) : this(title: title, groupTextKey: groupTextKey, callback: callback, value: value, type: IconPickerType.reward);
 
 	IconPickerField.badge({
 		String title,
@@ -46,17 +46,17 @@ class _IconPickerFieldState extends State<IconPickerField> {
 
   @override
   Widget build(BuildContext context) {
-		bool isAwardType = widget.type == IconPickerType.award;
+		bool isRewardType = widget.type == IconPickerType.reward;
 
 		return Padding(
 			padding: EdgeInsets.symmetric(vertical: 10.0),
 			child: SmartSelect<int>.single(
-				leading: SvgPicture.asset(getPicturePath(isAwardType, widget.value), height: 74.0),
+				leading: SvgPicture.asset(getPicturePath(isRewardType, widget.value), height: 74.0),
 				title: widget.title,
 				value: widget.value,
-				options: List.generate((isAwardType ? awardIcons : badgeIcons).length, (index) {
+				options: List.generate((isRewardType ? rewardIcons : badgeIcons).length, (index) {
 						final String name = AppLocales.of(context).translate(
-							widget.groupTextKey + '.${(isAwardType ? awardIcons : badgeIcons)[index].label.toString().split('.').last}'
+							widget.groupTextKey + '.${(isRewardType ? rewardIcons : badgeIcons)[index].label.toString().split('.').last}'
 						);
 						return SmartSelectOption(
 							title: name,
@@ -80,7 +80,7 @@ class _IconPickerFieldState extends State<IconPickerField> {
 							showBadge: checked != null ? checked : false,
 							child: GestureDetector(
 								onTap: () => { onChange(item.value, !checked) },
-								child: SvgPicture.asset(getPicturePath(isAwardType, item.value), height: 64.0)
+								child: SvgPicture.asset(getPicturePath(isRewardType, item.value), height: 64.0)
 							)
 						);
 					}

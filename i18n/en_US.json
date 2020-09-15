@@ -10,7 +10,7 @@
 		},
 		"child": {
 			"plans": "Plans",
-			"awards": "Awards",
+			"rewards": "Rewards",
 			"achievements": "Achievements"
 		},
 		"settings": "Settings"
@@ -60,7 +60,7 @@
 			},
 			"content": {
 				"caregiver": {
-					"receivedAward": "{CHILD_NAME} received the award",
+					"receivedReward": "{CHILD_NAME} received the reward",
 					"finishedTask": "{CHILD_NAME} finished the task",
 					"unfinishedPlan": "{CHILD_NAME} didn't finish the plan",
 					"gradeTask": "Grade task",
@@ -134,7 +134,7 @@
 					"noBadgesToAssignText": "No available badges to award",
 					"tabs": {
 						"plans": "Plans",
-						"awards": "Awards",
+						"rewards": "Rewards",
 						"achievements": "Achievements"
 					}
 				},
@@ -142,14 +142,14 @@
 					"plansTitle": "Today's plans",
 					"noPlansText": "No actions planned for today",
 					"openCalendarButton": "Open calendar",
-					"awardsTitle": "Claimed awards",
-					"noAwardsText": "No claimed awards to display",
+					"rewardsTitle": "Claimed rewards",
+					"noRewardsText": "No claimed rewards to display",
 					"achievementsTitle": "Awarded badges",
 					"noAchievementsText": "No awarded badges to display",
 					"alerts": {
 						"noPlansAdded": "No plan added yet. Add a plan to be able to assign it to a child.",
 						"unratedTasksExist": "There are unrated tasks. Visit the rating page to assign points for completed tasks.",
-						"noAwardsAdded": "The list of awards available for purchase is empty. Add an award for a child to claim.",
+						"noRewardsAdded": "The list of rewards available for purchase is empty. Add an award for a child to claim.",
 						"noBadgesAdded": "The list of badges is empty. Add a badge to be able to assign it to a child."
 					}
 				}
@@ -280,48 +280,48 @@
 			"awards": {
 				"header": {
 					"title": "Awards",
-					"addAward": "Add award",
+					"addReward": "Add reward",
 					"addBadge": "Add badge",
-					"pageHint": "Increase work motivation by using points, awards and badges"
+					"pageHint": "Increase work motivation by using points, rewards and badges"
 				},
 				"content": {
-					"addedAwardsTitle": "Added awards",
-					"noAwardsAdded": "No awards to display, add the first one now",
+					"addedRewardsTitle": "Added rewards",
+					"noRewardsAdded": "No rewards to display, add the first one now",
 					"addedBadgesTitle": "Added badges",
 					"noBadgesAdded": "No badges to display, add the first one now",
-					"pointCost": "Award's point cost",
-					"unlimitedAward": "Unlimited award",
-					"limitedAward": "Limited {AWARD_LIMIT, plural, offset:0 one {one award} other {# awards}} per child",
-					"noLeveledBadge": "One-time badge",
+					"pointCost": "Reward's point cost",
+					"unlimitedReward": "Unlimited reward",
+					"limitedReward": "Limited {REWARD_LIMIT, plural, offset:0 one {one reward} other {# rewards}} per child",
+					"1LeveledBadge": "One-time badge",
 					"3LeveledBadge": "3-leveled badge",
 					"5LeveledBadge": "5-leveled badge"
 				}
 			},
-			"awardForm": {
-				"addAwardTitle": "Add award",
-				"editAwardTitle": "Edit award",
-				"addAwardButton": "Add award",
-				"saveAwardButton": "Save award",
-				"removeAwardButton": "Remove award",
-				"removeAwardTitle": "Remove award",
-				"removeAwardText": "Are you sure you want to remove this award?",
+			"rewardForm": {
+				"addRewardTitle": "Add reward",
+				"editRewardTitle": "Edit reward",
+				"addRewardButton": "Add reward",
+				"saveRewardButton": "Save reward",
+				"removeRewardButton": "Remove reward",
+				"removeRewardTitle": "Remove reward",
+				"removeRewardText": "Are you sure you want to remove this reward?",
 				"fields": {
-					"awardName": {
-						"label": "Award name",
-						"emptyError": "Award name can't be empty"
+					"rewardName": {
+						"label": "Reward name",
+						"emptyError": "Reward name can't be empty"
 					},
-					"awardLimit": {
-						"label": "Award limit",
+					"rewardLimit": {
+						"label": "Reward limit",
 						"hint": "Leave empty not to limit"
 					},
-					"awardPoints": {
-						"valueLabel": "Award point cost",
+					"rewardPoints": {
+						"valueLabel": "Reward point cost",
 						"currencyLabel": "Point currency",
-						"hint": "How many points are needed to collect the award",
+						"hint": "How many points are needed to collect the reward",
 						"emptyError": "Point cost must be at least 1"
 					},
-					"awardIcon": {
-						"label": "Award icon",
+					"rewardIcon": {
+						"label": "Reward icon",
 						"groups": {
 							"gift": "Gift",
 							"activity": "Activity",
@@ -517,16 +517,24 @@
 					"noPlansOnDateTitle": "No plans for this day"
 				}
 			},
-			"awards": {
+			"rewards": {
 				"content": {
-					"awardsTitle": "Available awards",
-					"noAwardsMessage": "No available awards to display"
+					"rewardsTitle": "Available rewards",
+					"noRewardsMessage": "No available rewards to display",
+					"rewardsHint": "You can exchange your points for rewards",
+					"claimedRewardsTitle": "Claimed rewards",
+					"claimRewardTitle": "Claim reward",
+					"claimCostLabel": "Reward cost",
+					"claimButton": "Claim"
 				}
 			},
 			"achievements": {
 				"content": {
 					"achievementsTitle": "Achievements",
-					"noAchievementsMessage": "No achievements to display"
+					"achievementsHint": "Click on the badge to show details",
+					"noAchievementsMessage": "No achievements to display",
+					"earnedBadgeTitle": "Earned badge",
+					"earnedBadgeDate": "Earning date"
 				}
 			}
 		}
@@ -632,7 +640,7 @@
 		"first_steps": "First steps",
 		"plan_creation": "Plan creation",
 		"task_creation": "Task creation",
-		"award_creation": "Award creation",
+		"reward_creation": "Reward creation",
 		"badge_creation": "Badge creation",
 		"plan_info": "Plans"
 	},

@@ -110,7 +110,7 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 							indicatorWeight: 3.0,
 							tabs: [
 								Tab(text: AppLocales.of(context).translate('$_pageKey.header.tabs.plans')),
-								Tab(text: AppLocales.of(context).translate('$_pageKey.header.tabs.awards')),
+								Tab(text: AppLocales.of(context).translate('$_pageKey.header.tabs.rewards')),
 								Tab(text: AppLocales.of(context).translate('$_pageKey.header.tabs.achievements'))
 							]
 						)
@@ -120,7 +120,7 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 							controller: _tabController,
 							children: [
 								_buildPlansTab(),
-								_buildAwardsTab(),
+								_buildRewardsTab(),
 								_buildAchievementsTab()
 							]
 						)
@@ -335,22 +335,22 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 		);
 	}
 
-	Widget _buildAwardsTab() {
+	Widget _buildRewardsTab() {
 		return _buildTabContent(
 			children: <Widget>[
-				// Show only if there are no awards child can buy
+				// Show only if there are no rewards child can buy
 				AppAlert(
-					text: AppLocales.of(context).translate('$_pageKey.content.alerts.noAwardsAdded'),
-					onTap: () => { /* Go to award/badge list page */ },
+					text: AppLocales.of(context).translate('$_pageKey.content.alerts.noRewardsAdded'),
+					onTap: () => { /* Go to reward/badge list page */ },
 				),
 				Segment(
-					title: '$_pageKey.content.awardsTitle',
-					noElementsMessage: '$_pageKey.content.noAwardsText',
+					title: '$_pageKey.content.rewardsTitle',
+					noElementsMessage: '$_pageKey.content.noRewardsText',
 					elements: [
 						ItemCard(
 							title: "Wycieczka do Zoo", 
 							subtitle: "Odebrano dnia 25.08.2020 18:34",
-							graphicType: AssetType.awardsIcons,
+							graphicType: AssetType.rewardsIcons,
 							graphic: 16,
 							chips: <Widget>[
 								AttributeChip.withCurrency(content: "30", currencyType: CurrencyType.diamond)
@@ -368,7 +368,7 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 				// Show only if there are no badges child can get
 				AppAlert(
 					text: AppLocales.of(context).translate('$_pageKey.content.alerts.noBadgesAdded'),
-					onTap: () => { /* Go to award/badge list page */ },
+					onTap: () => { /* Go to reward/badge list page */ },
 				),
 				Segment(
 					title: '$_pageKey.content.achievementsTitle',

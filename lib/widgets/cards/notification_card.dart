@@ -16,7 +16,7 @@ import 'package:intl/intl.dart';
 const String _pageKey = "page.notifications.content";
 
 enum NotificationType{
-  caregiver_receivedAward,
+  caregiver_receivedReward,
   caregiver_finishedTaskUngraded,
   caregiver_finishedTaskGraded,
   caregiver_unfinishedPlan,
@@ -26,7 +26,7 @@ enum NotificationType{
 
 extension NotificationTypeExtension on NotificationType {
   String get title => {
-    NotificationType.caregiver_receivedAward: "caregiver.receivedAward",
+    NotificationType.caregiver_receivedReward: "caregiver.receivedReward",
     NotificationType.caregiver_finishedTaskUngraded: "caregiver.finishedTask",
     NotificationType.caregiver_finishedTaskGraded: "caregiver.finishedTask",
     NotificationType.caregiver_unfinishedPlan: "caregiver.unfinishedPlan",
@@ -36,7 +36,7 @@ extension NotificationTypeExtension on NotificationType {
 
   Icon get icon => Icon(
     const {
-      NotificationType.caregiver_receivedAward : Icons.star,
+      NotificationType.caregiver_receivedReward : Icons.star,
       NotificationType.caregiver_finishedTaskUngraded : Icons.assignment_turned_in,
       NotificationType.caregiver_finishedTaskGraded : Icons.assignment_turned_in,
       NotificationType.caregiver_unfinishedPlan : Icons.assignment_late,
@@ -47,7 +47,7 @@ extension NotificationTypeExtension on NotificationType {
   );
 
   AssetType get graphicType => const {
-    NotificationType.caregiver_receivedAward: AssetType.childAvatars,
+    NotificationType.caregiver_receivedReward: AssetType.childAvatars,
     NotificationType.caregiver_finishedTaskUngraded: AssetType.childAvatars,
     NotificationType.caregiver_finishedTaskGraded: AssetType.childAvatars,
     NotificationType.caregiver_unfinishedPlan: AssetType.childAvatars,

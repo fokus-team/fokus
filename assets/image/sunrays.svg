@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   id="svg50"
+   preserveAspectRatio="xMidYMid meet"
+   viewBox="0 0 1500 1500"
+   height="2000"
+   width="2000"
+   version="1.0">
+  <defs
+     id="defs54">
+    <linearGradient
+       id="linearGradient944">
+      <stop
+         id="stop940"
+         offset="0"
+         style="stop-color:#ffe793;stop-opacity:1;" />
+      <stop
+         id="stop942"
+         offset="1"
+         style="stop-color:#ffe793;stop-opacity:0.00540541" />
+    </linearGradient>
+    <radialGradient
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(1.1811358,0,0,1.1811358,-5.9269573,-5.9268412)"
+       r="628.80078"
+       fy="640"
+       fx="640"
+       cy="640"
+       cx="640"
+       id="radialGradient946"
+       xlink:href="#linearGradient944" />
+  </defs>
+<path
+     id="path908"
+     d="M 758.70478,7.3132998 C 709.0068,7.0271518 659.29572,11.726796 610.32287,21.407336 L 750.00718,749.98242 332.40069,134.82579 C 254.96975,188.06491 188.33821,255.50754 136.03917,333.57669 L 749.98815,749.9807 19.717481,610.29293 C 2.6112379,702.69063 3.1856268,797.49463 21.407865,889.67885 L 749.97949,749.9928 134.82458,1167.5994 c 53.23912,77.4308 120.68176,144.0623 198.7509,196.3615 L 749.98121,750.00837 v 0.005 L 610.29345,1480.2824 c 92.39773,17.1063 187.20172,16.5319 279.38593,-1.6903 L 749.99506,750.02393 1167.5998,1365.1754 c 36.2957,-24.9559 70.2182,-53.0312 101.404,-83.8601 35.3441,-34.9396 67.1719,-73.4149 94.9558,-114.889 L 750.00718,750.01876 1480.2813,889.7065 c 8.0185,-43.31139 12.1529,-87.15108 12.4055,-131.00225 0.2859,-49.69799 -4.4136,-99.40908 -14.0942,-148.38191 L 750.01928,750.00663 1365.1742,332.40016 c -24.9559,-36.29572 -53.0311,-70.21815 -83.86,-101.40409 -34.9397,-35.34407 -73.4133,-67.17189 -114.8874,-94.95573 L 750.02102,749.98589 889.70702,19.718664 C 846.39564,11.700094 802.55595,7.5657498 758.70478,7.3132998 Z m -8.7028,742.6760402 0.007,0.004 0.001,0.008 -0.005,0.007 -0.008,10e-4 -0.005,-0.004 -10e-4,-0.008 0.003,-0.007 z"
+     style="opacity:1;fill:url(#radialGradient946);fill-opacity:1;stroke:none;stroke-width:1.85988784;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:normal" />
+</svg>

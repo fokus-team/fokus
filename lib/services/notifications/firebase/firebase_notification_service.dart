@@ -1,13 +1,13 @@
 import 'package:bson/bson.dart';
+import 'package:fokus/model/notification/notification_type.dart';
 import 'package:googleapis/fcm/v1.dart';
 
 import 'package:fokus/services/notifications/firebase/firebase_notification_provider.dart';
 import 'package:fokus/services/notifications/notification_service.dart';
-import 'package:fokus/model/ui/notifications/notification_channel.dart';
-import 'package:fokus/model/ui/notifications/notification_button.dart';
-import 'package:fokus/model/ui/notifications/notification_icon.dart';
-import 'package:fokus/widgets/cards/notification_card.dart';
-import 'package:fokus/model/ui/notifications/notification_text.dart';
+import 'package:fokus/model/notification/notification_button.dart';
+import 'package:fokus/model/notification/notification_channel.dart';
+import 'package:fokus/model/notification/notification_icon.dart';
+import 'package:fokus/model/notification/notification_text.dart';
 
 class FirebaseNotificationService extends NotificationService {
 	@override

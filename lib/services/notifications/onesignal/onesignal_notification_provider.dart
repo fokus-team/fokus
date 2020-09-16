@@ -1,9 +1,15 @@
+import 'package:flutter/widgets.dart';
+import 'package:fokus/model/notification/notification_data.dart';
+import 'package:fokus/model/notification/notification_type.dart';
+import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/services/notifications/notification_provider.dart';
+import 'package:get_it/get_it.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 
 class OneSignalNotificationProvider extends NotificationProvider {
 	final String appId = 'ed3ee23f-aa7a-4fc7-91ab-9967fa7712e5';
+	final _navigatorKey = GetIt.I<GlobalKey<NavigatorState>>();
 
 	OneSignalNotificationProvider() {
 		_configureOneSignal();
@@ -29,6 +35,8 @@ class OneSignalNotificationProvider extends NotificationProvider {
 	  });
 	  OneSignal.shared.setNotificationOpenedHandler((OSNotificationOpenedResult result) {
 		  logger.fine("onOpenMessage: $result");
+		  var data = NotificationData.fromJson(result.notification.payload.additionalData);
+			_navigatorKey.currentState.pushNamed(data.type.redirectPage.name);
 	  });
 	  OneSignal.shared.setSubscriptionObserver((changes) {
 	  	if (activeUser == null)

@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/logic/auth/auth_bloc/authentication_bloc.dart';
 import 'package:fokus/model/currency_type.dart';
 import 'package:fokus/model/db/user/user_role.dart';
+import 'package:fokus/model/notification/notification_type.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/widgets/cards/notification_card.dart';
 import 'package:fokus/widgets/segment.dart';

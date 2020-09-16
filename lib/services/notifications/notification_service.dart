@@ -1,16 +1,16 @@
+import 'package:fokus/model/notification/notification_type.dart';
 import 'package:get_it/get_it.dart';
 import 'package:logging/logging.dart';
 import 'package:meta/meta.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
 import 'package:fokus/model/db/user/user.dart';
-import 'package:fokus/model/ui/notifications/notification_text.dart';
-import 'package:fokus/model/ui/notifications/notification_button.dart';
-import 'package:fokus/model/ui/notifications/notification_icon.dart';
+import 'package:fokus/model/notification/notification_text.dart';
+import 'package:fokus/model/notification/notification_button.dart';
+import 'package:fokus/model/notification/notification_icon.dart';
 import 'package:fokus/services/data/data_repository.dart';
 import 'package:fokus/services/notifications/notification_provider.dart';
 import 'package:fokus/services/observers/active_user_observer.dart';
-import 'package:fokus/widgets/cards/notification_card.dart';
 
 abstract class NotificationService implements ActiveUserObserver {
 	NotificationProvider get provider;

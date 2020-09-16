@@ -1,14 +1,15 @@
 import 'package:bson/bson.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 
-import 'package:fokus/model/ui/notifications/notification_text.dart';
-import 'package:fokus/model/ui/notifications/notification_button.dart';
+import 'package:fokus/model/notification/notification_text.dart';
+import 'package:fokus/model/notification/notification_button.dart';
 import 'package:fokus/services/notifications/notification_service.dart';
 import 'package:fokus/services/notifications/onesignal/onesignal_notification_provider.dart';
 import 'package:fokus/utils/theme_config.dart';
-import 'package:fokus/widgets/cards/notification_card.dart';
-import 'package:fokus/model/ui/notifications/notification_channel.dart';
-import 'package:fokus/model/ui/notifications/notification_icon.dart';
+import 'package:fokus/model/notification/notification_data.dart';
+import 'package:fokus/model/notification/notification_type.dart';
+import 'package:fokus/model/notification/notification_channel.dart';
+import 'package:fokus/model/notification/notification_icon.dart';
 
 class OneSignalNotificationService extends NotificationService {
 	final String _androidSmallIconId = 'ic_stat_name';
@@ -23,9 +24,9 @@ class OneSignalNotificationService extends NotificationService {
 		  logNoUserToken(userId);
 		  return;
 	  }
-	  var osButtons = buttons.reversed.map((button) => button.toJson()).toList();
+	  var data = NotificationData(type, buttons);
 	  var notification = OSCreateNotification(playerIds: tokens, heading: title.getTranslations(), content: body.getTranslations(), androidSmallIcon: _androidSmallIconId,
-		  androidAccentColor: AppColors.notificationAccentColor, existingAndroidChannelId: type.channel.id, androidLargeIcon: icon.getPath, additionalData: {'buttons': osButtons});
+		  androidAccentColor: AppColors.notificationAccentColor, existingAndroidChannelId: type.channel.id, androidLargeIcon: icon.getPath, additionalData: data.toJson());
 		return OneSignal.shared.postNotification(notification);
   }
 }

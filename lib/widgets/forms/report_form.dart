@@ -1,13 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:fokus/model/ui/task/ui_task_report.dart';
+import 'package:mongo_dart/mongo_dart.dart' as Mongo;
 
+import 'package:fokus/model/notification/notification_button.dart';
+import 'package:fokus/model/notification/notification_icon.dart';
+import 'package:fokus/model/notification/notification_text.dart';
+import 'package:fokus/model/ui/task/ui_task_report.dart';
 import 'package:fokus/services/app_locales.dart';
+import 'package:fokus/services/notifications/notification_service.dart';
 import 'package:fokus/utils/dialog_utils.dart';
 import 'package:fokus/utils/form_config.dart';
+import 'package:fokus/utils/icon_sets.dart';
 import 'package:fokus/utils/theme_config.dart';
 import 'package:fokus/widgets/cards/report_card.dart';
 import 'package:fokus/widgets/chips/attribute_chip.dart';
+import 'package:fokus/model/notification/notification_type.dart';
 
 class ReportForm extends StatefulWidget {
 	final UITaskReport report;
@@ -93,6 +101,9 @@ class _ReportFormState extends State<ReportForm> {
 			label: Text(AppLocales.of(context).translate('actions.confirm')),
 			onPressed: () {
 				widget.saveCallback(isRejected ? UITaskReportMark.rejected : mark, _commentController.value.text);
+				GetIt.I<NotificationService>().sendNotification(NotificationType.caregiver_finishedTaskUngraded, Mongo.ObjectId.parse('5f0884bbe66ce937cdc9d6ab'),
+					title: NotificationText.appBased('page.notifications.content.caregiver.finishedTask', {'CHILD_NAME': 'Maciek'}), body: NotificationText.userBased('Sprzątanie pokoju'),
+					icon: NotificationIcon(AssetType.avatars, null), buttons: [NotificationButton.rate]);
 				Navigator.of(context).pop();
 			}
 		);

@@ -1,5 +1,3 @@
-import 'package:fokus/widgets/cards/notification_card.dart';
-
 enum NotificationChannel {
 	general, prizes, grades, plans
 }
@@ -24,15 +22,5 @@ extension NotificationChannelInfo on NotificationChannel {
 		NotificationChannel.prizes: '$_key.description.prizes',
 		NotificationChannel.grades: '$_key.description.grades',
 		NotificationChannel.plans: '$_key.description.plans',
-	}[this];
-}
-
-extension NotificationTypeExtension on NotificationType {
-	NotificationChannel get channel => const {
-		NotificationType.caregiver_finishedTaskUngraded: NotificationChannel.grades,
-		NotificationType.child_taskGraded: NotificationChannel.grades,
-		NotificationType.caregiver_receivedReward: NotificationChannel.prizes,
-		NotificationType.child_receivedBadge: NotificationChannel.prizes,
-		NotificationType.caregiver_unfinishedPlan: NotificationChannel.plans,
 	}[this];
 }

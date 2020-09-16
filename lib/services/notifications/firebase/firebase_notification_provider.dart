@@ -2,12 +2,12 @@ import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:fokus/model/ui/notifications/notification_text.dart';
+import 'package:fokus/model/notification/notification_text.dart';
 import 'package:fokus/utils/theme_config.dart';
 import 'package:googleapis/fcm/v1.dart';
 import 'package:fokus_auth/fokus_auth.dart';
 
-import 'package:fokus/model/ui/notifications/notification_channel.dart';
+import 'package:fokus/model/notification/notification_channel.dart';
 import 'package:fokus/services/app_locales.dart';
 
 import '../notification_provider.dart';

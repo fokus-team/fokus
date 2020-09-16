@@ -1,7 +1,5 @@
 import 'dart:convert';
 
-import 'package:fokus/services/app_locales.dart';
-
 import 'notification_text.dart';
 
 enum NotificationButton {

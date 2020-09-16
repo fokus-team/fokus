@@ -17,48 +17,48 @@ class _NotificationsPageState extends State<NotificationsPage> {
 
   var _caregiverNotificationsMock = [
     NotificationCard(
-        childName: "Aleksandrittobuonaserra",
-        notificationType: NotificationType.caregiver_receivedReward,
-        dateTime: DateTime.now(),
-        subtitle: "1 godzina gry na konsoli",
-        graphic: 10
+      childName: "Aleksandrittobuonaserra",
+      notificationType: NotificationType.caregiver_receivedReward,
+      dateTime: DateTime.now(),
+      subtitle: "1 godzina gry na konsoli",
+      graphic: 10
     ),
     NotificationCard(
-        childName: "Gosia",
-        notificationType: NotificationType.caregiver_finishedTaskUngraded,
-        dateTime: DateTime.now(),
-        subtitle: "Sprzątanie pokoju",
-        graphic: 20
+      childName: "Gosia",
+      notificationType: NotificationType.caregiver_finishedTaskUngraded,
+      dateTime: DateTime.now(),
+      subtitle: "Sprzątanie pokoju",
+      graphic: 20
     ),
     NotificationCard(
-        childName: "Gosia",
-        notificationType: NotificationType.caregiver_finishedTaskGraded,
-        dateTime: DateTime.now(),
-        subtitle: "Spakowanie plecaka",
-        graphic: 20
+      childName: "Gosia",
+      notificationType: NotificationType.caregiver_finishedTaskGraded,
+      dateTime: DateTime.now(),
+      subtitle: "Spakowanie plecaka",
+      graphic: 20
     ),
     NotificationCard(
-        childName: "Maciek",
-        notificationType: NotificationType.caregiver_unfinishedPlan,
-        dateTime: DateTime.now(),
-        subtitle: "Bardzo długie sprzątanie pokoju, oj jakie długie niepotrzebnie, taki plan był no co zrobisz",
-        graphic: 0
+      childName: "Maciek",
+      notificationType: NotificationType.caregiver_unfinishedPlan,
+      dateTime: DateTime.now(),
+      subtitle: "Bardzo długie sprzątanie pokoju, oj jakie długie niepotrzebnie, taki plan był no co zrobisz",
+      graphic: 0
     )
   ];
 
   var _childNotificationsMock = [
     NotificationCard(
-        notificationType: NotificationType.child_taskGraded,
-        dateTime: DateTime.now(),
-        subtitle: "Spakowanie plecaka",
-        currencyType: CurrencyType.amethyst,
-        currencyValue: 30
+      notificationType: NotificationType.child_taskGraded,
+      dateTime: DateTime.now(),
+      subtitle: "Spakowanie plecaka",
+      graphic: CurrencyType.amethyst.index,
+      currencyValue: 30
     ),
     NotificationCard(
-        notificationType: NotificationType.child_receivedBadge,
-        dateTime: DateTime.now(),
-        subtitle: "Król pakowania plecaka",
-        graphic: 0
+      notificationType: NotificationType.child_receivedBadge,
+      dateTime: DateTime.now(),
+      subtitle: "Król pakowania plecaka",
+      graphic: 0
     )
   ];
 	

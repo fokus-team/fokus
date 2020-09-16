@@ -29,6 +29,7 @@ class ItemCard extends StatelessWidget {
 	final String title;
 	final String subtitle;
 	final Widget icon;
+	final Icon rightIcon;
 	final AssetType graphicType;
 	final int graphic;
 	final double graphicHeight;
@@ -64,29 +65,23 @@ class ItemCard extends StatelessWidget {
 		this.onTapped,
 		this.isActive = true,
 		this.textMaxLines = 3,
+		this.rightIcon,
 		this.activeProgressBarColor = AppColors.childBackgroundColor
 	}) : assert(graphic != null ? graphicType != null : true);
 	
 	Widget headerImage() {
-		switch(graphicType) {
-			case AssetType.avatars:
-				return AppAvatar(graphic, size: graphicHeight, color: childAvatars[graphic].color, checked: graphicShowCheckmark);
-			break;
-			case AssetType.rewards:
-				return SvgPicture.asset(graphicType.getPath(graphic), height: graphicHeight);
-			break;
-			case AssetType.badges:
-				return Badge(
-					showBadge: graphicShowCheckmark ?? false,
-					badgeColor: Colors.green,
-					badgeContent: Icon(Icons.check, color: Colors.white, size: 16.0),
-					child: SvgPicture.asset(graphicType.getPath(graphic), height: graphicHeight)
-				);
-			break;
-			default:
-				return Image.asset('assets/image/sunflower_logo.png', height: graphicHeight);
-			break;
-		}
+		if (graphicType == AssetType.avatars)
+			return AppAvatar(graphic, size: graphicHeight, color: childAvatars[graphic].color, checked: graphicShowCheckmark);
+		else if (graphicType == AssetType.badges)
+			return Badge(
+				showBadge: graphicShowCheckmark ?? false,
+				badgeColor: Colors.green,
+				badgeContent: Icon(Icons.check, color: Colors.white, size: 16.0),
+				child: SvgPicture.asset(graphicType.getPath(graphic), height: graphicHeight)
+			);
+		else if (graphicType == AssetType.rewards || graphicType == AssetType.currencies)
+			return SvgPicture.asset(graphicType.getPath(graphic), height: graphicHeight);
+		return Image.asset('assets/image/sunflower_logo.png', height: graphicHeight);
 	}
 
 	// Card's shape and interaction
@@ -169,20 +164,7 @@ class ItemCard extends StatelessWidget {
 						child: Column(
 							crossAxisAlignment: CrossAxisAlignment.start,
 							children: <Widget>[
-								Text(
-									title, 
-									style: Theme.of(context).textTheme.headline3,
-									overflow: TextOverflow.ellipsis,
-									maxLines: textMaxLines
-								),
-								if(subtitle != null)
-									Text(
-										subtitle, 
-										style: Theme.of(context).textTheme.subtitle2,
-										overflow: TextOverflow.ellipsis,
-										maxLines: textMaxLines,
-										softWrap: false,
-									),
+								...buildTextSection(context),
 								if(chips != null && chips.isNotEmpty)
 									Padding(
 										padding: EdgeInsets.only(top: 8.0),
@@ -195,9 +177,33 @@ class ItemCard extends StatelessWidget {
 							],
 						)
 					)
-				)
+				),
+				if (rightIcon != null)
+					Padding(
+						padding: EdgeInsets.all(6.0),
+						child: rightIcon
+					)
 			]
 		);
+	}
+
+	List<Widget> buildTextSection(BuildContext context) {
+		return [
+			Text(
+				title,
+				style: Theme.of(context).textTheme.headline3,
+				overflow: TextOverflow.ellipsis,
+				maxLines: textMaxLines
+			),
+			if(subtitle != null)
+				Text(
+					subtitle,
+					style: Theme.of(context).textTheme.subtitle2,
+					overflow: TextOverflow.ellipsis,
+					maxLines: textMaxLines,
+					softWrap: false,
+				),
+		];
 	}
 
 	// Bottom progress bar

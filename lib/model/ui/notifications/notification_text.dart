@@ -7,10 +7,10 @@ class NotificationText {
 	final String key;
 	final Map<String, String> arguments;
 
-	NotificationText._({this.hardcoded, this.key, this.arguments});
+	const NotificationText._({this.hardcoded, this.key, this.arguments});
 
-  NotificationText.appBased(String key, [Map<String, String> arguments]) : this._(key: key, arguments: arguments);
-	NotificationText.userBased(String text) : this._(hardcoded: text);
+  const NotificationText.appBased(String key, [Map<String, String> arguments]) : this._(key: key, arguments: arguments);
+	const NotificationText.userBased(String text) : this._(hardcoded: text);
 
 	String translate() => hardcoded != null ? hardcoded : AppLocales.instance.translate(key, arguments);
 

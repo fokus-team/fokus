@@ -29,7 +29,6 @@ extension NotificationChannelInfo on NotificationChannel {
 
 extension NotificationTypeExtension on NotificationType {
 	NotificationChannel get channel => const {
-		NotificationType.caregiver_finishedTaskGraded: NotificationChannel.grades,
 		NotificationType.caregiver_finishedTaskUngraded: NotificationChannel.grades,
 		NotificationType.child_taskGraded: NotificationChannel.grades,
 		NotificationType.caregiver_receivedReward: NotificationChannel.prizes,

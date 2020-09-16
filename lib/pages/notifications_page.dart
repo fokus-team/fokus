@@ -31,13 +31,6 @@ class _NotificationsPageState extends State<NotificationsPage> {
       graphic: 20
     ),
     NotificationCard(
-      childName: "Gosia",
-      notificationType: NotificationType.caregiver_finishedTaskGraded,
-      dateTime: DateTime.now(),
-      subtitle: "Spakowanie plecaka",
-      graphic: 20
-    ),
-    NotificationCard(
       childName: "Maciek",
       notificationType: NotificationType.caregiver_unfinishedPlan,
       dateTime: DateTime.now(),

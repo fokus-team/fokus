@@ -39,13 +39,13 @@ class NotificationCard extends ItemCard {
 	  graphicHeight: ItemCard.defaultImageHeight * 0.7,
     rightIcon: notificationType.icon,
     chips: [
-	    if (notificationType == NotificationType.caregiver_finishedTaskUngraded)
+	    if (notificationType == NotificationType.taskFinished)
 		    AttributeChip.withIcon(
 			    content: AppLocales.instance.translate("$_pageKey.caregiver.gradeTask"),
 			    color: Colors.red,
 			    icon: Icons.assignment
 		    )
-	    else if (notificationType == NotificationType.child_taskGraded)
+	    else if (notificationType == NotificationType.taskGraded)
 		    AttributeChip.withIcon(
 			    content: currencyValue.toString(),
 			    color: AppColors.currencyColor[CurrencyType.values[graphic]],

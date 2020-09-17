@@ -18,13 +18,13 @@ class OneSignalNotificationService extends NotificationService {
 
   @override
   Future sendNotification(NotificationType type, ObjectId userId, {NotificationText title,
-	    NotificationText body, NotificationIcon icon, List<NotificationButton> buttons = const []}) async {
+	    NotificationText body, ObjectId subject, NotificationIcon icon, List<NotificationButton> buttons = const []}) async {
 	  var tokens = await getUserTokens(userId);
 	  if (tokens == null || tokens.isEmpty) {
 		  logNoUserToken(userId);
 		  return;
 	  }
-	  var data = NotificationData(type, buttons);
+	  var data = NotificationData(type, buttons: buttons, subject: subject);
 	  var osButtons = buttons.map((button) => OSActionButton(id: button.action, text: button.action)).toList();
 	  var notification = OSCreateNotification(playerIds: tokens, heading: title.getTranslations(), content: body.getTranslations(),
 			androidSmallIcon: _androidSmallIconId, androidAccentColor: AppColors.notificationAccentColor, existingAndroidChannelId: type.channel.id,

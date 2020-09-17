@@ -36,7 +36,13 @@ class OneSignalNotificationProvider extends NotificationProvider {
 	  OneSignal.shared.setNotificationOpenedHandler((OSNotificationOpenedResult result) {
 		  logger.fine("onOpenMessage: $result");
 		  var data = NotificationData.fromJson(result.notification.payload.additionalData);
-			_navigatorKey.currentState.pushNamed(data.type.redirectPage.name);
+		  dynamic arguments = data.subject;
+			if (data.type.redirectPage == AppPage.caregiverChildDashboard) {
+				arguments = {'tab': data.type == NotificationType.rewardBought ? 1 : 0};
+				if (data.subject != null)
+					arguments['id'] = data.subject;
+			}
+			_navigatorKey.currentState.pushNamed(data.type.redirectPage.name, arguments: arguments);
 	  });
 	  OneSignal.shared.setSubscriptionObserver((changes) {
 	  	if (activeUser == null)

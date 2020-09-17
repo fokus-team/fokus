@@ -101,7 +101,7 @@ class _ReportFormState extends State<ReportForm> {
 			label: Text(AppLocales.of(context).translate('actions.confirm')),
 			onPressed: () {
 				widget.saveCallback(isRejected ? UITaskReportMark.rejected : mark, _commentController.value.text);
-				GetIt.I<NotificationService>().sendNotification(NotificationType.caregiver_finishedTaskUngraded, Mongo.ObjectId.parse('5f0884bbe66ce937cdc9d6ab'),
+				GetIt.I<NotificationService>().sendNotification(NotificationType.taskFinished, Mongo.ObjectId.parse('5f0884bbe66ce937cdc9d6ab'),
 					title: NotificationText.appBased('page.notifications.content.caregiver.finishedTask', {'CHILD_NAME': 'Maciek'}), body: NotificationText.userBased('Sprzątanie pokoju'),
 					icon: NotificationIcon(AssetType.avatars, null), buttons: [NotificationButton.rate]);
 				Navigator.of(context).pop();

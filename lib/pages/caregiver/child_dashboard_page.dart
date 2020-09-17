@@ -21,15 +21,21 @@ import 'package:fokus/widgets/buttons/popup_menu_list.dart';
 import 'package:smart_select/smart_select.dart';
 
 class CaregiverChildDashboardPage extends StatefulWidget {
+	final int _currentIndex;
+
+  CaregiverChildDashboardPage(Object args) : _currentIndex = (args as Map<String, dynamic>)['tab'];
+
   @override
   _CaregiverChildDashboardPageState createState() =>
-      new _CaregiverChildDashboardPageState();
+      new _CaregiverChildDashboardPageState(_currentIndex);
 }
 
 class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPage> with TickerProviderStateMixin {
 	static const String _pageKey = 'page.caregiverSection.childDashboard';
 	TabController _tabController;
-	int _currentIndex = 0;
+	int _currentIndex;
+
+	_CaregiverChildDashboardPageState(this._currentIndex);
 
 	final double customBottomBarHeight = 40.0;
 	final Duration bottomBarAnimationDuration = Duration(milliseconds: 400);
@@ -53,7 +59,7 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(vsync: this, length: 3);
+    _tabController = TabController(initialIndex: _currentIndex, vsync: this, length: 3);
     _tabController.animation
       ..addListener(() {
         setState(() {

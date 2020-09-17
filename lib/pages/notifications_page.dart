@@ -19,21 +19,21 @@ class _NotificationsPageState extends State<NotificationsPage> {
   var _caregiverNotificationsMock = [
     NotificationCard(
       childName: "Aleksandrittobuonaserra",
-      notificationType: NotificationType.caregiver_receivedReward,
+      notificationType: NotificationType.rewardBought,
       dateTime: DateTime.now(),
       subtitle: "1 godzina gry na konsoli",
       graphic: 10
     ),
     NotificationCard(
       childName: "Gosia",
-      notificationType: NotificationType.caregiver_finishedTaskUngraded,
+      notificationType: NotificationType.taskFinished,
       dateTime: DateTime.now(),
       subtitle: "Sprzątanie pokoju",
       graphic: 20
     ),
     NotificationCard(
       childName: "Maciek",
-      notificationType: NotificationType.caregiver_unfinishedPlan,
+      notificationType: NotificationType.planUnfinished,
       dateTime: DateTime.now(),
       subtitle: "Bardzo długie sprzątanie pokoju, oj jakie długie niepotrzebnie, taki plan był no co zrobisz",
       graphic: 0
@@ -42,14 +42,14 @@ class _NotificationsPageState extends State<NotificationsPage> {
 
   var _childNotificationsMock = [
     NotificationCard(
-      notificationType: NotificationType.child_taskGraded,
+      notificationType: NotificationType.taskGraded,
       dateTime: DateTime.now(),
       subtitle: "Spakowanie plecaka",
       graphic: CurrencyType.amethyst.index,
       currencyValue: 30
     ),
     NotificationCard(
-      notificationType: NotificationType.child_receivedBadge,
+      notificationType: NotificationType.badgeAwarded,
       dateTime: DateTime.now(),
       subtitle: "Król pakowania plecaka",
       graphic: 0

@@ -25,8 +25,10 @@ class OneSignalNotificationService extends NotificationService {
 		  return;
 	  }
 	  var data = NotificationData(type, buttons);
-	  var notification = OSCreateNotification(playerIds: tokens, heading: title.getTranslations(), content: body.getTranslations(), androidSmallIcon: _androidSmallIconId,
-		  androidAccentColor: AppColors.notificationAccentColor, existingAndroidChannelId: type.channel.id, androidLargeIcon: icon.getPath, additionalData: data.toJson());
+	  var osButtons = buttons.map((button) => OSActionButton(id: button.action, text: button.action)).toList();
+	  var notification = OSCreateNotification(playerIds: tokens, heading: title.getTranslations(), content: body.getTranslations(),
+			androidSmallIcon: _androidSmallIconId, androidAccentColor: AppColors.notificationAccentColor, existingAndroidChannelId: type.channel.id,
+			  androidLargeIcon: icon.getPath, buttons: osButtons, additionalData: data.toJson());
 		return OneSignal.shared.postNotification(notification);
   }
 }

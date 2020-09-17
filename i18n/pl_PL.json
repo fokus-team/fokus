@@ -294,7 +294,17 @@
 					"limitedReward": "Limit {REWARD_LIMIT, plural, offset:0 one {jednej nagrody} other {# nagród}} na dziecko",
 					"1LeveledBadge": "Odznaka przyznawana jednorazowo",
 					"3LeveledBadge": "Odznaka 3 poziomowa",
-					"5LeveledBadge": "Odznaka 5 poziomowa"
+					"5LeveledBadge": "Odznaka 5 poziomowa",
+					"removeRewardTitle": "Usuń nagrodę",
+					"removeRewardText": "Na pewno chcesz usunąć tą nagrodę?",
+					"removeBadgeTitle": "Usuń odznakę",
+					"removeBadgeText": "Na pewno chcesz usunąć tą odznakę?",
+					"rewardAddedText": "Dodano nagrodę",
+					"badgeAddedText": "Dodano odznakę",
+					"rewardUpdatedText": "Zmodifikowano nagrodę",
+					"badgeUpdatedText": "Zmodifikowano odznakę",
+					"rewardRemovedText": "Usunięto nagrodę",
+					"badgeRemovedText": "Usunięto odznakę"
 				}
 			},
 			"rewardForm": {

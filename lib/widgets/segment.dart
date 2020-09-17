@@ -81,7 +81,7 @@ class Segment extends StatelessWidget {
 					AppHero(
 						title: AppLocales.of(context).translate(noElementsMessage),
 						icon: noElementsIcon ?? Icons.local_florist,
-						actionWidget: noElementsAction
+						actionWidget: Padding(padding: EdgeInsets.only(bottom: 16.0), child: noElementsAction),
 					)
 			]
 		);

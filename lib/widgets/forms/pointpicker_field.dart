@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fokus/model/currency_type.dart';
 import 'package:fokus/model/ui/ui_button.dart';
 import 'package:fokus/model/ui/gamification/ui_currency.dart';
 import 'package:fokus/services/app_locales.dart';
@@ -103,8 +104,8 @@ class _PointPickerFieldState extends State<PointPickerField> {
 											Padding(
 												padding: EdgeInsets.only(left: 10.0, top: 4.0),
 												child: CircleAvatar(
-													child: SvgPicture.asset(currencySvgPath(state.value.type), width: 28, fit: BoxFit.cover),
-													backgroundColor: AppColors.currencyColor[state.value.type].withAlpha(50)
+													child: SvgPicture.asset(currencySvgPath(state.value != null ? state.value.type : CurrencyType.diamond), width: 28, fit: BoxFit.cover),
+													backgroundColor: AppColors.currencyColor[state.value != null ? state.value.type : CurrencyType.diamond].withAlpha(50)
 												)
 											),
 											(widget.loading) ?

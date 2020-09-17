@@ -34,7 +34,11 @@ class MongoDbProvider {
 
 	Future<ObjectId> insert(Collection collection, Map<String, dynamic> document) => _execute(() {
 		document['_id'] ??= ObjectId();
-		return _execute(() => _client.collection(collection.name).insert(document)).then((_) => document['_id']);
+		return _execute(() => _client.collection(collection.name) .insert(document)).then((_) => document['_id']);
+	});
+
+	Future remove(Collection collection, ObjectId id) => _execute(() {
+		return _execute(() => _client.collection(collection.name).remove(where.eq('_id', id)));
 	});
 
 	Future<List<ObjectId>> insertMany(Collection collection, List<Map<String, dynamic>> documents) => _execute(() {

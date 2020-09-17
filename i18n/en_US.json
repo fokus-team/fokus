@@ -294,7 +294,17 @@
 					"limitedReward": "Limited {REWARD_LIMIT, plural, offset:0 one {one reward} other {# rewards}} per child",
 					"1LeveledBadge": "One-time badge",
 					"3LeveledBadge": "3-leveled badge",
-					"5LeveledBadge": "5-leveled badge"
+					"5LeveledBadge": "5-leveled badge",
+					"removeRewardTitle": "Remove reward",
+					"removeRewardText": "Are you sure you want to remove this reward?",
+					"removeBadgeTitle": "Remove badge",
+					"removeBadgeText": "Are you sure you want to remove this badge?",
+					"rewardAddedText": "Reward was added",
+					"badgeAddedText": "Badge was added",
+					"rewardUpdatedText": "Reward has been updated",
+					"badgeUpdatedText": "Badge has been updated",
+					"rewardRemovedText": "Reward has been removed",
+					"badgeRemovedText": "Badge has been removed"
 				}
 			},
 			"rewardForm": {

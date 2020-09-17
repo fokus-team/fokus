@@ -54,6 +54,7 @@ dependencies:
     table_calendar: ^2.2.3
     carousel_slider: ^2.2.1
     flutter_rating_bar: ^3.0.1+1
+    flushbar: ^1.10.4
 
 dependency_overrides:
     bson:

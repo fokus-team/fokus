@@ -6,6 +6,7 @@ import 'package:get_it/get_it.dart';
 import 'package:fokus/logic/reloadable/reloadable_cubit.dart';
 import 'package:fokus/model/ui/user/ui_user.dart';
 import 'package:fokus/services/data/data_repository.dart';
+import 'package:mongo_dart/mongo_dart.dart';
 
 class CaregiverAwardsCubit extends ReloadableCubit {
 	final ActiveUserFunction _activeUser;
@@ -14,7 +15,7 @@ class CaregiverAwardsCubit extends ReloadableCubit {
   CaregiverAwardsCubit(this._activeUser, pageRoute) : super(pageRoute);
 
   @override
-	doLoadData() async {
+	void doLoadData() async {
     var user = _activeUser();
     var rewards = await _dataRepository.getRewards(caregiverId: user.id);
 		
@@ -23,6 +24,11 @@ class CaregiverAwardsCubit extends ReloadableCubit {
 			(user as UICaregiver).badges
 		));
   }
+
+	void removeReward(ObjectId id) async {
+		await _dataRepository.removeReward(id).then((value) => doLoadData());
+	}
+	
 }
 
 class CaregiverAwardsLoadSuccess extends DataLoadSuccess {

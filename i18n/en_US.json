@@ -60,15 +60,16 @@
 			},
 			"content": {
 				"caregiver": {
-					"receivedReward": "{CHILD_NAME} received the reward",
-					"finishedTask": "{CHILD_NAME} finished the task",
-					"unfinishedPlan": "{CHILD_NAME} didn't finish the plan",
+					"rewardBought": "{CHILD_NAME} received the reward",
+					"taskFinished": "{CHILD_NAME} finished the task",
+					"planUnfinished": "{CHILD_NAME} didn't finish the plan",
 					"gradeTask": "Grade task",
 					"graded": "Graded"
 				},
 				"child": {
-					"taskGraded": "You received points for a task!",
-					"receivedBadge": "You received a badge!"
+					"pointsReceived": "You received points for a task!",
+					"pointsReceivedWithCount": "You received {POINTS, plural, offset:0, one {# point} other {# points}} for a task!",
+					"badgeAwarded": "You received a badge!"
 				}
 			}
 		},

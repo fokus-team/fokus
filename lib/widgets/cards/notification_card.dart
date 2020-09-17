@@ -15,11 +15,10 @@ import 'package:fokus/widgets/cards/item_card.dart';
 
 import 'package:intl/intl.dart';
 
-const String _pageKey = "page.notifications.content";
-
-
 
 class NotificationCard extends ItemCard {
+	static const String _pageKey = "page.notifications.content";
+
   final DateTime dateTime;
 
   NotificationCard({
@@ -32,7 +31,7 @@ class NotificationCard extends ItemCard {
     AssetType graphicType,
     int graphic
   }) : super(
-    title: AppLocales.instance.translate("$_pageKey.${notificationType.title}", {'CHILD_NAME' : childName}),
+    title: AppLocales.instance.translate("${notificationType.title}", {'CHILD_NAME' : childName}),
     subtitle: subtitle,
     graphicType: graphicType ?? notificationType.graphicType,
     graphic: graphic,
@@ -45,7 +44,7 @@ class NotificationCard extends ItemCard {
 			    color: Colors.red,
 			    icon: Icons.assignment
 		    )
-	    else if (notificationType == NotificationType.taskGraded)
+	    else if (notificationType == NotificationType.pointsReceived)
 		    AttributeChip.withIcon(
 			    content: currencyValue.toString(),
 			    color: AppColors.currencyColor[CurrencyType.values[graphic]],

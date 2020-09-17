@@ -42,7 +42,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
 
   var _childNotificationsMock = [
     NotificationCard(
-      notificationType: NotificationType.taskGraded,
+      notificationType: NotificationType.pointsReceived,
       dateTime: DateTime.now(),
       subtitle: "Spakowanie plecaka",
       graphic: CurrencyType.amethyst.index,

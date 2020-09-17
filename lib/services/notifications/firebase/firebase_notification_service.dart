@@ -1,5 +1,7 @@
 import 'package:bson/bson.dart';
+import 'package:fokus/model/currency_type.dart';
 import 'package:fokus/model/notification/notification_type.dart';
+import 'package:fokus/model/ui/gamification/ui_points.dart';
 import 'package:googleapis/fcm/v1.dart';
 
 import 'package:fokus/services/notifications/firebase/firebase_notification_provider.dart';
@@ -13,6 +15,17 @@ class FirebaseNotificationService extends NotificationService {
 	@override
 	FirebaseNotificationProvider provider = FirebaseNotificationProvider();
 	static final String _projectId = 'projects/fokus-application';
+
+	@override
+	Future sendPlanUnfinishedNotification(ObjectId planId, String planName, ObjectId caregiverId, int avatar) => throw UnimplementedError();
+	@override
+	Future sendRewardBoughtNotification(String rewardName, ObjectId caregiverId, int avatar) => throw UnimplementedError();
+	@override
+	Future sendTaskFinishedNotification(ObjectId taskId, String taskName, ObjectId caregiverId, int avatar) => throw UnimplementedError();
+	@override
+	Future sendPointsReceivedNotification(CurrencyType currencyType, int quantity, String taskName, ObjectId childId) => throw UnimplementedError();
+	@override
+	Future sendBadgeAwardedNotification(String badgeName, int badgeIcon, ObjectId childId) => throw UnimplementedError();
 
   @override
   Future sendNotification(NotificationType type, ObjectId userId, {NotificationText title,

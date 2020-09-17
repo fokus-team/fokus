@@ -1,4 +1,6 @@
+import 'package:fokus/model/currency_type.dart';
 import 'package:fokus/model/notification/notification_type.dart';
+import 'package:fokus/model/ui/gamification/ui_points.dart';
 import 'package:get_it/get_it.dart';
 import 'package:logging/logging.dart';
 import 'package:meta/meta.dart';
@@ -22,12 +24,17 @@ abstract class NotificationService implements ActiveUserObserver {
 	Future sendNotification(NotificationType type, ObjectId user, {NotificationText title,
 		NotificationText body, NotificationIcon icon, List<NotificationButton> buttons = const []});
 
-	//Future sendTaskCompletedNotification(ObjectId caregiver);
+	Future sendRewardBoughtNotification(String rewardName, ObjectId caregiverId, int avatar);
+	Future sendTaskFinishedNotification(ObjectId taskId, String taskName, ObjectId caregiverId, int avatar);
+	Future sendPlanUnfinishedNotification(ObjectId planId, String planName, ObjectId caregiverId, int avatar);
+
+	Future sendPointsReceivedNotification(CurrencyType currencyType, int quantity, String taskName, ObjectId childId);
+	Future sendBadgeAwardedNotification(String badgeName, int badgeIcon, ObjectId childId);
 
 	@protected
 	Future<List<String>> getUserTokens(ObjectId userId) async => (await dataRepository.getUser(id: userId, fields: ['notificationIDs'])).notificationIDs;
 	@protected
-	void logNoUserToken(ObjectId userId) => logger.info('Could not send a notification to user with ID ${userId.toHexString()}, there is no notification ID assigned');
+	void logNoUserToken(ObjectId userId) => logger.info('Could not send a notification, user ${userId.toHexString()} has no notification ID assigned');
 
 	@override
 	void onUserSignIn(User user) => provider.onUserSignIn(user);

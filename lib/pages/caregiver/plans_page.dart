@@ -32,7 +32,8 @@ class _CaregiverPlansPageState extends State<CaregiverPlansPage> {
 							() => Navigator.of(context).pushNamed(AppPage.caregiverCalendar.name), Colors.lightBlue)
 					]),
 					LoadableBlocBuilder<CaregiverPlansCubit>(
-						builder: (context, state) => AppSegments(segments: _buildPanelSegments(state, context))
+						builder: (context, state) => AppSegments(segments: _buildPanelSegments(state, context)),
+						wrapWithExpanded: true,
 					)
 				]
 			),

@@ -52,6 +52,8 @@ import 'package:fokus/utils/theme_config.dart';
 import 'package:fokus/utils/service_injection.dart';
 import 'package:fokus/widgets/page_theme.dart';
 
+import 'model/ui/plan/ui_plan_instance.dart';
+
 void main() {
 	WidgetsFlutterBinding.ensureInitialized();
 	var navigatorKey = GlobalKey<NavigatorState>();
@@ -136,8 +138,8 @@ class FokusApp extends StatelessWidget {
 			AppPage.childAwards.name: (context) => _createPage(ChildAwardsPage(), context),
 			AppPage.childAchievements.name: (context) => _createPage(ChildAchievementsPage(), context),
 			AppPage.caregiverPlanDetails.name: (context) => _createPage(CaregiverPlanDetailsPage(), context, PlanCubit(getParams(context), getRoute(context))),
-			AppPage.childPlanInProgress.name: (context) => _createPage(ChildPlanInProgressPage(), context, PlanInstanceCubit(getParams(context), getRoute(context))),
-			AppPage.childTaskInProgress.name: (context) => _createPage(ChildTaskInProgressPage(), context, TaskInstanceCubit(getParams(context), getActiveUser(context)))
+			AppPage.childPlanInProgress.name: (context) => _createPage(ChildPlanInProgressPage(initialPlanInstance: getParams(context)), context, PlanInstanceCubit((getParams(context) as UIPlanInstance).id, getRoute(context))),
+			AppPage.childTaskInProgress.name: (context) => _createPage(ChildTaskInProgressPage(initialPlanInstance: (getParams(context) as List)[1]), context, TaskInstanceCubit((getParams(context) as List)[0], getActiveUser(context)))
 		};
 	}
 

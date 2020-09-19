@@ -62,6 +62,7 @@ class TaskInstanceCubit extends Cubit<TaskInstanceState> {
 
 		if((taskInstance.duration.length == 0 || (taskInstance.duration.length > 0 && taskInstance.duration.last.to != null)) && (taskInstance.breaks.length == 0 || (taskInstance.duration.length > 0 && taskInstance.breaks.last.to != null))) {
 			if(taskInstance.duration == null) taskInstance.duration = [];
+			if(taskInstance.status.completed) taskInstance.status.completed = false;
 			taskInstance.duration.add(DateSpan(from: TimeDate.now()));
 			updates.add(_dataRepository.updateTaskInstance(taskInstance));
 
@@ -75,12 +76,14 @@ class TaskInstanceCubit extends Cubit<TaskInstanceState> {
 
 		Task task = await _dataRepository.getTask(taskId: taskInstance.taskID);
 		UITaskInstance uiTaskInstance = UITaskInstance.singleFromDBModel(task: taskInstance, name: task.name, description: task.description, points: task.points != null ? UIPoints(quantity: task.points.quantity, title: task.points.name, createdBy: task.points.createdBy, type: task.points.icon) : null);
-		emit(TaskInstanceStateLoadSuccess(uiTaskInstance,  await _getUiPlanInstance(taskInstance.planInstanceID)));
+		if(isInProgress(uiTaskInstance.duration)) emit(TaskInstanceStateProgress(uiTaskInstance,  await _getUiPlanInstance(taskInstance.planInstanceID)));
+		else  emit(TaskInstanceStateBreak(uiTaskInstance,  await _getUiPlanInstance(taskInstance.planInstanceID)));
 	}
 
 	void switchToBreak() async {
 		TaskInstance taskInstance = await _dataRepository.getTaskInstance(taskInstanceId: _taskInstanceId);
 		taskInstance.duration.last.to = TimeDate.now();
+		taskInstance.breaks.add(DateSpan(from: TimeDate.now()));
 		await _dataRepository.updateTaskInstance(taskInstance);
 		Task task = await _dataRepository.getTask(taskId: taskInstance.taskID);
 		UITaskInstance uiTaskInstance = UITaskInstance.singleFromDBModel(task: taskInstance, name: task.name, description: task.description, points: task.points != null ? UIPoints(quantity: task.points.quantity, title: task.points.name, createdBy: task.points.createdBy, type: task.points.icon) : null);
@@ -90,6 +93,7 @@ class TaskInstanceCubit extends Cubit<TaskInstanceState> {
 	void switchToProgress() async {
 		TaskInstance taskInstance = await _dataRepository.getTaskInstance(taskInstanceId: _taskInstanceId);
 		taskInstance.breaks.last.to = TimeDate.now();
+		taskInstance.duration.add(DateSpan(from: TimeDate.now()));
 		await _dataRepository.updateTaskInstance(taskInstance);
 		Task task = await _dataRepository.getTask(taskId: taskInstance.taskID);
 		UITaskInstance uiTaskInstance = UITaskInstance.singleFromDBModel(task: taskInstance, name: task.name, description: task.description, points: task.points != null ? UIPoints(quantity: task.points.quantity, title: task.points.name, createdBy: task.points.createdBy, type: task.points.icon) : null);
@@ -99,27 +103,35 @@ class TaskInstanceCubit extends Cubit<TaskInstanceState> {
 	void markAsDone() async {
 		TaskInstance taskInstance = await _dataRepository.getTaskInstance(taskInstanceId: _taskInstanceId);
 		PlanInstance planInstance = await _dataRepository.getPlanInstance(id: taskInstance.planInstanceID);
-		planInstance.duration.add(DateSpan(to: TimeDate.now()));
-		await _dataRepository.updatePlanInstance(planInstance);
+		planInstance.duration.last.to = TimeDate.now();
+
 		if(taskInstance.duration.last.to == null) taskInstance.duration.last.to = TimeDate.now();
 		else taskInstance.breaks.last.to = TimeDate.now();
 		taskInstance.status.state = TaskState.notEvaluated;
 		taskInstance.status.completed = true;
 		await _dataRepository.updateTaskInstance(taskInstance);
-		emit(TaskInstanceStateDone());
+		if(await _dataRepository.getCompletedTaskCount(planInstance.id) == planInstance.taskInstances.length)
+			planInstance.state = PlanInstanceState.completed;
+		await _dataRepository.updatePlanInstance(planInstance);
+		Task task = await _dataRepository.getTask(taskId: taskInstance.taskID);
+		UITaskInstance uiTaskInstance = UITaskInstance.singleFromDBModel(task: taskInstance, name: task.name, description: task.description, points: task.points != null ? UIPoints(quantity: task.points.quantity, title: task.points.name, createdBy: task.points.createdBy, type: task.points.icon) : null);
+
+		emit(TaskInstanceStateDone(uiTaskInstance, await _getUiPlanInstance(taskInstance.planInstanceID)));
 	}
 
 	void markAsRejected() async {
 		TaskInstance taskInstance = await _dataRepository.getTaskInstance(taskInstanceId: _taskInstanceId);
 		PlanInstance planInstance = await _dataRepository.getPlanInstance(id: taskInstance.planInstanceID);
-		planInstance.duration.add(DateSpan(to: TimeDate.now()));
+		planInstance.duration.last.to = TimeDate.now();
 		await _dataRepository.updatePlanInstance(planInstance);
 		if(taskInstance.duration.last.to == null) taskInstance.duration.last.to = TimeDate.now();
 		else taskInstance.breaks.last.to = TimeDate.now();
 		taskInstance.status.state = TaskState.rejected;
 		taskInstance.status.completed = true;
 		await _dataRepository.updateTaskInstance(taskInstance);
-		emit(TaskInstanceStateRejected());
+		Task task = await _dataRepository.getTask(taskId: taskInstance.taskID);
+		UITaskInstance uiTaskInstance = UITaskInstance.singleFromDBModel(task: taskInstance, name: task.name, description: task.description, points: task.points != null ? UIPoints(quantity: task.points.quantity, title: task.points.name, createdBy: task.points.createdBy, type: task.points.icon) : null);
+		emit(TaskInstanceStateRejected(uiTaskInstance, await _getUiPlanInstance(taskInstance.planInstanceID)));
 	}
 
 	Future<UIPlanInstance> _getUiPlanInstance(ObjectId id) async {

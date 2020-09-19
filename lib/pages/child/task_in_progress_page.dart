@@ -1,32 +1,39 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/logic/task_instance/task_instance_cubit.dart';
 import 'package:fokus/logic/timer/timer_cubit.dart';
-import 'package:fokus/model/ui/task/ui_task_instance.dart';
+import 'package:fokus/model/ui/plan/ui_plan_instance.dart';
 import 'package:fokus/services/app_locales.dart';
+import 'package:fokus/utils/duration_utils.dart';
 import 'package:fokus/utils/theme_config.dart';
 import 'package:fokus/widgets/buttons/double_circular_notched_button.dart';
 import 'package:fokus/widgets/cards/item_card.dart';
 import 'package:fokus/widgets/cards/sliding_card.dart';
 import 'package:fokus/widgets/chips/attribute_chip.dart';
+import 'package:fokus/widgets/general/app_loader.dart';
 import 'package:fokus/widgets/large_timer.dart';
 import 'package:fokus/widgets/task_app_header.dart';
 import 'package:lottie/lottie.dart';
 
-enum TaskInProgressPageState {currentlyCompleting, inBreak, done, rejected}
 
 class ChildTaskInProgressPage extends StatefulWidget {
+	final UIPlanInstance initialPlanInstance;
+
+  const ChildTaskInProgressPage({Key key, @required this.initialPlanInstance}) : super(key: key);
+
   @override
   _ChildTaskInProgressPageState createState() => _ChildTaskInProgressPageState();
 }
 
 class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with TickerProviderStateMixin {
   final String _pageKey = 'page.childSection.taskInProgress';
-  TaskInProgressPageState _state;
 	Animation<Offset> _offsetAnimation;
 	Animation<Offset> _taskListFabAnimation;
 	AnimationController _bottomBarController;
+	bool _isButtonDisabled = false;
 
 	final GlobalKey<SlidingCardState> _breakCard = GlobalKey<SlidingCardState>();
 	final GlobalKey<SlidingCardState> _completingCard = GlobalKey<SlidingCardState>();
@@ -39,28 +46,28 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
   Widget build(BuildContext context) {
 		return BlocBuilder<TaskInstanceCubit, TaskInstanceState>(
 			builder: (context, state) {
+				bool isInitial = false;
 				if(state is TaskInstanceStateInitial) {
 					BlocProvider.of<TaskInstanceCubit>(context).loadTaskInstance();
-					return SizedBox.shrink();
+					isInitial = true;
 				}
-				else if(state is TaskInstanceStateLoadSuccess)
-					state.taskInstance.taskUiType == TaskUIType.currentlyPerformed ? _state = TaskInProgressPageState.currentlyCompleting :
-						_state = TaskInProgressPageState.inBreak;
 				return  Scaffold(
-					appBar: _getHeader(state),
-					body: Padding(
+					appBar: isInitial ? _getHeader(TaskInstanceProvider(null, this.widget.initialPlanInstance)) : _getHeader(state),
+					body: isInitial ? Center(child: AppLoader())
+						: Padding(
 						padding: EdgeInsets.only(bottom: 0.0),
 						child: Stack(
 							children: _getAllCards(state)
 						)
 					),
 					extendBody: true,
-					bottomNavigationBar: _getBottomNavBar(),
+					bottomNavigationBar: isInitial ? SizedBox.shrink() : _getBottomNavBar(),
 					floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-					floatingActionButton: Row(
+					floatingActionButton: isInitial ? SizedBox.shrink()
+						: Row(
 						mainAxisAlignment: MainAxisAlignment.spaceBetween,
 						children: <Widget>[
-							_getFab(true),
+							_getFab(true, state),
 							SlideTransition(
 								position: _taskListFabAnimation,
 								child: FloatingActionButton.extended(
@@ -79,7 +86,7 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 									backgroundColor: AppColors.childTaskColor,
 								),
 							),
-							_getFab(false)
+							_getFab(false, state)
 						],
 					),
 				);
@@ -111,8 +118,7 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 			helpPage: 'plan_info',
 			key: _header,
 			breakPerformingTransition: _breakPerformingTransition,
-			isBreak: false,
-			uiTaskInstance: state.taskInstance
+			state: state
 		);
 	}
 
@@ -138,7 +144,7 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 		);
 	}
 
-  Widget _getFab(bool cancel) {
+  Widget _getFab(bool cancel, state) {
 		return SlideTransition(
 			position: _offsetAnimation,
 			child: Padding(
@@ -147,7 +153,7 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 					child: Icon(
 						cancel ? Icons.close : Icons.check,
 					),
-					onPressed: cancel ? _onRejection : _onCompletion,
+					onPressed: cancel ? () => _onRejection(state) : () => _onCompletion(state),
 					heroTag: cancel ? "fabClose" :  "fabCheck",
 					backgroundColor: cancel ? AppColors.negativeColor : AppColors.positiveColor,
 				),
@@ -163,9 +169,9 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 				content: [
 					_getAnimation('assets/animation/jumping_little_man.json'),
 					_getTitle(state.taskInstance.name, translate: false),
-					_getSubtitle(state.taskInstance.description,alignment: TextAlign.justify, translate: false, topPadding: 8),
+					_getSubtitle(state.taskInstance.description != null ? state.taskInstance.description : AppLocales.of(context).translate('$_pageKey.content.motivate'),alignment: TextAlign.justify, translate: false, topPadding: 8),
 				],
-				showFirst: _state == TaskInProgressPageState.currentlyCompleting,
+				showFirst: state is TaskInstanceStateProgress,
 			),
 			SlidingCard(
 				key: _breakCard,
@@ -175,17 +181,22 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 					_getTitle('$_pageKey.cards.break.title'),
 					Padding(
 						padding: const EdgeInsets.symmetric(horizontal: 8.0),
-						child: BlocProvider<TimerCubit>(
-							create: (_) => TimerCubit(state.taskInstance.elapsedTimePassed)..startTimer(),
+						child: state is TaskInstanceStateBreak ? BlocProvider<TimerCubit>(
+							create: (_) => TimerCubit(() => sumDurations(state.taskInstance.breaks).inSeconds)..startTimer(),
 							child:LargeTimer(
 								textColor: AppColors.lightTextColor,
 								title: '$_pageKey.content.breakTime',
 								align: CrossAxisAlignment.center,
 							),
+						) : LargeTimer(
+							textColor: AppColors.lightTextColor,
+							title: '$_pageKey.content.breakTime',
+							align: CrossAxisAlignment.center,
+							value: sumDurations(state.taskInstance.breaks).inSeconds,
 						),
 					)
 				],
-				showFirst: _state == TaskInProgressPageState.inBreak,
+				showFirst: state is TaskInstanceStateBreak,
 			),
 			SlidingCard(
 				key: _rejectCard,
@@ -268,50 +279,50 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 		));
 	}
 
- void _breakPerformingTransition() {
-  	setState(() {
-  		if(_state == TaskInProgressPageState.currentlyCompleting) {
-  			_completingCard.currentState.closeCard();
-  			_breakCard.currentState.openCard();
-  			_state = TaskInProgressPageState.inBreak;
-  			this._header.currentState.animateButton();
+ void _breakPerformingTransition(state) {
+  	if(!_isButtonDisabled) setState(() {
+  		_isButtonDisabled = true;
+  		if(state is TaskInstanceStateProgress) {
 				BlocProvider.of<TaskInstanceCubit>(context).switchToBreak();
+				_completingCard.currentState.closeCard();
+  			_breakCard.currentState.openCard();
+  			this._header.currentState.animateButton();
 			}
-  		else if(_state == TaskInProgressPageState.inBreak) {
+  		else if(state is TaskInstanceStateBreak) {
+				BlocProvider.of<TaskInstanceCubit>(context).switchToProgress();
 				_breakCard.currentState.closeCard();
 				_completingCard.currentState.openCard();
-				_state = TaskInProgressPageState.currentlyCompleting;
-				BlocProvider.of<TaskInstanceCubit>(context).switchToProgress();
 				this._header.currentState.animateButton();
 			}
+			Timer(Duration(seconds: 2), () {
+				_isButtonDisabled = false;
+			});
   	});
   }
 
-  void _onCompletion() {
-		if(_state != TaskInProgressPageState.rejected && _state != TaskInProgressPageState.done)
+  void _onCompletion(state) {
+		if(state is! TaskInstanceStateRejected && state is! TaskInstanceStateDone)
 			setState(() {
 				BlocProvider.of<TaskInstanceCubit>(context).markAsDone();
-				_closeWidgetsOnFinish();
-				_state = TaskInProgressPageState.done;
+				_closeWidgetsOnFinish(state);
 				_doneCard.currentState.openCard();
 				this._header.currentState.animateSuccess();
 				this._header.currentState.closeButton();
 			});
 	}
 
-	void _onRejection() {
-		if(_state != TaskInProgressPageState.rejected && _state != TaskInProgressPageState.done)
+	void _onRejection(state) {
+		if(state is! TaskInstanceStateRejected && state is! TaskInstanceStateDone)
 			setState(() {
 				BlocProvider.of<TaskInstanceCubit>(context).markAsRejected();
-				_closeWidgetsOnFinish();
-				_state = TaskInProgressPageState.rejected;
+				_closeWidgetsOnFinish(state);
 				_rejectCard.currentState.openCard();
 				this._header.currentState.closeButton();
 			});
 	}
 
-	void _closeWidgetsOnFinish() {
-		if(_state == TaskInProgressPageState.currentlyCompleting)
+	void _closeWidgetsOnFinish(state) {
+		if(state is TaskInstanceStateProgress)
 			_completingCard.currentState.closeCard();
 		else _breakCard.currentState.closeCard();
 		_bottomBarController.forward();

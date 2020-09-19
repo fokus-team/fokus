@@ -19,6 +19,7 @@ class TaskInstanceService {
 			int Function() elapsedTimePassed;
 			if(taskUiTypes[i].inProgress)
 				elapsedTimePassed = () => taskUiTypes[i] == TaskUIType.currentlyPerformed ? sumDurations(taskInstances[i].duration).inSeconds : sumDurations(taskInstances[i].breaks).inSeconds;
+			else elapsedTimePassed = () => 0;
 			uiTaskInstances.add(UITaskInstance.listFromDBModel(task: taskInstances[i], name: task.name, description: task.description, points: task.points != null ? UIPoints(quantity: task.points.quantity, type: task.points.icon, title: task.points.name) : null, type: taskUiTypes[i], elapsedTimePassed: elapsedTimePassed));
 		}
 		return uiTaskInstances;
@@ -43,6 +44,7 @@ class TaskInstanceService {
 			taskStatuses.add(taskStatus);
 			prevTaskStatus = taskStatus;
 		}
+		while(isAnyInProgress && taskStatuses.contains(TaskUIType.available)) taskStatuses[taskStatuses.indexOf(TaskUIType.available)] = TaskUIType.queued;
 		return taskStatuses;
 	}
 

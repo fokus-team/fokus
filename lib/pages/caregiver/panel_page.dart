@@ -34,7 +34,8 @@ class _CaregiverPanelPageState extends State<CaregiverPanelPage> {
 							() => { Navigator.of(context).pushNamed(AppPage.caregiverRatingPage.name) }, Colors.lightBlue)
 					]),
 					LoadableBlocBuilder<CaregiverPanelCubit>(
-						builder: (context, state) => AppSegments(segments: _buildPanelSegments(state))
+						builder: (context, state) => AppSegments(segments: _buildPanelSegments(state)),
+						wrapWithExpanded: true,
 					),
 				]
 			),

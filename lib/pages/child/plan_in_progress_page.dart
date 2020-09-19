@@ -16,37 +16,49 @@ import 'package:fokus/widgets/app_header.dart';
 import 'package:fokus/widgets/chips/attribute_chip.dart';
 import 'package:fokus/widgets/cards/item_card.dart';
 import 'package:fokus/widgets/chips/timer_chip.dart';
+import 'package:fokus/widgets/general/app_loader.dart';
 import 'package:fokus/widgets/loadable_bloc_builder.dart';
 import 'package:fokus/widgets/segment.dart';
 
 class ChildPlanInProgressPage extends StatefulWidget {
+	final UIPlanInstance initialPlanInstance;
+
+  const ChildPlanInProgressPage({Key key, @required this.initialPlanInstance}) : super(key: key);
+
   @override
   _ChildPlanInProgressPageState createState() => new _ChildPlanInProgressPageState();
 }
 
 class _ChildPlanInProgressPageState extends State<ChildPlanInProgressPage> {
 	final String _pageKey = 'page.childSection.planInProgress';
-	final Function(BuildContext, UITaskInstance) navigate = (context, task) => Navigator.of(context).pushNamed(AppPage.childTaskInProgress.name, arguments: task.id);
+	final Function(BuildContext, UITaskInstance, UIPlanInstance) navigate = (context, task, plan) => Navigator.of(context).pushNamed(AppPage.childTaskInProgress.name, arguments: [task.id, plan]);
 
 
 	@override
   Widget build(BuildContext context) {
 		return Scaffold(
 			body: LoadableBlocBuilder<PlanInstanceCubit>(
-				builder: (context, state) => _getView(state)
+				builder: (context, state) => _getView(state),
+				loadingBuilder: (context, state) => _getInitialView(),
 			)
 		);
   }
+
+  Column _getInitialView() {
+		return Column(
+			crossAxisAlignment: CrossAxisAlignment.start,
+			children: [
+				_getHeader(this.widget.initialPlanInstance),
+				Expanded(child: Center(child: AppLoader()))
+			],
+		);
+	}
 
   Column _getView(ChildTasksLoadSuccess state) {
 		return Column(
 			crossAxisAlignment: CrossAxisAlignment.start,
 			children: [
-				AppHeader.widget(
-					title: '$_pageKey.header.title',
-					appHeaderWidget: getCardHeader(state.planInstance),
-					helpPage: 'plan_info'
-				),
+				_getHeader(state.planInstance),
 				AppSegments(segments: _buildPanelSegments(state))
 			],
 		);
@@ -60,13 +72,18 @@ class _ChildPlanInProgressPageState extends State<ChildPlanInProgressPage> {
       _getTasksSegment(
 				tasks: mandatoryTasks,
         title: '$_pageKey.content.toDoTasks',
+				uiPlanInstance: state.planInstance
       ),
 			if(optionalTasks.isNotEmpty)
-      	_getTasksSegment(tasks: optionalTasks, title: '$_pageKey.content.additionalTasks')
+      	_getTasksSegment(
+					tasks: optionalTasks,
+					title: '$_pageKey.content.additionalTasks',
+					uiPlanInstance: state.planInstance
+				)
     ];
   }
 
-  Segment _getTasksSegment({List<UITaskInstance> tasks,String title, String noElementsMessage}) {
+  Segment _getTasksSegment({List<UITaskInstance> tasks,String title, String noElementsMessage, UIPlanInstance uiPlanInstance}) {
     return Segment(
 			title: title,
 			noElementsMessage: '$_pageKey.content.noTasks',
@@ -82,7 +99,7 @@ class _ChildPlanInProgressPageState extends State<ChildPlanInProgressPage> {
 								if (task.timer != null && task.timer > 0) getTimeChip(task),
 								if (task.points != null && task.points.quantity != 0) getCurrencyChip(task)
 							],
-							actionButton:	ItemCardActionButton(color: Colors.teal, icon: Icons.play_arrow, onTapped: () => navigate(context, task)),
+							actionButton:	ItemCardActionButton(color: AppColors.childButtonColor, icon: Icons.play_arrow, onTapped: () => navigate(context, task, uiPlanInstance)),
 						)
 					else if(task.taskUiType == TaskUIType.rejected)
 							ItemCard(
@@ -94,11 +111,11 @@ class _ChildPlanInProgressPageState extends State<ChildPlanInProgressPage> {
 									if (task.timer != null && task.timer > 0) getTimeChip(task),
 									if (task.points != null && task.points.quantity != 0) getCurrencyChip(task)
 								],
-				actionButton:	ItemCardActionButton(color: AppColors.childActionColor, icon: Icons.play_arrow, onTapped: () => navigate(context, task)),
+				actionButton:	ItemCardActionButton(color: AppColors.childButtonColor, icon: Icons.refresh, onTapped: () => navigate(context, task, uiPlanInstance)),
 							)
 					else if(task.taskUiType.inProgress)
 						BlocProvider<TimerCubit>(
-							create: (_) => TimerCubit(task.elapsedTimePassed)..startTimer(),
+							create: (_) => TimerCubit(() => task.taskUiType == TaskUIType.currentlyPerformed ? sumDurations(task.duration).inSeconds : sumDurations(task.breaks).inSeconds)..startTimer(),
 							child:	ItemCard(
 								title: task.name,
 								subtitle: task.description,
@@ -121,7 +138,7 @@ class _ChildPlanInProgressPageState extends State<ChildPlanInProgressPage> {
 											),
 										]
 								],
-								actionButton: ItemCardActionButton(color: AppColors.childActionColor, icon: Icons.launch, onTapped: () => navigate(context, task)),
+								actionButton: ItemCardActionButton(color: AppColors.childActionColor, icon: Icons.launch, onTapped: () => navigate(context, task, uiPlanInstance)),
 							)
 						)
 					else if(task.taskUiType == TaskUIType.queued)
@@ -138,17 +155,31 @@ class _ChildPlanInProgressPageState extends State<ChildPlanInProgressPage> {
 		);
   }
 
+	AppHeader _getHeader(UIPlanInstance planInstance) {
+		return AppHeader.widget(
+			title: '$_pageKey.header.title',
+			appHeaderWidget: getCardHeader(planInstance),
+			helpPage: 'plan_info'
+		);
+	}
+
   Widget getCardHeader(UIPlanInstance _planInstance) {
 		var taskDescriptionKey = 'page.childSection.panel.content.' + (_planInstance.completedTaskCount > 0 ? 'taskProgress' : 'noTaskCompleted');
 		var card = ItemCard(
 			title: _planInstance.name,
 			subtitle: _planInstance.description(context),
 			isActive: _planInstance.state != PlanInstanceState.completed,
+			activeProgressBarColor: AppColors.childActionColor,
 			progressPercentage: _planInstance.state.inProgress ? _planInstance.completedTaskCount.ceilToDouble() / _planInstance.taskCount.ceilToDouble() : null,
 			chips: [
-				if(_planInstance.state == PlanInstanceState.active)
+				if(_planInstance.state.inProgress)
 				...[
-					TimerChip(color: AppColors.childButtonColor),
+					isInProgress(_planInstance.duration) ? TimerChip(color: AppColors.childButtonColor) :
+					AttributeChip.withIcon(
+						icon: Icons.timer,
+						color: Colors.orange,
+						content: formatDuration(sumDurations(_planInstance.duration))
+					),
 					AttributeChip.withIcon(
 						icon: Icons.description,
 						color: Colors.lightGreen,
@@ -162,7 +193,7 @@ class _ChildPlanInProgressPageState extends State<ChildPlanInProgressPage> {
 						content: AppLocales.of(context).translate('$_pageKey.content.tasks', {'NUM_TASKS': _planInstance.taskCount})
 					)
 			]);
-  	if(_planInstance.state == PlanInstanceState.active)
+  	if(isInProgress(_planInstance.duration))
   		return BlocProvider<TimerCubit>(
 				create: (_) => TimerCubit(_planInstance.elapsedActiveTime)..startTimer(),
 				child: card

@@ -9,28 +9,34 @@ class LargeTimer extends StatelessWidget {
 	final Color textColor;
 	final String title;
 	final CrossAxisAlignment align;
+	final int value;
 
-	LargeTimer({this.textColor,  this.title, this.align = CrossAxisAlignment.start});
+	LargeTimer({this.textColor,  this.title, this.align = CrossAxisAlignment.start, this.value});
 
 	@override
 	Widget build(BuildContext context) {
-		return BlocBuilder<TimerCubit, TimerState>(
+		if(value == null) return BlocBuilder<TimerCubit, TimerState>(
 			builder: (context, state) {
-				return Column(
-					mainAxisAlignment: MainAxisAlignment.start,
-					crossAxisAlignment: align,
-					children: [
-						Text(
-							AppLocales.of(context).translate(title),
-							style: Theme.of(context).textTheme.headline3.copyWith(color: textColor),
-						),
-						Text(
-							formatDuration(Duration(seconds: state.value)),
-							style: Theme.of(context).textTheme.headline1.copyWith(color: textColor),
-						)
-					],
-				);
+				return timeUI(context, state: state);
 			},
+		);
+		return timeUI(context, value: value);
+	}
+
+	Widget timeUI(BuildContext context, {state, int value}) {
+		return Column(
+			mainAxisAlignment: MainAxisAlignment.start,
+			crossAxisAlignment: align,
+			children: [
+				Text(
+					AppLocales.of(context).translate(title),
+					style: Theme.of(context).textTheme.headline3.copyWith(color: textColor),
+				),
+				Text(
+					formatDuration(Duration(seconds: value != null ? value : state.value)),
+					style: Theme.of(context).textTheme.headline1.copyWith(color: textColor),
+				)
+			],
 		);
 	}
 }

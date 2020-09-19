@@ -18,8 +18,8 @@ mixin PlanDbRepository implements DbRepository {
 		return dbClient.queryOneTyped(Collection.plan, query, (json) => Plan.fromJson(json));
 	}
 
-	Future<List<Plan>> getPlans({ObjectId caregiverId, ObjectId childId, bool active, bool oneDayOnly = false, List<String> fields}) {
-		var query = _buildPlanQuery(caregiverId: caregiverId, childId: childId, active: active);
+	Future<List<Plan>> getPlans({List<ObjectId> ids, ObjectId caregiverId, ObjectId childId, bool active, bool oneDayOnly = false, List<String> fields}) {
+		var query = _buildPlanQuery(caregiverId: caregiverId, childId: childId, active: active, ids: ids);
 		if (oneDayOnly)
 			query.and(where.ne('repeatability.untilCompleted', true));
 		if (fields != null)
@@ -87,11 +87,13 @@ mixin PlanDbRepository implements DbRepository {
 	Future updatePlan(Plan plan) => dbClient.update(Collection.plan, _buildPlanQuery(id: plan.id), plan.toJson(), multiUpdate: false);
 	Future createPlan(Plan plan) => dbClient.insert(Collection.plan, plan.toJson());
 
-	SelectorBuilder _buildPlanQuery({ObjectId id, ObjectId caregiverId, ObjectId childId, ObjectId planId,
+	SelectorBuilder _buildPlanQuery({ObjectId id, List<ObjectId> ids, ObjectId caregiverId, ObjectId childId, ObjectId planId,
 			PlanInstanceState state, Date date, DateSpan<Date> between, bool active, List<ObjectId> childIDs}) {
 		SelectorBuilder query = where;
 		if (id != null)
 			query.eq('_id', id);
+		if (ids != null)
+			query.oneFrom('_id', ids);
 		if (childId != null)
 			query.eq('assignedTo', childId);
 		if (childIDs != null)

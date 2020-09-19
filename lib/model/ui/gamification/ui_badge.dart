@@ -1,3 +1,4 @@
+import 'package:fokus/model/db/gamification/badge.dart';
 
 enum UIBadgeMaxLevel { one, three, five }
 
@@ -21,12 +22,21 @@ class UIBadge {
 	String description;
 	UIBadgeMaxLevel maxLevel;
 	int icon;
+	DateTime date;
 
 	UIBadge({
 		this.name,
 		this.description,
 		this.maxLevel = UIBadgeMaxLevel.one,
-		this.icon = 0
+		this.icon = 0,
+		this.date
 	});
+	UIBadge.fromDBModel(Badge badge) : this(
+		name: badge.name,
+		description:
+		badge.description,
+		icon: badge.icon,
+		maxLevel: badge.maxLevel == 5 ? UIBadgeMaxLevel.five : (badge.maxLevel == 3 ? UIBadgeMaxLevel.three : UIBadgeMaxLevel.one)
+	);
 
 }

@@ -72,8 +72,8 @@ class ItemCard extends StatelessWidget {
 			case GraphicAssetType.childAvatars:
 				return AppAvatar(graphic, size: graphicHeight, color: childAvatars[graphic].color, checked: graphicShowCheckmark);
 			break;
-			case GraphicAssetType.awardsIcons:
-				return SvgPicture.asset(awardIconSvgPath(graphic), height: graphicHeight);
+			case GraphicAssetType.rewardsIcons:
+				return SvgPicture.asset(rewardIconSvgPath(graphic), height: graphicHeight);
 			break;
 			case GraphicAssetType.badgeIcons:
 				return Badge(
@@ -227,9 +227,10 @@ class ItemCard extends StatelessWidget {
 			if(actionButton.disabled) {
 				return FlatButton(
 					onPressed: null,
+					disabledColor: inactiveProgressBar,
 					shape: RoundedRectangleBorder(borderRadius: BorderRadius.horizontal(right: Radius.circular(AppBoxProperties.roundedCornersRadius))),
 					child: Center(
-						child: Icon(actionButton.icon, color: actionButton.color, size: actionButton.size),
+						child: Icon(actionButton.icon, color: Colors.white, size: actionButton.size),
 					)
 				);
 			} else {

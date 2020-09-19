@@ -38,9 +38,9 @@ class AppNavigationBar extends StatefulWidget {
 			title: 'navigation.child.plans',
 		),
 		AppBottomNavigationItem(
-			navigationRoute: AppPage.childAwards,
+			navigationRoute: AppPage.childRewards,
 			icon: Icon(Icons.stars),
-			title: 'navigation.child.awards',
+			title: 'navigation.child.rewards',
 		),
 		AppBottomNavigationItem(
 			navigationRoute: AppPage.childAchievements,

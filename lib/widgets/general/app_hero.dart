@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fokus/utils/theme_config.dart';
 
 class AppHero extends StatelessWidget {
 	final String title;
@@ -21,7 +22,7 @@ class AppHero extends StatelessWidget {
 
 		return Center(
 			child: Padding(
-				padding: EdgeInsets.only(top: dense ? 0.0 : 40.0),
+				padding: EdgeInsets.symmetric(horizontal: AppBoxProperties.screenEdgePadding*3).copyWith(top: dense ? 0.0 : 40.0),
 				child: Column(
 					children: <Widget>[
 						if(icon != null)
@@ -38,7 +39,8 @@ class AppHero extends StatelessWidget {
 							style: TextStyle(
 								fontSize: 16.0,
 								color: heroColor
-							)
+							),
+							textAlign: TextAlign.center
 						),
 						if(actionWidget != null)
 							Padding(

@@ -20,9 +20,9 @@ void initializeServices(RouteObserver<PageRoute> routeObserver) {
 	GetIt.I.registerSingleton<AppConfigRepository>(AppConfigRepository(AppSharedPreferencesProvider())..initialize());
 	GetIt.I.registerSingleton<DataRepository>(DbDataRepository());
 	GetIt.I.registerSingleton<PlanRepeatabilityService>(PlanRepeatabilityService());
+	GetIt.I.registerSingleton<ActiveTaskService>(ActiveTaskService());
 	GetIt.I.registerSingleton<PlanKeeperService>(PlanKeeperService());
 	GetIt.I.registerSingleton<TaskInstanceService>(TaskInstanceService());
 	GetIt.I.registerSingleton<TaskKeeperService>(TaskKeeperService());
 	GetIt.I.registerSingleton<RouteObserver<PageRoute>>(routeObserver);
-	GetIt.I.registerSingleton<ActiveTaskService>(ActiveTaskService());
 }

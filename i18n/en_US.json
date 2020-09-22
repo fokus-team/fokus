@@ -443,7 +443,7 @@
 					"inProgress": "In progress",
 					"noPlans": "No plans",
 					"completedPlans": "Completed plans",
-					"futurePlans": "Check future plans",
+					"futurePlans": "Plans calendar",
 					"tasks": "{NUM_TASKS, plural, offset:0  one {# task} other {# tasks}}",
 					"noTaskCompleted": "{NUM_ALL_TASKS, plural, offset:0 one {# task} other {# tasks}} to complete",
 					"taskProgress": "{NUM_TASKS} out of {NUM_ALL_TASKS} tasks completed"

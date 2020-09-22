@@ -22,9 +22,10 @@ class ActiveTaskService {
 		prefs.setBool(key, false);
 	}
 
-	static void removeTaskState() async {
+	void removeTaskState() async {
 		final prefs = await SharedPreferences.getInstance();
-		prefs.remove(key);
+		if(prefs.containsKey(key))
+			prefs.remove(key);
 	}
 
 	static Future<bool> getActiveTaskState() async {
@@ -36,6 +37,10 @@ class ActiveTaskService {
 	Future<bool> isAnyTaskActive({List<PlanInstance> planInstances, ObjectId childId}) async {
 		bool isActive = await getActiveTaskState();
 		if(isActive != null) return isActive;
+		return _setTaskState(planInstances: planInstances, childId: childId);
+	}
+
+	Future<bool> _setTaskState({List<PlanInstance> planInstances, ObjectId childId}) async {
 		if(planInstances == null) {
 			planInstances = await _dataRepository.getPlanInstances(childIDs: [childId]);
 		}

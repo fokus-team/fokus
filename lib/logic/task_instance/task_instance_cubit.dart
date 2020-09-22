@@ -13,6 +13,7 @@ import 'package:fokus/model/ui/gamification/ui_points.dart';
 import 'package:fokus/model/ui/plan/ui_plan_instance.dart';
 import 'package:fokus/model/ui/task/ui_task_instance.dart';
 import 'package:fokus/model/ui/user/ui_user.dart';
+import 'package:fokus/services/active_task_service.dart';
 import 'package:fokus/services/data/data_repository.dart';
 import 'package:fokus/services/plan_repeatability_service.dart';
 import 'package:fokus/utils/duration_utils.dart';
@@ -28,6 +29,7 @@ class TaskInstanceCubit extends Cubit<TaskInstanceState> {
 
 	TaskInstanceCubit(this._taskInstanceId, this._activeUser) : super(TaskInstanceStateInitial());
 	final PlanRepeatabilityService _repeatabilityService = GetIt.I<PlanRepeatabilityService>();
+	final ActiveTaskService _activeTaskService = GetIt.I<ActiveTaskService>();
 
 
 
@@ -76,6 +78,7 @@ class TaskInstanceCubit extends Cubit<TaskInstanceState> {
 
 		Task task = await _dataRepository.getTask(taskId: taskInstance.taskID);
 		UITaskInstance uiTaskInstance = UITaskInstance.singleFromDBModel(task: taskInstance, name: task.name, description: task.description, points: task.points != null ? UIPoints(quantity: task.points.quantity, title: task.points.name, createdBy: task.points.createdBy, type: task.points.icon) : null);
+		_activeTaskService.setTaskStateActive();
 		if(isInProgress(uiTaskInstance.duration)) emit(TaskInstanceStateProgress(uiTaskInstance,  await _getUiPlanInstance(taskInstance.planInstanceID)));
 		else  emit(TaskInstanceStateBreak(uiTaskInstance,  await _getUiPlanInstance(taskInstance.planInstanceID)));
 	}
@@ -110,12 +113,20 @@ class TaskInstanceCubit extends Cubit<TaskInstanceState> {
 		taskInstance.status.state = TaskState.notEvaluated;
 		taskInstance.status.completed = true;
 		await _dataRepository.updateTaskInstance(taskInstance);
-		if(await _dataRepository.getCompletedTaskCount(planInstance.id) == planInstance.taskInstances.length)
-			planInstance.state = PlanInstanceState.completed;
+		if(await _dataRepository.getCompletedTaskCount(planInstance.id) == planInstance.taskInstances.length) {
+			List<TaskInstance> allTaskInstances = await _dataRepository.getTaskInstances(planInstanceId: planInstance.id);
+			bool isCompleted = true;
+			for(var task in allTaskInstances) {
+				if(task.status.state == TaskState.rejected) isCompleted = false;
+			}
+			if(isCompleted) planInstance.state = PlanInstanceState.completed;
+		}
+
 		await _dataRepository.updatePlanInstance(planInstance);
 		Task task = await _dataRepository.getTask(taskId: taskInstance.taskID);
 		UITaskInstance uiTaskInstance = UITaskInstance.singleFromDBModel(task: taskInstance, name: task.name, description: task.description, points: task.points != null ? UIPoints(quantity: task.points.quantity, title: task.points.name, createdBy: task.points.createdBy, type: task.points.icon) : null);
 
+		_activeTaskService.setTaskStateInactive();
 		emit(TaskInstanceStateDone(uiTaskInstance, await _getUiPlanInstance(taskInstance.planInstanceID)));
 	}
 
@@ -131,6 +142,8 @@ class TaskInstanceCubit extends Cubit<TaskInstanceState> {
 		await _dataRepository.updateTaskInstance(taskInstance);
 		Task task = await _dataRepository.getTask(taskId: taskInstance.taskID);
 		UITaskInstance uiTaskInstance = UITaskInstance.singleFromDBModel(task: taskInstance, name: task.name, description: task.description, points: task.points != null ? UIPoints(quantity: task.points.quantity, title: task.points.name, createdBy: task.points.createdBy, type: task.points.icon) : null);
+
+		_activeTaskService.setTaskStateInactive();
 		emit(TaskInstanceStateRejected(uiTaskInstance, await _getUiPlanInstance(taskInstance.planInstanceID)));
 	}
 
@@ -142,6 +155,5 @@ class TaskInstanceCubit extends Cubit<TaskInstanceState> {
 		var elapsedTime = () => sumDurations(planInstance.duration).inSeconds;
 		var completedTasks = await _dataRepository.getCompletedTaskCount(planInstance.id);
 		return UIPlanInstance.fromDBModel(planInstance, plan.name, completedTasks, elapsedTime, getDescription(plan, planInstance.date));
-
 	}
 }

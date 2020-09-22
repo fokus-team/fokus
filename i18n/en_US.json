@@ -492,7 +492,9 @@
 					"breakButton": "Break",
 					"resumeButton": "Resume",
 					"pointsToGet": "To earn:",
-					"motivate": "Complete tasks!"
+					"motivate": "Complete tasks!",
+					"completionTime": "Completion time:",
+					"latency": "Latency:"
 				},
 				"cards" : {
 					"break": {

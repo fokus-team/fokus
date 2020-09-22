@@ -492,7 +492,9 @@
 					"breakButton": "Przerwa",
 					"resumeButton": "Wznów",
 					"pointsToGet": "Do zdobycia:",
-					"motivate": "Wykonuj zadania!"
+					"motivate": "Wykonuj zadania!",
+					"completionTime": "Czas wykonywania:",
+					"latency": "Spóźnienie:"
 				},
 				"cards" : {
 					"break": {

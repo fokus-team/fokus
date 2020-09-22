@@ -72,18 +72,20 @@ class _ChildPlanInProgressPageState extends State<ChildPlanInProgressPage> {
       _getTasksSegment(
 				tasks: mandatoryTasks,
         title: '$_pageKey.content.toDoTasks',
-				uiPlanInstance: state.planInstance
+				uiPlanInstance: state.planInstance,
+				isOtherPlanInProgress: state.isOtherPlanInProgress
       ),
 			if(optionalTasks.isNotEmpty)
       	_getTasksSegment(
 					tasks: optionalTasks,
 					title: '$_pageKey.content.additionalTasks',
-					uiPlanInstance: state.planInstance
+					uiPlanInstance: state.planInstance,
+					isOtherPlanInProgress: state.isOtherPlanInProgress
 				)
     ];
   }
 
-  Segment _getTasksSegment({List<UITaskInstance> tasks,String title, String noElementsMessage, UIPlanInstance uiPlanInstance}) {
+  Segment _getTasksSegment({List<UITaskInstance> tasks,String title, String noElementsMessage, UIPlanInstance uiPlanInstance, bool isOtherPlanInProgress}) {
     return Segment(
 			title: title,
 			noElementsMessage: '$_pageKey.content.noTasks',
@@ -91,16 +93,26 @@ class _ChildPlanInProgressPageState extends State<ChildPlanInProgressPage> {
 				for(var task in tasks)
 					if(task.taskUiType == TaskUIType.completed)
 						getCompletedTaskCard(task)
-					else if(task.taskUiType == TaskUIType.available)
+					else if(task.taskUiType.canBeStarted && isOtherPlanInProgress)
 						ItemCard(
 							title: task.name,
 							subtitle: task.description,
-							chips:<Widget>[
+							chips: <Widget>[
 								if (task.timer != null && task.timer > 0) getTimeChip(task),
 								if (task.points != null && task.points.quantity != 0) getCurrencyChip(task)
 							],
-							actionButton:	ItemCardActionButton(color: AppColors.childButtonColor, icon: Icons.play_arrow, onTapped: () => navigate(context, task, uiPlanInstance)),
+							actionButton: ItemCardActionButton(color: Colors.grey, icon: Icons.chevron_left),
 						)
+					else if(task.taskUiType == TaskUIType.available)
+							ItemCard(
+								title: task.name,
+								subtitle: task.description,
+								chips:<Widget>[
+									if (task.timer != null && task.timer > 0) getTimeChip(task),
+									if (task.points != null && task.points.quantity != 0) getCurrencyChip(task)
+								],
+								actionButton:	ItemCardActionButton(color: AppColors.childButtonColor, icon: Icons.play_arrow, onTapped: () => navigate(context, task, uiPlanInstance)),
+							)
 					else if(task.taskUiType == TaskUIType.rejected)
 							ItemCard(
 								title: task.name,

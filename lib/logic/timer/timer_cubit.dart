@@ -11,10 +11,12 @@ class TimerCubit extends Cubit<TimerState> {
 	final Ticker _ticker;
 	int Function() _currentValue;
 	CountDirection _direction;
+	final bool shouldCountUpOnFinish;
+	void Function() _onFinish;
 
 	StreamSubscription<int> _tickerSubscription;
 
-	TimerCubit(this._currentValue, [this._direction = CountDirection.up]) : _ticker = Ticker(), super(TimerInitial(_currentValue()));
+	TimerCubit(this._currentValue, [this._direction = CountDirection.up,  this.shouldCountUpOnFinish = false, this._onFinish]) : _ticker = Ticker(), super(TimerInitial(_currentValue()));
 
 	void startTimer() {
 		int value = _currentValue();
@@ -45,8 +47,15 @@ class TimerCubit extends Cubit<TimerState> {
 		if (value != endValue)
 	    emit(TimerInProgress(value));
 		else {
-			emit(TimerComplete(endValue));
-			_tickerSubscription.cancel();
+			if(_onFinish != null) _onFinish();
+			if(shouldCountUpOnFinish) {
+				resetTimer(currentValue: () => 0, direction: CountDirection.up);
+				startTimer();
+			}
+			else {
+				emit(TimerComplete(endValue));
+				_tickerSubscription.cancel();
+			}
 		}
 	}
 

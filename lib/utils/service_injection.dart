@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:fokus/services/active_task_service.dart';
 import 'package:fokus/services/task_instance_service.dart';
 import 'package:fokus/services/task_keeper_service.dart';
 import 'package:get_it/get_it.dart';
@@ -23,4 +24,5 @@ void initializeServices(RouteObserver<PageRoute> routeObserver) {
 	GetIt.I.registerSingleton<TaskInstanceService>(TaskInstanceService());
 	GetIt.I.registerSingleton<TaskKeeperService>(TaskKeeperService());
 	GetIt.I.registerSingleton<RouteObserver<PageRoute>>(routeObserver);
+	GetIt.I.registerSingleton<ActiveTaskService>(ActiveTaskService());
 }

@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:developer';
+
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,6 +11,8 @@ import 'package:fokus/services/ticker.dart';
 import 'package:fokus/utils/duration_utils.dart';
 import 'package:fokus/utils/theme_config.dart';
 import 'package:fokus/widgets/app_header.dart';
+import 'package:vibration/vibration.dart';
+
 
 import 'chips/attribute_chip.dart';
 import 'large_timer.dart';
@@ -38,6 +43,10 @@ class TaskAppHeaderState extends State<TaskAppHeader> with TickerProviderStateMi
 	Animation<Offset> _offsetAnimation;
 	AnimationController _slideController;
 	final String _pageKey = 'page.childSection.taskInProgress';
+	bool _shouldUpdate = false;
+	TimerCubit _timerCompletionCubit;
+	List<int> vibrationPattern = [0, 500, 100, 250, 50, 1000];
+	Timer _updateTimer;
 
   @override
   Widget build(BuildContext context) {
@@ -72,23 +81,7 @@ class TaskAppHeaderState extends State<TaskAppHeader> with TickerProviderStateMi
 				child: Row(
 					mainAxisAlignment: MainAxisAlignment.spaceBetween,
 					children: [
-						Align(
-							alignment: Alignment.center,
-							child: this.widget.state is TaskInstanceStateProgress ? BlocProvider<TimerCubit>(
-								create: this.widget.state.taskInstance.timer != null && this.widget.state.taskInstance.timer*60 - sumDurations(this.widget.state.taskInstance.duration).inSeconds > 0 ? (_) => TimerCubit(() => this.widget.state.taskInstance.timer*60 - sumDurations(this.widget.state.taskInstance.duration).inSeconds, CountDirection.down)..startTimer() :
-													(_) => TimerCubit(() => sumDurations(this.widget.state.taskInstance.duration).inSeconds)..startTimer(),
-								child: LargeTimer(
-									textColor: AppColors.darkTextColor,
-									title: '$_pageKey.content.timeLeft',
-									align: alignment,
-								),
-							) : LargeTimer(
-								textColor: AppColors.darkTextColor,
-								title: '$_pageKey.content.timeLeft',
-								align: alignment,
-								value: this.widget.state.taskInstance.timer != null && this.widget.state.taskInstance.timer*60 - sumDurations(this.widget.state.taskInstance.duration).inSeconds > 0 ?  this.widget.state.taskInstance.timer*60 - sumDurations(this.widget.state.taskInstance.duration).inSeconds : sumDurations(this.widget.state.taskInstance.duration).inSeconds,
-							),
-						),
+						_getTimerSection(),
 						SlideTransition(
 							position: _offsetAnimation,
 							child: _getButtonWidget()
@@ -108,16 +101,22 @@ class TaskAppHeaderState extends State<TaskAppHeader> with TickerProviderStateMi
 					decoration: AppBoxProperties.elevatedContainer.copyWith(borderRadius: BorderRadius.vertical(top: Radius.circular(4.0))),
 					child: Padding(
 						padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
-						child: Row(
+						child: this.widget.state.taskInstance.points != null ? Row(
 							mainAxisAlignment: MainAxisAlignment.spaceBetween,
 							children: [
-								Text(AppLocales.of(context).translate(this.widget.state.taskInstance.points != null ? '$_pageKey.content.pointsToGet' : '$_pageKey.content.motivate')),
-								this.widget.state.taskInstance.points != null ? AttributeChip.withCurrency(
+								Text(AppLocales.of(context).translate('$_pageKey.content.pointsToGet')),
+								AttributeChip.withCurrency(
 									content: "+" + this.widget.state.taskInstance.points.quantity.toString(),
 									currencyType: this.widget.state.taskInstance.points.type
-								) : SizedBox.shrink()
+								)
 							]
-						)
+						) :
+						Row(
+							mainAxisAlignment: MainAxisAlignment.center,
+						  children: [
+						    Text(AppLocales.of(context).translate('$_pageKey.content.motivate')),
+						  ],
+						),
 					)
 				)
 			)
@@ -152,6 +151,11 @@ class TaskAppHeaderState extends State<TaskAppHeader> with TickerProviderStateMi
 	}
 
 	Widget _getButtonWidget() {
+		if(isBreakNow == null) setState(() {
+			isBreakNow = this.widget.state is TaskInstanceStateBreak;
+			_buttonController = AnimationController(duration: Duration(milliseconds: 450), vsync: this);
+			if(isBreakNow) _buttonController.forward();
+		});
 		return RaisedButton(
 			color: !isBreakNow ? AppColors.childBreakColor : AppColors.childTaskColor,
 			padding: EdgeInsets.zero,
@@ -182,15 +186,65 @@ class TaskAppHeaderState extends State<TaskAppHeader> with TickerProviderStateMi
 					)
 				)
 			),
-			onPressed: () => this.widget.breakPerformingTransition(this.widget.state),
+			onPressed: () => {
+				this.widget.breakPerformingTransition(this.widget.state),
+				this.widget.state is TaskInstanceStateProgress ? _timerCompletionCubit.pauseTimer() : _timerCompletionCubit.resumeTimer()
+			},
 			elevation: 4.0
 		);
 	}
 
+	Widget _getTimerSection() {
+		return Align(
+			alignment: Alignment.center,
+			child: BlocProvider<TimerCubit>(
+				create: _getTimerFun(),
+				child: LargeTimer(
+					textColor: AppColors.darkTextColor,
+					title: _shouldUpdate ? _getTimerTitle() : _getTimerTitle(),
+					align: alignment,
+				),
+			)
+		);
+	}
+
+	void _timeUpdate(Duration duration) {
+		_updateTimer = Timer(duration, () {
+			setState(() {
+			  _shouldUpdate = true;
+			});
+		});
+	}
+
+	CreateBloc _getTimerFun() {
+  	if(_timerCompletionCubit == null) {
+			if(this.widget.state.taskInstance.timer != null) {
+				if(this.widget.state.taskInstance.timer*60 - sumDurations(this.widget.state.taskInstance.duration).inSeconds > 0) {
+					int time = this.widget.state.taskInstance.timer*60 - sumDurations(this.widget.state.taskInstance.duration).inSeconds;
+					_timeUpdate(Duration(seconds: time));
+					_timerCompletionCubit = TimerCubit(() => time, CountDirection.down, true, _onTimerFinish);
+				}
+				else _timerCompletionCubit = TimerCubit(() => sumDurations(this.widget.state.taskInstance.duration).inSeconds - this.widget.state.taskInstance.timer*60, CountDirection.up);
+			}
+			else _timerCompletionCubit = TimerCubit(() => sumDurations(this.widget.state.taskInstance.duration).inSeconds);
+		}
+  	if(this.widget.state is TaskInstanceStateProgress)
+			return (_) => _timerCompletionCubit..startTimer();
+  	else return (_) => _timerCompletionCubit..startTimer()..pauseTimer();
+	}
+
+
+	String _getTimerTitle() {
+		if(this.widget.state.taskInstance.timer != null) {
+			if(this.widget.state.taskInstance.timer*60 - sumDurations(this.widget.state.taskInstance.duration).inSeconds > 0)
+				return '$_pageKey.content.timeLeft';
+			else return '$_pageKey.content.latency';
+		}
+		else return '$_pageKey.content.completionTime';
+	}
+
   @override
   void initState() {
-  	isBreakNow = this.widget.state is TaskInstanceStateBreak;
-		_buttonController = AnimationController(duration: Duration(milliseconds: 450), vsync: this);
 		_confetti = ConfettiController(
 			duration: Duration(seconds: 10),
 		);
@@ -220,15 +274,30 @@ class TaskAppHeaderState extends State<TaskAppHeader> with TickerProviderStateMi
 		_confetti.play();
 	}
 
-	void closeButton() {
+	void onFinish() {
+  	_timerCompletionCubit.pauseTimer();
 		_slideController.forward();
 	}
 
 	@override
   void dispose() {
-  	_confetti.dispose();
+		_updateTimer.cancel();
+		_confetti.dispose();
   	_buttonController.dispose();
   	_slideController.dispose();
     super.dispose();
   }
+
+  void _onTimerFinish() async {
+		try {
+		  if (await Vibration.hasVibrator()) {
+		  	if (await Vibration.hasAmplitudeControl()) {
+		  		Vibration.vibrate(amplitude: 1024, pattern: vibrationPattern);
+		  	}
+		  	else Vibration.vibrate(pattern: vibrationPattern);
+		  }
+		} on Exception catch (e) {
+			log(e.toString());
+		}
+	}
 }

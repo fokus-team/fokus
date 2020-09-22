@@ -12,6 +12,7 @@ enum TaskUIType {completed, available, inBreak, currentlyPerformed, rejected, qu
 extension TaskUITypeGroups on TaskUIType {
 	bool get inProgress => this == TaskUIType.inBreak || this == TaskUIType.currentlyPerformed;
 	bool get wasInProgress => this == TaskUIType.rejected || this == TaskUIType.completed;
+	bool get canBeStarted => this == TaskUIType.available || this == TaskUIType.rejected;
 }
 
 class UITaskInstance extends UITaskBase {

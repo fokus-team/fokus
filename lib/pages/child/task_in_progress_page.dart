@@ -34,6 +34,7 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 	Animation<Offset> _taskListFabAnimation;
 	AnimationController _bottomBarController;
 	bool _isButtonDisabled = false;
+	TimerCubit _timerBreakCubit;
 
 	final GlobalKey<SlidingCardState> _breakCard = GlobalKey<SlidingCardState>();
 	final GlobalKey<SlidingCardState> _completingCard = GlobalKey<SlidingCardState>();
@@ -169,7 +170,7 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 				content: [
 					_getAnimation('assets/animation/jumping_little_man.json'),
 					_getTitle(state.taskInstance.name, translate: false),
-					_getSubtitle(state.taskInstance.description != null ? state.taskInstance.description : AppLocales.of(context).translate('$_pageKey.content.motivate'),alignment: TextAlign.justify, translate: false, topPadding: 8),
+					if(state.taskInstance.description != null) _getSubtitle(state.taskInstance.description ,alignment: TextAlign.justify, translate: false, topPadding: 8),
 				],
 				showFirst: state is TaskInstanceStateProgress,
 			),
@@ -181,19 +182,14 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 					_getTitle('$_pageKey.cards.break.title'),
 					Padding(
 						padding: const EdgeInsets.symmetric(horizontal: 8.0),
-						child: state is TaskInstanceStateBreak ? BlocProvider<TimerCubit>(
-							create: (_) => TimerCubit(() => sumDurations(state.taskInstance.breaks).inSeconds)..startTimer(),
+						child: BlocProvider<TimerCubit>(
+							create: _getTimerBreakCubit(state),
 							child:LargeTimer(
 								textColor: AppColors.lightTextColor,
 								title: '$_pageKey.content.breakTime',
 								align: CrossAxisAlignment.center,
 							),
-						) : LargeTimer(
-							textColor: AppColors.lightTextColor,
-							title: '$_pageKey.content.breakTime',
-							align: CrossAxisAlignment.center,
-							value: sumDurations(state.taskInstance.breaks).inSeconds,
-						),
+						)
 					)
 				],
 				showFirst: state is TaskInstanceStateBreak,
@@ -235,6 +231,14 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 			height: 100,
 			child: Lottie.asset(data)
 		);
+	}
+
+	CreateBloc _getTimerBreakCubit(state) {
+		if(_timerBreakCubit == null) {
+			_timerBreakCubit = TimerCubit(() => sumDurations(state.taskInstance.breaks).inSeconds);
+		}
+		if(state is TaskInstanceStateProgress) return (_) => _timerBreakCubit..startTimer()..pauseTimer();
+		else return (_) => _timerBreakCubit..startTimer();
 	}
 
 	Widget _getTitle(String title, {bool translate = true}) {
@@ -287,12 +291,14 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 				_completingCard.currentState.closeCard();
   			_breakCard.currentState.openCard();
   			this._header.currentState.animateButton();
+  			_timerBreakCubit.resumeTimer();
 			}
   		else if(state is TaskInstanceStateBreak) {
 				BlocProvider.of<TaskInstanceCubit>(context).switchToProgress();
 				_breakCard.currentState.closeCard();
 				_completingCard.currentState.openCard();
 				this._header.currentState.animateButton();
+				_timerBreakCubit.pauseTimer();
 			}
 			Timer(Duration(seconds: 2), () {
 				_isButtonDisabled = false;
@@ -307,7 +313,7 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 				_closeWidgetsOnFinish(state);
 				_doneCard.currentState.openCard();
 				this._header.currentState.animateSuccess();
-				this._header.currentState.closeButton();
+				this._header.currentState.onFinish();
 			});
 	}
 
@@ -317,7 +323,7 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 				BlocProvider.of<TaskInstanceCubit>(context).markAsRejected();
 				_closeWidgetsOnFinish(state);
 				_rejectCard.currentState.openCard();
-				this._header.currentState.closeButton();
+				this._header.currentState.onFinish();
 			});
 	}
 

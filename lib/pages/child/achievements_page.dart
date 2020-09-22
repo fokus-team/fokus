@@ -27,7 +27,7 @@ class _ChildAchievementsPageState extends State<ChildAchievementsPage> {
 		UIBadge(
 			name: 'Dobry planista',
 			icon: 0,
-			date: TimeDate(2020, 9, 9),
+			//date: TimeDate(2020, 9, 9),
 			description: 'Odznaczyłeś się wysokimi umiejętnościami planowania własnego czasu pracy.'
 		),
 		UIBadge(

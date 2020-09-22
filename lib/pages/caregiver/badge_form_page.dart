@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:fokus/model/ui/app_page.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fokus/logic/badge_form/badge_form_cubit.dart';
+import 'package:fokus/model/ui/form/badge_form_model.dart';
 import 'package:fokus/model/ui/gamification/ui_badge.dart';
 import 'package:fokus/utils/dialog_utils.dart';
 import 'package:fokus/utils/form_config.dart';
+import 'package:fokus/utils/snackbar_utils.dart';
 import 'package:fokus/widgets/buttons/help_icon_button.dart';
 import 'package:fokus/widgets/forms/iconpicker_field.dart';
 import 'package:smart_select/smart_select.dart';
@@ -18,11 +21,10 @@ class CaregiverBadgeFormPage extends StatefulWidget {
 
 class _CaregiverBadgeFormPageState extends State<CaregiverBadgeFormPage> {
 	static const String _pageKey = 'page.caregiverSection.badgeForm';
-	AppFormType formType = AppFormType.create; // only create for now
 	GlobalKey<FormState> badgeFormKey;
 	bool isDataChanged = false;
 
-	UIBadge badge;
+	BadgeFormModel badge = BadgeFormModel();
 
 	TextEditingController _titleController = TextEditingController();
 	TextEditingController _descriptionController = TextEditingController();
@@ -30,7 +32,6 @@ class _CaregiverBadgeFormPageState extends State<CaregiverBadgeFormPage> {
 	@override
   void initState() {
 		badgeFormKey = GlobalKey<FormState>();
-		badge = UIBadge();
 		_titleController.text = '';
 		_descriptionController.text = '';
     super.initState();
@@ -45,48 +46,51 @@ class _CaregiverBadgeFormPageState extends State<CaregiverBadgeFormPage> {
 
   @override
   Widget build(BuildContext context) {
-		return WillPopScope(
-			onWillPop: () => showExitFormDialog(context, true, isDataChanged),
-			child: Scaffold(
-				appBar: AppBar(
-					backgroundColor: AppColors.formColor,
-					title: Text(AppLocales.of(context).translate(
-						formType == AppFormType.create ? '$_pageKey.addBadgeTitle' : '$_pageKey.editBadgeTitle'
-					)),
-					actions: <Widget>[
-						HelpIconButton(helpPage: 'badge_creation')
-					]
-				),
-				body: Stack(
-					children: [
-						Positioned.fill(
-							bottom: AppBoxProperties.standardBottomNavHeight,
-							child: Form(
-								key: badgeFormKey,
-								child: Material(
-									child: buildFormFields(context)
-								)
-							)
+		return BlocConsumer<BadgeFormCubit, BadgeFormState>(
+			listener: (context, state) {
+				if (state is BadgeFormSubmissionSuccess) {
+					Navigator.of(context).pop();
+					showSuccessSnackbar(context, 'page.caregiverSection.awards.content.badgeAddedText');
+				}
+			},
+	    builder: (context, state) {
+				return WillPopScope(
+					onWillPop: () => showExitFormDialog(context, true, isDataChanged),
+					child: Scaffold(
+						appBar: AppBar(
+							backgroundColor: AppColors.formColor,
+							title: Text(AppLocales.of(context).translate('$_pageKey.addBadgeTitle')),
+							actions: <Widget>[
+								HelpIconButton(helpPage: 'badge_creation')
+							]
 						),
-						Positioned.fill(
-							top: null,
-							child: buildBottomNavigation(context)
+						body: Stack(
+							children: [
+								Positioned.fill(
+									bottom: AppBoxProperties.standardBottomNavHeight,
+									child: Form(
+										key: badgeFormKey,
+										child: Material(
+											child: buildFormFields(context)
+										)
+									)
+								),
+								Positioned.fill(
+									top: null,
+									child: buildBottomNavigation(context)
+								)
+							]
 						)
-					]
-				)
-			)
+					)
+				);
+			}
 		);
 	}
 
 	void saveBadge(BuildContext context) {
 		if(badgeFormKey.currentState.validate()) {
-			// TODO adding/saving logic
-			Navigator.of(context).pop();
+			context.bloc<BadgeFormCubit>().submitBadgeForm(badge);
 		}
-	}
-
-	void removeBadge(BuildContext context) {
-		// TODO remove logic
 	}
 
 	Widget buildBottomNavigation(BuildContext context) {
@@ -98,18 +102,11 @@ class _CaregiverBadgeFormPageState extends State<CaregiverBadgeFormPage> {
 				mainAxisAlignment: MainAxisAlignment.spaceBetween,
 				crossAxisAlignment: CrossAxisAlignment.end,
 				children: <Widget>[
-					(formType == AppFormType.edit) ?
-						FlatButton(
-							onPressed: () => removeBadge(context),
-							child: Text(
-								AppLocales.of(context).translate('$_pageKey.removeBadgeButton'),
-								style: Theme.of(context).textTheme.button.copyWith(color: Colors.red)
-							)
-						) : SizedBox.shrink(),
+					SizedBox.shrink(),
 					FlatButton(
 						onPressed: () => saveBadge(context),
 						child: Text(
-							AppLocales.of(context).translate(formType == AppFormType.create ? '$_pageKey.addBadgeButton' : '$_pageKey.saveBadgeButton' ),
+							AppLocales.of(context).translate('$_pageKey.addBadgeButton'),
 							style: Theme.of(context).textTheme.button.copyWith(color: AppColors.mainBackgroundColor)
 						)
 					)
@@ -124,7 +121,6 @@ class _CaregiverBadgeFormPageState extends State<CaregiverBadgeFormPage> {
 			children: <Widget>[
 				buildNameField(context),
 				buildDescriptionField(context),
-				buildLevelField(context),
 				buildIconField(context)
 			]
 		);
@@ -153,7 +149,7 @@ class _CaregiverBadgeFormPageState extends State<CaregiverBadgeFormPage> {
 	
 	Widget buildDescriptionField(BuildContext context) {
 		return Padding(
-			padding: EdgeInsets.only(top: 5.0, bottom: 6.0, left: 20.0, right: 20.0),
+			padding: EdgeInsets.only(top: 5.0, bottom: 0, left: 20.0, right: 20.0),
 			child: TextFormField(
 				controller: _descriptionController,
 				decoration: AppFormProperties.longTextFieldDecoration(Icons.description).copyWith(
@@ -170,27 +166,6 @@ class _CaregiverBadgeFormPageState extends State<CaregiverBadgeFormPage> {
 			)
 		);
 	}
-
-	Widget buildLevelField(BuildContext context) {
-		return SmartSelect<UIBadgeMaxLevel>.single(
-			title: AppLocales.of(context).translate('$_pageKey.fields.badgeLevel.label'),
-			value: badge.maxLevel,
-			options: [
-				for(UIBadgeMaxLevel element in UIBadgeMaxLevel.values)
-					SmartSelectOption(
-						title: AppLocales.of(context).translate('$_pageKey.fields.badgeLevel.options.${element.toString().split('.').last}'),
-						value: element
-					)
-			],
-			isTwoLine: true,
-			modalType: SmartSelectModalType.bottomSheet,
-			leading: Padding(padding: EdgeInsets.all(8.0), child: Icon(Icons.layers)),
-			onChange: (val) => setState(() {
-				badge.maxLevel = val;
-				isDataChanged = true;
-			})
-		);
-	}
 	
 	Widget buildIconField(BuildContext context) {
 		return IconPickerField.badge(
@@ -200,6 +175,7 @@ class _CaregiverBadgeFormPageState extends State<CaregiverBadgeFormPage> {
 			callback: (val) => setState(() {
 				FocusManager.instance.primaryFocus.unfocus();
 				badge.icon = val;
+				isDataChanged = true;
 			})
 		);
 	}

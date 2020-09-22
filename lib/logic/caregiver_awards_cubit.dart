@@ -1,3 +1,4 @@
+import 'package:fokus/model/db/gamification/badge.dart';
 import 'package:fokus/model/ui/gamification/ui_badge.dart';
 import 'package:fokus/model/ui/gamification/ui_reward.dart';
 import 'package:fokus/model/ui/user/ui_caregiver.dart';
@@ -18,15 +19,22 @@ class CaregiverAwardsCubit extends ReloadableCubit {
 	void doLoadData() async {
     var user = _activeUser();
     var rewards = await _dataRepository.getRewards(caregiverId: user.id);
+    var badges = await _dataRepository.getBadges(caregiverId: user.id);
 		
 		emit(CaregiverAwardsLoadSuccess(
 			rewards.map((reward) => UIReward.fromDBModel(reward)).toList(),
-			(user as UICaregiver).badges
+			badges.map((badge) => UIBadge.fromDBModel(badge)).toList()
 		));
   }
 
 	void removeReward(ObjectId id) async {
 		await _dataRepository.removeReward(id).then((value) => doLoadData());
+	}
+
+	void removeBadge(UIBadge badge) async {
+    var user = _activeUser();
+		Badge model = Badge(name: badge.name, description: badge.description, icon: badge.icon);
+		await _dataRepository.removeBadge(user.id, model).then((value) => doLoadData());
 	}
 	
 }

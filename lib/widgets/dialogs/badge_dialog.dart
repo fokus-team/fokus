@@ -69,13 +69,13 @@ class _BadgeDialogState extends State<BadgeDialog> with SingleTickerProviderStat
 								textAlign: TextAlign.center
 							),
 							SizedBox(height: 6.0),
-							if(widget.badge.date != null)
-								Text(
-									AppLocales.of(context).translate('$_pageKey.earnedBadgeDate') + ': '
-										+ DateFormat.yMd(Localizations.localeOf(context).toString()).format(widget.badge.date),
-									style: Theme.of(context).textTheme.caption,
-									textAlign: TextAlign.center
-								),
+							// if(widget.badge.date != null)
+							// 	Text(
+							// 		AppLocales.of(context).translate('$_pageKey.earnedBadgeDate') + ': '
+							// 			+ DateFormat.yMd(Localizations.localeOf(context).toString()).format(widget.badge.date),
+							// 		style: Theme.of(context).textTheme.caption,
+							// 		textAlign: TextAlign.center
+							// 	),
 							if(widget.badge.description != null)
 								Padding(
 									padding: EdgeInsets.symmetric(vertical: 10.0),

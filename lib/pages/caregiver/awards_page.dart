@@ -57,6 +57,12 @@ class _CaregiverAwardsPageState extends State<CaregiverAwardsPage> {
 		showSuccessSnackbar(context, '$_pageKey.content.rewardRemovedText');
 	}
 
+	void _deleteBadge(UIBadge badge) {
+		context.bloc<CaregiverAwardsCubit>().removeBadge(badge);
+		Navigator.of(context).pop(); // closing confirm dialog before pushing snackbar
+		showSuccessSnackbar(context, '$_pageKey.content.badgeRemovedText');
+	}
+
 	List<Segment> _buildPanelSegments(CaregiverAwardsLoadSuccess state, BuildContext context) {
 		return [
 			Segment(
@@ -112,10 +118,19 @@ class _CaregiverAwardsPageState extends State<CaregiverAwardsPage> {
 					for (var badge in state.badges)
 						ItemCard(
 							title: badge.name, 
-							subtitle: badge.maxLevel != null ? AppLocales.of(context).translate('$_pageKey.content.${badge.maxLevel.value}LeveledBadge') : '',
-							menuItems: [
-								UIButton.ofType(ButtonType.edit, () => {log("edit")}),
-								UIButton.ofType(ButtonType.delete, () => {log("delete")})
+							subtitle: badge.description != null ? badge.description : AppLocales.of(context).translate('$_pageKey.content.noDescriptionSubtitle'),
+							menuItems: [ 
+								UIButton.ofType(ButtonType.delete, () {
+									showBasicDialog(context,
+										GeneralDialog.confirm(
+											title: AppLocales.of(context).translate('$_pageKey.content.removeBadgeTitle'),
+											content: AppLocales.of(context).translate('$_pageKey.content.removeBadgeText'),
+											confirmColor: Colors.red,
+											confirmText: 'actions.delete',
+											confirmAction: () => _deleteBadge(badge)
+										)
+									);
+								})
 							],
 							graphicType: GraphicAssetType.badgeIcons,
 							graphic: badge.icon,

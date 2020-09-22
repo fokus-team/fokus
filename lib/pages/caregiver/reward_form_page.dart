@@ -122,7 +122,7 @@ class _CaregiverRewardFormPageState extends State<CaregiverRewardFormPage> {
 					FlatButton(
 						onPressed: () => saveReward(context),
 						child: Text(
-							AppLocales.of(context).translate(formType == AppFormType.create ? '$_pageKey.addRewardButton' : '$_pageKey.saveRewardButton' ),
+							AppLocales.of(context).translate(formType == AppFormType.create ? '$_pageKey.addRewardButton' : '$_pageKey.saveRewardButton'),
 							style: Theme.of(context).textTheme.button.copyWith(color: AppColors.mainBackgroundColor)
 						)
 					)

@@ -32,8 +32,8 @@ class CalendarCubit extends Cubit<CalendarState> {
   void loadInitialData() async {
 	  var activeUser = _activeUser();
 	  var getRoleId = (UserRole paramRole) => paramRole == activeUser.role ? activeUser.id : null;
-	  _plans = Map.fromEntries((await _dataRepository.getPlans(caregiverId: getRoleId(UserRole.caregiver),
-			  childId: getRoleId(UserRole.child))).map((plan) => MapEntry(plan.id, plan)));
+	  _plans = Map.fromEntries(_planEntries(await _dataRepository.getPlans(caregiverId: getRoleId(UserRole.caregiver),
+			  childId: getRoleId(UserRole.child))));
 
 	  Map<UIChild, bool> filter;
 	  if (activeUser.role == UserRole.caregiver) {
@@ -103,17 +103,25 @@ class CalendarCubit extends Cubit<CalendarState> {
 
   /// [span] - must fit within a month (from 1'st to the end)
 	Future<Map<Date, List<UIPlan>>> _loadPastData(DateSpan<Date> span) async {
-		var instances = await _dataRepository.getPlanInstances(planIDs: _plans.keys.toList(), childIDs: _childNames.keys.toList(), between: span);
+		var instances = await _dataRepository.getPlanInstances(childIDs: _childNames.keys.toList(), between: span);
+		var unassignedPlanIDs = instances.map((plan) => plan.planID).where((id) => !_plans.keys.contains(id)).toList();
+		Map<ObjectId, Plan> pastPlans = Map.from(_plans)..addEntries(_planEntries(await _dataRepository.getPlans(ids: unassignedPlanIDs)));
 		var dateMap = groupBy<Date, PlanInstance>(instances, (plan) => plan.date);
 
+		var planWithAssigned = (MapEntry<ObjectId, List<PlanInstance>> planEntry) {
+			var plan = pastPlans[planEntry.key];
+		  return UIPlan(plan.id, plan.name, plan.active, plan.tasks.length, planEntry.value.map(
+					(instance) => instance.assignedTo).toList(), _repeatabilityService.buildPlanDescription(plan.repeatability));
+		};
 	  Map<Date, List<UIPlan>> events = {};
 		for (var entry in dateMap.entries) {
-			var planMap = groupBy<ObjectId, PlanInstance>(entry.value, (plan) => plan.planID);
-			var getDescription = (Plan plan) => _repeatabilityService.buildPlanDescription(plan.repeatability);
-			events[entry.key] = planMap.keys.map((planId) => UIPlan.fromDBModel(_plans[planId], getDescription(_plans[planId]))).toList();
+			var planToInstanceMap = groupBy<ObjectId, PlanInstance>(entry.value, (plan) => plan.planID);
+			events[entry.key] = planToInstanceMap.entries.map((planEntry) => planWithAssigned(planEntry)).toList();
 		}
 		return events;
 	}
+
+	Iterable<MapEntry<ObjectId, Plan>> _planEntries(List<Plan> plans) => plans.map((plan) => MapEntry(plan.id, plan));
 
 	Map<Date, List<UIPlan>> _loadFutureData(DateSpan<Date> span) {
 		Map<Date, List<UIPlan>> events = {};

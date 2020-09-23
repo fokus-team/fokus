@@ -52,6 +52,8 @@ import 'package:fokus/utils/theme_config.dart';
 import 'package:fokus/utils/service_injection.dart';
 import 'package:fokus/widgets/page_theme.dart';
 
+import 'logic/tasks_evaluation/tasks_evaluation_cubit.dart';
+
 void main() {
 	WidgetsFlutterBinding.ensureInitialized();
 	var navigatorKey = GlobalKey<NavigatorState>();
@@ -130,7 +132,7 @@ class FokusApp extends StatelessWidget {
 			AppPage.caregiverRewardForm.name: (context) => _createPage(CaregiverRewardFormPage(), context),
 			AppPage.caregiverBadgeForm.name: (context) => _createPage(CaregiverBadgeFormPage(), context),
 			AppPage.caregiverStatistics.name: (context) => _createPage(CaregiverStatisticsPage(), context),
-			AppPage.caregiverRatingPage.name: (context) => _createPage(CaregiverRatingPage(), context),
+			AppPage.caregiverRatingPage.name: (context) => _createPage(CaregiverRatingPage(), context, TasksEvaluationCubit(getActiveUser(context))),
 			AppPage.childPanel.name: (context) => _createPage(ChildPanelPage(), context, ChildPlansCubit(getActiveUser(context), getRoute(context))),
 			AppPage.childCalendar.name: (context) => _createPage(ChildCalendarPage(), context, CalendarCubit(getParams(context), getActiveUser(context))),
 			AppPage.childRewards.name: (context) => _createPage(ChildRewardsPage(), context),

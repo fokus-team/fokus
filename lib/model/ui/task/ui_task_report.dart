@@ -1,5 +1,4 @@
-import 'package:fokus/model/db/date/time_date.dart';
-import 'package:fokus/model/ui/task/ui_task.dart';
+import 'package:fokus/model/ui/task/ui_task_instance.dart';
 import 'package:fokus/model/ui/user/ui_child.dart';
 
 enum UITaskReportMark { notRated, rated5, rated4, rated3, rated2, rated1, rejected }
@@ -29,12 +28,9 @@ extension UITaskReportMarkExtension on UITaskReportMark {
 
 class UITaskReport {
 	final String planName;
-	final UITask task;
+	final UITaskInstance task;
 	final UIChild child;
-	final int taskTimer;
-	final int breakCount;
-	final int breakTimer;
-	final TimeDate taskDate;
+
 
 	UITaskReportMark ratingMark;
 	String ratingComment;
@@ -43,10 +39,6 @@ class UITaskReport {
 		this.planName,
 		this.task,
 		this.child,
-		this.taskTimer,
-		this.breakCount,
-		this.breakTimer,
-		this.taskDate,
 		this.ratingMark = UITaskReportMark.notRated,
 		this.ratingComment
 	});

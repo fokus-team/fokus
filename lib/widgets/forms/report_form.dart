@@ -60,7 +60,7 @@ class _ReportFormState extends State<ReportForm> {
 								Container(
 									margin: EdgeInsets.all(AppBoxProperties.screenEdgePadding),
 									child: Hero(
-										tag: widget.report.task.id.toString() + widget.report.taskDate.toString(),
+										tag: widget.report.task.id.toString() + widget.report.task.duration.last.to.toString(),
 										child: ReportCard(report: widget.report, hideBottomBar: true)
 									)
 								),

@@ -1,3 +1,4 @@
+import 'package:fokus/model/db/gamification/points.dart';
 import 'package:fokus/model/db/user/user.dart';
 import 'package:fokus/model/db/user/user_role.dart';
 import 'package:mongo_dart/mongo_dart.dart';
@@ -10,5 +11,5 @@ abstract class UserRepository {
 	Future<bool> userExists({ObjectId id, UserRole role});
 
 	Future createUser(User user);
-	Future updateUser(ObjectId userId, {List<ObjectId> newConnections});
+	Future updateUser(ObjectId userId, {List<ObjectId> newConnections, List<Points> points});
 }

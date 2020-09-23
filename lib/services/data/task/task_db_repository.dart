@@ -16,6 +16,14 @@ mixin TaskDbRepository implements DbRepository {
 		return dbClient.queryTyped(Collection.task, query, (json) => Task.fromJson(json));
 	}
 
+	Future<List<TaskInstance>> getTaskInstancesFromIds({List<ObjectId> taskInstancesIds, bool requiredOnly = false, bool optionalOnly = false, List<String> fields}) {
+		var query = _buildTaskQuery(ids: taskInstancesIds, optionalOnly: optionalOnly, requiredOnly: requiredOnly);
+		if (fields != null)
+			query.fields(fields);
+		return dbClient.queryTyped(Collection.taskInstance, query, (json) => TaskInstance.fromJson(json));
+	}
+
+
 	Future<Task> getTask({ObjectId taskId, bool requiredOnly = false, bool optionalOnly = false, List<String> fields}) {
 		var query = _buildTaskQuery(id: taskId, optionalOnly: optionalOnly, requiredOnly: requiredOnly);
 		if (fields != null)
@@ -44,7 +52,8 @@ mixin TaskDbRepository implements DbRepository {
 		return dbClient.updateAll(Collection.task, tasks.map((task) => _buildTaskQuery(id: task.id)).toList(), tasks.map((task) => task.toJson()).toList(), multiUpdate: false);
 	}
 
-	SelectorBuilder _buildTaskQuery({ObjectId id, ObjectId planId, ObjectId planInstanceId, bool requiredOnly, bool optionalOnly}) {
+
+	SelectorBuilder _buildTaskQuery({ObjectId id, List<ObjectId> ids, ObjectId planId, ObjectId planInstanceId, bool requiredOnly, bool optionalOnly}) {
 		SelectorBuilder query = where;
 		if (planId != null && planInstanceId != null)
 			_logger.warning("Both plan and plan instance IDs specified in task query");
@@ -53,6 +62,8 @@ mixin TaskDbRepository implements DbRepository {
 
 		if (id != null)
 			query.eq('_id', id);
+		if (ids != null)
+			query.oneFrom('_id', ids);
 		if (planId != null)
 			query.eq('planID', planId);
 		if (planInstanceId != null)

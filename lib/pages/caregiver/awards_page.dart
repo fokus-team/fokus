@@ -97,6 +97,7 @@ class _CaregiverAwardsPageState extends State<CaregiverAwardsPage> {
 							],
 							graphicType: GraphicAssetType.rewardsIcons,
 							graphic: reward.icon,
+							onTapped: () => showRewardDialog(context, reward, showHeader: false),
 							chips: <Widget>[
 								if(reward.cost != null)
 									AttributeChip.withCurrency(content: reward.cost.quantity.toString(), currencyType: reward.cost.type, tooltip: '$_pageKey.content.pointCost')
@@ -132,6 +133,7 @@ class _CaregiverAwardsPageState extends State<CaregiverAwardsPage> {
 									);
 								})
 							],
+							onTapped: () => showBadgeDialog(context, badge, showHeader: false),
 							graphicType: GraphicAssetType.badgeIcons,
 							graphic: badge.icon,
 							graphicHeight: 44.0

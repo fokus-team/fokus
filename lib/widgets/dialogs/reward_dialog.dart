@@ -9,8 +9,9 @@ import 'package:fokus/widgets/chips/attribute_chip.dart';
 
 class RewardDialog extends StatefulWidget {
 	final UIReward reward;
+	final bool showHeader;
 
-	RewardDialog({@required this.reward});
+	RewardDialog({@required this.reward, this.showHeader});
 
 	@override
 	_RewardDialogState createState() => new _RewardDialogState();
@@ -42,14 +43,15 @@ class _RewardDialogState extends State<RewardDialog> with SingleTickerProviderSt
 					padding: EdgeInsets.symmetric(horizontal: AppBoxProperties.screenEdgePadding),
 					child: Column(
 						mainAxisSize: MainAxisSize.min,
-						children: [				
-							Padding(
-								padding: EdgeInsets.all(20.0).copyWith(bottom: 0), 
-								child: Text(
-									AppLocales.of(context).translate('$_pageKey.claimRewardTitle'),
-									style: Theme.of(context).textTheme.headline6
-								)
-							),
+						children: [		
+							if(widget.showHeader)		
+								Padding(
+									padding: EdgeInsets.all(20.0).copyWith(bottom: 0), 
+									child: Text(
+										AppLocales.of(context).translate('$_pageKey.claimRewardTitle'),
+										style: Theme.of(context).textTheme.headline6
+									)
+								),
 							Stack(
 								alignment: Alignment.center,
 								children: [
@@ -96,13 +98,14 @@ class _RewardDialogState extends State<RewardDialog> with SingleTickerProviderSt
 											onPressed: () => Navigator.of(context).pop(),
 											dense: true
 										),
-										RoundedButton(
-											icon: Icons.add,
-											text: AppLocales.of(context).translate('$_pageKey.claimButton'),
-											color: AppColors.childButtonColor,
-											onPressed: () => { /* TODO Claim reward */ },
-											dense: true
-										)
+										if(widget.showHeader)
+											RoundedButton(
+												icon: Icons.add,
+												text: AppLocales.of(context).translate('$_pageKey.claimButton'),
+												color: AppColors.childButtonColor,
+												onPressed: () => { /* TODO Claim reward */ },
+												dense: true
+											)
 									]
 								)
 							)

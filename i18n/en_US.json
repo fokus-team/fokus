@@ -294,9 +294,9 @@
 					"limitedReward": "Limited {REWARD_LIMIT, plural, offset:0 one {one reward} other {# rewards}} per child",
 					"noDescriptionSubtitle": "No description",
 					"removeRewardTitle": "Remove reward",
-					"removeRewardText": "Are you sure you want to remove this reward?",
+					"removeRewardText": "Rewards claimed by children will not be removed, though this reward will no longer be available. Are you sure you want to remove this reward?",
 					"removeBadgeTitle": "Remove badge",
-					"removeBadgeText": "Are you sure you want to remove this badge?",
+					"removeBadgeText": "Assigned badges will not be removed, bu you will loose the ability to assign this badge to other children. Are you sure you want to remove this badge?",
 					"rewardAddedText": "Reward was added",
 					"badgeAddedText": "Badge was added",
 					"rewardUpdatedText": "Reward has been updated",
@@ -319,7 +319,7 @@
 					},
 					"rewardLimit": {
 						"label": "Reward limit",
-						"hint": "Leave empty not to limit"
+						"hint": "Number of possible claims per child, leave empty for unlimited"
 					},
 					"rewardPoints": {
 						"valueLabel": "Reward point cost",

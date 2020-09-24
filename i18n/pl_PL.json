@@ -294,9 +294,9 @@
 					"limitedReward": "Limit {REWARD_LIMIT, plural, offset:0 one {jednej nagrody} other {# nagród}} na dziecko",
 					"noDescriptionSubtitle": "Brak opisu",
 					"removeRewardTitle": "Usuń nagrodę",
-					"removeRewardText": "Na pewno chcesz usunąć tą nagrodę?",
+					"removeRewardText": "Odebrane przez dzieci nagrody nie zostaną usunięte. Nagroda zniknie jednak z listy możliwych do odbioru. Na pewno chcesz usunąć tą nagrodę?",
 					"removeBadgeTitle": "Usuń odznakę",
-					"removeBadgeText": "Na pewno chcesz usunąć tą odznakę?",
+					"removeBadgeText": "Odznaki przydzielone dzieciom nie zostaną usunięte. Nie będzie jednak możliwości przyznawania tej odznaki innym dzieciom. Na pewno chcesz usunąć tą odznakę?",
 					"rewardAddedText": "Dodano nagrodę",
 					"badgeAddedText": "Dodano odznakę",
 					"rewardUpdatedText": "Zmodifikowano nagrodę",
@@ -319,7 +319,7 @@
 					},
 					"rewardLimit": {
 						"label": "Limit nagród",
-						"hint": "Pozostaw puste, aby nie limitować"
+						"hint": "Liczba nagród możliwych do odbioru per dziecko. Pozostaw puste, aby nie limitować"
 					},
 					"rewardPoints": {
 						"valueLabel": "Koszt punktowy",

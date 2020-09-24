@@ -179,6 +179,8 @@ class _CaregiverRewardFormPageState extends State<CaregiverRewardFormPage> {
 					labelText: AppLocales.of(context).translate('$_pageKey.fields.rewardLimit.label'),
 					hintText: '0',
 					helperText: AppLocales.of(context).translate('$_pageKey.fields.rewardLimit.hint'),
+					helperMaxLines: 3,
+					errorMaxLines: 3,
 					suffixIcon: IconButton(
 						onPressed: () {
 							FocusScope.of(context).requestFocus(FocusNode());

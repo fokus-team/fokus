@@ -92,6 +92,7 @@ class _ChildPanelPageState extends State<ChildPanelPage> {
 		  elements: <Widget>[
 			  for (var plan in plans)
 				  ItemCard(
+						isActive: plan.state != PlanInstanceState.completed,
 					  title: plan.name,
 					  subtitle: plan.description(context),
 					  progressPercentage: plan.state.inProgress ? plan.completedTaskCount / plan.taskCount : null,

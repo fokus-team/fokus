@@ -105,6 +105,13 @@ void showPasswordChangeDialog(BuildContext context) {
 	);
 }
 
+void showCurrencyEditDialog(BuildContext context, Function(String) callback, {String initialValue}) {
+	showDialog(
+		context: context,
+		builder: (context) => CurrencyEditDialog(callback: callback, initialValue: initialValue)
+	);
+}
+
 void showRewardDialog(BuildContext context, UIReward reward) {
 	showDialog(
 		context: context,

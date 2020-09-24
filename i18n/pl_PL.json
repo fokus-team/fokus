@@ -6,7 +6,8 @@
 			"panel": "Panel",
 			"plans": "Plany",
 			"awards": "Nagrody",
-			"statistics": "Statystyki"
+			"statistics": "Statystyki",
+			"currencies": "Waluty"
 		},
 		"child": {
 			"plans": "Plany",
@@ -426,6 +427,25 @@
 						"rateCommentLabel": "Komentarz do zadania"
 					}
 				}
+			},
+			"currencies": {
+				"header": {
+					"title": "Waluty"
+				},
+				"content": {
+					"generalHint": "Możesz ustawić do trzech dodatkowych walut w aplikacji, a następnie używać ich w zadaniach i nagrodach. Domyślna waluta aplikacji, nie może zostać zmodyfikowana.",
+					"currenciesUpdatedText": "Zaktualizowano listę walut",
+					"saveCurrenciesButton": "Zapisz konfigurację",
+					"currencyNotUsed": "Nie używana",
+					"currencyNameLabel": "Nazwa waluty",
+					"clearCurrencyText": "Zdobyte w tej walucie punkty nie zostaną usunięte. Nie będzie można jednak używać dalej tej waluty. Na pewno chcesz wyczyścić tą walutę?",
+					"currencies": {
+						"diamond": "Diament",
+						"emerald": "Szmaragd",
+						"ruby": "Rubin",
+						"amethyst": "Ametyst"
+					}
+				}
 			}
 		},
 		"childSection": {
@@ -623,7 +643,8 @@
 		"task_creation": "Konfiguracja zadania",
 		"reward_creation": "Tworzenie nagrody",
 		"badge_creation": "Tworzenie odznaki",
-		"plan_info": "Plany"
+		"plan_info": "Plany",
+		"currencies": "Waluty"
 	},
 	"assignedTo": "Przypisane do",
 	"points": "Punkty",

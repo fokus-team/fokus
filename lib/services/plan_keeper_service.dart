@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:fokus/model/db/user/user.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
@@ -12,9 +13,10 @@ import 'package:fokus/model/db/plan/plan_instance.dart';
 import 'package:fokus/services/plan_repeatability_service.dart';
 import 'package:fokus/model/db/date_span.dart';
 
+import 'active_user_observer.dart';
 import 'data/data_repository.dart';
 
-class PlanKeeperService {
+class PlanKeeperService implements ActiveUserObserver {
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final PlanRepeatabilityService _repeatabilityService = GetIt.I<PlanRepeatabilityService>();
 
@@ -22,12 +24,13 @@ class PlanKeeperService {
 	ObjectId _userId;
 	UserRole _role;
 
-	Future onUserSignIn(ObjectId userId, UserRole role) async {
+	@override
+	Future onUserSignIn(User user) async {
 		return Future.sync(() async {
-			_userId = userId;
-			_role = role;
+			_userId = user.id;
+			_role = user.role;
 
-			onUserSignOut();
+			onUserSignOut(user);
 			await _updateData();
 			var now = DateTime.now();
 			Duration timeToMidnight = DateTime(now.year, now.month, now.day + 1, 0, 0, 10).difference(now);
@@ -35,7 +38,8 @@ class PlanKeeperService {
 		});
 	}
 
-	void onUserSignOut() {
+	@override
+	void onUserSignOut(User user) {
 		if (_dataCheckTimer != null)
 			_dataCheckTimer.cancel();
 	}

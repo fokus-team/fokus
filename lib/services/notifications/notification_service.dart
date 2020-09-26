@@ -35,7 +35,7 @@ abstract class NotificationService implements ActiveUserObserver {
 	@protected
 	Future<List<String>> getUserTokens(ObjectId userId) async => (await dataRepository.getUser(id: userId, fields: ['notificationIDs'])).notificationIDs;
 	@protected
-	void logNoUserToken(ObjectId userId) => logger.info('Could not send a notification, user ${userId.toHexString()} has no notification ID assigned');
+	void logNoUserToken(ObjectId userId) => logger.info('Could not send a notification, user ${userId.toHexString()} is not logged in on any device');
 
 	@override
 	void onUserSignIn(User user) => provider.onUserSignIn(user);

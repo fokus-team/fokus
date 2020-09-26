@@ -17,7 +17,7 @@ import 'package:fokus/model/notification/notification_channel.dart';
 import 'package:fokus/model/notification/notification_icon.dart';
 
 class OneSignalNotificationService extends NotificationService {
-	final String _androidSmallIconId = 'ic_stat_name';
+	final String _androidSmallIconId = 'ic_stat_onesignal_default';
 	@override
 	final OneSignalNotificationProvider provider = OneSignalNotificationProvider();
 

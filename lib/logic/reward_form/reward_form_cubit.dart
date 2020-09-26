@@ -39,9 +39,7 @@ class RewardFormCubit extends Cubit<RewardFormState> {
   }
 	
   Future<RewardFormModel> _fillRewardFormModel() async {
-  	var reward = await _dataRepository.getReward(id: state.rewardId);
-		var model = RewardFormModel.fromDBModel(reward);
-		return model;
+		return RewardFormModel.fromDBModel(await _dataRepository.getReward(id: state.rewardId));
   }
 
 }

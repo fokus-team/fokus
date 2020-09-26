@@ -37,8 +37,8 @@ class MongoDbProvider {
 		return _execute(() => _client.collection(collection.name) .insert(document)).then((_) => document['_id']);
 	});
 
-	Future remove(Collection collection, ObjectId id) => _execute(() {
-		return _execute(() => _client.collection(collection.name).remove(where.eq('_id', id)));
+	Future remove(Collection collection, SelectorBuilder selector) => _execute(() {
+		return _execute(() => _client.collection(collection.name).remove(selector));
 	});
 
 	Future<List<ObjectId>> insertMany(Collection collection, List<Map<String, dynamic>> documents) => _execute(() {

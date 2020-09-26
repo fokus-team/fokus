@@ -105,8 +105,8 @@ class _PointPickerFieldState extends State<PointPickerField> {
 											Padding(
 												padding: EdgeInsets.only(left: 10.0, top: 4.0),
 												child: CircleAvatar(
-													child: SvgPicture.asset(getIconPath(state.value.type), width: 28, fit: BoxFit.cover),
-													backgroundColor: AppColors.currencyColor[state.value.type].withAlpha(50)
+													child: SvgPicture.asset(getIconPath(state.value != null ? state.value.type : CurrencyType.diamond), width: 28, fit: BoxFit.cover),
+													backgroundColor: AppColors.currencyColor[state.value != null ? state.value.type : CurrencyType.diamond].withAlpha(50)
 												)
 											),
 											(widget.loading) ?

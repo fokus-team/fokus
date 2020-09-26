@@ -293,9 +293,16 @@
 					"pointCost": "Koszt punktowy nagrody",
 					"unlimitedReward": "Nagroda nielimitowana",
 					"limitedReward": "Limit {REWARD_LIMIT, plural, offset:0 one {jednej nagrody} other {# nagród}} na dziecko",
-					"1LeveledBadge": "Odznaka przyznawana jednorazowo",
-					"3LeveledBadge": "Odznaka 3 poziomowa",
-					"5LeveledBadge": "Odznaka 5 poziomowa"
+					"noDescriptionSubtitle": "Brak opisu",
+					"removeRewardTitle": "Usuń nagrodę",
+					"removeRewardText": "Odebrane przez dzieci nagrody nie zostaną usunięte. Nagroda zniknie jednak z listy możliwych do odbioru. Na pewno chcesz usunąć tą nagrodę?",
+					"removeBadgeTitle": "Usuń odznakę",
+					"removeBadgeText": "Odznaki przydzielone dzieciom nie zostaną usunięte. Nie będzie jednak możliwości przyznawania tej odznaki innym dzieciom. Na pewno chcesz usunąć tą odznakę?",
+					"rewardAddedText": "Dodano nagrodę",
+					"badgeAddedText": "Dodano odznakę",
+					"rewardUpdatedText": "Zmodifikowano nagrodę",
+					"rewardRemovedText": "Usunięto nagrodę",
+					"badgeRemovedText": "Usunięto odznakę"
 				}
 			},
 			"rewardForm": {
@@ -313,7 +320,7 @@
 					},
 					"rewardLimit": {
 						"label": "Limit nagród",
-						"hint": "Pozostaw puste, aby nie limitować"
+						"hint": "Liczba nagród możliwych do odbioru per dziecko. Pozostaw puste, aby nie limitować"
 					},
 					"rewardPoints": {
 						"valueLabel": "Koszt punktowy",
@@ -334,12 +341,7 @@
 			},
 			"badgeForm": {
 				"addBadgeTitle": "Dodaj odznakę",
-				"editBadgeTitle": "Edytuj odznakę",
 				"addBadgeButton": "Dodaj odznakę",
-				"saveBadgeButton": "Zapisz odznakę",
-				"removeBadgeButton": "Usuń odznakę",
-				"removeBadgeTitle": "Usuń odznakę",
-				"removeBadgeText": "Na pewno chcesz usunąć tą odznakę?",
 				"fields": {
 					"badgeName": {
 						"label": "Nazwa odznaki",
@@ -347,14 +349,6 @@
 					},
 					"badgeDescription": {
 						"label": "Opis odznaki"
-					},
-					"badgeLevel": {
-						"label": "Typ odznaki",
-						"options": {
-							"one": "Jednorazowa",
-							"three": "3 poziomy",
-							"five": "5 poziomów"
-						}
 					},
 					"badgeIcon": {
 						"label": "Ikona odznaki",

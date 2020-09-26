@@ -292,9 +292,16 @@
 					"pointCost": "Reward's point cost",
 					"unlimitedReward": "Unlimited reward",
 					"limitedReward": "Limited {REWARD_LIMIT, plural, offset:0 one {one reward} other {# rewards}} per child",
-					"1LeveledBadge": "One-time badge",
-					"3LeveledBadge": "3-leveled badge",
-					"5LeveledBadge": "5-leveled badge"
+					"noDescriptionSubtitle": "No description",
+					"removeRewardTitle": "Remove reward",
+					"removeRewardText": "Rewards claimed by children will not be removed, though this reward will no longer be available. Are you sure you want to remove this reward?",
+					"removeBadgeTitle": "Remove badge",
+					"removeBadgeText": "Assigned badges will not be removed, bu you will loose the ability to assign this badge to other children. Are you sure you want to remove this badge?",
+					"rewardAddedText": "Reward was added",
+					"badgeAddedText": "Badge was added",
+					"rewardUpdatedText": "Reward has been updated",
+					"rewardRemovedText": "Reward has been removed",
+					"badgeRemovedText": "Badge has been removed"
 				}
 			},
 			"rewardForm": {
@@ -312,7 +319,7 @@
 					},
 					"rewardLimit": {
 						"label": "Reward limit",
-						"hint": "Leave empty not to limit"
+						"hint": "Number of possible claims per child, leave empty for unlimited"
 					},
 					"rewardPoints": {
 						"valueLabel": "Reward point cost",
@@ -333,12 +340,7 @@
 			},
 			"badgeForm": {
 				"addBadgeTitle": "Add badge",
-				"editBadgeTitle": "Edit badge",
 				"addBadgeButton": "Add badge",
-				"saveBadgeButton": "Save badge",
-				"removeBadgeButton": "Remove badge",
-				"removeBadgeTitle": "Remove badge",
-				"removeBadgeText": "Are you sure you want to remove this badge?",
 				"fields": {
 					"badgeName": {
 						"label": "Badge name",
@@ -346,14 +348,6 @@
 					},
 					"badgeDescription": {
 						"label": "Badge description"
-					},
-					"badgeLevel": {
-						"label": "Badge type",
-						"options": {
-							"one": "Assigned once",
-							"three": "3 levels",
-							"five": "5 levels"
-						}
 					},
 					"badgeIcon": {
 						"label": "Badge icon",

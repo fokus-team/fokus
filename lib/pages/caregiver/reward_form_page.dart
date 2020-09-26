@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fokus/logic/reward_form/reward_form_cubit.dart';
+import 'package:fokus/model/ui/form/reward_form_model.dart';
 import 'package:fokus/utils/dialog_utils.dart';
 import 'package:fokus/utils/form_config.dart';
 import 'package:fokus/model/currency_type.dart';
 import 'package:fokus/model/ui/app_page.dart';
-import 'package:fokus/model/ui/gamification/ui_reward.dart';
-import 'package:fokus/model/ui/gamification/ui_points.dart';
 import 'package:fokus/model/ui/gamification/ui_currency.dart';
+import 'package:fokus/utils/snackbar_utils.dart';
 import 'package:fokus/widgets/buttons/help_icon_button.dart';
 import 'package:fokus/widgets/forms/iconpicker_field.dart';
 import 'package:fokus/widgets/forms/pointpicker_field.dart';
@@ -21,17 +23,11 @@ class CaregiverRewardFormPage extends StatefulWidget {
 
 class _CaregiverRewardFormPageState extends State<CaregiverRewardFormPage> {
 	static const String _pageKey = 'page.caregiverSection.rewardForm';
-	AppFormType formType = AppFormType.create; // only create for now
+	AppFormType formType;
 	GlobalKey<FormState> rewardFormKey;
 	bool isDataChanged = false;
 
-	UIReward reward;
-
-	List<UICurrency> currencies = [
-		UICurrency(type: CurrencyType.diamond, title: "Punkty"),
-		UICurrency(type: CurrencyType.ruby, title: "Klejnoty"),
-		UICurrency(type: CurrencyType.amethyst, title: "Super punkty")
-	];
+	RewardFormModel reward = RewardFormModel();
 
 	TextEditingController _titleController = TextEditingController();
 	TextEditingController _limitController = TextEditingController();
@@ -40,10 +36,7 @@ class _CaregiverRewardFormPageState extends State<CaregiverRewardFormPage> {
 	@override
   void initState() {
 		rewardFormKey = GlobalKey<FormState>();
-		reward = UIReward(cost: UIPoints(type: currencies[0].type, title: currencies[0].title));
-		_titleController.text = '';
-		_limitController.text = '';
-		_pointsController.text = '';
+		reward.pointCurrency = UICurrency(type: CurrencyType.diamond);
     super.initState();
   }
 	
@@ -57,48 +50,63 @@ class _CaregiverRewardFormPageState extends State<CaregiverRewardFormPage> {
 
   @override
   Widget build(BuildContext context) {
-		return WillPopScope(
-			onWillPop: () => showExitFormDialog(context, true, isDataChanged),
-			child: Scaffold(
-				appBar: AppBar(
-					backgroundColor: AppColors.formColor,
-					title: Text(AppLocales.of(context).translate(
-						formType == AppFormType.create ? '$_pageKey.addRewardTitle' : '$_pageKey.editRewardTitle'
-					)),
-					actions: <Widget>[
-						HelpIconButton(helpPage: 'reward_creation')
-					]
-				),
-				body: Stack(
-					children: [
-						Positioned.fill(
-							bottom: AppBoxProperties.standardBottomNavHeight,
-							child: Form(
-								key: rewardFormKey,
-								child: Material(
-									child: buildFormFields(context)
-								)
-							)
+		return BlocConsumer<RewardFormCubit, RewardFormState>(
+			listener: (context, state) {
+				if (state is RewardFormSubmissionSuccess) {
+					Navigator.of(context).pop();
+					showSuccessSnackbar(context, 'page.caregiverSection.awards.content.reward${formType == AppFormType.create ? 'Added' : 'Updated'}Text');
+				} else if (state is RewardFormDataLoadSuccess)
+					setState(() {
+						reward = RewardFormModel.from(state.rewardForm);
+						_titleController.text = reward.name ?? '';
+						_limitController.text = reward.limit != null ? reward.limit.toString() : '';
+						_pointsController.text = reward.pointValue != null ? reward.pointValue.toString() : '';
+					});
+			},
+	    builder: (context, state) {
+				if (state is RewardFormInitial) {
+					formType = state.formType;
+					context.bloc<RewardFormCubit>().loadFormData();
+				}
+				return WillPopScope(
+					onWillPop: () => showExitFormDialog(context, true, isDataChanged),
+					child: Scaffold(
+						appBar: AppBar(
+							backgroundColor: AppColors.formColor,
+							title: Text(AppLocales.of(context).translate(
+								formType == AppFormType.create ? '$_pageKey.addRewardTitle' : '$_pageKey.editRewardTitle'
+							)),
+							actions: <Widget>[
+								HelpIconButton(helpPage: 'reward_creation')
+							]
 						),
-						Positioned.fill(
-							top: null,
-							child: buildBottomNavigation(context)
+						body: Stack(
+							children: [
+								Positioned.fill(
+									bottom: AppBoxProperties.standardBottomNavHeight,
+									child: Form(
+										key: rewardFormKey,
+										child: Material(
+											child: buildFormFields(context)
+										)
+									)
+								),
+								Positioned.fill(
+									top: null,
+									child: buildBottomNavigation(context)
+								)
+							]
 						)
-					]
-				)
-			)
+					)
+				);
+			}
 		);
 	}
 
 	void saveReward(BuildContext context) {
 		if(rewardFormKey.currentState.validate()) {
-			// TODO adding/saving logic
-			Navigator.of(context).pop();
+			context.bloc<RewardFormCubit>().submitRewardForm(reward);
 		}
-	}
-
-	void removeReward(BuildContext context) {
-		// TODO remove logic
 	}
 
 	Widget buildBottomNavigation(BuildContext context) {
@@ -110,18 +118,11 @@ class _CaregiverRewardFormPageState extends State<CaregiverRewardFormPage> {
 				mainAxisAlignment: MainAxisAlignment.spaceBetween,
 				crossAxisAlignment: CrossAxisAlignment.end,
 				children: <Widget>[
-					(formType == AppFormType.edit) ?
-						FlatButton(
-							onPressed: () => removeReward(context),
-							child: Text(
-								AppLocales.of(context).translate('$_pageKey.removeRewardButton'),
-								style: Theme.of(context).textTheme.button.copyWith(color: Colors.red)
-							)
-						) : SizedBox.shrink(),
+					SizedBox.shrink(),
 					FlatButton(
 						onPressed: () => saveReward(context),
 						child: Text(
-							AppLocales.of(context).translate(formType == AppFormType.create ? '$_pageKey.addRewardButton' : '$_pageKey.saveRewardButton' ),
+							AppLocales.of(context).translate(formType == AppFormType.create ? '$_pageKey.addRewardButton' : '$_pageKey.saveRewardButton'),
 							style: Theme.of(context).textTheme.button.copyWith(color: AppColors.mainBackgroundColor)
 						)
 					)
@@ -136,7 +137,13 @@ class _CaregiverRewardFormPageState extends State<CaregiverRewardFormPage> {
 			children: <Widget>[
 				buildNameField(context),
 				buildLimitField(context),
-				buildPointsFields(context),
+				BlocBuilder<RewardFormCubit, RewardFormState>(
+		  		builder: (context, state) {
+		  			if (state is RewardFormDataLoadSuccess)
+		  				return buildPointsFields(currencies: state.currencies);
+						return buildPointsFields(loading: state.formType == AppFormType.create);
+					}
+				),
 				buildIconField(context)
 			]
 		);
@@ -156,7 +163,7 @@ class _CaregiverRewardFormPageState extends State<CaregiverRewardFormPage> {
 					return value.trim().isEmpty ? AppLocales.of(context).translate('$_pageKey.fields.rewardName.emptyError') : null;
 				},
 				onChanged: (val) => setState(() {
-					reward = reward.copyWith(name: val);
+					reward.name = val;
 					isDataChanged = true;
 				})
 			)
@@ -172,6 +179,8 @@ class _CaregiverRewardFormPageState extends State<CaregiverRewardFormPage> {
 					labelText: AppLocales.of(context).translate('$_pageKey.fields.rewardLimit.label'),
 					hintText: '0',
 					helperText: AppLocales.of(context).translate('$_pageKey.fields.rewardLimit.hint'),
+					helperMaxLines: 3,
+					errorMaxLines: 3,
 					suffixIcon: IconButton(
 						onPressed: () {
 							FocusScope.of(context).requestFocus(FocusNode());
@@ -186,19 +195,19 @@ class _CaregiverRewardFormPageState extends State<CaregiverRewardFormPage> {
 						LengthLimitingTextInputFormatter(9),
 				],
 				onChanged: (val) => setState(() {
-					reward = reward.copyWith(limit: int.tryParse(val));
+					reward.limit = val != null ? int.tryParse(val) : null;
 					isDataChanged = true;
 				})
 			)
 		);
 	}
 	
-	Widget buildPointsFields(BuildContext context) {
+	Widget buildPointsFields({List<UICurrency> currencies = const [], bool loading = false}) {
 		return PointPickerField(
 			controller: _pointsController,
-			pickedCurrency: reward.cost,
+			pickedCurrency: reward.pointCurrency,
 			currencies: currencies,
-			loading: false,
+			loading: loading,
 			minPoints: 1,
 			canBeEmpty: false,
 			labelValueText: AppLocales.of(context).translate('$_pageKey.fields.rewardPoints.valueLabel'),
@@ -206,14 +215,14 @@ class _CaregiverRewardFormPageState extends State<CaregiverRewardFormPage> {
 			labelCurrencyText: AppLocales.of(context).translate('$_pageKey.fields.rewardPoints.currencyLabel'),
 			pointValueSetter: (val) {
 				setState(() {
-					isDataChanged = reward.cost.quantity != ((val != null) ? int.tryParse(val) : null);
-					reward = reward.copyWith(cost: reward.cost.copyWith(quantity: (val != null) ? int.tryParse(val) : null));
+					reward.pointValue = val != null ? int.tryParse(val) : null;
+					isDataChanged = true;
 				});
 			},
 			pointCurrencySetter: (val) {
 				setState(() {
-					isDataChanged = reward.cost.type != val.type;
-					reward = reward.copyWith(cost: reward.cost.copyWith(type: val.type, title: val.title));
+					reward.pointCurrency = val;
+					isDataChanged = true;
 				});
 			},
 		);
@@ -226,7 +235,8 @@ class _CaregiverRewardFormPageState extends State<CaregiverRewardFormPage> {
 			value: reward.icon,
 			callback: (val) => setState(() {
 				FocusManager.instance.primaryFocus.unfocus();
-				reward = reward.copyWith(icon: val);
+				reward.icon = val;
+				isDataChanged = true;
 			})
 		);
 	}

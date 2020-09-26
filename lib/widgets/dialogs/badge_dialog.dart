@@ -5,12 +5,12 @@ import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/app_paths.dart';
 import 'package:fokus/utils/theme_config.dart';
 import 'package:fokus/widgets/buttons/rounded_button.dart';
-import 'package:intl/intl.dart';
 
 class BadgeDialog extends StatefulWidget {
 	final UIBadge badge;
+	final bool showHeader;
 
-	BadgeDialog({@required this.badge});
+	BadgeDialog({@required this.badge, this.showHeader});
 
 	@override
 	_BadgeDialogState createState() => new _BadgeDialogState();
@@ -39,17 +39,18 @@ class _BadgeDialogState extends State<BadgeDialog> with SingleTickerProviderStat
 			insetPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
 			child: SingleChildScrollView(
 				child: Padding(
-					padding: EdgeInsets.symmetric(horizontal: AppBoxProperties.screenEdgePadding),
+					padding: EdgeInsets.symmetric(horizontal: 30.0),
 					child: Column(
 						mainAxisSize: MainAxisSize.min,
-						children: [				
-							Padding(
-								padding: EdgeInsets.all(20.0).copyWith(bottom: 0), 
-								child: Text(
-									AppLocales.of(context).translate('$_pageKey.earnedBadgeTitle'),
-									style: Theme.of(context).textTheme.headline6
-								)
-							),
+						children: [
+							if(widget.showHeader)	
+								Padding(
+									padding: EdgeInsets.all(20.0).copyWith(bottom: 0), 
+									child: Text(
+										AppLocales.of(context).translate('$_pageKey.earnedBadgeTitle'),
+										style: Theme.of(context).textTheme.headline6
+									)
+								),
 							Stack(
 								alignment: Alignment.center,
 								children: [
@@ -69,13 +70,13 @@ class _BadgeDialogState extends State<BadgeDialog> with SingleTickerProviderStat
 								textAlign: TextAlign.center
 							),
 							SizedBox(height: 6.0),
-							if(widget.badge.date != null)
-								Text(
-									AppLocales.of(context).translate('$_pageKey.earnedBadgeDate') + ': '
-										+ DateFormat.yMd(Localizations.localeOf(context).toString()).format(widget.badge.date),
-									style: Theme.of(context).textTheme.caption,
-									textAlign: TextAlign.center
-								),
+							// if(widget.badge.date != null)
+							// 	Text(
+							// 		AppLocales.of(context).translate('$_pageKey.earnedBadgeDate') + ': '
+							// 			+ DateFormat.yMd(Localizations.localeOf(context).toString()).format(widget.badge.date),
+							// 		style: Theme.of(context).textTheme.caption,
+							// 		textAlign: TextAlign.center
+							// 	),
 							if(widget.badge.description != null)
 								Padding(
 									padding: EdgeInsets.symmetric(vertical: 10.0),

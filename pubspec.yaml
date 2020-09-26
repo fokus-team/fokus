@@ -54,6 +54,7 @@ dependencies:
     table_calendar: ^2.2.3
     carousel_slider: ^2.2.1
     flutter_rating_bar: ^3.0.1+1
+    flushbar: ^1.10.4
 
 dependency_overrides:
     bson:
@@ -89,7 +90,6 @@ flutter:
         - assets/image/avatar/
         - assets/image/avatar/child/
         - assets/image/reward/
-        - assets/image/badge_level/
         - assets/image/badge/
         - assets/image/currency/
 

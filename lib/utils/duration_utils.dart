@@ -30,7 +30,5 @@ String formatDuration(Duration duration) {
 }
 
 bool isInProgress(List<DateSpan<TimeDate>> durations) {
-	if(durations != null && durations.length > 0 && durations.last.to == null)
-		return true;
-	else return false;
+	return durations != null && durations.length > 0 && durations.last.to == null;
 }

@@ -127,7 +127,7 @@ class _ChildPlanInProgressPageState extends State<ChildPlanInProgressPage> {
 							)
 					else if(task.taskUiType.inProgress)
 						BlocProvider<TimerCubit>(
-							create: (_) => TimerCubit(() => task.taskUiType == TaskUIType.currentlyPerformed ? sumDurations(task.duration).inSeconds : sumDurations(task.breaks).inSeconds)..startTimer(),
+							create: (_) => TimerCubit.up(() => task.taskUiType == TaskUIType.currentlyPerformed ? sumDurations(task.duration).inSeconds : sumDurations(task.breaks).inSeconds)..startTimer(),
 							child:	ItemCard(
 								title: task.name,
 								subtitle: task.description,
@@ -207,7 +207,7 @@ class _ChildPlanInProgressPageState extends State<ChildPlanInProgressPage> {
 			]);
   	if(isInProgress(_planInstance.duration))
   		return BlocProvider<TimerCubit>(
-				create: (_) => TimerCubit(_planInstance.elapsedActiveTime)..startTimer(),
+				create: (_) => TimerCubit.up(_planInstance.elapsedActiveTime)..startTimer(),
 				child: card
 			);
   	else return card;

@@ -7,7 +7,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/logic/task_instance/task_instance_cubit.dart';
 import 'package:fokus/logic/timer/timer_cubit.dart';
 import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/services/ticker.dart';
 import 'package:fokus/utils/duration_utils.dart';
 import 'package:fokus/utils/theme_config.dart';
 import 'package:fokus/widgets/app_header.dart';
@@ -222,11 +221,11 @@ class TaskAppHeaderState extends State<TaskAppHeader> with TickerProviderStateMi
 				if(this.widget.state.taskInstance.timer*60 - sumDurations(this.widget.state.taskInstance.duration).inSeconds > 0) {
 					int time = this.widget.state.taskInstance.timer*60 - sumDurations(this.widget.state.taskInstance.duration).inSeconds;
 					_timeUpdate(Duration(seconds: time));
-					_timerCompletionCubit = TimerCubit(() => time, CountDirection.down, true, _onTimerFinish);
+					_timerCompletionCubit = TimerCubit.down(() => time, true, _onTimerFinish);
 				}
-				else _timerCompletionCubit = TimerCubit(() => sumDurations(this.widget.state.taskInstance.duration).inSeconds - this.widget.state.taskInstance.timer*60, CountDirection.up);
+				else _timerCompletionCubit = TimerCubit.up(() => sumDurations(this.widget.state.taskInstance.duration).inSeconds - this.widget.state.taskInstance.timer*60);
 			}
-			else _timerCompletionCubit = TimerCubit(() => sumDurations(this.widget.state.taskInstance.duration).inSeconds);
+			else _timerCompletionCubit = TimerCubit.up(() => sumDurations(this.widget.state.taskInstance.duration).inSeconds);
 		}
   	if(this.widget.state is TaskInstanceStateProgress)
 			return (_) => _timerCompletionCubit..startTimer();

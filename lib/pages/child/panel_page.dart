@@ -56,7 +56,7 @@ class _ChildPanelPageState extends State<ChildPanelPage> {
 			if(activePlan != null)
 				isInProgress(activePlan.duration) ?
 					BlocProvider<TimerCubit>(
-						create: (_) => TimerCubit(activePlan.elapsedActiveTime)..startTimer(),
+						create: (_) => TimerCubit.up(activePlan.elapsedActiveTime)..startTimer(),
 						child: _getPlansSegment(
 							plans: [activePlan],
 							icon: Icons.launch,

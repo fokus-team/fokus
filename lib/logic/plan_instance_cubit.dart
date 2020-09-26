@@ -2,10 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:fokus/logic/reloadable/reloadable_cubit.dart';
 import 'package:fokus/model/db/date/date.dart';
 import 'package:fokus/model/db/plan/plan.dart';
+import 'package:fokus/model/db/plan/plan_instance.dart';
 import 'package:fokus/model/db/plan/plan_instance_state.dart';
+import 'package:fokus/model/db/plan/task_instance.dart';
 import 'package:fokus/model/ui/plan/ui_plan_instance.dart';
 import 'package:fokus/model/ui/task/ui_task_instance.dart';
-import 'package:fokus/services/active_task_service.dart';
+import 'package:fokus/services/app_config/app_config_repository.dart';
 import 'package:fokus/services/data/data_repository.dart';
 import 'package:fokus/services/plan_repeatability_service.dart';
 import 'package:fokus/services/task_instance_service.dart';
@@ -20,7 +22,7 @@ class PlanInstanceCubit extends ReloadableCubit {
 	final PlanRepeatabilityService _repeatabilityService = GetIt.I<PlanRepeatabilityService>();
 	final ObjectId _planInstanceId;
 	final TaskKeeperService _taskKeeperService = GetIt.I<TaskKeeperService>();
-	final ActiveTaskService _activeTaskService = GetIt.I<ActiveTaskService>();
+	final AppConfigRepository _appConfigRepository = GetIt.I<AppConfigRepository>();
 	PlanInstanceCubit(this._planInstanceId, ModalRoute modalRoute) : super(modalRoute);
 
 	@override
@@ -34,10 +36,32 @@ class PlanInstanceCubit extends ReloadableCubit {
 		var completedTasks = await _dataRepository.getCompletedTaskCount(planInstance.id);
 		var uiPlanInstance = UIPlanInstance.fromDBModel(planInstance, plan.name, completedTasks, elapsedTime, getDescription(plan, planInstance.date));
 		var allTasksInstances = await _dataRepository.getTaskInstances(planInstanceId: _planInstanceId);
-		bool isOtherPlanInProgress = planInstance.state == PlanInstanceState.active ? false : await _activeTaskService.isAnyTaskActive(childId: planInstance.assignedTo);
+		bool isOtherPlanInProgress = planInstance.state == PlanInstanceState.active ? false : await isAnyTaskActive(childId: planInstance.assignedTo);
 
 		List<UITaskInstance> uiInstances = await _taskInstancesService.mapToUIModels(allTasksInstances);
 		emit(ChildTasksLoadSuccess(uiInstances, uiPlanInstance, isOtherPlanInProgress));
+	}
+
+
+	Future<bool> isAnyTaskActive({ObjectId childId}) async {
+		bool isActive = _appConfigRepository.getActiveTaskState();
+		if(isActive != null) return isActive;
+		return _setTaskState(childId: childId);
+	}
+
+	Future<bool> _setTaskState({ObjectId childId}) async {
+		List<PlanInstance> planInstances = await _dataRepository.getPlanInstances(childIDs: [childId], state: PlanInstanceState.active);
+		if(planInstances != null && planInstances.isNotEmpty) {
+			List<TaskInstance> taskInstances = await _dataRepository.getTaskInstances(planInstanceId: planInstances.first.id);
+			for(var instance in taskInstances) {
+				if(isInProgress(instance.duration) || isInProgress(instance.breaks)) {
+					_appConfigRepository.setActiveTaskState(true);
+					return true;
+				}
+			}
+		}
+		_appConfigRepository.setActiveTaskState(false);
+		return false;
 	}
 }
 

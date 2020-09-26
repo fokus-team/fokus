@@ -235,7 +235,7 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 
 	CreateBloc _getTimerBreakCubit(state) {
 		if(_timerBreakCubit == null) {
-			_timerBreakCubit = TimerCubit(() => sumDurations(state.taskInstance.breaks).inSeconds);
+			_timerBreakCubit = TimerCubit.up(() => sumDurations(state.taskInstance.breaks).inSeconds);
 		}
 		if(state is TaskInstanceStateProgress) return (_) => _timerBreakCubit..startTimer()..pauseTimer();
 		else return (_) => _timerBreakCubit..startTimer();

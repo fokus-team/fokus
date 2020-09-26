@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:fokus/services/active_task_service.dart';
+import 'package:fokus/services/app_config/app_config_repository.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
@@ -18,7 +18,7 @@ import 'data/data_repository.dart';
 class PlanKeeperService {
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final PlanRepeatabilityService _repeatabilityService = GetIt.I<PlanRepeatabilityService>();
-	final ActiveTaskService _activeTaskService = GetIt.I<ActiveTaskService>();
+	final AppConfigRepository _appConfigRepository = GetIt.I<AppConfigRepository>();
 
 	Timer _dataCheckTimer;
 	ObjectId _userId;
@@ -29,7 +29,7 @@ class PlanKeeperService {
 			_userId = userId;
 			_role = role;
 
-			_activeTaskService.removeTaskState();
+			_appConfigRepository.removeActiveTaskState();
 			onUserSignOut();
 			await _updateData();
 			var now = DateTime.now();

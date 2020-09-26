@@ -1,12 +1,12 @@
-import 'package:fokus/model/db/gamification/badge.dart';
-import 'package:fokus/model/ui/gamification/ui_badge.dart';
-import 'package:fokus/model/ui/gamification/ui_reward.dart';
-import 'package:fokus/model/ui/user/ui_caregiver.dart';
+
 import 'package:get_it/get_it.dart';
 
 import 'package:fokus/logic/reloadable/reloadable_cubit.dart';
 import 'package:fokus/model/ui/user/ui_user.dart';
 import 'package:fokus/services/data/data_repository.dart';
+import 'package:fokus/model/db/gamification/badge.dart';
+import 'package:fokus/model/ui/gamification/ui_badge.dart';
+import 'package:fokus/model/ui/gamification/ui_reward.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
 class CaregiverAwardsCubit extends ReloadableCubit {

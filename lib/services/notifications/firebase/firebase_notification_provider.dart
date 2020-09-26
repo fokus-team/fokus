@@ -58,13 +58,7 @@ class FirebaseNotificationProvider extends NotificationProvider {
 	}
 
 	static Future<dynamic> _bgMessageHandler(Map<String, dynamic> message) async {
-		Map<dynamic, dynamic> content;
-		if (!message.containsKey('notification')) {
-			content = message['data'];
-		} else {
-			content = message['notification'];
-		}
-		//await _showNotification(content['title'], content['body'], message['data']['channel']);
+		await _showNotification(message);
 	}
 
 	static Future _showNotification(Map<String, dynamic> message) async {

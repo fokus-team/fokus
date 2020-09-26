@@ -1,7 +1,6 @@
 import 'package:fokus/model/currency_type.dart';
 import 'package:fokus/model/notification/notification_group.dart';
 import 'package:fokus/model/notification/notification_type.dart';
-import 'package:fokus/model/ui/gamification/ui_points.dart';
 import 'package:fokus/model/ui/user/ui_user.dart';
 import 'package:get_it/get_it.dart';
 import 'package:logging/logging.dart';

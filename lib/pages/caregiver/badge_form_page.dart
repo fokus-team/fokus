@@ -3,13 +3,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/logic/badge_form/badge_form_cubit.dart';
 import 'package:fokus/model/ui/form/badge_form_model.dart';
-import 'package:fokus/model/ui/gamification/ui_badge.dart';
 import 'package:fokus/utils/dialog_utils.dart';
 import 'package:fokus/utils/form_config.dart';
 import 'package:fokus/utils/snackbar_utils.dart';
 import 'package:fokus/widgets/buttons/help_icon_button.dart';
 import 'package:fokus/widgets/forms/iconpicker_field.dart';
-import 'package:smart_select/smart_select.dart';
 
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/theme_config.dart';

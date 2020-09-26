@@ -2,7 +2,6 @@ import 'package:bson/bson.dart';
 import 'package:fokus/model/currency_type.dart';
 import 'package:fokus/model/notification/notification_group.dart';
 import 'package:fokus/model/notification/notification_type.dart';
-import 'package:fokus/model/ui/gamification/ui_points.dart';
 import 'package:fokus/model/ui/user/ui_user.dart';
 import 'package:googleapis/fcm/v1.dart';
 

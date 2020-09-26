@@ -1,10 +1,6 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fokus/logic/auth/auth_bloc/authentication_bloc.dart';
 import 'package:fokus/logic/caregiver_awards_cubit.dart';
-import 'package:fokus/logic/reward_form/reward_form_cubit.dart';
 import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/ui/gamification/ui_badge.dart';
 import 'package:fokus/model/ui/ui_button.dart';

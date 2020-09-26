@@ -28,6 +28,8 @@ class AppColors {
 	static final Color negativeColor = Colors.red;
 	static final Color positiveColor = Colors.lightGreen;
 
+  static final Color notificationAccentColor = Color(0xfffdbf00);
+
   // Currency colors
 	static final Map<CurrencyType, Color> currencyColor = {
 		CurrencyType.diamond: Color.fromARGB(255, 3, 169, 244),

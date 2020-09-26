@@ -3,31 +3,31 @@ import 'package:fokus/model/currency_type.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/icon_sets.dart';
 
+enum AssetPathType { flutter, drawable }
+
+extension GraphicAssetPaths on AssetType {
+	String get category => const {
+		AssetType.avatars: 'avatar',
+		AssetType.rewards: 'reward',
+		AssetType.badges: 'badge',
+		AssetType.currencies: 'currency',
+	}[this];
+
+	String getPath(int index, [AssetPathType pathType = AssetPathType.flutter]) {
+		String assetId;
+		if (this == AssetType.currencies) {
+			if (index == null)
+				index = 0;
+			assetId = CurrencyType.values[index].name;
+		} else
+			assetId = index == null || graphicAssets[this][index] == null ? 'default' : graphicAssets[this][index].filename;
+		if (pathType == AssetPathType.drawable)
+			return '${category}_${assetId.replaceAll(RegExp('-'), '_')}';
+		else
+			return 'assets/image/$category/$assetId.svg';
+	}
+}
+
 String helpPagePath(BuildContext context, String helpPage) {
 	return 'assets/help/${AppLocales.of(context).locale.languageCode}/$helpPage.md';
-}
-
-String currencySvgPath(CurrencyType currencyType) {
-	return 'assets/image/currency/${currencyType.toString().split('.').last}.svg';
-}
-
-String childAvatarSvgPath(int avatar) {
-	if(graphicAssets[GraphicAssetType.childAvatars][avatar] != null)
-		return 'assets/image/avatar/child/${graphicAssets[GraphicAssetType.childAvatars][avatar].filename}.svg';
-	else
-		return 'assets/image/avatar/default.svg';
-}
-
-String rewardIconSvgPath(int icon) {
-	if(graphicAssets[GraphicAssetType.rewardsIcons][icon] != null)
-		return 'assets/image/reward/${graphicAssets[GraphicAssetType.rewardsIcons][icon].filename}.svg';
-	else
-		return 'assets/image/reward/default.svg';
-}
-
-String badgeIconSvgPath(int icon) {
-	if(graphicAssets[GraphicAssetType.badgeIcons][icon] != null)
-		return 'assets/image/badge/${graphicAssets[GraphicAssetType.badgeIcons][icon].filename}.svg';
-	else
-		return 'assets/image/badge/default.svg';
 }

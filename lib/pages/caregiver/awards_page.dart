@@ -1,10 +1,6 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fokus/logic/auth/auth_bloc/authentication_bloc.dart';
 import 'package:fokus/logic/caregiver_awards_cubit.dart';
-import 'package:fokus/logic/reward_form/reward_form_cubit.dart';
 import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/ui/gamification/ui_badge.dart';
 import 'package:fokus/model/ui/ui_button.dart';
@@ -78,8 +74,8 @@ class _CaregiverAwardsPageState extends State<CaregiverAwardsPage> {
 				elements: <Widget>[
 					for (var reward in state.rewards)
 						ItemCard(
-							title: reward.name, 
-							subtitle: AppLocales.of(context).translate((reward.limit != null || reward.limit == 0 ) ? 
+							title: reward.name,
+							subtitle: AppLocales.of(context).translate((reward.limit != null || reward.limit == 0 ) ?
 								'$_pageKey.content.limitedReward' : '$_pageKey.content.unlimitedReward', {'REWARD_LIMIT': reward.limit.toString()}),
 							menuItems: [
 								UIButton.ofType(ButtonType.edit, () => { Navigator.of(context).pushNamed(AppPage.caregiverRewardForm.name, arguments: reward.id) }),
@@ -95,7 +91,7 @@ class _CaregiverAwardsPageState extends State<CaregiverAwardsPage> {
 									);
 								})
 							],
-							graphicType: GraphicAssetType.rewardsIcons,
+							graphicType: AssetType.rewards,
 							graphic: reward.icon,
 							onTapped: () => showRewardDialog(context, reward, showHeader: false),
 							chips: <Widget>[
@@ -120,7 +116,7 @@ class _CaregiverAwardsPageState extends State<CaregiverAwardsPage> {
 						ItemCard(
 							title: badge.name, 
 							subtitle: badge.description != null ? badge.description : AppLocales.of(context).translate('$_pageKey.content.noDescriptionSubtitle'),
-							menuItems: [ 
+							menuItems: [
 								UIButton.ofType(ButtonType.delete, () {
 									showBasicDialog(context,
 										GeneralDialog.confirm(
@@ -134,7 +130,7 @@ class _CaregiverAwardsPageState extends State<CaregiverAwardsPage> {
 								})
 							],
 							onTapped: () => showBadgeDialog(context, badge, showHeader: false),
-							graphicType: GraphicAssetType.badgeIcons,
+							graphicType: AssetType.badges,
 							graphic: badge.icon,
 							graphicHeight: 44.0
 						)

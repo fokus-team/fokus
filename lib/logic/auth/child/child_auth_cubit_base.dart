@@ -5,7 +5,7 @@ import 'package:get_it/get_it.dart';
 import 'package:fokus/logic/auth/auth_bloc/authentication_bloc.dart';
 import 'package:fokus/services/app_config/app_config_repository.dart';
 import 'package:fokus/services/data/data_repository.dart';
-import 'package:fokus/utils/id_code_transformer.dart';
+import 'package:fokus_auth/fokus_auth.dart';
 import 'package:fokus/model/db/user/user_role.dart';
 
 class ChildAuthCubitBase<State> extends Cubit<State> {

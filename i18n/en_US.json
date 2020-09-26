@@ -60,15 +60,16 @@
 			},
 			"content": {
 				"caregiver": {
-					"receivedReward": "{CHILD_NAME} received the reward",
-					"finishedTask": "{CHILD_NAME} finished the task",
-					"unfinishedPlan": "{CHILD_NAME} didn't finish the plan",
+					"rewardBought": "{CHILD_NAME} received the reward",
+					"taskFinished": "{CHILD_NAME} finished the task",
+					"planUnfinished": "{CHILD_NAME} didn't finish the plan",
 					"gradeTask": "Grade task",
 					"graded": "Graded"
 				},
 				"child": {
-					"taskGraded": "You received points for a task!",
-					"receivedBadge": "You received a badge!"
+					"pointsReceived": "You received points for a task!",
+					"pointsReceivedWithCount": "You received {POINTS, plural, offset:0, one {# point} other {# points}} for a task!",
+					"badgeAwarded": "You received a badge!"
 				}
 			}
 		},
@@ -609,6 +610,36 @@
 			"noPasswordMatch": "Passwords do not match",
 			"passwordEmpty": "Password can not be empty",
 			"avatarEmpty": "You must pick child's avatar"
+		}
+	},
+	"notification": {
+		"button": {
+			"rate": "Rate"
+		},
+		"group": {
+			"caregiver": {
+				"rewardBought": "$[notif_count] rewards bought",
+				"taskFinished": "$[notif_count] tasks finished",
+				"planUnfinished": "$[notif_count] plans unfinished"
+			},
+			"child": {
+				"pointsReceived": "$[notif_count] tasks graded",
+				"badgeAwarded": "$[notif_count] badges awarded"
+			}
+		},
+		"channel": {
+			"name": {
+				"general": "General",
+				"prizes": "Prizes",
+				"grades": "Grades",
+				"plans": "Plans"
+			},
+			"description": {
+				"general": "General notifications",
+				"prizes": "Child prizes updates",
+				"grades": "Task grading updates",
+				"plans": "Plan updates"
+			}
 		}
 	},
 	"help": {

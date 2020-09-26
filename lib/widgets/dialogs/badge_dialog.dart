@@ -3,7 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:fokus/model/ui/gamification/ui_badge.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/app_paths.dart';
-import 'package:fokus/utils/theme_config.dart';
+import 'package:fokus/utils/icon_sets.dart';
 import 'package:fokus/widgets/buttons/rounded_button.dart';
 
 class BadgeDialog extends StatefulWidget {
@@ -60,7 +60,7 @@ class _BadgeDialogState extends State<BadgeDialog> with SingleTickerProviderStat
 									),
 									Padding(
 										padding: EdgeInsets.only(top: 10.0),
-										child: SvgPicture.asset(badgeIconSvgPath(widget.badge.icon), height: MediaQuery.of(context).size.width*0.3)
+										child: SvgPicture.asset(AssetType.badges.getPath(widget.badge.icon), height: MediaQuery.of(context).size.width*0.3)
 									)
 								]
 							),

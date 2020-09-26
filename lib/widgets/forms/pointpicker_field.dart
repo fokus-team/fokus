@@ -7,6 +7,7 @@ import 'package:fokus/model/ui/gamification/ui_currency.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/app_paths.dart';
 import 'package:fokus/utils/form_config.dart';
+import 'package:fokus/utils/icon_sets.dart';
 import 'package:fokus/utils/theme_config.dart';
 import 'package:fokus/widgets/buttons/bottom_sheet_bar_buttons.dart';
 import 'package:smart_select/smart_select.dart';
@@ -104,7 +105,7 @@ class _PointPickerFieldState extends State<PointPickerField> {
 											Padding(
 												padding: EdgeInsets.only(left: 10.0, top: 4.0),
 												child: CircleAvatar(
-													child: SvgPicture.asset(currencySvgPath(state.value != null ? state.value.type : CurrencyType.diamond), width: 28, fit: BoxFit.cover),
+													child: SvgPicture.asset(getIconPath(state.value != null ? state.value.type : CurrencyType.diamond), width: 28, fit: BoxFit.cover),
 													backgroundColor: AppColors.currencyColor[state.value != null ? state.value.type : CurrencyType.diamond].withAlpha(50)
 												)
 											),
@@ -153,7 +154,7 @@ class _PointPickerFieldState extends State<PointPickerField> {
 							children: [
 								Padding(
 									padding: EdgeInsets.only(right: 6.0),
-									child: SvgPicture.asset(currencySvgPath(item.value.type), width: 30, fit: BoxFit.cover)
+									child: SvgPicture.asset(getIconPath(item.value.type), width: 30, fit: BoxFit.cover)
 								),
 								Text(item.value.getName(context), style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.currencyColor[item.value.type]))
 							]
@@ -173,4 +174,5 @@ class _PointPickerFieldState extends State<PointPickerField> {
 		);
   }
 
+  String getIconPath(CurrencyType type) => AssetType.currencies.getPath(type.index);
 }

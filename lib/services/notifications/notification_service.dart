@@ -1,4 +1,5 @@
 import 'package:fokus/model/currency_type.dart';
+import 'package:fokus/model/notification/notification_group.dart';
 import 'package:fokus/model/notification/notification_type.dart';
 import 'package:fokus/model/ui/gamification/ui_points.dart';
 import 'package:fokus/model/ui/user/ui_user.dart';
@@ -22,8 +23,8 @@ abstract class NotificationService implements ActiveUserObserver {
 	@protected
 	final Logger logger = Logger('NotificationService');
 
-	Future sendNotification(NotificationType type, ObjectId user, {NotificationText title,
-		NotificationText body, NotificationIcon icon, List<NotificationButton> buttons = const []});
+	Future sendNotification(NotificationType type, ObjectId user, {NotificationText title, NotificationText body,
+		NotificationIcon icon, NotificationGroup group, List<NotificationButton> buttons = const []});
 
 	Future sendRewardBoughtNotification(ObjectId rewardId, String rewardName, ObjectId caregiverId, UIUser child);
 	Future sendTaskFinishedNotification(ObjectId taskId, String taskName, ObjectId caregiverId, UIUser child);

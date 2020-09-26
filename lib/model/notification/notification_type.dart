@@ -12,15 +12,19 @@ enum NotificationType {
 	badgeAwarded
 }
 
-const String _pageKey = "page.notifications.content";
+const String _titleKey = "page.notifications.content";
+const String _groupKey = "notification.group";
 
 extension NotificationTypeExtension on NotificationType {
-	String get title => {
-		NotificationType.rewardBought: "$_pageKey.caregiver.rewardBought",
-		NotificationType.taskFinished: "$_pageKey.caregiver.taskFinished",
-		NotificationType.planUnfinished: "$_pageKey.caregiver.planUnfinished",
-		NotificationType.pointsReceived: "$_pageKey.child.pointsReceived",
-		NotificationType.badgeAwarded: "$_pageKey.child.badgeAwarded"
+	String get title => '$_titleKey.$key';
+	String get group => '$_groupKey.$key';
+
+	String get key => {
+		NotificationType.rewardBought: "caregiver.rewardBought",
+		NotificationType.taskFinished: "caregiver.taskFinished",
+		NotificationType.planUnfinished: "caregiver.planUnfinished",
+		NotificationType.pointsReceived: "child.pointsReceived",
+		NotificationType.badgeAwarded: "child.badgeAwarded",
 	}[this];
 
 	Icon get icon => Icon(

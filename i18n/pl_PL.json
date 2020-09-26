@@ -622,6 +622,17 @@
 		"button": {
 			"rate": "Oceń"
 		},
+		"group": {
+			"caregiver": {
+				"rewardBought": "$[notif_count] odebranych nagród",
+				"taskFinished": "$[notif_count] wykonanych zadań",
+				"planUnfinished": "$[notif_count] nieskończonych planów"
+			},
+			"child": {
+				"pointsReceived": "$[notif_count] ocenionych zadań",
+				"badgeAwarded": "$[notif_count] przyznanych odznak"
+			}
+		},
 		"channel": {
 			"name": {
 				"general": "Ogólne",

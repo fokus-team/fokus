@@ -622,6 +622,17 @@
 		"button": {
 			"rate": "Rate"
 		},
+		"group": {
+			"caregiver": {
+				"rewardBought": "$[notif_count] rewards bought",
+				"taskFinished": "$[notif_count] tasks finished",
+				"planUnfinished": "$[notif_count] plans unfinished"
+			},
+			"child": {
+				"pointsReceived": "$[notif_count] tasks graded",
+				"badgeAwarded": "$[notif_count] badges awarded"
+			}
+		},
 		"channel": {
 			"name": {
 				"general": "General",

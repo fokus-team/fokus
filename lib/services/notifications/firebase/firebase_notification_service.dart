@@ -1,5 +1,6 @@
 import 'package:bson/bson.dart';
 import 'package:fokus/model/currency_type.dart';
+import 'package:fokus/model/notification/notification_group.dart';
 import 'package:fokus/model/notification/notification_type.dart';
 import 'package:fokus/model/ui/gamification/ui_points.dart';
 import 'package:fokus/model/ui/user/ui_user.dart';
@@ -29,8 +30,8 @@ class FirebaseNotificationService extends NotificationService {
 	Future sendBadgeAwardedNotification(String badgeName, int badgeIcon, ObjectId childId) => throw UnimplementedError();
 
   @override
-  Future sendNotification(NotificationType type, ObjectId userId, {NotificationText title,
-	  NotificationText body, NotificationIcon icon, List<NotificationButton> buttons = const []}) async {
+  Future sendNotification(NotificationType type, ObjectId userId, {NotificationText title, NotificationText body,
+	    NotificationIcon icon, NotificationGroup group, List<NotificationButton> buttons = const []}) async {
   	var tokens = await getUserTokens(userId);
   	if (tokens == null || tokens.isEmpty) {
 		  logNoUserToken(userId);

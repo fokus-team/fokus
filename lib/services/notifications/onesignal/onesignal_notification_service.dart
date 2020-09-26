@@ -1,6 +1,7 @@
 import 'package:bson/bson.dart';
 import 'package:fokus/model/currency_type.dart';
 import 'package:fokus/model/ui/gamification/ui_points.dart';
+import 'package:fokus/model/ui/user/ui_user.dart';
 import 'package:fokus/utils/icon_sets.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 
@@ -20,33 +21,34 @@ class OneSignalNotificationService extends NotificationService {
 	final OneSignalNotificationProvider provider = OneSignalNotificationProvider();
 
 	@override
-	Future sendPlanUnfinishedNotification(ObjectId planId, String planName, ObjectId caregiverId, int avatar) {
+	Future sendPlanUnfinishedNotification(ObjectId planId, String planName, ObjectId caregiverId, UIUser child) {
 		var type = NotificationType.planUnfinished;
 		return sendNotification(type, caregiverId,
-			title: NotificationText.appBased(type.title),
+			title: NotificationText.appBased(type.title, {'CHILD_NAME': child.name}),
 			body: NotificationText.userBased(planName),
-			icon: NotificationIcon(AssetType.avatars, avatar),
+			icon: NotificationIcon(AssetType.avatars, child.avatar),
 			subject: planId,
 		);
 	}
 
 	@override
-	Future sendRewardBoughtNotification(String rewardName, ObjectId caregiverId, int avatar) {
+	Future sendRewardBoughtNotification(ObjectId rewardId, String rewardName, ObjectId caregiverId, UIUser child) {
 		var type = NotificationType.rewardBought;
 		return sendNotification(type, caregiverId,
-			title: NotificationText.appBased(type.title),
+			title: NotificationText.appBased(type.title, {'CHILD_NAME': child.name}),
 			body: NotificationText.userBased(rewardName),
-			icon: NotificationIcon(AssetType.avatars, avatar),
+			icon: NotificationIcon(AssetType.avatars, child.avatar),
+			subject: rewardId
 		);
 	}
 
 	@override
-	Future sendTaskFinishedNotification(ObjectId taskId, String taskName, ObjectId caregiverId, int avatar) {
+	Future sendTaskFinishedNotification(ObjectId taskId, String taskName, ObjectId caregiverId, UIUser child) {
 		var type = NotificationType.taskFinished;
 		return sendNotification(type, caregiverId,
-			title: NotificationText.appBased(type.title),
+			title: NotificationText.appBased(type.title, {'CHILD_NAME': child.name}),
 			body: NotificationText.userBased(taskName),
-			icon: NotificationIcon(AssetType.avatars, avatar),
+			icon: NotificationIcon(AssetType.avatars, child.avatar),
 			buttons: [NotificationButton.rate],
 			subject: taskId,
 		);

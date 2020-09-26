@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fokus/model/currency_type.dart';
+import 'package:fokus/model/ui/user/ui_user.dart';
 import 'package:get_it/get_it.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:mongo_dart/mongo_dart.dart' as Mongo;
@@ -102,10 +103,21 @@ class _ReportFormState extends State<ReportForm> {
 			label: Text(AppLocales.of(context).translate('actions.confirm')),
 			onPressed: () {
 				widget.saveCallback(isRejected ? UITaskReportMark.rejected : mark, _commentController.value.text);
-				GetIt.I<NotificationService>().sendPointsReceivedNotification(CurrencyType.amethyst, 42, 'Sprzątanie pokoju', Mongo.ObjectId.parse('5f0884bbe66ce937cdc9d6ab'));
 				Navigator.of(context).pop();
+				notificationTest();
 			}
 		);
+	}
+	
+	void notificationTest() {
+		var child = UIUser(Mongo.ObjectId.parse('5f0884bbe66ce937cdc9d6ab'), 'Maciek', avatar: 0);
+		var service = GetIt.I<NotificationService>();
+		service.sendBadgeAwardedNotification('Dobry Planista', 6, child.id);
+		service.sendPointsReceivedNotification(CurrencyType.amethyst, 42, 'Sprzątanie pokoju', child.id);
+
+		service.sendPlanUnfinishedNotification(Mongo.ObjectId.parse("5f10c17c270aa1504e9bdf8c"), 'Sprzątanie pokoju', child.id, child);
+		service.sendTaskFinishedNotification(Mongo.ObjectId.parse("5f11d1753d573e587b63b04c"), 'Sprzątanie', child.id, child);
+		service.sendRewardBoughtNotification(Mongo.ObjectId.parse("5f6cb1745ad4467802e2b1cb"), 'Godzina gry na konsoli', child.id, child);
 	}
 
 	Widget buildBottomNavigation() {

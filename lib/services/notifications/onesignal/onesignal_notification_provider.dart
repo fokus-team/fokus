@@ -41,7 +41,8 @@ class OneSignalNotificationProvider extends NotificationProvider {
 				arguments = {'tab': data.type == NotificationType.rewardBought ? 1 : 0};
 				if (data.subject != null)
 					arguments['id'] = data.subject;
-			}
+			} else if (data.subject != null)
+				arguments = data.subject;
 			_navigatorKey.currentState.pushNamed(data.type.redirectPage.name, arguments: arguments);
 	  });
 	  OneSignal.shared.setSubscriptionObserver((changes) {

@@ -69,7 +69,7 @@
 				"child": {
 					"pointsReceived": "Masz nowe punkty za zadanie!",
 					"pointsReceivedWithCount": "Masz {POINTS, plural, offset:0, one {nowy punkt} two {# nowe punkty} few {# nowe punkty} other {# nowych punktów}} za zadanie!",
-					"badgeAwarded": "Masz nową odznaka!"
+					"badgeAwarded": "Masz nową odznakę!"
 				}
 			}
 		},

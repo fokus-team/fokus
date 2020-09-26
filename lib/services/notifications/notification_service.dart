@@ -1,6 +1,7 @@
 import 'package:fokus/model/currency_type.dart';
 import 'package:fokus/model/notification/notification_type.dart';
 import 'package:fokus/model/ui/gamification/ui_points.dart';
+import 'package:fokus/model/ui/user/ui_user.dart';
 import 'package:get_it/get_it.dart';
 import 'package:logging/logging.dart';
 import 'package:meta/meta.dart';
@@ -24,9 +25,9 @@ abstract class NotificationService implements ActiveUserObserver {
 	Future sendNotification(NotificationType type, ObjectId user, {NotificationText title,
 		NotificationText body, NotificationIcon icon, List<NotificationButton> buttons = const []});
 
-	Future sendRewardBoughtNotification(String rewardName, ObjectId caregiverId, int avatar);
-	Future sendTaskFinishedNotification(ObjectId taskId, String taskName, ObjectId caregiverId, int avatar);
-	Future sendPlanUnfinishedNotification(ObjectId planId, String planName, ObjectId caregiverId, int avatar);
+	Future sendRewardBoughtNotification(ObjectId rewardId, String rewardName, ObjectId caregiverId, UIUser child);
+	Future sendTaskFinishedNotification(ObjectId taskId, String taskName, ObjectId caregiverId, UIUser child);
+	Future sendPlanUnfinishedNotification(ObjectId planId, String planName, ObjectId caregiverId, UIUser child);
 
 	Future sendPointsReceivedNotification(CurrencyType currencyType, int quantity, String taskName, ObjectId childId);
 	Future sendBadgeAwardedNotification(String badgeName, int badgeIcon, ObjectId childId);

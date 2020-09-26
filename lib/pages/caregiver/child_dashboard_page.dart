@@ -23,7 +23,7 @@ import 'package:smart_select/smart_select.dart';
 class CaregiverChildDashboardPage extends StatefulWidget {
 	final int _currentIndex;
 
-  CaregiverChildDashboardPage(Object args) : _currentIndex = (args as Map<String, dynamic>)['tab'];
+  CaregiverChildDashboardPage(Map<String, dynamic> args) : _currentIndex = args != null ? args['tab'] ?? 0 : 0;
 
   @override
   _CaregiverChildDashboardPageState createState() =>

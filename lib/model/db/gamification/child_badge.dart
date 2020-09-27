@@ -1,16 +1,16 @@
 import 'package:fokus/model/db/date/time_date.dart';
 
 class ChildBadge {
-  String comment;
+  String description;
   TimeDate date;
   int icon;
   String name;
 
-  ChildBadge({this.comment, this.date, this.icon, this.name});
+  ChildBadge({this.description, this.date, this.icon, this.name});
 
   factory ChildBadge.fromJson(Map<String, dynamic> json) {
     return json != null ? ChildBadge(
-      comment: json['comment'],
+      description: json['description'],
       date: TimeDate.parseDBDate(json['date']),
       icon: json['icon'],
       name: json['name'],
@@ -19,7 +19,7 @@ class ChildBadge {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['comment'] = this.comment;
+    data['description'] = this.description;
     data['date'] = this.date.toDBDate();
     data['icon'] = this.icon;
     data['name'] = this.name;

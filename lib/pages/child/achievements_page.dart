@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:fokus/model/ui/gamification/ui_badge.dart';
+import 'package:fokus/logic/child_badges_cubit.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/app_paths.dart';
 import 'package:fokus/utils/dialog_utils.dart';
@@ -9,6 +9,7 @@ import 'package:fokus/utils/theme_config.dart';
 import 'package:fokus/widgets/app_navigation_bar.dart';
 import 'package:fokus/widgets/app_header.dart';
 import 'package:fokus/widgets/general/app_hero.dart';
+import 'package:fokus/widgets/loadable_bloc_builder.dart';
 import 'package:fokus/widgets/segment.dart';
 
 class ChildAchievementsPage extends StatefulWidget {
@@ -21,110 +22,6 @@ class _ChildAchievementsPageState extends State<ChildAchievementsPage> {
 	double badgeMargin = 20.0;
 	int badgesPerShelf = 3;
 
-	List<UIBadge> badges = [
-		UIBadge(
-			name: 'Dobry planista',
-			icon: 0,
-			//date: TimeDate(2020, 9, 9),
-			description: 'Odznaczyłeś się wysokimi umiejętnościami planowania własnego czasu pracy.'
-		),
-		UIBadge(
-			name: 'Dobry planista',
-			icon: 1,
-			description: 'Odznaczyłeś się wysokimi umiejętnościami planowania własnego czasu pracy.'
-		),
-		UIBadge(
-			name: 'Dobry planista',
-			icon: 2,
-			description: 'Odznaczyłeś się wysokimi umiejętnościami planowania własnego czasu pracy.'
-		),
-		UIBadge(
-			name: 'Dobry planista',
-			icon: 3,
-			description: 'Odznaczyłeś się wysokimi umiejętnościami planowania własnego czasu pracy.'
-		),
-		UIBadge(
-			name: 'Dobry planista',
-			icon: 4,
-			description: 'Odznaczyłeś się wysokimi umiejętnościami planowania własnego czasu pracy.'
-		),
-		UIBadge(
-			name: 'Dobry planista',
-			icon: 5,
-			description: 'Odznaczyłeś się wysokimi umiejętnościami planowania własnego czasu pracy.'
-		),
-		UIBadge(
-			name: 'Dobry planista',
-			icon: 6,
-			description: 'Odznaczyłeś się wysokimi umiejętnościami planowania własnego czasu pracy.'
-		),
-		UIBadge(
-			name: 'Dobry planista',
-			icon: 7,
-			description: 'Odznaczyłeś się wysokimi umiejętnościami planowania własnego czasu pracy.'
-		),
-		UIBadge(
-			name: 'Dobry planista',
-			icon: 8,
-			description: 'Odznaczyłeś się wysokimi umiejętnościami planowania własnego czasu pracy.'
-		),
-		UIBadge(
-			name: 'Dobry planista',
-			icon: 9,
-			description: 'Odznaczyłeś się wysokimi umiejętnościami planowania własnego czasu pracy.'
-		),
-		UIBadge(
-			name: 'Dobry planista',
-			icon: 10,
-			description: 'Odznaczyłeś się wysokimi umiejętnościami planowania własnego czasu pracy.'
-		),
-		UIBadge(
-			name: 'Dobry planista',
-			icon: 11,
-			description: 'Odznaczyłeś się wysokimi umiejętnościami planowania własnego czasu pracy.'
-		),
-		UIBadge(
-			name: 'Dobry planista',
-			icon: 12,
-			description: 'Odznaczyłeś się wysokimi umiejętnościami planowania własnego czasu pracy.'
-		),
-		UIBadge(
-			name: 'Dobry planista',
-			icon: 13,
-			description: 'Odznaczyłeś się wysokimi umiejętnościami planowania własnego czasu pracy.'
-		),
-		UIBadge(
-			name: 'Dobry planista',
-			icon: 14,
-			description: 'Odznaczyłeś się wysokimi umiejętnościami planowania własnego czasu pracy.'
-		),
-		UIBadge(
-			name: 'Dobry planista',
-			icon: 15,
-			description: 'Odznaczyłeś się wysokimi umiejętnościami planowania własnego czasu pracy.'
-		),
-		UIBadge(
-			name: 'Dobry planista',
-			icon: 16,
-			description: 'Odznaczyłeś się wysokimi umiejętnościami planowania własnego czasu pracy.'
-		),
-		UIBadge(
-			name: 'Dobry planista',
-			icon: 17,
-			description: 'Odznaczyłeś się wysokimi umiejętnościami planowania własnego czasu pracy.'
-		),
-		UIBadge(
-			name: 'Dobry planista',
-			icon: 18,
-			description: 'Odznaczyłeś się wysokimi umiejętnościami planowania własnego czasu pracy.'
-		),
-		UIBadge(
-			name: 'Dobry planista',
-			icon: 19,
-			description: 'Odznaczyłeś się wysokimi umiejętnościami planowania własnego czasu pracy.'
-		)
-	];
-
 	@override
 	Widget build(BuildContext context) {
 		if(MediaQuery.of(context).size.width <= 370) {
@@ -136,31 +33,35 @@ class _ChildAchievementsPageState extends State<ChildAchievementsPage> {
 				crossAxisAlignment: CrossAxisAlignment.start,
 				children: [
 					ChildCustomHeader(),
-					AppSegments(
-						segments: [
-							Segment(
-								title: '$_pageKey.content.achievementsTitle',
-								subtitle: '$_pageKey.content.achievementsHint',
-								customContent: _buildBadgeShelfs()
-							)
-						]
-					)
+		      LoadableBlocBuilder<ChildBadgesCubit>(
+				    builder: (context, state) => 
+							AppSegments(
+								segments: [
+									Segment(
+										title: '$_pageKey.content.achievementsTitle',
+										subtitle: '$_pageKey.content.achievementsHint',
+										customContent: _buildBadgeShelfs(state)
+									)
+								]
+							),
+						wrapWithExpanded: true,
+		      )
 				]
 			),
 			bottomNavigationBar: AppNavigationBar.childPage(currentIndex: 2)
 		);
 	}
 
-	Widget _buildBadgeShelfs() {
-		if(badges.isNotEmpty) {
+	Widget _buildBadgeShelfs(ChildBadgesLoadSuccess state) {
+		if(state.badges.isNotEmpty) {
 			return Padding(
 				padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: AppBoxProperties.screenEdgePadding),
 				child: Builder(
 					builder: (context) {
 						List<Widget> rows = [];
-						for (var i = 0; i < badges.length; i += badgesPerShelf) {
+						for (var i = 0; i < state.badges.length; i += badgesPerShelf) {
 							rows.add(Row(
-								children: badges.sublist(i, i+badgesPerShelf > badges.length ? badges.length : i+badgesPerShelf)
+								children: state.badges.sublist(i, i+badgesPerShelf > state.badges.length ? state.badges.length : i+badgesPerShelf)
 								.map((badge) =>
 									Expanded(
 										flex: (100.0/badgesPerShelf).round(),

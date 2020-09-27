@@ -432,7 +432,7 @@
 					"currenciesUpdatedText": "Currencies list has been updated",
 					"saveCurrenciesButton": "Save currencies",
 					"currencyNotUsed": "Not used",
-					"currencyNameLabel": "Nazwa waluty",
+					"currencyNameLabel": "Currency name",
 					"clearCurrencyText": "Points in this currency will not be removed. You will however loose the ability to use it. Are you sure you want to clear this currency?",
 					"currencies": {
 						"diamond": "Diamond",

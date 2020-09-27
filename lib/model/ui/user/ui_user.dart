@@ -23,7 +23,7 @@ class UIUser extends Equatable {
 	User toDBModel() => User(id: id, name: name, role: role, avatar: avatar);
 
 	@override
-  List<Object> get props => [id, name, avatar];
+  List<Object> get props => [id, name, avatar, role];
 
 	@override
   String toString() {

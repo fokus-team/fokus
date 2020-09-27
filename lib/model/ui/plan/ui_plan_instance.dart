@@ -23,7 +23,7 @@ class UIPlanInstance extends UIPlanBase {
 			taskCount = plan.tasks.length, state = PlanInstanceState.notStarted, duration = null, super(null, plan.name, description);
 
 	@override
-  List<Object> get props => super.props..addAll([taskCount]);
+  List<Object> get props => super.props..addAll([taskCount, completedTaskCount, state, duration]);
 
 	static int _defElapsedTime() => 0;
 }

@@ -428,7 +428,7 @@
 					"title": "Waluty"
 				},
 				"content": {
-					"generalHint": "Możesz ustawić do trzech dodatkowych walut w aplikacji, a następnie używać ich w zadaniach i nagrodach. Domyślna waluta aplikacji, nie może zostać zmodyfikowana.",
+					"generalHint": "Możesz ustawić do trzech dodatkowych walut w aplikacji, a następnie używać ich w zadaniach i nagrodach. Domyślna waluta aplikacji nie może zostać zmodyfikowana.",
 					"currenciesUpdatedText": "Zaktualizowano listę walut",
 					"saveCurrenciesButton": "Zapisz konfigurację",
 					"currencyNotUsed": "Nie używana",

@@ -20,11 +20,12 @@ class _SettingsPageState extends State<SettingsPage> {
 	static const String _pageKey = 'page.settings.content';
 	static const String _defaultLanguageKey = 'default';
 
-	List<String> languages = [_defaultLanguageKey, 'en', 'pl'];
+	List<String> languages = [_defaultLanguageKey, ...AppLocalesDelegate.supportedLocales.map((locale) => locale.languageCode)];
 	String pickedLanguage;
 
   @override
   Widget build(BuildContext context) {
+	  // ignore: close_sinks
     var authenticationBloc = context.bloc<AuthenticationBloc>();
     var isCurrentUserCaregiver = authenticationBloc.state.user.role == UserRole.caregiver;
 

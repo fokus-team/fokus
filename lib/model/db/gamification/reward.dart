@@ -1,3 +1,5 @@
+import 'package:fokus/model/db/date/time_date.dart';
+import 'package:fokus/model/ui/form/reward_form_model.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
 import 'points.dart';
@@ -9,8 +11,11 @@ class Reward {
   String name;
   Points cost;
   ObjectId createdBy;
+  TimeDate createdAt;
 
-  Reward({this.createdBy, this.id, this.icon, this.limit, this.name, this.cost});
+  Reward({this.createdBy, this.id, this.icon, this.limit, this.name, this.cost, this.createdAt});
+	Reward.fromRewardForm(RewardFormModel reward, ObjectId creator, [ObjectId id]) : this(name: reward.name, id: id ?? ObjectId(), createdBy: creator,
+		  limit: reward.limit, icon: reward.icon, cost: reward.pointValue != null ? Points.fromUICurrency(reward.pointCurrency, reward.pointValue, creator: creator) : null);
 
   factory Reward.fromJson(Map<String, dynamic> json) {
     return json != null ? Reward(

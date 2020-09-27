@@ -6,6 +6,8 @@ import 'package:fokus/model/currency_type.dart';
 import 'package:fokus/model/ui/gamification/ui_currency.dart';
 import 'package:fokus/utils/app_paths.dart';
 import 'package:fokus/utils/dialog_utils.dart';
+import 'package:fokus/utils/icon_sets.dart';
+import 'package:fokus/utils/snackbar_utils.dart';
 import 'package:fokus/widgets/buttons/help_icon_button.dart';
 import 'package:fokus/widgets/dialogs/general_dialog.dart';
 import 'package:fokus/widgets/general/app_loader.dart';
@@ -49,8 +51,7 @@ class _CaregiverCurrenciesPageState extends State<CaregiverCurrenciesPage> {
 				}
 				if (state is CaregiverCurrenciesSubmissionSuccess) {
 					Navigator.of(context).pop();
-					// visual feedback
-					// showSuccessSnackbar(context, '$_pageKey.content.currenciesUpdatedText');
+					showSuccessSnackbar(context, '$_pageKey.content.currenciesUpdatedText');
 				}
 			},
 	    builder: (context, state) {
@@ -130,7 +131,7 @@ class _CaregiverCurrenciesPageState extends State<CaregiverCurrenciesPage> {
 			leading: Padding(
 				padding: EdgeInsets.only(left: 10.0, top: 4.0),
 				child: CircleAvatar(
-					child: SvgPicture.asset(currencySvgPath(type), width: 28, fit: BoxFit.cover),
+					child: SvgPicture.asset(AssetType.currencies.getPath(type.index), width: 28, fit: BoxFit.cover),
 					backgroundColor: AppColors.currencyColor[type].withAlpha(50)
 				)
 			),
@@ -140,7 +141,7 @@ class _CaregiverCurrenciesPageState extends State<CaregiverCurrenciesPage> {
 					mainAxisSize: MainAxisSize.min,
 					children: [
 						IconButton(
-							icon: Icon(Icons.edit),
+							icon: Icon(Icons.edit, color: Colors.grey[600]),
 							onPressed: () => {
 								showCurrencyEditDialog(
 									context,
@@ -156,7 +157,7 @@ class _CaregiverCurrenciesPageState extends State<CaregiverCurrenciesPage> {
 						),
 						if(title != null)
 							IconButton(
-								icon: Icon(Icons.remove_circle),
+								icon: Icon(Icons.remove_circle, color: Colors.grey[600]),
 								onPressed: () => {
 									showBasicDialog(
 										context,

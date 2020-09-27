@@ -5,6 +5,7 @@ import 'package:bloc/bloc.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/dialog_utils.dart';
 import 'package:fokus/widgets/dialogs/general_dialog.dart';
+import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 import 'package:logging/logging.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -15,9 +16,9 @@ import 'exception/db_exceptions.dart';
 
 class Instrumentator {
 	final Logger _logger = Logger('Instrumentator');
-	GlobalKey<NavigatorState> _navigatorKey;
+	final _navigatorKey = GetIt.I<GlobalKey<NavigatorState>>();
 
-	Instrumentator.runAppGuarded(Widget app, this._navigatorKey) {
+	Instrumentator.runAppGuarded(Widget app) {
 		Bloc.observer = FokusBlocObserver();
 		_setupLogger();
 		_setupCrashlytics();

@@ -294,7 +294,8 @@ class AppHeader extends StatelessWidget {
 		var auth = context.bloc<AuthenticationBloc>();
 		return Row(
 			children: <Widget>[
-				headerIconButton(Icons.notifications, () => Navigator.of(context).pushNamed(AppPage.notificationsPage.name)),
+				// Supporting system notification only for now
+				// headerIconButton(Icons.notifications, () => Navigator.of(context).pushNamed(AppPage.notificationsPage.name)),
 				PopupMenuList(
 					lightTheme: true,
 					items: [

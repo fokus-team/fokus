@@ -61,15 +61,16 @@
 			},
 			"content": {
 				"caregiver": {
-					"receivedReward": "{CHILD_NAME} odebrał(a) nagrodę",
-					"finishedTask": "{CHILD_NAME} wykonał(a) zadanie",
-					"unfinishedPlan": "{CHILD_NAME} nie skończył(a) planu",
+					"rewardBought": "{CHILD_NAME} odebrał(a) nagrodę",
+					"taskFinished": "{CHILD_NAME} wykonał(a) zadanie",
+					"planUnfinished": "{CHILD_NAME} nie skończył(a) planu",
 					"gradeTask": "Oceń zadanie",
 					"graded": "Oceniono"
 				},
 				"child": {
-					"taskGraded": "Nowe punkty za zadanie!",
-					"receivedBadge": "Nowa odznaka!"
+					"pointsReceived": "Masz nowe punkty za zadanie!",
+					"pointsReceivedWithCount": "Masz {POINTS, plural, offset:0, one {nowy punkt} two {# nowe punkty} few {# nowe punkty} other {# nowych punktów}} za zadanie!",
+					"badgeAwarded": "Masz nową odznakę!"
 				}
 			}
 		},
@@ -293,9 +294,16 @@
 					"pointCost": "Koszt punktowy nagrody",
 					"unlimitedReward": "Nagroda nielimitowana",
 					"limitedReward": "Limit {REWARD_LIMIT, plural, offset:0 one {jednej nagrody} other {# nagród}} na dziecko",
-					"1LeveledBadge": "Odznaka przyznawana jednorazowo",
-					"3LeveledBadge": "Odznaka 3 poziomowa",
-					"5LeveledBadge": "Odznaka 5 poziomowa"
+					"noDescriptionSubtitle": "Brak opisu",
+					"removeRewardTitle": "Usuń nagrodę",
+					"removeRewardText": "Odebrane przez dzieci nagrody nie zostaną usunięte. Nagroda zniknie jednak z listy możliwych do odbioru. Na pewno chcesz usunąć tą nagrodę?",
+					"removeBadgeTitle": "Usuń odznakę",
+					"removeBadgeText": "Odznaki przydzielone dzieciom nie zostaną usunięte. Nie będzie jednak możliwości przyznawania tej odznaki innym dzieciom. Na pewno chcesz usunąć tą odznakę?",
+					"rewardAddedText": "Dodano nagrodę",
+					"badgeAddedText": "Dodano odznakę",
+					"rewardUpdatedText": "Zmodifikowano nagrodę",
+					"rewardRemovedText": "Usunięto nagrodę",
+					"badgeRemovedText": "Usunięto odznakę"
 				}
 			},
 			"rewardForm": {
@@ -313,7 +321,7 @@
 					},
 					"rewardLimit": {
 						"label": "Limit nagród",
-						"hint": "Pozostaw puste, aby nie limitować"
+						"hint": "Liczba nagród możliwych do odbioru per dziecko. Pozostaw puste, aby nie limitować"
 					},
 					"rewardPoints": {
 						"valueLabel": "Koszt punktowy",
@@ -334,12 +342,7 @@
 			},
 			"badgeForm": {
 				"addBadgeTitle": "Dodaj odznakę",
-				"editBadgeTitle": "Edytuj odznakę",
 				"addBadgeButton": "Dodaj odznakę",
-				"saveBadgeButton": "Zapisz odznakę",
-				"removeBadgeButton": "Usuń odznakę",
-				"removeBadgeTitle": "Usuń odznakę",
-				"removeBadgeText": "Na pewno chcesz usunąć tą odznakę?",
 				"fields": {
 					"badgeName": {
 						"label": "Nazwa odznaki",
@@ -347,14 +350,6 @@
 					},
 					"badgeDescription": {
 						"label": "Opis odznaki"
-					},
-					"badgeLevel": {
-						"label": "Typ odznaki",
-						"options": {
-							"one": "Jednorazowa",
-							"three": "3 poziomy",
-							"five": "5 poziomów"
-						}
 					},
 					"badgeIcon": {
 						"label": "Ikona odznaki",
@@ -635,6 +630,36 @@
 			"noPasswordMatch": "Hasła nie pasują",
 			"passwordEmpty": "Hasło nie może być puste",
 			"avatarEmpty": "Należy wybrać awatar dziecka"
+		}
+	},
+	"notification": {
+		"button": {
+			"rate": "Oceń"
+		},
+		"group": {
+			"caregiver": {
+				"rewardBought": "$[notif_count] odebranych nagród",
+				"taskFinished": "$[notif_count] wykonanych zadań",
+				"planUnfinished": "$[notif_count] nieskończonych planów"
+			},
+			"child": {
+				"pointsReceived": "$[notif_count] ocenionych zadań",
+				"badgeAwarded": "$[notif_count] przyznanych odznak"
+			}
+		},
+		"channel": {
+			"name": {
+				"general": "Ogólne",
+				"prizes": "Nagrody",
+				"grades": "Oceny",
+				"plans": "Plany"
+			},
+			"description": {
+				"general": "Ogólne powiadomienia",
+				"prizes": "Informacje o nagrodach",
+				"grades": "Informacje o ocenach zadań",
+				"plans": "Informacje o planach"
+			}
 		}
 	},
 	"help": {

@@ -21,15 +21,21 @@ import 'package:fokus/widgets/buttons/popup_menu_list.dart';
 import 'package:smart_select/smart_select.dart';
 
 class CaregiverChildDashboardPage extends StatefulWidget {
+	final int _currentIndex;
+
+  CaregiverChildDashboardPage(Map<String, dynamic> args) : _currentIndex = args != null ? args['tab'] ?? 0 : 0;
+
   @override
   _CaregiverChildDashboardPageState createState() =>
-      new _CaregiverChildDashboardPageState();
+      new _CaregiverChildDashboardPageState(_currentIndex);
 }
 
 class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPage> with TickerProviderStateMixin {
 	static const String _pageKey = 'page.caregiverSection.childDashboard';
 	TabController _tabController;
-	int _currentIndex = 0;
+	int _currentIndex;
+
+	_CaregiverChildDashboardPageState(this._currentIndex);
 
 	final double customBottomBarHeight = 40.0;
 	final Duration bottomBarAnimationDuration = Duration(milliseconds: 400);
@@ -53,7 +59,7 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(vsync: this, length: 3);
+    _tabController = TabController(initialIndex: _currentIndex, vsync: this, length: 3);
     _tabController.animation
       ..addListener(() {
         setState(() {
@@ -90,7 +96,7 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 							// classic child card from caregiver panel
 							title: 'Maciek',
 							subtitle: '2 plany na dziś',
-							graphicType: GraphicAssetType.childAvatars,
+							graphicType: AssetType.avatars,
 							graphic: 16,
 							chips: <Widget>[
 								AttributeChip.withCurrency(content: '69420', currencyType: CurrencyType.amethyst)
@@ -268,7 +274,7 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 						title: item.title,
 						subtitle: AppLocales.of(context).translate(checked ? 'actions.selected' : 'actions.tapToSelect'),
 						graphic: item.value.icon,
-						graphicType: GraphicAssetType.badgeIcons,
+						graphicType: AssetType.badges,
 						graphicShowCheckmark: checked,
 						graphicHeight: 40.0,
 						onTapped: onChange != null ? () => onChange(item.value, !checked) : null,
@@ -350,7 +356,7 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 						ItemCard(
 							title: "Wycieczka do Zoo", 
 							subtitle: "Odebrano dnia 25.08.2020 18:34",
-							graphicType: GraphicAssetType.rewardsIcons,
+							graphicType: AssetType.rewards,
 							graphic: 16,
 							chips: <Widget>[
 								AttributeChip.withCurrency(content: "30", currencyType: CurrencyType.diamond)
@@ -378,7 +384,7 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 						// ItemCard(
 						// 	title: "Super planista", 
 						// 	subtitle: "Przyznano dnia 26.08.2020 20:10",
-						// 	graphicType: GraphicAssetType.badgeIcons,
+						// 	graphicType: AssetType.badgeIcons,
 						// 	graphic: 3,
 						// 	graphicHeight: 44.0,
 						// )

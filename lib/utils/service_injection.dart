@@ -10,7 +10,6 @@ import 'package:fokus/services/plan_keeper_service.dart';
 import 'package:fokus/services/task_instance_service.dart';
 import 'package:fokus/services/notifications/onesignal/onesignal_notification_service.dart';
 import 'package:fokus/services/notifications/notification_service.dart';
-import 'package:fokus/services/task_keeper_service.dart';
 import 'package:fokus_auth/fokus_auth.dart';
 
 void registerServices(GlobalKey<NavigatorState> navigatorKey, RouteObserver<PageRoute> routeObserver) {
@@ -25,5 +24,4 @@ void registerServices(GlobalKey<NavigatorState> navigatorKey, RouteObserver<Page
 	GetIt.I.registerSingleton<PlanKeeperService>(PlanKeeperService());
 	GetIt.I.registerSingleton<TaskInstanceService>(TaskInstanceService());
 	GetIt.I.registerSingleton<NotificationService>(OneSignalNotificationService());
-	GetIt.I.registerSingleton<TaskKeeperService>(TaskKeeperService());
 }

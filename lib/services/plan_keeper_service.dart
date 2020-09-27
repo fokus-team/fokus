@@ -1,5 +1,6 @@
 import 'dart:async';
 
+
 import 'package:fokus/model/db/user/user.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mongo_dart/mongo_dart.dart';
@@ -30,7 +31,9 @@ class PlanKeeperService implements ActiveUserObserver {
 			_userId = user.id;
 			_role = user.role;
 
+
 			onUserSignOut(user);
+
 			await _updateData();
 			var now = DateTime.now();
 			Duration timeToMidnight = DateTime(now.year, now.month, now.day + 1, 0, 0, 10).difference(now);
@@ -77,7 +80,7 @@ class PlanKeeperService implements ActiveUserObserver {
 
 		List<Future> updates = [];
 		for (var instance in instances)
-			updates.add(_dataRepository.updatePlanInstances(
+			updates.add(_dataRepository.updatePlanInstanceFields(
 				instance.id,
 				state: await _determineFinalPlanState(instance),
 				durationChange: instance.duration.isNotEmpty ? DateSpanUpdate<TimeDate>(getEndTime(instance.date), SpanDateType.end, instance.duration.length - 1) : null

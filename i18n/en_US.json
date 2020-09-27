@@ -438,7 +438,7 @@
 					"inProgress": "In progress",
 					"noPlans": "No plans",
 					"completedPlans": "Completed plans",
-					"futurePlans": "Check future plans",
+					"futurePlans": "Plans calendar",
 					"tasks": "{NUM_TASKS, plural, offset:0  one {# task} other {# tasks}}",
 					"noTaskCompleted": "{NUM_ALL_TASKS, plural, offset:0 one {# task} other {# tasks}} to complete",
 					"taskProgress": "{NUM_TASKS} out of {NUM_ALL_TASKS} tasks completed"
@@ -470,6 +470,10 @@
 						"rejectedTooltip" : "Task has been rejected by caregiver",
 						"notEvaluatedTooltip" : "Ask caregiver to rate task",
 						"pointsPossible" : "Max points to earn"
+					},
+					"taskInProgressDialog" : {
+						"title": "Different task in progress",
+						"content": "You can't perform two tasks at the same time. Complete the current one and try again."
 					}
 				}
 			},
@@ -486,7 +490,10 @@
 					"isCompleted": "Task completed?",
 					"breakButton": "Break",
 					"resumeButton": "Resume",
-					"pointsToGet": "To earn:"
+					"pointsToGet": "To earn:",
+					"motivate": "Complete tasks!",
+					"completionTime": "Completion time:",
+					"latency": "Late:"
 				},
 				"cards" : {
 					"break": {

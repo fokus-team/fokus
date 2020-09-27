@@ -428,7 +428,7 @@
 					"title": "Currencies"
 				},
 				"content": {
-					"generalHint": "You can configure up to three different additional currencies for use in tasks and rewards. App's default currency, can't be changed.",
+					"generalHint": "You can configure up to three additional currencies for use in tasks and rewards. The default currency can't be changed.",
 					"currenciesUpdatedText": "Currencies list has been updated",
 					"saveCurrenciesButton": "Save currencies",
 					"currencyNotUsed": "Not used",

@@ -15,5 +15,5 @@ class UIChild extends UIUser {
 			  points = child.points != null ? Map.fromEntries(child.points.map((type) => MapEntry(type.icon, type.quantity))) : {}, super.fromDBModel(child);
 
 	@override
-	List<Object> get props => super.props..addAll([id, todayPlanCount, hasActivePlan, points]);
+	List<Object> get props => super.props..addAll([todayPlanCount, hasActivePlan, points]);
 }

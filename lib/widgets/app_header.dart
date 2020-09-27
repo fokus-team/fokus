@@ -290,7 +290,8 @@ class AppHeader extends StatelessWidget {
 		);
 	 }
 
-	 Widget _userHeaderIcons(BuildContext context) {
+	Widget _userHeaderIcons(BuildContext context) {
+		var auth = context.bloc<AuthenticationBloc>();
 		return Row(
 			children: <Widget>[
 				// Supporting system notification only for now
@@ -298,8 +299,10 @@ class AppHeader extends StatelessWidget {
 				PopupMenuList(
 					lightTheme: true,
 					items: [
-						UIButton('actions.signOut', () => context.bloc<AuthenticationBloc>().add(AuthenticationSignOutRequested())),
 						UIButton('navigation.settings', () => Navigator.of(context).pushNamed(AppPage.settingsPage.name)),
+						if(auth.state.user.role == UserRole.caregiver)
+							UIButton('navigation.caregiver.currencies', () => Navigator.of(context).pushNamed(AppPage.caregiverCurrencies.name)),
+						UIButton('actions.signOut', () => auth.add(AuthenticationSignOutRequested())),
 					]
 				),
 			],

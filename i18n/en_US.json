@@ -6,7 +6,8 @@
 			"panel": "Dashboard",
 			"plans": "Plans",
 			"awards": "Awards",
-			"statistics": "Statistics"
+			"statistics": "Statistics",
+			"currencies": "Currencies"
 		},
 		"child": {
 			"plans": "Plans",
@@ -421,6 +422,25 @@
 						"rateCommentLabel": "Task feedback"
 					}
 				}
+			},
+			"currencies": {
+				"header": {
+					"title": "Currencies"
+				},
+				"content": {
+					"generalHint": "You can configure up to three additional currencies for use in tasks and rewards. The default currency can't be changed.",
+					"currenciesUpdatedText": "Available currencies have been updated",
+					"saveCurrenciesButton": "Save currencies",
+					"currencyNotUsed": "Not used",
+					"currencyNameLabel": "Currency name",
+					"clearCurrencyText": "You will loose the ability to use this currency. Points already gathered by children will remain intact. Are you sure you want to clear this currency?",
+					"currencies": {
+						"diamond": "Diamond",
+						"emerald": "Emerald",
+						"ruby": "Ruby",
+						"amethyst": "Amethyst"
+					}
+				}
 			}
 		},
 		"childSection": {
@@ -655,7 +675,8 @@
 		"task_creation": "Task creation",
 		"reward_creation": "Reward creation",
 		"badge_creation": "Badge creation",
-		"plan_info": "Plans"
+		"plan_info": "Plans",
+		"currencies": "Currencies"
 	},
 	"assignedTo": "Assigned to",
 	"points": "Points",

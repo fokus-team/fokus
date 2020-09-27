@@ -26,3 +26,12 @@ class AuthenticationChildSignInRequested extends AuthenticationEvent {
 }
 
 class AuthenticationSignOutRequested extends AuthenticationEvent {}
+
+class AuthenticationActiveUserUpdated extends AuthenticationEvent {
+	final UIUser user;
+
+  AuthenticationActiveUserUpdated(this.user);
+
+	@override
+	List<Object> get props => [user];
+}

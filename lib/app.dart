@@ -11,13 +11,14 @@ import 'package:fokus/logic/auth/child/prev_profiles_cubit.dart';
 import 'package:fokus/logic/auth/child/sign_in/child_sign_in_cubit.dart';
 import 'package:fokus/logic/auth/child/sign_up/child_sign_up_cubit.dart';
 import 'package:fokus/logic/caregiver_awards_cubit.dart';
-import 'package:fokus/logic/child_badges_cubit.dart';
+import 'package:fokus/logic/caregiver_currencies_cubit.dart';
 import 'package:fokus/logic/plan_cubit.dart';
 import 'package:fokus/logic/plan_instance_cubit.dart';
 import 'package:fokus/logic/calendar_cubit.dart';
 import 'package:fokus/logic/caregiver_panel_cubit.dart';
 import 'package:fokus/logic/caregiver_plans_cubit.dart';
 import 'package:fokus/logic/child_plans_cubit.dart';
+import 'package:fokus/logic/child_badges_cubit.dart';
 import 'package:fokus/logic/plan_form/plan_form_cubit.dart';
 import 'package:fokus/logic/task_instance/task_instance_cubit.dart';
 import 'package:fokus/logic/reward_form/reward_form_cubit.dart';
@@ -41,6 +42,7 @@ import 'package:fokus/pages/caregiver/plan_form_page.dart';
 import 'package:fokus/pages/caregiver/plans_page.dart';
 import 'package:fokus/pages/caregiver/statistics_page.dart';
 import 'package:fokus/pages/caregiver/rating_page.dart';
+import 'package:fokus/pages/caregiver/currencies_page.dart';
 import 'package:fokus/pages/child/auth/child_profiles_page.dart';
 import 'package:fokus/pages/child/auth/child_sign_in_page.dart';
 import 'package:fokus/pages/child/rewards_page.dart';
@@ -104,6 +106,7 @@ class FokusApp extends StatelessWidget {
 
 	Widget _authenticationGateBuilder(BuildContext context, Widget child) {
 		return BlocListener<AuthenticationBloc, AuthenticationState>(
+			listenWhen: (oldState, newState) => oldState.status != newState.status,
 			listener: (context, state) {
 				var redirectPage = state.status == AuthenticationStatus.authenticated ? state.user.role.panelPage : AppPage.rolesPage;
 				_navigatorKey.currentState.pushNamedAndRemoveUntil(redirectPage.name, (route) => false);
@@ -136,6 +139,7 @@ class FokusApp extends StatelessWidget {
 			AppPage.caregiverBadgeForm.name: (context) => _createPage(CaregiverBadgeFormPage(), context, BadgeFormCubit(getParams(context), getActiveUser(context))),
 			AppPage.caregiverStatistics.name: (context) => _createPage(CaregiverStatisticsPage(), context),
 			AppPage.caregiverRatingPage.name: (context) => _createPage(CaregiverRatingPage(), context),
+			AppPage.caregiverCurrencies.name: (context) => _createPage(CaregiverCurrenciesPage(), context, CaregiverCurrenciesCubit(getActiveUser(context), getActiveUser(context), authBloc(context))),
 			AppPage.childPanel.name: (context) => _createPage(ChildPanelPage(), context, ChildPlansCubit(getActiveUser(context), getRoute(context))),
 			AppPage.childCalendar.name: (context) => _createPage(ChildCalendarPage(), context, CalendarCubit(getParams(context), getActiveUser(context))),
 			AppPage.childRewards.name: (context) => _createPage(ChildRewardsPage(), context),

@@ -41,10 +41,10 @@ class PlanInstanceCubit extends ReloadableCubit {
 	}
 
 
-	Future<bool> _setTaskState({ObjectId childId, ObjectId tappedTaskInstance}) async {
-		List<PlanInstance> planInstances = await _dataRepository.getPlanInstances(childIDs: [childId], state: PlanInstanceState.active);
-		if(planInstances != null && planInstances.isNotEmpty) {
-			List<TaskInstance> taskInstances = await _dataRepository.getTaskInstances(planInstanceId: planInstances.first.id);
+	Future<bool> isOtherPlanInProgressDbCheck({ObjectId tappedTaskInstance}) async {
+		PlanInstance activePlanInstance = await _dataRepository.getPlanInstance(childId: planInstance.assignedTo, state: PlanInstanceState.active, fields: ["_id"]);
+		if(activePlanInstance != null) {
+			List<TaskInstance> taskInstances = await _dataRepository.getTaskInstances(planInstanceId: activePlanInstance.id);
 			for(var instance in taskInstances) {
 				if(isInProgress(instance.duration) || isInProgress(instance.breaks)) {
 					if(tappedTaskInstance != null && tappedTaskInstance == instance.id) return false;
@@ -53,10 +53,6 @@ class PlanInstanceCubit extends ReloadableCubit {
 			}
 		}
 		return false;
-	}
-
-	Future<bool> isOtherPlanInProgressDbCheck(ObjectId tappedTaskInstance) async {
-		return await _setTaskState(childId: planInstance.assignedTo, tappedTaskInstance: tappedTaskInstance);
 	}
 }
 

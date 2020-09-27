@@ -34,9 +34,9 @@ class _ChildPlanInProgressPageState extends State<ChildPlanInProgressPage> {
 	final String _pageKey = 'page.childSection.planInProgress';
 
 	void navigate(context, UITaskInstance task, UIPlanInstance plan) async {
-		if(await BlocProvider.of<PlanInstanceCubit>(context).isOtherPlanInProgressDbCheck(task.id)) {
+		if(await BlocProvider.of<PlanInstanceCubit>(context).isOtherPlanInProgressDbCheck(tappedTaskInstance: task.id)) {
 			showDialog(context: context,
-				builder: (_) => GeneralDialog.confirm(
+				builder: (_) => GeneralDialog.discard(
 					title: AppLocales.of(context).translate('$_pageKey.content.taskInProgressDialog.title'),
 					content: AppLocales.of(context).translate('$_pageKey.content.taskInProgressDialog.content'),
 				)

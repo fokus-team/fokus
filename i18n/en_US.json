@@ -473,7 +473,7 @@
 					},
 					"taskInProgressDialog" : {
 						"title": "Different task in progress",
-						"content": "You can't perform two tasks at the same time. Complete currently performed task and try again."
+						"content": "You can't perform two tasks at the same time. Complete the current one and try again."
 					}
 				}
 			},

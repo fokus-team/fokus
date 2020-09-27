@@ -49,10 +49,7 @@ class TaskInstanceCubit extends Cubit<TaskInstanceState> {
 			wasPlanStateChanged = true;
 
 			var childId = _activeUser().id;
-			List<PlanInstance> activePlanInstances = await _dataRepository.getPlanInstances(childIDs: [childId], state: PlanInstanceState.active);
-			if (activePlanInstances != null && activePlanInstances.isNotEmpty) {
-				updates.add(_dataRepository.updatePlanInstanceFields(activePlanInstances.first.id, state: PlanInstanceState.notCompleted));
-			}
+			updates.add(_dataRepository.updateActivePlanInstanceState(childId, PlanInstanceState.notCompleted));
 		}
 		if(!isInProgress(taskInstance.duration) && !isInProgress(taskInstance.breaks)) {
 			if(taskInstance.duration == null) taskInstance.duration = [];

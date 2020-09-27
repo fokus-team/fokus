@@ -305,8 +305,8 @@ class TaskAppHeaderState extends State<TaskAppHeader> with TickerProviderStateMi
 		  	}
 		  	else Vibration.vibrate(pattern: vibrationPattern);
 		  }
-		} on Exception catch (e) {
-			_logger.warning("Vibration failed. Details: " + e.toString());
+		} on Exception catch (e, stacktrace) {
+			_logger.warning("Vibration failed.", e, stacktrace);
 		}
 	}
 }

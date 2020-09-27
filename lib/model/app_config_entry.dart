@@ -1,11 +1,10 @@
 enum AppConfigEntry {
-	savedChildProfiles, signedInChild, isAnyTaskActive
+	savedChildProfiles, signedInChild
 }
 
 extension AppConfigEntryKey on AppConfigEntry {
 	String get key => const {
 		AppConfigEntry.savedChildProfiles: 'savedChildProfiles',
-		AppConfigEntry.signedInChild: 'signedInChild',
-		AppConfigEntry.isAnyTaskActive: 'isAnyTaskActive'
+		AppConfigEntry.signedInChild: 'signedInChild'
 	}[this];
 }

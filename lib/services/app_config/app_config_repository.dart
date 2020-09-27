@@ -36,16 +36,4 @@ class AppConfigRepository {
 	void clearSavedChildProfiles() {
 		_settingsProvider.setStringList(AppConfigEntry.savedChildProfiles, []);
 	}
-
-	void setActiveTaskState(bool isActive) => _settingsProvider.setBool(AppConfigEntry.isAnyTaskActive, isActive);
-
-	void removeActiveTaskState() {
-		if(_settingsProvider.containsEntry(AppConfigEntry.isAnyTaskActive))
-			_settingsProvider.remove(AppConfigEntry.isAnyTaskActive);
-	}
-
-	bool getActiveTaskState() {
-		final isActive = _settingsProvider.getBool(AppConfigEntry.isAnyTaskActive) ?? null;
-		return isActive;
-	}
 }

@@ -57,7 +57,7 @@ mixin PlanDbRepository implements DbRepository {
 		return dbClient.queryTyped(Collection.planInstance, query, (json) => PlanInstance.fromJson(json));
 	}
 
-	Future updatePlanInstances(ObjectId instanceId, {PlanInstanceState state, DateSpanUpdate<TimeDate> durationChange, List<ObjectId> taskInstances}) {
+	Future updatePlanInstanceFields(ObjectId instanceId, {PlanInstanceState state, DateSpanUpdate<TimeDate> durationChange, List<ObjectId> taskInstances, List<DateSpan<TimeDate>> duration}) {
 		var document = modify;
 		if (state != null)
 			document.set('state', state.index);
@@ -65,6 +65,8 @@ mixin PlanDbRepository implements DbRepository {
 			document.set('duration.${durationChange.getQuery()}', durationChange.value.toDBDate());
 		if	(taskInstances != null)
 			document.set('taskInstances', taskInstances);
+		if (duration != null)
+			document.set('duration', duration.map((v) => v.toJson()).toList());
 		return dbClient.update(Collection.planInstance, where.eq('_id', instanceId), document);
 	}
 

@@ -16,6 +16,7 @@ import 'package:fokus/widgets/app_header.dart';
 import 'package:fokus/widgets/chips/attribute_chip.dart';
 import 'package:fokus/widgets/cards/item_card.dart';
 import 'package:fokus/widgets/chips/timer_chip.dart';
+import 'package:fokus/widgets/dialogs/general_dialog.dart';
 import 'package:fokus/widgets/general/app_loader.dart';
 import 'package:fokus/widgets/loadable_bloc_builder.dart';
 import 'package:fokus/widgets/segment.dart';
@@ -31,8 +32,18 @@ class ChildPlanInProgressPage extends StatefulWidget {
 
 class _ChildPlanInProgressPageState extends State<ChildPlanInProgressPage> {
 	final String _pageKey = 'page.childSection.planInProgress';
-	final Function(BuildContext, UITaskInstance, UIPlanInstance) navigate = (context, task, plan) => Navigator.of(context).pushNamed(AppPage.childTaskInProgress.name, arguments: [task.id, plan]);
 
+	void navigate(context, UITaskInstance task, UIPlanInstance plan) async {
+		if(await BlocProvider.of<PlanInstanceCubit>(context).isOtherPlanInProgressDbCheck(task.id)) {
+			showDialog(context: context,
+				builder: (_) => GeneralDialog.confirm(
+					title: AppLocales.of(context).translate('$_pageKey.content.taskInProgressDialog.title'),
+					content: AppLocales.of(context).translate('$_pageKey.content.taskInProgressDialog.content'),
+				)
+			);
+		}
+		else Navigator.of(context).pushNamed(AppPage.childTaskInProgress.name, arguments: {"TaskId" : task.id, "UIPlanInstance" : plan});
+	}
 
 	@override
   Widget build(BuildContext context) {
@@ -73,19 +84,17 @@ class _ChildPlanInProgressPageState extends State<ChildPlanInProgressPage> {
 				tasks: mandatoryTasks,
         title: '$_pageKey.content.toDoTasks',
 				uiPlanInstance: state.planInstance,
-				isOtherPlanInProgress: state.isOtherPlanInProgress
       ),
 			if(optionalTasks.isNotEmpty)
       	_getTasksSegment(
 					tasks: optionalTasks,
 					title: '$_pageKey.content.additionalTasks',
 					uiPlanInstance: state.planInstance,
-					isOtherPlanInProgress: state.isOtherPlanInProgress
 				)
     ];
   }
 
-  Segment _getTasksSegment({List<UITaskInstance> tasks,String title, String noElementsMessage, UIPlanInstance uiPlanInstance, bool isOtherPlanInProgress}) {
+  Segment _getTasksSegment({List<UITaskInstance> tasks,String title, String noElementsMessage, UIPlanInstance uiPlanInstance}) {
     return Segment(
 			title: title,
 			noElementsMessage: '$_pageKey.content.noTasks',
@@ -93,16 +102,6 @@ class _ChildPlanInProgressPageState extends State<ChildPlanInProgressPage> {
 				for(var task in tasks)
 					if(task.taskUiType == TaskUIType.completed)
 						getCompletedTaskCard(task)
-					else if(task.taskUiType.canBeStarted && isOtherPlanInProgress)
-						ItemCard(
-							title: task.name,
-							subtitle: task.description,
-							chips: <Widget>[
-								if (task.timer != null && task.timer > 0) getTimeChip(task),
-								if (task.points != null && task.points.quantity != 0) getCurrencyChip(task)
-							],
-							actionButton: ItemCardActionButton(color: Colors.grey, icon: Icons.chevron_left),
-						)
 					else if(task.taskUiType == TaskUIType.available)
 							ItemCard(
 								title: task.name,

@@ -9,11 +9,9 @@ import 'package:fokus/model/db/plan/plan_instance_state.dart';
 import 'package:fokus/model/db/plan/task.dart';
 import 'package:fokus/model/db/plan/task_instance.dart';
 import 'package:fokus/model/db/plan/task_status.dart';
-import 'package:fokus/model/ui/gamification/ui_points.dart';
 import 'package:fokus/model/ui/plan/ui_plan_instance.dart';
 import 'package:fokus/model/ui/task/ui_task_instance.dart';
 import 'package:fokus/model/ui/user/ui_user.dart';
-import 'package:fokus/services/app_config/app_config_repository.dart';
 import 'package:fokus/services/data/data_repository.dart';
 import 'package:fokus/services/plan_repeatability_service.dart';
 import 'package:fokus/utils/duration_utils.dart';
@@ -24,134 +22,104 @@ part 'task_instance_state.dart';
 
 class TaskInstanceCubit extends Cubit<TaskInstanceState> {
 	final ObjectId _taskInstanceId;
-	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final ActiveUserFunction _activeUser;
 
-	TaskInstanceCubit(this._taskInstanceId, this._activeUser) : super(TaskInstanceStateInitial());
+	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final PlanRepeatabilityService _repeatabilityService = GetIt.I<PlanRepeatabilityService>();
-	final AppConfigRepository _appConfigRepository = GetIt.I<AppConfigRepository>();
 
+	TaskInstanceCubit(this._taskInstanceId, this._activeUser) : super(TaskInstanceStateInitial());
+
+	TaskInstance taskInstance;
+	PlanInstance planInstance;
+	Task task;
+	Plan plan;
 
 
   void loadTaskInstance() async {
-		TaskInstance taskInstance = await _dataRepository.getTaskInstance(taskInstanceId: _taskInstanceId);
-		PlanInstance planInstance = await _dataRepository.getPlanInstance(id: taskInstance.planInstanceID);
+		taskInstance = await _dataRepository.getTaskInstance(taskInstanceId: _taskInstanceId);
+		task = await _dataRepository.getTask(taskId: taskInstance.taskID);
+		planInstance = await _dataRepository.getPlanInstance(id: taskInstance.planInstanceID);
+		plan = await _dataRepository.getPlan(id: planInstance.planID);
 
 		List<Future> updates = [];
-		List<PlanInstance> toUpdate = [];
-		bool wasPlanInstanceChanged = false;
+		bool wasPlanStateChanged = false, wasPlanDurationChanged = false;
 
 		if(planInstance.state != PlanInstanceState.active) {
 			planInstance.state = PlanInstanceState.active;
-			wasPlanInstanceChanged = true;
+			wasPlanStateChanged = true;
 
 			var childId = _activeUser().id;
-			var allPlans = await _dataRepository.getPlans(childId: childId);
-			var todayPlans = await _repeatabilityService.filterPlansByDate(allPlans, Date.now());
-			var todayPlanIds = todayPlans.map((plan) => plan.id).toList();
-			var untilCompletedPlans = allPlans.where((plan) => plan.repeatability.untilCompleted && !todayPlans.contains(plan.id)).map((plan) => plan.id).toList();
-			var instances = await _dataRepository.getPlanInstancesForPlans(childId, todayPlanIds, Date.now());
-			instances.addAll(await _dataRepository.getPastNotCompletedPlanInstances([childId], untilCompletedPlans, Date.now()));
-
-			for(var instance in instances) {
-				if(instance.state == PlanInstanceState.active) {
-					instance.state = PlanInstanceState.notCompleted;
-					toUpdate.add(instance);
-					break;
-				}
+			List<PlanInstance> activePlanInstances = await _dataRepository.getPlanInstances(childIDs: [childId], state: PlanInstanceState.active);
+			if (activePlanInstances != null && activePlanInstances.isNotEmpty) {
+				updates.add(_dataRepository.updatePlanInstanceFields(activePlanInstances.first.id, state: PlanInstanceState.notCompleted));
 			}
 		}
-
-		if((taskInstance.duration.length == 0 || (taskInstance.duration.length > 0 && taskInstance.duration.last.to != null)) && (taskInstance.breaks.length == 0 || (taskInstance.duration.length > 0 && taskInstance.breaks.last.to != null))) {
+		if(!isInProgress(taskInstance.duration) && !isInProgress(taskInstance.breaks)) {
 			if(taskInstance.duration == null) taskInstance.duration = [];
-			if(taskInstance.status.completed) taskInstance.status.completed = false;
 			taskInstance.duration.add(DateSpan(from: TimeDate.now()));
-			updates.add(_dataRepository.updateTaskInstance(taskInstance));
+			updates.add(_dataRepository.updateTaskInstanceFields(taskInstance.id, duration: taskInstance.duration, isCompleted: taskInstance.status.completed ? false : null));
+			if(taskInstance.status.completed) taskInstance.status.completed = false;
 
 			if(planInstance.duration == null) planInstance.duration = [];
 			planInstance.duration.add(DateSpan(from: TimeDate.now()));
-			wasPlanInstanceChanged = true;
+			wasPlanDurationChanged = true;
 		}
-		if(wasPlanInstanceChanged) toUpdate.add(planInstance);
-		updates.add(_dataRepository.updateMultiplePlanInstances(toUpdate));
+		if(wasPlanStateChanged || wasPlanDurationChanged) updates.add(_dataRepository.updatePlanInstanceFields(planInstance.id, state:wasPlanStateChanged ? PlanInstanceState.active : null, duration: wasPlanDurationChanged ? planInstance.duration : null));
 		await Future.value(updates);
 
-		Task task = await _dataRepository.getTask(taskId: taskInstance.taskID);
-		UITaskInstance uiTaskInstance = UITaskInstance.singleFromDBModel(task: taskInstance, name: task.name, description: task.description, points: task.points != null ? UIPoints(quantity: task.points.quantity, title: task.points.name, createdBy: task.points.createdBy, type: task.points.icon) : null);
-		_appConfigRepository.setActiveTaskState(true);
+		UITaskInstance uiTaskInstance = UITaskInstance.singleWithTask(taskInstance: taskInstance, task: task);
 		if(isInProgress(uiTaskInstance.duration)) emit(TaskInstanceStateProgress(uiTaskInstance,  await _getUiPlanInstance(taskInstance.planInstanceID)));
 		else  emit(TaskInstanceStateBreak(uiTaskInstance,  await _getUiPlanInstance(taskInstance.planInstanceID)));
 	}
 
 	void switchToBreak() async {
-		TaskInstance taskInstance = await _dataRepository.getTaskInstance(taskInstanceId: _taskInstanceId);
 		taskInstance.duration.last.to = TimeDate.now();
 		taskInstance.breaks.add(DateSpan(from: TimeDate.now()));
-		await _dataRepository.updateTaskInstance(taskInstance);
-		Task task = await _dataRepository.getTask(taskId: taskInstance.taskID);
-		UITaskInstance uiTaskInstance = UITaskInstance.singleFromDBModel(task: taskInstance, name: task.name, description: task.description, points: task.points != null ? UIPoints(quantity: task.points.quantity, title: task.points.name, createdBy: task.points.createdBy, type: task.points.icon) : null);
+		await _dataRepository.updateTaskInstanceFields(taskInstance.id, duration: taskInstance.duration, breaks: taskInstance.breaks);
+		UITaskInstance uiTaskInstance = UITaskInstance.singleWithTask(taskInstance: taskInstance, task: task);
 		emit(TaskInstanceStateBreak(uiTaskInstance,  await _getUiPlanInstance(taskInstance.planInstanceID)));
 	}
 
 	void switchToProgress() async {
-		TaskInstance taskInstance = await _dataRepository.getTaskInstance(taskInstanceId: _taskInstanceId);
 		taskInstance.breaks.last.to = TimeDate.now();
 		taskInstance.duration.add(DateSpan(from: TimeDate.now()));
-		await _dataRepository.updateTaskInstance(taskInstance);
-		Task task = await _dataRepository.getTask(taskId: taskInstance.taskID);
-		UITaskInstance uiTaskInstance = UITaskInstance.singleFromDBModel(task: taskInstance, name: task.name, description: task.description, points: task.points != null ? UIPoints(quantity: task.points.quantity, title: task.points.name, createdBy: task.points.createdBy, type: task.points.icon) : null);
+		await _dataRepository.updateTaskInstanceFields(taskInstance.id, duration: taskInstance.duration, breaks: taskInstance.breaks);
+		UITaskInstance uiTaskInstance = UITaskInstance.singleWithTask(taskInstance: taskInstance, task: task);
 		emit(TaskInstanceStateProgress(uiTaskInstance, await _getUiPlanInstance(taskInstance.planInstanceID)));
 	}
 
 	void markAsDone() async {
-		TaskInstance taskInstance = await _dataRepository.getTaskInstance(taskInstanceId: _taskInstanceId);
-		PlanInstance planInstance = await _dataRepository.getPlanInstance(id: taskInstance.planInstanceID);
-		planInstance.duration.last.to = TimeDate.now();
-
-		if(taskInstance.duration.last.to == null) taskInstance.duration.last.to = TimeDate.now();
-		else taskInstance.breaks.last.to = TimeDate.now();
-		taskInstance.status.state = TaskState.notEvaluated;
-		taskInstance.status.completed = true;
-		await _dataRepository.updateTaskInstance(taskInstance);
-		if(await _dataRepository.getCompletedTaskCount(planInstance.id) == planInstance.taskInstances.length) {
-			List<TaskInstance> allTaskInstances = await _dataRepository.getTaskInstances(planInstanceId: planInstance.id);
-			bool isCompleted = true;
-			for(var task in allTaskInstances) {
-				if(task.status.state == TaskState.rejected) isCompleted = false;
-			}
-			if(isCompleted) planInstance.state = PlanInstanceState.completed;
-		}
-
-		await _dataRepository.updatePlanInstance(planInstance);
-		Task task = await _dataRepository.getTask(taskId: taskInstance.taskID);
-		UITaskInstance uiTaskInstance = UITaskInstance.singleFromDBModel(task: taskInstance, name: task.name, description: task.description, points: task.points != null ? UIPoints(quantity: task.points.quantity, title: task.points.name, createdBy: task.points.createdBy, type: task.points.icon) : null);
-
-		_appConfigRepository.setActiveTaskState(false);
-		emit(TaskInstanceStateDone(uiTaskInstance, await _getUiPlanInstance(taskInstance.planInstanceID)));
-	}
+		emit(TaskInstanceStateDone(await _onCompletion(TaskState.notEvaluated), await _getUiPlanInstance(taskInstance.planInstanceID)));
+  }
 
 	void markAsRejected() async {
-		TaskInstance taskInstance = await _dataRepository.getTaskInstance(taskInstanceId: _taskInstanceId);
-		PlanInstance planInstance = await _dataRepository.getPlanInstance(id: taskInstance.planInstanceID);
-		planInstance.duration.last.to = TimeDate.now();
-		await _dataRepository.updatePlanInstance(planInstance);
-		if(taskInstance.duration.last.to == null) taskInstance.duration.last.to = TimeDate.now();
-		else taskInstance.breaks.last.to = TimeDate.now();
-		taskInstance.status.state = TaskState.rejected;
-		taskInstance.status.completed = true;
-		await _dataRepository.updateTaskInstance(taskInstance);
-		Task task = await _dataRepository.getTask(taskId: taskInstance.taskID);
-		UITaskInstance uiTaskInstance = UITaskInstance.singleFromDBModel(task: taskInstance, name: task.name, description: task.description, points: task.points != null ? UIPoints(quantity: task.points.quantity, title: task.points.name, createdBy: task.points.createdBy, type: task.points.icon) : null);
+		emit(TaskInstanceStateRejected(await _onCompletion(TaskState.rejected), await _getUiPlanInstance(taskInstance.planInstanceID)));
+	}
 
-		_appConfigRepository.setActiveTaskState(false);
-		emit(TaskInstanceStateRejected(uiTaskInstance, await _getUiPlanInstance(taskInstance.planInstanceID)));
+	Future<UITaskInstance> _onCompletion(TaskState state) async {
+		taskInstance.status.state = state;
+		taskInstance.status.completed = true;
+		if(taskInstance.duration.last.to == null) {
+			taskInstance.duration.last.to = TimeDate.now();
+			await _dataRepository.updateTaskInstanceFields(taskInstance.id, state: state, isCompleted: true, duration: taskInstance.duration);
+		}
+		else {
+			taskInstance.breaks.last.to = TimeDate.now();
+			await _dataRepository.updateTaskInstanceFields(taskInstance.id, state: state, isCompleted: true, breaks: taskInstance.breaks);
+		}
+
+		if(await _dataRepository.getCompletedTaskCount(planInstance.id) == planInstance.taskInstances.length) {
+			planInstance.state = PlanInstanceState.completed;
+		}
+		planInstance.duration.last.to = TimeDate.now();
+		await _dataRepository.updatePlanInstanceFields(planInstance.id, duration: planInstance.duration, state: planInstance.state == PlanInstanceState.completed ? PlanInstanceState.completed : null);
+
+		return UITaskInstance.singleWithTask(taskInstance: taskInstance, task: task);
 	}
 
 	Future<UIPlanInstance> _getUiPlanInstance(ObjectId id) async {
 		var getDescription = (Plan plan, [Date instanceDate]) => _repeatabilityService.buildPlanDescription(plan.repeatability, instanceDate: instanceDate);
-		PlanInstance planInstance = await _dataRepository.getPlanInstance(id: id);
 
-		var plan = await _dataRepository.getPlan(id: planInstance.planID);
 		var elapsedTime = () => sumDurations(planInstance.duration).inSeconds;
 		var completedTasks = await _dataRepository.getCompletedTaskCount(planInstance.id);
 		return UIPlanInstance.fromDBModel(planInstance, plan.name, completedTasks, elapsedTime, getDescription(plan, planInstance.date));

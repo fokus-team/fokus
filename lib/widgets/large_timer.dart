@@ -9,21 +9,19 @@ class LargeTimer extends StatelessWidget {
 	final Color textColor;
 	final String title;
 	final CrossAxisAlignment align;
-	final int value;
 
-	LargeTimer({this.textColor,  this.title, this.align = CrossAxisAlignment.start, this.value});
+	LargeTimer({this.textColor,  this.title, this.align = CrossAxisAlignment.start});
 
 	@override
 	Widget build(BuildContext context) {
-		if(value == null) return BlocBuilder<TimerCubit, TimerState>(
+	return BlocBuilder<TimerCubit, TimerState>(
 			builder: (context, state) {
-				return timeUI(context, state: state);
+				return timeUI(context, state.value);
 			},
 		);
-		return timeUI(context, value: value);
 	}
 
-	Widget timeUI(BuildContext context, {state, int value}) {
+	Widget timeUI(BuildContext context, int value) {
 		return Column(
 			mainAxisAlignment: MainAxisAlignment.start,
 			crossAxisAlignment: align,
@@ -33,7 +31,7 @@ class LargeTimer extends StatelessWidget {
 					style: Theme.of(context).textTheme.headline3.copyWith(color: textColor),
 				),
 				Text(
-					formatDuration(Duration(seconds: value != null ? value : state.value)),
+					formatDuration(Duration(seconds: value)),
 					style: Theme.of(context).textTheme.headline1.copyWith(color: textColor),
 				)
 			],

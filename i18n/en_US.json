@@ -475,6 +475,10 @@
 						"rejectedTooltip" : "Task has been rejected by caregiver",
 						"notEvaluatedTooltip" : "Ask caregiver to rate task",
 						"pointsPossible" : "Max points to earn"
+					},
+					"taskInProgressDialog" : {
+						"title": "Different task in progress",
+						"content": "You can't perform two tasks at the same time. Complete currently performed task and try again."
 					}
 				}
 			},

@@ -20,11 +20,12 @@ class TimerCubit extends Cubit<TimerState> {
 	TimerCubit.down(this._currentValue, [this.countUpOnComplete = false, this._onFinish]) : _ticker = Ticker(), this._direction = CountDirection.down, super(TimerInitial(_currentValue()));
 
 
-	void startTimer() {
+	void startTimer({bool paused = false}) {
 		int value = _currentValue();
 		emit(TimerInProgress(value));
 		_tickerSubscription?.cancel();
 		_tickerSubscription = _ticker.tick(direction: _direction, initialValue: value).listen((value) => _timerTicked(value));
+		if(paused) pauseTimer();
 	}
 
 	void pauseTimer() {

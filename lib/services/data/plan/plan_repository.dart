@@ -20,7 +20,7 @@ abstract class PlanRepository {
 	Future<List<PlanInstance>> getPlanInstancesForPlans(ObjectId childId, List<ObjectId> planIDs, [Date date]);
 	Future<List<PlanInstance>> getPastNotCompletedPlanInstances(List<ObjectId> childIDs, List<ObjectId> planIDs, Date beforeDate, {List<String> fields});
 
-	Future updatePlanInstances(ObjectId instanceId, {PlanInstanceState state, DateSpanUpdate<TimeDate> durationChange, List<ObjectId> taskInstances});
+	Future updatePlanInstanceFields(ObjectId instanceId, {PlanInstanceState state, DateSpanUpdate<TimeDate> durationChange, List<ObjectId> taskInstances, List<DateSpan<TimeDate>> duration});
 	Future updatePlanInstance(PlanInstance planInstance);
 
 	Future updateMultiplePlanInstances(List<PlanInstance> planInstances);

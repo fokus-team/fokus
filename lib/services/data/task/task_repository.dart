@@ -1,6 +1,10 @@
+import 'package:fokus/model/db/date/time_date.dart';
+import 'package:fokus/model/db/date_span.dart';
 import 'package:fokus/model/db/plan/task.dart';
 import 'package:fokus/model/db/plan/task_instance.dart';
+import 'package:fokus/model/db/plan/task_status.dart';
 import 'package:mongo_dart/mongo_dart.dart';
+
 
 abstract class TaskRepository {
 	Future<int> getCompletedTaskCount(ObjectId planInstanceId);
@@ -11,8 +15,7 @@ abstract class TaskRepository {
 	Future createTasks(List<Task> tasks);
 	Future updateTasks(List<Task> tasks);
 	Future createTaskInstances(List<TaskInstance> taskInstances);
-	Future updateTaskInstances(List<TaskInstance> taskInstances);
 	Future updateTaskInstance(TaskInstance taskInstance);
-
+	Future updateTaskInstanceFields(ObjectId taskInstanceId, {TaskState state, List<DateSpan<TimeDate>> duration, List<DateSpan<TimeDate>> breaks, bool isCompleted, int rating, int pointsAwarded});
 
 }

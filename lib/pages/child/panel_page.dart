@@ -59,31 +59,23 @@ class _ChildPanelPageState extends State<ChildPanelPage> {
 						create: (_) => TimerCubit.up(activePlan.elapsedActiveTime)..startTimer(),
 						child: _getPlansSegment(
 							plans: [activePlan],
-							icon: Icons.launch,
-							color: AppColors.childActionColor,
 							title: '$_pageKey.content.inProgress',
 							displayTimer: true
 						),
 					) :
 					_getPlansSegment(
 						plans: [activePlan],
-						icon: Icons.launch,
-						color: AppColors.childActionColor,
 						title: '$_pageKey.content.inProgress',
 					),
 	    if (otherPlans.isNotEmpty || state.plans.isEmpty)
 		    _getPlansSegment(
 			    plans: otherPlans,
-			    icon: Icons.play_arrow,
-			    color: AppColors.childButtonColor,
 			    title: '$_pageKey.content.' + (activePlan == null ? 'todaysPlans' : 'remainingTodaysPlans'),
 			    noElementsMessage: '$_pageKey.content.noPlans'
 		    ),
 	    if (completedPlans.isNotEmpty)
 		    _getPlansSegment(
 			    plans: completedPlans,
-			    icon: Icons.check,
-			    color: AppColors.childBackgroundColor,
 			    title: '$_pageKey.content.completedPlans'
 		    ),
 				Row(
@@ -100,25 +92,19 @@ class _ChildPanelPageState extends State<ChildPanelPage> {
     ];
   }
 
-  Segment _getPlansSegment({List<UIPlanInstance> plans, IconData icon, Color color, String title, String noElementsMessage, bool displayTimer = false}) {
+  Segment _getPlansSegment({List<UIPlanInstance> plans, String title, String noElementsMessage, bool displayTimer = false}) {
   	return Segment(
 		  title: title,
 		  noElementsMessage: noElementsMessage,
 		  elements: <Widget>[
 			  for (var plan in plans)
 				  ItemCard(
-					  actionButton: ItemCardActionButton(
-						  icon: icon,
-						  color: color,
-						  disabled: plan.state == PlanInstanceState.completed,
-						  onTapped: () => Navigator.of(context).pushNamed(AppPage.childPlanInProgress.name, arguments: plan)
-						),
+						isActive: plan.state != PlanInstanceState.completed,
 					  title: plan.name,
 					  subtitle: plan.description(context),
-					  isActive: plan.state != PlanInstanceState.completed,
 					  progressPercentage: plan.state.inProgress ? plan.completedTaskCount / plan.taskCount : null,
-					  chips: _getTaskChipForPlan(plan, displayTimer)
-					  ,
+					  chips: _getTaskChipForPlan(plan, displayTimer),
+						onTapped: () => Navigator.of(context).pushNamed(AppPage.childPlanInProgress.name, arguments: plan)
 				  )
 		  ],
 	  );

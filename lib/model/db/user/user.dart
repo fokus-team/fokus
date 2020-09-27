@@ -42,11 +42,8 @@ class User {
   }
 
   factory User.typedFromJson(Map<String, dynamic> json) {
-  	if (json == null)
+  	if (json == null || json['role'] == null)
   		return null;
-  	var rawRole = json['role'];
-  	if (rawRole == null)
-  		return null;
-  	return rawRole == UserRole.caregiver.index ? Caregiver.fromJson(json) : Child.fromJson(json);
+  	return json['role'] == UserRole.caregiver.index ? Caregiver.fromJson(json) : Child.fromJson(json);
   }
 }

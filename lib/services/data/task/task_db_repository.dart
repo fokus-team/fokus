@@ -1,3 +1,6 @@
+import 'package:fokus/model/db/date/time_date.dart';
+import 'package:fokus/model/db/date_span.dart';
+import 'package:fokus/model/db/plan/task_status.dart';
 import 'package:logging/logging.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
@@ -51,11 +54,24 @@ mixin TaskDbRepository implements DbRepository {
 		return dbClient.updateAll(Collection.task, tasks.map((task) => _buildTaskQuery(id: task.id)).toList(), tasks.map((task) => task.toJson()).toList(), multiUpdate: false);
 	}
 
-	Future updateTaskInstances(List<TaskInstance> taskInstances) {
-		return dbClient.updateAll(Collection.taskInstance, taskInstances.map((taskInstance) => _buildTaskQuery(id: taskInstance.id)).toList(), taskInstances.map((task) => task.toJson()).toList(), multiUpdate: false);
-	}
-
 	Future updateTaskInstance(TaskInstance taskInstance) => dbClient.update(Collection.taskInstance, _buildTaskQuery(id: taskInstance.id), taskInstance.toJson(), multiUpdate: false);
+
+	Future updateTaskInstanceFields(ObjectId taskInstanceId, {TaskState state, List<DateSpan<TimeDate>> duration, List<DateSpan<TimeDate>> breaks, bool isCompleted, int rating, int pointsAwarded}) {
+		var document = modify;
+		if (state != null)
+			document.set('status.state', state.index);
+		if (duration != null)
+			document.set('duration', duration.map((v) => v.toJson()).toList());
+		if (breaks != null)
+			document.set('breaks', breaks.map((v) => v.toJson()).toList());
+		if (isCompleted != null)
+			document.set('status.completed', isCompleted);
+		if (rating != null)
+			document.set('status.rating', rating);
+		if (pointsAwarded != null)
+			document.set('status.pointsAwarded', pointsAwarded);
+		return dbClient.update(Collection.taskInstance, where.eq('_id', taskInstanceId), document);
+	}
 
 	SelectorBuilder _buildTaskQuery({ObjectId id, ObjectId planId, ObjectId planInstanceId, bool requiredOnly, bool optionalOnly}) {
 		SelectorBuilder query = where;

@@ -475,6 +475,10 @@
 						"rejectedTooltip" : "Zadanie odrzucone przez opiekuna",
 						"notEvaluatedTooltip" : "Poproś opiekuna o ocenę",
 						"pointsPossible" : "Możliwe do zdobycia"
+					},
+					"taskInProgressDialog" : {
+						"title": "Inne zadanie w trakcie wykonywania",
+						"content": "Nie możesz wykonywać dwóch zadań jednocześnie. Zakończ aktualne zadanie i spróbuj ponownie."
 					}
 				}
 			},

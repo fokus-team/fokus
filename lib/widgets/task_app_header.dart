@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +9,7 @@ import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/duration_utils.dart';
 import 'package:fokus/utils/theme_config.dart';
 import 'package:fokus/widgets/app_header.dart';
+import 'package:logging/logging.dart';
 import 'package:vibration/vibration.dart';
 
 
@@ -46,8 +46,10 @@ class TaskAppHeaderState extends State<TaskAppHeader> with TickerProviderStateMi
 	TimerCubit _timerCompletionCubit;
 	List<int> vibrationPattern = [0, 500, 100, 250, 50, 1000];
 	Timer _updateTimer;
+	final Logger _logger = Logger('TaskAppHeader');
 
-  @override
+
+	@override
   Widget build(BuildContext context) {
 		return Container(
 			color: Colors.grey[50],
@@ -218,18 +220,26 @@ class TaskAppHeaderState extends State<TaskAppHeader> with TickerProviderStateMi
 	CreateBloc _getTimerFun() {
   	if(_timerCompletionCubit == null) {
 			if(this.widget.state.taskInstance.timer != null) {
-				if(this.widget.state.taskInstance.timer*60 - sumDurations(this.widget.state.taskInstance.duration).inSeconds > 0) {
-					int time = this.widget.state.taskInstance.timer*60 - sumDurations(this.widget.state.taskInstance.duration).inSeconds;
+				if(_getTimerInSeconds() - _getDuration() > 0) {
+					int time = _getTimerInSeconds() - _getDuration();
 					_timeUpdate(Duration(seconds: time));
 					_timerCompletionCubit = TimerCubit.down(() => time, true, _onTimerFinish);
 				}
-				else _timerCompletionCubit = TimerCubit.up(() => sumDurations(this.widget.state.taskInstance.duration).inSeconds - this.widget.state.taskInstance.timer*60);
+				else _timerCompletionCubit = TimerCubit.up(() => _getDuration() - _getTimerInSeconds());
 			}
-			else _timerCompletionCubit = TimerCubit.up(() => sumDurations(this.widget.state.taskInstance.duration).inSeconds);
+			else _timerCompletionCubit = TimerCubit.up(() => _getDuration());
 		}
   	if(this.widget.state is TaskInstanceStateProgress)
 			return (_) => _timerCompletionCubit..startTimer();
-  	else return (_) => _timerCompletionCubit..startTimer()..pauseTimer();
+  	else return (_) => _timerCompletionCubit..startTimer(paused: true);
+	}
+
+	int _getDuration() {
+  	return sumDurations(this.widget.state.taskInstance.duration).inSeconds;
+	}
+
+	int _getTimerInSeconds() {
+  	return this.widget.state.taskInstance.timer*60;
 	}
 
 
@@ -296,7 +306,7 @@ class TaskAppHeaderState extends State<TaskAppHeader> with TickerProviderStateMi
 		  	else Vibration.vibrate(pattern: vibrationPattern);
 		  }
 		} on Exception catch (e) {
-			log(e.toString());
+			_logger.warning("Vibration failed. Details: " + e.toString());
 		}
 	}
 }

@@ -140,7 +140,7 @@ class FokusApp extends StatelessWidget {
 			AppPage.childAchievements.name: (context) => _createPage(ChildAchievementsPage(), context),
 			AppPage.caregiverPlanDetails.name: (context) => _createPage(CaregiverPlanDetailsPage(), context, PlanCubit(getParams(context), getRoute(context))),
 			AppPage.childPlanInProgress.name: (context) => _createPage(ChildPlanInProgressPage(initialPlanInstance: getParams(context)), context, PlanInstanceCubit((getParams(context) as UIPlanInstance).id, getRoute(context))),
-			AppPage.childTaskInProgress.name: (context) => _createPage(ChildTaskInProgressPage(initialPlanInstance: (getParams(context) as List)[1]), context, TaskInstanceCubit((getParams(context) as List)[0], getActiveUser(context)))
+			AppPage.childTaskInProgress.name: (context) => _createPage(ChildTaskInProgressPage(initialPlanInstance: (getParams(context) as Map)["UIPlanInstance"]), context, TaskInstanceCubit((getParams(context) as Map)["TaskId"], getActiveUser(context)))
 		};
 	}
 

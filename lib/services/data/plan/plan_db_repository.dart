@@ -28,8 +28,8 @@ mixin PlanDbRepository implements DbRepository {
 	}
 
 
-	Future<PlanInstance> getPlanInstance({ObjectId id, List<String> fields}) {
-		var query = _buildPlanQuery(id: id);
+	Future<PlanInstance> getPlanInstance({ObjectId id, ObjectId childId, PlanInstanceState state, List<String> fields}) {
+		var query = _buildPlanQuery(id: id, childId: childId, state: state);
 		if (fields != null)
 			query.fields(fields);
 		return dbClient.queryOneTyped(Collection.planInstance, query, (json) => PlanInstance.fromJson(json));
@@ -57,7 +57,7 @@ mixin PlanDbRepository implements DbRepository {
 		return dbClient.queryTyped(Collection.planInstance, query, (json) => PlanInstance.fromJson(json));
 	}
 
-	Future updatePlanInstances(ObjectId instanceId, {PlanInstanceState state, DateSpanUpdate<TimeDate> durationChange, List<ObjectId> taskInstances}) {
+	Future updatePlanInstanceFields(ObjectId instanceId, {PlanInstanceState state, DateSpanUpdate<TimeDate> durationChange, List<ObjectId> taskInstances, List<DateSpan<TimeDate>> duration}) {
 		var document = modify;
 		if (state != null)
 			document.set('state', state.index);
@@ -65,7 +65,22 @@ mixin PlanDbRepository implements DbRepository {
 			document.set('duration.${durationChange.getQuery()}', durationChange.value.toDBDate());
 		if	(taskInstances != null)
 			document.set('taskInstances', taskInstances);
+		if (duration != null)
+			document.set('duration', duration.map((v) => v.toJson()).toList());
 		return dbClient.update(Collection.planInstance, where.eq('_id', instanceId), document);
+	}
+
+	Future updatePlanInstance(PlanInstance planInstance) => dbClient.update(Collection.planInstance, _buildPlanQuery(id: planInstance.id), planInstance.toJson(), multiUpdate: false);
+
+	Future updateMultiplePlanInstances(List<PlanInstance> planInstances) {
+		return dbClient.updateAll(Collection.planInstance, planInstances.map((planInstance) => _buildPlanQuery(id: planInstance.id)).toList(), planInstances.map((planInstance) => planInstance.toJson()).toList(), multiUpdate: false);
+	}
+
+	Future updateActivePlanInstanceState(ObjectId childId, PlanInstanceState state) {
+		var document = modify;
+		if (state != null)
+			document.set('state', state.index);
+		return dbClient.update(Collection.planInstance, where.eq('assignedTo', childId).and(where.eq('state', PlanInstanceState.active.index)), document);
 	}
 
 	Future createPlanInstances(List<PlanInstance> plans) {
@@ -77,6 +92,7 @@ mixin PlanDbRepository implements DbRepository {
 		var insert = (PlanInstance plan) => modify.setAllOnInsert(plan.toJson());
 	  return dbClient.updateAll(Collection.planInstance, plans.map((plan) => query(plan)).toList(), plans.map((plan) => insert(plan)).toList());
 	}
+
 	Future updatePlan(Plan plan) => dbClient.update(Collection.plan, _buildPlanQuery(id: plan.id), plan.toJson(), multiUpdate: false);
 	Future createPlan(Plan plan) => dbClient.insert(Collection.plan, plan.toJson());
 

@@ -9,6 +9,7 @@ import 'package:fokus/model/db/plan/plan_instance_state.dart';
 import 'package:fokus/model/ui/plan/ui_plan_instance.dart';
 import 'package:fokus/model/ui/user/ui_child.dart';
 import 'package:fokus/services/app_locales.dart';
+import 'package:fokus/utils/duration_utils.dart';
 import 'package:fokus/utils/theme_config.dart';
 import 'package:fokus/widgets/app_header.dart';
 import 'package:fokus/widgets/app_navigation_bar.dart';
@@ -36,7 +37,8 @@ class _ChildPanelPageState extends State<ChildPanelPage> {
 	      children: [
 	        ChildCustomHeader(),
 		      LoadableBlocBuilder<ChildPlansCubit>(
-				    builder: (context, state) => AppSegments(segments: _buildPanelSegments(state))
+				    builder: (context, state) => AppSegments(segments: _buildPanelSegments(state)),
+						wrapWithExpanded: true,
 		      )
 	      ]
       ),
@@ -52,14 +54,19 @@ class _ChildPanelPageState extends State<ChildPanelPage> {
 
     return [
 			if(activePlan != null)
-				BlocProvider<TimerCubit>(
-					create: (_) => TimerCubit(activePlan.elapsedActiveTime)..startTimer(),
-					child: _getPlansSegment(
+				isInProgress(activePlan.duration) ?
+					BlocProvider<TimerCubit>(
+						create: (_) => TimerCubit.up(activePlan.elapsedActiveTime)..startTimer(),
+						child: _getPlansSegment(
+							plans: [activePlan],
+							title: '$_pageKey.content.inProgress',
+							displayTimer: true
+						),
+					) :
+					_getPlansSegment(
 						plans: [activePlan],
 						title: '$_pageKey.content.inProgress',
-						displayTimer: true
 					),
-				),
 	    if (otherPlans.isNotEmpty || state.plans.isEmpty)
 		    _getPlansSegment(
 			    plans: otherPlans,
@@ -96,29 +103,34 @@ class _ChildPanelPageState extends State<ChildPanelPage> {
 					  title: plan.name,
 					  subtitle: plan.description(context),
 					  progressPercentage: plan.state.inProgress ? plan.completedTaskCount / plan.taskCount : null,
-					  chips: [
-					  	if (displayTimer)
-					  	  TimerChip(color: AppColors.childButtonColor),
-						  _getTaskChipForPlan(plan)
-					  ],
-						onTapped: () => Navigator.of(context).pushNamed(AppPage.childPlanInProgress.name, arguments: plan.id),
+					  chips: _getTaskChipForPlan(plan, displayTimer),
+						onTapped: () => Navigator.of(context).pushNamed(AppPage.childPlanInProgress.name, arguments: plan)
 				  )
 		  ],
 	  );
   }
 
-  AttributeChip _getTaskChipForPlan(UIPlanInstance plan) {
-	  if (!plan.state.inProgress)
-		  return AttributeChip.withIcon(
-				  icon: Icons.description,
-				  color: AppColors.mainBackgroundColor,
-				  content: AppLocales.of(context).translate('$_pageKey.content.tasks', {'NUM_TASKS': plan.taskCount})
-		  );
-	  var taskDescriptionKey = '$_pageKey.content.' + (plan.completedTaskCount > 0 ? 'taskProgress' : 'noTaskCompleted');
-	  return AttributeChip.withIcon(
-			  icon: Icons.description,
-			  color: Colors.lightGreen,
-			  content: AppLocales.of(context).translate(taskDescriptionKey, {'NUM_TASKS': plan.completedTaskCount, 'NUM_ALL_TASKS': plan.taskCount})
-	  );
+  List<Widget> _getTaskChipForPlan(UIPlanInstance plan, bool displayTimer) {
+  	List<Widget> chips = [];
+		var taskDescriptionKey = '$_pageKey.content.' + (plan.completedTaskCount > 0 ? 'taskProgress' : 'noTaskCompleted');
+		if (displayTimer) chips.add(TimerChip(color: AppColors.childButtonColor));
+	  else if(plan.duration != null && plan.duration.isNotEmpty && !isInProgress(plan.duration))
+			chips.add(AttributeChip.withIcon(
+			icon: Icons.timer,
+			color: Colors.orange,
+			content: formatDuration(sumDurations(plan.duration))
+		));
+		if (!plan.state.inProgress)
+			chips.add(AttributeChip.withIcon(
+				icon: Icons.description,
+				color: AppColors.mainBackgroundColor,
+				content: AppLocales.of(context).translate('$_pageKey.content.tasks', {'NUM_TASKS': plan.taskCount})
+			));
+		else chips.add(AttributeChip.withIcon(
+			icon: Icons.description,
+			color: Colors.lightGreen,
+			content: AppLocales.of(context).translate(taskDescriptionKey, {'NUM_TASKS': plan.completedTaskCount, 'NUM_ALL_TASKS': plan.taskCount})
+		));
+	  return chips;
   }
 }

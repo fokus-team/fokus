@@ -2,12 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:fokus/logic/reloadable/reloadable_cubit.dart';
 import 'package:fokus/model/db/date/date.dart';
 import 'package:fokus/model/db/plan/plan.dart';
+import 'package:fokus/model/db/plan/plan_instance.dart';
+import 'package:fokus/model/db/plan/plan_instance_state.dart';
+import 'package:fokus/model/db/plan/task_instance.dart';
 import 'package:fokus/model/ui/plan/ui_plan_instance.dart';
 import 'package:fokus/model/ui/task/ui_task_instance.dart';
 import 'package:fokus/services/data/data_repository.dart';
 import 'package:fokus/services/plan_repeatability_service.dart';
 import 'package:fokus/services/task_instance_service.dart';
-import 'package:fokus/services/task_keeper_service.dart';
 import 'package:fokus/utils/duration_utils.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mongo_dart/mongo_dart.dart';
@@ -17,15 +19,17 @@ class PlanInstanceCubit extends ReloadableCubit {
 	final TaskInstanceService _taskInstancesService = GetIt.I<TaskInstanceService>();
 	final PlanRepeatabilityService _repeatabilityService = GetIt.I<PlanRepeatabilityService>();
 	final ObjectId _planInstanceId;
-	final TaskKeeperService _taskKeeperService = GetIt.I<TaskKeeperService>();
+
 	PlanInstanceCubit(this._planInstanceId, ModalRoute modalRoute) : super(modalRoute);
+
+	PlanInstance planInstance;
 
 	@override
 	void doLoadData() async {
 		var getDescription = (Plan plan, [Date instanceDate]) => _repeatabilityService.buildPlanDescription(plan.repeatability, instanceDate: instanceDate);
-		var planInstance = await _dataRepository.getPlanInstance(id: _planInstanceId);
+		planInstance = await _dataRepository.getPlanInstance(id: _planInstanceId);
 		if(planInstance.taskInstances == null || planInstance.taskInstances.isEmpty)
-			_taskKeeperService.createTaskInstances(planInstance);
+			_taskInstancesService.createTaskInstances(planInstance);
 		var plan = await _dataRepository.getPlan(id: planInstance.planID);
 		var elapsedTime = () => sumDurations(planInstance.duration).inSeconds;
 		var completedTasks = await _dataRepository.getCompletedTaskCount(planInstance.id);
@@ -34,6 +38,21 @@ class PlanInstanceCubit extends ReloadableCubit {
 
 		List<UITaskInstance> uiInstances = await _taskInstancesService.mapToUIModels(allTasksInstances);
 		emit(ChildTasksLoadSuccess(uiInstances, uiPlanInstance));
+	}
+
+
+	Future<bool> isOtherPlanInProgressDbCheck({ObjectId tappedTaskInstance}) async {
+		PlanInstance activePlanInstance = await _dataRepository.getPlanInstance(childId: planInstance.assignedTo, state: PlanInstanceState.active, fields: ["_id"]);
+		if(activePlanInstance != null) {
+			List<TaskInstance> taskInstances = await _dataRepository.getTaskInstances(planInstanceId: activePlanInstance.id);
+			for(var instance in taskInstances) {
+				if(isInProgress(instance.duration) || isInProgress(instance.breaks)) {
+					if(tappedTaskInstance != null && tappedTaskInstance == instance.id) return false;
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 }
 

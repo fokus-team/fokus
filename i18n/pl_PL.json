@@ -458,7 +458,7 @@
 					"inProgress": "W trakcie",
 					"noPlans": "Brak planów",
 					"completedPlans": "Zakończone plany",
-					"futurePlans": "Zobacz przyszłe plany",
+					"futurePlans": "Kalendarz planów",
 					"tasks": "{NUM_TASKS, plural, offset:0  zero {# zadań} one {# zadanie} two {# zadania} few {# zadania} other {# zadań}}",
 					"noTaskCompleted": "{NUM_ALL_TASKS, plural, offset:0 one {# zadanie} two {# zadania} few {# zadania} other {# zadań}} do wykonania",
 					"taskProgress": "Wykonano {NUM_TASKS} z {NUM_ALL_TASKS} zadań"
@@ -490,6 +490,10 @@
 						"rejectedTooltip" : "Zadanie odrzucone przez opiekuna",
 						"notEvaluatedTooltip" : "Poproś opiekuna o ocenę",
 						"pointsPossible" : "Możliwe do zdobycia"
+					},
+					"taskInProgressDialog" : {
+						"title": "Inne zadanie w trakcie wykonywania",
+						"content": "Nie możesz wykonywać dwóch zadań jednocześnie. Zakończ aktualne zadanie i spróbuj ponownie."
 					}
 				}
 			},
@@ -506,7 +510,10 @@
 					"isCompleted": "Wykonano zadanie?",
 					"breakButton": "Przerwa",
 					"resumeButton": "Wznów",
-					"pointsToGet": "Do zdobycia:"
+					"pointsToGet": "Do zdobycia:",
+					"motivate": "Wykonuj zadania!",
+					"completionTime": "Czas wykonywania:",
+					"latency": "Spóźnienie:"
 				},
 				"cards" : {
 					"break": {

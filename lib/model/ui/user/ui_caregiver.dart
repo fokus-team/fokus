@@ -21,6 +21,17 @@ class UICaregiver extends UIUser {
       connections = caregiver.connections,
 		  super.fromDBModel(caregiver);
 
+	UICaregiver copyWith({List<UICurrency> currencies}) {
+		return UICaregiver(
+			id,
+			name,
+			currencies: currencies ?? this.currencies,
+			badges: badges,
+			connections: connections,
+			friends: friends
+		);
+	}
+
 	@override
   List<Object> get props => super.props..addAll([friends]);
 }

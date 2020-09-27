@@ -14,7 +14,7 @@ import 'package:fokus/model/db/plan/plan_instance.dart';
 import 'package:fokus/services/plan_repeatability_service.dart';
 import 'package:fokus/model/db/date_span.dart';
 
-import 'active_user_observer.dart';
+import 'observers/active_user_observer.dart';
 import 'data/data_repository.dart';
 
 class PlanKeeperService implements ActiveUserObserver {

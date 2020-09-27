@@ -49,7 +49,7 @@ class AppAvatar extends StatelessWidget {
 						offset: const Offset(0.0, 8.0),
 						child: blankAvatar ? 
 						SvgPicture.asset('assets/image/avatar/default.svg', fit: BoxFit.fitHeight)
-						: SvgPicture.asset(childAvatarSvgPath(avatar), fit: BoxFit.fitHeight)
+						: SvgPicture.asset(AssetType.avatars.getPath(avatar), fit: BoxFit.fitHeight)
 					)
 				)
 			)

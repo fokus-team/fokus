@@ -1,10 +1,9 @@
 import 'dart:async';
-import 'package:get_it/get_it.dart';
+import 'package:fokus_auth/fokus_auth.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
 import 'package:fokus/model/db/collection.dart';
 import 'package:fokus/services/exception/db_exceptions.dart';
-import 'package:fokus/services/remote_config_provider.dart';
 
 
 class MongoDbProvider {
@@ -13,9 +12,7 @@ class MongoDbProvider {
 	Future initialize() async {
 		if (_client != null && _client.state == State.OPEN)
 			return;
-		_client = new Db(await GetIt.I<RemoteConfigProvider>().dbAccessString);
-		return _client.open(
-			secure: true,
+		_client = await MongoDBAuthenticator.authenticate(
 			timeoutConfig: TimeoutConfig(
 				connectionTimeout: 8000,
 				socketTimeout: 6000,
@@ -24,7 +21,7 @@ class MongoDbProvider {
 		).catchError((e) => throw NoDbConnection(e));
 	}
 
-	Future update(Collection collection, SelectorBuilder selector, dynamic document, {bool multiUpdate = true, bool upsert = true}) {
+	Future update(Collection collection, dynamic selector, dynamic document, {bool multiUpdate = true, bool upsert = true}) {
 		return _execute(() => _client.collection(collection.name).update(selector, document, multiUpdate: multiUpdate, upsert: upsert));
 	}
 
@@ -34,7 +31,11 @@ class MongoDbProvider {
 
 	Future<ObjectId> insert(Collection collection, Map<String, dynamic> document) => _execute(() {
 		document['_id'] ??= ObjectId();
-		return _execute(() => _client.collection(collection.name).insert(document)).then((_) => document['_id']);
+		return _execute(() => _client.collection(collection.name) .insert(document)).then((_) => document['_id']);
+	});
+
+	Future remove(Collection collection, SelectorBuilder selector) => _execute(() {
+		return _execute(() => _client.collection(collection.name).remove(selector));
 	});
 
 	Future<List<ObjectId>> insertMany(Collection collection, List<Map<String, dynamic>> documents) => _execute(() {

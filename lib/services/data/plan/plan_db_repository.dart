@@ -115,6 +115,8 @@ mixin PlanDbRepository implements DbRepository {
 			query.gte('date', between.from);
 		if (between?.to != null)
 			query.lt('date', between.to);
+		if (query.map.isEmpty)
+			return null;
 		return query;
 	}
 }

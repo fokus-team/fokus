@@ -90,6 +90,8 @@ mixin TaskDbRepository implements DbRepository {
 			query.notExists('optional').or(where.eq('optional', false));
 		if (optionalOnly ?? false)
 			query.eq('optional', true);
+		if (query.map.isEmpty)
+			return null;
 		return query;
 	}
 }

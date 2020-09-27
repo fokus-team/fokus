@@ -2,19 +2,19 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:fokus_auth/fokus_auth.dart';
 import 'package:logging/logging.dart';
 import 'package:get_it/get_it.dart';
 
-import 'package:fokus/model/auth_user.dart';
 import 'package:fokus/model/db/user/child.dart';
 import 'package:fokus/model/ui/user/ui_user.dart';
 import 'package:fokus/model/db/user/caregiver.dart';
 import 'package:fokus/model/db/user/user_role.dart';
 import 'package:fokus/model/db/user/user.dart';
 import 'package:fokus/services/data/data_repository.dart';
-import 'package:fokus/services/active_user_observer.dart';
+import 'package:fokus/services/observers/active_user_observer.dart';
 import 'package:fokus/services/plan_keeper_service.dart';
-import 'package:fokus/services/auth/authentication_repository.dart';
+import 'package:fokus/services/notifications/notification_service.dart';
 import 'package:fokus/services/app_config/app_config_repository.dart';
 
 part 'authentication_event.dart';
@@ -23,7 +23,7 @@ part 'authentication_state.dart';
 class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
 	final Logger _logger = Logger('AuthenticationBloc');
 
-	final AuthenticationRepository _authenticationRepository = GetIt.I<AuthenticationRepository>();
+	final AuthenticationProvider _authenticationProvider = GetIt.I<AuthenticationProvider>();
 	final AppConfigRepository _appConfigRepository = GetIt.I<AppConfigRepository>();
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 
@@ -32,7 +32,8 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 
   AuthenticationBloc() : super(AuthenticationState.unknown()) {
 	  observeUserChanges(GetIt.I<PlanKeeperService>());
-	  _userSubscription = _authenticationRepository.user.listen((user) => add(AuthenticationUserChanged(user)));
+	  observeUserChanges(GetIt.I<NotificationService>());
+	  _userSubscription = _authenticationProvider.user.listen((user) => add(AuthenticationUserChanged(user)));
   }
 
   @override
@@ -45,7 +46,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 	  } else if (event is AuthenticationSignOutRequested) {
 	  	_onUserSignOut(state.user.toDBModel());
 		  if (state.user.role == UserRole.caregiver)
-		    _authenticationRepository.signOut();
+		    _authenticationProvider.signOut();
 		  else {
 			  _appConfigRepository.signOutChild();
 			  add(AuthenticationUserChanged(AuthenticatedUser.empty));

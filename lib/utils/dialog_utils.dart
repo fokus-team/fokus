@@ -105,16 +105,16 @@ void showPasswordChangeDialog(BuildContext context) {
 	);
 }
 
-void showRewardDialog(BuildContext context, UIReward reward) {
+void showRewardDialog(BuildContext context, UIReward reward, {bool showHeader = true}) {
 	showDialog(
 		context: context,
-		builder: (context) => RewardDialog(reward: reward)
+		builder: (context) => RewardDialog(reward: reward, showHeader: showHeader)
 	);
 }
 
-void showBadgeDialog(BuildContext context, UIBadge badge) {
+void showBadgeDialog(BuildContext context, UIBadge badge, {bool showHeader = true}) {
 	showDialog(
 		context: context,
-		builder: (context) => BadgeDialog(badge: badge)
+		builder: (context) => BadgeDialog(badge: badge, showHeader: showHeader)
 	);
 }

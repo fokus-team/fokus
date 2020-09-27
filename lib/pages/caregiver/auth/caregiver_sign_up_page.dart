@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fokus/utils/snackbar_utils.dart';
 import 'package:fokus/utils/theme_config.dart';
 import 'package:fokus/widgets/auth/auth_button.dart';
 import 'package:fokus/widgets/auth/auth_widgets.dart';
@@ -25,9 +26,7 @@ class CaregiverSignUpPage extends StatelessWidget {
 			  child: BlocListener<CaregiverSignUpCubit, CaregiverSignUpState>(
 				  listener: (context, state) {
 					  if (state.status.isSubmissionFailure && (state.signInError != null || state.signUpError != null))
-						  Scaffold.of(context)..hideCurrentSnackBar()..showSnackBar(
-							  SnackBar(content: Text(AppLocales.of(context).translate(state.signUpError?.key ?? state.signInError.key))),
-						  );
+							showFailSnackbar(context, state.signUpError?.key ?? state.signInError.key);
 				  },
 					child: ListView(
 						padding: EdgeInsets.symmetric(vertical: AppBoxProperties.screenEdgePadding),

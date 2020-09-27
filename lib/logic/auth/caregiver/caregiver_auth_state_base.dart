@@ -1,5 +1,5 @@
 import 'package:fokus/logic/auth/formz_state.dart';
-import 'package:fokus/services/exception/auth_exceptions.dart';
+import 'package:fokus_auth/fokus_auth.dart';
 import 'package:formz/formz.dart';
 
 

@@ -99,6 +99,7 @@ class FokusApp extends StatelessWidget {
 
 	Widget _authenticationGateBuilder(BuildContext context, Widget child) {
 		return BlocListener<AuthenticationBloc, AuthenticationState>(
+			listenWhen: (oldState, newState) => oldState.status != newState.status,
 			listener: (context, state) {
 				var redirectPage = state.status == AuthenticationStatus.authenticated ? state.user.role.panelPage : AppPage.rolesPage;
 				_navigatorKey.currentState.pushNamedAndRemoveUntil(redirectPage.name, (route) => false);

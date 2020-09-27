@@ -429,7 +429,7 @@
 				},
 				"content": {
 					"generalHint": "You can configure up to three additional currencies for use in tasks and rewards. The default currency can't be changed.",
-					"currenciesUpdatedText": "Currencies list has been updated",
+					"currenciesUpdatedText": "Available currencies have been updated",
 					"saveCurrenciesButton": "Save currencies",
 					"currencyNotUsed": "Not used",
 					"currencyNameLabel": "Currency name",

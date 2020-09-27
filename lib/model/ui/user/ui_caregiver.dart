@@ -33,5 +33,5 @@ class UICaregiver extends UIUser {
 	}
 
 	@override
-  List<Object> get props => super.props..addAll([friends]);
+  List<Object> get props => super.props..addAll([friends, currencies, connections, badges]);
 }

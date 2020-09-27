@@ -9,6 +9,9 @@ abstract class AppConfigProvider {
 	List<String> getStringList(AppConfigEntry entry);
 	void setStringList(AppConfigEntry entry, List<String> list);
 
+	bool getBool(AppConfigEntry entry);
+	void setBool(AppConfigEntry entry, bool value);
+
 	void remove(AppConfigEntry entry);
 
 	bool containsEntry(AppConfigEntry entry);

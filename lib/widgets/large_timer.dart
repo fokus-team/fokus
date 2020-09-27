@@ -14,23 +14,27 @@ class LargeTimer extends StatelessWidget {
 
 	@override
 	Widget build(BuildContext context) {
-		return BlocBuilder<TimerCubit, TimerState>(
+	return BlocBuilder<TimerCubit, TimerState>(
 			builder: (context, state) {
-				return Column(
-					mainAxisAlignment: MainAxisAlignment.start,
-					crossAxisAlignment: align,
-					children: [
-						Text(
-							AppLocales.of(context).translate(title),
-							style: Theme.of(context).textTheme.headline3.copyWith(color: textColor),
-						),
-						Text(
-							formatDuration(Duration(seconds: state.value)),
-							style: Theme.of(context).textTheme.headline1.copyWith(color: textColor),
-						)
-					],
-				);
+				return timeUI(context, state.value);
 			},
+		);
+	}
+
+	Widget timeUI(BuildContext context, int value) {
+		return Column(
+			mainAxisAlignment: MainAxisAlignment.start,
+			crossAxisAlignment: align,
+			children: [
+				Text(
+					AppLocales.of(context).translate(title),
+					style: Theme.of(context).textTheme.headline3.copyWith(color: textColor),
+				),
+				Text(
+					formatDuration(Duration(seconds: value)),
+					style: Theme.of(context).textTheme.headline1.copyWith(color: textColor),
+				)
+			],
 		);
 	}
 }

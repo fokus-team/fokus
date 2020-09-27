@@ -18,6 +18,7 @@ import 'package:fokus/logic/caregiver_panel_cubit.dart';
 import 'package:fokus/logic/caregiver_plans_cubit.dart';
 import 'package:fokus/logic/child_plans_cubit.dart';
 import 'package:fokus/logic/plan_form/plan_form_cubit.dart';
+import 'package:fokus/logic/task_instance/task_instance_cubit.dart';
 import 'package:fokus/logic/reward_form/reward_form_cubit.dart';
 import 'package:fokus/logic/badge_form/badge_form_cubit.dart';
 import 'package:fokus/pages/child/calendar_page.dart';
@@ -54,6 +55,9 @@ import 'package:fokus/services/instrumentator.dart';
 import 'package:fokus/utils/theme_config.dart';
 import 'package:fokus/utils/service_injection.dart';
 import 'package:fokus/widgets/page_theme.dart';
+
+import 'model/ui/plan/ui_plan_instance.dart';
+
 
 void main() async {
 	WidgetsFlutterBinding.ensureInitialized();
@@ -137,8 +141,8 @@ class FokusApp extends StatelessWidget {
 			AppPage.childRewards.name: (context) => _createPage(ChildRewardsPage(), context),
 			AppPage.childAchievements.name: (context) => _createPage(ChildAchievementsPage(), context),
 			AppPage.caregiverPlanDetails.name: (context) => _createPage(CaregiverPlanDetailsPage(), context, PlanCubit(getParams(context), getRoute(context))),
-			AppPage.childPlanInProgress.name: (context) => _createPage(ChildPlanInProgressPage(), context, PlanInstanceCubit(getParams(context), getRoute(context))),
-			AppPage.childTaskInProgress.name: (context) => _createPage(ChildTaskInProgressPage(), context)
+			AppPage.childPlanInProgress.name: (context) => _createPage(ChildPlanInProgressPage(initialPlanInstance: getParams(context)), context, PlanInstanceCubit((getParams(context) as UIPlanInstance).id, getRoute(context))),
+			AppPage.childTaskInProgress.name: (context) => _createPage(ChildTaskInProgressPage(initialPlanInstance: (getParams(context) as Map)["UIPlanInstance"]), context, TaskInstanceCubit((getParams(context) as Map)["TaskId"], getActiveUser(context)))
 		};
 	}
 

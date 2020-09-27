@@ -6,8 +6,10 @@ import 'package:fokus/widgets/general/app_loader.dart';
 
 class LoadableBlocBuilder<CubitType extends ReloadableCubit> extends StatelessWidget {
 	final BlocWidgetBuilder<DataLoadSuccess> builder;
+	final BlocWidgetBuilder<LoadableState> loadingBuilder;
+	final bool wrapWithExpanded;
 
-  LoadableBlocBuilder({this.builder});
+  LoadableBlocBuilder({this.builder, this.loadingBuilder, this.wrapWithExpanded = false});
 
   @override
   Widget build(BuildContext context) {
@@ -17,9 +19,9 @@ class LoadableBlocBuilder<CubitType extends ReloadableCubit> extends StatelessWi
 			    context.bloc<CubitType>().loadData();
 		    else if (state is DataLoadSuccess)
 			    return builder(context, state);
-		    else if (state is DataLoadInProgress)
-		      return Expanded(child: Center(child: AppLoader()));
-		    return Container();
+				if(loadingBuilder == null)
+					return wrapWithExpanded ? Expanded(child: Center(child: AppLoader())) : Center(child: AppLoader());
+				else return loadingBuilder(context, state);
 	    }
     );
   }

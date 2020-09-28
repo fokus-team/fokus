@@ -87,13 +87,13 @@ class TasksEvaluationCubit extends Cubit<TasksEvaluationState> {
 
 	void rateTask(UITaskReport report) async {
 		//updateTaskInstance
-		TaskInstance taskInstance = null;//await _dataRepository.getTaskInstance(taskInstanceId: report.task.id);
+		TaskInstance taskInstance = await _dataRepository.getTaskInstance(taskInstanceId: report.task.id);
 		PlanInstance planInstance = await _dataRepository.getPlanInstance(id: taskInstance.planInstanceID);
 		Task task = await _dataRepository.getTask(taskId: taskInstance.taskID);
 		if(report.ratingMark == UITaskReportMark.rejected) {
 			taskInstance.status.state = TaskState.rejected;
 			planInstance.state = PlanInstanceState.notCompleted;
-			//_dataRepository.updatePlanInstance(plan);
+			_dataRepository.updatePlanInstance(planInstance);
 
 		} else {
 			taskInstance.status.state = TaskState.evaluated;

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:ui';
+import 'package:fokus/services/observers/current_locale_observer.dart';
 import 'package:intl/message_format.dart';
 import 'package:logging/logging.dart';
 
@@ -9,18 +10,22 @@ import 'package:flutter/widgets.dart';
 typedef TranslateFunc = String Function(BuildContext);
 
 class AppLocalesDelegate extends LocalizationsDelegate<AppLocales> {
+	static List<Locale> supportedLocales = [
+		const Locale('en', 'US'),
+		const Locale('pl', 'PL')
+	];
+
 	const AppLocalesDelegate();
 
 	@override
 	bool isSupported(Locale locale) {
-		return ['en', 'pl'].contains(locale.languageCode);
+		return supportedLocales.contains(locale);
 	}
 
 	@override
 	Future<AppLocales> load(Locale locale) async {
-		AppLocales localizations = new AppLocales(locale);
-		await localizations.load();
-		return localizations;
+		await AppLocales.instance.load(locale);
+		return AppLocales.instance;
 	}
 
 	@override
@@ -29,37 +34,49 @@ class AppLocalesDelegate extends LocalizationsDelegate<AppLocales> {
 
 class AppLocales {
 	final Logger _logger = Logger('AppLocales');
+	Locale locale;
+	List<CurrentLocaleObserver> _localeObservers = [];
 
-	final Locale locale;
-
-	AppLocales(this.locale);
-
-	static AppLocales of(BuildContext context) {
-		return Localizations.of<AppLocales>(context, AppLocales);
-	}
+	static AppLocales instance = AppLocales();
+	static AppLocales of(BuildContext context) => Localizations.of<AppLocales>(context, AppLocales);
 
 	static const LocalizationsDelegate<AppLocales> delegate = AppLocalesDelegate();
 
-	Map<String, dynamic> _jsonMap;
+	Map<Locale, Map<String, dynamic>> _translations = {};
 
-	Future<bool> load() async {
-		String jsonString = await rootBundle.loadString('i18n/${locale.languageCode}_${locale.countryCode}.json');
-		_jsonMap = json.decode(jsonString);
+	Future<bool> load(Locale locale) async {
+		this.locale = locale;
+		if (_translations.isEmpty)
+			for (var locale in AppLocalesDelegate.supportedLocales) {
+				String localeTranslations = await rootBundle.loadString('i18n/$locale.json');
+				_translations[locale] = json.decode(localeTranslations);
+			}
+		_localeObservers.forEach((observer) => observer.onLocaleSet(locale));
 		return true;
 	}
 
-	String translate(String keyPath, [Map<String, Object> args]) {
+	String translate(String key, [Map<String, Object> args, Locale locale]) {
+		locale ??= this.locale;
 		try {
-			var string = keyPath.split('.').fold(_jsonMap, (object, key) => object[key]) as String;
+			var string = key.split('.').fold(_translations[locale], (object, key) => object[key]) as String;
 			if (args == null)
 				return string;
 			return MessageFormat(string, locale: locale.toString()).format(args);
 		} on NoSuchMethodError {
-			_logger.warning('Key $keyPath has no localized string in language ${locale.languageCode}');
+			_logger.warning('Key $key has no localized string in language ${locale.languageCode}');
 			return '';
 		} on Error catch (e) {
 			_logger.severe('$e');
 			return '';
 		}
 	}
+
+	Map<String, dynamic> getTranslations(String key, [Map<String, Object> args]) {
+		Map<String, String> translations = {};
+		for (var locale in AppLocalesDelegate.supportedLocales)
+			translations[locale.languageCode] = translate(key, args, locale);
+		return translations;
+	}
+
+	void observeLocaleChanges(CurrentLocaleObserver observer) => _localeObservers.add(observer);
 }

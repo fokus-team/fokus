@@ -34,7 +34,8 @@ class _CaregiverPanelPageState extends State<CaregiverPanelPage> {
 							() => { Navigator.of(context).pushNamed(AppPage.caregiverRatingPage.name) }, Colors.lightBlue)
 					]),
 					LoadableBlocBuilder<CaregiverPanelCubit>(
-						builder: (context, state) => AppSegments(segments: _buildPanelSegments(state))
+						builder: (context, state) => AppSegments(segments: _buildPanelSegments(state)),
+						wrapWithExpanded: true,
 					),
 				]
 			),
@@ -53,7 +54,7 @@ class _CaregiverPanelPageState extends State<CaregiverPanelPage> {
 							title: child.name,
 							subtitle: getChildCardSubtitle(context, child),
 							onTapped: () => Navigator.of(context).pushNamed(AppPage.caregiverChildDashboard.name),
-							graphicType: GraphicAssetType.childAvatars,
+							graphicType: AssetType.avatars,
 							graphic: child.avatar,
 							chips: <Widget>[
 								for (var currency in child.points.entries)

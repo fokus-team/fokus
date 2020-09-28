@@ -105,16 +105,23 @@ void showPasswordChangeDialog(BuildContext context) {
 	);
 }
 
-void showRewardDialog(BuildContext context, UIReward reward) {
+void showCurrencyEditDialog(BuildContext context, Function(String) callback, {String initialValue}) {
 	showDialog(
 		context: context,
-		builder: (context) => RewardDialog(reward: reward)
+		builder: (context) => CurrencyEditDialog(callback: callback, initialValue: initialValue)
 	);
 }
 
-void showBadgeDialog(BuildContext context, UIBadge badge) {
+void showRewardDialog(BuildContext context, UIReward reward, {bool showHeader = true}) {
 	showDialog(
 		context: context,
-		builder: (context) => BadgeDialog(badge: badge)
+		builder: (context) => RewardDialog(reward: reward, showHeader: showHeader)
+	);
+}
+
+void showBadgeDialog(BuildContext context, UIBadge badge, {bool showHeader = true}) {
+	showDialog(
+		context: context,
+		builder: (context) => BadgeDialog(badge: badge, showHeader: showHeader)
 	);
 }

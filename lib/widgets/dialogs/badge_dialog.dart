@@ -3,14 +3,15 @@ import 'package:flutter_svg/svg.dart';
 import 'package:fokus/model/ui/gamification/ui_badge.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/app_paths.dart';
-import 'package:fokus/utils/theme_config.dart';
+import 'package:fokus/utils/icon_sets.dart';
 import 'package:fokus/widgets/buttons/rounded_button.dart';
 import 'package:intl/intl.dart';
 
 class BadgeDialog extends StatefulWidget {
 	final UIBadge badge;
+	final bool showHeader;
 
-	BadgeDialog({@required this.badge});
+	BadgeDialog({@required this.badge, this.showHeader});
 
 	@override
 	_BadgeDialogState createState() => new _BadgeDialogState();
@@ -39,17 +40,18 @@ class _BadgeDialogState extends State<BadgeDialog> with SingleTickerProviderStat
 			insetPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
 			child: SingleChildScrollView(
 				child: Padding(
-					padding: EdgeInsets.symmetric(horizontal: AppBoxProperties.screenEdgePadding),
+					padding: EdgeInsets.symmetric(horizontal: 30.0),
 					child: Column(
 						mainAxisSize: MainAxisSize.min,
-						children: [				
-							Padding(
-								padding: EdgeInsets.all(20.0).copyWith(bottom: 0), 
-								child: Text(
-									AppLocales.of(context).translate('$_pageKey.earnedBadgeTitle'),
-									style: Theme.of(context).textTheme.headline6
-								)
-							),
+						children: [
+							if(widget.showHeader)	
+								Padding(
+									padding: EdgeInsets.all(20.0).copyWith(bottom: 0), 
+									child: Text(
+										AppLocales.of(context).translate('$_pageKey.earnedBadgeTitle'),
+										style: Theme.of(context).textTheme.headline6
+									)
+								),
 							Stack(
 								alignment: Alignment.center,
 								children: [
@@ -59,7 +61,7 @@ class _BadgeDialogState extends State<BadgeDialog> with SingleTickerProviderStat
 									),
 									Padding(
 										padding: EdgeInsets.only(top: 10.0),
-										child: SvgPicture.asset(badgeIconSvgPath(widget.badge.icon), height: MediaQuery.of(context).size.width*0.3)
+										child: SvgPicture.asset(AssetType.badges.getPath(widget.badge.icon), height: MediaQuery.of(context).size.width*0.3)
 									)
 								]
 							),
@@ -69,10 +71,10 @@ class _BadgeDialogState extends State<BadgeDialog> with SingleTickerProviderStat
 								textAlign: TextAlign.center
 							),
 							SizedBox(height: 6.0),
-							if(widget.badge.date != null)
+							if(widget.badge is UIChildBadge && (widget.badge as UIChildBadge).date != null)
 								Text(
 									AppLocales.of(context).translate('$_pageKey.earnedBadgeDate') + ': '
-										+ DateFormat.yMd(Localizations.localeOf(context).toString()).format(widget.badge.date),
+										+ DateFormat.yMd(Localizations.localeOf(context).toString()).format((widget.badge as UIChildBadge).date),
 									style: Theme.of(context).textTheme.caption,
 									textAlign: TextAlign.center
 								),

@@ -1,15 +1,16 @@
+import 'package:fokus/model/ui/form/badge_form_model.dart';
+
 class Badge {
-  int icon;
-  int maxLevel;
   String name;
   String description;
+  int icon;
 
-  Badge({this.icon, this.maxLevel, this.name, this.description});
+  Badge({this.name, this.description, this.icon});
+	Badge.fromBadgeForm(BadgeFormModel badge) : this(name: badge.name, description: badge.description, icon: badge.icon);
 
   factory Badge.fromJson(Map<String, dynamic> json) {
     return json != null ? Badge(
       icon: json['icon'],
-      maxLevel: json['maxLevel'],
       name: json['name'],
 			description: json['description']
     ) : null;
@@ -18,7 +19,6 @@ class Badge {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['icon'] = this.icon;
-    data['maxLevel'] = this.maxLevel;
     data['name'] = this.name;
 		data['description'] = this.description;
     return data;

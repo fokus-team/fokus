@@ -1,3 +1,4 @@
+import 'package:fokus_auth/fokus_auth.dart';
 import 'package:formz/formz.dart';
 
 import 'package:fokus/model/ui/auth/confirmed_password.dart';
@@ -6,7 +7,6 @@ import 'package:fokus/model/ui/auth/name.dart';
 import 'package:fokus/model/ui/auth/password.dart';
 import 'package:fokus/logic/auth/caregiver/caregiver_auth_cubit_base.dart';
 import 'package:fokus/logic/auth/caregiver/caregiver_auth_state_base.dart';
-import 'package:fokus/services/exception/auth_exceptions.dart';
 
 part 'caregiver_sign_up_state.dart';
 
@@ -21,7 +21,7 @@ class CaregiverSignUpCubit extends CaregiverAuthCubitBase<CaregiverSignUpState> 
 	  }
 	  emit(state.copyWith(status: FormzStatus.submissionInProgress));
 	  try {
-		  await authenticationRepository.signUpWithEmail(
+		  await authenticationProvider.signUpWithEmail(
 			  email: state.email.value,
 			  password: state.password.value,
 			  name: state.name.value

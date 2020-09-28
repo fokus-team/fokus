@@ -4,8 +4,9 @@ import 'package:fokus/utils/theme_config.dart';
 class SlidingCard extends StatefulWidget {
 	final List<Widget> content;
 	final Color cardColor;
+	final showFirst;
 
-  SlidingCard({Key key, this.content, this.cardColor}) : super(key: key);
+  SlidingCard({Key key, this.content, this.cardColor, this.showFirst = false}) : super(key: key);
   @override
   SlidingCardState createState() => SlidingCardState();
 }
@@ -66,7 +67,11 @@ class SlidingCardState extends State<SlidingCard> with SingleTickerProviderState
 			curve: Curves.easeInOutQuint,
 		));
 		_scrollController = ScrollController();
-  }
+		WidgetsBinding.instance.addPostFrameCallback((_) {
+			jumpToEnd();
+			if(this.widget.showFirst) openCard();
+		});
+	}
 
   void closeCard() {
 		_scrollController.animateTo(

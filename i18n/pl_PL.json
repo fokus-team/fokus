@@ -6,7 +6,8 @@
 			"panel": "Panel",
 			"plans": "Plany",
 			"awards": "Nagrody",
-			"statistics": "Statystyki"
+			"statistics": "Statystyki",
+			"currencies": "Waluty"
 		},
 		"child": {
 			"plans": "Plany",
@@ -60,15 +61,16 @@
 			},
 			"content": {
 				"caregiver": {
-					"receivedReward": "{CHILD_NAME} odebrał(a) nagrodę",
-					"finishedTask": "{CHILD_NAME} wykonał(a) zadanie",
-					"unfinishedPlan": "{CHILD_NAME} nie skończył(a) planu",
+					"rewardBought": "{CHILD_NAME} odebrał(a) nagrodę",
+					"taskFinished": "{CHILD_NAME} wykonał(a) zadanie",
+					"planUnfinished": "{CHILD_NAME} nie skończył(a) planu",
 					"gradeTask": "Oceń zadanie",
 					"graded": "Oceniono"
 				},
 				"child": {
-					"taskGraded": "Nowe punkty za zadanie!",
-					"receivedBadge": "Nowa odznaka!"
+					"pointsReceived": "Masz nowe punkty za zadanie!",
+					"pointsReceivedWithCount": "Masz {POINTS, plural, offset:0, one {nowy punkt} two {# nowe punkty} few {# nowe punkty} other {# nowych punktów}} za zadanie!",
+					"badgeAwarded": "Masz nową odznakę!"
 				}
 			}
 		},
@@ -292,9 +294,16 @@
 					"pointCost": "Koszt punktowy nagrody",
 					"unlimitedReward": "Nagroda nielimitowana",
 					"limitedReward": "Limit {REWARD_LIMIT, plural, offset:0 one {jednej nagrody} other {# nagród}} na dziecko",
-					"1LeveledBadge": "Odznaka przyznawana jednorazowo",
-					"3LeveledBadge": "Odznaka 3 poziomowa",
-					"5LeveledBadge": "Odznaka 5 poziomowa"
+					"noDescriptionSubtitle": "Brak opisu",
+					"removeRewardTitle": "Usuń nagrodę",
+					"removeRewardText": "Odebrane przez dzieci nagrody nie zostaną usunięte. Nagroda zniknie jednak z listy możliwych do odbioru. Na pewno chcesz usunąć tą nagrodę?",
+					"removeBadgeTitle": "Usuń odznakę",
+					"removeBadgeText": "Odznaki przydzielone dzieciom nie zostaną usunięte. Nie będzie jednak możliwości przyznawania tej odznaki innym dzieciom. Na pewno chcesz usunąć tą odznakę?",
+					"rewardAddedText": "Dodano nagrodę",
+					"badgeAddedText": "Dodano odznakę",
+					"rewardUpdatedText": "Zmodifikowano nagrodę",
+					"rewardRemovedText": "Usunięto nagrodę",
+					"badgeRemovedText": "Usunięto odznakę"
 				}
 			},
 			"rewardForm": {
@@ -312,7 +321,7 @@
 					},
 					"rewardLimit": {
 						"label": "Limit nagród",
-						"hint": "Pozostaw puste, aby nie limitować"
+						"hint": "Liczba nagród możliwych do odbioru per dziecko. Pozostaw puste, aby nie limitować"
 					},
 					"rewardPoints": {
 						"valueLabel": "Koszt punktowy",
@@ -333,12 +342,7 @@
 			},
 			"badgeForm": {
 				"addBadgeTitle": "Dodaj odznakę",
-				"editBadgeTitle": "Edytuj odznakę",
 				"addBadgeButton": "Dodaj odznakę",
-				"saveBadgeButton": "Zapisz odznakę",
-				"removeBadgeButton": "Usuń odznakę",
-				"removeBadgeTitle": "Usuń odznakę",
-				"removeBadgeText": "Na pewno chcesz usunąć tą odznakę?",
 				"fields": {
 					"badgeName": {
 						"label": "Nazwa odznaki",
@@ -346,14 +350,6 @@
 					},
 					"badgeDescription": {
 						"label": "Opis odznaki"
-					},
-					"badgeLevel": {
-						"label": "Typ odznaki",
-						"options": {
-							"one": "Jednorazowa",
-							"three": "3 poziomy",
-							"five": "5 poziomów"
-						}
 					},
 					"badgeIcon": {
 						"label": "Ikona odznaki",
@@ -426,6 +422,25 @@
 						"rateCommentLabel": "Komentarz do zadania"
 					}
 				}
+			},
+			"currencies": {
+				"header": {
+					"title": "Waluty"
+				},
+				"content": {
+					"generalHint": "Możesz ustawić do trzech dodatkowych walut w aplikacji, a następnie używać ich w zadaniach i nagrodach. Domyślna waluta aplikacji nie może zostać zmodyfikowana.",
+					"currenciesUpdatedText": "Zaktualizowano listę walut",
+					"saveCurrenciesButton": "Zapisz konfigurację",
+					"currencyNotUsed": "Nie używana",
+					"currencyNameLabel": "Nazwa waluty",
+					"clearCurrencyText": "Stracisz możliwość używania tej waluty. Zdobyte już przez dzieci punkty zostaną zachowane. Na pewno chcesz wyczyścić tą walutę?",
+					"currencies": {
+						"diamond": "Diament",
+						"emerald": "Szmaragd",
+						"ruby": "Rubin",
+						"amethyst": "Ametyst"
+					}
+				}
 			}
 		},
 		"childSection": {
@@ -443,7 +458,7 @@
 					"inProgress": "W trakcie",
 					"noPlans": "Brak planów",
 					"completedPlans": "Zakończone plany",
-					"futurePlans": "Zobacz przyszłe plany",
+					"futurePlans": "Kalendarz planów",
 					"tasks": "{NUM_TASKS, plural, offset:0  zero {# zadań} one {# zadanie} two {# zadania} few {# zadania} other {# zadań}}",
 					"noTaskCompleted": "{NUM_ALL_TASKS, plural, offset:0 one {# zadanie} two {# zadania} few {# zadania} other {# zadań}} do wykonania",
 					"taskProgress": "Wykonano {NUM_TASKS} z {NUM_ALL_TASKS} zadań"
@@ -475,6 +490,10 @@
 						"rejectedTooltip" : "Zadanie odrzucone przez opiekuna",
 						"notEvaluatedTooltip" : "Poproś opiekuna o ocenę",
 						"pointsPossible" : "Możliwe do zdobycia"
+					},
+					"taskInProgressDialog" : {
+						"title": "Inne zadanie w trakcie wykonywania",
+						"content": "Nie możesz wykonywać dwóch zadań jednocześnie. Zakończ aktualne zadanie i spróbuj ponownie."
 					}
 				}
 			},
@@ -491,7 +510,10 @@
 					"isCompleted": "Wykonano zadanie?",
 					"breakButton": "Przerwa",
 					"resumeButton": "Wznów",
-					"pointsToGet": "Do zdobycia:"
+					"pointsToGet": "Do zdobycia:",
+					"motivate": "Wykonuj zadania!",
+					"completionTime": "Czas wykonywania:",
+					"latency": "Spóźnienie:"
 				},
 				"cards" : {
 					"break": {
@@ -617,13 +639,44 @@
 			"avatarEmpty": "Należy wybrać awatar dziecka"
 		}
 	},
+	"notification": {
+		"button": {
+			"rate": "Oceń"
+		},
+		"group": {
+			"caregiver": {
+				"rewardBought": "$[notif_count] odebranych nagród",
+				"taskFinished": "$[notif_count] wykonanych zadań",
+				"planUnfinished": "$[notif_count] nieskończonych planów"
+			},
+			"child": {
+				"pointsReceived": "$[notif_count] ocenionych zadań",
+				"badgeAwarded": "$[notif_count] przyznanych odznak"
+			}
+		},
+		"channel": {
+			"name": {
+				"general": "Ogólne",
+				"prizes": "Nagrody",
+				"grades": "Oceny",
+				"plans": "Plany"
+			},
+			"description": {
+				"general": "Ogólne powiadomienia",
+				"prizes": "Informacje o nagrodach",
+				"grades": "Informacje o ocenach zadań",
+				"plans": "Informacje o planach"
+			}
+		}
+	},
 	"help": {
 		"first_steps": "Pierwsze kroki",
 		"plan_creation": "Tworzenie planu",
 		"task_creation": "Konfiguracja zadania",
 		"reward_creation": "Tworzenie nagrody",
 		"badge_creation": "Tworzenie odznaki",
-		"plan_info": "Plany"
+		"plan_info": "Plany",
+		"currencies": "Waluty"
 	},
 	"assignedTo": "Przypisane do",
 	"points": "Punkty",

@@ -51,7 +51,7 @@ class _IconPickerFieldState extends State<IconPickerField> {
 		return Padding(
 			padding: EdgeInsets.symmetric(vertical: 10.0),
 			child: SmartSelect<int>.single(
-				leading: SvgPicture.asset(isRewardType ? rewardIconSvgPath(widget.value) : badgeIconSvgPath(widget.value), height: 74.0),
+				leading: SvgPicture.asset(getPicturePath(isRewardType, widget.value), height: 74.0),
 				title: widget.title,
 				value: widget.value,
 				options: List.generate((isRewardType ? rewardIcons : badgeIcons).length, (index) {
@@ -80,7 +80,7 @@ class _IconPickerFieldState extends State<IconPickerField> {
 							showBadge: checked != null ? checked : false,
 							child: GestureDetector(
 								onTap: () => { onChange(item.value, !checked) },
-								child: SvgPicture.asset(isRewardType ? rewardIconSvgPath(item.value) : badgeIconSvgPath(item.value), height: 64.0)
+								child: SvgPicture.asset(getPicturePath(isRewardType, item.value), height: 64.0)
 							)
 						);
 					}
@@ -91,4 +91,5 @@ class _IconPickerFieldState extends State<IconPickerField> {
 		);
   }
 
+  String getPicturePath(bool isAwardType, int value) => isAwardType ? AssetType.rewards.getPath(value) : AssetType.badges.getPath(value);
 }

@@ -144,3 +144,51 @@ class PasswordChangeDialog extends StatelessWidget {
   }
 	
 }
+
+
+class CurrencyEditDialog extends StatefulWidget {
+	final Function(String) callback;
+	final String initialValue;
+
+	CurrencyEditDialog({this.callback, this.initialValue});
+	
+	@override
+	_CurrencyEditDialogState createState() => new _CurrencyEditDialogState();
+}
+
+class _CurrencyEditDialogState extends State<CurrencyEditDialog> {
+	TextEditingController fieldController = TextEditingController();
+
+	@override
+  void initState() {
+		fieldController.text = widget.initialValue ?? '';
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FormDialog(
+			title: AppLocales.of(context).translate('page.caregiverSection.currencies.content.currencyNameLabel'),
+			fields: [
+				Padding(
+					padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+					child: Padding(
+						padding: const EdgeInsets.all(8.0),
+						child: TextField(
+							controller: fieldController,
+							maxLength: 30,
+							decoration: InputDecoration(
+								icon: Padding(padding: EdgeInsets.all(5.0), child: Icon(Icons.edit)),
+								contentPadding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
+								border: OutlineInputBorder(),
+								labelText: AppLocales.of(context).translate('page.caregiverSection.currencies.content.currencyNameLabel')
+							)
+						)
+					)
+				)
+			],
+			onConfirm: () => widget.callback(fieldController.text == '' ? null : fieldController.text)
+		);
+  }
+	
+}

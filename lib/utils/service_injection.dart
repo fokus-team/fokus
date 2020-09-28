@@ -1,6 +1,4 @@
 import 'package:flutter/widgets.dart';
-import 'package:fokus/services/task_instance_service.dart';
-import 'package:fokus/services/task_keeper_service.dart';
 import 'package:get_it/get_it.dart';
 
 import 'package:fokus/services/data/db/db_data_repository.dart';
@@ -9,18 +7,21 @@ import 'package:fokus/services/app_config/app_shared_preferences_provider.dart';
 import 'package:fokus/services/data/data_repository.dart';
 import 'package:fokus/services/plan_repeatability_service.dart';
 import 'package:fokus/services/plan_keeper_service.dart';
-import 'package:fokus/services/auth/authentication_repository.dart';
-import 'package:fokus/services/auth/firebase_auth_repository.dart';
-import 'package:fokus/services/remote_config_provider.dart';
+import 'package:fokus/services/task_instance_service.dart';
+import 'package:fokus/services/notifications/onesignal/onesignal_notification_service.dart';
+import 'package:fokus/services/notifications/notification_service.dart';
+import 'package:fokus_auth/fokus_auth.dart';
 
-void initializeServices(RouteObserver<PageRoute> routeObserver) {
-	GetIt.I.registerSingleton<AuthenticationRepository>(FirebaseAuthRepository());
-	GetIt.I.registerSingleton<RemoteConfigProvider>(RemoteConfigProvider()..initialize());
+void registerServices(GlobalKey<NavigatorState> navigatorKey, RouteObserver<PageRoute> routeObserver) {
+	// Semi-services needed for context and navigation state sharing
+	GetIt.I.registerSingleton<GlobalKey<NavigatorState>>(navigatorKey);
+	GetIt.I.registerSingleton<RouteObserver<PageRoute>>(routeObserver);
+
+	GetIt.I.registerSingleton<AuthenticationProvider>(AuthenticationProvider.instance);
 	GetIt.I.registerSingleton<AppConfigRepository>(AppConfigRepository(AppSharedPreferencesProvider())..initialize());
 	GetIt.I.registerSingleton<DataRepository>(DbDataRepository());
 	GetIt.I.registerSingleton<PlanRepeatabilityService>(PlanRepeatabilityService());
 	GetIt.I.registerSingleton<PlanKeeperService>(PlanKeeperService());
 	GetIt.I.registerSingleton<TaskInstanceService>(TaskInstanceService());
-	GetIt.I.registerSingleton<TaskKeeperService>(TaskKeeperService());
-	GetIt.I.registerSingleton<RouteObserver<PageRoute>>(routeObserver);
+	GetIt.I.registerSingleton<NotificationService>(OneSignalNotificationService());
 }

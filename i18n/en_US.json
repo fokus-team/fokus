@@ -6,7 +6,8 @@
 			"panel": "Dashboard",
 			"plans": "Plans",
 			"awards": "Awards",
-			"statistics": "Statistics"
+			"statistics": "Statistics",
+			"currencies": "Currencies"
 		},
 		"child": {
 			"plans": "Plans",
@@ -60,15 +61,16 @@
 			},
 			"content": {
 				"caregiver": {
-					"receivedReward": "{CHILD_NAME} received the reward",
-					"finishedTask": "{CHILD_NAME} finished the task",
-					"unfinishedPlan": "{CHILD_NAME} didn't finish the plan",
+					"rewardBought": "{CHILD_NAME} received the reward",
+					"taskFinished": "{CHILD_NAME} finished the task",
+					"planUnfinished": "{CHILD_NAME} didn't finish the plan",
 					"gradeTask": "Grade task",
 					"graded": "Graded"
 				},
 				"child": {
-					"taskGraded": "You received points for a task!",
-					"receivedBadge": "You received a badge!"
+					"pointsReceived": "You received points for a task!",
+					"pointsReceivedWithCount": "You received {POINTS, plural, offset:0, one {# point} other {# points}} for a task!",
+					"badgeAwarded": "You received a badge!"
 				}
 			}
 		},
@@ -292,9 +294,16 @@
 					"pointCost": "Reward's point cost",
 					"unlimitedReward": "Unlimited reward",
 					"limitedReward": "Limited {REWARD_LIMIT, plural, offset:0 one {one reward} other {# rewards}} per child",
-					"1LeveledBadge": "One-time badge",
-					"3LeveledBadge": "3-leveled badge",
-					"5LeveledBadge": "5-leveled badge"
+					"noDescriptionSubtitle": "No description",
+					"removeRewardTitle": "Remove reward",
+					"removeRewardText": "Rewards claimed by children will not be removed, though this reward will no longer be available. Are you sure you want to remove this reward?",
+					"removeBadgeTitle": "Remove badge",
+					"removeBadgeText": "Assigned badges will not be removed, bu you will loose the ability to assign this badge to other children. Are you sure you want to remove this badge?",
+					"rewardAddedText": "Reward was added",
+					"badgeAddedText": "Badge was added",
+					"rewardUpdatedText": "Reward has been updated",
+					"rewardRemovedText": "Reward has been removed",
+					"badgeRemovedText": "Badge has been removed"
 				}
 			},
 			"rewardForm": {
@@ -312,7 +321,7 @@
 					},
 					"rewardLimit": {
 						"label": "Reward limit",
-						"hint": "Leave empty not to limit"
+						"hint": "Number of possible claims per child, leave empty for unlimited"
 					},
 					"rewardPoints": {
 						"valueLabel": "Reward point cost",
@@ -333,12 +342,7 @@
 			},
 			"badgeForm": {
 				"addBadgeTitle": "Add badge",
-				"editBadgeTitle": "Edit badge",
 				"addBadgeButton": "Add badge",
-				"saveBadgeButton": "Save badge",
-				"removeBadgeButton": "Remove badge",
-				"removeBadgeTitle": "Remove badge",
-				"removeBadgeText": "Are you sure you want to remove this badge?",
 				"fields": {
 					"badgeName": {
 						"label": "Badge name",
@@ -346,14 +350,6 @@
 					},
 					"badgeDescription": {
 						"label": "Badge description"
-					},
-					"badgeLevel": {
-						"label": "Badge type",
-						"options": {
-							"one": "Assigned once",
-							"three": "3 levels",
-							"five": "5 levels"
-						}
 					},
 					"badgeIcon": {
 						"label": "Badge icon",
@@ -426,6 +422,25 @@
 						"rateCommentLabel": "Task feedback"
 					}
 				}
+			},
+			"currencies": {
+				"header": {
+					"title": "Currencies"
+				},
+				"content": {
+					"generalHint": "You can configure up to three additional currencies for use in tasks and rewards. The default currency can't be changed.",
+					"currenciesUpdatedText": "Available currencies have been updated",
+					"saveCurrenciesButton": "Save currencies",
+					"currencyNotUsed": "Not used",
+					"currencyNameLabel": "Currency name",
+					"clearCurrencyText": "You will loose the ability to use this currency. Points already gathered by children will remain intact. Are you sure you want to clear this currency?",
+					"currencies": {
+						"diamond": "Diamond",
+						"emerald": "Emerald",
+						"ruby": "Ruby",
+						"amethyst": "Amethyst"
+					}
+				}
 			}
 		},
 		"childSection": {
@@ -443,7 +458,7 @@
 					"inProgress": "In progress",
 					"noPlans": "No plans",
 					"completedPlans": "Completed plans",
-					"futurePlans": "Check future plans",
+					"futurePlans": "Plans calendar",
 					"tasks": "{NUM_TASKS, plural, offset:0  one {# task} other {# tasks}}",
 					"noTaskCompleted": "{NUM_ALL_TASKS, plural, offset:0 one {# task} other {# tasks}} to complete",
 					"taskProgress": "{NUM_TASKS} out of {NUM_ALL_TASKS} tasks completed"
@@ -475,6 +490,10 @@
 						"rejectedTooltip" : "Task has been rejected by caregiver",
 						"notEvaluatedTooltip" : "Ask caregiver to rate task",
 						"pointsPossible" : "Max points to earn"
+					},
+					"taskInProgressDialog" : {
+						"title": "Different task in progress",
+						"content": "You can't perform two tasks at the same time. Complete the current one and try again."
 					}
 				}
 			},
@@ -491,7 +510,10 @@
 					"isCompleted": "Task completed?",
 					"breakButton": "Break",
 					"resumeButton": "Resume",
-					"pointsToGet": "To earn:"
+					"pointsToGet": "To earn:",
+					"motivate": "Complete tasks!",
+					"completionTime": "Completion time:",
+					"latency": "Late:"
 				},
 				"cards" : {
 					"break": {
@@ -617,13 +639,44 @@
 			"avatarEmpty": "You must pick child's avatar"
 		}
 	},
+	"notification": {
+		"button": {
+			"rate": "Rate"
+		},
+		"group": {
+			"caregiver": {
+				"rewardBought": "$[notif_count] rewards bought",
+				"taskFinished": "$[notif_count] tasks finished",
+				"planUnfinished": "$[notif_count] plans unfinished"
+			},
+			"child": {
+				"pointsReceived": "$[notif_count] tasks graded",
+				"badgeAwarded": "$[notif_count] badges awarded"
+			}
+		},
+		"channel": {
+			"name": {
+				"general": "General",
+				"prizes": "Prizes",
+				"grades": "Grades",
+				"plans": "Plans"
+			},
+			"description": {
+				"general": "General notifications",
+				"prizes": "Child prizes updates",
+				"grades": "Task grading updates",
+				"plans": "Plan updates"
+			}
+		}
+	},
 	"help": {
 		"first_steps": "First steps",
 		"plan_creation": "Plan creation",
 		"task_creation": "Task creation",
 		"reward_creation": "Reward creation",
 		"badge_creation": "Badge creation",
-		"plan_info": "Plans"
+		"plan_info": "Plans",
+		"currencies": "Currencies"
 	},
 	"assignedTo": "Assigned to",
 	"points": "Points",

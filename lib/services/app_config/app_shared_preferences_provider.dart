@@ -28,4 +28,10 @@ class AppSharedPreferencesProvider implements AppConfigProvider {
 
   @override
   void setStringList(AppConfigEntry entry, List<String> list) => _preferences.setStringList(entry.key, list);
+
+  @override
+  bool getBool(AppConfigEntry entry) => _preferences.getBool(entry.key);
+
+  @override
+  void setBool(AppConfigEntry entry, bool value) => _preferences.setBool(entry.key, value);
 }

@@ -641,7 +641,8 @@
 	},
 	"notification": {
 		"button": {
-			"rate": "Rate"
+			"rate": "Rate",
+			"view": "View"
 		},
 		"group": {
 			"caregiver": {

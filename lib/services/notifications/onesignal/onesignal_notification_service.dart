@@ -64,7 +64,8 @@ class OneSignalNotificationService extends NotificationService {
 			title: NotificationText.appBased(type.title),
 			body: NotificationText.userBased(badgeName),
 			icon: NotificationIcon(AssetType.badges, badgeIcon),
-			group: NotificationGroup(type.key, NotificationText.appBased(type.group))
+			group: NotificationGroup(type.key, NotificationText.appBased(type.group)),
+			buttons: [NotificationButton.view],
 		);
 	}
 

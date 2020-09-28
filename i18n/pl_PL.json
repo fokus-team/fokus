@@ -641,7 +641,8 @@
 	},
 	"notification": {
 		"button": {
-			"rate": "Oceń"
+			"rate": "Oceń",
+			"view": "Zobacz"
 		},
 		"group": {
 			"caregiver": {

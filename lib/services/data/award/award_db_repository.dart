@@ -1,5 +1,7 @@
 import 'package:fokus/model/db/gamification/badge.dart';
+import 'package:fokus/model/db/gamification/child_badge.dart';
 import 'package:fokus/model/db/user/caregiver.dart';
+import 'package:fokus/model/db/user/child.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 import 'package:fokus/model/db/collection.dart';
 import 'package:fokus/model/db/gamification/reward.dart';
@@ -37,6 +39,11 @@ mixin AwardDbRepository implements DbRepository {
 		if (badge != null)
 			document.pull('badges', badge.toJson());
 		return dbClient.update(Collection.user, _buildUserQuery(id: userId), document);
+	}
+
+	Future<List<ChildBadge>> getChildBadges({ObjectId childId}) {
+		var query = _buildUserQuery(id: childId);
+		return dbClient.queryOneTyped(Collection.user, query, (json) => (Child.fromJson(json)).badges);
 	}
 
 	SelectorBuilder _buildRewardQuery({ObjectId id, ObjectId caregiverId}) {

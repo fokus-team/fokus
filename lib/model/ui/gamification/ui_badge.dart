@@ -39,5 +39,5 @@ class UIChildBadge extends UIBadge {
 	}
 
   @override
-  List<Object> get props => [name, description, icon, date];
+  List<Object> get props => super.props..addAll([date]);
 }

@@ -1,11 +1,12 @@
 import 'package:fokus/model/db/date/time_date.dart';
 import 'package:fokus/model/db/date_span.dart';
 
-Duration sumDurations(List<DateSpan<TimeDate>> durations) {
+Duration sumDurations(List<DateSpan<TimeDate>> durations, [bool limitToOneDay = true]) {
 	if (durations == null || durations.isEmpty)
 		return Duration();
 	var sum = durations.sublist(0, durations.length - 1).fold<Duration>(Duration(), (sum, span) => sum + span.to.difference(span.from));
-	var lastSpanEnd = durations.last.to ?? TimeDate.now();
+	var midnight = TimeDate(durations.last.from.year, durations.last.from.month, durations.last.from.day + 1);
+	var lastSpanEnd = durations.last.to ?? (limitToOneDay ? midnight : TimeDate.now());
 	return sum + lastSpanEnd.difference(durations.last.from);
 }
 

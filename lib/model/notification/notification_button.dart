@@ -13,9 +13,9 @@ extension NotificationButtonInfo on NotificationButton {
 		NotificationButton.rate: 'rate',
 		NotificationButton.view: 'view',
 	}[this];
-	NotificationText get name => const {
-		NotificationButton.rate: NotificationText.appBased('$_key.rate'),
-		NotificationButton.view: NotificationText.appBased('$_key.view'),
+	SimpleNotificationText get name => const {
+		NotificationButton.rate: SimpleNotificationText.appBased('$_key.rate'),
+		NotificationButton.view: SimpleNotificationText.appBased('$_key.view'),
 	}[this];
 
 	Map<String, dynamic> toJson() => {

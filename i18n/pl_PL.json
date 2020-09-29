@@ -68,9 +68,12 @@
 					"graded": "Oceniono"
 				},
 				"child": {
-					"pointsReceived": "Masz nowe punkty za zadanie!",
-					"pointsReceivedWithCount": "Masz {POINTS, plural, offset:0, one {nowy punkt} two {# nowe punkty} few {# nowe punkty} other {# nowych punktów}} za zadanie!",
-					"badgeAwarded": "Masz nową odznakę!"
+					"taskApproved": "Masz nowe punkty za zadanie!",
+					"taskApprovedPrefix": "Zadanie ocenione: ",
+					"taskApprovedStars": "{STARS}",
+					"taskApprovedCount": " oraz {COUNT, plural, offset:0, one {# punkt} two {# punkty} few {# punkty} other {# punktów}}",
+					"badgeAwarded": "Masz nową odznakę!",
+					"taskRejected": "Wykonaj zadanie jeszcze raz"
 				}
 			}
 		},
@@ -651,8 +654,9 @@
 				"planUnfinished": "$[notif_count] nieskończonych planów"
 			},
 			"child": {
-				"pointsReceived": "$[notif_count] ocenionych zadań",
-				"badgeAwarded": "$[notif_count] przyznanych odznak"
+				"taskApproved": "$[notif_count] ocenionych zadań",
+				"badgeAwarded": "$[notif_count] przyznanych odznak",
+				"taskRejected": "$[notif_count] odrzuconych planów"
 			}
 		},
 		"channel": {

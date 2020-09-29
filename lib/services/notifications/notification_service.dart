@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:fokus/model/currency_type.dart';
 import 'package:fokus/model/notification/notification_group.dart';
 import 'package:fokus/model/notification/notification_type.dart';
@@ -26,16 +28,19 @@ abstract class NotificationService implements ActiveUserObserver {
 		NotificationIcon icon, NotificationGroup group, List<NotificationButton> buttons = const []});
 
 	Future sendRewardBoughtNotification(ObjectId rewardId, String rewardName, ObjectId caregiverId, UIUser child);
-	Future sendTaskFinishedNotification(ObjectId taskId, String taskName, ObjectId caregiverId, UIUser child);
-	Future sendPlanUnfinishedNotification(ObjectId planId, String planName, ObjectId caregiverId, UIUser child);
+	Future sendTaskFinishedNotification(ObjectId taskId, String taskName, ObjectId caregiverId, UIUser child, {@required bool completed});
 
-	Future sendPointsReceivedNotification(CurrencyType currencyType, int quantity, String taskName, ObjectId childId);
+	Future sendTaskApprovedNotification(String taskName, ObjectId childId, int stars, [CurrencyType currencyType, int pointCount]);
 	Future sendBadgeAwardedNotification(String badgeName, int badgeIcon, ObjectId childId);
+	Future sendTaskRejectedNotification(ObjectId taskId, String taskName, ObjectId childId);
 
 	@protected
 	Future<List<String>> getUserTokens(ObjectId userId) async => (await dataRepository.getUser(id: userId, fields: ['notificationIDs'])).notificationIDs;
 	@protected
 	void logNoUserToken(ObjectId userId) => logger.info('Could not send a notification, user ${userId.toHexString()} is not logged in on any device');
+
+	@protected
+	String formatTaskStars(int count) => String.fromCharCode(0x2B50) * count + String.fromCharCode(0x1F538) * (max(5, count) - count);
 
 	@override
 	void onUserSignIn(User user) => provider.onUserSignIn(user);

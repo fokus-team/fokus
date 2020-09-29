@@ -63,14 +63,17 @@
 				"caregiver": {
 					"rewardBought": "{CHILD_NAME} odebrał(a) nagrodę",
 					"taskFinished": "{CHILD_NAME} wykonał(a) zadanie",
-					"planUnfinished": "{CHILD_NAME} nie skończył(a) planu",
+					"taskUnfinished": "{CHILD_NAME} nie skończył(a) zadania",
 					"gradeTask": "Oceń zadanie",
 					"graded": "Oceniono"
 				},
 				"child": {
-					"pointsReceived": "Masz nowe punkty za zadanie!",
-					"pointsReceivedWithCount": "Masz {POINTS, plural, offset:0, one {nowy punkt} two {# nowe punkty} few {# nowe punkty} other {# nowych punktów}} za zadanie!",
-					"badgeAwarded": "Masz nową odznakę!"
+					"taskApproved": "Masz nowe punkty za zadanie!",
+					"taskApprovedPrefix": "Zadanie ocenione: ",
+					"taskApprovedStars": "{STARS}",
+					"taskApprovedCount": " oraz {COUNT, plural, offset:0, one {# punkt} two {# punkty} few {# punkty} other {# punktów}}",
+					"badgeAwarded": "Masz nową odznakę!",
+					"taskRejected": "Wykonaj zadanie jeszcze raz"
 				}
 			}
 		},
@@ -641,17 +644,19 @@
 	},
 	"notification": {
 		"button": {
-			"rate": "Oceń"
+			"rate": "Oceń",
+			"view": "Zobacz"
 		},
 		"group": {
 			"caregiver": {
 				"rewardBought": "$[notif_count] odebranych nagród",
 				"taskFinished": "$[notif_count] wykonanych zadań",
-				"planUnfinished": "$[notif_count] nieskończonych planów"
+				"taskUnfinished": "$[notif_count] nieskończonych zadań"
 			},
 			"child": {
-				"pointsReceived": "$[notif_count] ocenionych zadań",
-				"badgeAwarded": "$[notif_count] przyznanych odznak"
+				"taskApproved": "$[notif_count] ocenionych zadań",
+				"badgeAwarded": "$[notif_count] przyznanych odznak",
+				"taskRejected": "$[notif_count] odrzuconych planów"
 			}
 		},
 		"channel": {
@@ -665,7 +670,7 @@
 				"general": "Ogólne powiadomienia",
 				"prizes": "Informacje o nagrodach",
 				"grades": "Informacje o ocenach zadań",
-				"plans": "Informacje o planach"
+				"plans": "Informacje o planach i zadaniach"
 			}
 		}
 	},

@@ -21,16 +21,16 @@ import 'package:fokus/widgets/general/app_loader.dart';
 import 'package:fokus/widgets/loadable_bloc_builder.dart';
 import 'package:fokus/widgets/segment.dart';
 
-class ChildPlanInProgressPage extends StatefulWidget {
+class PlanInstanceDetailsPage extends StatefulWidget {
 	final UIPlanInstance initialPlanInstance;
 
-  const ChildPlanInProgressPage({Key key, @required this.initialPlanInstance}) : super(key: key);
+  const PlanInstanceDetailsPage({Key key, @required this.initialPlanInstance}) : super(key: key);
 
   @override
-  _ChildPlanInProgressPageState createState() => new _ChildPlanInProgressPageState();
+  _PlanInstanceDetailsPageState createState() => new _PlanInstanceDetailsPageState();
 }
 
-class _ChildPlanInProgressPageState extends State<ChildPlanInProgressPage> {
+class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 	final String _pageKey = 'page.childSection.planInProgress';
 
 	void navigate(context, UITaskInstance task, UIPlanInstance plan) async {

@@ -22,13 +22,13 @@ import 'package:fokus/widgets/segment.dart';
 import 'package:fokus/widgets/cards/task_card.dart';
 import 'package:mongo_dart/mongo_dart.dart' as Mongo;
 
-class CaregiverPlanDetailsPage extends StatefulWidget {
+class PlanDetailsPage extends StatefulWidget {
   @override
-  _CaregiverPlanDetailsPageState createState() =>
-      new _CaregiverPlanDetailsPageState();
+  _PlanDetailsPageState createState() =>
+      new _PlanDetailsPageState();
 }
 
-class _CaregiverPlanDetailsPageState extends State<CaregiverPlanDetailsPage> {
+class _PlanDetailsPageState extends State<PlanDetailsPage> {
 	static const String _pageKey = 'page.caregiverSection.planDetails';
 
 

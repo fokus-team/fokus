@@ -15,5 +15,5 @@ class DbDataRepository with UserDbRepository, PlanDbRepository, TaskDbRepository
 	final MongoDbProvider dbClient = MongoDbProvider();
 
 	@override
-	Future initialize() async => dbClient.initialize();
+	Future initialize() async => dbClient.connect();
 }

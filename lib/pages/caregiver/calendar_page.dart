@@ -119,7 +119,7 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 							for(UIPlan plan in state.events[state.day])
 								ItemCard(
 									title: plan.name,
-									onTapped: () => Navigator.pushNamed(context, AppPage.caregiverPlanDetails.name, arguments: plan.id),
+									onTapped: () => Navigator.pushNamed(context, AppPage.planDetails.name, arguments: plan.id),
 									subtitle: AppLocales.of(context).translate(
 										'$_pageKey.content.${plan.assignedTo.isNotEmpty ? 'planAssignedToSubtitle' : 'planNotAssignedToSubtitle'}'
 									),

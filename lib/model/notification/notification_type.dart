@@ -55,7 +55,7 @@ extension NotificationTypeExtension on NotificationType {
 		NotificationType.planUnfinished: AppPage.caregiverChildDashboard,
 		NotificationType.taskApproved: AppPage.caregiverAwards,
 		NotificationType.badgeAwarded: AppPage.childAchievements,
-		NotificationType.taskRejected: AppPage.childPlanInProgress,
+		NotificationType.taskRejected: AppPage.planInstanceDetails,
 	}[this];
 
 	NotificationChannel get channel => const {

@@ -1,29 +1,33 @@
 import 'package:fokus/model/db/date/time_date.dart';
+import 'package:fokus/model/db/gamification/points.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
 class ChildReward {
-  int cost;
+	ObjectId id;
+	String name;
+  Points cost;
   TimeDate date;
-  ObjectId id;
-  int quantity;
+	int icon;
 
-  ChildReward({this.cost, this.date, this.id, this.quantity});
+  ChildReward({this.id, this.name, this.cost, this.date, this.icon});
 
   factory ChildReward.fromJson(Map<String, dynamic> json) {
     return json != null ? ChildReward(
-      cost: json['cost'],
-      date: TimeDate.parseDBDate(json['date']),
       id: json['_id'],
-      quantity: json['quantity'],
+      name: json['name'],
+      cost: Points.fromJson(json['cost']),
+      date: TimeDate.parseDBDate(json['date']),
+      icon: json['icon'],
     ) : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['cost'] = this.cost;
-    data['date'] = this.date.toDBDate();
     data['_id'] = this.id;
-    data['quantity'] = this.quantity;
+    data['name'] = this.name;
+    data['cost'] = this.cost.toJson();
+    data['date'] = this.date.toDBDate();
+    data['icon'] = this.icon;
     return data;
   }
 }

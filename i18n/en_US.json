@@ -547,6 +547,7 @@
 					"claimedRewardsTitle": "Claimed rewards",
 					"claimRewardTitle": "Claim reward",
 					"claimCostLabel": "Reward cost",
+					"claimDateLabel": "Claimed on",
 					"claimButton": "Claim"
 				}
 			},

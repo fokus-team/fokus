@@ -7,7 +7,7 @@ import 'notification_channel.dart';
 enum NotificationType {
 	rewardBought,
 	taskFinished,
-	planUnfinished,
+	taskUnfinished,
 	taskApproved,
 	badgeAwarded,
 	taskRejected,
@@ -23,7 +23,7 @@ extension NotificationTypeExtension on NotificationType {
 	String get key => {
 		NotificationType.rewardBought: "caregiver.rewardBought",
 		NotificationType.taskFinished: "caregiver.taskFinished",
-		NotificationType.planUnfinished: "caregiver.planUnfinished",
+		NotificationType.taskUnfinished: "caregiver.taskUnfinished",
 		NotificationType.taskApproved: "child.taskApproved",
 		NotificationType.badgeAwarded: "child.badgeAwarded",
 		NotificationType.taskRejected: "child.taskRejected"
@@ -33,7 +33,7 @@ extension NotificationTypeExtension on NotificationType {
 		const {
 			NotificationType.rewardBought : Icons.star,
 			NotificationType.taskFinished : Icons.assignment_turned_in,
-			NotificationType.planUnfinished : Icons.assignment_late,
+			NotificationType.taskUnfinished : Icons.assignment_late,
 			NotificationType.taskApproved : Icons.assignment_turned_in,
 			NotificationType.badgeAwarded : Icons.star,
 			NotificationType.taskRejected : Icons.assignment_late,
@@ -44,7 +44,7 @@ extension NotificationTypeExtension on NotificationType {
 	AssetType get graphicType => const {
 		NotificationType.rewardBought: AssetType.avatars,
 		NotificationType.taskFinished: AssetType.avatars,
-		NotificationType.planUnfinished: AssetType.avatars,
+		NotificationType.taskUnfinished: AssetType.avatars,
 		NotificationType.taskApproved: AssetType.currencies,
 		NotificationType.badgeAwarded: AssetType.badges,
 	}[this];
@@ -52,7 +52,7 @@ extension NotificationTypeExtension on NotificationType {
 	AppPage get redirectPage => const {
 		NotificationType.rewardBought: AppPage.caregiverChildDashboard,
 		NotificationType.taskFinished: AppPage.caregiverRatingPage,
-		NotificationType.planUnfinished: AppPage.caregiverChildDashboard,
+		NotificationType.taskUnfinished: AppPage.caregiverChildDashboard,
 		NotificationType.taskApproved: AppPage.caregiverAwards,
 		NotificationType.badgeAwarded: AppPage.childAchievements,
 		NotificationType.taskRejected: AppPage.planInstanceDetails,
@@ -61,9 +61,9 @@ extension NotificationTypeExtension on NotificationType {
 	NotificationChannel get channel => const {
 		NotificationType.rewardBought: NotificationChannel.prizes,
 		NotificationType.taskFinished: NotificationChannel.plans,
+		NotificationType.taskUnfinished: NotificationChannel.plans,
 		NotificationType.taskApproved: NotificationChannel.grades,
 		NotificationType.badgeAwarded: NotificationChannel.prizes,
-		NotificationType.planUnfinished: NotificationChannel.plans,
 		NotificationType.taskRejected: NotificationChannel.grades,
 	}[this];
 }

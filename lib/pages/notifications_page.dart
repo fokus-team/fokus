@@ -33,7 +33,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
     ),
     NotificationCard(
       childName: "Maciek",
-      notificationType: NotificationType.planUnfinished,
+      notificationType: NotificationType.taskUnfinished,
       dateTime: DateTime.now(),
       subtitle: "Bardzo długie sprzątanie pokoju, oj jakie długie niepotrzebnie, taki plan był no co zrobisz",
       graphic: 0

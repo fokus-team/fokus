@@ -63,7 +63,7 @@
 				"caregiver": {
 					"rewardBought": "{CHILD_NAME} received the reward",
 					"taskFinished": "{CHILD_NAME} finished the task",
-					"planUnfinished": "{CHILD_NAME} didn't finish the plan",
+					"taskUnfinished": "{CHILD_NAME} didn't finish the task",
 					"gradeTask": "Grade task",
 					"graded": "Graded"
 				},
@@ -651,7 +651,7 @@
 			"caregiver": {
 				"rewardBought": "$[notif_count] rewards bought",
 				"taskFinished": "$[notif_count] tasks finished",
-				"planUnfinished": "$[notif_count] plans unfinished"
+				"taskUnfinished": "$[notif_count] tasks unfinished"
 			},
 			"child": {
 				"taskApproved": "$[notif_count] tasks graded",
@@ -670,7 +670,7 @@
 				"general": "General notifications",
 				"prizes": "Child prizes updates",
 				"grades": "Task grading updates",
-				"plans": "Plan updates"
+				"plans": "Plan and task updates"
 			}
 		}
 	},

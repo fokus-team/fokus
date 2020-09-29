@@ -13,6 +13,7 @@ import 'package:fokus/model/ui/plan/ui_plan_instance.dart';
 import 'package:fokus/model/ui/task/ui_task_instance.dart';
 import 'package:fokus/model/ui/user/ui_user.dart';
 import 'package:fokus/services/data/data_repository.dart';
+import 'package:fokus/services/notifications/notification_service.dart';
 import 'package:fokus/services/plan_repeatability_service.dart';
 import 'package:fokus/utils/duration_utils.dart';
 import 'package:get_it/get_it.dart';
@@ -26,6 +27,7 @@ class TaskInstanceCubit extends Cubit<TaskInstanceState> {
 
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final PlanRepeatabilityService _repeatabilityService = GetIt.I<PlanRepeatabilityService>();
+	final NotificationService _notificationService = GetIt.I<NotificationService>();
 
 	TaskInstanceCubit(this._taskInstanceId, this._activeUser) : super(TaskInstanceStateInitial());
 
@@ -86,10 +88,12 @@ class TaskInstanceCubit extends Cubit<TaskInstanceState> {
 	}
 
 	void markAsDone() async {
+  	_notificationService.sendTaskFinishedNotification(_taskInstanceId, task.name, plan.createdBy, _activeUser(), completed: true);
 		emit(TaskInstanceStateDone(await _onCompletion(TaskState.notEvaluated), await _getUiPlanInstance(taskInstance.planInstanceID)));
   }
 
 	void markAsRejected() async {
+		_notificationService.sendTaskFinishedNotification(_taskInstanceId, task.name, plan.createdBy, _activeUser(), completed: false);
 		emit(TaskInstanceStateRejected(await _onCompletion(TaskState.rejected), await _getUiPlanInstance(taskInstance.planInstanceID)));
 	}
 

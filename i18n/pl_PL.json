@@ -63,7 +63,7 @@
 				"caregiver": {
 					"rewardBought": "{CHILD_NAME} odebrał(a) nagrodę",
 					"taskFinished": "{CHILD_NAME} wykonał(a) zadanie",
-					"planUnfinished": "{CHILD_NAME} nie skończył(a) planu",
+					"taskUnfinished": "{CHILD_NAME} nie skończył(a) zadania",
 					"gradeTask": "Oceń zadanie",
 					"graded": "Oceniono"
 				},
@@ -651,7 +651,7 @@
 			"caregiver": {
 				"rewardBought": "$[notif_count] odebranych nagród",
 				"taskFinished": "$[notif_count] wykonanych zadań",
-				"planUnfinished": "$[notif_count] nieskończonych planów"
+				"taskUnfinished": "$[notif_count] nieskończonych zadań"
 			},
 			"child": {
 				"taskApproved": "$[notif_count] ocenionych zadań",
@@ -670,7 +670,7 @@
 				"general": "Ogólne powiadomienia",
 				"prizes": "Informacje o nagrodach",
 				"grades": "Informacje o ocenach zadań",
-				"plans": "Informacje o planach"
+				"plans": "Informacje o planach i zadaniach"
 			}
 		}
 	},

@@ -1,4 +1,5 @@
 import 'package:bson/bson.dart';
+import 'package:meta/meta.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 import 'package:fokus/model/notification/notification_text.dart';
@@ -20,13 +21,14 @@ class OneSignalNotificationService extends NotificationService {
 	final OneSignalNotificationProvider provider = OneSignalNotificationProvider();
 
 	@override
-	Future sendPlanUnfinishedNotification(ObjectId planId, String planName, ObjectId caregiverId, UIUser child) {
-		var type = NotificationType.planUnfinished;
+	Future sendTaskFinishedNotification(ObjectId taskId, String taskName, ObjectId caregiverId, UIUser child, {@required bool completed}) {
+		var type = completed ? NotificationType.taskFinished : NotificationType.taskUnfinished;
 		return sendNotification(type, caregiverId,
 			title: SimpleNotificationText.appBased(type.title, {'CHILD_NAME': child.name}),
-			body: SimpleNotificationText.userBased(planName),
+			body: SimpleNotificationText.userBased(taskName),
 			icon: NotificationIcon(type.graphicType, child.avatar),
-			subject: planId,
+			buttons: completed ? [NotificationButton.rate] : null,
+			subject: taskId,
 			group: NotificationGroup(type.key, SimpleNotificationText.appBased(type.group))
 		);
 	}
@@ -39,19 +41,6 @@ class OneSignalNotificationService extends NotificationService {
 			body: SimpleNotificationText.userBased(rewardName),
 			icon: NotificationIcon(type.graphicType, child.avatar),
 			subject: rewardId,
-			group: NotificationGroup(type.key, SimpleNotificationText.appBased(type.group))
-		);
-	}
-
-	@override
-	Future sendTaskFinishedNotification(ObjectId taskId, String taskName, ObjectId caregiverId, UIUser child) {
-		var type = NotificationType.taskFinished;
-		return sendNotification(type, caregiverId,
-			title: SimpleNotificationText.appBased(type.title, {'CHILD_NAME': child.name}),
-			body: SimpleNotificationText.userBased(taskName),
-			icon: NotificationIcon(type.graphicType, child.avatar),
-			buttons: [NotificationButton.rate],
-			subject: taskId,
 			group: NotificationGroup(type.key, SimpleNotificationText.appBased(type.group))
 		);
 	}
@@ -107,7 +96,7 @@ class OneSignalNotificationService extends NotificationService {
 		  return;
 	  }
 	  var data = NotificationData(type, buttons: buttons, subject: subject);
-	  var osButtons = buttons.map((button) => OSActionButton(id: button.action, text: button.action)).toList();
+	  var osButtons = buttons?.map((button) => OSActionButton(id: button.action, text: button.action))?.toList();
 	  var notification = OSCreateNotification(
 		  playerIds: tokens,
 		  heading: title.getTranslations(),
@@ -119,7 +108,8 @@ class OneSignalNotificationService extends NotificationService {
 		  buttons: osButtons,
 		  additionalData: data.toJson(),
 		  androidGroup: group?.key,
-		  androidGroupMessage: group?.title?.getTranslations());
+		  androidGroupMessage: group?.title?.getTranslations()
+	  );
 		return OneSignal.shared.postNotification(notification);
   }
 }

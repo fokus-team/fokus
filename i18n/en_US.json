@@ -403,7 +403,7 @@
 						"raportBreaks": "Used breaks",
 						"breakCount": "{BREAKS_NUM, plural, offset:0 zero {No breaks} one {# break} other {# breaks}}",
 						"totalBreakTime": "time total",
-						"timeFormat": "{HOURS_NUM, plural, offset:0 zero {} other {# hr }}{MINUTES_NUM} min",
+						"timeFormat": "{HOURS_NUM, plural, offset:0 zero {} other {# h }}{MINUTES_NUM} min {SECONDS_NUM} s",
 						"ratedOnLabel": "Rated {STARS_NUM} out of 5",
 						"ratedOnHint": "Child received {POINTS_NUM, plural, offset:0 one {# point} other {# points}}",
 						"rejectedLabel": "Marked as not done",

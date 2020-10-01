@@ -42,7 +42,7 @@ mixin UserDbRepository implements DbRepository {
 		if (newConnections != null)
 			document.addAllToSet('connections', newConnections);
 		if (points != null)
-			document.set('points', points);
+			document.set('points', points.map((v) => v.toJson()).toList());
 		return dbClient.update(Collection.user, where.eq('_id', userId), document);
 	}
 

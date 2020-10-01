@@ -139,12 +139,12 @@ class _CaregiverRatingPageState extends State<CaregiverRatingPage> {
 	}
 
   void _buildReports(TasksEvaluationProvider state) {
-		for(int i=0; i<state.uiTaskInstances.length;i++) {
+		for(var uiTaskInstance in state.uiTaskInstances) {
 			reports.add(
 				UITaskReport(
-					planName: state.plansNames[i],
-					task: state.uiTaskInstances[i],
-					child: state.uiChildren[i],
+					planName: state.plansNames[uiTaskInstance.planInstanceId],
+					task: uiTaskInstance,
+					child: state.uiChildren[uiTaskInstance.planInstanceId],
 				)
 			);
 		}

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
@@ -128,7 +130,7 @@ class _ReportFormState extends State<ReportForm> {
 
 	Widget _getPointsAssigned() {
 		int totalPoints = widget.report.task.points.quantity;
-		int points = (totalPoints*mark.value/5).round();
+		int points = max((totalPoints*mark.value/5).round(), 1);
 		return AttributeChip.withCurrency(
 			currencyType: widget.report.task.points.type,
 			content: points.toString() + ' / ' + totalPoints.toString()
@@ -176,7 +178,7 @@ class _ReportFormState extends State<ReportForm> {
 								AppLocales.of(context).translate('$_pageKey.ratingLevels.${mark.toString().split('.').last}') + ')',
 								style: TextStyle(fontWeight: FontWeight.bold)
 							),
-							Padding(
+							widget.report.task.points != null ? Padding(
 								padding: EdgeInsets.only(top: 12.0),
 								child: Wrap(
 									alignment: WrapAlignment.center,
@@ -190,7 +192,7 @@ class _ReportFormState extends State<ReportForm> {
 										_getPointsAssigned()
 									]
 								)
-							)
+							) : SizedBox.shrink()
 						]
 					)
 				)

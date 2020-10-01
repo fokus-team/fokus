@@ -13,8 +13,8 @@ import 'data/data_repository.dart';
 class TaskInstanceService {
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 
-	Future<List<UITaskInstance>> mapToUIModels(List<TaskInstance> taskInstances) async {
-		var taskUiTypes = getTasksInstanceStatus(tasks: taskInstances);
+	Future<List<UITaskInstance>> mapToUIModels(List<TaskInstance> taskInstances, {shouldGetTaskStatus = true}) async {
+		var taskUiTypes = shouldGetTaskStatus ? getTasksInstanceStatus(tasks: taskInstances) : List.filled(taskInstances.length, TaskUIType.notCompletedUndefined);
 		List<UITaskInstance> uiTaskInstances = [];
 		for(int i=0; i<taskInstances.length; i++) {
 			var task = await _dataRepository.getTask(taskId: taskInstances[i].taskID);
@@ -33,7 +33,7 @@ class TaskInstanceService {
 		bool isAnyInProgress = false;
 		for(var task in tasks) {
 			var taskStatus;
-			if(task.status.completed) {
+			if(task.status != null && task.status.completed) {
 				task.status.state == TaskState.rejected ? taskStatus = TaskUIType.rejected
 					: taskStatus = TaskUIType.completed;
 			}
@@ -51,7 +51,7 @@ class TaskInstanceService {
 	}
 
 	static TaskUIType getSingleTaskInstanceStatus({@required TaskInstance task}) {
-		if(task.status.completed) return TaskUIType.completed;
+		if(task.status != null && task.status.completed) return TaskUIType.completed;
 		else return _getInProgressType(task);
 	}
 

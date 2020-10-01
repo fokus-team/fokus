@@ -10,21 +10,21 @@ class TasksEvaluationInitial extends TasksEvaluationState {
 }
 
 class TasksEvaluationLoadSuccess extends TasksEvaluationProvider {
-  TasksEvaluationLoadSuccess(List<UITaskInstance> uiTaskInstances, List<UIChild> uiChildren, List<String> plansNames) : super(uiTaskInstances, uiChildren, plansNames);
+  TasksEvaluationLoadSuccess(List<UITaskInstance> uiTaskInstances,  Map<ObjectId, UIChild> uiChildren, Map<ObjectId, String> plansNames) : super(uiTaskInstances, uiChildren, plansNames);
 }
 
 class TasksEvaluationSubmissionInProgress extends TasksEvaluationProvider {
-  TasksEvaluationSubmissionInProgress(List<UITaskInstance> uiTaskInstances, List<UIChild> uiChildren, List<String> plansNames) : super(uiTaskInstances, uiChildren, plansNames);
+  TasksEvaluationSubmissionInProgress(List<UITaskInstance> uiTaskInstances,  Map<ObjectId, UIChild> uiChildren, Map<ObjectId, String> plansNames) : super(uiTaskInstances, uiChildren, plansNames);
 }
 
 class TasksEvaluationSubmissionSuccess extends TasksEvaluationProvider {
-  TasksEvaluationSubmissionSuccess(List<UITaskInstance> uiTaskInstances, List<UIChild> uiChildren, List<String> plansNames) : super(uiTaskInstances, uiChildren, plansNames);
+  TasksEvaluationSubmissionSuccess(List<UITaskInstance> uiTaskInstances, Map<ObjectId, UIChild> uiChildren, Map<ObjectId, String> plansNames) : super(uiTaskInstances, uiChildren, plansNames);
 }
 
 class TasksEvaluationProvider extends TasksEvaluationState {
 	final List<UITaskInstance> uiTaskInstances;
-	final List<UIChild> uiChildren;
-	final List<String> plansNames;
+	final Map<ObjectId, UIChild> uiChildren;
+	final Map<ObjectId, String> plansNames;
 
 	TasksEvaluationProvider(this.uiTaskInstances, this.uiChildren, this.plansNames);
 

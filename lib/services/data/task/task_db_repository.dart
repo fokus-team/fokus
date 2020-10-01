@@ -12,8 +12,8 @@ import 'package:fokus/model/db/plan/task_instance.dart';
 mixin TaskDbRepository implements DbRepository {
 	final Logger _logger = Logger('TaskDbRepository');
 
-	Future<List<Task>> getTasks({ObjectId planId, bool requiredOnly = false, bool optionalOnly = false, List<String> fields}) {
-		var query = _buildTaskQuery(planId: planId, optionalOnly: optionalOnly, requiredOnly: requiredOnly);
+	Future<List<Task>> getTasks({ObjectId planId, List<ObjectId> ids, bool requiredOnly = false, bool optionalOnly = false, List<String> fields}) {
+		var query = _buildTaskQuery(planId: planId, ids: ids, optionalOnly: optionalOnly, requiredOnly: requiredOnly);
 		if (fields != null)
 			query.fields(fields);
 		return dbClient.queryTyped(Collection.task, query, (json) => Task.fromJson(json));
@@ -41,8 +41,8 @@ mixin TaskDbRepository implements DbRepository {
 		return dbClient.queryOneTyped(Collection.taskInstance, query, (json) => TaskInstance.fromJson(json));
 	}
 
-	Future<List<TaskInstance>> getTaskInstances({ObjectId planInstanceId, bool requiredOnly = false, bool optionalOnly = false, List<String> fields}) {
-		var query = _buildTaskQuery(planInstanceId: planInstanceId, requiredOnly: requiredOnly, optionalOnly: optionalOnly);
+	Future<List<TaskInstance>> getTaskInstances({ObjectId planInstanceId, List<ObjectId> planInstancesId, bool requiredOnly = false, bool optionalOnly = false, bool isCompleted, TaskState state, List<String> fields}) {
+		var query = _buildTaskQuery(planInstanceId: planInstanceId, requiredOnly: requiredOnly, optionalOnly: optionalOnly, isCompleted: isCompleted, planInstancesId: planInstancesId, state: state);
 		if (fields != null)
 			query.fields(fields);
 		return dbClient.queryTyped(Collection.taskInstance, query, (json) => TaskInstance.fromJson(json));
@@ -82,7 +82,7 @@ mixin TaskDbRepository implements DbRepository {
 		return dbClient.update(Collection.taskInstance, where.eq('_id', taskInstanceId), document);
 	}
 
-	SelectorBuilder _buildTaskQuery({ObjectId id, List<ObjectId> ids, ObjectId planId, ObjectId planInstanceId, bool requiredOnly, bool optionalOnly}) {
+	SelectorBuilder _buildTaskQuery({ObjectId id, List<ObjectId> ids, ObjectId planId, ObjectId planInstanceId, List<ObjectId> planInstancesId, bool requiredOnly, bool optionalOnly, bool isCompleted, TaskState state}) {
 		SelectorBuilder query = where;
 		if (planId != null && planInstanceId != null)
 			_logger.warning("Both plan and plan instance IDs specified in task query");
@@ -97,10 +97,16 @@ mixin TaskDbRepository implements DbRepository {
 			query.eq('planID', planId);
 		if (planInstanceId != null)
 			query.eq('planInstanceID', planInstanceId);
+		if (planInstancesId != null)
+			query.oneFrom('planInstanceID', planInstancesId);
 		if (requiredOnly ?? false)
 			query.notExists('optional').or(where.eq('optional', false));
 		if (optionalOnly ?? false)
 			query.eq('optional', true);
+		if (state != null)
+			query.eq('status.state', state.index);
+		if (isCompleted != null)
+			query.eq('status.completed', isCompleted);
 		if (query.map.isEmpty)
 			return null;
 		return query;

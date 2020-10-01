@@ -104,7 +104,7 @@ class _ChildPanelPageState extends State<ChildPanelPage> {
 					  subtitle: plan.description(context),
 					  progressPercentage: plan.state.inProgress ? plan.completedTaskCount / plan.taskCount : null,
 					  chips: _getTaskChipForPlan(plan, displayTimer),
-						onTapped: () => Navigator.of(context).pushNamed(AppPage.childPlanInProgress.name, arguments: plan)
+						onTapped: () => Navigator.of(context).pushNamed(AppPage.planInstanceDetails.name, arguments: plan)
 				  )
 		  ],
 	  );

@@ -82,17 +82,10 @@ class PlanKeeperService implements ActiveUserObserver {
 		for (var instance in instances)
 			updates.add(_dataRepository.updatePlanInstanceFields(
 				instance.id,
-				state: await _determineFinalPlanState(instance),
+				state: PlanInstanceState.lostForever,
 				durationChange: instance.duration.isNotEmpty ? DateSpanUpdate<TimeDate>(getEndTime(instance.date), SpanDateType.end, instance.duration.length - 1) : null
 			));
 		return Future.wait(updates);
 		// TODO there are also 'to' fields in task instance last 'duration' and 'breaks' objects that could be left missing here - handle here or inside statistics code
-	}
-
-	Future<PlanInstanceState> _determineFinalPlanState(PlanInstance instance) async {
-		if (instance.state == PlanInstanceState.notStarted)
-			return PlanInstanceState.lostForever;
-		var tasks = await _dataRepository.getTaskInstances(planInstanceId: instance.id, requiredOnly: true, fields: ['status.completed']);
-		return tasks.every((task) => task.status.completed) ? PlanInstanceState.completed : PlanInstanceState.lostForever;
 	}
 }

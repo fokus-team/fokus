@@ -39,7 +39,7 @@ class NotificationCard extends ItemCard {
 			    color: Colors.red,
 			    icon: Icons.assignment
 		    )
-	    else if (notificationType == NotificationType.pointsReceived)
+	    else if (notificationType == NotificationType.taskApproved)
 		    AttributeChip.withIcon(
 			    content: currencyValue.toString(),
 			    color: AppColors.currencyColor[CurrencyType.values[graphic]],

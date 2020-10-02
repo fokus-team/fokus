@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:fokus/logic/auth/auth_bloc/authentication_bloc.dart';
+import 'package:fokus/model/currency_type.dart';
 import 'package:fokus/model/db/user/user_role.dart';
 import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/ui/ui_button.dart';
@@ -310,11 +311,20 @@ class AppHeader extends StatelessWidget {
 	 }
 }
 
-class ChildCustomHeader extends StatelessWidget {
+class ChildCustomHeader extends StatefulWidget {
+	final Map<CurrencyType, int> points;
+
+	ChildCustomHeader({this.points});
+
+	@override
+	_ChildCustomHeaderState createState() => new _ChildCustomHeaderState();
+}
+
+class _ChildCustomHeaderState extends State<ChildCustomHeader> {
 	@override
 	Widget build(BuildContext context) {
 		UIChild currentUser = context.bloc<AuthenticationBloc>().state.user;
-		var points = currentUser?.points ?? {};
+		var points = (widget.points != null) ? widget.points : currentUser?.points ?? {};
 
 		return AppHeader.greetings(text: 'page.childSection.panel.header.pageHint', headerActionButtons: [
 			HeaderActionButton.custom(

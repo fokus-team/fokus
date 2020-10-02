@@ -33,6 +33,13 @@ mixin AwardDbRepository implements DbRepository {
 		return dbClient.queryOneTyped(Collection.user, query, (json) => (Caregiver.fromJson(json)).badges);
 	}
 
+	Future createChildReward(ObjectId childId, ChildReward reward) {
+		var document = modify;
+		if (reward != null)
+			document.addToSet('rewards', reward.toJson());
+		return dbClient.update(Collection.user, _buildUserQuery(id: childId), document);
+	}
+
 	Future createBadge(ObjectId userId, Badge badge) {
 		var document = modify;
 		if (badge != null)

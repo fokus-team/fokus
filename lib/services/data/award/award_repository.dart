@@ -10,6 +10,8 @@ abstract class AwardRepository {
 	Future<List<ChildReward>> getChildRewards({ObjectId childId});
 	Future<List<Badge>> getBadges({ObjectId caregiverId});
 
+	Future createChildReward(ObjectId childId, ChildReward reward);
+
 	Future updateReward(Reward reward);
 	Future createReward(Reward reward);
 	Future removeReward(ObjectId id);

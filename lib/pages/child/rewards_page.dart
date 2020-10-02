@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/logic/child_rewards_cubit.dart';
+import 'package:fokus/logic/reloadable/reloadable_cubit.dart';
+import 'package:fokus/model/ui/gamification/ui_reward.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/dialog_utils.dart';
 import 'package:fokus/utils/icon_sets.dart';
+import 'package:fokus/utils/snackbar_utils.dart';
 import 'package:fokus/utils/theme_config.dart';
 import 'package:fokus/widgets/app_navigation_bar.dart';
 import 'package:fokus/widgets/app_header.dart';
@@ -25,8 +29,11 @@ class _ChildRewardsPageState extends State<ChildRewardsPage> {
 		return Scaffold(
 			body: Column(
 				crossAxisAlignment: CrossAxisAlignment.start,
+				mainAxisSize: MainAxisSize.min,
 				children: [
-					ChildCustomHeader(),
+					BlocBuilder<ChildRewardsCubit, LoadableState>(
+						builder: (context, state) => ChildCustomHeader(points: state is DataLoadSuccess ? (state as ChildRewardsLoadSuccess).points : null)
+					),
 		      LoadableBlocBuilder<ChildRewardsCubit>(
 				    builder: (context, state) => 
 							AppSegments(
@@ -35,7 +42,7 @@ class _ChildRewardsPageState extends State<ChildRewardsPage> {
 										title: '$_pageKey.rewardsTitle',
 										subtitle: '$_pageKey.rewardsHint',
 										noElementsMessage: '$_pageKey.noRewardsMessage',
-										elements: _buildRewardShop(state)
+										elements: _buildRewardShop(state, context)
 									),
 									if((state as ChildRewardsLoadSuccess).claimedRewards.isNotEmpty)
 										Segment(
@@ -52,12 +59,17 @@ class _ChildRewardsPageState extends State<ChildRewardsPage> {
 		);
 	}
 
-	List<Widget> _buildRewardShop(ChildRewardsLoadSuccess state) {
+	void _claimReward(UIReward reward) {
+		context.bloc<ChildRewardsCubit>().claimReward(reward);
+		Navigator.of(context).pop(); // closing confirm dialog before pushing snackbar
+		showSuccessSnackbar(context, '$_pageKey.rewardClaimedText');
+	}
+
+	List<Widget> _buildRewardShop(ChildRewardsLoadSuccess state, BuildContext context) {
 		return state.rewards.map((reward) {
 			double percentage = (state.points[reward.cost.type] ?? 0) / reward.cost.quantity; 
 			return ItemCard(
 				title: reward.name,
-				subtitle: AppLocales.of(context).translate('$_pageKey.claimCostLabel') + ':',
 				graphic: reward.icon,
 				graphicType: AssetType.rewards,
 				graphicHeight: 44.0,
@@ -66,14 +78,15 @@ class _ChildRewardsPageState extends State<ChildRewardsPage> {
 				chips: [
 					AttributeChip.withCurrency(
 						currencyType: reward.cost.type,
-						content: reward.cost.quantity.toString()
+						content: reward.cost.quantity.toString(),
+						tooltip: '$_pageKey.claimCostLabel'
 					)
 				],
 				actionButton: ItemCardActionButton(
 					color: AppColors.currencyColor[reward.cost.type],
 					icon: Icons.add_shopping_cart,
 					disabled: percentage < 1.0,
-					onTapped: () => showRewardDialog(context, reward)
+					onTapped: () => showRewardDialog(context, reward, claimFeedback: () => _claimReward(reward))
 				)
 			);
 		}).toList();

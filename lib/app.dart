@@ -143,7 +143,7 @@ class FokusApp extends StatelessWidget {
 			AppPage.caregiverCurrencies.name: (context) => _createPage(CaregiverCurrenciesPage(), context, CaregiverCurrenciesCubit(getActiveUser(context), getActiveUser(context), authBloc(context))),
 			AppPage.childPanel.name: (context) => _createPage(ChildPanelPage(), context, ChildPlansCubit(getActiveUser(context), getRoute(context))),
 			AppPage.childCalendar.name: (context) => _createPage(ChildCalendarPage(), context, CalendarCubit(getParams(context), getActiveUser(context))),
-			AppPage.childRewards.name: (context) => _createPage(ChildRewardsPage(), context, ChildRewardsCubit(getActiveUser(context), getRoute(context))),
+			AppPage.childRewards.name: (context) => _createPage(ChildRewardsPage(), context, ChildRewardsCubit(getActiveUser(context), getRoute(context), authBloc(context))),
 			AppPage.childAchievements.name: (context) => _createPage(ChildAchievementsPage(), context, ChildBadgesCubit(getActiveUser(context), getRoute(context))),
 			AppPage.caregiverPlanDetails.name: (context) => _createPage(CaregiverPlanDetailsPage(), context, PlanCubit(getParams(context), getRoute(context))),
 			AppPage.childPlanInProgress.name: (context) => _createPage(ChildPlanInProgressPage(initialPlanInstance: getParams(context)), context, PlanInstanceCubit((getParams(context) as UIPlanInstance).id, getRoute(context))),

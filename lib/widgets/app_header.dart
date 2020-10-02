@@ -307,7 +307,7 @@ class AppHeader extends StatelessWidget {
 				),
 			],
 		);
-	 }
+	}
 }
 
 class ChildCustomHeader extends StatelessWidget {

@@ -95,8 +95,8 @@
 					"changeLanguageLabel": "App language",
 					"languages": {
 						"default": "System (default)",
-						"pl": "Polish",
-						"en": "English"
+						"pl_PL": "Polish",
+						"en_US": "English"
 					},
 					"showAppInfoLabel": "About the app",
 					"appInfo": {

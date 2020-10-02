@@ -74,7 +74,7 @@ class _BadgeDialogState extends State<BadgeDialog> with SingleTickerProviderStat
 							if(widget.badge is UIChildBadge && (widget.badge as UIChildBadge).date != null)
 								Text(
 									AppLocales.of(context).translate('$_pageKey.earnedBadgeDate') + ': '
-										+ DateFormat.yMd(Localizations.localeOf(context).toString()).format((widget.badge as UIChildBadge).date),
+										+ DateFormat.yMd(AppLocales.instance.locale.toString()).format((widget.badge as UIChildBadge).date),
 									style: Theme.of(context).textTheme.caption,
 									textAlign: TextAlign.center
 								),

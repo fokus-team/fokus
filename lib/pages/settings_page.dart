@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fokus/logic/settings/locale_cubit.dart';
 import 'package:fokus/utils/theme_config.dart';
 import 'package:fokus/widgets/dialogs/general_dialog.dart';
 import 'package:smart_select/smart_select.dart';
@@ -18,10 +19,9 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
 	static const String _pageKey = 'page.settings.content';
-	static const String _defaultLanguageKey = 'default';
 
-	List<String> languages = [_defaultLanguageKey, ...AppLocalesDelegate.supportedLocales.map((locale) => locale.languageCode)];
-	String pickedLanguage;
+	List<String> languages = [LocaleCubit.defaultLanguageKey, ...AppLocalesDelegate.supportedLocales.map((locale) => '$locale')];
+	String _pickedLanguage;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,7 @@ class _SettingsPageState extends State<SettingsPage> {
     var isCurrentUserCaregiver = authenticationBloc.state.user.role == UserRole.caregiver;
 
 		// Loading current locale (don't work with "default" option)
-    pickedLanguage = pickedLanguage ?? AppLocales.of(context).locale.languageCode;
+    _pickedLanguage = _pickedLanguage ?? AppLocales.of(context).locale.languageCode;
 
     return Scaffold(
       appBar: AppBar(
@@ -77,15 +77,6 @@ class _SettingsPageState extends State<SettingsPage> {
 				itemBuilder: (context, index) => fields[index]
 			)
 		];
-	}
-	
-	void _setLanguage(String langCode) {
-		setState(() => pickedLanguage = langCode);
-		if(langCode == _defaultLanguageKey) {
-			// Don't overwrite system lang
-		} else {
-			// Change app lang to langCode
-		}
 	}
 
 	void _deleteAccount() {
@@ -139,31 +130,35 @@ class _SettingsPageState extends State<SettingsPage> {
 		];
 	}
 
+	void _setLanguage(String langKey) {
+		if (langKey == LocaleCubit.defaultLanguageKey)
+			context.bloc<LocaleCubit>().setLocale(setDefault: true);
+		else
+			context.bloc<LocaleCubit>().setLocale(locale: AppLocalesDelegate.supportedLocales.firstWhere((locale) => '$locale' == langKey));
+	}
+
 	List<Widget> _getSettingsFields() {
 		return [
-			SmartSelect.single(
-				value: pickedLanguage,
-				title: AppLocales.of(context).translate('$_pageKey.appSettings.changeLanguageLabel'),
-				modalType: SmartSelectModalType.bottomSheet,
-				options: [
-					for(String lang in languages)
-						SmartSelectOption(
-							title: AppLocales.of(context).translate('$_pageKey.appSettings.languages.$lang'),
-							value: lang
-						)
-				],
-				modalConfig: SmartSelectModalConfig(
-					trailing: ButtonSheetBarButtons(
-						buttons: [
-							UIButton('actions.confirm', () => { Navigator.pop(context) }, Colors.green, Icons.done)
+			BlocBuilder<LocaleCubit, LocaleState>(
+				builder: (context, state) {
+					return SmartSelect.single(
+						value: context.bloc<LocaleCubit>().state.languageKey,
+						title: AppLocales.of(context).translate('$_pageKey.appSettings.changeLanguageLabel'),
+						modalType: SmartSelectModalType.bottomSheet,
+						options: [
+							for(String lang in languages)
+								SmartSelectOption(
+									title: AppLocales.of(context).translate('$_pageKey.appSettings.languages.$lang'),
+									value: lang
+								)
 						],
-					)
-				),
-				leading: Padding(
-					padding: EdgeInsets.only(left: 8.0),
-					child: Icon(Icons.language)
-				),
-				onChange: (val) => _setLanguage(val)
+						leading: Padding(
+							padding: EdgeInsets.only(left: 8.0),
+							child: Icon(Icons.language)
+						),
+						onChange: (langKey) => _setLanguage(langKey),
+					);
+				}
 			),
 			_buildBasicListTile(
 				title: AppLocales.of(context).translate('$_pageKey.appSettings.showAppInfoLabel'),

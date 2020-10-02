@@ -20,6 +20,7 @@ import 'package:fokus/logic/caregiver_plans_cubit.dart';
 import 'package:fokus/logic/child_plans_cubit.dart';
 import 'package:fokus/logic/child_badges_cubit.dart';
 import 'package:fokus/logic/plan_form/plan_form_cubit.dart';
+import 'package:fokus/logic/settings/locale_cubit.dart';
 import 'package:fokus/logic/task_instance/task_instance_cubit.dart';
 import 'package:fokus/logic/reward_form/reward_form_cubit.dart';
 import 'package:fokus/logic/badge_form/badge_form_cubit.dart';
@@ -55,6 +56,7 @@ import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/db/user/user_role.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/services/instrumentator.dart';
+import 'package:fokus/services/observers/current_locale_observer.dart';
 import 'package:fokus/utils/theme_config.dart';
 import 'package:fokus/utils/service_injection.dart';
 import 'package:fokus/widgets/page_theme.dart';
@@ -67,7 +69,7 @@ void main() async {
 	await Firebase.initializeApp();
 	var navigatorKey = GlobalKey<NavigatorState>();
 	var routeObserver = RouteObserver<PageRoute>();
-	registerServices(navigatorKey, routeObserver);
+	await registerServices(navigatorKey, routeObserver);
 
 	Instrumentator.runAppGuarded(
 		BlocProvider<AuthenticationBloc>(
@@ -77,12 +79,17 @@ void main() async {
 	);
 }
 
-class FokusApp extends StatelessWidget {
+class FokusApp extends StatefulWidget {
 	final GlobalKey<NavigatorState> _navigatorKey;
 	final _routeObserver;
 
   FokusApp(this._navigatorKey, this._routeObserver);
 
+  @override
+  _FokusAppState createState() => _FokusAppState();
+}
+
+class _FokusAppState extends State<FokusApp> implements CurrentLocaleObserver {
 	@override
 	Widget build(BuildContext context) {
 		return MaterialApp(
@@ -94,8 +101,10 @@ class FokusApp extends StatelessWidget {
 				GlobalCupertinoLocalizations.delegate,
 			],
 			supportedLocales: AppLocalesDelegate.supportedLocales,
-			navigatorKey: _navigatorKey,
-			navigatorObservers: [_routeObserver],
+			localeListResolutionCallback: LocaleCubit.localeSelector,
+
+			navigatorKey: widget._navigatorKey,
+			navigatorObservers: [widget._routeObserver],
 			initialRoute: AppPage.loadingPage.name,
 			routes: _createRoutes(),
 
@@ -109,7 +118,7 @@ class FokusApp extends StatelessWidget {
 			listenWhen: (oldState, newState) => oldState.status != newState.status,
 			listener: (context, state) {
 				var redirectPage = state.status == AuthenticationStatus.authenticated ? state.user.role.panelPage : AppPage.rolesPage;
-				_navigatorKey.currentState.pushNamedAndRemoveUntil(redirectPage.name, (route) => false);
+				widget._navigatorKey.currentState.pushNamedAndRemoveUntil(redirectPage.name, (route) => false);
 			},
 			child: child
 		);
@@ -124,7 +133,7 @@ class FokusApp extends StatelessWidget {
 			AppPage.loadingPage.name: (context) => _createPage(LoadingPage(), context),
 			AppPage.rolesPage.name: (context) => _createPage(RolesPage(), context),
       AppPage.notificationsPage.name: (context) => _createPage(NotificationsPage(), context),
-			AppPage.settingsPage.name:  (context) => _createPage(SettingsPage(), context),
+			AppPage.settingsPage.name:  (context) => _createPage(SettingsPage(), context, LocaleCubit(this)),
 			AppPage.caregiverSignInPage.name: (context) => _createPage(CaregiverSignInPage(), context, CaregiverSignInCubit()),
 			AppPage.caregiverSignUpPage.name: (context) => _createPage(CaregiverSignUpPage(), context, CaregiverSignUpCubit()),
 			AppPage.childProfilesPage.name: (context) => _createPage(ChildProfilesPage(), context, PreviousProfilesCubit(authBloc(context), getRoute(context))),
@@ -187,5 +196,7 @@ class FokusApp extends StatelessWidget {
 			),
 		);
 	}
-	
+
+	@override
+	void onLocaleSet(Locale locale) => setState(() {});
 }

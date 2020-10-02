@@ -71,7 +71,7 @@ class NotificationCard extends ItemCard {
 				),
 			if(dateTime != null)
 				Text(
-					"${DateFormat.yMd(Localizations.localeOf(context).toString()).add_Hm().format(dateTime)}",
+					"${DateFormat.yMd(AppLocales.instance.locale.toString()).add_Hm().format(dateTime)}",
 					style: Theme.of(context).textTheme.subtitle2,
 					overflow: TextOverflow.ellipsis,
 					maxLines: 1,

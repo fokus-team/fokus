@@ -12,16 +12,18 @@ import 'package:fokus/services/notifications/onesignal/onesignal_notification_se
 import 'package:fokus/services/notifications/notification_service.dart';
 import 'package:fokus_auth/fokus_auth.dart';
 
-void registerServices(GlobalKey<NavigatorState> navigatorKey, RouteObserver<PageRoute> routeObserver) {
+Future registerServices(GlobalKey<NavigatorState> navigatorKey, RouteObserver<PageRoute> routeObserver) {
 	// Semi-services needed for context and navigation state sharing
 	GetIt.I.registerSingleton<GlobalKey<NavigatorState>>(navigatorKey);
 	GetIt.I.registerSingleton<RouteObserver<PageRoute>>(routeObserver);
 
 	GetIt.I.registerSingleton<AuthenticationProvider>(AuthenticationProvider.instance);
-	GetIt.I.registerSingleton<AppConfigRepository>(AppConfigRepository(AppSharedPreferencesProvider())..initialize());
+	GetIt.I.registerSingletonAsync<AppConfigRepository>(() => AppConfigRepository(AppSharedPreferencesProvider()).initialize());
 	GetIt.I.registerSingleton<DataRepository>(DbDataRepository());
 	GetIt.I.registerSingleton<PlanRepeatabilityService>(PlanRepeatabilityService());
 	GetIt.I.registerSingleton<PlanKeeperService>(PlanKeeperService());
 	GetIt.I.registerSingleton<TaskInstanceService>(TaskInstanceService());
 	GetIt.I.registerSingleton<NotificationService>(OneSignalNotificationService());
+
+	return GetIt.I.allReady();
 }

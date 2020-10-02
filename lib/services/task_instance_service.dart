@@ -13,7 +13,7 @@ import 'data/data_repository.dart';
 class TaskInstanceService {
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 
-	Future<List<UITaskInstance>> mapToUIModels(List<TaskInstance> taskInstances, {shouldGetTaskStatus = true}) async {
+	Future<List<UITaskInstance>> mapToUIModels(List<TaskInstance> taskInstances, {bool shouldGetTaskStatus = true}) async {
 		var taskUiTypes = shouldGetTaskStatus ? getTasksInstanceStatus(tasks: taskInstances) : List.filled(taskInstances.length, TaskUIType.notCompletedUndefined);
 		List<UITaskInstance> uiTaskInstances = [];
 		for(int i=0; i<taskInstances.length; i++) {

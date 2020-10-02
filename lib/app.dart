@@ -90,6 +90,8 @@ class FokusApp extends StatefulWidget {
 }
 
 class _FokusAppState extends State<FokusApp> implements CurrentLocaleObserver {
+
+
 	@override
 	Widget build(BuildContext context) {
 		return MaterialApp(
@@ -133,7 +135,7 @@ class _FokusAppState extends State<FokusApp> implements CurrentLocaleObserver {
 			AppPage.loadingPage.name: (context) => _createPage(LoadingPage(), context),
 			AppPage.rolesPage.name: (context) => _createPage(RolesPage(), context),
       AppPage.notificationsPage.name: (context) => _createPage(NotificationsPage(), context),
-			AppPage.settingsPage.name:  (context) => _createPage(SettingsPage(), context, LocaleCubit(this)),
+			AppPage.settingsPage.name:  (context) => _createPage(SettingsPage(), context, LocaleCubit()),
 			AppPage.caregiverSignInPage.name: (context) => _createPage(CaregiverSignInPage(), context, CaregiverSignInCubit()),
 			AppPage.caregiverSignUpPage.name: (context) => _createPage(CaregiverSignUpPage(), context, CaregiverSignUpCubit()),
 			AppPage.childProfilesPage.name: (context) => _createPage(ChildProfilesPage(), context, PreviousProfilesCubit(authBloc(context), getRoute(context))),
@@ -199,4 +201,10 @@ class _FokusAppState extends State<FokusApp> implements CurrentLocaleObserver {
 
 	@override
 	void onLocaleSet(Locale locale) => setState(() {});
+
+	@override
+  void initState() {
+		AppLocales.instance.observeLocaleChanges(this);
+		super.initState();
+  }
 }

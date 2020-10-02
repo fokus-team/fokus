@@ -7,15 +7,13 @@ import 'package:get_it/get_it.dart';
 
 import 'package:fokus/services/app_config/app_config_repository.dart';
 import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/services/observers/current_locale_observer.dart';
 
 class LocaleCubit extends Cubit<LocaleState> {
-	final CurrentLocaleObserver _localeObserver;
 
 	static const String defaultLanguageKey = 'default';
 	static final AppConfigRepository _appConfigRepository = GetIt.I<AppConfigRepository>();
 
-  LocaleCubit(this._localeObserver) : super(LocaleState(_getLocaleCode()));
+  LocaleCubit() : super(LocaleState(_getLocaleCode()));
 
   void setLocale({Locale locale, bool setDefault = false}) {
   	if (setDefault) {
@@ -23,10 +21,9 @@ class LocaleCubit extends Cubit<LocaleState> {
 		  locale = _selectLocale();
 	  } else
 	  	_appConfigRepository.setUserLanguage(locale);
-	  if (locale != AppLocales.instance.locale) {
+	  if (locale != AppLocales.instance.locale)
 		  AppLocales.instance.setLocale(locale);
-		  _localeObserver.onLocaleSet(locale);
-	  }
+
 	  emit(LocaleState(_getLocaleCode()));
   }
 

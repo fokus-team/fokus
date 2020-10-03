@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fokus/logic/settings/account_settings_cubit.dart';
 import 'package:fokus/model/ui/gamification/ui_badge.dart';
 import 'package:fokus/model/ui/gamification/ui_reward.dart';
 
@@ -101,7 +103,10 @@ void showNameEditDialog(BuildContext context) {
 void showPasswordChangeDialog(BuildContext context) {
 	showDialog(
 		context: context,
-		builder: (context) => PasswordChangeDialog()
+		builder: (_) => BlocProvider.value(
+			value: context.bloc<AccountSettingsCubit>(),
+			child: PasswordChangeDialog(),
+		)
 	);
 }
 

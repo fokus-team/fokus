@@ -18,7 +18,6 @@ class ChildSignInCubit extends ChildAuthCubitBase<ChildSignInState> {
 		  emit(state);
 		  return;
 	  }
-	  if (!state.status.isValidated) return;
 	  emit(state.copyWith(status: FormzStatus.submissionInProgress));
   	var childId = getIdFromCode(state.childCode.value);
 	  appConfigRepository.saveChildProfile(childId);

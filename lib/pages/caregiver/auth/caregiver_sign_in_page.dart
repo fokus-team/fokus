@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fokus/utils/snackbar_utils.dart';
-import 'package:fokus/widgets/auth/auth_button.dart';
-import 'package:fokus/widgets/auth/auth_widgets.dart';
 import 'package:formz/formz.dart';
 
 import 'package:fokus/logic/auth/caregiver/sign_in/caregiver_sign_in_cubit.dart';
@@ -14,6 +11,9 @@ import 'package:fokus/widgets/auth/auth_input_field.dart';
 import 'package:fokus/model/ui/auth/email.dart';
 import 'package:fokus/services/exception/auth_exceptions.dart';
 import 'package:fokus/model/ui/auth/password.dart';
+import 'package:fokus/utils/snackbar_utils.dart';
+import 'package:fokus/widgets/auth/auth_button.dart';
+import 'package:fokus/widgets/auth/auth_widgets.dart';
 
 class CaregiverSignInPage extends StatelessWidget {
 	static const String _pageKey = 'page.loginSection.caregiverSignIn';

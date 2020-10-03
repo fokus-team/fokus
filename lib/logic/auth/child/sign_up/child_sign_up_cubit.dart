@@ -20,7 +20,6 @@ class ChildSignUpCubit extends ChildAuthCubitBase<ChildSignUpState> {
 		  emit(state);
 		  return;
 	  }
-	  if (!state.status.isValidated) return;
 	  emit(state.copyWith(status: FormzStatus.submissionInProgress));
 
 	  var caregiverId = getIdFromCode(state.caregiverCode.value);

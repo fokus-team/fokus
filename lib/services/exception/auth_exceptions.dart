@@ -14,3 +14,9 @@ extension EmailSignInErrorTextKey on EmailSignInError {
 		EmailSignInError.userDisabled: 'authentication.error.userDisabled',
 	}[this];
 }
+
+extension PasswordChangeErrorCode on PasswordChangeError {
+	String get key => const {
+		PasswordChangeError.wrongPassword: 'wrong-password',
+	}[this];
+}

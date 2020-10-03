@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fokus/logic/settings/locale_cubit.dart';
-import 'package:fokus/utils/theme_config.dart';
-import 'package:fokus/widgets/dialogs/general_dialog.dart';
 import 'package:smart_select/smart_select.dart';
 
 import 'package:fokus/logic/auth/auth_bloc/authentication_bloc.dart';
 import 'package:fokus/model/db/user/user_role.dart';
-import 'package:fokus/model/ui/ui_button.dart';
 import 'package:fokus/services/app_locales.dart';
+import 'package:fokus/logic/settings/locale_cubit.dart';
+import 'package:fokus/utils/theme_config.dart';
+import 'package:fokus/widgets/dialogs/general_dialog.dart';
 import 'package:fokus/utils/dialog_utils.dart';
-import 'package:fokus/widgets/buttons/bottom_sheet_bar_buttons.dart';
 
 class SettingsPage extends StatefulWidget {
 	@override

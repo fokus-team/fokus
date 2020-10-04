@@ -27,7 +27,7 @@ class CaregiverCurrenciesCubit extends Cubit<CaregiverCurrenciesState> {
 	void updateCurrencies(List<UICurrency> currencyList) async {
 		emit(CaregiverCurrenciesInProgress());
     var user = _activeUser();
-		_authBloc.add(AuthenticationActiveUserUpdated((user as UICaregiver).copyWith(currencies: [UICurrency(type: CurrencyType.diamond), ...currencyList])));
+		_authBloc.add(AuthenticationActiveUserUpdated(UICaregiver.from(user, currencies: [UICurrency(type: CurrencyType.diamond), ...currencyList])));
 		List<Currency> currencies = currencyList.map((currency) => Currency(icon: currency.type, name: currency.title)).toList();
 		await _dataRepository.updateCurrencies(user.id, currencies);
 		emit(CaregiverCurrenciesSubmissionSuccess());

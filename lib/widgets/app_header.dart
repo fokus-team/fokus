@@ -204,7 +204,7 @@ class AppHeader extends StatelessWidget {
 								children: <Widget>[
 									RichText(
 										text: TextSpan(
-											text: '${AppLocales.of(context).translate('page.${currentUser?.role?.name}Section.panel.header.greetings')},\n',
+											text: '${currentUser != null ? AppLocales.of(context).translate('page.${currentUser.role.name}Section.panel.header.greetings') : ''},\n',
 											style: TextStyle(color: Colors.white, fontSize: 20),
 											children: <TextSpan>[
 												TextSpan(
@@ -300,7 +300,7 @@ class AppHeader extends StatelessWidget {
 					lightTheme: true,
 					items: [
 						UIButton('navigation.settings', () => Navigator.of(context).pushNamed(AppPage.settingsPage.name)),
-						if(auth.state.user.role == UserRole.caregiver)
+						if(auth.state.user?.role == UserRole.caregiver)
 							UIButton('navigation.caregiver.currencies', () => Navigator.of(context).pushNamed(AppPage.caregiverCurrencies.name)),
 						UIButton('actions.signOut', () => auth.add(AuthenticationSignOutRequested())),
 					]

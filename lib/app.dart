@@ -57,6 +57,7 @@ import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/db/user/user_role.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/services/instrumentator.dart';
+import 'package:fokus/services/locale_provider.dart';
 import 'package:fokus/services/observers/current_locale_observer.dart';
 import 'package:fokus/utils/theme_config.dart';
 import 'package:fokus/utils/service_injection.dart';
@@ -104,7 +105,7 @@ class _FokusAppState extends State<FokusApp> implements CurrentLocaleObserver {
 				GlobalCupertinoLocalizations.delegate,
 			],
 			supportedLocales: AppLocalesDelegate.supportedLocales,
-			localeListResolutionCallback: LocaleCubit.localeSelector,
+			localeListResolutionCallback: LocaleProvider.localeSelector,
 
 			navigatorKey: widget._navigatorKey,
 			navigatorObservers: [widget._routeObserver],
@@ -136,7 +137,7 @@ class _FokusAppState extends State<FokusApp> implements CurrentLocaleObserver {
 			AppPage.loadingPage.name: (context) => _createPage(LoadingPage(), context),
 			AppPage.rolesPage.name: (context) => _createPage(RolesPage(), context),
       AppPage.notificationsPage.name: (context) => _createPage(NotificationsPage(), context),
-			AppPage.settingsPage.name:  (context) => _createPage(_wrapWithCubit(SettingsPage(), LocaleCubit()), context, AccountSettingsCubit()),
+			AppPage.settingsPage.name:  (context) => _createPage(_wrapWithCubit(SettingsPage(), LocaleCubit(getActiveUser(context), authBloc(context))), context, AccountSettingsCubit()),
 			AppPage.caregiverSignInPage.name: (context) => _createPage(CaregiverSignInPage(), context, CaregiverSignInCubit()),
 			AppPage.caregiverSignUpPage.name: (context) => _createPage(CaregiverSignUpPage(), context, CaregiverSignUpCubit()),
 			AppPage.childProfilesPage.name: (context) => _createPage(ChildProfilesPage(), context, PreviousProfilesCubit(authBloc(context), getRoute(context))),

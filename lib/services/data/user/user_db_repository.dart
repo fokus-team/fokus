@@ -36,10 +36,12 @@ mixin UserDbRepository implements DbRepository {
 
 	Future createUser(User user) => dbClient.insert(Collection.user, user.toJson());
 
-	Future updateUser(ObjectId userId, {List<ObjectId> newConnections}) {
+	Future updateUser(ObjectId userId, {List<ObjectId> newConnections, String locale}) {
 		var document = modify;
 		if (newConnections != null)
 			document.addAllToSet('connections', newConnections);
+		if (locale != null)
+			locale.isNotEmpty ? document.set('locale',  locale) : document.unset('locale');
 		return dbClient.update(Collection.user, where.eq('_id', userId), document);
 	}
 

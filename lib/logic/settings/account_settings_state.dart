@@ -14,13 +14,13 @@ class AccountSettingsState extends FormzState {
 		this.error
 	}) : super(status);
 
-	AccountSettingsState copyWith({Password currentPassword, Password newPassword, ConfirmedPassword confirmedPassword, FormzStatus status}) {
+	AccountSettingsState copyWith({Password currentPassword, Password newPassword, ConfirmedPassword confirmedPassword, PasswordChangeError error, FormzStatus status}) {
 		return AccountSettingsState(
 			currentPassword: currentPassword ?? this.currentPassword,
 			newPassword: newPassword ?? this.newPassword,
 			confirmedPassword: confirmedPassword ?? this.confirmedPassword,
 			status: status ?? this.status,
-			error: error
+			error: error ?? this.error
 		);
 	}
 

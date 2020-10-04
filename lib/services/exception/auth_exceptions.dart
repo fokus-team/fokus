@@ -17,6 +17,6 @@ extension EmailSignInErrorTextKey on EmailSignInError {
 
 extension PasswordChangeErrorCode on PasswordChangeError {
 	String get key => const {
-		PasswordChangeError.wrongPassword: 'wrong-password',
+		PasswordChangeError.wrongPassword: 'authentication.error.incorrectPassword',
 	}[this];
 }

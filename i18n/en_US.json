@@ -625,9 +625,11 @@
 		"confirmPassword": "Repeat password",
 		"googleSignIn": "Sign in with Google",
 		"googleSignUp": "Sign up with Google",
+		"passwordChanged": "Password changed",
 
 		"error": {
 			"incorrectData": "Incorrect e-mail or password",
+			"incorrectPassword": "Incorrect password",
 			"emailAlreadyUsed": "E-mail address is already used",
 			"emailInvalid": "E-mail address is invalid",
 			"nameEmpty": "Name can not be empty",

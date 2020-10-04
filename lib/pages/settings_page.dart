@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fokus/logic/settings/account_settings_cubit.dart';
 import 'package:smart_select/smart_select.dart';
 
 import 'package:fokus/logic/auth/auth_bloc/authentication_bloc.dart';
@@ -113,11 +114,12 @@ class _SettingsPageState extends State<SettingsPage> {
 				icon: Icons.edit,
 				onTap: () => showNameEditDialog(context)
 			),
-			_buildBasicListTile(
-				title: AppLocales.of(context).translate('$_pageKey.profile.changePasswordLabel'),
-				icon: Icons.lock,
-				onTap: () => showPasswordChangeDialog(context)
-			),
+			if (context.bloc<AccountSettingsCubit>().isUserSignedInWithEmail())
+				_buildBasicListTile(
+					title: AppLocales.of(context).translate('$_pageKey.profile.changePasswordLabel'),
+					icon: Icons.lock,
+					onTap: () => showPasswordChangeDialog(context)
+				),
 			_buildBasicListTile(
 				title: AppLocales.of(context).translate('$_pageKey.profile.deleteAccountLabel'),
 				subtitle: AppLocales.of(context).translate('$_pageKey.profile.deleteAccountHint'),

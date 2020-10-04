@@ -5,10 +5,13 @@ import 'package:formz/formz.dart';
 import 'package:fokus/logic/auth/formz_state.dart';
 import 'package:fokus/model/ui/auth/password.dart';
 import 'package:fokus/model/ui/auth/confirmed_password.dart';
+import 'package:get_it/get_it.dart';
 
 part 'account_settings_state.dart';
 
 class AccountSettingsCubit extends Cubit<AccountSettingsState> {
+	final AuthenticationProvider _authenticationProvider = GetIt.I<AuthenticationProvider>();
+
   AccountSettingsCubit() : super(AccountSettingsState());
 
   Future changePasswordFormSubmitted() async {
@@ -18,7 +21,17 @@ class AccountSettingsCubit extends Cubit<AccountSettingsState> {
 		  return;
 	  }
 	  emit(state.copyWith(status: FormzStatus.submissionInProgress));
+	  try {
+		  await _authenticationProvider.changePassword(state.currentPassword.value, state.newPassword.value);
+		  emit(state.copyWith(status: FormzStatus.submissionSuccess));
+	  } on PasswordChangeFailure catch (e) {
+		  emit(state.copyWith(status: FormzStatus.submissionFailure, error: e.reason));
+	  } on Exception {
+		  emit(state.copyWith(status: FormzStatus.submissionFailure));
+	  }
   }
+
+  bool isUserSignedInWithEmail() => _authenticationProvider.signedInWithEmail();
 
   AccountSettingsState _validateFields() {
 	  var state = this.state;

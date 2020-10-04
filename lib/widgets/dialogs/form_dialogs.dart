@@ -94,9 +94,10 @@ class PasswordChangeDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocListener<AccountSettingsCubit, AccountSettingsState>(
 	    listener: (context, state) {
-	    	if (state.status.isSubmissionSuccess)
+	    	if (state.status.isSubmissionSuccess) {
 			    Navigator.of(context).pop();
-		    else if (state.status.isSubmissionFailure && state.error != null)
+			    showSuccessSnackbar(context, 'authentication.passwordChanged');
+		    } else if (state.status.isSubmissionFailure && state.error != null)
 			    showFailSnackbar(context, state.error.key);
 	    },
       child: FormDialog(

@@ -20,7 +20,10 @@ mixin AwardDbRepository implements DbRepository {
 	
 	Future updateReward(Reward reward) => dbClient.update(Collection.reward, _buildRewardQuery(id: reward.id), reward.toJson(), multiUpdate: false);
 	Future createReward(Reward reward) => dbClient.insert(Collection.reward, reward.toJson());
-	Future removeReward(ObjectId id) => dbClient.remove(Collection.reward, _buildRewardQuery(id: id));
+	Future removeRewards({ObjectId id, ObjectId createdBy}) {
+		var query = _buildRewardQuery(id: id, caregiverId: createdBy);
+	  return dbClient.remove(Collection.reward, query);
+	}
 
 	Future<List<Badge>> getBadges({ObjectId caregiverId}) {
 		var query = _buildUserQuery(id: caregiverId);

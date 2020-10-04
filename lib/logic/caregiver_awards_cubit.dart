@@ -28,7 +28,7 @@ class CaregiverAwardsCubit extends ReloadableCubit {
   }
 
 	void removeReward(ObjectId id) async {
-		await _dataRepository.removeReward(id).then((value) => doLoadData());
+		await _dataRepository.removeRewards(id: id).then((value) => doLoadData());
 	}
 
 	void removeBadge(UIBadge badge) async {

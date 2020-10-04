@@ -10,7 +10,7 @@ abstract class AwardRepository {
 
 	Future updateReward(Reward reward);
 	Future createReward(Reward reward);
-	Future removeReward(ObjectId id);
+	Future removeRewards({ObjectId id, ObjectId createdBy});
 
 	Future createBadge(ObjectId userId, Badge badge);
 	Future removeBadge(ObjectId userId, Badge badge);

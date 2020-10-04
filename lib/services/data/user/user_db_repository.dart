@@ -52,6 +52,10 @@ mixin UserDbRepository implements DbRepository {
 		return dbClient.update(Collection.user, _buildUserQuery(id: userId), modify.pull('notificationIDs', notificationID));
 	}
 
+	Future removeUsers(List<ObjectId> ids) {
+		return dbClient.remove(Collection.user, _buildUserQuery(ids: ids));
+	}
+
 	SelectorBuilder _buildUserQuery({List<ObjectId> ids, ObjectId id, ObjectId connected, String authenticationId, String notificationId, UserRole role}) {
 		SelectorBuilder query = where;
 		if (ids != null && id != null)

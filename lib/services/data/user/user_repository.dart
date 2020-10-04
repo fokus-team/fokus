@@ -11,6 +11,7 @@ abstract class UserRepository {
 
 	Future createUser(User user);
 	Future updateUser(ObjectId userId, {List<ObjectId> newConnections, String locale});
+	Future removeUsers(List<ObjectId> ids);
 
 	Future insertNotificationID(ObjectId userId, String notificationId);
 	Future removeNotificationID(String notificationID, {ObjectId userId});

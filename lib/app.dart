@@ -137,7 +137,7 @@ class _FokusAppState extends State<FokusApp> implements CurrentLocaleObserver {
 			AppPage.loadingPage.name: (context) => _createPage(LoadingPage(), context),
 			AppPage.rolesPage.name: (context) => _createPage(RolesPage(), context),
       AppPage.notificationsPage.name: (context) => _createPage(NotificationsPage(), context),
-			AppPage.settingsPage.name:  (context) => _createPage(_wrapWithCubit(SettingsPage(), LocaleCubit(getActiveUser(context), authBloc(context))), context, AccountSettingsCubit()),
+			AppPage.settingsPage.name:  (context) => _createPage(_wrapWithCubit(SettingsPage(), LocaleCubit(getActiveUser(context), authBloc(context))), context, AccountSettingsCubit(getActiveUser(context))),
 			AppPage.caregiverSignInPage.name: (context) => _createPage(CaregiverSignInPage(), context, CaregiverSignInCubit()),
 			AppPage.caregiverSignUpPage.name: (context) => _createPage(CaregiverSignUpPage(), context, CaregiverSignUpCubit()),
 			AppPage.childProfilesPage.name: (context) => _createPage(ChildProfilesPage(), context, PreviousProfilesCubit(authBloc(context), getRoute(context))),

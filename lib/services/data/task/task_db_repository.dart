@@ -73,7 +73,16 @@ mixin TaskDbRepository implements DbRepository {
 		return dbClient.update(Collection.taskInstance, where.eq('_id', taskInstanceId), document);
 	}
 
-	SelectorBuilder _buildTaskQuery({ObjectId id, ObjectId planId, ObjectId planInstanceId, bool requiredOnly, bool optionalOnly}) {
+	Future removeTasks({List<ObjectId> planIds}) {
+		var query = _buildTaskQuery(planIds: planIds);
+		return dbClient.remove(Collection.task, query);
+	}
+	Future removeTaskInstances({List<ObjectId> tasksIds}) {
+		var query = _buildTaskQuery(tasksIds: tasksIds);
+		return dbClient.remove(Collection.taskInstance, query);
+	}
+
+	SelectorBuilder _buildTaskQuery({ObjectId id, ObjectId planId, List<ObjectId> planIds, List<ObjectId> tasksIds, ObjectId planInstanceId, bool requiredOnly, bool optionalOnly}) {
 		SelectorBuilder query = where;
 		if (planId != null && planInstanceId != null)
 			_logger.warning("Both plan and plan instance IDs specified in task query");
@@ -84,6 +93,10 @@ mixin TaskDbRepository implements DbRepository {
 			query.eq('_id', id);
 		if (planId != null)
 			query.eq('planID', planId);
+		if (planIds != null)
+			query.oneFrom('planID', planIds);
+		if (tasksIds != null)
+			query.oneFrom('taskID', tasksIds);
 		if (planInstanceId != null)
 			query.eq('planInstanceID', planInstanceId);
 		if (requiredOnly ?? false)

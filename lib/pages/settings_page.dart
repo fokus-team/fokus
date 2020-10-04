@@ -84,7 +84,7 @@ class _SettingsPageState extends State<SettingsPage> {
 			GeneralDialog.confirm(
 				title: AppLocales.of(context).translate('$_pageKey.profile.deleteAccountLabel'),
 				content: AppLocales.of(context).translate('$_pageKey.profile.deleteAccountConfirmation'),
-				confirmAction: () => { /* Delete the account */},
+				confirmAction: () => context.bloc<AccountSettingsCubit>().deleteAccount(),
 				confirmText: 'actions.delete',
 				confirmColor: Colors.red
 			)

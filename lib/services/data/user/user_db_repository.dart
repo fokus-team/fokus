@@ -1,4 +1,3 @@
-import 'package:fokus/model/db/gamification/points.dart';
 import 'package:logging/logging.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
@@ -37,12 +36,10 @@ mixin UserDbRepository implements DbRepository {
 
 	Future createUser(User user) => dbClient.insert(Collection.user, user.toJson());
 
-	Future updateUser(ObjectId userId, {List<ObjectId> newConnections, List<Points> points}) {
+	Future updateUser(ObjectId userId, {List<ObjectId> newConnections}) {
 		var document = modify;
 		if (newConnections != null)
 			document.addAllToSet('connections', newConnections);
-		if (points != null)
-			document.set('points', points.map((e) => e.toJson()).toList());
 		return dbClient.update(Collection.user, where.eq('_id', userId), document);
 	}
 

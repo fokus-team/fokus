@@ -8,10 +8,10 @@ import '../gamification/child_reward.dart';
 import 'user_role.dart';
 
 class Child extends User {
-  List<ChildBadge> badges;
   List<ChildPermission> permissions;
   List<Points> points;
   List<ChildReward> rewards;
+  List<ChildBadge> badges;
 
   Child.create({String name, int avatar, List<ObjectId> connections}) : this._(name: name, avatar: avatar, connections: connections);
 

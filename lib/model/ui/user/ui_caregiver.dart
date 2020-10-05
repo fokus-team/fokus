@@ -10,24 +10,21 @@ import 'package:fokus/model/db/user/caregiver.dart';
 class UICaregiver extends UIUser {
 	final List<ObjectId> friends;
 	final List<UICurrency> currencies;
-	final List<ObjectId> connections;
 	final List<UIBadge> badges;
 
-  UICaregiver(ObjectId id, String name, {this.currencies, this.badges, this.connections, this.friends = const []}) : super(id, name, role: UserRole.caregiver);
+  UICaregiver(ObjectId id, String name, {this.currencies, this.badges, this.friends = const []}) : super(id, name, role: UserRole.caregiver);
   UICaregiver.fromDBModel(Caregiver caregiver) :
 		  friends = caregiver.friends,
 			badges = caregiver.badges?.map((badge) => UIBadge.fromDBModel(badge))?.toList() ?? [],
 		  currencies = [UICurrency(type: CurrencyType.diamond)]..addAll(caregiver.currencies?.map((currency) => UICurrency.fromDBModel(currency)) ?? []),
-      connections = caregiver.connections,
 		  super.fromDBModel(caregiver);
 
-	UICaregiver copyWith({List<UICurrency> currencies}) {
+	UICaregiver copyWith({List<UICurrency> currencies, List<UIBadge> badges}) {
 		return UICaregiver(
 			id,
 			name,
 			currencies: currencies ?? this.currencies,
-			badges: badges,
-			connections: connections,
+			badges: badges ?? this.badges,
 			friends: friends
 		);
 	}

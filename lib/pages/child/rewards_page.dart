@@ -67,7 +67,7 @@ class _ChildRewardsPageState extends State<ChildRewardsPage> {
 
 	List<Widget> _buildRewardShop(ChildRewardsLoadSuccess state, BuildContext context) {
 		return state.rewards.map((reward) {
-			double percentage = (state.points[reward.cost.type] ?? 0) / reward.cost.quantity; 
+			double percentage = (state.points.firstWhere((element) => element.type == reward.cost.type, orElse: () => null)?.quantity ?? 0) / reward.cost.quantity; 
 			return ItemCard(
 				title: reward.name,
 				graphic: reward.icon,
@@ -97,7 +97,7 @@ class _ChildRewardsPageState extends State<ChildRewardsPage> {
 			return ItemCard(
 				title: reward.name,
 				subtitle: AppLocales.of(context).translate('$_pageKey.claimDateLabel') + ' ' +
-					DateFormat.yMd(Localizations.localeOf(context).toString()).format(reward.date).toString(),
+					DateFormat.yMd(AppLocales.instance.locale.toString()).format(reward.date).toString(),
 				graphic: reward.icon,
 				graphicType: AssetType.rewards,
 				graphicHeight: 44.0,

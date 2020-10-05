@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fokus/logic/auth/auth_bloc/authentication_bloc.dart';
 import 'package:fokus/logic/child_badges_cubit.dart';
+import 'package:fokus/model/ui/gamification/ui_badge.dart';
+import 'package:fokus/model/ui/user/ui_child.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/app_paths.dart';
 import 'package:fokus/utils/dialog_utils.dart';
@@ -33,35 +37,34 @@ class _ChildAchievementsPageState extends State<ChildAchievementsPage> {
 				crossAxisAlignment: CrossAxisAlignment.start,
 				children: [
 					ChildCustomHeader(),
-		      LoadableBlocBuilder<ChildBadgesCubit>(
-				    builder: (context, state) => 
-							AppSegments(
-								segments: [
-									Segment(
-										title: '$_pageKey.content.achievementsTitle',
-										subtitle: '$_pageKey.content.achievementsHint',
-										customContent: _buildBadgeShelfs(state)
-									)
-								]
-							),
-						wrapWithExpanded: true,
-		      )
+					AppSegments(
+						segments: [
+							Segment(
+								title: '$_pageKey.content.achievementsTitle',
+								subtitle: '$_pageKey.content.achievementsHint',
+								customContent: _buildBadgeShelfs()
+							)
+						]
+					)
 				]
 			),
 			bottomNavigationBar: AppNavigationBar.childPage(currentIndex: 2)
 		);
 	}
 
-	Widget _buildBadgeShelfs(ChildBadgesLoadSuccess state) {
-		if(state.badges.isNotEmpty) {
+	Widget _buildBadgeShelfs() {
+		var authenticationBloc = context.bloc<AuthenticationBloc>();
+		List<UIBadge> badges = (authenticationBloc.state.user as UIChild).badges;
+		
+		if(badges.isNotEmpty) {
 			return Padding(
 				padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: AppBoxProperties.screenEdgePadding),
 				child: Builder(
 					builder: (context) {
 						List<Widget> rows = [];
-						for (var i = 0; i < state.badges.length; i += badgesPerShelf) {
+						for (var i = 0; i < badges.length; i += badgesPerShelf) {
 							rows.add(Row(
-								children: state.badges.sublist(i, i+badgesPerShelf > state.badges.length ? state.badges.length : i+badgesPerShelf)
+								children: badges.sublist(i, i+badgesPerShelf > badges.length ? badges.length : i+badgesPerShelf)
 								.map((badge) =>
 									Expanded(
 										flex: (100.0/badgesPerShelf).round(),

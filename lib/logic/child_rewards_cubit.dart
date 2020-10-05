@@ -36,7 +36,7 @@ class ChildRewardsCubit extends ReloadableCubit {
 		claimedRewards.forEach((element) => claimedCount[element.id] = !claimedCount.containsKey(element.id) ? 1 : claimedCount[element.id] + 1);
 
 	  emit(ChildRewardsLoadSuccess(
-			rewards.map((reward) => UIReward.fromDBModel(reward)).where((reward) => reward.limit != null ? reward.limit.compareTo(claimedCount[reward.id] ?? 0) > 0: true).toList(),
+			rewards.map((reward) => UIReward.fromDBModel(reward)).where((reward) => reward.limit != null ? reward.limit < (claimedCount[reward.id] ?? 0) : true).toList(),
 			claimedRewards.map((reward) => UIChildReward.fromDBModel(reward)).toList(),
 			(child as UIChild).points
 		));

@@ -6,7 +6,7 @@ import 'package:fokus/services/observers/active_user_observer.dart';
 
 import 'app_locales.dart';
 
-class LocaleProvider implements ActiveUserObserver {
+class LocaleService implements ActiveUserObserver {
 	static Locale parseLocale(String locale) {
 		List<String> parts = locale.split('_');
 		return Locale(parts[0], parts.length > 1 ? parts[1] : null);

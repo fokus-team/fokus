@@ -36,7 +36,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
   AuthenticationBloc() : super(AuthenticationState.unknown()) {
 	  observeUserChanges(GetIt.I<PlanKeeperService>());
 	  observeUserChanges(GetIt.I<NotificationService>());
-	  observeUserChanges(GetIt.I<LocaleProvider>());
+	  observeUserChanges(GetIt.I<LocaleService>());
 	  _userSubscription = _authenticationProvider.user.listen((user) => add(AuthenticationUserChanged(user)));
   }
 

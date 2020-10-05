@@ -15,7 +15,7 @@ class LocaleCubit extends Cubit<LocaleState> {
 	final AuthenticationBloc _authenticationBloc;
 	
 	static const String defaultLanguageKey = 'default';
-	final LocaleProvider _localeProvider = GetIt.I<LocaleProvider>();
+	final LocaleService _localeProvider = GetIt.I<LocaleService>();
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 
   LocaleCubit(this._activeUser, this._authenticationBloc) : super(LocaleState(_getLocaleCode(_activeUser().locale)));
@@ -23,7 +23,7 @@ class LocaleCubit extends Cubit<LocaleState> {
   void setLocale({Locale locale, bool setDefault = false}) {
   	var activeUser = _activeUser();
 	  if (setDefault) {
-		  locale = LocaleProvider.userAwareLocaleSelector();
+		  locale = LocaleService.userAwareLocaleSelector();
 		  _dataRepository.updateUser(activeUser.id, locale: '');
 	  } else
 		  _dataRepository.updateUser(activeUser.id, locale: '$locale');
@@ -33,9 +33,7 @@ class LocaleCubit extends Cubit<LocaleState> {
 	  emit(LocaleState(_getLocaleCode(userLocale)));
   }
 
-  static String _getLocaleCode(String userLocale) {
-    return userLocale != null ? '${LocaleProvider.parseLocale(userLocale)}' : defaultLanguageKey;
-  }
+  static String _getLocaleCode(String userLocale) => userLocale != null ? '${LocaleService.parseLocale(userLocale)}' : defaultLanguageKey;
 }
 
 class LocaleState extends Equatable {

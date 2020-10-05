@@ -32,6 +32,9 @@ class AccountSettingsCubit extends Cubit<AccountSettingsState> {
 			_dataRepository.removeTaskInstances(tasksIds: plans.fold<List<ObjectId>>([], (tasks, plan) => tasks..addAll(plan.tasks))),
 			_dataRepository.removeRewards(createdBy: user.id),
 		]);
+		// logout
+	  // clear local data
+	  // firebase
   }
 
   Future changePasswordFormSubmitted() async {

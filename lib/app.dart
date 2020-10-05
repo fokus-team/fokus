@@ -105,7 +105,7 @@ class _FokusAppState extends State<FokusApp> implements CurrentLocaleObserver {
 				GlobalCupertinoLocalizations.delegate,
 			],
 			supportedLocales: AppLocalesDelegate.supportedLocales,
-			localeListResolutionCallback: LocaleProvider.localeSelector,
+			localeListResolutionCallback: LocaleService.localeSelector,
 
 			navigatorKey: widget._navigatorKey,
 			navigatorObservers: [widget._routeObserver],

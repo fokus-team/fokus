@@ -25,7 +25,7 @@ Future registerServices(GlobalKey<NavigatorState> navigatorKey, RouteObserver<Pa
 	GetIt.I.registerSingleton<PlanKeeperService>(PlanKeeperService());
 	GetIt.I.registerSingleton<TaskInstanceService>(TaskInstanceService());
 	GetIt.I.registerSingleton<NotificationService>(OneSignalNotificationService());
-	GetIt.I.registerSingleton<LocaleProvider>(LocaleProvider());
+	GetIt.I.registerSingleton<LocaleService>(LocaleService());
 
 	return GetIt.I.allReady();
 }

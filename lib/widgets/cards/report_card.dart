@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fokus/logic/tasks_evaluation/tasks_evaluation_cubit.dart';
 import 'package:fokus/model/ui/task/ui_task_report.dart';
 import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/string_utils.dart';
+import 'package:fokus/utils/duration_utils.dart';
 import 'package:fokus/utils/theme_config.dart';
 import 'package:fokus/widgets/forms/report_form.dart';
 import 'package:fokus/widgets/general/app_avatar.dart';
@@ -87,7 +89,6 @@ class _ReportCardState extends State<ReportCard> {
 						child: ListTile(
 							leading: AppAvatar(widget.report.child.avatar, size: 48.0),
 							title: Text(widget.report.child.name),
-							subtitle: Text(getChildCardSubtitle(context, widget.report.child)),
 							visualDensity: VisualDensity.compact
 						)
 					),
@@ -95,7 +96,7 @@ class _ReportCardState extends State<ReportCard> {
 					_buildReportTile(
 						Icons.event,
 						Text(
-							widget.report.taskDate.toAppString(DateFormat.yMEd(AppLocales.of(context).locale.toString()).add_jm()),
+							widget.report.task.duration.last.to.toAppString(DateFormat.yMEd(AppLocales.of(context).locale.toString()).add_jm()),
 							softWrap: false,
 							overflow: TextOverflow.fade,
 						),
@@ -105,8 +106,9 @@ class _ReportCardState extends State<ReportCard> {
 						Icons.timer,
 						Text(
 							AppLocales.of(context).translate('$_pageKey.raportCard.timeFormat', {
-								'HOURS_NUM': widget.report.taskTimer~/60,
-								'MINUTES_NUM': widget.report.taskTimer%60
+								'HOURS_NUM': sumDurations(widget.report.task.duration).inHours,
+								'MINUTES_NUM': sumDurations(widget.report.task.duration).inMinutes.remainder(60),
+								'SECONDS_NUM': sumDurations(widget.report.task.breaks).inSeconds.remainder(60)
 							}),
 							softWrap: false,
 							overflow: TextOverflow.fade,
@@ -120,16 +122,17 @@ class _ReportCardState extends State<ReportCard> {
 							overflow: TextOverflow.fade,
 							text: TextSpan(
 								text: AppLocales.of(context).translate('$_pageKey.raportCard.breakCount', {
-									'BREAKS_NUM': widget.report.breakCount
+									'BREAKS_NUM': widget.report.task.breaks.length
 								}) + ' ',
 								style: Theme.of(context).textTheme.bodyText2,
 								children: [
-									if(widget.report.breakCount > 0)
+									if(widget.report.task.breaks.length > 0)
 										TextSpan(
 											text: '(${AppLocales.of(context).translate('$_pageKey.raportCard.totalBreakTime')}: ' +
 												AppLocales.of(context).translate('$_pageKey.raportCard.timeFormat', {
-													'HOURS_NUM': widget.report.breakTimer~/60,
-													'MINUTES_NUM': widget.report.breakTimer%60
+													'HOURS_NUM': sumDurations(widget.report.task.breaks).inHours,
+													'MINUTES_NUM': sumDurations(widget.report.task.breaks).inMinutes.remainder(60),
+													'SECONDS_NUM': sumDurations(widget.report.task.breaks).inSeconds.remainder(60)
 												}) + ')',
 											style: TextStyle(color: AppColors.mediumTextColor, fontSize: 13.0)
 										)
@@ -148,6 +151,7 @@ class _ReportCardState extends State<ReportCard> {
 			widget.report.ratingMark = mark;
 			widget.report.ratingComment = comment;
 		});
+		BlocProvider.of<TasksEvaluationCubit>(context).rateTask(widget.report);
 	}
 
 	Widget _buildBottomBar(BuildContext context) {
@@ -195,17 +199,21 @@ class _ReportCardState extends State<ReportCard> {
 							AppLocales.of(context).translate('$_pageKey.raportCard.rejectedLabel')
 							: AppLocales.of(context).translate('$_pageKey.raportCard.ratedOnLabel', {'STARS_NUM': widget.report.ratingMark.value.toString()})
 					),
-					subtitle: Text(
-						isRejected ?
-							AppLocales.of(context).translate('$_pageKey.raportCard.rejectedHint')
-							: AppLocales.of(context).translate('$_pageKey.raportCard.ratedOnHint', {
-                'POINTS_NUM': (widget.report.ratingMark.value*widget.report.task.points.quantity/5.0).round().toString()
-              })
-					),
+					subtitle: Text(_getSubtitle()),
 					visualDensity: VisualDensity.compact,
 					contentPadding: EdgeInsets.zero
 				)
 		);
 	}
 
+	String _getSubtitle() {
+  	if(widget.report.ratingMark.value == 0)
+  		return AppLocales.of(context).translate('$_pageKey.raportCard.rejectedHint');
+		else if(widget.report.task.points != null)
+			return AppLocales.of(context).translate('$_pageKey.raportCard.ratedOnHint',
+				{'POINTS_NUM': (TasksEvaluationCubit.getPointsAwarded(widget.report.ratingMark.value, widget.report.task.points.quantity).toString())});
+		else
+			return AppLocales.of(context).translate('$_pageKey.raportCard.ratedOnLabel',
+				{'STARS_NUM': widget.report.ratingMark.value.toString()});
+  }
 }

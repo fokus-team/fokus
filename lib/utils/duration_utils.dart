@@ -6,7 +6,7 @@ Duration sumDurations(List<DateSpan<TimeDate>> durations, [bool limitToOneDay = 
 		return Duration();
 	var sum = durations.sublist(0, durations.length - 1).fold<Duration>(Duration(), (sum, span) => sum + span.to.difference(span.from));
 	var midnight = TimeDate(durations.last.from.year, durations.last.from.month, durations.last.from.day + 1);
-	var lastSpanEnd = durations.last.to ?? (limitToOneDay ? midnight : TimeDate.now());
+	var lastSpanEnd = durations.last.to ?? (limitToOneDay && durations.last.from.day != TimeDate.now().day ? midnight : TimeDate.now());
 	return sum + lastSpanEnd.difference(durations.last.from);
 }
 

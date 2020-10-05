@@ -290,7 +290,7 @@ class TaskAppHeaderState extends State<TaskAppHeader> with TickerProviderStateMi
 
 	@override
   void dispose() {
-		_updateTimer.cancel();
+		if(_updateTimer != null) _updateTimer.cancel();
 		_confetti.dispose();
   	_buttonController.dispose();
   	_slideController.dispose();

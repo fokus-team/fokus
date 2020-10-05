@@ -199,19 +199,21 @@ class _ReportCardState extends State<ReportCard> {
 							AppLocales.of(context).translate('$_pageKey.raportCard.rejectedLabel')
 							: AppLocales.of(context).translate('$_pageKey.raportCard.ratedOnLabel', {'STARS_NUM': widget.report.ratingMark.value.toString()})
 					),
-					subtitle: Text(
-						isRejected ?
-							AppLocales.of(context).translate('$_pageKey.raportCard.rejectedHint')
-							: widget.report.task.points != null ?
-							AppLocales.of(context).translate('$_pageKey.raportCard.ratedOnHint', {
-                'POINTS_NUM': (widget.report.ratingMark.value*widget.report.task.points.quantity/5.0).round().toString()
-              })
-							: AppLocales.of(context).translate('$_pageKey.raportCard.ratedOnLabel', {'STARS_NUM': widget.report.ratingMark.value.toString()})
-					),
+					subtitle: Text(_getSubtitle()),
 					visualDensity: VisualDensity.compact,
 					contentPadding: EdgeInsets.zero
 				)
 		);
 	}
 
+	String _getSubtitle() {
+  	if(widget.report.ratingMark.value == 0)
+  		return AppLocales.of(context).translate('$_pageKey.raportCard.rejectedHint');
+		else if(widget.report.task.points != null)
+			return AppLocales.of(context).translate('$_pageKey.raportCard.ratedOnHint',
+				{'POINTS_NUM': (widget.report.ratingMark.value*widget.report.task.points.quantity/5.0).round().toString()});
+		else
+			return AppLocales.of(context).translate('$_pageKey.raportCard.ratedOnLabel',
+				{'STARS_NUM': widget.report.ratingMark.value.toString()});
+  }
 }

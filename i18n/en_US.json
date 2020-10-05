@@ -413,10 +413,10 @@
 						"ratingLabel": "Rating",
 						"pointsAssigned": "Points assigned",
 						"ratingLevels": {
-							"rated5": "Perfect",
-							"rated4": "Very good",
-							"rated3": "Good",
-							"rated2": "OK",
+							"rated5": "Great",
+							"rated4": "Good",
+							"rated3": "OK",
+							"rated2": "So-so",
 							"rated1": "Acceptable",
 							"rejected": "Task rejected"
 						},

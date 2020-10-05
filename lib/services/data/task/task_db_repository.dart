@@ -19,14 +19,6 @@ mixin TaskDbRepository implements DbRepository {
 		return dbClient.queryTyped(Collection.task, query, (json) => Task.fromJson(json));
 	}
 
-	Future<List<TaskInstance>> getTaskInstancesFromIds({List<ObjectId> taskInstancesIds, bool requiredOnly = false, bool optionalOnly = false, List<String> fields}) {
-		var query = _buildTaskQuery(ids: taskInstancesIds, optionalOnly: optionalOnly, requiredOnly: requiredOnly);
-		if (fields != null)
-			query.fields(fields);
-		return dbClient.queryTyped(Collection.taskInstance, query, (json) => TaskInstance.fromJson(json));
-	}
-
-
 	Future<Task> getTask({ObjectId taskId, bool requiredOnly = false, bool optionalOnly = false, List<String> fields}) {
 		var query = _buildTaskQuery(id: taskId, optionalOnly: optionalOnly, requiredOnly: requiredOnly);
 		if (fields != null)
@@ -41,8 +33,8 @@ mixin TaskDbRepository implements DbRepository {
 		return dbClient.queryOneTyped(Collection.taskInstance, query, (json) => TaskInstance.fromJson(json));
 	}
 
-	Future<List<TaskInstance>> getTaskInstances({ObjectId planInstanceId, List<ObjectId> planInstancesId, bool requiredOnly = false, bool optionalOnly = false, bool isCompleted, TaskState state, List<String> fields}) {
-		var query = _buildTaskQuery(planInstanceId: planInstanceId, requiredOnly: requiredOnly, optionalOnly: optionalOnly, isCompleted: isCompleted, planInstancesId: planInstancesId, state: state);
+	Future<List<TaskInstance>> getTaskInstances({ObjectId planInstanceId, List<ObjectId> taskInstancesIds, List<ObjectId> planInstancesId, bool requiredOnly = false, bool optionalOnly = false, bool isCompleted, TaskState state, List<String> fields}) {
+		var query = _buildTaskQuery(planInstanceId: planInstanceId, ids: taskInstancesIds, requiredOnly: requiredOnly, optionalOnly: optionalOnly, isCompleted: isCompleted, planInstancesId: planInstancesId, state: state);
 		if (fields != null)
 			query.fields(fields);
 		return dbClient.queryTyped(Collection.taskInstance, query, (json) => TaskInstance.fromJson(json));

@@ -9,25 +9,23 @@ class TasksEvaluationInitial extends TasksEvaluationState {
   List<Object> get props => [];
 }
 
-class TasksEvaluationLoadSuccess extends TasksEvaluationProvider {
-  TasksEvaluationLoadSuccess(List<UITaskInstance> uiTaskInstances,  Map<ObjectId, UIChild> uiChildren, Map<ObjectId, String> plansNames) : super(uiTaskInstances, uiChildren, plansNames);
+class TasksEvaluationLoadSuccess extends TasksEvaluationBaseState {
+  TasksEvaluationLoadSuccess(List<UITaskReport> reports) : super(reports);
 }
 
-class TasksEvaluationSubmissionInProgress extends TasksEvaluationProvider {
-  TasksEvaluationSubmissionInProgress(List<UITaskInstance> uiTaskInstances,  Map<ObjectId, UIChild> uiChildren, Map<ObjectId, String> plansNames) : super(uiTaskInstances, uiChildren, plansNames);
+class TasksEvaluationSubmissionInProgress extends TasksEvaluationBaseState {
+  TasksEvaluationSubmissionInProgress(List<UITaskReport> reports) : super(reports);
 }
 
-class TasksEvaluationSubmissionSuccess extends TasksEvaluationProvider {
-  TasksEvaluationSubmissionSuccess(List<UITaskInstance> uiTaskInstances, Map<ObjectId, UIChild> uiChildren, Map<ObjectId, String> plansNames) : super(uiTaskInstances, uiChildren, plansNames);
+class TasksEvaluationSubmissionSuccess extends TasksEvaluationBaseState {
+  TasksEvaluationSubmissionSuccess(List<UITaskReport> reports) : super(reports);
 }
 
-class TasksEvaluationProvider extends TasksEvaluationState {
-	final List<UITaskInstance> uiTaskInstances;
-	final Map<ObjectId, UIChild> uiChildren;
-	final Map<ObjectId, String> plansNames;
+class TasksEvaluationBaseState extends TasksEvaluationState {
+	final List<UITaskReport> reports;
 
-	TasksEvaluationProvider(this.uiTaskInstances, this.uiChildren, this.plansNames);
+	TasksEvaluationBaseState(this.reports);
 
   @override
-  List<Object> get props => [uiTaskInstances, uiChildren, plansNames];
+  List<Object> get props => [reports];
 }

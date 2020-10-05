@@ -25,6 +25,7 @@ class TasksEvaluationCubit extends Cubit<TasksEvaluationState> {
   final TaskInstanceService _taskInstanceService = GetIt.I<TaskInstanceService>();
 	final ActiveUserFunction _activeUser;
 	List<UITaskInstance> _uiTaskInstances;
+	List<UITaskReport> _reports;
 	Map<ObjectId, UIChild> _planInstanceToChild;
 	Map<ObjectId, String> _planInstanceToName;
 
@@ -42,15 +43,20 @@ class TasksEvaluationCubit extends Cubit<TasksEvaluationState> {
 		if(taskInstances.isNotEmpty) _uiTaskInstances = await _taskInstanceService.mapToUIModels(taskInstances, shouldGetTaskStatus: false);
 		else _uiTaskInstances = [];
 		_planInstanceToName = Map.fromEntries(planInstances.map((planInstance) => MapEntry(planInstance.id, nameMap[planInstance.planID])));
-
-		emit(TasksEvaluationLoadSuccess(_uiTaskInstances, _planInstanceToChild, _planInstanceToName));
+		for(var taskInstance in _uiTaskInstances) {
+			_reports.add(UITaskReport(
+				planName: _planInstanceToName[taskInstance.planInstanceId],
+				task: taskInstance,
+				child: _planInstanceToChild[taskInstance.planInstanceId],
+			));
+		}
+		emit(TasksEvaluationLoadSuccess(_reports));
 	}
 
 	void rateTask(UITaskReport report) async {
 		List<Future> updates = [];
-		int i = _uiTaskInstances.indexOf(_uiTaskInstances.singleWhere((uiTaskInstance) => uiTaskInstance.id == report.task.id));
 		if(report.ratingMark == UITaskReportMark.rejected) {
-			updates.add(_dataRepository.updatePlanInstanceFields(_uiTaskInstances[i].planInstanceId, state: PlanInstanceState.notCompleted));
+			updates.add(_dataRepository.updatePlanInstanceFields(report.task.planInstanceId, state: PlanInstanceState.notCompleted));
 			updates.add(_dataRepository.updateTaskInstanceFields(report.task.id, state:TaskState.rejected));
 		} else {
 			int pointsAwarded;
@@ -60,16 +66,16 @@ class TasksEvaluationCubit extends Cubit<TasksEvaluationState> {
 			if (report.task.points != null) {
 			  Child child = await _dataRepository.getUser(id: report.child.id);
 			  List<Points> newPoints = child.points;
-			  if(newPoints != null && newPoints.isNotEmpty && newPoints.any((element) => element.icon == _uiTaskInstances[i].points.type)) {
-					newPoints.singleWhere((element) => element.icon == _uiTaskInstances[i].points.type).quantity += pointsAwarded;
+			  if(newPoints != null && newPoints.isNotEmpty && newPoints.any((element) => element.icon == report.task.points.type)) {
+					newPoints.singleWhere((element) => element.icon == report.task.points.type).quantity += pointsAwarded;
 			  } else {
 			  	if(newPoints == null) newPoints = [];
-					newPoints.add(Points.fromUICurrency(_uiTaskInstances[i].points, pointsAwarded, creator: _uiTaskInstances[i].points.createdBy));
+					newPoints.add(Points.fromUICurrency(report.task.points, pointsAwarded, creator: report.task.points.createdBy));
 			  }
 				updates.add(_dataRepository.updateUser(child.id, points: newPoints));
 			}
 		}
 		await Future.wait(updates);
-		emit(TasksEvaluationSubmissionSuccess(_uiTaskInstances, _planInstanceToChild, _planInstanceToName));
+		emit(TasksEvaluationSubmissionSuccess(_reports));
 	}
 }

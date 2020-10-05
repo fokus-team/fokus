@@ -36,7 +36,9 @@ class _CaregiverRatingPageState extends State<CaregiverRatingPage> {
 			builder: (context, state) {
 				if(state is TasksEvaluationInitial)
 					BlocProvider.of<TasksEvaluationCubit>(context).loadData();
-				else if (reports.isEmpty) _buildReports(state);
+				else setState(() {
+				  reports = (state as TasksEvaluationBaseState).reports;
+				});
 				return Scaffold(
 					backgroundColor: AppColors.caregiverBackgroundColor,
 					appBar: AppBar(
@@ -136,17 +138,5 @@ class _CaregiverRatingPageState extends State<CaregiverRatingPage> {
 				)
 			]
 		);
-	}
-
-  void _buildReports(TasksEvaluationProvider state) {
-		for(var uiTaskInstance in state.uiTaskInstances) {
-			reports.add(
-				UITaskReport(
-					planName: state.plansNames[uiTaskInstance.planInstanceId],
-					task: uiTaskInstance,
-					child: state.uiChildren[uiTaskInstance.planInstanceId],
-				)
-			);
-		}
 	}
 }

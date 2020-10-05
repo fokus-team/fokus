@@ -413,10 +413,10 @@
 						"ratingLabel": "Ocena",
 						"pointsAssigned": "Przyznawane punkty",
 						"ratingLevels": {
-							"rated5": "Idealnie",
-							"rated4": "Bardzo dobrze",
-							"rated3": "Dobrze",
-							"rated2": "OK",
+							"rated5": "Świetnie",
+							"rated4": "Dobrze",
+							"rated3": "OK",
+							"rated2": "Może być",
 							"rated1": "Dopuszczalnie",
 							"rejected": "Zadanie odrzucone"
 						},

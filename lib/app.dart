@@ -20,7 +20,7 @@ import 'package:fokus/logic/caregiver_plans_cubit.dart';
 import 'package:fokus/logic/child_plans_cubit.dart';
 import 'package:fokus/logic/child_badges_cubit.dart';
 import 'package:fokus/logic/plan_form/plan_form_cubit.dart';
-import 'package:fokus/logic/settings/account_settings_cubit.dart';
+import 'package:fokus/logic/settings/password_change/password_change_cubit.dart';
 import 'package:fokus/logic/settings/locale_cubit.dart';
 import 'package:fokus/logic/task_instance/task_instance_cubit.dart';
 import 'package:fokus/logic/reward_form/reward_form_cubit.dart';
@@ -137,7 +137,7 @@ class _FokusAppState extends State<FokusApp> implements CurrentLocaleObserver {
 			AppPage.loadingPage.name: (context) => _createPage(LoadingPage(), context),
 			AppPage.rolesPage.name: (context) => _createPage(RolesPage(), context),
       AppPage.notificationsPage.name: (context) => _createPage(NotificationsPage(), context),
-			AppPage.settingsPage.name:  (context) => _createPage(_wrapWithCubit(SettingsPage(), LocaleCubit(getActiveUser(context), authBloc(context))), context, AccountSettingsCubit(getActiveUser(context))),
+			AppPage.settingsPage.name:  (context) => _createPage(_wrapWithCubit(SettingsPage(), LocaleCubit(getActiveUser(context), authBloc(context))), context, PasswordChangeCubit(getActiveUser(context))),
 			AppPage.caregiverSignInPage.name: (context) => _createPage(CaregiverSignInPage(), context, CaregiverSignInCubit()),
 			AppPage.caregiverSignUpPage.name: (context) => _createPage(CaregiverSignUpPage(), context, CaregiverSignUpCubit()),
 			AppPage.childProfilesPage.name: (context) => _createPage(ChildProfilesPage(), context, PreviousProfilesCubit(authBloc(context), getRoute(context))),

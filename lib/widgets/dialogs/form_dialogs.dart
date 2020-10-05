@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 
-import 'package:fokus/logic/settings/account_settings_cubit.dart';
+import 'package:fokus/logic/settings/password_change/password_change_cubit.dart';
 import 'package:fokus/model/ui/auth/password.dart';
 import 'package:fokus/model/ui/auth/confirmed_password.dart';
 import 'package:fokus/services/app_locales.dart';
@@ -92,7 +92,7 @@ class NameEditDialog extends StatelessWidget {
 class PasswordChangeDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocListener<AccountSettingsCubit, AccountSettingsState>(
+    return BlocListener<PasswordChangeCubit, PasswordChangeState>(
 	    listener: (context, state) {
 	    	if (state.status.isSubmissionSuccess) {
 			    Navigator.of(context).pop();
@@ -105,7 +105,7 @@ class PasswordChangeDialog extends StatelessWidget {
 				fields: [
 					Padding(
 						padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-						child: AuthenticationInputField<AccountSettingsCubit, AccountSettingsState>(
+						child: AuthenticationInputField<PasswordChangeCubit, PasswordChangeState>(
 							getField: (state) => state.currentPassword,
 							changedAction: (cubit, value) => cubit.currentPasswordChanged(value),
 							labelKey: 'authentication.currentPassword',
@@ -116,7 +116,7 @@ class PasswordChangeDialog extends StatelessWidget {
 					),
 					Padding(
 						padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 0.0),
-						child: AuthenticationInputField<AccountSettingsCubit, AccountSettingsState>(
+						child: AuthenticationInputField<PasswordChangeCubit, PasswordChangeState>(
 							getField: (state) => state.newPassword,
 							changedAction: (cubit, value) => cubit.newPasswordChanged(value),
 							labelKey: 'authentication.newPassword',
@@ -127,7 +127,7 @@ class PasswordChangeDialog extends StatelessWidget {
 					),
 					Padding(
 						padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-						child: AuthenticationInputField<AccountSettingsCubit, AccountSettingsState>(
+						child: AuthenticationInputField<PasswordChangeCubit, PasswordChangeState>(
 							getField: (state) => state.confirmedPassword,
 							changedAction: (cubit, value) => cubit.confirmedPasswordChanged(value),
 							labelKey: 'authentication.confirmPassword',
@@ -137,7 +137,7 @@ class PasswordChangeDialog extends StatelessWidget {
 						),
 					),
 				],
-				onConfirm: () => context.bloc<AccountSettingsCubit>().changePasswordFormSubmitted(),
+				onConfirm: () => context.bloc<PasswordChangeCubit>().changePasswordFormSubmitted(),
 			),
     );
   }

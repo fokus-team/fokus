@@ -1,12 +1,12 @@
-part of 'account_settings_cubit.dart';
+part of 'password_change_cubit.dart';
 
-class AccountSettingsState extends FormzState {
+class PasswordChangeState extends FormzState {
 	final Password currentPassword;
 	final Password newPassword;
 	final ConfirmedPassword confirmedPassword;
 	final PasswordChangeError error;
 
-	AccountSettingsState({
+	PasswordChangeState({
 		this.currentPassword = const Password.pure(),
 		this.newPassword = const Password.pure(),
 		this.confirmedPassword = const ConfirmedPassword.pure(),
@@ -14,8 +14,8 @@ class AccountSettingsState extends FormzState {
 		this.error
 	}) : super(status);
 
-	AccountSettingsState copyWith({Password currentPassword, Password newPassword, ConfirmedPassword confirmedPassword, PasswordChangeError error, FormzStatus status}) {
-		return AccountSettingsState(
+	PasswordChangeState copyWith({Password currentPassword, Password newPassword, ConfirmedPassword confirmedPassword, PasswordChangeError error, FormzStatus status}) {
+		return PasswordChangeState(
 			currentPassword: currentPassword ?? this.currentPassword,
 			newPassword: newPassword ?? this.newPassword,
 			confirmedPassword: confirmedPassword ?? this.confirmedPassword,

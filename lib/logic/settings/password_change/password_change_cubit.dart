@@ -11,19 +11,21 @@ import 'package:fokus/model/ui/user/ui_user.dart';
 import 'package:fokus/services/data/data_repository.dart';
 import 'package:fokus_auth/fokus_auth.dart';
 
-part 'account_settings_state.dart';
+part 'password_change_state.dart';
 
-class AccountSettingsCubit extends Cubit<AccountSettingsState> {
+class PasswordChangeCubit extends Cubit<PasswordChangeState> {
 	final ActiveUserFunction _activeUser;
 
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final AuthenticationProvider _authenticationProvider = GetIt.I<AuthenticationProvider>();
 
-  AccountSettingsCubit(this._activeUser) : super(AccountSettingsState());
+  PasswordChangeCubit(this._activeUser) : super(PasswordChangeState());
 
   Future deleteAccount() async {
   	var user = _activeUser() as UICaregiver;
   	var plans = await _dataRepository.getPlans(caregiverId: user.id, fields: ['tasks', '_id']);
+
+
 		return Future.value([
 			_dataRepository.removeUsers(user.connections..add(user.id)),
 			_dataRepository.removePlans(caregiverId: user.id),
@@ -32,6 +34,7 @@ class AccountSettingsCubit extends Cubit<AccountSettingsState> {
 			_dataRepository.removeTaskInstances(tasksIds: plans.fold<List<ObjectId>>([], (tasks, plan) => tasks..addAll(plan.tasks))),
 			_dataRepository.removeRewards(createdBy: user.id),
 		]);
+
 		// logout
 	  // clear local data
 	  // firebase
@@ -56,7 +59,7 @@ class AccountSettingsCubit extends Cubit<AccountSettingsState> {
 
   bool isUserSignedInWithEmail() => _authenticationProvider.signedInWithEmail();
 
-  AccountSettingsState _validateFields() {
+  PasswordChangeState _validateFields() {
 	  var state = this.state;
 	  state = state.copyWith(currentPassword: Password.dirty(state.currentPassword.value, false));
 	  state = state.copyWith(newPassword: Password.dirty(state.newPassword.value));

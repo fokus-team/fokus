@@ -63,7 +63,7 @@ class FirebaseNotificationProvider extends NotificationProvider {
 
 	static Future _showNotification(Map<String, dynamic> message) async {
 		var translate = (String key) => AppLocales.instance.translate(key);
-		var locTranslate = (NotificationText text) => AppLocales.instance.translate(text.key, text.arguments);
+		var locTranslate = (SimpleNotificationText text) => AppLocales.instance.translate(text.key, text.arguments);
 
 		var channel = NotificationChannel.general;
 		if (message['data']['channel'] != null)
@@ -72,7 +72,7 @@ class FirebaseNotificationProvider extends NotificationProvider {
 		String parse(String field) {
 			var text = message['notification'][field];
 			if (message['data']['${field}Key'] != null)
-				text = locTranslate(NotificationText.fromJson(field, message['data']));
+				text = locTranslate(SimpleNotificationText.fromJson(field, message['data']));
 			return text;
 		}
 		var androidPlatformChannelSpecifics = AndroidNotificationDetails(channel.id, translate(channel.nameKey), translate(channel.descriptionKey), color: AppColors.notificationAccentColor);

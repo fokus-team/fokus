@@ -9,13 +9,17 @@ import 'package:fokus/services/exception/db_exceptions.dart';
 class MongoDbProvider {
 	Db _client;
 
-	Future initialize() async {
-		if (_client != null && _client.state == State.OPEN)
-			return;
+	Future connect({bool dropExisting = false}) async {
+		if (_client != null && _client.state == State.OPEN) {
+			if (dropExisting)
+				await _client.close();
+			else
+				return;
+		}
 		_client = await MongoDBAuthenticator.authenticate(
 			timeoutConfig: TimeoutConfig(
 				connectionTimeout: 8000,
-				socketTimeout: 6000,
+				socketTimeout: 4000,
 				keepAliveTime: 10 * 60
 			)
 		).catchError((e) => throw NoDbConnection(e));
@@ -64,19 +68,19 @@ class MongoDbProvider {
 	}
 
 	Future<T> _execute<T>(Future<T> Function() query) async {
-		try {
-			await initialize();
+		var doExecute = ({bool dropConnection = false}) async {
+			await connect(dropExisting: dropConnection);
 			return await query();
+		};
+		try {
+			return await doExecute();
 		} on TimeoutException { // Keep alive disconnected
-			await initialize();
-			return query();
+			return await doExecute();
 		} on ConnectionException { // Connection closed, try to reconnect
-			await initialize();
-			return query();
+			return await doExecute();
 		} on MongoQueryTimeout { // Query timeout, retry
-			await initialize();
-			return query();
-		} catch(e) { // TODO Handle double MongoQueryTimeout
+			return await doExecute(dropConnection: true);
+		} catch(e) {
 			if (e is NoDbConnection)
 				throw e;
 			throw DbQueryFailed(e);

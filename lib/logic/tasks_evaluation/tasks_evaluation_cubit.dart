@@ -61,7 +61,7 @@ class TasksEvaluationCubit extends Cubit<TasksEvaluationState> {
 		} else {
 			int pointsAwarded;
 			if(report.task.points != null)
-				pointsAwarded =  max((report.task.points.quantity*report.ratingMark.value/5).round(), 1);
+				pointsAwarded =  getPointsAwarded(report.task.points.quantity, report.ratingMark.value);
 			updates.add(_dataRepository.updateTaskInstanceFields(report.task.id, state: TaskState.evaluated, rating: report.ratingMark.value, pointsAwarded: pointsAwarded));
 			if (report.task.points != null) {
 			  Child child = await _dataRepository.getUser(id: report.child.id);
@@ -78,4 +78,6 @@ class TasksEvaluationCubit extends Cubit<TasksEvaluationState> {
 		await Future.wait(updates);
 		emit(TasksEvaluationSubmissionSuccess(_reports));
 	}
+
+	static int getPointsAwarded(int quantity, int ratingMark) => max((quantity*ratingMark/5).round(), 1);
 }

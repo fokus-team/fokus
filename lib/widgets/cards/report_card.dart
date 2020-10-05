@@ -211,7 +211,7 @@ class _ReportCardState extends State<ReportCard> {
   		return AppLocales.of(context).translate('$_pageKey.raportCard.rejectedHint');
 		else if(widget.report.task.points != null)
 			return AppLocales.of(context).translate('$_pageKey.raportCard.ratedOnHint',
-				{'POINTS_NUM': (widget.report.ratingMark.value*widget.report.task.points.quantity/5.0).round().toString()});
+				{'POINTS_NUM': (TasksEvaluationCubit.getPointsAwarded(widget.report.ratingMark.value, widget.report.task.points.quantity).toString())});
 		else
 			return AppLocales.of(context).translate('$_pageKey.raportCard.ratedOnLabel',
 				{'STARS_NUM': widget.report.ratingMark.value.toString()});

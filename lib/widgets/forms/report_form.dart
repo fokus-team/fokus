@@ -1,7 +1,6 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:fokus/logic/tasks_evaluation/tasks_evaluation_cubit.dart';
 
 import 'package:fokus/model/ui/task/ui_task_report.dart';
 import 'package:fokus/services/app_locales.dart';
@@ -130,7 +129,7 @@ class _ReportFormState extends State<ReportForm> {
 
 	Widget _getPointsAssigned() {
 		int totalPoints = widget.report.task.points.quantity;
-		int points = max((totalPoints*mark.value/5).round(), 1);
+		int points = TasksEvaluationCubit.getPointsAwarded(totalPoints, mark.value);
 		return AttributeChip.withCurrency(
 			currencyType: widget.report.task.points.type,
 			content: points.toString() + ' / ' + totalPoints.toString()

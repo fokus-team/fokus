@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/logic/auth/auth_bloc/authentication_bloc.dart';
-import 'package:fokus/logic/child_badges_cubit.dart';
 import 'package:fokus/model/ui/gamification/ui_badge.dart';
 import 'package:fokus/model/ui/user/ui_child.dart';
 import 'package:fokus/services/app_locales.dart';
@@ -13,7 +12,6 @@ import 'package:fokus/utils/theme_config.dart';
 import 'package:fokus/widgets/app_navigation_bar.dart';
 import 'package:fokus/widgets/app_header.dart';
 import 'package:fokus/widgets/general/app_hero.dart';
-import 'package:fokus/widgets/loadable_bloc_builder.dart';
 import 'package:fokus/widgets/segment.dart';
 
 class ChildAchievementsPage extends StatefulWidget {
@@ -53,9 +51,10 @@ class _ChildAchievementsPageState extends State<ChildAchievementsPage> {
 	}
 
 	Widget _buildBadgeShelfs() {
+  	// ignore: close_sinks
 		var authenticationBloc = context.bloc<AuthenticationBloc>();
-		List<UIBadge> badges = (authenticationBloc.state.user as UIChild).badges;
-		
+		List<UIBadge> badges = (authenticationBloc.state.user as UIChild).badges ?? [];
+
 		if(badges.isNotEmpty) {
 			return Padding(
 				padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: AppBoxProperties.screenEdgePadding),

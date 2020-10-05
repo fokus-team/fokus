@@ -25,7 +25,7 @@ class TasksEvaluationCubit extends Cubit<TasksEvaluationState> {
   final TaskInstanceService _taskInstanceService = GetIt.I<TaskInstanceService>();
 	final ActiveUserFunction _activeUser;
 	List<UITaskInstance> _uiTaskInstances;
-	List<UITaskReport> _reports;
+	List<UITaskReport> _reports = [];
 	Map<ObjectId, UIChild> _planInstanceToChild;
 	Map<ObjectId, String> _planInstanceToName;
 

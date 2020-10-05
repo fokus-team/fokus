@@ -36,9 +36,7 @@ class _CaregiverRatingPageState extends State<CaregiverRatingPage> {
 			builder: (context, state) {
 				if(state is TasksEvaluationInitial)
 					BlocProvider.of<TasksEvaluationCubit>(context).loadData();
-				else setState(() {
-				  reports = (state as TasksEvaluationBaseState).reports;
-				});
+				else if(reports.isEmpty) reports = (state as TasksEvaluationBaseState).reports;
 				return Scaffold(
 					backgroundColor: AppColors.caregiverBackgroundColor,
 					appBar: AppBar(

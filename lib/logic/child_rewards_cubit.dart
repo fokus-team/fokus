@@ -22,10 +22,10 @@ class ChildRewardsCubit extends ReloadableCubit {
 
   ChildRewardsCubit(this._activeUser, ModalRoute pageRoute, this._authBloc) : super(pageRoute);
 
-	Map<ObjectId, int> _claimedRewardsCount(List<UIChildReward> rewards) {
+	List<UIReward> _updateRewardLimits(List<UIReward> rewards, List<UIChildReward> claimedRewards) {
 		Map<ObjectId, int> claimedCount = Map<ObjectId, int>();
-		rewards.forEach((element) => claimedCount[element.id] = !claimedCount.containsKey(element.id) ? 1 : claimedCount[element.id] + 1);
-		return claimedCount;
+		claimedRewards.forEach((element) => claimedCount[element.id] = !claimedCount.containsKey(element.id) ? 1 : claimedCount[element.id] + 1);
+		return rewards.where((reward) => reward.limit != null ? reward.limit > (claimedCount[reward.id] ?? 0) : true).toList();
 	}
 
   void doLoadData() async {
@@ -37,7 +37,7 @@ class ChildRewardsCubit extends ReloadableCubit {
 			rewards = await _dataRepository.getRewards(caregiverId: caregiverID);
 
 	  emit(ChildRewardsLoadSuccess(
-			rewards.map((reward) => UIReward.fromDBModel(reward)).where((reward) => reward.limit != null ? reward.limit < (_claimedRewardsCount(child.rewards)[reward.id] ?? 0) : true).toList(),
+			_updateRewardLimits(rewards.map((reward) => UIReward.fromDBModel(reward)), child.rewards),
 			child.rewards,
 			child.points
 		));
@@ -63,7 +63,7 @@ class ChildRewardsCubit extends ReloadableCubit {
 			);
 			_authBloc.add(AuthenticationActiveUserUpdated(child.copyWith(points: points, rewards: rewards..add(UIChildReward.fromDBModel(model)))));
 			emit(ChildRewardsLoadSuccess(
-				(state as ChildRewardsLoadSuccess).rewards.where((reward) => reward.limit != null ? reward.limit < (_claimedRewardsCount(child.rewards)[reward.id] ?? 0) : true).toList(),
+				_updateRewardLimits((state as ChildRewardsLoadSuccess).rewards, child.rewards),
 				rewards..add(UIChildReward.fromDBModel(model)),
 				points
 			));

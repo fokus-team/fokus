@@ -1,4 +1,5 @@
 
+import 'package:fokus/logic/auth/auth_bloc/authentication_bloc.dart';
 import 'package:fokus/model/ui/user/ui_caregiver.dart';
 import 'package:get_it/get_it.dart';
 
@@ -12,9 +13,10 @@ import 'package:mongo_dart/mongo_dart.dart';
 
 class CaregiverAwardsCubit extends ReloadableCubit {
 	final ActiveUserFunction _activeUser;
+	final AuthenticationBloc _authBloc;
   final DataRepository _dataRepository = GetIt.I<DataRepository>();
 
-  CaregiverAwardsCubit(this._activeUser, pageRoute) : super(pageRoute);
+  CaregiverAwardsCubit(this._activeUser, pageRoute, this._authBloc) : super(pageRoute);
 
   @override
 	void doLoadData() async {
@@ -28,13 +30,15 @@ class CaregiverAwardsCubit extends ReloadableCubit {
   }
 
 	void removeReward(ObjectId id) async {
-		await _dataRepository.removeReward(id).then((value) => doLoadData());
+		await _dataRepository.removeReward(id);
+		doLoadData();
 	}
 
 	void removeBadge(UIBadge badge) async {
-    var user = _activeUser();
+    UICaregiver user = _activeUser();
 		Badge model = Badge(name: badge.name, description: badge.description, icon: badge.icon);
-		await _dataRepository.removeBadge(user.id, model).then((value) => doLoadData());
+		await _dataRepository.removeBadge(user.id, model);
+		_authBloc.add(AuthenticationActiveUserUpdated(user.copyWith(badges: user.badges..remove(UIBadge.fromDBModel(model)))));
 	}
 	
 }

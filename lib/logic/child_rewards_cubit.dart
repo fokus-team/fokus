@@ -1,5 +1,4 @@
 import 'package:flutter/widgets.dart';
-import 'package:fokus/logic/auth/auth_bloc/authentication_bloc.dart';
 import 'package:fokus/model/db/date/time_date.dart';
 import 'package:fokus/model/db/gamification/child_reward.dart';
 import 'package:fokus/model/db/gamification/points.dart';
@@ -17,10 +16,9 @@ import 'package:mongo_dart/mongo_dart.dart';
 
 class ChildRewardsCubit extends ReloadableCubit {
 	final ActiveUserFunction _activeUser;
-	final AuthenticationBloc _authBloc;
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 
-  ChildRewardsCubit(this._activeUser, ModalRoute pageRoute, this._authBloc) : super(pageRoute);
+  ChildRewardsCubit(this._activeUser, ModalRoute pageRoute) : super(pageRoute);
 
 	List<UIReward> _updateRewardLimits(List<UIReward> rewards, List<UIChildReward> claimedRewards) {
 		Map<ObjectId, int> claimedCount = Map<ObjectId, int>();
@@ -38,8 +36,8 @@ class ChildRewardsCubit extends ReloadableCubit {
 
 	  emit(ChildRewardsLoadSuccess(
 			_updateRewardLimits(rewards.map((reward) => UIReward.fromDBModel(reward)).toList(), child.rewards),
-			child.rewards,
-			child.points
+			List.from(child.rewards),
+			List.from(child.points)
 		));
   }
 
@@ -58,14 +56,14 @@ class ChildRewardsCubit extends ReloadableCubit {
 		
 		if(pointCurrency != null && pointCurrency.quantity >= reward.cost.quantity) {
 			points[points.indexOf(pointCurrency)] = pointCurrency.copyWith(quantity: pointCurrency.quantity - reward.cost.quantity);
+			rewards..add(UIChildReward.fromDBModel(model));
 			await _dataRepository.claimChildReward(child.id, reward: model, points: points.map((e) =>
 				Points.fromUICurrency(UICurrency(type: e.type, title: e.title), e.quantity, creator: e.createdBy)).toList()
 			);
-			_authBloc.add(AuthenticationActiveUserUpdated(child.copyWith(points: points, rewards: rewards..add(UIChildReward.fromDBModel(model)))));
 			emit(ChildRewardsLoadSuccess(
 				_updateRewardLimits((state as ChildRewardsLoadSuccess).rewards, child.rewards),
-				child.rewards,
-				points
+				List.from(child.rewards),
+				List.from(child.points)
 			));
 		}
 	}

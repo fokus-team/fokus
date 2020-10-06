@@ -1,5 +1,3 @@
-
-import 'package:fokus/logic/auth/auth_bloc/authentication_bloc.dart';
 import 'package:fokus/model/ui/user/ui_caregiver.dart';
 import 'package:get_it/get_it.dart';
 
@@ -13,32 +11,37 @@ import 'package:mongo_dart/mongo_dart.dart';
 
 class CaregiverAwardsCubit extends ReloadableCubit {
 	final ActiveUserFunction _activeUser;
-	final AuthenticationBloc _authBloc;
   final DataRepository _dataRepository = GetIt.I<DataRepository>();
 
-  CaregiverAwardsCubit(this._activeUser, pageRoute, this._authBloc) : super(pageRoute);
+  CaregiverAwardsCubit(this._activeUser, pageRoute) : super(pageRoute);
 
   @override
 	void doLoadData() async {
-    var user = _activeUser();
+    UICaregiver user = _activeUser();
     var rewards = await _dataRepository.getRewards(caregiverId: user.id);
 		
 		emit(CaregiverAwardsLoadSuccess(
 			rewards.map((reward) => UIReward.fromDBModel(reward)).toList(),
-			(user as UICaregiver).badges
+			List.from(user.badges)
 		));
   }
 
 	void removeReward(ObjectId id) async {
 		await _dataRepository.removeReward(id);
-		doLoadData();
+		emit(CaregiverAwardsLoadSuccess(
+			(state as CaregiverAwardsLoadSuccess).rewards.where((element) => element.id != id).toList(),
+			(state as CaregiverAwardsLoadSuccess).badges
+		));
 	}
 
 	void removeBadge(UIBadge badge) async {
     UICaregiver user = _activeUser();
 		Badge model = Badge(name: badge.name, description: badge.description, icon: badge.icon);
 		await _dataRepository.removeBadge(user.id, model);
-		_authBloc.add(AuthenticationActiveUserUpdated(user.copyWith(badges: user.badges..remove(UIBadge.fromDBModel(model)))));
+		emit(CaregiverAwardsLoadSuccess(
+			(state as CaregiverAwardsLoadSuccess).rewards,
+			List.from(user.badges..remove(UIBadge.fromDBModel(model)))
+		));
 	}
 	
 }

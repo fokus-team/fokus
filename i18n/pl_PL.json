@@ -550,7 +550,9 @@
 					"claimedRewardsTitle": "Odebrane nagrody",
 					"claimRewardTitle": "Odbierz nagrodę",
 					"claimCostLabel": "Koszt nagrody",
-					"claimButton": "Odbierz"
+					"claimDateLabel": "Odebrano dnia",
+					"claimButton": "Odbierz",
+					"rewardClaimedText": "Nagroda odebrana"
 				}
 			},
 			"achievements": {

@@ -1,4 +1,6 @@
 import 'package:equatable/equatable.dart';
+import 'package:fokus/model/db/date/time_date.dart';
+import 'package:fokus/model/db/gamification/child_reward.dart';
 import 'package:fokus/model/db/gamification/reward.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
@@ -26,4 +28,25 @@ class UIReward extends Equatable {
 
   @override
   List<Object> get props => [id, name, limit, cost, icon];
+}
+
+class UIChildReward extends UIReward {
+	final TimeDate date;
+
+	UIChildReward({ObjectId id, String name, int limit = 0, UIPoints cost, int icon = 0, this.date}) : super(id: id, name: name, limit: limit, cost: cost, icon: icon);
+	UIChildReward.fromDBModel(ChildReward reward) : this(id: reward.id, name: reward.name, limit: 0, icon: reward.icon, date: reward.date,
+			cost: reward.cost != null ? UIPoints(type: reward.cost.icon, title: reward.cost.name, quantity: reward.cost.quantity, createdBy: reward.cost.createdBy) : null);
+	
+	UIChildReward copyWith({ObjectId id, String name, int limit, UIPoints cost, int icon, DateTime date}) {
+		return UIChildReward(
+			name: name ?? this.name,
+			limit: limit ?? this.limit,
+			cost: limit ?? this.cost,
+			icon: icon ?? this.icon,
+			date: date ?? this.date
+		);
+	}
+
+  @override
+  List<Object> get props => super.props..addAll([date]);
 }

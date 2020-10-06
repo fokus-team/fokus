@@ -11,8 +11,9 @@ import 'package:fokus/widgets/chips/attribute_chip.dart';
 class RewardDialog extends StatefulWidget {
 	final UIReward reward;
 	final bool showHeader;
+	final Function claimFeedback;
 
-	RewardDialog({@required this.reward, this.showHeader});
+	RewardDialog({@required this.reward, this.showHeader, this.claimFeedback});
 
 	@override
 	_RewardDialogState createState() => new _RewardDialogState();
@@ -104,7 +105,7 @@ class _RewardDialogState extends State<RewardDialog> with SingleTickerProviderSt
 												icon: Icons.add,
 												text: AppLocales.of(context).translate('$_pageKey.claimButton'),
 												color: AppColors.childButtonColor,
-												onPressed: () => { /* TODO Claim reward */ },
+												onPressed: () => widget.claimFeedback(),
 												dense: true
 											)
 									]

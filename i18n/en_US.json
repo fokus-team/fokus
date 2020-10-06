@@ -550,7 +550,9 @@
 					"claimedRewardsTitle": "Claimed rewards",
 					"claimRewardTitle": "Claim reward",
 					"claimCostLabel": "Reward cost",
-					"claimButton": "Claim"
+					"claimDateLabel": "Claimed on",
+					"claimButton": "Claim",
+					"rewardClaimedText": "Reward claimed"
 				}
 			},
 			"achievements": {

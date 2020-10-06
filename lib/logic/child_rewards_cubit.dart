@@ -37,7 +37,7 @@ class ChildRewardsCubit extends ReloadableCubit {
 			rewards = await _dataRepository.getRewards(caregiverId: caregiverID);
 
 	  emit(ChildRewardsLoadSuccess(
-			_updateRewardLimits(rewards.map((reward) => UIReward.fromDBModel(reward)), child.rewards),
+			_updateRewardLimits(rewards.map((reward) => UIReward.fromDBModel(reward)).toList(), child.rewards),
 			child.rewards,
 			child.points
 		));
@@ -64,7 +64,7 @@ class ChildRewardsCubit extends ReloadableCubit {
 			_authBloc.add(AuthenticationActiveUserUpdated(child.copyWith(points: points, rewards: rewards..add(UIChildReward.fromDBModel(model)))));
 			emit(ChildRewardsLoadSuccess(
 				_updateRewardLimits((state as ChildRewardsLoadSuccess).rewards, child.rewards),
-				rewards..add(UIChildReward.fromDBModel(model)),
+				child.rewards,
 				points
 			));
 		}

@@ -93,7 +93,7 @@ class _ChildRewardsPageState extends State<ChildRewardsPage> {
 	}
 
 	List<Widget> _buildRewardHistory(ChildRewardsLoadSuccess state) {
-		return state.claimedRewards.map((reward) {
+		return (state.claimedRewards..sort((a, b) => -a.date.compareTo(b.date))).map((reward) {
 			return ItemCard(
 				title: reward.name,
 				subtitle: AppLocales.of(context).translate('$_pageKey.claimDateLabel') + ' ' +

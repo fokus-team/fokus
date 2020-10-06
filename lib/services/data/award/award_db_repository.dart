@@ -2,7 +2,6 @@ import 'package:fokus/model/db/gamification/badge.dart';
 import 'package:fokus/model/db/gamification/child_badge.dart';
 import 'package:fokus/model/db/gamification/child_reward.dart';
 import 'package:fokus/model/db/gamification/points.dart';
-import 'package:fokus/model/db/user/caregiver.dart';
 import 'package:fokus/model/db/user/child.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 import 'package:fokus/model/db/collection.dart';
@@ -19,20 +18,10 @@ mixin AwardDbRepository implements DbRepository {
 		var query = _buildRewardQuery(caregiverId: caregiverId);
 		return dbClient.queryTyped(Collection.reward, query, (json) => Reward.fromJson(json));
 	}
-
-	Future<List<ChildReward>> getChildRewards({ObjectId childId}) {
-		var query = _buildUserQuery(id: childId);
-		return dbClient.queryOneTyped(Collection.user, query, (json) => (Child.fromJson(json)).rewards);
-	}
 	
 	Future updateReward(Reward reward) => dbClient.update(Collection.reward, _buildRewardQuery(id: reward.id), reward.toJson(), multiUpdate: false);
 	Future createReward(Reward reward) => dbClient.insert(Collection.reward, reward.toJson());
 	Future removeReward(ObjectId id) => dbClient.remove(Collection.reward, _buildRewardQuery(id: id));
-
-	Future<List<Badge>> getBadges({ObjectId caregiverId}) {
-		var query = _buildUserQuery(id: caregiverId);
-		return dbClient.queryOneTyped(Collection.user, query, (json) => (Caregiver.fromJson(json)).badges);
-	}
 
 	Future claimChildReward(ObjectId childId, {ChildReward reward, List<Points> points}) {
 		var document = modify;

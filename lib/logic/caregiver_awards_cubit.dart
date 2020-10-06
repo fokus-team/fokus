@@ -1,4 +1,5 @@
 
+import 'package:fokus/model/ui/user/ui_caregiver.dart';
 import 'package:get_it/get_it.dart';
 
 import 'package:fokus/logic/reloadable/reloadable_cubit.dart';
@@ -19,11 +20,10 @@ class CaregiverAwardsCubit extends ReloadableCubit {
 	void doLoadData() async {
     var user = _activeUser();
     var rewards = await _dataRepository.getRewards(caregiverId: user.id);
-    var badges = await _dataRepository.getBadges(caregiverId: user.id);
 		
 		emit(CaregiverAwardsLoadSuccess(
 			rewards.map((reward) => UIReward.fromDBModel(reward)).toList(),
-			badges.map((badge) => UIBadge.fromDBModel(badge)).toList()
+			(user as UICaregiver).badges
 		));
   }
 

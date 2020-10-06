@@ -8,8 +8,6 @@ import 'package:fokus/model/db/gamification/reward.dart';
 abstract class AwardRepository {
 	Future<Reward> getReward({ObjectId id});
 	Future<List<Reward>> getRewards({ObjectId caregiverId});
-	Future<List<ChildReward>> getChildRewards({ObjectId childId});
-	Future<List<Badge>> getBadges({ObjectId caregiverId});
 
 	Future claimChildReward(ObjectId childId, {ChildReward reward, List<Points> points});
 

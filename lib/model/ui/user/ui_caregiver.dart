@@ -12,7 +12,8 @@ class UICaregiver extends UIUser {
 	final List<UICurrency> currencies;
 	final List<UIBadge> badges;
 
-  UICaregiver(ObjectId id, String name, {this.currencies, this.badges, this.friends = const []}) : super(id, name, role: UserRole.caregiver);
+  UICaregiver(ObjectId id, String name, {this.currencies, this.badges, this.friends = const [], List<ObjectId> connections = const []}) :
+			super(id, name, role: UserRole.caregiver, connections: connections);
   UICaregiver.fromDBModel(Caregiver caregiver) :
 		  friends = caregiver.friends,
 			badges = caregiver.badges?.map((badge) => UIBadge.fromDBModel(badge))?.toList() ?? [],
@@ -30,5 +31,5 @@ class UICaregiver extends UIUser {
 	}
 
 	@override
-  List<Object> get props => super.props..addAll([friends, currencies, connections, badges]);
+  List<Object> get props => super.props..addAll([friends, currencies, badges]);
 }

@@ -22,6 +22,12 @@ class ChildRewardsCubit extends ReloadableCubit {
 
   ChildRewardsCubit(this._activeUser, ModalRoute pageRoute, this._authBloc) : super(pageRoute);
 
+	Map<ObjectId, int> _claimedRewardsCount(List<UIChildReward> rewards) {
+		Map<ObjectId, int> claimedCount = Map<ObjectId, int>();
+		rewards.forEach((element) => claimedCount[element.id] = !claimedCount.containsKey(element.id) ? 1 : claimedCount[element.id] + 1);
+		return claimedCount;
+	}
+
   void doLoadData() async {
 	  UIChild child = _activeUser();
 		ObjectId caregiverID = child.connections.first;
@@ -30,11 +36,8 @@ class ChildRewardsCubit extends ReloadableCubit {
 		if(caregiverID != null) 
 			rewards = await _dataRepository.getRewards(caregiverId: caregiverID);
 
-		Map<ObjectId, int> claimedCount = Map<ObjectId, int>();
-		child.rewards.forEach((element) => claimedCount[element.id] = !claimedCount.containsKey(element.id) ? 1 : claimedCount[element.id] + 1);
-
 	  emit(ChildRewardsLoadSuccess(
-			rewards.map((reward) => UIReward.fromDBModel(reward)).where((reward) => reward.limit != null ? reward.limit < (claimedCount[reward.id] ?? 0) : true).toList(),
+			rewards.map((reward) => UIReward.fromDBModel(reward)).where((reward) => reward.limit != null ? reward.limit < (_claimedRewardsCount(child.rewards)[reward.id] ?? 0) : true).toList(),
 			child.rewards,
 			child.points
 		));
@@ -54,14 +57,16 @@ class ChildRewardsCubit extends ReloadableCubit {
 		UIPoints pointCurrency = points.firstWhere((element) => element.type == reward.cost.type, orElse: () => null);
 		
 		if(pointCurrency != null && pointCurrency.quantity >= reward.cost.quantity) {
-			emit(DataLoadInitial());
 			points[points.indexOf(pointCurrency)] = pointCurrency.copyWith(quantity: pointCurrency.quantity - reward.cost.quantity);
 			await _dataRepository.claimChildReward(child.id, reward: model, points: points.map((e) =>
 				Points.fromUICurrency(UICurrency(type: e.type, title: e.title), e.quantity, creator: e.createdBy)).toList()
-			).then((value) {
-				_authBloc.add(AuthenticationActiveUserUpdated(child.copyWith(points: points, rewards: rewards..add(UIChildReward.fromDBModel(model)))));
-				doLoadData();
-			});
+			);
+			_authBloc.add(AuthenticationActiveUserUpdated(child.copyWith(points: points, rewards: rewards..add(UIChildReward.fromDBModel(model)))));
+			emit(ChildRewardsLoadSuccess(
+				(state as ChildRewardsLoadSuccess).rewards.where((reward) => reward.limit != null ? reward.limit < (_claimedRewardsCount(child.rewards)[reward.id] ?? 0) : true).toList(),
+				rewards..add(UIChildReward.fromDBModel(model)),
+				points
+			));
 		}
 	}
 

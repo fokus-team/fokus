@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fokus/logic/settings/account_delete/account_delete_cubit.dart';
 import 'package:fokus/logic/settings/password_change/password_change_cubit.dart';
 import 'package:fokus/model/ui/gamification/ui_badge.dart';
 import 'package:fokus/model/ui/gamification/ui_reward.dart';
 
 import 'package:fokus/services/app_locales.dart';
+import 'package:fokus/utils/bloc_utils.dart';
 import 'package:fokus/widgets/dialogs/app_info_dialog.dart';
 import 'package:fokus/widgets/dialogs/reward_dialog.dart';
 import 'package:fokus/widgets/dialogs/badge_dialog.dart';
@@ -103,10 +105,14 @@ void showNameEditDialog(BuildContext context) {
 void showPasswordChangeDialog(BuildContext context) {
 	showDialog(
 		context: context,
-		builder: (_) => BlocProvider.value(
-			value: context.bloc<PasswordChangeCubit>(),
-			child: PasswordChangeDialog(),
-		)
+		builder: (_) => forwardCubit(PasswordChangeDialog(), context.bloc<PasswordChangeCubit>())
+	);
+}
+
+void showAccountDeleteDialog(BuildContext context) {
+	showDialog(
+		context: context,
+		builder: (_) => forwardCubit(AccountDeleteDialog(), context.bloc<AccountDeleteCubit>())
 	);
 }
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fokus/logic/settings/account_delete/account_delete_cubit.dart';
 import 'package:fokus/logic/settings/password_change/password_change_cubit.dart';
 import 'package:smart_select/smart_select.dart';
 
@@ -84,7 +85,7 @@ class _SettingsPageState extends State<SettingsPage> {
 			GeneralDialog.confirm(
 				title: AppLocales.of(context).translate('$_pageKey.profile.deleteAccountLabel'),
 				content: AppLocales.of(context).translate('$_pageKey.profile.deleteAccountConfirmation'),
-				confirmAction: () => context.bloc<PasswordChangeCubit>().deleteAccount(),
+				confirmAction: () => context.bloc<AccountDeleteCubit>().accountDeleteFormSubmitted(),
 				confirmText: 'actions.delete',
 				confirmColor: Colors.red
 			)
@@ -125,7 +126,7 @@ class _SettingsPageState extends State<SettingsPage> {
 				subtitle: AppLocales.of(context).translate('$_pageKey.profile.deleteAccountHint'),
 				icon: Icons.delete,
 				color: Colors.red,
-				onTap: _deleteAccount
+				onTap: () => showAccountDeleteDialog(context)
 			)
 		];
 	}

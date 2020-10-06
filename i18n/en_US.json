@@ -88,7 +88,10 @@
 					"changePasswordLabel": "Change your password",
 					"deleteAccountLabel": "Delete your account",
 					"deleteAccountHint": "Delete your and children's accounts",
-					"deleteAccountConfirmation": "Are you sure you want to delete your account with all children profiles? This action cannot be undone!"
+					"deleteAccountDescription": "Are you sure you want to delete your account? This will permanently erase all entered data including:",
+					"deleteAccountDataList": "Plans|Tasks|Awards|Child profiles|Performed task history",
+					"deleteAccountWarning": "This action cannot be undone!",
+					"deleteAccountConfirm": "Enter your password to confirm:"
 				},
 				"appSettings": {
 					"header": "App settings",

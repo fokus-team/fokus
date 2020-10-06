@@ -20,6 +20,7 @@ import 'package:fokus/logic/caregiver_plans_cubit.dart';
 import 'package:fokus/logic/child_plans_cubit.dart';
 import 'package:fokus/logic/child_badges_cubit.dart';
 import 'package:fokus/logic/plan_form/plan_form_cubit.dart';
+import 'package:fokus/logic/settings/account_delete/account_delete_cubit.dart';
 import 'package:fokus/logic/settings/password_change/password_change_cubit.dart';
 import 'package:fokus/logic/settings/locale_cubit.dart';
 import 'package:fokus/logic/task_instance/task_instance_cubit.dart';
@@ -61,6 +62,7 @@ import 'package:fokus/services/locale_provider.dart';
 import 'package:fokus/services/observers/current_locale_observer.dart';
 import 'package:fokus/utils/theme_config.dart';
 import 'package:fokus/utils/service_injection.dart';
+import 'package:fokus/utils/bloc_utils.dart';
 import 'package:fokus/widgets/page_theme.dart';
 
 import 'model/ui/plan/ui_plan_instance.dart';
@@ -137,11 +139,18 @@ class _FokusAppState extends State<FokusApp> implements CurrentLocaleObserver {
 			AppPage.loadingPage.name: (context) => _createPage(LoadingPage(), context),
 			AppPage.rolesPage.name: (context) => _createPage(RolesPage(), context),
       AppPage.notificationsPage.name: (context) => _createPage(NotificationsPage(), context),
-			AppPage.settingsPage.name:  (context) => _createPage(_wrapWithCubit(SettingsPage(), LocaleCubit(getActiveUser(context), authBloc(context))), context, PasswordChangeCubit(getActiveUser(context))),
+			AppPage.settingsPage.name:  (context) => _createPage(
+					withCubit(
+						withCubit(
+							SettingsPage(),
+							LocaleCubit(getActiveUser(context), authBloc(context))
+						),
+						AccountDeleteCubit(getActiveUser(context))
+					), context, PasswordChangeCubit()),
 			AppPage.caregiverSignInPage.name: (context) => _createPage(CaregiverSignInPage(), context, CaregiverSignInCubit()),
 			AppPage.caregiverSignUpPage.name: (context) => _createPage(CaregiverSignUpPage(), context, CaregiverSignUpCubit()),
 			AppPage.childProfilesPage.name: (context) => _createPage(ChildProfilesPage(), context, PreviousProfilesCubit(authBloc(context), getRoute(context))),
-			AppPage.childSignInPage.name: (context) => _createPage(_wrapWithCubit(ChildSignInPage(), ChildSignInCubit(authBloc(context))), context, ChildSignUpCubit(authBloc(context))),
+			AppPage.childSignInPage.name: (context) => _createPage(withCubit(ChildSignInPage(), ChildSignInCubit(authBloc(context))), context, ChildSignUpCubit(authBloc(context))),
 
 			AppPage.caregiverPanel.name: (context) => _createPage(CaregiverPanelPage(), context, CaregiverPanelCubit(getActiveUser(context), getRoute(context))),
 			AppPage.caregiverChildDashboard.name: (context) => _createPage(CaregiverChildDashboardPage(getParams(context)), context),
@@ -167,7 +176,7 @@ class _FokusAppState extends State<FokusApp> implements CurrentLocaleObserver {
 
 	Widget _createPage<CubitType extends Cubit>(Widget page, BuildContext context, [CubitType pageCubit]) {
 		if (pageCubit != null)
-			page = _wrapWithCubit(page, pageCubit);
+			page = withCubit(page, pageCubit);
 		var authState = context.bloc<AuthenticationBloc>().state;
 		if (authState.status == AuthenticationStatus.authenticated)
 			return PageTheme.parametrizedRoleSection(
@@ -175,13 +184,6 @@ class _FokusAppState extends State<FokusApp> implements CurrentLocaleObserver {
 				child: page
 			);
 		return PageTheme.loginSection(child: page);
-	}
-
-	Widget _wrapWithCubit<CubitType extends Cubit>(Widget page, CubitType pageCubit) {
-		return BlocProvider<CubitType>(
-			create: (context) => pageCubit,
-			child: page,
-		);
 	}
 
 	ThemeData _createAppTheme() {

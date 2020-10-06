@@ -1,44 +1,18 @@
 import 'package:bloc/bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:get_it/get_it.dart';
-import 'package:mongo_dart/mongo_dart.dart';
 
 import 'package:fokus/logic/auth/formz_state.dart';
 import 'package:fokus/model/ui/auth/password.dart';
 import 'package:fokus/model/ui/auth/confirmed_password.dart';
-import 'package:fokus/model/ui/user/ui_caregiver.dart';
-import 'package:fokus/model/ui/user/ui_user.dart';
-import 'package:fokus/services/data/data_repository.dart';
 import 'package:fokus_auth/fokus_auth.dart';
 
 part 'password_change_state.dart';
 
 class PasswordChangeCubit extends Cubit<PasswordChangeState> {
-	final ActiveUserFunction _activeUser;
-
-	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final AuthenticationProvider _authenticationProvider = GetIt.I<AuthenticationProvider>();
 
-  PasswordChangeCubit(this._activeUser) : super(PasswordChangeState());
-
-  Future deleteAccount() async {
-  	var user = _activeUser() as UICaregiver;
-  	var plans = await _dataRepository.getPlans(caregiverId: user.id, fields: ['tasks', '_id']);
-
-
-		return Future.value([
-			_dataRepository.removeUsers(user.connections..add(user.id)),
-			_dataRepository.removePlans(caregiverId: user.id),
-			_dataRepository.removePlanInstances(childIds: user.connections),
-			_dataRepository.removeTasks(planIds: plans.map((e) => e.id).toList()),
-			_dataRepository.removeTaskInstances(tasksIds: plans.fold<List<ObjectId>>([], (tasks, plan) => tasks..addAll(plan.tasks))),
-			_dataRepository.removeRewards(createdBy: user.id),
-		]);
-
-		// logout
-	  // clear local data
-	  // firebase
-  }
+  PasswordChangeCubit() : super(PasswordChangeState());
 
   Future changePasswordFormSubmitted() async {
 	  var state = _validateFields();
@@ -50,7 +24,7 @@ class PasswordChangeCubit extends Cubit<PasswordChangeState> {
 	  try {
 		  await _authenticationProvider.changePassword(state.currentPassword.value, state.newPassword.value);
 		  emit(state.copyWith(status: FormzStatus.submissionSuccess));
-	  } on PasswordChangeFailure catch (e) {
+	  } on PasswordConfirmFailure catch (e) {
 		  emit(state.copyWith(status: FormzStatus.submissionFailure, error: e.reason));
 	  } on Exception {
 		  emit(state.copyWith(status: FormzStatus.submissionFailure));

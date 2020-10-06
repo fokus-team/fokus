@@ -88,7 +88,10 @@
 					"changePasswordLabel": "Zmień hasło",
 					"deleteAccountLabel": "Usuń konto",
 					"deleteAccountHint": "Trwale usuń konto i profile dzieci",
-					"deleteAccountConfirmation": "Czy na pewno chcesz usunąć swoje konto wraz z wszystkimi profilami dzieci? Tej akcji nie mozna cofnąć!"
+					"deleteAccountDescription": "Czy na pewno chcesz usunąć swoje konto? Spowoduje to trwałe wymazanie wszystkich wprowadzonych w aplikacji danych włączając w to:",
+					"deleteAccountDataList": "Plany|Zadania|Nagrody|Profile dzieci|Historię wykonanych zadań",
+					"deleteAccountWarning": "Tej akcji nie można cofnąć!",
+					"deleteAccountConfirm": "Wprowadź swoje hasło aby potwierdzić wybór:"
 				},
 				"appSettings": {
 					"header": "Ustawienia aplikacji",

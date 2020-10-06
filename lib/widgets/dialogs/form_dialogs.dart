@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fokus/logic/settings/account_delete/account_delete_cubit.dart';
 import 'package:formz/formz.dart';
 
 import 'package:fokus/logic/settings/password_change/password_change_cubit.dart';
@@ -63,11 +64,13 @@ class FormDialog extends StatelessWidget {
   }
 }
 
+const String _settingsPageKey = 'page.settings.content';
+
 class NameEditDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FormDialog(
-			title: AppLocales.of(context).translate('page.settings.content.profile.editNameLabel'),
+			title: AppLocales.of(context).translate('$_settingsPageKey.profile.editNameLabel'),
 			fields: [
 				Padding(
 					padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
@@ -89,6 +92,53 @@ class NameEditDialog extends StatelessWidget {
   }
 }
 
+class AccountDeleteDialog extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+  	var test = ['Konto', 'Dzieci', 'Plany', 'Zadania'];
+  	var getText = (String key) => AppLocales.of(context).translate('$_settingsPageKey.profile.deleteAccount$key');
+	  return BlocListener<AccountDeleteCubit, AccountDeleteState>(
+		  listener: (context, state) {
+			  if (state.status.isSubmissionFailure && state.error != null)
+				  showFailSnackbar(context, state.error.key);
+		  },
+		  child: FormDialog(
+			  title: getText('Label'),
+			  fields: [
+				  Padding(
+					  padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+					  child: Column(
+						  crossAxisAlignment: CrossAxisAlignment.start,
+					    children: [
+					    	Text(getText('Description')),
+						    SizedBox(height: 10),
+						    ...getText('DataList').split('\|').map((point) => Padding(
+							    padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 4.0),
+							    child: Text('• $point'),
+						    )),
+						    SizedBox(height: 10),
+						    Text(getText('Warning'), style: TextStyle(color: Colors.red)),
+						    SizedBox(height: 10),
+						    Text(getText('Confirm')),
+					      SizedBox(height: 10),
+					      AuthenticationInputField<AccountDeleteCubit, AccountDeleteState>(
+								  getField: (state) => state.password,
+								  changedAction: (cubit, value) => cubit.passwordChanged(value),
+								  labelKey: 'authentication.password',
+								  icon: Icons.lock_open,
+								  getErrorKey: (state) => [state.password.error.key],
+								  hideInput: true
+					      ),
+					    ],
+					  ),
+				  ),
+			  ],
+			  onConfirm: () => context.bloc<AccountDeleteCubit>().accountDeleteFormSubmitted(),
+		  ),
+	  );
+  }
+}
+
 class PasswordChangeDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -101,7 +151,7 @@ class PasswordChangeDialog extends StatelessWidget {
 			    showFailSnackbar(context, state.error.key);
 	    },
       child: FormDialog(
-				title: AppLocales.of(context).translate('page.settings.content.profile.changePasswordLabel'),
+				title: AppLocales.of(context).translate('$_settingsPageKey.profile.changePasswordLabel'),
 				fields: [
 					Padding(
 						padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
@@ -115,7 +165,7 @@ class PasswordChangeDialog extends StatelessWidget {
 						),
 					),
 					Padding(
-						padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 0.0),
+						padding: EdgeInsets.symmetric(horizontal: 20.0),
 						child: AuthenticationInputField<PasswordChangeCubit, PasswordChangeState>(
 							getField: (state) => state.newPassword,
 							changedAction: (cubit, value) => cubit.newPasswordChanged(value),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/logic/plan_form/plan_form_cubit.dart';
+import 'package:fokus/utils/bloc_utils.dart';
 import 'package:fokus/widgets/cards/task_card.dart';
 import 'package:fokus/widgets/general/app_hero.dart';
 import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorderable_list.dart';
@@ -93,51 +94,50 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 		});
 	}
 
-	Widget provideCubitForRoute(Widget route) {
-		return BlocProvider.value(
-			value: context.bloc<PlanFormCubit>(),
-			child: route,
-		);
-	}
-
 	void addNewTask() {
 		Navigator.of(context).push(MaterialPageRoute(
-			builder: (context) => provideCubitForRoute(TaskForm(
-				task: null,
-				createTaskCallback: (newTask) { 
-					Future.wait([
-						Future(() => setState(() {
-							widget.plan.tasks.add(newTask);
-							sortTasks();
-						}))
-					]);
-				}
-			))
+			builder: (context) => forwardCubit(
+				TaskForm(
+					task: null,
+					createTaskCallback: (newTask) {
+						Future.wait([
+							Future(() => setState(() {
+								widget.plan.tasks.add(newTask);
+								sortTasks();
+							}))
+						]);
+					}
+				),
+				context.bloc<PlanFormCubit>()
+			)
 		));
 	}
 
 
 	void editTask(TaskFormModel task) {
 		Navigator.of(context).push(MaterialPageRoute(
-			builder: (context) => provideCubitForRoute(TaskForm(
-				task: task,
-				saveTaskCallback: (TaskFormModel updatedTask) {
-					Future.wait([
-						Future(() => setState(() {
-							task.copy(updatedTask);
-							sortTasks();
-						}))
-					]);
-				},
-				removeTaskCallback: () {
-					Future.wait([
-						Future(() => setState(() {
-							widget.plan.tasks.remove(task);
-							sortTasks();
-						}))
-					]);
-				}
-			))
+			builder: (context) => forwardCubit(
+				TaskForm(
+					task: task,
+					saveTaskCallback: (TaskFormModel updatedTask) {
+						Future.wait([
+							Future(() => setState(() {
+								task.copy(updatedTask);
+								sortTasks();
+							}))
+						]);
+					},
+					removeTaskCallback: () {
+						Future.wait([
+							Future(() => setState(() {
+								widget.plan.tasks.remove(task);
+								sortTasks();
+							}))
+						]);
+					}
+				),
+				context.bloc<PlanFormCubit>()
+			)
 		));
 	}
 

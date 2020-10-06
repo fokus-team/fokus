@@ -4,7 +4,7 @@ class PasswordChangeState extends FormzState {
 	final Password currentPassword;
 	final Password newPassword;
 	final ConfirmedPassword confirmedPassword;
-	final PasswordChangeError error;
+	final PasswordConfirmError error;
 
 	PasswordChangeState({
 		this.currentPassword = const Password.pure(),
@@ -14,7 +14,7 @@ class PasswordChangeState extends FormzState {
 		this.error
 	}) : super(status);
 
-	PasswordChangeState copyWith({Password currentPassword, Password newPassword, ConfirmedPassword confirmedPassword, PasswordChangeError error, FormzStatus status}) {
+	PasswordChangeState copyWith({Password currentPassword, Password newPassword, ConfirmedPassword confirmedPassword, PasswordConfirmError error, FormzStatus status}) {
 		return PasswordChangeState(
 			currentPassword: currentPassword ?? this.currentPassword,
 			newPassword: newPassword ?? this.newPassword,

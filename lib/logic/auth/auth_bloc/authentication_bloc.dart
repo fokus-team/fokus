@@ -50,7 +50,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 	  } else if (event is AuthenticationSignOutRequested) {
 	  	_onUserSignOut(state.user.toDBModel());
 		  if (state.user.role == UserRole.caregiver)
-		    _authenticationProvider.signOut();
+		    event.userDeleted ? add(AuthenticationUserChanged(null)) : _authenticationProvider.signOut();
 		  else {
 			  _appConfigRepository.signOutChild();
 			  add(AuthenticationUserChanged(AuthenticatedUser.empty));

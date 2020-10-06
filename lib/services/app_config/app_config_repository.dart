@@ -14,11 +14,6 @@ class AppConfigRepository {
 		return this;
 	}
 
-	bool isUserLanguageSet() => _settingsProvider.containsEntry(AppConfigEntry.userLanguage);
-	String getUserLanguage() => _settingsProvider.getString(AppConfigEntry.userLanguage);
-	void setUserLanguage(Locale locale) => _settingsProvider.setString(AppConfigEntry.userLanguage, '$locale');
-	void unsetUserLanguage() => _settingsProvider.remove(AppConfigEntry.userLanguage);
-
 	ObjectId getSignedInChild() => _settingsProvider.containsEntry(AppConfigEntry.signedInChild) ? ObjectId.parse(_settingsProvider.getString(AppConfigEntry.signedInChild)) : null;
 	void signInChild(ObjectId userId) => _settingsProvider.setString(AppConfigEntry.signedInChild, userId.toHexString());
 	void signOutChild() => _settingsProvider.remove(AppConfigEntry.signedInChild);
@@ -33,8 +28,8 @@ class AppConfigRepository {
 		}
 	}
 
-	void removeSavedChildProfile(ObjectId userId) {
-		var newList = _settingsProvider.getStringList(AppConfigEntry.savedChildProfiles).where((element) => element != userId.toHexString());
+	void removeSavedChildProfiles(List<ObjectId> userIds) {
+		var newList = _settingsProvider.getStringList(AppConfigEntry.savedChildProfiles)..removeWhere(userIds.contains);
 		_settingsProvider.setStringList(AppConfigEntry.savedChildProfiles, newList);
 	}
 

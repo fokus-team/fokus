@@ -145,7 +145,7 @@ class _FokusAppState extends State<FokusApp> implements CurrentLocaleObserver {
 							SettingsPage(),
 							LocaleCubit(getActiveUser(context), authBloc(context))
 						),
-						AccountDeleteCubit(getActiveUser(context))
+						AccountDeleteCubit(getActiveUser(context), authBloc(context))
 					), context, PasswordChangeCubit()),
 			AppPage.caregiverSignInPage.name: (context) => _createPage(CaregiverSignInPage(), context, CaregiverSignInCubit()),
 			AppPage.caregiverSignUpPage.name: (context) => _createPage(CaregiverSignUpPage(), context, CaregiverSignUpCubit()),

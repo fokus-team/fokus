@@ -91,7 +91,7 @@
 					"deleteAccountDescription": "Czy na pewno chcesz usunąć swoje konto? Spowoduje to trwałe wymazanie wszystkich wprowadzonych w aplikacji danych włączając w to:",
 					"deleteAccountDataList": "Plany|Zadania|Nagrody|Profile dzieci|Historię wykonanych zadań",
 					"deleteAccountWarning": "Tej akcji nie można cofnąć!",
-					"deleteAccountConfirm": "Wprowadź swoje hasło aby potwierdzić wybór:"
+					"deleteAccountConfirm": "Wprowadź swoje hasło aby potwierdzić:"
 				},
 				"appSettings": {
 					"header": "Ustawienia aplikacji",

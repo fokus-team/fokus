@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:mongo_dart/mongo_dart.dart' as Mongo;
-
-import 'package:fokus/model/currency_type.dart';
-import 'package:fokus/model/db/date/time_date.dart';
-import 'package:fokus/model/ui/gamification/ui_points.dart';
-import 'package:fokus/model/ui/task/ui_task.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fokus/logic/tasks_evaluation/tasks_evaluation_cubit.dart';
+import 'package:fokus/widgets/general/app_loader.dart';
 import 'package:fokus/model/ui/task/ui_task_report.dart';
-import 'package:fokus/model/ui/user/ui_child.dart';
+
 
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/theme_config.dart';
@@ -25,78 +22,7 @@ class _CaregiverRatingPageState extends State<CaregiverRatingPage> {
 	int _currentRaport = 0;
 
 	// Mock for children task reports
-	List<UITaskReport> reports = [
-		UITaskReport(
-			planName: "Sprzątanie pokoju",
-			taskDate: TimeDate(2020, 09, 06, 20, 02),
-			task: UITask(
-				name: "Odkurz podłogę",
-				points: UIPoints(
-					quantity: 2,
-					title: "Super Punkty",
-					type: CurrencyType.emerald
-				),
-				timer: 60
-			),
-			child: UIChild(Mongo.ObjectId.fromHexString('6ba8348b71097ab3a63d8edc'), 'Jagoda', avatar: 29),
-			taskTimer: 40,
-			breakCount: 1,
-			breakTimer: 10,
-		),
-		UITaskReport(
-			planName: "Pakowanie tornistra",
-			taskDate: TimeDate(2020, 09, 07, 17, 20),
-			task: UITask(
-				name: "Przygotuj książki i zeszyty na kolejny dzień według planu zajęć",
-				points: UIPoints(
-					quantity: 50,
-					title: "Punkty",
-					type: CurrencyType.diamond
-				),
-				timer: 120
-			),
-			child: UIChild(Mongo.ObjectId.fromHexString('6ba8348b71097ab3a63d8edb'), 'Maciek', avatar: 13),
-			taskTimer: 65,
-			breakCount: 0,
-			breakTimer: 0,
-			ratingMark: UITaskReportMark.rejected
-		),
-		UITaskReport(
-			planName: "Pakowanie tornistra",
-			taskDate: TimeDate(2020, 09, 07, 17, 50),
-			task: UITask(
-				name: "Oddaj strój na WF do prania",
-				points: UIPoints(
-					quantity: 30,
-					title: "Punkty",
-					type: CurrencyType.diamond
-				),
-				timer: 2650
-			),
-			child: UIChild(Mongo.ObjectId.fromHexString('6ba8348b71097ab3a63d8edb'), 'Maciek', avatar: 13),
-			taskTimer: 20,
-			breakCount: 1,
-			breakTimer: 4,
-			ratingMark: UITaskReportMark.rated4
-		),
-		UITaskReport(
-			planName: "Zajęcia z rysunku",
-			taskDate: TimeDate(2020, 09, 07, 17, 20),
-			task: UITask(
-				name: "Odrobienie pracy domowej",
-				points: UIPoints(
-					quantity: 25,
-					title: "Punkty",
-					type: CurrencyType.diamond
-				),
-				timer: 120
-			),
-			child: UIChild(Mongo.ObjectId.fromHexString('6ba8348b71097ab3a63d8edd'), 'Ninja', avatar: 8),
-			taskTimer: 110,
-			breakCount: 0,
-			breakTimer: 0,
-		)
-	];
+	List<UITaskReport> reports = [];
 
 	@override
   void initState() {
@@ -106,28 +32,37 @@ class _CaregiverRatingPageState extends State<CaregiverRatingPage> {
 
   @override
   Widget build(BuildContext context) {
-		return Scaffold(
-			backgroundColor: AppColors.caregiverBackgroundColor,
-			appBar: AppBar(
-				title: Text(AppLocales.of(context).translate('$_pageKey.header.title')),
-				backgroundColor: Colors.transparent,
-				elevation: 0.0
-			),
-			body: Column(
-				mainAxisSize: reports.isNotEmpty ? MainAxisSize.min : MainAxisSize.max,
-				mainAxisAlignment: MainAxisAlignment.center,
-				crossAxisAlignment: CrossAxisAlignment.center,
-				children: <Widget>[
-					reports.isNotEmpty ?
-						Expanded(child: _buildCarousel())
-						: AppHero(
-							title: AppLocales.of(context).translate('$_pageKey.content.noTasksToRate'),
-							color: Colors.white,
-							icon: Icons.done,
-							dense: true
-						)
-				]
-			)
+		return BlocBuilder<TasksEvaluationCubit, TasksEvaluationState>(
+			builder: (context, state) {
+				if(state is TasksEvaluationInitial)
+					BlocProvider.of<TasksEvaluationCubit>(context).loadData();
+				else if(reports.isEmpty) reports = (state as TasksEvaluationBaseState).reports;
+				return Scaffold(
+					backgroundColor: AppColors.caregiverBackgroundColor,
+					appBar: AppBar(
+						title: Text(AppLocales.of(context).translate('$_pageKey.header.title')),
+						backgroundColor: Colors.transparent,
+						elevation: 0.0
+					),
+					body: Column(
+						mainAxisSize: reports.isNotEmpty ? MainAxisSize.min : MainAxisSize.max,
+						mainAxisAlignment: MainAxisAlignment.center,
+						crossAxisAlignment: CrossAxisAlignment.center,
+						children: state is TasksEvaluationInitial ?
+							[Expanded(child: Center(child: AppLoader()),)]
+							: <Widget>[
+							reports.isNotEmpty ?
+								Expanded(child: _buildCarousel())
+								: AppHero(
+									title: AppLocales.of(context).translate('$_pageKey.content.noTasksToRate'),
+									color: Colors.white,
+									icon: Icons.done,
+									dense: true
+								)
+						]
+					)
+				);
+			}
 		);
 	}
 
@@ -193,7 +128,7 @@ class _CaregiverRatingPageState extends State<CaregiverRatingPage> {
 						carouselController: _carouselController,
 						items: reports.map((report) => 
 							Hero(
-								tag: report.task.id.toString() + report.taskDate.toString(),
+								tag: report.task.id.toString() + report.task.duration.last.to.toString(),
 								child: ReportCard(report: report)
 							)
 						).toList()
@@ -202,5 +137,4 @@ class _CaregiverRatingPageState extends State<CaregiverRatingPage> {
 			]
 		);
 	}
-
 }

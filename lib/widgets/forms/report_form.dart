@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:fokus/logic/tasks_evaluation/tasks_evaluation_cubit.dart';
 
 import 'package:fokus/model/ui/task/ui_task_report.dart';
 import 'package:fokus/services/app_locales.dart';
@@ -60,7 +61,7 @@ class _ReportFormState extends State<ReportForm> {
 								Container(
 									margin: EdgeInsets.all(AppBoxProperties.screenEdgePadding),
 									child: Hero(
-										tag: widget.report.task.id.toString() + widget.report.taskDate.toString(),
+										tag: widget.report.task.id.toString() + widget.report.task.duration.last.to.toString(),
 										child: ReportCard(report: widget.report, hideBottomBar: true)
 									)
 								),
@@ -128,7 +129,7 @@ class _ReportFormState extends State<ReportForm> {
 
 	Widget _getPointsAssigned() {
 		int totalPoints = widget.report.task.points.quantity;
-		int points = (totalPoints*mark.value/5).round();
+		int points = TasksEvaluationCubit.getPointsAwarded(totalPoints, mark.value);
 		return AttributeChip.withCurrency(
 			currencyType: widget.report.task.points.type,
 			content: points.toString() + ' / ' + totalPoints.toString()
@@ -176,7 +177,7 @@ class _ReportFormState extends State<ReportForm> {
 								AppLocales.of(context).translate('$_pageKey.ratingLevels.${mark.toString().split('.').last}') + ')',
 								style: TextStyle(fontWeight: FontWeight.bold)
 							),
-							Padding(
+							widget.report.task.points != null ? Padding(
 								padding: EdgeInsets.only(top: 12.0),
 								child: Wrap(
 									alignment: WrapAlignment.center,
@@ -190,7 +191,7 @@ class _ReportFormState extends State<ReportForm> {
 										_getPointsAssigned()
 									]
 								)
-							)
+							) : SizedBox.shrink()
 						]
 					)
 				)

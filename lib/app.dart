@@ -18,7 +18,7 @@ import 'package:fokus/logic/calendar_cubit.dart';
 import 'package:fokus/logic/caregiver_panel_cubit.dart';
 import 'package:fokus/logic/caregiver_plans_cubit.dart';
 import 'package:fokus/logic/child_plans_cubit.dart';
-import 'package:fokus/logic/child_badges_cubit.dart';
+import 'package:fokus/logic/child_rewards_cubit.dart';
 import 'package:fokus/logic/plan_form/plan_form_cubit.dart';
 import 'package:fokus/logic/settings/account_delete/account_delete_cubit.dart';
 import 'package:fokus/logic/settings/password_change/password_change_cubit.dart';
@@ -26,6 +26,7 @@ import 'package:fokus/logic/settings/locale_cubit.dart';
 import 'package:fokus/logic/task_instance/task_instance_cubit.dart';
 import 'package:fokus/logic/reward_form/reward_form_cubit.dart';
 import 'package:fokus/logic/badge_form/badge_form_cubit.dart';
+import 'package:fokus/logic/tasks_evaluation/tasks_evaluation_cubit.dart';
 import 'package:fokus/pages/child/calendar_page.dart';
 
 import 'package:fokus/pages/loading_page.dart';
@@ -64,7 +65,6 @@ import 'package:fokus/utils/theme_config.dart';
 import 'package:fokus/utils/service_injection.dart';
 import 'package:fokus/utils/bloc_utils.dart';
 import 'package:fokus/widgets/page_theme.dart';
-
 import 'model/ui/plan/ui_plan_instance.dart';
 
 
@@ -159,16 +159,16 @@ class _FokusAppState extends State<FokusApp> implements CurrentLocaleObserver {
 			AppPage.caregiverPlanForm.name: (context) => _createPage(CaregiverPlanFormPage(), context, PlanFormCubit(getParams(context), getActiveUser(context))),
 			AppPage.caregiverAwards.name: (context) => _createPage(CaregiverAwardsPage(), context, CaregiverAwardsCubit(getActiveUser(context), getRoute(context))),
 			AppPage.caregiverRewardForm.name: (context) => _createPage(CaregiverRewardFormPage(), context, RewardFormCubit(getParams(context), getActiveUser(context))),
-			AppPage.caregiverBadgeForm.name: (context) => _createPage(CaregiverBadgeFormPage(), context, BadgeFormCubit(getParams(context), getActiveUser(context))),
+			AppPage.caregiverBadgeForm.name: (context) => _createPage(CaregiverBadgeFormPage(), context, BadgeFormCubit(getParams(context), getActiveUser(context), authBloc(context))),
 			AppPage.caregiverStatistics.name: (context) => _createPage(CaregiverStatisticsPage(), context),
-			AppPage.caregiverRatingPage.name: (context) => _createPage(CaregiverRatingPage(), context),
+			AppPage.caregiverRatingPage.name: (context) => _createPage(CaregiverRatingPage(), context, TasksEvaluationCubit(getActiveUser(context))),
 			AppPage.caregiverCurrencies.name: (context) => _createPage(CaregiverCurrenciesPage(), context, CaregiverCurrenciesCubit(getActiveUser(context), getActiveUser(context), authBloc(context))),
 			AppPage.planDetails.name: (context) => _createPage(PlanDetailsPage(), context, PlanCubit(getParams(context), getRoute(context))),
 
 			AppPage.childPanel.name: (context) => _createPage(ChildPanelPage(), context, ChildPlansCubit(getActiveUser(context), getRoute(context))),
 			AppPage.childCalendar.name: (context) => _createPage(ChildCalendarPage(), context, CalendarCubit(getParams(context), getActiveUser(context))),
-			AppPage.childRewards.name: (context) => _createPage(ChildRewardsPage(), context),
-			AppPage.childAchievements.name: (context) => _createPage(ChildAchievementsPage(), context, ChildBadgesCubit(getActiveUser(context), getRoute(context))),
+			AppPage.childRewards.name: (context) => _createPage(ChildRewardsPage(), context, ChildRewardsCubit(getActiveUser(context), getRoute(context))),
+			AppPage.childAchievements.name: (context) => _createPage(ChildAchievementsPage(), context),
 			AppPage.planInstanceDetails.name: (context) => _createPage(PlanInstanceDetailsPage(initialPlanInstance: getParams(context)), context, PlanInstanceCubit((getParams(context) as UIPlanInstance).id, getRoute(context))),
 			AppPage.childTaskInProgress.name: (context) => _createPage(ChildTaskInProgressPage(initialPlanInstance: (getParams(context) as Map)["UIPlanInstance"]), context, TaskInstanceCubit((getParams(context) as Map)["TaskId"], getActiveUser(context)))
 		};

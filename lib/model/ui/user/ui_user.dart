@@ -15,9 +15,11 @@ class UIUser extends Equatable {
 	final String locale;
 	final int avatar;
 	final UserRole role;
+	final List<ObjectId> connections;
 
-	UIUser(this.id, this.name, {this.locale, this.role, this.avatar = -1});
-	UIUser.fromDBModel(User user) : this(user.id, user.name, role: user.role, avatar: user.avatar, locale: user.locale);
+	UIUser(this.id, this.name, {this.locale, this.role, this.connections, this.avatar = -1});
+	UIUser.fromDBModel(User user) : this(user.id, user.name, role: user.role, connections: user.connections, avatar: user.avatar, locale: user.locale);
+
 	factory UIUser.typedFromDBModel(User user) => user.role == UserRole.caregiver ? UICaregiver.fromDBModel(user) : UIChild.fromDBModel(user);
 
 	User toDBModel() => User(id: id, name: name, role: role, avatar: avatar);
@@ -31,7 +33,7 @@ class UIUser extends Equatable {
 	);
 
 	@override
-  List<Object> get props => [id, name, avatar, role, locale];
+  List<Object> get props => [id, name, avatar, role, locale, connections];
 
 	@override
   String toString() {

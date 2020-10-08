@@ -23,8 +23,9 @@ import 'package:fokus/widgets/segment.dart';
 
 class PlanInstanceDetailsPage extends StatefulWidget {
 	final UIPlanInstance initialPlanInstance;
+	final bool showActions;
 
-  const PlanInstanceDetailsPage({Key key, @required this.initialPlanInstance}) : super(key: key);
+  const PlanInstanceDetailsPage({Key key, @required this.initialPlanInstance, this.showActions = true}) : super(key: key);
 
   @override
   _PlanInstanceDetailsPageState createState() => new _PlanInstanceDetailsPageState();
@@ -110,19 +111,17 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 									if (task.timer != null && task.timer > 0) getTimeChip(task),
 									if (task.points != null && task.points.quantity != 0) getCurrencyChip(task)
 								],
-								actionButton:	ItemCardActionButton(color: AppColors.childButtonColor, icon: Icons.play_arrow, onTapped: () => navigate(context, task, uiPlanInstance)),
+								actionButton: widget.showActions ? ItemCardActionButton(color: AppColors.childButtonColor, icon: Icons.play_arrow, onTapped: () => navigate(context, task, uiPlanInstance)) : null,
 							)
 					else if(task.taskUiType == TaskUIType.rejected)
 							ItemCard(
 								title: task.name,
 								subtitle: task.description,
 								chips:<Widget>[
-									getDurationChip(task),
-									getBreaksChip(task),
 									if (task.timer != null && task.timer > 0) getTimeChip(task),
 									if (task.points != null && task.points.quantity != 0) getCurrencyChip(task)
 								],
-				actionButton:	ItemCardActionButton(color: AppColors.childButtonColor, icon: Icons.refresh, onTapped: () => navigate(context, task, uiPlanInstance)),
+								actionButton: widget.showActions ? ItemCardActionButton(color: AppColors.childButtonColor, icon: Icons.refresh, onTapped: () => navigate(context, task, uiPlanInstance)) : null,
 							)
 					else if(task.taskUiType.inProgress)
 						BlocProvider<TimerCubit>(
@@ -149,7 +148,7 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 											),
 										]
 								],
-								actionButton: ItemCardActionButton(color: AppColors.childActionColor, icon: Icons.launch, onTapped: () => navigate(context, task, uiPlanInstance)),
+								actionButton: widget.showActions ? ItemCardActionButton(color: AppColors.childActionColor, icon: Icons.launch, onTapped: () => navigate(context, task, uiPlanInstance)) : null,
 							)
 						)
 					else if(task.taskUiType == TaskUIType.queued)
@@ -160,7 +159,7 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 								if (task.timer != null && task.timer > 0) getTimeChip(task),
 								if (task.points != null && task.points.quantity != 0) getCurrencyChip(task)
 							],
-							actionButton: ItemCardActionButton(color: Colors.grey, icon: Icons.keyboard_arrow_up),
+							actionButton: widget.showActions ? ItemCardActionButton(color: Colors.grey, icon: Icons.keyboard_arrow_up) : null,
 						)
 			]
 		);
@@ -218,8 +217,6 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 			subtitle: task.description,
 			chips:
 			<Widget>[
-				getDurationChip(task),
-				getBreaksChip(task),
 				if(task.status.state == TaskState.evaluated)
 					...[
 						AttributeChip.withIcon(
@@ -247,12 +244,11 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 								color: Colors.amber,
 								tooltip:'$_pageKey.content.chips.notEvaluatedTooltip',
 							),
-							if (task.points != null && task.points.quantity != 0) getCurrencyChip(task, tooltip: '$_pageKey.content.chips.pointsPossible')
 						]
 			],
-			actionButton: ItemCardActionButton(
+			actionButton: widget.showActions ? ItemCardActionButton(
 				color: AppColors.childBackgroundColor, icon: Icons.check, onTapped: () => log("Tapped finished activity")
-			),
+			) : null,
 		);
 	}
 

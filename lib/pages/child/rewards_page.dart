@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:fokus/model/currency_type.dart';
-import 'package:fokus/model/ui/gamification/ui_points.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fokus/logic/child_rewards_cubit.dart';
+import 'package:fokus/logic/reloadable/reloadable_cubit.dart';
 import 'package:fokus/model/ui/gamification/ui_reward.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/dialog_utils.dart';
 import 'package:fokus/utils/icon_sets.dart';
+import 'package:fokus/utils/snackbar_utils.dart';
 import 'package:fokus/utils/theme_config.dart';
 import 'package:fokus/widgets/app_navigation_bar.dart';
 import 'package:fokus/widgets/app_header.dart';
 import 'package:fokus/widgets/cards/item_card.dart';
 import 'package:fokus/widgets/chips/attribute_chip.dart';
+import 'package:fokus/widgets/loadable_bloc_builder.dart';
 import 'package:fokus/widgets/segment.dart';
+import 'package:intl/intl.dart';
 
 class ChildRewardsPage extends StatefulWidget {
 	@override
@@ -25,77 +29,81 @@ class _ChildRewardsPageState extends State<ChildRewardsPage> {
 		return Scaffold(
 			body: Column(
 				crossAxisAlignment: CrossAxisAlignment.start,
+				mainAxisSize: MainAxisSize.min,
 				children: [
-					ChildCustomHeader(),
-					AppSegments(
-						segments: [
-							Segment(
-								title: '$_pageKey.rewardsTitle',
-								subtitle: '$_pageKey.noRewardsMessage',
-								noElementsMessage: '$_pageKey.noRewardsMessage',
-								elements: <Widget>[
-									ItemCard(
-										title: '1 godzina gry na konsoli',
-										subtitle: AppLocales.of(context).translate('$_pageKey.claimCostLabel') + ':',
-										graphic: 9,
-										graphicType: AssetType.rewards,
-										graphicHeight: 44.0,
-										progressPercentage: 1,
-										activeProgressBarColor: AppColors.childActionColor,
-										chips: [
-											AttributeChip.withCurrency(
-												currencyType: CurrencyType.diamond,
-												content: '20',
-											)
-										],
-										actionButton: ItemCardActionButton(
-											color: AppColors.childActionColor,
-											icon: Icons.add_box,
-											onTapped: () => showRewardDialog(context, UIReward(name: 'Zakupomania', icon: 13, cost: UIPoints(quantity: 900, type: CurrencyType.diamond)))
-										)
+					BlocBuilder<ChildRewardsCubit, LoadableState>(
+						builder: (context, state) => ChildCustomHeader(points: state is DataLoadSuccess ? (state as ChildRewardsLoadSuccess).points : null)
+					),
+		      LoadableBlocBuilder<ChildRewardsCubit>(
+				    builder: (context, state) => 
+							AppSegments(
+								segments: [
+									Segment(
+										title: '$_pageKey.rewardsTitle',
+										subtitle: '$_pageKey.rewardsHint',
+										noElementsMessage: '$_pageKey.noRewardsMessage',
+										elements: _buildRewardShop(state, context)
 									),
-									ItemCard(
-										title: 'Zakupomania',
-										subtitle: AppLocales.of(context).translate('$_pageKey.claimCostLabel') + ':',
-										graphic: 13,
-										graphicType: AssetType.rewards,
-										graphicHeight: 44.0,
-										progressPercentage: 0.1,
-										activeProgressBarColor: AppColors.childActionColor,
-										chips: [
-											AttributeChip.withCurrency(
-												currencyType: CurrencyType.diamond,
-												content: '200',
-											)
-										],
-										actionButton: ItemCardActionButton(
-											disabled: true,
-											color: AppColors.childActionColor,
-											icon: Icons.add_box,
-											onTapped: () => showRewardDialog(context, UIReward(name: 'Zakupomania', icon: 13, cost: UIPoints(quantity: 900, type: CurrencyType.diamond)))
+									if((state as ChildRewardsLoadSuccess).claimedRewards.isNotEmpty)
+										Segment(
+											title: '$_pageKey.claimedRewardsTitle',
+											elements: _buildRewardHistory(state)
 										)
-									)
 								]
 							),
-							// TODO Show only if there are any claimed rewards
-							Segment(
-								title: '$_pageKey.claimedRewardsTitle',
-								elements: <Widget>[
-									ItemCard(
-										title: '1 godzina gry na konsoli',
-										subtitle: 'Odebrano 09.08.2020',
-										graphic: 9,
-										graphicType: AssetType.rewards,
-										graphicHeight: 44.0,
-										isActive: false
-									)
-								]
-							)
-						]
-					)
+						wrapWithExpanded: true,
+		      )
 				]
 			),
 			bottomNavigationBar: AppNavigationBar.childPage(currentIndex: 1)
 		);
 	}
+
+	void _claimReward(UIReward reward) {
+		context.bloc<ChildRewardsCubit>().claimReward(reward);
+		Navigator.of(context).pop(); // closing confirm dialog before pushing snackbar
+		showSuccessSnackbar(context, '$_pageKey.rewardClaimedText');
+	}
+
+	List<Widget> _buildRewardShop(ChildRewardsLoadSuccess state, BuildContext context) {
+		return state.rewards.map((reward) {
+			double percentage = (state.points.firstWhere((element) => element.type == reward.cost.type, orElse: () => null)?.quantity ?? 0) / reward.cost.quantity; 
+			return ItemCard(
+				title: reward.name,
+				graphic: reward.icon,
+				graphicType: AssetType.rewards,
+				graphicHeight: 44.0,
+				progressPercentage: percentage >= 1.0 ? 1.0 : percentage,
+				activeProgressBarColor: AppColors.currencyColor[reward.cost.type],
+				chips: [
+					AttributeChip.withCurrency(
+						currencyType: reward.cost.type,
+						content: reward.cost.quantity.toString(),
+						tooltip: '$_pageKey.claimCostLabel'
+					)
+				],
+				actionButton: ItemCardActionButton(
+					color: AppColors.currencyColor[reward.cost.type],
+					icon: Icons.add_shopping_cart,
+					disabled: percentage < 1.0,
+					onTapped: () => showRewardDialog(context, reward, claimFeedback: () => _claimReward(reward))
+				)
+			);
+		}).toList();
+	}
+
+	List<Widget> _buildRewardHistory(ChildRewardsLoadSuccess state) {
+		return (state.claimedRewards..sort((a, b) => -a.date.compareTo(b.date))).map((reward) {
+			return ItemCard(
+				title: reward.name,
+				subtitle: AppLocales.of(context).translate('$_pageKey.claimDateLabel') + ' ' +
+					DateFormat.yMd(AppLocales.instance.locale.toString()).format(reward.date).toString(),
+				graphic: reward.icon,
+				graphicType: AssetType.rewards,
+				graphicHeight: 44.0,
+				isActive: false
+			);
+		}).toList();
+	}
+
 }

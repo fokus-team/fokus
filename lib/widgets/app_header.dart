@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:fokus/logic/auth/auth_bloc/authentication_bloc.dart';
+import 'package:fokus/model/currency_type.dart';
 import 'package:fokus/model/db/user/user_role.dart';
 import 'package:fokus/model/ui/app_page.dart';
+import 'package:fokus/model/ui/gamification/ui_points.dart';
 import 'package:fokus/model/ui/ui_button.dart';
 import 'package:fokus/model/ui/user/ui_child.dart';
 import 'package:fokus/model/ui/user/ui_user.dart';
@@ -310,11 +312,20 @@ class AppHeader extends StatelessWidget {
 	}
 }
 
-class ChildCustomHeader extends StatelessWidget {
+class ChildCustomHeader extends StatefulWidget {
+	final List<UIPoints> points;
+
+	ChildCustomHeader({this.points});
+
+	@override
+	_ChildCustomHeaderState createState() => new _ChildCustomHeaderState();
+}
+
+class _ChildCustomHeaderState extends State<ChildCustomHeader> {
 	@override
 	Widget build(BuildContext context) {
 		UIChild currentUser = context.bloc<AuthenticationBloc>().state.user;
-		var points = currentUser?.points ?? {};
+		List<UIPoints> points = (widget.points != null) ? widget.points : currentUser?.points ?? {};
 
 		return AppHeader.greetings(text: 'page.childSection.panel.header.pageHint', headerActionButtons: [
 			HeaderActionButton.custom(
@@ -325,20 +336,19 @@ class ChildCustomHeader extends StatelessWidget {
 								'${AppLocales.of(context).translate('page.childSection.panel.header.myPoints')}: ',
 								style: Theme.of(context).textTheme.button.copyWith(color: AppColors.darkTextColor)
 							),
-							for (var currency in points.entries)
+							for (UIPoints pointCurrency in points)
 								Padding(
 									padding: EdgeInsets.only(left: 4.0),
-									child: AttributeChip.withCurrency(content: '${currency.value}', currencyType: currency.key)
+									child: AttributeChip.withCurrency(content: '${pointCurrency.quantity}', currencyType: pointCurrency.type)
 								),
-							if(points.entries.isEmpty)
+							if(points.isEmpty)
 								Text(AppLocales.of(context).translate('page.childSection.panel.header.noPoints'))
 						]
 					)
 				),
-				() => { log('Child detailed wallet popup') },
+				() => {},
 				Colors.white
-			),
-			//HeaderActionButton.normal(Icons.local_florist, 'page.childSection.panel.header.garden', () => { log("Ogród") })
+			)
 		]);
 	}
 }

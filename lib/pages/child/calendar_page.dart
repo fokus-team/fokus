@@ -1,5 +1,6 @@
 import 'package:date_utils/date_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:fokus/model/ui/app_page.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -89,7 +90,7 @@ class _ChildCalendarPageState extends State<ChildCalendarPage> with TickerProvid
 								ItemCard(
 									title: plan.name,
 									subtitle: plan.description(context),
-									// TODO add plan detail page (or reuse the caregiver one) for children to see plan's content
+									onTapped: () => Navigator.of(context).pushNamed(AppPage.planDetails.name, arguments: plan.id),
 									chips: [
 										AttributeChip.withIcon(
 											icon: Icons.description,

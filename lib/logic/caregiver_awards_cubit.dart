@@ -1,4 +1,4 @@
-
+import 'package:fokus/model/ui/user/ui_caregiver.dart';
 import 'package:get_it/get_it.dart';
 
 import 'package:fokus/logic/reloadable/reloadable_cubit.dart';
@@ -17,24 +17,31 @@ class CaregiverAwardsCubit extends ReloadableCubit {
 
   @override
 	void doLoadData() async {
-    var user = _activeUser();
+    UICaregiver user = _activeUser();
     var rewards = await _dataRepository.getRewards(caregiverId: user.id);
-    var badges = await _dataRepository.getBadges(caregiverId: user.id);
 		
 		emit(CaregiverAwardsLoadSuccess(
 			rewards.map((reward) => UIReward.fromDBModel(reward)).toList(),
-			badges.map((badge) => UIBadge.fromDBModel(badge)).toList()
+			List.from(user.badges)
 		));
   }
 
 	void removeReward(ObjectId id) async {
-		await _dataRepository.removeRewards(id: id).then((value) => doLoadData());
+		await _dataRepository.removeRewards(id: id);
+		emit(CaregiverAwardsLoadSuccess(
+			(state as CaregiverAwardsLoadSuccess).rewards.where((element) => element.id != id).toList(),
+			(state as CaregiverAwardsLoadSuccess).badges
+		));
 	}
 
 	void removeBadge(UIBadge badge) async {
-    var user = _activeUser();
+    UICaregiver user = _activeUser();
 		Badge model = Badge(name: badge.name, description: badge.description, icon: badge.icon);
-		await _dataRepository.removeBadge(user.id, model).then((value) => doLoadData());
+		await _dataRepository.removeBadge(user.id, model);
+		emit(CaregiverAwardsLoadSuccess(
+			(state as CaregiverAwardsLoadSuccess).rewards,
+			List.from(user.badges..remove(UIBadge.fromDBModel(model)))
+		));
 	}
 	
 }

@@ -23,7 +23,7 @@ class BadgeFormCubit extends Cubit<BadgeFormState> {
 		UICaregiver user = _activeUser();
 		var badge = Badge.fromBadgeForm(badgeForm);
 		await _dataRepository.createBadge(user.id, badge);
-		_authBloc.add(AuthenticationActiveUserUpdated(user.copyWith(badges: user.badges..add(UIBadge.fromDBModel(badge)))));
+		_authBloc.add(AuthenticationActiveUserUpdated(UICaregiver.from(user, badges: user.badges..add(UIBadge.fromDBModel(badge)))));
 		emit(BadgeFormSubmissionSuccess(state));
   }
 

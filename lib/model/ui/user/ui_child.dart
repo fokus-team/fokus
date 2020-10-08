@@ -39,6 +39,8 @@ class UIChild extends UIUser {
 			todayPlanCount = original.todayPlanCount,
 			hasActivePlan = original.hasActivePlan,
 			points = original.points,
+			badges = original.badges,
+			rewards = original.rewards,
 			super.from(original, locale: locale);
 
 	@override

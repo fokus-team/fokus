@@ -325,7 +325,7 @@ class _ChildCustomHeaderState extends State<ChildCustomHeader> {
 	@override
 	Widget build(BuildContext context) {
 		UIChild currentUser = context.bloc<AuthenticationBloc>().state.user;
-		List<UIPoints> points = (widget.points != null) ? widget.points : currentUser?.points ?? {};
+		List<UIPoints> points = (widget.points != null) ? widget.points : currentUser?.points ?? [];
 
 		return AppHeader.greetings(text: 'page.childSection.panel.header.pageHint', headerActionButtons: [
 			HeaderActionButton.custom(

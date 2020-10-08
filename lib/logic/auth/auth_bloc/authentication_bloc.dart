@@ -50,7 +50,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 	  } else if (event is AuthenticationSignOutRequested) {
 	  	_onUserSignOut(state.user.toDBModel());
 		  if (state.user.role == UserRole.caregiver)
-		    event.userDeleted ? add(AuthenticationUserChanged(null)) : _authenticationProvider.signOut();
+		    _authenticationProvider.signOut();
 		  else {
 			  _appConfigRepository.signOutChild();
 			  add(AuthenticationUserChanged(AuthenticatedUser.empty));
@@ -74,6 +74,10 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 	  }
 		user = await _dataRepository.getUser(authenticationId: event.user.id);
 		if (user == null) {
+			if (! (await _authenticationProvider.userExists(event.user.email))) {
+				await _authenticationProvider.signOut();
+				return const AuthenticationState.unauthenticated();
+			}
 			_logger.fine('Creating new user for ${event.user}');
 			user = Caregiver.fromAuthUser(event.user);
 			await _dataRepository.createUser(user);

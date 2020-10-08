@@ -25,14 +25,7 @@ class AuthenticationChildSignInRequested extends AuthenticationEvent {
 	List<Object> get props => [child.id];
 }
 
-class AuthenticationSignOutRequested extends AuthenticationEvent {
-	final bool userDeleted;
-
-  AuthenticationSignOutRequested({this.userDeleted = false});
-
-	@override
-	List<Object> get props => [userDeleted];
-}
+class AuthenticationSignOutRequested extends AuthenticationEvent {}
 
 class AuthenticationActiveUserUpdated extends AuthenticationEvent {
 	final UIUser user;

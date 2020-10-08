@@ -29,16 +29,21 @@ class AccountDeleteCubit extends Cubit<AccountDeleteState> {
 		var plans = await _dataRepository.getPlans(caregiverId: user.id, fields: ['tasks', '_id']);
 		await _authenticationProvider.deleteAccount(state.password.value);
 
+		var users = [user.id];
+		var hasConnections = user.connections != null && user.connections.isNotEmpty;
+		if (hasConnections)
+			users.addAll(user.connections);
 		await Future.value([
-			_dataRepository.removeUsers(user.connections..add(user.id)),
+			_dataRepository.removeUsers(users),
 			_dataRepository.removePlans(caregiverId: user.id),
-			_dataRepository.removePlanInstances(childIds: user.connections),
+			if (hasConnections)
+				_dataRepository.removePlanInstances(childIds: user.connections),
 			_dataRepository.removeTasks(planIds: plans.map((e) => e.id).toList()),
 			_dataRepository.removeTaskInstances(tasksIds: plans.fold<List<ObjectId>>([], (tasks, plan) => tasks..addAll(plan.tasks))),
 			_dataRepository.removeRewards(createdBy: user.id),
 		]);
-		_appConfigRepository.removeSavedChildProfiles(user.connections);
-		_authenticationBloc.add(AuthenticationSignOutRequested(userDeleted: true));
+		if (hasConnections)
+			_appConfigRepository.removeSavedChildProfiles(user.connections);
 	}
 
   Future accountDeleteFormSubmitted() async {

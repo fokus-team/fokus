@@ -19,5 +19,5 @@ class AccountDeleteState extends FormzState {
 	}
 
 	@override
-	List<Object> get props => [password];
+	List<Object> get props => [password, status, error];
 }

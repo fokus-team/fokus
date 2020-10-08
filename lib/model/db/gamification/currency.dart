@@ -17,8 +17,10 @@ class Currency {
 
 	Map<String, dynamic> toJson() {
 		final Map<String, dynamic> data = new Map<String, dynamic>();
-		data['icon'] = this.icon.index;
-		data['name'] = this.name;
+		if (this.icon != null)
+      data['icon'] = this.icon.index;
+		if (this.name != null)
+      data['name'] = this.name;
 		return data;
 	}
 }

@@ -20,10 +20,14 @@ class ChildReward {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['cost'] = this.cost;
-    data['date'] = this.date.toDBDate();
-    data['_id'] = this.id;
-    data['quantity'] = this.quantity;
+    if (this.cost != null)
+      data['cost'] = this.cost;
+    if (this.date != null)
+      data['date'] = this.date.toDBDate();
+    if (this.id != null)
+      data['_id'] = this.id;
+    if (this.quantity != null)
+      data['quantity'] = this.quantity;
     return data;
   }
 }

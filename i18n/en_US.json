@@ -472,7 +472,7 @@
 			},
 			"planInProgress": {
 				"header": {
-					"title": "In progress"
+					"title": "Plan details"
 				},
 				"content": {
 					"toDoTasks": "To-do list",

@@ -36,23 +36,24 @@ class TaskInstance {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['_id'] = this.id;
-    data['planInstanceID'] = this.planInstanceID;
-    data['taskID'] = this.taskID;
-    data['timer'] = this.timer;
-    data['optional'] = this.optional;
-    if (this.breaks != null) {
+    if (this.id != null)
+      data['_id'] = this.id;
+    if (this.planInstanceID != null)
+      data['planInstanceID'] = this.planInstanceID;
+    if (this.taskID != null)
+      data['taskID'] = this.taskID;
+    if (this.timer != null)
+      data['timer'] = this.timer;
+    if (this.optional != null)
+      data['optional'] = this.optional;
+    if (this.breaks != null)
       data['breaks'] = this.breaks.map((v) => v.toJson()).toList();
-    }
-    if (this.duration != null) {
+    if (this.duration != null)
       data['duration'] = this.duration.map((v) => v.toJson()).toList();
-    }
-    if (this.status != null) {
+    if (this.status != null)
       data['status'] = this.status.toJson();
-    }
-    if (this.subtasks != null) {
+    if (this.subtasks != null)
       data['subtasks'] = this.subtasks;
-    }
     return data;
   }
 }

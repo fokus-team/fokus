@@ -21,7 +21,8 @@ class Points extends Currency {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = super.toJson();
-    data['quantity'] = this.quantity;
+    if (this.quantity != null)
+	    data['quantity'] = this.quantity;
     if (createdBy != null)
       data['createdBy'] = this.createdBy;
     return data;

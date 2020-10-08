@@ -96,7 +96,7 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 
 	void addNewTask() {
 		Navigator.of(context).push(MaterialPageRoute(
-			builder: (context) => forwardCubit(
+			builder: (_) => forwardCubit(
 				TaskForm(
 					task: null,
 					createTaskCallback: (newTask) {
@@ -116,7 +116,7 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 
 	void editTask(TaskFormModel task) {
 		Navigator.of(context).push(MaterialPageRoute(
-			builder: (context) => forwardCubit(
+			builder: (_) => forwardCubit(
 				TaskForm(
 					task: task,
 					saveTaskCallback: (TaskFormModel updatedTask) {

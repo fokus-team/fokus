@@ -22,14 +22,14 @@ class PlanRepeatability {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['type'] = this.type.index;
-    data['untilCompleted'] = this.untilCompleted;
-    if (this.days != null) {
+    if (this.type != null)
+	    data['type'] = this.type.index;
+    if (this.untilCompleted != null)
+	    data['untilCompleted'] = this.untilCompleted;
+    if (this.days != null)
       data['days'] = this.days;
-    }
-    if (this.range != null) {
+    if (this.range != null)
       data['range'] = this.range.toJson();
-    }
     return data;
   }
 }

@@ -35,6 +35,14 @@ class UIChild extends UIUser {
 		);
 	}
 
+	UIChild.from(UIChild original, {String locale, String name}) :
+			todayPlanCount = original.todayPlanCount,
+			hasActivePlan = original.hasActivePlan,
+			points = original.points,
+			badges = original.badges,
+			rewards = original.rewards,
+			super.from(original, locale: locale, name: name);
+
 	@override
 	List<Object> get props => super.props..addAll([todayPlanCount, hasActivePlan, points, rewards, badges]);
 }

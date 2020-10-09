@@ -9,4 +9,7 @@ abstract class CaregiverAuthStateBase extends FormzState {
   CaregiverAuthStateBase(FormzStatus status, [this.signInError]) : super(status);
 
 	CaregiverAuthStateBase copyWith({FormzStatus status, EmailSignInError signInError});
+
+	@override
+  List<Object> get props => [signInError];
 }

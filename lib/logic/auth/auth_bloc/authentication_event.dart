@@ -30,7 +30,9 @@ class AuthenticationSignOutRequested extends AuthenticationEvent {}
 class AuthenticationActiveUserUpdated extends AuthenticationEvent {
 	final UIUser user;
 
-  AuthenticationActiveUserUpdated(this.user);
+	AuthenticationActiveUserUpdated(this.user);
+	AuthenticationActiveUserUpdated.fromLocale(UIUser user, String locale) :
+			user = (user is UICaregiver) ? UICaregiver.from(user, locale: locale) : UIChild.from(user, locale: locale);
 
 	@override
 	List<Object> get props => [user];

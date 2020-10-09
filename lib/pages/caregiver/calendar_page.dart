@@ -111,7 +111,7 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 			builder: (context, state) {
 				return Segment(
 					title: '$_pageKey.content.plansOnDateTitle',
-					titleArgs: {'DATE': DateFormat.yMd(Localizations.localeOf(context).toString()).format(state.day).toString()},
+					titleArgs: {'DATE': DateFormat.yMd(AppLocales.instance.locale.toString()).format(state.day).toString()},
 					noElementsMessage: '$_pageKey.content.noPlansOnDateTitle',
 					noElementsIcon: Icons.description,
 					elements: [

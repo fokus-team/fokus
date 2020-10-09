@@ -1,10 +1,7 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:fokus/logic/auth/auth_bloc/authentication_bloc.dart';
-import 'package:fokus/model/currency_type.dart';
 import 'package:fokus/model/db/user/user_role.dart';
 import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/ui/gamification/ui_points.dart';
@@ -186,39 +183,39 @@ class AppHeader extends StatelessWidget {
 	}
 
 	Widget buildGreetings(BuildContext context) {
-		// ignore: close_sinks
-		var authenticationBloc = context.bloc<AuthenticationBloc>();
-		var currentUser = authenticationBloc.state.user;
-
 		return buildHeaderContainer(context,
 			Row(
 				mainAxisAlignment: MainAxisAlignment.spaceBetween,
 				crossAxisAlignment: CrossAxisAlignment.start,
 				children: <Widget>[
-					Row(
-						children: <Widget>[
-							Padding(
-								padding: EdgeInsets.only(left: 4.0, right: 8.0),
-								child: currentUser != null ? headerImage(currentUser) : Container()
-							),
-							Column(
-								crossAxisAlignment: CrossAxisAlignment.start,
+					BlocBuilder<AuthenticationBloc, AuthenticationState>(
+						builder: (context, state) {
+							return Row(
 								children: <Widget>[
-									RichText(
-										text: TextSpan(
-											text: currentUser != null ? '${AppLocales.of(context).translate('page.${currentUser?.role?.name}Section.panel.header.greetings')},\n' : '',
-											style: TextStyle(color: Colors.white, fontSize: 20),
-											children: <TextSpan>[
-												TextSpan(
-													text: currentUser?.name ?? '',
-													style: Theme.of(context).textTheme.headline1.copyWith(color: Colors.white, height: 1.1)
-												)
-											]
-										),
-									)
-								],
-							),
-						]
+									Padding(
+										padding: EdgeInsets.only(left: 4.0, right: 8.0),
+										child: state.user != null ? headerImage(state.user) : Container()
+									),
+									Column(
+										crossAxisAlignment: CrossAxisAlignment.start,
+										children: <Widget>[
+											RichText(
+												text: TextSpan(
+													text: '${state.user != null ? AppLocales.of(context).translate('page.${state.user.role.name}Section.panel.header.greetings') : ''},\n',
+													style: TextStyle(color: Colors.white, fontSize: 20),
+													children: <TextSpan>[
+														TextSpan(
+															text: state.user?.name ?? '',
+															style: Theme.of(context).textTheme.headline1.copyWith(color: Colors.white, height: 1.1)
+														)
+													]
+												),
+											)
+										],
+									),
+								]
+							);
+						}
 					),
 					_userHeaderIcons(context),
 				]
@@ -302,14 +299,14 @@ class AppHeader extends StatelessWidget {
 					lightTheme: true,
 					items: [
 						UIButton('navigation.settings', () => Navigator.of(context).pushNamed(AppPage.settingsPage.name)),
-						if(auth.state.user != null && auth.state.user.role == UserRole.caregiver)
+						if(auth.state.user?.role == UserRole.caregiver)
 							UIButton('navigation.caregiver.currencies', () => Navigator.of(context).pushNamed(AppPage.caregiverCurrencies.name)),
 						UIButton('actions.signOut', () => auth.add(AuthenticationSignOutRequested())),
 					]
 				),
 			],
 		);
-	 }
+	}
 }
 
 class ChildCustomHeader extends StatefulWidget {
@@ -324,26 +321,30 @@ class ChildCustomHeader extends StatefulWidget {
 class _ChildCustomHeaderState extends State<ChildCustomHeader> {
 	@override
 	Widget build(BuildContext context) {
-		UIChild currentUser = context.bloc<AuthenticationBloc>().state.user;
-		List<UIPoints> points = (widget.points != null) ? widget.points : currentUser?.points ?? {};
-
+		var getPoints = (AuthenticationState state) => (state.user as UIChild)?.points;
 		return AppHeader.greetings(text: 'page.childSection.panel.header.pageHint', headerActionButtons: [
 			HeaderActionButton.custom(
 				Container(
-					child: Row(
-						children: <Widget>[
-							Text(
-								'${AppLocales.of(context).translate('page.childSection.panel.header.myPoints')}: ',
-								style: Theme.of(context).textTheme.button.copyWith(color: AppColors.darkTextColor)
-							),
-							for (UIPoints pointCurrency in points)
-								Padding(
-									padding: EdgeInsets.only(left: 4.0),
-									child: AttributeChip.withCurrency(content: '${pointCurrency.quantity}', currencyType: pointCurrency.type)
-								),
-							if(points.isEmpty)
-								Text(AppLocales.of(context).translate('page.childSection.panel.header.noPoints'))
-						]
+					child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
+						buildWhen: (oldState, newState) => getPoints(oldState) != getPoints(newState),
+						builder: (context, state) {
+							List<UIPoints> points = (widget.points != null) ? widget.points : getPoints(state) ?? [];
+							return Row(
+								children: <Widget>[
+									Text(
+										'${AppLocales.of(context).translate('page.childSection.panel.header.myPoints')}: ',
+										style: Theme.of(context).textTheme.button.copyWith(color: AppColors.darkTextColor)
+									),
+									for (UIPoints pointCurrency in points)
+										Padding(
+											padding: EdgeInsets.only(left: 4.0),
+											child: AttributeChip.withCurrency(content: '${pointCurrency.quantity}', currencyType: pointCurrency.type)
+										),
+									if(points.isEmpty)
+										Text(AppLocales.of(context).translate('page.childSection.panel.header.noPoints'))
+								]
+							);
+						}
 					)
 				),
 				() => {},

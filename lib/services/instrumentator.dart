@@ -82,8 +82,11 @@ class Instrumentator {
 }
 
 class FokusBlocObserver extends BlocObserver {
+	final Logger _logger = Logger('FokusBlocObserver');
+
 	@override
   void onError(Cubit cubit, Object error, StackTrace stackTrace) {
+		_logger.severe('Cubit ${cubit.runtimeType} exception unhandled', error, stackTrace);
 		super.onError(cubit, error, stackTrace);
   }
 }

@@ -27,7 +27,7 @@ class CaregiverAwardsCubit extends ReloadableCubit {
   }
 
 	void removeReward(ObjectId id) async {
-		await _dataRepository.removeReward(id);
+		await _dataRepository.removeRewards(id: id);
 		emit(CaregiverAwardsLoadSuccess(
 			(state as CaregiverAwardsLoadSuccess).rewards.where((element) => element.id != id).toList(),
 			(state as CaregiverAwardsLoadSuccess).badges

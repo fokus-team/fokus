@@ -4,5 +4,5 @@ import 'package:formz/formz.dart';
 abstract class FormzState extends Equatable {
 	final FormzStatus status;
 
-  FormzState(this.status);
+  const FormzState(this.status);
 }

@@ -17,10 +17,14 @@ class TaskStatus {
 
 	Map<String, dynamic> toJson() {
 		final Map<String, dynamic> data = new Map<String, dynamic>();
-		data['completed'] = this.completed;
-		data['state'] = this.state.index;
-		data['pointsAwarded'] = this.pointsAwarded;
-		data['rating'] = this.rating;
+		if (this.completed != null)
+			data['completed'] = this.completed;
+		if (this.state != null)
+			data['state'] = this.state.index;
+		if (this.pointsAwarded != null)
+			data['pointsAwarded'] = this.pointsAwarded;
+		if (this.rating != null)
+			data['rating'] = this.rating;
 		return data;
 	}
 }

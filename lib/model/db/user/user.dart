@@ -8,6 +8,7 @@ class User {
   ObjectId id;
   final UserRole role;
   String name;
+  String locale;
   List<String> notificationIDs;
 
   List<int> accessCode;
@@ -22,6 +23,7 @@ class User {
     notificationIDs = json['notificationIDs'] != null ? new List<String>.from(json['notificationIDs']) : [];
     accessCode = json['accessCode'] != null ? new List<int>.from(json['accessCode']) : [];
     avatar = json['avatar'];
+    locale = json['locale'];
     connections = json['connections'] != null ? new List<ObjectId>.from(json['connections']) : [];
     connections = json['connections'] != null ? new List<ObjectId>.from(json['connections']) : null;
   }
@@ -34,6 +36,8 @@ class User {
       data['_id'] = this.id;
     if (this.name != null)
 	    data['name'] = this.name;
+    if (this.locale != null)
+	    data['locale'] = this.locale;
     if (this.role != null)
 	    data['role'] = this.role.index;
     if (this.accessCode != null)

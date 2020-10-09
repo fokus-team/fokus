@@ -88,15 +88,18 @@
 					"changePasswordLabel": "Zmień hasło",
 					"deleteAccountLabel": "Usuń konto",
 					"deleteAccountHint": "Trwale usuń konto i profile dzieci",
-					"deleteAccountConfirmation": "Czy na pewno chcesz usunąć swoje konto wraz z wszystkimi profilami dzieci? Tej akcji nie mozna cofnąć!"
+					"deleteAccountDescription": "Czy na pewno chcesz usunąć swoje konto? Spowoduje to trwałe wymazanie wszystkich wprowadzonych w aplikacji danych włączając w to:",
+					"deleteAccountDataList": "Plany|Zadania|Nagrody|Profile dzieci|Historię wykonanych zadań",
+					"deleteAccountWarning": "Tej akcji nie można cofnąć!",
+					"deleteAccountConfirm": "Wprowadź swoje hasło aby potwierdzić:"
 				},
 				"appSettings": {
 					"header": "Ustawienia aplikacji",
 					"changeLanguageLabel": "Język aplikacji",
 					"languages": {
 						"default": "Systemowy (domyślny)",
-						"pl": "Polski",
-						"en": "Angielski"
+						"pl_PL": "Polski",
+						"en_US": "Angielski"
 					},
 					"showAppInfoLabel": "O aplikacji",
 					"appInfo": {
@@ -469,7 +472,7 @@
 			},
 			"planInProgress": {
 				"header": {
-					"title": "Aktualny plan"
+					"title": "Szczegóły planu"
 				},
 				"content": {
 					"toDoTasks": "Zadania do wykonania",
@@ -627,9 +630,12 @@
 		"confirmPassword": "Powtórz hasło",
 		"googleSignIn": "Zaloguj się z Google",
 		"googleSignUp": "Załóż konto z Google",
+		"passwordChanged": "Hasło zmienione",
+		"nameChanged": "Imię zmienione",
 
 		"error": {
 			"incorrectData": "Nieprawidłowy e-mail lub hasło",
+			"incorrectPassword": "Nieprawidłowe hasło",
 			"emailAlreadyUsed": "Adres e-mail jest już zajęty",
 			"emailInvalid": "Adres e-mail jest nieprawidłowy",
 			"nameEmpty": "Imię nie może być puste",

@@ -31,8 +31,6 @@ class PasswordChangeCubit extends Cubit<PasswordChangeState> {
 	  }
   }
 
-  bool isUserSignedInWithEmail() => _authenticationProvider.signedInWithEmail();
-
   PasswordChangeState _validateFields() {
 	  var state = this.state;
 	  state = state.copyWith(currentPassword: Password.dirty(state.currentPassword.value, false));

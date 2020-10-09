@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/logic/settings/account_delete/account_delete_cubit.dart';
 import 'package:fokus/logic/settings/password_change/password_change_cubit.dart';
+import 'package:fokus/model/ui/user/ui_caregiver.dart';
+import 'package:fokus_auth/fokus_auth.dart';
 import 'package:smart_select/smart_select.dart';
 
 import 'package:fokus/logic/auth/auth_bloc/authentication_bloc.dart';
@@ -109,13 +111,14 @@ class _SettingsPageState extends State<SettingsPage> {
 	}
 
 	List<Widget> _getProfileFields() {
+  	var user = context.bloc<AuthenticationBloc>().state.user;
 		return [
 			_buildBasicListTile(
 				title: AppLocales.of(context).translate('$_pageKey.profile.editNameLabel'),
 				icon: Icons.edit,
 				onTap: () => showNameEditDialog(context)
 			),
-			if (context.bloc<PasswordChangeCubit>().isUserSignedInWithEmail())
+			if (user is UICaregiver && user.authMethod == AuthMethod.EMAIL)
 				_buildBasicListTile(
 					title: AppLocales.of(context).translate('$_pageKey.profile.changePasswordLabel'),
 					icon: Icons.lock,

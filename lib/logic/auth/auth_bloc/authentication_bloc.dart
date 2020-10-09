@@ -82,12 +82,12 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 			user = Caregiver.fromAuthUser(event.user);
 			await _dataRepository.createUser(user);
 		}
-		return _signInUser(user);
+		return _signInUser(user, event.user.authMethod);
   }
 
-	Future<AuthenticationState> _signInUser(User user) async {
+	Future<AuthenticationState> _signInUser(User user, [AuthMethod authMethod]) async {
 	  _onUserSignIn(user);
-	  return AuthenticationState.authenticated(UIUser.typedFromDBModel(user));
+	  return AuthenticationState.authenticated(UIUser.typedFromDBModel(user, authMethod));
   }
 
 	@override

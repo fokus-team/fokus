@@ -53,7 +53,7 @@ class _ChildAchievementsPageState extends State<ChildAchievementsPage> {
 	Widget _buildBadgeShelves() {
 		return BlocBuilder<AuthenticationBloc, AuthenticationState>(
 			builder: (context, state) {
-				List<UIBadge> badges = (state.user as UIChild).badges ?? [];
+				List<UIBadge> badges = (state.user as UIChild)?.badges ?? [];
 				if(badges.isNotEmpty) {
 					return Padding(
 						padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: AppBoxProperties.screenEdgePadding),

@@ -1,7 +1,6 @@
 import 'package:bloc/bloc.dart';
-import 'package:fokus/logic/auth/auth_bloc/authentication_bloc.dart';
-import 'package:fokus/services/app_config/app_config_repository.dart';
 import 'package:formz/formz.dart';
+import 'package:mongo_dart/mongo_dart.dart';
 import 'package:get_it/get_it.dart';
 
 import 'package:fokus/model/ui/user/ui_user.dart';
@@ -10,19 +9,18 @@ import 'package:fokus/model/ui/auth/password.dart';
 import 'package:fokus/services/data/data_repository.dart';
 import 'package:fokus/model/ui/user/ui_caregiver.dart';
 import 'package:fokus_auth/fokus_auth.dart';
-import 'package:mongo_dart/mongo_dart.dart';
+import 'package:fokus/services/app_config/app_config_repository.dart';
 
 part 'account_delete_state.dart';
 
 class AccountDeleteCubit extends Cubit<AccountDeleteState> {
 	final ActiveUserFunction _activeUser;
-	final AuthenticationBloc _authenticationBloc;
 
 	final AuthenticationProvider _authenticationProvider = GetIt.I<AuthenticationProvider>();
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final AppConfigRepository _appConfigRepository = GetIt.I<AppConfigRepository>();
 
-  AccountDeleteCubit(this._activeUser, this._authenticationBloc) : super(AccountDeleteState());
+  AccountDeleteCubit(this._activeUser) : super(AccountDeleteState());
 
 	Future _deleteAccount() async {
 		var user = _activeUser() as UICaregiver;
@@ -47,12 +45,14 @@ class AccountDeleteCubit extends Cubit<AccountDeleteState> {
 	}
 
   Future accountDeleteFormSubmitted() async {
-	  var state = this.state;
-	  state = state.copyWith(password: Password.dirty(state.password.value, false));
-	  state = state.copyWith(status: Formz.validate([state.password]));
-	  if (!state.status.isValidated) {
-		  emit(state);
-		  return;
+	  if ((_activeUser() as UICaregiver).authMethod == AuthMethod.EMAIL) {
+		  var state = this.state;
+		  state = state.copyWith(password: Password.dirty(state.password.value, false));
+		  state = state.copyWith(status: Formz.validate([state.password]));
+		  if (!state.status.isValidated) {
+			  emit(state);
+			  return;
+		  }
 	  }
 	  emit(state.copyWith(status: FormzStatus.submissionInProgress));
 	  try {

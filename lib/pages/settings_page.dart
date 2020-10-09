@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fokus/logic/settings/account_delete/account_delete_cubit.dart';
-import 'package:fokus/logic/settings/password_change/password_change_cubit.dart';
-import 'package:fokus/model/ui/user/ui_caregiver.dart';
 import 'package:fokus_auth/fokus_auth.dart';
 import 'package:smart_select/smart_select.dart';
 
@@ -11,7 +8,7 @@ import 'package:fokus/model/db/user/user_role.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/logic/settings/locale_cubit.dart';
 import 'package:fokus/utils/theme_config.dart';
-import 'package:fokus/widgets/dialogs/general_dialog.dart';
+import 'package:fokus/model/ui/user/ui_caregiver.dart';
 import 'package:fokus/utils/dialog_utils.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -81,19 +78,6 @@ class _SettingsPageState extends State<SettingsPage> {
 		];
 	}
 
-	void _deleteAccount() {
-		showBasicDialog(
-			context,
-			GeneralDialog.confirm(
-				title: AppLocales.of(context).translate('$_pageKey.profile.deleteAccountLabel'),
-				content: AppLocales.of(context).translate('$_pageKey.profile.deleteAccountConfirmation'),
-				confirmAction: () => context.bloc<AccountDeleteCubit>().accountDeleteFormSubmitted(),
-				confirmText: 'actions.delete',
-				confirmColor: Colors.red
-			)
-		);
-	}
-
 	Widget _buildBasicListTile({String title, String subtitle, IconData icon, Color color, Function onTap}) {
 		return ListTile(
 			title: Text(title, style: TextStyle(color: color ?? Colors.black)),
@@ -111,14 +95,14 @@ class _SettingsPageState extends State<SettingsPage> {
 	}
 
 	List<Widget> _getProfileFields() {
-  	var user = context.bloc<AuthenticationBloc>().state.user;
+  	var user = context.bloc<AuthenticationBloc>().state.user as UICaregiver;
 		return [
 			_buildBasicListTile(
 				title: AppLocales.of(context).translate('$_pageKey.profile.editNameLabel'),
 				icon: Icons.edit,
 				onTap: () => showNameEditDialog(context)
 			),
-			if (user is UICaregiver && user.authMethod == AuthMethod.EMAIL)
+			if (user.authMethod == AuthMethod.EMAIL)
 				_buildBasicListTile(
 					title: AppLocales.of(context).translate('$_pageKey.profile.changePasswordLabel'),
 					icon: Icons.lock,

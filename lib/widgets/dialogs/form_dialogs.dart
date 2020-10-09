@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fokus/logic/auth/auth_bloc/authentication_bloc.dart';
 import 'package:fokus/logic/settings/account_delete/account_delete_cubit.dart';
+import 'package:fokus/model/ui/user/ui_caregiver.dart';
+import 'package:fokus/widgets/auth/auth_button.dart';
+import 'package:fokus_auth/fokus_auth.dart';
 import 'package:formz/formz.dart';
 
 import 'package:fokus/logic/settings/password_change/password_change_cubit.dart';
@@ -95,7 +99,7 @@ class NameEditDialog extends StatelessWidget {
 class AccountDeleteDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-  	var test = ['Konto', 'Dzieci', 'Plany', 'Zadania'];
+	  var user = context.bloc<AuthenticationBloc>().state.user as UICaregiver;
   	var getText = (String key) => AppLocales.of(context).translate('$_settingsPageKey.profile.deleteAccount$key');
 	  return BlocListener<AccountDeleteCubit, AccountDeleteState>(
 		  listener: (context, state) {
@@ -119,16 +123,19 @@ class AccountDeleteDialog extends StatelessWidget {
 						    SizedBox(height: 10),
 						    Text(getText('Warning'), style: TextStyle(color: Colors.red)),
 						    SizedBox(height: 10),
-						    Text(getText('Confirm')),
-					      SizedBox(height: 10),
-					      AuthenticationInputField<AccountDeleteCubit, AccountDeleteState>(
-								  getField: (state) => state.password,
-								  changedAction: (cubit, value) => cubit.passwordChanged(value),
-								  labelKey: 'authentication.password',
-								  icon: Icons.lock_open,
-								  getErrorKey: (state) => [state.password.error.key],
-								  hideInput: true
-					      ),
+					      if (user.authMethod == AuthMethod.EMAIL)
+						      ...[
+						      	Text(getText('Confirm')),
+							      SizedBox(height: 10),
+							      AuthenticationInputField<AccountDeleteCubit, AccountDeleteState>(
+										  getField: (state) => state.password,
+										  changedAction: (cubit, value) => cubit.passwordChanged(value),
+										  labelKey: 'authentication.password',
+										  icon: Icons.lock_open,
+										  getErrorKey: (state) => [state.password.error.key],
+										  hideInput: true
+							      ),
+						      ]
 					    ],
 					  ),
 				  ),

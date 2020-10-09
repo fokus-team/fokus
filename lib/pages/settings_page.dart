@@ -97,17 +97,19 @@ class _SettingsPageState extends State<SettingsPage> {
 	List<Widget> _getProfileFields() {
   	var user = context.bloc<AuthenticationBloc>().state.user as UICaregiver;
 		return [
-			_buildBasicListTile(
-				title: AppLocales.of(context).translate('$_pageKey.profile.editNameLabel'),
-				icon: Icons.edit,
-				onTap: () => showNameEditDialog(context)
-			),
 			if (user.authMethod == AuthMethod.EMAIL)
-				_buildBasicListTile(
-					title: AppLocales.of(context).translate('$_pageKey.profile.changePasswordLabel'),
-					icon: Icons.lock,
-					onTap: () => showPasswordChangeDialog(context)
-				),
+				...[
+					_buildBasicListTile(
+						title: AppLocales.of(context).translate('$_pageKey.profile.editNameLabel'),
+						icon: Icons.edit,
+						onTap: () => showNameEditDialog(context)
+					),
+					_buildBasicListTile(
+						title: AppLocales.of(context).translate('$_pageKey.profile.changePasswordLabel'),
+						icon: Icons.lock,
+						onTap: () => showPasswordChangeDialog(context)
+					),
+				],
 			_buildBasicListTile(
 				title: AppLocales.of(context).translate('$_pageKey.profile.deleteAccountLabel'),
 				subtitle: AppLocales.of(context).translate('$_pageKey.profile.deleteAccountHint'),

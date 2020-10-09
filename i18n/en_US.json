@@ -631,6 +631,7 @@
 		"googleSignIn": "Sign in with Google",
 		"googleSignUp": "Sign up with Google",
 		"passwordChanged": "Password changed",
+		"nameChanged": "Name changed",
 
 		"error": {
 			"incorrectData": "Incorrect e-mail or password",

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/logic/settings/account_delete/account_delete_cubit.dart';
+import 'package:fokus/logic/settings/name_change/name_change_cubit.dart';
 import 'package:fokus/logic/settings/password_change/password_change_cubit.dart';
 import 'package:fokus/model/ui/gamification/ui_badge.dart';
 import 'package:fokus/model/ui/gamification/ui_reward.dart';
@@ -98,7 +99,7 @@ void showAppInfoDialog(BuildContext context) {
 void showNameEditDialog(BuildContext context) {
 	showDialog(
 		context: context,
-		builder: (context) => NameEditDialog()
+		builder: (_) => forwardCubit(NameEditDialog(), context.bloc<NameChangeCubit>())
 	);
 }
 

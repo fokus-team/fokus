@@ -631,6 +631,7 @@
 		"googleSignIn": "Zaloguj się z Google",
 		"googleSignUp": "Załóż konto z Google",
 		"passwordChanged": "Hasło zmienione",
+		"nameChanged": "Imię zmienione",
 
 		"error": {
 			"incorrectData": "Nieprawidłowy e-mail lub hasło",

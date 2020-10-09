@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fokus/logic/auth/auth_bloc/authentication_bloc.dart';
-import 'package:fokus/logic/settings/account_delete/account_delete_cubit.dart';
-import 'package:fokus/model/ui/user/ui_caregiver.dart';
-import 'package:fokus/widgets/auth/auth_button.dart';
 import 'package:fokus_auth/fokus_auth.dart';
 import 'package:formz/formz.dart';
 
 import 'package:fokus/logic/settings/password_change/password_change_cubit.dart';
 import 'package:fokus/model/ui/auth/password.dart';
+import 'package:fokus/model/ui/auth/name.dart';
 import 'package:fokus/model/ui/auth/confirmed_password.dart';
 import 'package:fokus/services/app_locales.dart';
+import 'package:fokus/logic/auth/auth_bloc/authentication_bloc.dart';
+import 'package:fokus/logic/settings/account_delete/account_delete_cubit.dart';
+import 'package:fokus/logic/settings/name_change/name_change_cubit.dart';
+import 'package:fokus/model/ui/user/ui_caregiver.dart';
 import 'package:fokus/utils/theme_config.dart';
 import 'package:fokus/widgets/auth/auth_input_field.dart';
 import 'package:fokus/utils/snackbar_utils.dart';
@@ -73,26 +74,30 @@ const String _settingsPageKey = 'page.settings.content';
 class NameEditDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return FormDialog(
-			title: AppLocales.of(context).translate('$_settingsPageKey.profile.editNameLabel'),
-			fields: [
-				Padding(
-					padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-					child: Padding(
-						padding: const EdgeInsets.all(8.0),
-						child: TextField(
-							decoration: InputDecoration(
-								icon: Padding(padding: EdgeInsets.all(5.0), child: Icon(Icons.edit)),
-								contentPadding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
-								border: OutlineInputBorder(),
-								labelText: AppLocales.of(context).translate('authentication.name')
-							)
-						)
-					)
-				)
-			],
-			onConfirm: () => Navigator.of(context).pop()
-		);
+    return BlocListener<NameChangeCubit, NameChangeState>(
+	    listener: (context, state) {
+		    if (state.status.isSubmissionSuccess) {
+			    Navigator.of(context).pop();
+			    showSuccessSnackbar(context, 'authentication.nameChanged');
+		    }
+	    },
+      child: FormDialog(
+				title: AppLocales.of(context).translate('$_settingsPageKey.profile.editNameLabel'),
+				fields: [
+					Padding(
+						padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+						child: AuthenticationInputField<NameChangeCubit, NameChangeState>(
+							getField: (state) => state.name,
+							changedAction: (cubit, value) => cubit.nameChanged(value),
+							labelKey: 'authentication.name',
+							icon: Icons.edit,
+							getErrorKey: (state) => [state.name.error.key],
+						),
+					),
+				],
+				onConfirm: () => context.bloc<NameChangeCubit>().nameChangeFormSubmitted()
+			),
+    );
   }
 }
 

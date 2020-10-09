@@ -21,6 +21,7 @@ import 'package:fokus/logic/child_plans_cubit.dart';
 import 'package:fokus/logic/child_rewards_cubit.dart';
 import 'package:fokus/logic/plan_form/plan_form_cubit.dart';
 import 'package:fokus/logic/settings/account_delete/account_delete_cubit.dart';
+import 'package:fokus/logic/settings/name_change/name_change_cubit.dart';
 import 'package:fokus/logic/settings/password_change/password_change_cubit.dart';
 import 'package:fokus/logic/settings/locale_cubit.dart';
 import 'package:fokus/logic/task_instance/task_instance_cubit.dart';
@@ -142,7 +143,10 @@ class _FokusAppState extends State<FokusApp> implements CurrentLocaleObserver {
 			AppPage.settingsPage.name:  (context) => _createPage(
 				withCubit(
 					withCubit(
-						SettingsPage(),
+						withCubit(
+							SettingsPage(),
+							NameChangeCubit(getActiveUser(context), authBloc(context))
+						),
 						LocaleCubit(getActiveUser(context), authBloc(context))
 					),
 					AccountDeleteCubit(getActiveUser(context))

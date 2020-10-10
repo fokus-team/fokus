@@ -16,9 +16,9 @@ class UIChild extends UIUser {
   UIChild(ObjectId id, String name, {this.todayPlanCount = 0, this.hasActivePlan = false, List<ObjectId> connections = const [], this.points = const [], this.rewards = const [], this.badges = const [], int avatar = -1}) :
 			super(id, name, role: UserRole.child, avatar: avatar, connections: connections);
   UIChild.fromDBModel(Child child, {this.todayPlanCount = 0, this.hasActivePlan = false}):
-			points = child.points != null ? child.points.map((e) => UIPoints(type: e.icon, title: e.name, createdBy: e.createdBy, quantity: e.quantity)).toList() : [],
-			rewards = child.rewards != null ? child.rewards.map((e) => UIChildReward(id: e.id, name: e.name, cost: UIPoints.fromDBModel(e.cost), icon: e.icon, date: e.date)).toList() : [],
-			badges = child.badges != null ? child.badges.map((e) => UIChildBadge(name: e.name, description: e.description, icon: e.icon, date: e.date)).toList() : [],
+			points = child.points != null ? child.points.map((points) => UIPoints.fromDBModel(points)).toList() : [],
+			rewards = child.rewards != null ? child.rewards.map((reward) => UIChildReward.fromDBModel(reward)).toList() : [],
+			badges = child.badges != null ? child.badges.map((badge) => UIChildBadge.fromDBModel(badge)).toList() : [],
 			super.fromDBModel(child);
 
 	UIChild copyWith({List<UIPoints> points, List<UIChildReward> rewards, List<UIChildBadge> badges}) {
@@ -35,11 +35,11 @@ class UIChild extends UIUser {
 		);
 	}
 
-	UIChild.from(UIChild original, {String locale, String name}) :
+	UIChild.from(UIChild original, {String locale, String name, List<UIChildBadge> badges}) :
 			todayPlanCount = original.todayPlanCount,
 			hasActivePlan = original.hasActivePlan,
 			points = original.points,
-			badges = original.badges,
+			badges = badges ?? original.badges,
 			rewards = original.rewards,
 			super.from(original, locale: locale, name: name);
 

@@ -1,5 +1,4 @@
 import 'package:flutter/widgets.dart';
-import 'package:fokus/services/plan_keeper_service.dart';
 import 'package:get_it/get_it.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,6 +6,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/logic/auth/auth_bloc/authentication_bloc.dart';
 import 'package:fokus/model/notification/notification_data.dart';
 import 'package:fokus/model/notification/notification_type.dart';
+import 'package:fokus/model/db/user/child.dart';
+import 'package:fokus/model/ui/gamification/ui_badge.dart';
+import 'package:fokus/model/ui/user/ui_child.dart';
+import 'package:fokus/services/plan_keeper_service.dart';
 import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/db/user/user_role.dart';
 import 'package:fokus/utils/snackbar_utils.dart';
@@ -63,8 +66,15 @@ class OneSignalNotificationProvider extends NotificationProvider {
 	}
 
   void _configureNotificationHandlers() {
-	  OneSignal.shared.setNotificationReceivedHandler((OSNotification notification) {
+	  OneSignal.shared.setNotificationReceivedHandler((OSNotification notification) async {
 		  logger.fine("onMessage: $notification");
+		  var context = _navigatorKey.currentState.context;
+		  var data = NotificationData.fromJson(notification.payload.additionalData);
+		  var activeUser = context.bloc<AuthenticationBloc>().state.user;
+		  if (data.type == NotificationType.badgeAwarded)
+			  Child user = await dataRepository.getUser(id: activeUser.id, fields: ['badges']);
+			  context.bloc<AuthenticationBloc>().add(AuthenticationActiveUserUpdated(UIChild.from(activeUser, badges: user.badges.map((badge) => UIChildBadge.fromDBModel(badge)).toList())));
+		  }
 	  });
 	  OneSignal.shared.setNotificationOpenedHandler(_onNotificationOpened);
 	  OneSignal.shared.setSubscriptionObserver((changes) {

@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:fokus/services/plan_keeper_service.dart';
 import 'package:get_it/get_it.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,13 +10,13 @@ import 'package:fokus/model/notification/notification_type.dart';
 import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/db/user/user_role.dart';
 import 'package:fokus/utils/snackbar_utils.dart';
-import 'package:fokus/model/ui/plan/ui_plan_instance.dart';
 import 'package:fokus/services/notifications/notification_provider.dart';
 
 
 class OneSignalNotificationProvider extends NotificationProvider {
 	final String appId = 'ed3ee23f-aa7a-4fc7-91ab-9967fa7712e5';
 	final _navigatorKey = GetIt.I<GlobalKey<NavigatorState>>();
+	final PlanKeeperService _planService = GetIt.I<PlanKeeperService>();
 
 	OneSignalNotificationProvider() {
 		_configureOneSignal();
@@ -49,7 +50,7 @@ class OneSignalNotificationProvider extends NotificationProvider {
 		}
 		dynamic arguments = data.subject;
 		if (data.type.redirectPage == AppPage.planInstanceDetails) {
-			//arguments = UIPlanInstance.fromDBModel(await dataRepository.getPlanInstance(taskInstanceId: data.subject), );
+			arguments = await _planService.loadPlanInstance(planInstanceId: data.subject);
 			navigate(data.type.redirectPage, arguments);
 			return;
 		} else if (data.type.redirectPage == AppPage.caregiverChildDashboard) {

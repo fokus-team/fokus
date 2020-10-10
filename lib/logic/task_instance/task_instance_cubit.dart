@@ -1,6 +1,5 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:fokus/model/db/date/date.dart';
 import 'package:fokus/model/db/date/time_date.dart';
 import 'package:fokus/model/db/date_span.dart';
 import 'package:fokus/model/db/plan/plan.dart';
@@ -14,7 +13,7 @@ import 'package:fokus/model/ui/task/ui_task_instance.dart';
 import 'package:fokus/model/ui/user/ui_user.dart';
 import 'package:fokus/services/data/data_repository.dart';
 import 'package:fokus/services/notifications/notification_service.dart';
-import 'package:fokus/services/plan_repeatability_service.dart';
+import 'package:fokus/services/plan_keeper_service.dart';
 import 'package:fokus/utils/duration_utils.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mongo_dart/mongo_dart.dart';
@@ -26,8 +25,8 @@ class TaskInstanceCubit extends Cubit<TaskInstanceState> {
 	final ActiveUserFunction _activeUser;
 
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
-	final PlanRepeatabilityService _repeatabilityService = GetIt.I<PlanRepeatabilityService>();
 	final NotificationService _notificationService = GetIt.I<NotificationService>();
+	final PlanKeeperService _planService = GetIt.I<PlanKeeperService>();
 
 	TaskInstanceCubit(this._taskInstanceId, this._activeUser) : super(TaskInstanceStateInitial());
 
@@ -67,8 +66,8 @@ class TaskInstanceCubit extends Cubit<TaskInstanceState> {
 		await Future.value(updates);
 
 		UITaskInstance uiTaskInstance = UITaskInstance.singleWithTask(taskInstance: taskInstance, task: task);
-		if(isInProgress(uiTaskInstance.duration)) emit(TaskInstanceStateProgress(uiTaskInstance,  await _getUiPlanInstance(taskInstance.planInstanceID)));
-		else  emit(TaskInstanceStateBreak(uiTaskInstance,  await _getUiPlanInstance(taskInstance.planInstanceID)));
+		if(isInProgress(uiTaskInstance.duration)) emit(TaskInstanceStateProgress(uiTaskInstance,  await _planService.loadPlanInstance(planInstance: planInstance, plan: plan)));
+		else  emit(TaskInstanceStateBreak(uiTaskInstance,  await _planService.loadPlanInstance(planInstance: planInstance, plan: plan)));
 	}
 
 	void switchToBreak() async {
@@ -76,7 +75,7 @@ class TaskInstanceCubit extends Cubit<TaskInstanceState> {
 		taskInstance.breaks.add(DateSpan(from: TimeDate.now()));
 		await _dataRepository.updateTaskInstanceFields(taskInstance.id, duration: taskInstance.duration, breaks: taskInstance.breaks);
 		UITaskInstance uiTaskInstance = UITaskInstance.singleWithTask(taskInstance: taskInstance, task: task);
-		emit(TaskInstanceStateBreak(uiTaskInstance,  await _getUiPlanInstance(taskInstance.planInstanceID)));
+		emit(TaskInstanceStateBreak(uiTaskInstance,  await _planService.loadPlanInstance(planInstance: planInstance, plan: plan)));
 	}
 
 	void switchToProgress() async {
@@ -84,17 +83,17 @@ class TaskInstanceCubit extends Cubit<TaskInstanceState> {
 		taskInstance.duration.add(DateSpan(from: TimeDate.now()));
 		await _dataRepository.updateTaskInstanceFields(taskInstance.id, duration: taskInstance.duration, breaks: taskInstance.breaks);
 		UITaskInstance uiTaskInstance = UITaskInstance.singleWithTask(taskInstance: taskInstance, task: task);
-		emit(TaskInstanceStateProgress(uiTaskInstance, await _getUiPlanInstance(taskInstance.planInstanceID)));
+		emit(TaskInstanceStateProgress(uiTaskInstance, await _planService.loadPlanInstance(planInstance: planInstance, plan: plan)));
 	}
 
 	void markAsDone() async {
   	_notificationService.sendTaskFinishedNotification(_taskInstanceId, task.name, plan.createdBy, _activeUser(), completed: true);
-		emit(TaskInstanceStateDone(await _onCompletion(TaskState.notEvaluated), await _getUiPlanInstance(taskInstance.planInstanceID)));
+		emit(TaskInstanceStateDone(await _onCompletion(TaskState.notEvaluated), await _planService.loadPlanInstance(planInstance: planInstance, plan: plan)));
   }
 
 	void markAsRejected() async {
 		_notificationService.sendTaskFinishedNotification(_taskInstanceId, task.name, plan.createdBy, _activeUser(), completed: false);
-		emit(TaskInstanceStateRejected(await _onCompletion(TaskState.rejected), await _getUiPlanInstance(taskInstance.planInstanceID)));
+		emit(TaskInstanceStateRejected(await _onCompletion(TaskState.rejected), await _planService.loadPlanInstance(planInstance: planInstance, plan: plan)));
 	}
 
 	Future<UITaskInstance> _onCompletion(TaskState state) async {
@@ -116,13 +115,5 @@ class TaskInstanceCubit extends Cubit<TaskInstanceState> {
 		await _dataRepository.updatePlanInstanceFields(planInstance.id, duration: planInstance.duration, state: planInstance.state == PlanInstanceState.completed ? PlanInstanceState.completed : null);
 
 		return UITaskInstance.singleWithTask(taskInstance: taskInstance, task: task);
-	}
-
-	Future<UIPlanInstance> _getUiPlanInstance(ObjectId id) async {
-		var getDescription = (Plan plan, [Date instanceDate]) => _repeatabilityService.buildPlanDescription(plan.repeatability, instanceDate: instanceDate);
-
-		var elapsedTime = () => sumDurations(planInstance.duration).inSeconds;
-		var completedTasks = await _dataRepository.getCompletedTaskCount(planInstance.id);
-		return UIPlanInstance.fromDBModel(planInstance, plan.name, completedTasks, elapsedTime, getDescription(plan, planInstance.date));
 	}
 }

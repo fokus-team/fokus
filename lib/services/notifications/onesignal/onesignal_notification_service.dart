@@ -58,7 +58,7 @@ class OneSignalNotificationService extends NotificationService {
 	}
 
 	@override
-	Future sendTaskApprovedNotification(ObjectId taskId, String taskName, ObjectId childId, int stars, [CurrencyType currencyType, int pointCount]) {
+	Future sendTaskApprovedNotification(ObjectId planId, String taskName, ObjectId childId, int stars, [CurrencyType currencyType, int pointCount]) {
 		var type = NotificationType.taskApproved;
 		var hasPoints = pointCount != null && pointCount > 0;
 		return sendNotification(type, childId,
@@ -73,18 +73,18 @@ class OneSignalNotificationService extends NotificationService {
 			]),
 			icon: hasPoints ? NotificationIcon(type.graphicType, currencyType.index) : NotificationIcon.fromName('star'),
 			group: NotificationGroup(type.key, SimpleNotificationText.appBased(type.group)),
-			subject: taskId
+			subject: planId
 		);
 	}
 
 	@override
-	Future sendTaskRejectedNotification(ObjectId taskId, String taskName, ObjectId childId) {
+	Future sendTaskRejectedNotification(ObjectId planId, String taskName, ObjectId childId) {
 		var type = NotificationType.taskRejected;
 		return sendNotification(type, childId,
 			title: SimpleNotificationText.appBased(type.title),
 			body: SimpleNotificationText.userBased(taskName),
 			group: NotificationGroup(type.key, SimpleNotificationText.appBased(type.group)),
-			subject: taskId
+			subject: planId
 		);
 	}
 

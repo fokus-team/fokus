@@ -2,6 +2,8 @@ import 'dart:async';
 
 
 import 'package:fokus/model/db/user/user.dart';
+import 'package:fokus/model/ui/plan/ui_plan_instance.dart';
+import 'package:fokus/utils/duration_utils.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
@@ -86,4 +88,14 @@ class PlanKeeperService implements ActiveUserObserver {
 		return Future.wait(updates);
 		// TODO there are also 'to' fields in task instance last 'duration' and 'breaks' objects that could be left missing here - handle here or inside statistics code
 	}
+
+	Future<UIPlanInstance> loadPlanInstance({PlanInstance planInstance, ObjectId planInstanceId, Plan plan}) async {
+		planInstance ??= await _dataRepository.getPlanInstance(id: planInstanceId);
+		var completedTasks = await _dataRepository.getCompletedTaskCount(planInstanceId);
+		plan ??= await _dataRepository.getPlan(id: planInstance.planID, fields: ['_id', 'repeatability', 'name']);
+		var getDescription = (Plan plan, [Date instanceDate]) => _repeatabilityService.buildPlanDescription(plan.repeatability, instanceDate: instanceDate);
+		var elapsedTime = () => sumDurations(planInstance.duration).inSeconds;
+		return UIPlanInstance.fromDBModel(planInstance, plan.name, completedTasks, elapsedTime, getDescription(plan, planInstance.date));
+	}
+
 }

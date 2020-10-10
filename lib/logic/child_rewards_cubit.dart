@@ -7,6 +7,7 @@ import 'package:fokus/model/ui/gamification/ui_currency.dart';
 import 'package:fokus/model/ui/gamification/ui_points.dart';
 import 'package:fokus/model/ui/gamification/ui_reward.dart';
 import 'package:fokus/model/ui/user/ui_child.dart';
+import 'package:fokus/services/notifications/notification_service.dart';
 import 'package:get_it/get_it.dart';
 
 import 'package:fokus/model/ui/user/ui_user.dart';
@@ -17,6 +18,7 @@ import 'package:mongo_dart/mongo_dart.dart';
 class ChildRewardsCubit extends ReloadableCubit {
 	final ActiveUserFunction _activeUser;
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
+	final NotificationService _notificationService = GetIt.I<NotificationService>();
 
   ChildRewardsCubit(this._activeUser, ModalRoute pageRoute) : super(pageRoute);
 
@@ -60,6 +62,7 @@ class ChildRewardsCubit extends ReloadableCubit {
 			await _dataRepository.claimChildReward(child.id, reward: model, points: points.map((e) =>
 				Points.fromUICurrency(UICurrency(type: e.type, title: e.title), e.quantity, creator: e.createdBy)).toList()
 			);
+			await _notificationService.sendRewardBoughtNotification(model.id, model.name, child.connections.first, child);
 			emit(ChildRewardsLoadSuccess(
 				_updateRewardLimits((state as ChildRewardsLoadSuccess).rewards, child.rewards),
 				List.from(child.rewards),

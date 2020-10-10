@@ -30,14 +30,18 @@ class Reward {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['createdBy'] = this.createdBy;
-    data['_id'] = this.id;
-    data['icon'] = this.icon;
-    data['limit'] = this.limit;
-    data['name'] = this.name;
-    if (this.cost != null) {
+    if (this.createdBy != null)
+	    data['createdBy'] = this.createdBy;
+    if (this.id != null)
+	    data['_id'] = this.id;
+    if (this.icon != null)
+	    data['icon'] = this.icon;
+    if (this.limit != null)
+	    data['limit'] = this.limit;
+    if (this.name != null)
+	    data['name'] = this.name;
+    if (this.cost != null)
       data['cost'] = this.cost.toJson();
-    }
     return data;
   }
 }

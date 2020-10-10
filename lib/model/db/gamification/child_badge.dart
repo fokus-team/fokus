@@ -19,10 +19,14 @@ class ChildBadge {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['description'] = this.description;
-    data['date'] = this.date.toDBDate();
-    data['icon'] = this.icon;
-    data['name'] = this.name;
+    if (this.description != null)
+      data['description'] = this.description;
+    if (this.date != null)
+      data['date'] = this.date.toDBDate();
+    if (this.icon != null)
+      data['icon'] = this.icon;
+    if (this.name != null)
+      data['name'] = this.name;
     return data;
   }
 }

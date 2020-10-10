@@ -16,6 +16,9 @@ import 'package:fokus/services/observers/active_user_observer.dart';
 import 'package:fokus/services/plan_keeper_service.dart';
 import 'package:fokus/services/notifications/notification_service.dart';
 import 'package:fokus/services/app_config/app_config_repository.dart';
+import 'package:fokus/model/ui/user/ui_caregiver.dart';
+import 'package:fokus/model/ui/user/ui_child.dart';
+import 'package:fokus/services/locale_provider.dart';
 
 part 'authentication_event.dart';
 part 'authentication_state.dart';
@@ -33,6 +36,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
   AuthenticationBloc() : super(AuthenticationState.unknown()) {
 	  observeUserChanges(GetIt.I<PlanKeeperService>());
 	  observeUserChanges(GetIt.I<NotificationService>());
+	  observeUserChanges(GetIt.I<LocaleService>());
 	  _userSubscription = _authenticationProvider.user.listen((user) => add(AuthenticationUserChanged(user)));
   }
 
@@ -70,16 +74,20 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 	  }
 		user = await _dataRepository.getUser(authenticationId: event.user.id);
 		if (user == null) {
+			if (! (await _authenticationProvider.userExists(event.user.email))) {
+				await _authenticationProvider.signOut();
+				return const AuthenticationState.unauthenticated();
+			}
 			_logger.fine('Creating new user for ${event.user}');
 			user = Caregiver.fromAuthUser(event.user);
 			await _dataRepository.createUser(user);
 		}
-		return _signInUser(user);
+		return _signInUser(user, event.user.authMethod);
   }
 
-	Future<AuthenticationState> _signInUser(User user) async {
+	Future<AuthenticationState> _signInUser(User user, [AuthMethod authMethod]) async {
 	  _onUserSignIn(user);
-	  return AuthenticationState.authenticated(UIUser.typedFromDBModel(user));
+	  return AuthenticationState.authenticated(UIUser.typedFromDBModel(user, authMethod));
   }
 
 	@override

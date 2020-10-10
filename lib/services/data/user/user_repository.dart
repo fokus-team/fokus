@@ -11,7 +11,8 @@ abstract class UserRepository {
 	Future<bool> userExists({ObjectId id, UserRole role});
 
 	Future createUser(User user);
-	Future updateUser(ObjectId userId, {List<ObjectId> newConnections, List<Points> points});
+	Future updateUser(ObjectId userId, {List<ObjectId> newConnections, String name, String locale, List<Points> points});
+	Future removeUsers(List<ObjectId> ids);
 
 	Future insertNotificationID(ObjectId userId, String notificationId);
 	Future removeNotificationID(String notificationID, {ObjectId userId});

@@ -18,9 +18,12 @@ class Badge {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['icon'] = this.icon;
-    data['name'] = this.name;
-		data['description'] = this.description;
+    if (this.icon != null)
+      data['icon'] = this.icon;
+    if (this.name != null)
+      data['name'] = this.name;
+		if (this.description != null)
+      data['description'] = this.description;
     return data;
   }
 }

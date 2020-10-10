@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:fokus/logic/caregiver_panel_cubit.dart';
 import 'package:fokus/model/ui/app_page.dart';
+import 'package:fokus/model/ui/gamification/ui_points.dart';
 import 'package:fokus/model/ui/ui_button.dart';
 import 'package:fokus/utils/icon_sets.dart';
 import 'package:fokus/utils/string_utils.dart';
@@ -57,8 +58,8 @@ class _CaregiverPanelPageState extends State<CaregiverPanelPage> {
 							graphicType: AssetType.avatars,
 							graphic: child.avatar,
 							chips: <Widget>[
-								for (var currency in child.points.entries)
-									AttributeChip.withCurrency(content: '${currency.value}', currencyType: currency.key)
+								for (UIPoints pointCurrency in child.points)
+									AttributeChip.withCurrency(content: '${pointCurrency.quantity}', currencyType: pointCurrency.type)
 							]
 						)
 				]

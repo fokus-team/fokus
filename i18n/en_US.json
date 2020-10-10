@@ -88,15 +88,18 @@
 					"changePasswordLabel": "Change your password",
 					"deleteAccountLabel": "Delete your account",
 					"deleteAccountHint": "Delete your and children's accounts",
-					"deleteAccountConfirmation": "Are you sure you want to delete your account with all children profiles? This action cannot be undone!"
+					"deleteAccountDescription": "Are you sure you want to delete your account? This will permanently erase all entered data including:",
+					"deleteAccountDataList": "Plans|Tasks|Awards|Child profiles|Performed task history",
+					"deleteAccountWarning": "This action cannot be undone!",
+					"deleteAccountConfirm": "Enter your password to confirm:"
 				},
 				"appSettings": {
 					"header": "App settings",
 					"changeLanguageLabel": "App language",
 					"languages": {
 						"default": "System (default)",
-						"pl": "Polish",
-						"en": "English"
+						"pl_PL": "Polish",
+						"en_US": "English"
 					},
 					"showAppInfoLabel": "About the app",
 					"appInfo": {
@@ -469,7 +472,7 @@
 			},
 			"planInProgress": {
 				"header": {
-					"title": "In progress"
+					"title": "Plan details"
 				},
 				"content": {
 					"toDoTasks": "To-do list",
@@ -550,7 +553,9 @@
 					"claimedRewardsTitle": "Claimed rewards",
 					"claimRewardTitle": "Claim reward",
 					"claimCostLabel": "Reward cost",
-					"claimButton": "Claim"
+					"claimDateLabel": "Claimed on",
+					"claimButton": "Claim",
+					"rewardClaimedText": "Reward claimed"
 				}
 			},
 			"achievements": {
@@ -625,9 +630,12 @@
 		"confirmPassword": "Repeat password",
 		"googleSignIn": "Sign in with Google",
 		"googleSignUp": "Sign up with Google",
+		"passwordChanged": "Password changed",
+		"nameChanged": "Name changed",
 
 		"error": {
 			"incorrectData": "Incorrect e-mail or password",
+			"incorrectPassword": "Incorrect password",
 			"emailAlreadyUsed": "E-mail address is already used",
 			"emailInvalid": "E-mail address is invalid",
 			"nameEmpty": "Name can not be empty",

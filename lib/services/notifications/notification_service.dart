@@ -30,7 +30,7 @@ abstract class NotificationService implements ActiveUserObserver {
 	Future sendRewardBoughtNotification(ObjectId rewardId, String rewardName, ObjectId caregiverId, UIUser child);
 	Future sendTaskFinishedNotification(ObjectId taskId, String taskName, ObjectId caregiverId, UIUser child, {@required bool completed});
 
-	Future sendTaskApprovedNotification(String taskName, ObjectId childId, int stars, [CurrencyType currencyType, int pointCount]);
+	Future sendTaskApprovedNotification(ObjectId taskId, String taskName, ObjectId childId, int stars, [CurrencyType currencyType, int pointCount]);
 	Future sendBadgeAwardedNotification(String badgeName, int badgeIcon, ObjectId childId);
 	Future sendTaskRejectedNotification(ObjectId taskId, String taskName, ObjectId childId);
 

@@ -632,6 +632,7 @@
 		"googleSignUp": "Załóż konto z Google",
 		"passwordChanged": "Hasło zmienione",
 		"nameChanged": "Imię zmienione",
+		"signInPrompt": "Musisz się najpierw ponownie zalogować",
 
 		"error": {
 			"incorrectData": "Nieprawidłowy e-mail lub hasło",

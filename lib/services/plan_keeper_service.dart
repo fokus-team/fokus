@@ -31,9 +31,7 @@ class PlanKeeperService implements ActiveUserObserver {
 			_userId = user.id;
 			_role = user.role;
 
-
 			onUserSignOut(user);
-
 			await _updateData();
 			var now = DateTime.now();
 			Duration timeToMidnight = DateTime(now.year, now.month, now.day + 1, 0, 0, 10).difference(now);

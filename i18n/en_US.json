@@ -632,6 +632,7 @@
 		"googleSignUp": "Sign up with Google",
 		"passwordChanged": "Password changed",
 		"nameChanged": "Name changed",
+		"signInPrompt": "You need to log back first",
 
 		"error": {
 			"incorrectData": "Incorrect e-mail or password",

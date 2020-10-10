@@ -23,7 +23,7 @@ class FirebaseNotificationService extends NotificationService {
 	@override
 	Future sendRewardBoughtNotification(ObjectId rewardId, String rewardName, ObjectId caregiverId, UIUser child) => throw UnimplementedError();
 	@override
-	Future sendTaskApprovedNotification(String taskName, ObjectId childId, int stars, [CurrencyType currencyType, int pointCount]) => throw UnimplementedError();
+	Future sendTaskApprovedNotification(ObjectId taskId, String taskName, ObjectId childId, int stars, [CurrencyType currencyType, int pointCount]) => throw UnimplementedError();
 	@override
 	Future sendBadgeAwardedNotification(String badgeName, int badgeIcon, ObjectId childId) => throw UnimplementedError();
 	@override

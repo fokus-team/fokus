@@ -58,7 +58,7 @@ class OneSignalNotificationService extends NotificationService {
 	}
 
 	@override
-	Future sendTaskApprovedNotification(String taskName, ObjectId childId, int stars, [CurrencyType currencyType, int pointCount]) {
+	Future sendTaskApprovedNotification(ObjectId taskId, String taskName, ObjectId childId, int stars, [CurrencyType currencyType, int pointCount]) {
 		var type = NotificationType.taskApproved;
 		var hasPoints = pointCount != null && pointCount > 0;
 		return sendNotification(type, childId,
@@ -72,7 +72,8 @@ class OneSignalNotificationService extends NotificationService {
 					SimpleNotificationText.appBased('${type.title}Count', {'COUNT': '$pointCount'}),
 			]),
 			icon: hasPoints ? NotificationIcon(type.graphicType, currencyType.index) : NotificationIcon.fromName('star'),
-			group: NotificationGroup(type.key, SimpleNotificationText.appBased(type.group))
+			group: NotificationGroup(type.key, SimpleNotificationText.appBased(type.group)),
+			subject: taskId
 		);
 	}
 
@@ -95,7 +96,7 @@ class OneSignalNotificationService extends NotificationService {
 		  logNoUserToken(userId);
 		  return;
 	  }
-	  var data = NotificationData(type, buttons: buttons, subject: subject);
+	  var data = NotificationData(type, userId, buttons: buttons, subject: subject);
 	  var osButtons = buttons?.map((button) => OSActionButton(id: button.action, text: button.action))?.toList();
 	  var notification = OSCreateNotification(
 		  playerIds: tokens,

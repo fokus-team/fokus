@@ -23,7 +23,8 @@ abstract class NotificationProvider implements ActiveUserObserver, CurrentLocale
 
 	static var localNotifications = FlutterLocalNotificationsPlugin();
 
-	final DataRepository _dataRepository = GetIt.I<DataRepository>();
+	@protected
+	final DataRepository dataRepository = GetIt.I<DataRepository>();
 
 	NotificationProvider()  {
 		if (Platform.isAndroid)
@@ -47,12 +48,12 @@ abstract class NotificationProvider implements ActiveUserObserver, CurrentLocale
 	void addUserToken(String token) async {
 		if (token == null)
 			return;
-		_dataRepository.removeNotificationID(token);
-		_dataRepository.insertNotificationID(activeUser.id, token);
+		dataRepository.removeNotificationID(token);
+		dataRepository.insertNotificationID(activeUser.id, token);
 	}
 
 	@protected
-	void removeUserToken(String token) async => _dataRepository.removeNotificationID(token, userId: activeUser.id);
+	void removeUserToken(String token) async => dataRepository.removeNotificationID(token, userId: activeUser.id);
 
 	@override
   void onLocaleSet(Locale locale) {

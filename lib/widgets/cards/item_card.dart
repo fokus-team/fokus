@@ -163,6 +163,7 @@ class ItemCard extends StatelessWidget {
 						padding: (graphic != null) ? EdgeInsets.all(6.0) : EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
 						child: Column(
 							crossAxisAlignment: CrossAxisAlignment.start,
+							mainAxisSize: MainAxisSize.max,
 							children: <Widget>[
 								...buildTextSection(context),
 								if(chips != null && chips.isNotEmpty)

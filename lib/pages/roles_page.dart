@@ -13,7 +13,7 @@ class RolesPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.mainBackgroundColor,
-      body: Center(
+      body: SingleChildScrollView(
 				child: Column(
 			    mainAxisAlignment: MainAxisAlignment.center,
 			    crossAxisAlignment: CrossAxisAlignment.center,

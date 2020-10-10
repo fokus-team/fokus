@@ -82,7 +82,7 @@ class TaskAppHeaderState extends State<TaskAppHeader> with TickerProviderStateMi
 				child: Row(
 					mainAxisAlignment: MainAxisAlignment.spaceBetween,
 					children: [
-						_getTimerSection(),
+						Expanded(child: _getTimerSection()),
 						SlideTransition(
 							position: _offsetAnimation,
 							child: _getButtonWidget()
@@ -101,7 +101,7 @@ class TaskAppHeaderState extends State<TaskAppHeader> with TickerProviderStateMi
 				child: Container(
 					decoration: AppBoxProperties.elevatedContainer.copyWith(borderRadius: BorderRadius.vertical(top: Radius.circular(4.0))),
 					child: Padding(
-						padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
+						padding: EdgeInsets.symmetric(vertical: 6.0, horizontal: 12.0),
 						child: this.widget.state.taskInstance.points != null ? Row(
 							mainAxisAlignment: MainAxisAlignment.spaceBetween,
 							children: [
@@ -197,7 +197,7 @@ class TaskAppHeaderState extends State<TaskAppHeader> with TickerProviderStateMi
 
 	Widget _getTimerSection() {
 		return Align(
-			alignment: Alignment.center,
+			alignment: Alignment.centerLeft,
 			child: BlocProvider<TimerCubit>(
 				create: _getTimerFun(),
 				child: LargeTimer(
@@ -290,7 +290,8 @@ class TaskAppHeaderState extends State<TaskAppHeader> with TickerProviderStateMi
 
 	@override
   void dispose() {
-		if(_updateTimer != null) _updateTimer.cancel();
+		if(_updateTimer != null)
+			_updateTimer.cancel();
 		_confetti.dispose();
   	_buttonController.dispose();
   	_slideController.dispose();

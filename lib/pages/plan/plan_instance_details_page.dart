@@ -159,7 +159,8 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 								if (task.timer != null && task.timer > 0) getTimeChip(task),
 								if (task.points != null && task.points.quantity != 0) getCurrencyChip(task)
 							],
-							actionButton: widget.showActions ? ItemCardActionButton(color: Colors.grey, icon: Icons.keyboard_arrow_up) : null,
+							isActive: false,
+							actionButton: widget.showActions ? ItemCardActionButton(color: Colors.grey[400], icon: Icons.keyboard_arrow_up) : null,
 						)
 			]
 		);
@@ -247,7 +248,7 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 						]
 			],
 			actionButton: widget.showActions ? ItemCardActionButton(
-				color: AppColors.childBackgroundColor, icon: Icons.check, onTapped: () => log("Tapped finished activity")
+				color: AppColors.childBackgroundColor, icon: Icons.check
 			) : null,
 		);
 	}

@@ -47,7 +47,7 @@ class ItemCard extends StatelessWidget {
 	final int titleMaxLines = 3;
 	static const double defaultImageHeight = 76.0;
 	final double progressIndicatorHeight = 10.0;
-	final Color disabledButtonColor = Colors.grey[200];
+	final Color disabledButtonColor = Colors.grey[100];
   final Color inactiveProgressBar = Colors.grey[300];
 
 	ItemCard({
@@ -87,21 +87,19 @@ class ItemCard extends StatelessWidget {
 	// Card's shape and interaction
 	@override
 	Widget build(BuildContext context) {
-		return IntrinsicHeight(
-			child: Card(
-				elevation: isActive ? 1.2 : 0.6,
-				color: isActive ? Colors.white : disabledButtonColor,
-				shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppBoxProperties.roundedCornersRadius)),
-				margin: EdgeInsets.symmetric(
-					vertical: AppBoxProperties.cardListPadding,
-					horizontal: AppBoxProperties.screenEdgePadding
-				),
-				child: (onTapped != null) ? InkWell(
-					onTap: onTapped, 
-					child:  buildStructure(context),
-					borderRadius: BorderRadius.circular(AppBoxProperties.roundedCornersRadius)
-				) : buildStructure(context)
-			)
+		return Card(
+      elevation: isActive ? 1.2 : 0.6,
+      color: isActive ? Colors.white : disabledButtonColor,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppBoxProperties.roundedCornersRadius)),
+      margin: EdgeInsets.symmetric(
+        vertical: AppBoxProperties.cardListPadding,
+        horizontal: AppBoxProperties.screenEdgePadding
+      ),
+      child: (onTapped != null) ? InkWell(
+        onTap: onTapped, 
+        child: buildStructure(context),
+        borderRadius: BorderRadius.circular(AppBoxProperties.roundedCornersRadius)
+      ) : buildStructure(context)
 		);
 	}
 
@@ -120,15 +118,14 @@ class ItemCard extends StatelessWidget {
 
 	// Structure change depending on big action button (progress bar goes under ActionSection)
 	Widget buildStructure(BuildContext context) {
-		if(progressPercentage != null && actionButton == null) 
-			return Column(
-				mainAxisAlignment: MainAxisAlignment.spaceBetween,
-				children: [
-					buildbaseLayout(context),
-					buildProgressBar()
-				]
-			);
-		return buildbaseLayout(context);
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        buildbaseLayout(context),
+        if(progressPercentage != null)
+          buildProgressBar()
+      ]
+    );
 	}
 
 	// Inner structure of MainSection (content + sometimes progress bar)
@@ -138,9 +135,7 @@ class ItemCard extends StatelessWidget {
 				crossAxisAlignment: CrossAxisAlignment.start,
 				mainAxisAlignment: (progressPercentage != null) ? MainAxisAlignment.spaceBetween : MainAxisAlignment.center,
 				children: <Widget>[
-					buildContentSection(context),
-					if(progressPercentage != null && actionButton != null)
-						buildProgressBar()
+					buildContentSection(context)
 				]
 			)
 		);
@@ -154,7 +149,7 @@ class ItemCard extends StatelessWidget {
 			children: <Widget>[
 				if(graphic != null || icon != null)
 					Padding(
-						padding: EdgeInsets.all(6.0),
+						padding: EdgeInsets.all(8.0),
 						child: icon != null ? icon : headerImage()
 					),
 				Expanded(
@@ -212,9 +207,7 @@ class ItemCard extends StatelessWidget {
 		return Container(
 			height: progressIndicatorHeight,
 			decoration: BoxDecoration(
-				borderRadius: actionButton != null ?
-					BorderRadius.only(bottomLeft: Radius.circular(AppBoxProperties.roundedCornersRadius))
-					: BorderRadius.vertical(bottom: Radius.circular(AppBoxProperties.roundedCornersRadius))
+				borderRadius: BorderRadius.vertical(bottom: Radius.circular(AppBoxProperties.roundedCornersRadius))
 			),
 			clipBehavior: Clip.hardEdge,
 			child: LinearProgressIndicator(
@@ -231,26 +224,29 @@ class ItemCard extends StatelessWidget {
 			return PopupMenuList(items: menuItems);
 		}
 		if(actionButton != null) {
-			if(actionButton.disabled) {
-				return FlatButton(
-					onPressed: null,
-					disabledColor: inactiveProgressBar,
-					shape: RoundedRectangleBorder(borderRadius: BorderRadius.horizontal(right: Radius.circular(AppBoxProperties.roundedCornersRadius))),
-					child: Center(
-						child: Icon(actionButton.icon, color: Colors.white, size: actionButton.size),
-					)
-				);
-			} else {
-				return FlatButton(
-					shape: RoundedRectangleBorder(borderRadius: BorderRadius.horizontal(right: Radius.circular(AppBoxProperties.roundedCornersRadius))),
-					onPressed: actionButton.disabled ? null : actionButton.onTapped,
-					color: actionButton.color,
-					disabledColor: disabledButtonColor,
-					child: Center(
-						child: Icon(actionButton.icon, color: Colors.white, size: actionButton.size),
-					)
-				);
-			}
+      return Container(
+        margin: EdgeInsets.all(8.0),
+        child: Ink(
+          decoration: ShapeDecoration(
+            color: actionButton.disabled ? inactiveProgressBar : actionButton.color,					
+            shape: ContinuousRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(AppBoxProperties.roundedCornersRadius))),
+            shadows: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(.2),
+                blurRadius: 4.0,
+                spreadRadius: 2.0
+              )
+            ]
+          ),
+          child: MaterialButton(
+            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            padding: EdgeInsets.all(8.0),
+            onPressed: actionButton.disabled ? null : actionButton.onTapped,
+            child: Icon(actionButton.icon, color: Colors.white, size: actionButton.size),
+            minWidth: 0
+          )
+        )
+      );
 		}
 		return SizedBox(width: 0, height: 0);
 	}

@@ -14,21 +14,30 @@ class RolesPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.mainBackgroundColor,
       body: Center(
-				child: Column(
-			    mainAxisAlignment: MainAxisAlignment.center,
-			    crossAxisAlignment: CrossAxisAlignment.center,
-			    children: <Widget>[
-			      Lottie.asset('assets/animation/sunflower_with_title_rotate_only.json', width: 280),
-			      _roleButton(context, UserRole.caregiver),
-			      _roleButton(context, UserRole.child),
-						AuthFloatingButton(
-							icon: Icons.help_outline,
-							action: () => showHelpDialog(context, 'first_steps'),
-							text: AppLocales.of(context).translate('page.loginSection.roles.help')
-						)
-			    ]
-			  ),
-			),
+				child:SingleChildScrollView(
+					child: Column(
+						mainAxisAlignment: MainAxisAlignment.center,
+						crossAxisAlignment: CrossAxisAlignment.center,
+						children: <Widget>[
+							Lottie.asset('assets/animation/sunflower_with_title_rotate_only.json', width: 280),
+							IntrinsicWidth(
+								child: Column(
+									crossAxisAlignment: CrossAxisAlignment.stretch,
+									children: [
+										_roleButton(context, UserRole.caregiver),
+										_roleButton(context, UserRole.child)
+									]
+								)
+							),
+							AuthFloatingButton(
+								icon: Icons.help_outline,
+								action: () => showHelpDialog(context, 'first_steps'),
+								text: AppLocales.of(context).translate('page.loginSection.roles.help')
+							)
+						]
+					)
+				)
+			)
     );
   }
 
@@ -43,9 +52,9 @@ class RolesPage extends StatelessWidget {
 		  child: FlatButton(
 			  onPressed: () => Navigator.of(context).pushNamed(role.signInPage.name),
 			  color: role == UserRole.caregiver ? AppColors.caregiverButtonColor : AppColors.childButtonColor,
-			  padding: EdgeInsets.all(20.0),
-			  child: Row(
-				  mainAxisAlignment: MainAxisAlignment.center,
+			  padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 28.0),
+			  child: Wrap(
+				  alignment: WrapAlignment.center,
 				  children: <Widget>[
 					  Text(
 						  '${AppLocales.of(context).translate("page.loginSection.roles.introduction")} ',

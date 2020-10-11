@@ -35,10 +35,10 @@ class UIChild extends UIUser {
 		);
 	}
 
-	UIChild.from(UIChild original, {String locale, String name, List<UIChildBadge> badges}) :
+	UIChild.from(UIChild original, {String locale, String name, List<UIChildBadge> badges, List<UIPoints> points}) :
 			todayPlanCount = original.todayPlanCount,
 			hasActivePlan = original.hasActivePlan,
-			points = original.points,
+			points = points ?? original.points,
 			badges = badges ?? original.badges,
 			rewards = original.rewards,
 			super.from(original, locale: locale, name: name);

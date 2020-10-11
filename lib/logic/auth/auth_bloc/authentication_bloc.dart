@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:fokus/services/observers/active_user_update_observer.dart';
 import 'package:fokus_auth/fokus_auth.dart';
 import 'package:logging/logging.dart';
 import 'package:get_it/get_it.dart';
@@ -32,6 +33,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 
 	StreamSubscription<AuthenticatedUser> _userSubscription;
 	List<ActiveUserObserver> _userObservers = [];
+	List<ActiveUserUpdateObserver> _userUpdateObservers = [];
 
   AuthenticationBloc() : super(AuthenticationState.unknown()) {
 	  observeUserChanges(GetIt.I<PlanKeeperService>());
@@ -55,8 +57,11 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 			  _appConfigRepository.signOutChild();
 			  add(AuthenticationUserChanged(AuthenticatedUser.empty));
 		  }
-	  } else if (event is AuthenticationActiveUserUpdated)
-	  	yield AuthenticationState.authenticated(event.user);
+	  } else if (event is AuthenticationActiveUserUpdated) {
+	  	var notifiedObservers = _userUpdateObservers.where((observer) => observer.userUpdateCondition(state.user, event.user)).toList();
+		  yield AuthenticationState.authenticated(event.user);
+		  notifiedObservers.forEach((observer) => observer.onUserUpdated(event.user));
+	  }
   }
 
 	Future<AuthenticationState> _processUserChangedEvent(AuthenticationUserChanged event) async {
@@ -97,6 +102,8 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 	}
 
 	void observeUserChanges(ActiveUserObserver observer) => _userObservers.add(observer);
+	void observeUserUpdates(ActiveUserUpdateObserver observer) => _userUpdateObservers.add(observer);
+
   void _onUserSignIn(User user) => _userObservers.forEach((observer) => observer.onUserSignIn(user));
   void _onUserSignOut(User user) => _userObservers.forEach((observer) => observer.onUserSignOut(user));
 }

@@ -1,4 +1,9 @@
 import 'package:flutter/widgets.dart';
+import 'package:get_it/get_it.dart';
+
+import 'package:fokus/model/ui/user/ui_user.dart';
+import 'package:fokus/logic/reloadable/reloadable_cubit.dart';
+import 'package:fokus/services/data/data_repository.dart';
 import 'package:fokus/model/db/date/time_date.dart';
 import 'package:fokus/model/db/gamification/child_reward.dart';
 import 'package:fokus/model/db/gamification/points.dart';
@@ -8,19 +13,15 @@ import 'package:fokus/model/ui/gamification/ui_points.dart';
 import 'package:fokus/model/ui/gamification/ui_reward.dart';
 import 'package:fokus/model/ui/user/ui_child.dart';
 import 'package:fokus/services/notifications/notification_service.dart';
-import 'package:get_it/get_it.dart';
-
-import 'package:fokus/model/ui/user/ui_user.dart';
-import 'package:fokus/logic/reloadable/reloadable_cubit.dart';
-import 'package:fokus/services/data/data_repository.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
 class ChildRewardsCubit extends ReloadableCubit {
 	final ActiveUserFunction _activeUser;
+
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final NotificationService _notificationService = GetIt.I<NotificationService>();
 
-  ChildRewardsCubit(this._activeUser, ModalRoute pageRoute) : super(pageRoute);
+  ChildRewardsCubit(this._activeUser, ModalRoute pageRoute) : super(pageRoute, observeUserUpdates: true);
 
 	List<UIReward> _updateRewardLimits(List<UIReward> rewards, List<UIChildReward> claimedRewards) {
 		Map<ObjectId, int> claimedCount = Map<ObjectId, int>();
@@ -71,6 +72,8 @@ class ChildRewardsCubit extends ReloadableCubit {
 		}
 	}
 
+	@override
+	bool userUpdateCondition(UIUser oldUser, UIUser newUser) => (oldUser as UIChild).points != (newUser as UIChild).points;
 }
 
 class ChildRewardsLoadSuccess extends DataLoadSuccess {

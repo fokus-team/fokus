@@ -69,8 +69,7 @@ class _CaregiverPlansPageState extends State<CaregiverPlansPage> {
 				  ItemCard(
 					  title: plan.name,
 					  subtitle: plan.description(context),
-					  actionButton: ItemCardActionButton(
-							  color: Colors.teal, icon: Icons.keyboard_arrow_right, onTapped: () => {Navigator.of(context).pushNamed(AppPage.planDetails.name, arguments: plan.id)}),
+						onTapped: () => Navigator.of(context).pushNamed(AppPage.planDetails.name, arguments: plan.id),
 					  chips: <Widget>[
 						  AttributeChip.withIcon(
 							  content: AppLocales.of(context).translate('$_pageKey.content.tasks', {'NUM_TASKS': plan.taskCount}),

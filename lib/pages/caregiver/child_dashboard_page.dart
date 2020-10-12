@@ -240,7 +240,7 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 								child: CircleAvatar(
 								backgroundColor: checked ? Colors.green : Colors.grey,
 								radius: 16.0,
-								child: Icon(checked ? Icons.check : Icons.remove, color: Colors.white, size: 20.0)
+								child: checked ? Icon(Icons.check, color: Colors.white, size: 20.0) : SizedBox(height: 20)
 							)
 						),
 						onTapped: onChange != null ? () => onChange(item.value, !checked) : null,

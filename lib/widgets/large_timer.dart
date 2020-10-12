@@ -29,6 +29,8 @@ class LargeTimer extends StatelessWidget {
 				Text(
 					AppLocales.of(context).translate(title),
 					style: Theme.of(context).textTheme.headline3.copyWith(color: textColor),
+					softWrap: false,
+					overflow: TextOverflow.fade
 				),
 				Text(
 					formatDuration(Duration(seconds: value)),

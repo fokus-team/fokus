@@ -192,32 +192,34 @@ class AppHeader extends StatelessWidget {
 						builder: (context, state) {
 							return Row(
 								children: <Widget>[
-									Padding(
-										padding: EdgeInsets.only(left: 4.0, right: 8.0),
-										child: state.user != null ? headerImage(state.user) : Container()
-									),
-									Column(
-										crossAxisAlignment: CrossAxisAlignment.start,
-										children: <Widget>[
-											RichText(
-												text: TextSpan(
-													text: '${state.user != null ? AppLocales.of(context).translate('page.${state.user.role.name}Section.panel.header.greetings') : ''},\n',
-													style: TextStyle(color: Colors.white, fontSize: 20),
-													children: <TextSpan>[
-														TextSpan(
-															text: state.user?.name ?? '',
-															style: Theme.of(context).textTheme.headline1.copyWith(color: Colors.white, height: 1.1)
-														)
-													]
-												),
-											)
-										],
-									),
+									if(state.user != null)
+										Padding(
+											padding: EdgeInsets.only(left: 4.0, right: 8.0),
+											child: state.user != null ? headerImage(state.user) : Container()
+										),
+									if(state.user != null)
+										Column(
+											crossAxisAlignment: CrossAxisAlignment.start,
+											children: <Widget>[
+												RichText(
+													text: TextSpan(
+														text: '${state.user != null ? AppLocales.of(context).translate('page.${state.user.role.name}Section.panel.header.greetings') : ''},\n',
+														style: TextStyle(color: Colors.white, fontSize: 20),
+														children: <TextSpan>[
+															TextSpan(
+																text: state.user.name ?? '',
+																style: Theme.of(context).textTheme.headline1.copyWith(color: Colors.white, height: 1.1)
+															)
+														]
+													)
+												)
+											]
+										)
 								]
 							);
 						}
 					),
-					_userHeaderIcons(context),
+					_userHeaderIcons(context)
 				]
 			)
 		);
@@ -236,7 +238,7 @@ class AppHeader extends StatelessWidget {
 							style: Theme.of(context).textTheme.headline1.copyWith(color: Colors.white)
 						)
 					),
-					_userHeaderIcons(context),
+					_userHeaderIcons(context)
 				]
 			)
 		);
@@ -290,6 +292,7 @@ class AppHeader extends StatelessWidget {
 	 }
 
 	Widget _userHeaderIcons(BuildContext context) {
+  	// ignore: close_sinks
 		var auth = context.bloc<AuthenticationBloc>();
 		return Row(
 			children: <Widget>[
@@ -303,8 +306,8 @@ class AppHeader extends StatelessWidget {
 							UIButton('navigation.caregiver.currencies', () => Navigator.of(context).pushNamed(AppPage.caregiverCurrencies.name)),
 						UIButton('actions.signOut', () => auth.add(AuthenticationSignOutRequested())),
 					]
-				),
-			],
+				)
+			]
 		);
 	}
 }

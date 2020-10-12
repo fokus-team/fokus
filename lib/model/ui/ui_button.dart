@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/theme_config.dart';
+import 'package:fokus/utils/ui/theme_config.dart';
 
 enum ButtonType { exit, ok, retry, close, details, edit, delete, unpair, signIn, signUp }
 

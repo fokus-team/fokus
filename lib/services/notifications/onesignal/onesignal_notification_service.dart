@@ -6,7 +6,7 @@ import 'package:fokus/model/notification/notification_text.dart';
 import 'package:fokus/model/notification/notification_button.dart';
 import 'package:fokus/services/notifications/notification_service.dart';
 import 'package:fokus/services/notifications/onesignal/onesignal_notification_provider.dart';
-import 'package:fokus/utils/theme_config.dart';
+import 'package:fokus/utils/ui/theme_config.dart';
 import 'package:fokus/model/currency_type.dart';
 import 'package:fokus/model/notification/notification_group.dart';
 import 'package:fokus/model/ui/user/ui_user.dart';

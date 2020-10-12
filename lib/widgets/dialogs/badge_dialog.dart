@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fokus/model/ui/gamification/ui_badge.dart';
 import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/app_paths.dart';
-import 'package:fokus/utils/icon_sets.dart';
+import 'package:fokus/utils/ui/app_paths.dart';
+import 'package:fokus/utils/ui/icon_sets.dart';
 import 'package:fokus/widgets/buttons/rounded_button.dart';
 import 'package:intl/intl.dart';
 

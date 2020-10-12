@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/theme_config.dart';
+import 'package:fokus/utils/ui/theme_config.dart';
 import 'package:fokus/widgets/buttons/help_icon_button.dart';
 import 'package:fokus/widgets/general/app_hero.dart';
 

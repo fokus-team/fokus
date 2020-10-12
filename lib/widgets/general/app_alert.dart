@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fokus/utils/theme_config.dart';
+import 'package:fokus/utils/ui/theme_config.dart';
 
 class AppAlert extends StatelessWidget {
 	final String text;

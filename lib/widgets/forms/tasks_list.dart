@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fokus/logic/plan_form/plan_form_cubit.dart';
+import 'package:fokus/logic/caregiver/plan_form/plan_form_cubit.dart';
 import 'package:fokus/utils/bloc_utils.dart';
 import 'package:fokus/widgets/cards/task_card.dart';
 import 'package:fokus/widgets/general/app_hero.dart';
@@ -9,8 +9,8 @@ import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorder
 import 'package:fokus/model/ui/form/task_form_model.dart';
 import 'package:fokus/model/ui/form/plan_form_model.dart';
 
-import 'package:fokus/utils/dialog_utils.dart';
-import 'package:fokus/utils/theme_config.dart';
+import 'package:fokus/utils/ui/dialog_utils.dart';
+import 'package:fokus/utils/ui/theme_config.dart';
 import 'package:fokus/services/app_locales.dart';
 
 import 'package:fokus/widgets/dialogs/general_dialog.dart';

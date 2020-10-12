@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fokus/logic/caregiver_plans_cubit.dart';
+import 'package:fokus/logic/caregiver/caregiver_plans_cubit.dart';
 import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/ui/plan/ui_plan.dart';
 import 'package:fokus/services/app_locales.dart';

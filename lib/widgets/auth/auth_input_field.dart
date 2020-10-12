@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 
 import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/logic/auth/formz_state.dart';
+import 'package:fokus/logic/common/formz_state.dart';
 
 class AuthenticationInputField<Bloc extends Cubit<State>, State extends FormzState> extends StatelessWidget {
 	final List<dynamic> Function(State) getErrorKey;

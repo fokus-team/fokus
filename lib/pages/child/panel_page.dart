@@ -1,29 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mongo_dart/mongo_dart.dart' as Mongo;
-import 'package:fokus/logic/auth/auth_bloc/authentication_bloc.dart';
 
+import 'package:fokus/logic/auth/auth_bloc/authentication_bloc.dart';
 import 'package:fokus/logic/child_plans_cubit.dart';
-import 'package:fokus/model/currency_type.dart';
-import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/logic/timer/timer_cubit.dart';
 import 'package:fokus/model/db/plan/plan_instance_state.dart';
+import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/ui/plan/ui_plan_instance.dart';
 import 'package:fokus/model/ui/user/ui_child.dart';
-import 'package:fokus/model/ui/user/ui_user.dart';
 import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/services/notifications/notification_service.dart';
 import 'package:fokus/utils/duration_utils.dart';
 import 'package:fokus/utils/theme_config.dart';
 import 'package:fokus/widgets/app_header.dart';
 import 'package:fokus/widgets/app_navigation_bar.dart';
+import 'package:fokus/widgets/buttons/rounded_button.dart';
+import 'package:fokus/widgets/cards/item_card.dart';
 import 'package:fokus/widgets/chips/attribute_chip.dart';
 import 'package:fokus/widgets/chips/timer_chip.dart';
-import 'package:fokus/widgets/cards/item_card.dart';
-import 'package:fokus/widgets/buttons/rounded_button.dart';
 import 'package:fokus/widgets/loadable_bloc_builder.dart';
 import 'package:fokus/widgets/segment.dart';
-import 'package:get_it/get_it.dart';
 
 
 class ChildPanelPage extends StatefulWidget {
@@ -90,24 +85,12 @@ class _ChildPanelPageState extends State<ChildPanelPage> {
 							icon: Icons.calendar_today,
 							text: AppLocales.of(context).translate('$_pageKey.content.futurePlans'),
 							color: AppColors.childButtonColor,
-							onPressed: () {
-								notificationTest();
-								Navigator.of(context).pushNamed(AppPage.childCalendar.name, arguments: currentUser.id);
-							}
+							onPressed: () => Navigator.of(context).pushNamed(AppPage.childCalendar.name, arguments: currentUser.id)
 						)
 					]
 				)
     ];
   }
-
-	void notificationTest() {
-		var child = UIUser(Mongo.ObjectId.parse('5f81c09ef8c8df81f0ab7bf3'), 'Maciek', avatar: 0);
-		var service = GetIt.I<NotificationService>();
-		service.sendTaskApprovedNotification(Mongo.ObjectId.parse('5f81c2cb928a682fc48e818d'), 'Sprzątanie pokoju', child.id, 4, CurrencyType.diamond, 12);
-		//service.sendBadgeAwardedNotification("Ba", 8, child.id);
-		//service.sendRewardBoughtNotification(Mongo.ObjectId.parse("5f81cc38a0c78d22451c4ff5"), 'Godzina gry na konsoli', Mongo.ObjectId.parse("5f81bf9ff8c8df81f0ab7bf0"), child);
-		//service.sendTaskFinishedNotification(Mongo.ObjectId.parse("5f81c2f80801b6cc395f7702"), 'Sprzątanie', Mongo.ObjectId.parse("5f81bf9ff8c8df81f0ab7bf0"), child, completed: true);
-	}
 
   Segment _getPlansSegment({List<UIPlanInstance> plans, String title, String noElementsMessage, bool displayTimer = false}) {
   	return Segment(

@@ -7,6 +7,7 @@ import 'package:fokus/services/data/data_repository.dart';
 import 'package:fokus/model/db/date/time_date.dart';
 import 'package:fokus/model/db/gamification/child_reward.dart';
 import 'package:fokus/model/db/gamification/points.dart';
+import 'package:fokus/model/notification/notification_type.dart';
 import 'package:fokus/model/db/gamification/reward.dart';
 import 'package:fokus/model/ui/gamification/ui_currency.dart';
 import 'package:fokus/model/ui/gamification/ui_points.dart';
@@ -21,7 +22,7 @@ class ChildRewardsCubit extends ReloadableCubit {
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final NotificationService _notificationService = GetIt.I<NotificationService>();
 
-  ChildRewardsCubit(this._activeUser, ModalRoute pageRoute) : super(pageRoute, observeUserUpdates: true);
+  ChildRewardsCubit(this._activeUser, ModalRoute pageRoute) : super(pageRoute);
 
 	List<UIReward> _updateRewardLimits(List<UIReward> rewards, List<UIChildReward> claimedRewards) {
 		Map<ObjectId, int> claimedCount = Map<ObjectId, int>();
@@ -73,7 +74,7 @@ class ChildRewardsCubit extends ReloadableCubit {
 	}
 
 	@override
-	bool userUpdateCondition(UIUser oldUser, UIUser newUser) => (oldUser as UIChild).points != (newUser as UIChild).points;
+	List<NotificationType> dataTypeSubscription() => [NotificationType.taskApproved];
 }
 
 class ChildRewardsLoadSuccess extends DataLoadSuccess {

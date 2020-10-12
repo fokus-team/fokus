@@ -1,5 +1,4 @@
 import 'package:flutter/widgets.dart';
-import 'package:fokus/model/ui/gamification/ui_points.dart';
 import 'package:get_it/get_it.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/logic/auth/auth_bloc/authentication_bloc.dart';
 import 'package:fokus/model/notification/notification_data.dart';
 import 'package:fokus/model/notification/notification_type.dart';
+import 'package:fokus/model/ui/gamification/ui_points.dart';
 import 'package:fokus/model/db/user/child.dart';
 import 'package:fokus/model/ui/gamification/ui_badge.dart';
 import 'package:fokus/model/ui/user/ui_child.dart';
@@ -81,6 +81,7 @@ class OneSignalNotificationProvider extends NotificationProvider {
 			  Child user = await dataRepository.getUser(id: activeUser.id, fields: ['points']);
 			  context.bloc<AuthenticationBloc>().add(AuthenticationActiveUserUpdated(UIChild.from(activeUser, points: user.points.map((points) => UIPoints.fromDBModel(points)).toList())));
 		  }
+		  onNotificationReceived(data.type);
 	  });
 	  OneSignal.shared.setNotificationOpenedHandler(_onNotificationOpened);
 	  OneSignal.shared.setSubscriptionObserver((changes) {

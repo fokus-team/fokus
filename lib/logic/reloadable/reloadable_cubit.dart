@@ -2,23 +2,18 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
-import 'package:fokus/logic/auth/auth_bloc/authentication_bloc.dart';
-import 'package:fokus/model/ui/user/ui_user.dart';
-import 'package:fokus/services/observers/active_user_update_observer.dart';
 import 'package:get_it/get_it.dart';
 
+import 'package:fokus/model/notification/notification_type.dart';
+import 'package:fokus/services/notifications/notification_service.dart';
+import 'package:fokus/services/observers/data_update_observer.dart';
 part 'loadable_state.dart';
 
-abstract class ReloadableCubit extends Cubit<LoadableState> with ActiveUserUpdateObserver implements RouteAware {
+abstract class ReloadableCubit extends Cubit<LoadableState> with DataUpdateObserver implements RouteAware {
 	final _routeObserver = GetIt.I<RouteObserver<PageRoute>>();
-	final _navigatorKey = GetIt.I<GlobalKey<NavigatorState>>();
+	final NotificationService _notificationService = GetIt.I<NotificationService>();
 
-	@protected
-	final bool observeUserUpdates;
-
-	AuthenticationBloc _authBloc() => _navigatorKey.currentState.context.bloc<AuthenticationBloc>();
-
-  ReloadableCubit(ModalRoute pageRoute, {this.observeUserUpdates = false}) : super(DataLoadInitial()) {
+  ReloadableCubit(ModalRoute pageRoute) : super(DataLoadInitial()) {
 	  _subscribeToUserChanges();
 	  _routeObserver.subscribe(this, pageRoute);
   }
@@ -35,11 +30,11 @@ abstract class ReloadableCubit extends Cubit<LoadableState> with ActiveUserUpdat
   void reload() => emit(DataLoadInitial());
 
 	@override
-	void onUserUpdated(UIUser user) => reload();
+	void onDataUpdated(NotificationType type) => reload();
 
 	void _subscribeToUserChanges() {
-		if (observeUserUpdates)
-			_authBloc().observeUserUpdates(this);
+		if (dataTypeSubscription().isNotEmpty)
+			_notificationService.observeDataUpdates(this);
 	}
 
 	@override
@@ -55,11 +50,11 @@ abstract class ReloadableCubit extends Cubit<LoadableState> with ActiveUserUpdat
 	}
 
 	@override
-	void didPop() => _authBloc().removeUserUpdateObserver(this);
+	void didPop() => _notificationService.removeDataUpdateObserver(this);
 
 	@override
 	void didPush() {}
 
 	@override
-	void didPushNext() => _authBloc().removeUserUpdateObserver(this);
+	void didPushNext() => _notificationService.removeDataUpdateObserver(this);
 }

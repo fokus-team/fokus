@@ -33,7 +33,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 
 	StreamSubscription<AuthenticatedUser> _userSubscription;
 	List<ActiveUserObserver> _userObservers = [];
-	List<ActiveUserUpdateObserver> _userUpdateObservers = [];
+	Map<Type, ActiveUserUpdateObserver> _userUpdateObservers = {};
 
   AuthenticationBloc() : super(AuthenticationState.unknown()) {
 	  observeUserChanges(GetIt.I<PlanKeeperService>());
@@ -58,7 +58,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 			  add(AuthenticationUserChanged(AuthenticatedUser.empty));
 		  }
 	  } else if (event is AuthenticationActiveUserUpdated) {
-	  	var notifiedObservers = _userUpdateObservers.where((observer) => observer.userUpdateCondition(state.user, event.user)).toList();
+	  	var notifiedObservers = _userUpdateObservers.values.where((observer) => observer.userUpdateCondition(state.user, event.user)).toList();
 		  yield AuthenticationState.authenticated(event.user);
 		  notifiedObservers.forEach((observer) => observer.onUserUpdated(event.user));
 	  }
@@ -102,7 +102,8 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 	}
 
 	void observeUserChanges(ActiveUserObserver observer) => _userObservers.add(observer);
-	void observeUserUpdates(ActiveUserUpdateObserver observer) => _userUpdateObservers.add(observer);
+	void observeUserUpdates(ActiveUserUpdateObserver observer) => _userUpdateObservers[observer.runtimeType] = observer;
+	void removeUserUpdateObserver(ActiveUserUpdateObserver observer) => _userUpdateObservers.remove(observer.runtimeType);
 
   void _onUserSignIn(User user) => _userObservers.forEach((observer) => observer.onUserSignIn(user));
   void _onUserSignOut(User user) => _userObservers.forEach((observer) => observer.onUserSignOut(user));

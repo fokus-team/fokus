@@ -13,10 +13,14 @@ abstract class ReloadableCubit extends Cubit<LoadableState> with ActiveUserUpdat
 	final _routeObserver = GetIt.I<RouteObserver<PageRoute>>();
 	final _navigatorKey = GetIt.I<GlobalKey<NavigatorState>>();
 
-  ReloadableCubit(ModalRoute pageRoute, {bool observeUserUpdates = false}) : super(DataLoadInitial()) {
+	@protected
+	final bool observeUserUpdates;
+
+	AuthenticationBloc _authBloc() => _navigatorKey.currentState.context.bloc<AuthenticationBloc>();
+
+  ReloadableCubit(ModalRoute pageRoute, {this.observeUserUpdates = false}) : super(DataLoadInitial()) {
+	  _subscribeToUserChanges();
 	  _routeObserver.subscribe(this, pageRoute);
-	  if (observeUserUpdates)
-	    _navigatorKey.currentState.context.bloc<AuthenticationBloc>().observeUserUpdates(this);
   }
 
   void loadData() {
@@ -31,7 +35,12 @@ abstract class ReloadableCubit extends Cubit<LoadableState> with ActiveUserUpdat
   void reload() => emit(DataLoadInitial());
 
 	@override
-	void onUserUpdated(UIUser user) => doLoadData();
+	void onUserUpdated(UIUser user) => reload();
+
+	void _subscribeToUserChanges() {
+		if (observeUserUpdates)
+			_authBloc().observeUserUpdates(this);
+	}
 
 	@override
 	Future<void> close() {
@@ -40,14 +49,17 @@ abstract class ReloadableCubit extends Cubit<LoadableState> with ActiveUserUpdat
 	}
 
 	@override
-	void didPopNext() => reload();
+	void didPopNext() {
+		_subscribeToUserChanges();
+	  reload();
+	}
 
 	@override
-	void didPop() {}
+	void didPop() => _authBloc().removeUserUpdateObserver(this);
 
 	@override
 	void didPush() {}
 
 	@override
-	void didPushNext() {}
+	void didPushNext() => _authBloc().removeUserUpdateObserver(this);
 }

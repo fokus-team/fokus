@@ -312,17 +312,7 @@ class AppHeader extends StatelessWidget {
 	}
 }
 
-class ChildCustomHeader extends StatefulWidget {
-	final List<UIPoints> points;
-
-	ChildCustomHeader({this.points});
-
-	@override
-	_ChildCustomHeaderState createState() => new _ChildCustomHeaderState();
-}
-
-class _ChildCustomHeaderState extends State<ChildCustomHeader> {
-	@override
+class ChildCustomHeader extends StatelessWidget {
 	Widget build(BuildContext context) {
 		var getPoints = (AuthenticationState state) => (state.user as UIChild)?.points;
 		return AppHeader.greetings(text: 'page.childSection.panel.header.pageHint', headerActionButtons: [
@@ -331,7 +321,7 @@ class _ChildCustomHeaderState extends State<ChildCustomHeader> {
 					child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
 						buildWhen: (oldState, newState) => getPoints(oldState) != getPoints(newState),
 						builder: (context, state) {
-							List<UIPoints> points = (widget.points != null) ? widget.points : getPoints(state) ?? [];
+							List<UIPoints> points = getPoints(state) ?? [];
 							return Row(
 								children: <Widget>[
 									Text(

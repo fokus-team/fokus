@@ -8,6 +8,7 @@ import 'package:fokus/model/db/plan/task_instance.dart';
 import 'package:fokus/model/ui/plan/ui_plan_instance.dart';
 import 'package:fokus/model/ui/task/ui_task_instance.dart';
 import 'package:fokus/services/data/data_repository.dart';
+import 'package:fokus/services/plan_keeper_service.dart';
 import 'package:fokus/services/plan_repeatability_service.dart';
 import 'package:fokus/services/task_instance_service.dart';
 import 'package:fokus/utils/duration_utils.dart';
@@ -18,6 +19,7 @@ class PlanInstanceCubit extends ReloadableCubit {
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final TaskInstanceService _taskInstancesService = GetIt.I<TaskInstanceService>();
 	final PlanRepeatabilityService _repeatabilityService = GetIt.I<PlanRepeatabilityService>();
+	final PlanKeeperService _planService = GetIt.I<PlanKeeperService>();
 	final ObjectId _planInstanceId;
 
 	PlanInstanceCubit(this._planInstanceId, ModalRoute modalRoute) : super(modalRoute);
@@ -26,14 +28,10 @@ class PlanInstanceCubit extends ReloadableCubit {
 
 	@override
 	void doLoadData() async {
-		var getDescription = (Plan plan, [Date instanceDate]) => _repeatabilityService.buildPlanDescription(plan.repeatability, instanceDate: instanceDate);
 		planInstance = await _dataRepository.getPlanInstance(id: _planInstanceId);
 		if(planInstance.taskInstances == null || planInstance.taskInstances.isEmpty)
 			_taskInstancesService.createTaskInstances(planInstance);
-		var plan = await _dataRepository.getPlan(id: planInstance.planID);
-		var elapsedTime = () => sumDurations(planInstance.duration).inSeconds;
-		var completedTasks = await _dataRepository.getCompletedTaskCount(planInstance.id);
-		var uiPlanInstance = UIPlanInstance.fromDBModel(planInstance, plan.name, completedTasks, elapsedTime, getDescription(plan, planInstance.date));
+		var uiPlanInstance = await _planService.loadPlanInstance(planInstance: planInstance);
 		var allTasksInstances = await _dataRepository.getTaskInstances(planInstanceId: _planInstanceId);
 
 		List<UITaskInstance> uiInstances = await _taskInstancesService.mapToUIModels(allTasksInstances);

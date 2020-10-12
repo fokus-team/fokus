@@ -56,7 +56,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 			  add(AuthenticationUserChanged(AuthenticatedUser.empty));
 		  }
 	  } else if (event is AuthenticationActiveUserUpdated)
-	  	yield AuthenticationState.authenticated(event.user);
+		  yield AuthenticationState.authenticated(event.user);
   }
 
 	Future<AuthenticationState> _processUserChangedEvent(AuthenticationUserChanged event) async {

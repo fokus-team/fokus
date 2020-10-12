@@ -14,6 +14,7 @@ import 'package:fokus/model/ui/user/ui_caregiver.dart';
 import 'package:fokus/model/ui/user/ui_child.dart';
 import 'package:fokus/model/ui/user/ui_user.dart';
 import 'package:fokus/services/data/data_repository.dart';
+import 'package:fokus/services/notifications/notification_service.dart';
 import 'package:fokus/services/task_instance_service.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mongo_dart/mongo_dart.dart';
@@ -23,6 +24,8 @@ part 'tasks_evaluation_state.dart';
 class TasksEvaluationCubit extends Cubit<TasksEvaluationState> {
   final DataRepository _dataRepository = GetIt.I<DataRepository>();
   final TaskInstanceService _taskInstanceService = GetIt.I<TaskInstanceService>();
+  final NotificationService _notificationService = GetIt.I<NotificationService>();
+
 	final ActiveUserFunction _activeUser;
 	List<UITaskInstance> _uiTaskInstances;
 	List<UITaskReport> _reports = [];
@@ -56,14 +59,16 @@ class TasksEvaluationCubit extends Cubit<TasksEvaluationState> {
 	void rateTask(UITaskReport report) async {
 		List<Future> updates = [];
 		if(report.ratingMark == UITaskReportMark.rejected) {
+			await _notificationService.sendTaskRejectedNotification(report.task.planInstanceId, report.task.name, report.child.id);
 			updates.add(_dataRepository.updatePlanInstanceFields(report.task.planInstanceId, state: PlanInstanceState.notCompleted));
 			updates.add(_dataRepository.updateTaskInstanceFields(report.task.id, state:TaskState.rejected));
 		} else {
 			int pointsAwarded;
-			if(report.task.points != null)
+			bool hasPoints = report.task.points != null;
+			if(hasPoints)
 				pointsAwarded =  getPointsAwarded(report.task.points.quantity, report.ratingMark.value);
 			updates.add(_dataRepository.updateTaskInstanceFields(report.task.id, state: TaskState.evaluated, rating: report.ratingMark.value, pointsAwarded: pointsAwarded));
-			if (report.task.points != null) {
+			if (hasPoints) {
 			  Child child = await _dataRepository.getUser(id: report.child.id);
 			  List<Points> newPoints = child.points;
 			  if(newPoints != null && newPoints.isNotEmpty && newPoints.any((element) => element.icon == report.task.points.type)) {
@@ -74,6 +79,8 @@ class TasksEvaluationCubit extends Cubit<TasksEvaluationState> {
 			  }
 				updates.add(_dataRepository.updateUser(child.id, points: newPoints));
 			}
+			await _notificationService.sendTaskApprovedNotification(report.task.planInstanceId, report.task.name, report.child.id,
+					report.ratingMark.value, hasPoints ? report.task.points.type : null, hasPoints ? pointsAwarded : null);
 		}
 		await Future.wait(updates);
 		emit(TasksEvaluationSubmissionSuccess(_reports));

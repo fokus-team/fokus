@@ -31,9 +31,7 @@ class _ChildRewardsPageState extends State<ChildRewardsPage> {
 				crossAxisAlignment: CrossAxisAlignment.start,
 				mainAxisSize: MainAxisSize.min,
 				children: [
-					BlocBuilder<ChildRewardsCubit, LoadableState>(
-						builder: (context, state) => ChildCustomHeader(points: state is DataLoadSuccess ? (state as ChildRewardsLoadSuccess).points : null)
-					),
+					ChildCustomHeader(),
 		      LoadableBlocBuilder<ChildRewardsCubit>(
 				    builder: (context, state) => 
 							AppSegments(

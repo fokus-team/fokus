@@ -1,15 +1,26 @@
 import 'package:flutter/widgets.dart';
-import 'package:fokus/model/notification/notification_data.dart';
-import 'package:fokus/model/notification/notification_type.dart';
-import 'package:fokus/model/ui/app_page.dart';
-import 'package:fokus/services/notifications/notification_provider.dart';
 import 'package:get_it/get_it.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'package:fokus/logic/auth/auth_bloc/authentication_bloc.dart';
+import 'package:fokus/model/notification/notification_data.dart';
+import 'package:fokus/model/notification/notification_type.dart';
+import 'package:fokus/model/ui/gamification/ui_points.dart';
+import 'package:fokus/model/db/user/child.dart';
+import 'package:fokus/model/ui/gamification/ui_badge.dart';
+import 'package:fokus/model/ui/user/ui_child.dart';
+import 'package:fokus/services/plan_keeper_service.dart';
+import 'package:fokus/model/ui/app_page.dart';
+import 'package:fokus/model/db/user/user_role.dart';
+import 'package:fokus/utils/snackbar_utils.dart';
+import 'package:fokus/services/notifications/notification_provider.dart';
 
 
 class OneSignalNotificationProvider extends NotificationProvider {
 	final String appId = 'ed3ee23f-aa7a-4fc7-91ab-9967fa7712e5';
 	final _navigatorKey = GetIt.I<GlobalKey<NavigatorState>>();
+	final PlanKeeperService _planService = GetIt.I<PlanKeeperService>();
 
 	OneSignalNotificationProvider() {
 		_configureOneSignal();
@@ -29,22 +40,50 @@ class OneSignalNotificationProvider extends NotificationProvider {
 		await OneSignal.shared.promptUserForPushNotificationPermission(fallbackToSettings: true);
 	}
 
+	void _onNotificationOpened(OSNotificationOpenedResult result) async {
+		logger.fine("onOpenMessage: $result");
+		var navigate = (AppPage page, [dynamic arguments]) => _navigatorKey.currentState.pushNamed(page.name, arguments: arguments);
+		var context = _navigatorKey.currentState.context;
+		var data = NotificationData.fromJson(result.notification.payload.additionalData);
+		var activeUser = context.bloc<AuthenticationBloc>().state.user;
+		if (activeUser == null || activeUser.id != data.recipient) {
+			if (activeUser == null)
+				navigate(data.type.recipient.signInPage);
+			showFailSnackbar(context, 'authentication.signInPrompt');
+			return;
+		}
+		dynamic arguments = data.subject;
+		if (data.type.redirectPage == AppPage.planInstanceDetails) {
+			arguments = await _planService.loadPlanInstance(planInstanceId: data.subject);
+			navigate(data.type.redirectPage, arguments);
+			return;
+		} else if (data.type.redirectPage == AppPage.caregiverChildDashboard) {
+			arguments = Map<String, dynamic>();
+			arguments['tab'] = data.type == NotificationType.rewardBought ? 1 : 0;
+			if (data.subject != null)
+				arguments['id'] = data.subject;
+		}
+		navigate(data.type.redirectPage, arguments);
+	}
+
   void _configureNotificationHandlers() {
-	  OneSignal.shared.setNotificationReceivedHandler((OSNotification notification) {
+	  OneSignal.shared.setNotificationReceivedHandler((OSNotification notification) async {
 		  logger.fine("onMessage: $notification");
+		  var context = _navigatorKey.currentState.context;
+		  var data = NotificationData.fromJson(notification.payload.additionalData);
+		  var activeUser = context.bloc<AuthenticationBloc>().state.user;
+		  if (activeUser == null || activeUser.id != data.recipient)
+		  	return;
+		  if (data.type == NotificationType.badgeAwarded) {
+			  Child user = await dataRepository.getUser(id: activeUser.id, fields: ['badges']);
+			  context.bloc<AuthenticationBloc>().add(AuthenticationActiveUserUpdated(UIChild.from(activeUser, badges: user.badges.map((badge) => UIChildBadge.fromDBModel(badge)).toList())));
+		  } else if (data.type == NotificationType.taskApproved) {
+			  Child user = await dataRepository.getUser(id: activeUser.id, fields: ['points']);
+			  context.bloc<AuthenticationBloc>().add(AuthenticationActiveUserUpdated(UIChild.from(activeUser, points: user.points.map((points) => UIPoints.fromDBModel(points)).toList())));
+		  }
+		  onNotificationReceived(data.type);
 	  });
-	  OneSignal.shared.setNotificationOpenedHandler((OSNotificationOpenedResult result) {
-		  logger.fine("onOpenMessage: $result");
-		  var data = NotificationData.fromJson(result.notification.payload.additionalData);
-		  dynamic arguments = data.subject;
-			if (data.type.redirectPage == AppPage.caregiverChildDashboard) {
-				arguments = {'tab': data.type == NotificationType.rewardBought ? 1 : 0};
-				if (data.subject != null)
-					arguments['id'] = data.subject;
-			} else if (data.subject != null)
-				arguments = data.subject;
-			_navigatorKey.currentState.pushNamed(data.type.redirectPage.name, arguments: arguments);
-	  });
+	  OneSignal.shared.setNotificationOpenedHandler(_onNotificationOpened);
 	  OneSignal.shared.setSubscriptionObserver((changes) {
 	  	if (activeUser == null)
 	  		return;

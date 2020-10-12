@@ -30,7 +30,8 @@ class UIUser extends Equatable {
 		name ?? original.name,
 		locale: locale ?? original.locale,
 		avatar: original.avatar,
-		role: original.role
+		role: original.role,
+		connections: original.connections
 	);
 
 	@override

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fokus/logic/caregiver_plans_cubit.dart';
+import 'package:fokus/logic/caregiver/caregiver_plans_cubit.dart';
 import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/ui/plan/ui_plan.dart';
 import 'package:fokus/services/app_locales.dart';
@@ -39,47 +39,46 @@ class _CaregiverPlansPageState extends State<CaregiverPlansPage> {
 			),
 			bottomNavigationBar: AppNavigationBar.caregiverPage(currentIndex: 1));
 	}
-}
 
-List<Segment> _buildPanelSegments(CaregiverPlansLoadSuccess state, context) {
-	var activePlans = state.plans.where((blueprint) => (blueprint.isActive)).toList();
-	var deactivatedPlans = state.plans.where((blueprint) => (!blueprint.isActive)).toList();
-	return [
-		_getPlansSegment(
-			plans: activePlans,
-			title: '$_pageKey.content.addedActivePlansTitle',
-			noElementsAction: deactivatedPlans.isEmpty ? RaisedButton(
-				child: Text(AppLocales.of(context).translate('$_pageKey.header.addPlan'),
-					style: Theme.of(context).textTheme.button),
-				onPressed: () => {}
-			) : SizedBox.shrink(),
-			context: context
-		),
-		if (deactivatedPlans.isNotEmpty)
-			_getPlansSegment(plans: deactivatedPlans, title: '$_pageKey.content.addedDeactivatedPlansTitle', context: context)
-	];
-}
+  List<Segment> _buildPanelSegments(CaregiverPlansLoadSuccess state, context) {
+	  var activePlans = state.plans.where((blueprint) => (blueprint.isActive)).toList();
+	  var deactivatedPlans = state.plans.where((blueprint) => (!blueprint.isActive)).toList();
+	  return [
+		  _getPlansSegment(
+			  plans: activePlans,
+			  title: '$_pageKey.content.addedActivePlansTitle',
+			  noElementsAction: deactivatedPlans.isEmpty ? RaisedButton(
+				  child: Text(AppLocales.of(context).translate('$_pageKey.header.addPlan'),
+						  style: Theme.of(context).textTheme.button),
+				  onPressed: () => Navigator.of(context).pushNamed(AppPage.caregiverPlanForm.name)
+			  ) : SizedBox.shrink(),
+			  context: context
+		  ),
+		  if (deactivatedPlans.isNotEmpty)
+			  _getPlansSegment(plans: deactivatedPlans, title: '$_pageKey.content.addedDeactivatedPlansTitle', context: context)
+	  ];
+  }
 
-Segment _getPlansSegment({List<UIPlan> plans, String title, String noElementsMessage, Widget noElementsAction, context}) {
-	return Segment(
-		title: title,
-		noElementsMessage: '$_pageKey.content.noPlansAdded',
-		noElementsAction: noElementsAction,
-		elements: <Widget>[
-			for (var plan in plans)
-				ItemCard(
-					title: plan.name,
-					subtitle: plan.description(context),
-					actionButton: ItemCardActionButton(
-						color: Colors.teal, icon: Icons.keyboard_arrow_right, onTapped: () => {Navigator.of(context).pushNamed(AppPage.planDetails.name, arguments: plan.id)}),
-					chips: <Widget>[
-						AttributeChip.withIcon(
-							content: AppLocales.of(context).translate('$_pageKey.content.tasks', {'NUM_TASKS': plan.taskCount}),
-							color: Colors.indigo,
-							icon: Icons.layers
-						)
-					]
-				)
-		]
-	);
+  Segment _getPlansSegment({List<UIPlan> plans, String title, String noElementsMessage, Widget noElementsAction, context}) {
+	  return Segment(
+		  title: title,
+		  noElementsMessage: '$_pageKey.content.noPlansAdded',
+		  noElementsAction: noElementsAction,
+		  elements: <Widget>[
+			  for (var plan in plans)
+				  ItemCard(
+					  title: plan.name,
+					  subtitle: plan.description(context),
+						onTapped: () => Navigator.of(context).pushNamed(AppPage.planDetails.name, arguments: plan.id),
+					  chips: <Widget>[
+						  AttributeChip.withIcon(
+							  content: AppLocales.of(context).translate('$_pageKey.content.tasks', {'NUM_TASKS': plan.taskCount}),
+							  color: Colors.indigo,
+							  icon: Icons.layers
+						  )
+					  ]
+				  )
+		  ]
+	  );
+  }
 }

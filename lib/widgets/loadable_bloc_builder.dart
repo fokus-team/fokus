@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fokus/logic/reloadable/reloadable_cubit.dart';
+import 'package:fokus/logic/common/reloadable/reloadable_cubit.dart';
 import 'package:fokus/widgets/general/app_loader.dart';
 
 class LoadableBlocBuilder<CubitType extends ReloadableCubit> extends StatelessWidget {

@@ -4,8 +4,8 @@ import 'package:flutter/services.dart' show rootBundle;
 
 import 'package:fokus/model/ui/ui_button.dart';
 import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/app_paths.dart';
-import 'package:fokus/utils/theme_config.dart';
+import 'package:fokus/utils/ui/app_paths.dart';
+import 'package:fokus/utils/ui/theme_config.dart';
 import 'package:fokus/widgets/general/app_loader.dart';
 
 class HelpDialog extends StatelessWidget {

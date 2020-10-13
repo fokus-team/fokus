@@ -3,7 +3,7 @@ import 'dart:isolate';
 
 import 'package:bloc/bloc.dart';
 import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/dialog_utils.dart';
+import 'package:fokus/utils/ui/dialog_utils.dart';
 import 'package:fokus/widgets/dialogs/general_dialog.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
@@ -82,8 +82,11 @@ class Instrumentator {
 }
 
 class FokusBlocObserver extends BlocObserver {
+	final Logger _logger = Logger('FokusBlocObserver');
+
 	@override
   void onError(Cubit cubit, Object error, StackTrace stackTrace) {
+		_logger.severe('Cubit ${cubit.runtimeType} exception unhandled', error, stackTrace);
 		super.onError(cubit, error, stackTrace);
   }
 }

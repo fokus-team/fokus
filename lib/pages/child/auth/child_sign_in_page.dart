@@ -3,18 +3,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:smart_select/smart_select.dart';
 
-import 'package:fokus/logic/auth/child/sign_up/child_sign_up_cubit.dart';
+import 'package:fokus/logic/child/auth/sign_up/child_sign_up_cubit.dart';
 import 'package:fokus/model/ui/ui_button.dart';
 import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/icon_sets.dart';
-import 'package:fokus/utils/theme_config.dart';
+import 'package:fokus/utils/ui/icon_sets.dart';
+import 'package:fokus/utils/ui/theme_config.dart';
 import 'package:fokus/widgets/general/app_avatar.dart';
 import 'package:fokus/widgets/auth/auth_button.dart';
 import 'package:fokus/widgets/auth/auth_input_field.dart';
 import 'package:fokus/model/ui/auth/user_code.dart';
 import 'package:fokus/model/ui/auth/name.dart';
 import 'package:fokus/widgets/auth/auth_widgets.dart';
-import 'package:fokus/logic/auth/child/sign_in/child_sign_in_cubit.dart';
+import 'package:fokus/logic/child/auth/sign_in/child_sign_in_cubit.dart';
 
 class ChildSignInPage extends StatelessWidget {
 	static const String _pageKey = 'page.loginSection.childSignIn';

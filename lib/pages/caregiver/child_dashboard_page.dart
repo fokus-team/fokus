@@ -3,9 +3,9 @@ import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/ui/gamification/ui_badge.dart';
 import 'package:fokus/model/ui/plan/ui_plan.dart';
 import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/dialog_utils.dart';
-import 'package:fokus/utils/icon_sets.dart';
-import 'package:fokus/utils/theme_config.dart';
+import 'package:fokus/utils/ui/dialog_utils.dart';
+import 'package:fokus/utils/ui/icon_sets.dart';
+import 'package:fokus/utils/ui/theme_config.dart';
 import 'package:fokus/widgets/buttons/bottom_sheet_bar_buttons.dart';
 import 'package:fokus/widgets/dialogs/general_dialog.dart';
 import 'package:fokus/widgets/general/app_alert.dart';
@@ -240,7 +240,7 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 								child: CircleAvatar(
 								backgroundColor: checked ? Colors.green : Colors.grey,
 								radius: 16.0,
-								child: Icon(checked ? Icons.check : Icons.remove, color: Colors.white, size: 20.0)
+								child: checked ? Icon(Icons.check, color: Colors.white, size: 20.0) : SizedBox(height: 20)
 							)
 						),
 						onTapped: onChange != null ? () => onChange(item.value, !checked) : null,

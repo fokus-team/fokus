@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fokus/logic/auth/auth_bloc/authentication_bloc.dart';
+import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
 import 'package:fokus/model/ui/gamification/ui_badge.dart';
 import 'package:fokus/model/ui/user/ui_child.dart';
 import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/app_paths.dart';
-import 'package:fokus/utils/dialog_utils.dart';
-import 'package:fokus/utils/icon_sets.dart';
-import 'package:fokus/utils/theme_config.dart';
+import 'package:fokus/utils/ui/app_paths.dart';
+import 'package:fokus/utils/ui/dialog_utils.dart';
+import 'package:fokus/utils/ui/icon_sets.dart';
+import 'package:fokus/utils/ui/theme_config.dart';
 import 'package:fokus/widgets/app_navigation_bar.dart';
 import 'package:fokus/widgets/app_header.dart';
 import 'package:fokus/widgets/general/app_hero.dart';
@@ -40,7 +40,7 @@ class _ChildAchievementsPageState extends State<ChildAchievementsPage> {
 							Segment(
 								title: '$_pageKey.content.achievementsTitle',
 								subtitle: '$_pageKey.content.achievementsHint',
-								customContent: _buildBadgeShelfs()
+								customContent: _buildBadgeShelves()
 							)
 						]
 					)
@@ -50,43 +50,43 @@ class _ChildAchievementsPageState extends State<ChildAchievementsPage> {
 		);
 	}
 
-	Widget _buildBadgeShelfs() {
-  	// ignore: close_sinks
-		var authenticationBloc = context.bloc<AuthenticationBloc>();
-		List<UIBadge> badges = (authenticationBloc.state.user as UIChild).badges ?? [];
-
-		if(badges.isNotEmpty) {
-			return Padding(
-				padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: AppBoxProperties.screenEdgePadding),
-				child: Builder(
-					builder: (context) {
-						List<Widget> rows = [];
-						for (var i = 0; i < badges.length; i += badgesPerShelf) {
-							rows.add(Row(
-								children: badges.sublist(i, i+badgesPerShelf > badges.length ? badges.length : i+badgesPerShelf)
-								.map((badge) =>
-									Expanded(
-										flex: (100.0/badgesPerShelf).round(),
-										child: GestureDetector(
-											onTap: () => showBadgeDialog(context, badge),
-											child: SvgPicture.asset(
-												AssetType.badges.getPath(badge.icon),
-												width: (MediaQuery.of(context).size.width - 2 * AppBoxProperties.screenEdgePadding)/badgesPerShelf - 2 * badgeMargin
+	Widget _buildBadgeShelves() {
+		return BlocBuilder<AuthenticationBloc, AuthenticationState>(
+			builder: (context, state) {
+				List<UIBadge> badges = (state.user as UIChild)?.badges ?? [];
+				if(badges.isNotEmpty) {
+					return Padding(
+						padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: AppBoxProperties.screenEdgePadding),
+						child: Builder(
+							builder: (context) {
+								List<Widget> rows = [];
+								for (var i = 0; i < badges.length; i += badgesPerShelf) {
+									rows.add(Row(
+										children: badges.sublist(i, i+badgesPerShelf > badges.length ? badges.length : i+badgesPerShelf).map((badge) =>
+											Expanded(
+												flex: (100.0/badgesPerShelf).round(),
+												child: GestureDetector(
+													onTap: () => showBadgeDialog(context, badge),
+													child: SvgPicture.asset(
+														AssetType.badges.getPath(badge.icon),
+														width: (MediaQuery.of(context).size.width - 2 * AppBoxProperties.screenEdgePadding)/badgesPerShelf - 2 * badgeMargin
+													)
+												)
 											)
-										)
-									)
-								).toList()
-							));
-							rows.add(_buildShelf());
-						}
-						return Column(children: rows);
-					}
-				)
-			);
-		}
-		return AppHero(
-			title: AppLocales.of(context).translate('$_pageKey.content.noAchievementsMessage'),
-			icon: Icons.local_florist
+										).toList()
+									));
+									rows.add(_buildShelf());
+								}
+								return Column(children: rows);
+							}
+						)
+					);
+				}
+				return AppHero(
+					title: AppLocales.of(context).translate('$_pageKey.content.noAchievementsMessage'),
+					icon: Icons.local_florist
+				);
+			}
 		);
 	}
 

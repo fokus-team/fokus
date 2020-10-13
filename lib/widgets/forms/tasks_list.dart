@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fokus/logic/plan_form/plan_form_cubit.dart';
+import 'package:fokus/logic/caregiver/plan_form/plan_form_cubit.dart';
+import 'package:fokus/utils/bloc_utils.dart';
 import 'package:fokus/widgets/cards/task_card.dart';
 import 'package:fokus/widgets/general/app_hero.dart';
 import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorderable_list.dart';
@@ -8,8 +9,8 @@ import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorder
 import 'package:fokus/model/ui/form/task_form_model.dart';
 import 'package:fokus/model/ui/form/plan_form_model.dart';
 
-import 'package:fokus/utils/dialog_utils.dart';
-import 'package:fokus/utils/theme_config.dart';
+import 'package:fokus/utils/ui/dialog_utils.dart';
+import 'package:fokus/utils/ui/theme_config.dart';
 import 'package:fokus/services/app_locales.dart';
 
 import 'package:fokus/widgets/dialogs/general_dialog.dart';
@@ -93,51 +94,50 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 		});
 	}
 
-	Widget provideCubitForRoute(Widget route) {
-		return BlocProvider.value(
-			value: context.bloc<PlanFormCubit>(),
-			child: route,
-		);
-	}
-
 	void addNewTask() {
 		Navigator.of(context).push(MaterialPageRoute(
-			builder: (context) => provideCubitForRoute(TaskForm(
-				task: null,
-				createTaskCallback: (newTask) { 
-					Future.wait([
-						Future(() => setState(() {
-							widget.plan.tasks.add(newTask);
-							sortTasks();
-						}))
-					]);
-				}
-			))
+			builder: (_) => forwardCubit(
+				TaskForm(
+					task: null,
+					createTaskCallback: (newTask) {
+						Future.wait([
+							Future(() => setState(() {
+								widget.plan.tasks.add(newTask);
+								sortTasks();
+							}))
+						]);
+					}
+				),
+				context.bloc<PlanFormCubit>()
+			)
 		));
 	}
 
 
 	void editTask(TaskFormModel task) {
 		Navigator.of(context).push(MaterialPageRoute(
-			builder: (context) => provideCubitForRoute(TaskForm(
-				task: task,
-				saveTaskCallback: (TaskFormModel updatedTask) {
-					Future.wait([
-						Future(() => setState(() {
-							task.copy(updatedTask);
-							sortTasks();
-						}))
-					]);
-				},
-				removeTaskCallback: () {
-					Future.wait([
-						Future(() => setState(() {
-							widget.plan.tasks.remove(task);
-							sortTasks();
-						}))
-					]);
-				}
-			))
+			builder: (_) => forwardCubit(
+				TaskForm(
+					task: task,
+					saveTaskCallback: (TaskFormModel updatedTask) {
+						Future.wait([
+							Future(() => setState(() {
+								task.copy(updatedTask);
+								sortTasks();
+							}))
+						]);
+					},
+					removeTaskCallback: () {
+						Future.wait([
+							Future(() => setState(() {
+								widget.plan.tasks.remove(task);
+								sortTasks();
+							}))
+						]);
+					}
+				),
+				context.bloc<PlanFormCubit>()
+			)
 		));
 	}
 

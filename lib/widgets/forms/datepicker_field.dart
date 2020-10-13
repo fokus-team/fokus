@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fokus/model/db/date/date.dart';
 import 'package:fokus/model/db/date_span.dart';
 import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/form_config.dart';
+import 'package:fokus/utils/ui/form_config.dart';
 
 class DatePickerField extends StatefulWidget {
 	final String labelText;

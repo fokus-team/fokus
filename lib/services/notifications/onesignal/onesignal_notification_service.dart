@@ -6,7 +6,7 @@ import 'package:fokus/model/notification/notification_text.dart';
 import 'package:fokus/model/notification/notification_button.dart';
 import 'package:fokus/services/notifications/notification_service.dart';
 import 'package:fokus/services/notifications/onesignal/onesignal_notification_provider.dart';
-import 'package:fokus/utils/theme_config.dart';
+import 'package:fokus/utils/ui/theme_config.dart';
 import 'package:fokus/model/currency_type.dart';
 import 'package:fokus/model/notification/notification_group.dart';
 import 'package:fokus/model/ui/user/ui_user.dart';
@@ -58,7 +58,7 @@ class OneSignalNotificationService extends NotificationService {
 	}
 
 	@override
-	Future sendTaskApprovedNotification(String taskName, ObjectId childId, int stars, [CurrencyType currencyType, int pointCount]) {
+	Future sendTaskApprovedNotification(ObjectId planId, String taskName, ObjectId childId, int stars, [CurrencyType currencyType, int pointCount]) {
 		var type = NotificationType.taskApproved;
 		var hasPoints = pointCount != null && pointCount > 0;
 		return sendNotification(type, childId,
@@ -72,18 +72,19 @@ class OneSignalNotificationService extends NotificationService {
 					SimpleNotificationText.appBased('${type.title}Count', {'COUNT': '$pointCount'}),
 			]),
 			icon: hasPoints ? NotificationIcon(type.graphicType, currencyType.index) : NotificationIcon.fromName('star'),
-			group: NotificationGroup(type.key, SimpleNotificationText.appBased(type.group))
+			group: NotificationGroup(type.key, SimpleNotificationText.appBased(type.group)),
+			subject: planId
 		);
 	}
 
 	@override
-	Future sendTaskRejectedNotification(ObjectId taskId, String taskName, ObjectId childId) {
+	Future sendTaskRejectedNotification(ObjectId planId, String taskName, ObjectId childId) {
 		var type = NotificationType.taskRejected;
 		return sendNotification(type, childId,
 			title: SimpleNotificationText.appBased(type.title),
 			body: SimpleNotificationText.userBased(taskName),
 			group: NotificationGroup(type.key, SimpleNotificationText.appBased(type.group)),
-			subject: taskId
+			subject: planId
 		);
 	}
 
@@ -95,7 +96,7 @@ class OneSignalNotificationService extends NotificationService {
 		  logNoUserToken(userId);
 		  return;
 	  }
-	  var data = NotificationData(type, buttons: buttons, subject: subject);
+	  var data = NotificationData(type, userId, buttons: buttons, subject: subject);
 	  var osButtons = buttons?.map((button) => OSActionButton(id: button.action, text: button.action))?.toList();
 	  var notification = OSCreateNotification(
 		  playerIds: tokens,

@@ -24,7 +24,7 @@ class AppLocalesDelegate extends LocalizationsDelegate<AppLocales> {
 
 	@override
 	Future<AppLocales> load(Locale locale) async {
-		await AppLocales.instance.load(locale);
+		await AppLocales.instance.setLocale(locale);
 		return AppLocales.instance;
 	}
 
@@ -44,15 +44,21 @@ class AppLocales {
 
 	Map<Locale, Map<String, dynamic>> _translations = {};
 
-	Future<bool> load(Locale locale) async {
-		this.locale = locale;
+	Future setLocale(Locale locale) async {
 		if (_translations.isEmpty)
-			for (var locale in AppLocalesDelegate.supportedLocales) {
-				String localeTranslations = await rootBundle.loadString('i18n/$locale.json');
-				_translations[locale] = json.decode(localeTranslations);
-			}
+			await loadLocales();
+		if (this.locale == locale)
+			return;
+		this.locale = locale;
 		_localeObservers.forEach((observer) => observer.onLocaleSet(locale));
-		return true;
+		return;
+	}
+
+	Future loadLocales() async {
+		for (var locale in AppLocalesDelegate.supportedLocales) {
+			String localeTranslations = await rootBundle.loadString('i18n/$locale.json');
+			_translations[locale] = json.decode(localeTranslations);
+		}
 	}
 
 	String translate(String key, [Map<String, Object> args, Locale locale]) {

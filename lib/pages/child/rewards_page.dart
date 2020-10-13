@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fokus/logic/child_rewards_cubit.dart';
-import 'package:fokus/logic/reloadable/reloadable_cubit.dart';
+import 'package:fokus/logic/child/child_rewards_cubit.dart';
+import 'package:fokus/logic/common/reloadable/reloadable_cubit.dart';
 import 'package:fokus/model/ui/gamification/ui_reward.dart';
 import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/dialog_utils.dart';
-import 'package:fokus/utils/icon_sets.dart';
-import 'package:fokus/utils/snackbar_utils.dart';
-import 'package:fokus/utils/theme_config.dart';
+import 'package:fokus/utils/ui/dialog_utils.dart';
+import 'package:fokus/utils/ui/icon_sets.dart';
+import 'package:fokus/utils/ui/snackbar_utils.dart';
+import 'package:fokus/utils/ui/theme_config.dart';
 import 'package:fokus/widgets/app_navigation_bar.dart';
 import 'package:fokus/widgets/app_header.dart';
 import 'package:fokus/widgets/cards/item_card.dart';
@@ -31,9 +31,7 @@ class _ChildRewardsPageState extends State<ChildRewardsPage> {
 				crossAxisAlignment: CrossAxisAlignment.start,
 				mainAxisSize: MainAxisSize.min,
 				children: [
-					BlocBuilder<ChildRewardsCubit, LoadableState>(
-						builder: (context, state) => ChildCustomHeader(points: state is DataLoadSuccess ? (state as ChildRewardsLoadSuccess).points : null)
-					),
+					ChildCustomHeader(),
 		      LoadableBlocBuilder<ChildRewardsCubit>(
 				    builder: (context, state) => 
 							AppSegments(
@@ -72,7 +70,7 @@ class _ChildRewardsPageState extends State<ChildRewardsPage> {
 				title: reward.name,
 				graphic: reward.icon,
 				graphicType: AssetType.rewards,
-				graphicHeight: 44.0,
+				graphicHeight: 56.0,
 				progressPercentage: percentage >= 1.0 ? 1.0 : percentage,
 				activeProgressBarColor: AppColors.currencyColor[reward.cost.type],
 				chips: [
@@ -84,7 +82,7 @@ class _ChildRewardsPageState extends State<ChildRewardsPage> {
 				],
 				actionButton: ItemCardActionButton(
 					color: AppColors.currencyColor[reward.cost.type],
-					icon: Icons.add_shopping_cart,
+					icon: Icons.add,
 					disabled: percentage < 1.0,
 					onTapped: () => showRewardDialog(context, reward, claimFeedback: () => _claimReward(reward))
 				)
@@ -100,7 +98,7 @@ class _ChildRewardsPageState extends State<ChildRewardsPage> {
 					DateFormat.yMd(AppLocales.instance.locale.toString()).format(reward.date).toString(),
 				graphic: reward.icon,
 				graphicType: AssetType.rewards,
-				graphicHeight: 44.0,
+				graphicHeight: 40.0,
 				isActive: false
 			);
 		}).toList();

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:fokus/logic/timer/timer_cubit.dart';
+import 'package:fokus/logic/common/timer/timer_cubit.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/duration_utils.dart';
 
@@ -29,6 +29,8 @@ class LargeTimer extends StatelessWidget {
 				Text(
 					AppLocales.of(context).translate(title),
 					style: Theme.of(context).textTheme.headline3.copyWith(color: textColor),
+					softWrap: false,
+					overflow: TextOverflow.fade
 				),
 				Text(
 					formatDuration(Duration(seconds: value)),

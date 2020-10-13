@@ -98,6 +98,15 @@ mixin PlanDbRepository implements DbRepository {
 	Future updatePlan(Plan plan) => dbClient.update(Collection.plan, _buildPlanQuery(id: plan.id), plan.toJson(), multiUpdate: false);
 	Future createPlan(Plan plan) => dbClient.insert(Collection.plan, plan.toJson());
 
+	Future removePlans({List<ObjectId> ids, ObjectId caregiverId}) {
+		var query = _buildPlanQuery(ids: ids, caregiverId: caregiverId);
+		return dbClient.remove(Collection.plan, query);
+	}
+	Future removePlanInstances({List<ObjectId> ids, List<ObjectId> childIds}) {
+		var query = _buildPlanQuery(ids: ids, childIDs: childIds);
+		return dbClient.remove(Collection.planInstance, query);
+	}
+
 	SelectorBuilder _buildPlanQuery({ObjectId id, List<ObjectId> ids, ObjectId caregiverId, ObjectId childId, ObjectId planId,
 			PlanInstanceState state, Date date, DateSpan<Date> between, bool active, List<ObjectId> childIDs}) {
 		SelectorBuilder query = where;

@@ -9,10 +9,10 @@ import 'package:fokus/model/db/date/date.dart';
 import 'package:fokus/model/ui/user/ui_child.dart';
 import 'package:fokus/model/ui/plan/ui_plan.dart';
 
-import 'package:fokus/logic/calendar_cubit.dart';
+import 'package:fokus/logic/common/calendar_cubit.dart';
 import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/theme_config.dart';
-import 'package:fokus/utils/calendar_utils.dart';
+import 'package:fokus/utils/ui/theme_config.dart';
+import 'package:fokus/utils/ui/calendar_utils.dart';
 import 'package:fokus/widgets/chips/attribute_chip.dart';
 import 'package:fokus/widgets/cards/item_card.dart';
 import 'package:fokus/widgets/segment.dart';
@@ -81,7 +81,7 @@ class _ChildCalendarPageState extends State<ChildCalendarPage> with TickerProvid
 			builder: (context, state) {
 				return Segment(
 					title: '$_pageKey.content.plansOnDateTitle',
-					titleArgs: {'DATE': DateFormat.yMd(Localizations.localeOf(context).toString()).format(state.day).toString()},
+					titleArgs: {'DATE': DateFormat.yMd(AppLocales.instance.locale.toString()).format(state.day).toString()},
 					noElementsMessage: '$_pageKey.content.noPlansOnDateTitle',
 					noElementsIcon: Icons.description,
 					elements: [

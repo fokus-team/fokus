@@ -3,11 +3,11 @@ import 'dart:async';
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fokus/logic/task_instance/task_instance_cubit.dart';
-import 'package:fokus/logic/timer/timer_cubit.dart';
+import 'package:fokus/logic/child/task_instance/task_instance_cubit.dart';
+import 'package:fokus/logic/common/timer/timer_cubit.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/duration_utils.dart';
-import 'package:fokus/utils/theme_config.dart';
+import 'package:fokus/utils/ui/theme_config.dart';
 import 'package:fokus/widgets/app_header.dart';
 import 'package:logging/logging.dart';
 import 'package:vibration/vibration.dart';
@@ -82,7 +82,7 @@ class TaskAppHeaderState extends State<TaskAppHeader> with TickerProviderStateMi
 				child: Row(
 					mainAxisAlignment: MainAxisAlignment.spaceBetween,
 					children: [
-						_getTimerSection(),
+						Expanded(child: _getTimerSection()),
 						SlideTransition(
 							position: _offsetAnimation,
 							child: _getButtonWidget()
@@ -101,7 +101,7 @@ class TaskAppHeaderState extends State<TaskAppHeader> with TickerProviderStateMi
 				child: Container(
 					decoration: AppBoxProperties.elevatedContainer.copyWith(borderRadius: BorderRadius.vertical(top: Radius.circular(4.0))),
 					child: Padding(
-						padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
+						padding: EdgeInsets.symmetric(vertical: 6.0, horizontal: 12.0),
 						child: this.widget.state.taskInstance.points != null ? Row(
 							mainAxisAlignment: MainAxisAlignment.spaceBetween,
 							children: [
@@ -197,7 +197,7 @@ class TaskAppHeaderState extends State<TaskAppHeader> with TickerProviderStateMi
 
 	Widget _getTimerSection() {
 		return Align(
-			alignment: Alignment.center,
+			alignment: Alignment.centerLeft,
 			child: BlocProvider<TimerCubit>(
 				create: _getTimerFun(),
 				child: LargeTimer(

@@ -54,7 +54,6 @@ mixin TaskDbRepository implements DbRepository {
 		return dbClient.updateAll(Collection.task, tasks.map((task) => _buildTaskQuery(id: task.id)).toList(), tasks.map((task) => task.toJson()).toList(), multiUpdate: false);
 	}
 
-
 	Future updateTaskInstance(TaskInstance taskInstance) => dbClient.update(Collection.taskInstance, _buildTaskQuery(id: taskInstance.id), taskInstance.toJson(), multiUpdate: false);
 
 	Future updateTaskInstanceFields(ObjectId taskInstanceId, {TaskState state, List<DateSpan<TimeDate>> duration, List<DateSpan<TimeDate>> breaks, bool isCompleted, int rating, int pointsAwarded}) {
@@ -74,7 +73,16 @@ mixin TaskDbRepository implements DbRepository {
 		return dbClient.update(Collection.taskInstance, where.eq('_id', taskInstanceId), document);
 	}
 
-	SelectorBuilder _buildTaskQuery({ObjectId id, List<ObjectId> ids, ObjectId planId, ObjectId planInstanceId, List<ObjectId> planInstancesId, bool requiredOnly, bool optionalOnly, bool isCompleted, TaskState state}) {
+	Future removeTasks({List<ObjectId> planIds}) {
+		var query = _buildTaskQuery(planIds: planIds);
+		return dbClient.remove(Collection.task, query);
+	}
+	Future removeTaskInstances({List<ObjectId> tasksIds}) {
+		var query = _buildTaskQuery(tasksIds: tasksIds);
+		return dbClient.remove(Collection.taskInstance, query);
+	}
+
+	SelectorBuilder _buildTaskQuery({ObjectId id, List<ObjectId> ids, List<ObjectId> planIds, List<ObjectId> tasksIds, ObjectId planId, ObjectId planInstanceId, List<ObjectId> planInstancesId, bool requiredOnly, bool optionalOnly, bool isCompleted, TaskState state}) {
 		SelectorBuilder query = where;
 		if (planId != null && planInstanceId != null)
 			_logger.warning("Both plan and plan instance IDs specified in task query");
@@ -87,6 +95,10 @@ mixin TaskDbRepository implements DbRepository {
 			query.oneFrom('_id', ids);
 		if (planId != null)
 			query.eq('planID', planId);
+		if (planIds != null)
+			query.oneFrom('planID', planIds);
+		if (tasksIds != null)
+			query.oneFrom('taskID', tasksIds);
 		if (planInstanceId != null)
 			query.eq('planInstanceID', planInstanceId);
 		if (planInstancesId != null)

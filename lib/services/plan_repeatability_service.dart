@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:date_utils/date_utils.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 import 'package:mongo_dart/mongo_dart.dart';
@@ -90,7 +89,7 @@ class PlanRepeatabilityService {
 
 	TranslateFunc buildPlanDescription(PlanRepeatability rules, {Date instanceDate, bool detailed = false}) {
   	return (context) {
-		  var formatDate = (date) => DateFormat.yMd(Localizations.localeOf(context).toString()).format(date);
+		  var formatDate = (date) => DateFormat.yMd(AppLocales.instance.locale.toString()).format(date);
   		String description = '';
 		  if (rules.untilCompleted && instanceDate != null)
 			  description += AppLocales.of(context).translate('repeatability.startedOn', {'DAY': formatDate(instanceDate)});

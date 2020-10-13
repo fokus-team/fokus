@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fokus/logic/auth/child/prev_profiles_cubit.dart';
+import 'package:fokus/logic/child/auth/prev_profiles_cubit.dart';
 
-import 'package:fokus/logic/reloadable/reloadable_cubit.dart';
+import 'package:fokus/logic/common/reloadable/reloadable_cubit.dart';
 import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/ui/ui_button.dart';
 import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/theme_config.dart';
+import 'package:fokus/utils/ui/theme_config.dart';
 import 'package:fokus/widgets/general/app_avatar.dart';
 import 'package:fokus/widgets/auth/auth_button.dart';
 import 'package:fokus/widgets/auth/auth_widgets.dart';

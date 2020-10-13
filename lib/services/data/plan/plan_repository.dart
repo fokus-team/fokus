@@ -30,4 +30,7 @@ abstract class PlanRepository {
 	Future createPlanInstances(List<PlanInstance> plans);
 	Future updatePlan(Plan plan);
 	Future createPlan(Plan plan);
+
+	Future removePlans({List<ObjectId> ids, ObjectId caregiverId});
+	Future removePlanInstances({List<ObjectId> ids, List<ObjectId> childIds});
 }

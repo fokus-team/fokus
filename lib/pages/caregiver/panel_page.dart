@@ -1,11 +1,11 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 
-import 'package:fokus/logic/caregiver_panel_cubit.dart';
+import 'package:fokus/logic/caregiver/caregiver_panel_cubit.dart';
 import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/ui/gamification/ui_points.dart';
 import 'package:fokus/model/ui/ui_button.dart';
-import 'package:fokus/utils/icon_sets.dart';
+import 'package:fokus/utils/ui/icon_sets.dart';
 import 'package:fokus/utils/string_utils.dart';
 import 'package:fokus/widgets/app_header.dart';
 import 'package:fokus/widgets/app_navigation_bar.dart';

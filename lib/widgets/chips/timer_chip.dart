@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:fokus/logic/timer/timer_cubit.dart';
+import 'package:fokus/logic/common/timer/timer_cubit.dart';
 import 'package:fokus/utils/duration_utils.dart';
 import 'package:fokus/widgets/chips/attribute_chip.dart';
 

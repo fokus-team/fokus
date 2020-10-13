@@ -3,18 +3,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus_auth/fokus_auth.dart';
 import 'package:formz/formz.dart';
 
-import 'package:fokus/logic/settings/password_change/password_change_cubit.dart';
+import 'package:fokus/logic/common/settings/password_change/password_change_cubit.dart';
 import 'package:fokus/model/ui/auth/password.dart';
 import 'package:fokus/model/ui/auth/name.dart';
 import 'package:fokus/model/ui/auth/confirmed_password.dart';
 import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/logic/auth/auth_bloc/authentication_bloc.dart';
-import 'package:fokus/logic/settings/account_delete/account_delete_cubit.dart';
-import 'package:fokus/logic/settings/name_change/name_change_cubit.dart';
+import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
+import 'package:fokus/logic/common/settings/account_delete/account_delete_cubit.dart';
+import 'package:fokus/logic/common/settings/name_change/name_change_cubit.dart';
 import 'package:fokus/model/ui/user/ui_caregiver.dart';
-import 'package:fokus/utils/theme_config.dart';
+import 'package:fokus/utils/ui/theme_config.dart';
 import 'package:fokus/widgets/auth/auth_input_field.dart';
-import 'package:fokus/utils/snackbar_utils.dart';
+import 'package:fokus/utils/ui/snackbar_utils.dart';
 import 'package:fokus/services/exception/auth_exceptions.dart';
 
 class FormDialog extends StatelessWidget {

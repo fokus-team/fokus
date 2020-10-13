@@ -2,9 +2,9 @@ import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fokus/model/ui/ui_button.dart';
-import 'package:fokus/utils/app_paths.dart';
-import 'package:fokus/utils/icon_sets.dart';
-import 'package:fokus/utils/theme_config.dart';
+import 'package:fokus/utils/ui/app_paths.dart';
+import 'package:fokus/utils/ui/icon_sets.dart';
+import 'package:fokus/utils/ui/theme_config.dart';
 import 'package:fokus/widgets/general/app_avatar.dart';
 import 'package:fokus/widgets/buttons/popup_menu_list.dart';
 

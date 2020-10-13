@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:fokus/model/db/user/user_role.dart';
 import 'package:fokus/model/ui/app_page.dart';
-import 'package:fokus/utils/icon_sets.dart';
+import 'package:fokus/utils/ui/icon_sets.dart';
 
 import 'notification_channel.dart';
 
@@ -53,9 +54,18 @@ extension NotificationTypeExtension on NotificationType {
 		NotificationType.rewardBought: AppPage.caregiverChildDashboard,
 		NotificationType.taskFinished: AppPage.caregiverRatingPage,
 		NotificationType.taskUnfinished: AppPage.caregiverChildDashboard,
-		NotificationType.taskApproved: AppPage.caregiverAwards,
+		NotificationType.taskApproved: AppPage.planInstanceDetails,
 		NotificationType.badgeAwarded: AppPage.childAchievements,
 		NotificationType.taskRejected: AppPage.planInstanceDetails,
+	}[this];
+
+	UserRole get recipient => const {
+		NotificationType.rewardBought: UserRole.caregiver,
+		NotificationType.taskFinished: UserRole.caregiver,
+		NotificationType.taskUnfinished: UserRole.caregiver,
+		NotificationType.taskApproved: UserRole.child,
+		NotificationType.badgeAwarded: UserRole.child,
+		NotificationType.taskRejected: UserRole.child,
 	}[this];
 
 	NotificationChannel get channel => const {

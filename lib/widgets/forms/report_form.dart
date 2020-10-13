@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:fokus/logic/tasks_evaluation/tasks_evaluation_cubit.dart';
+import 'package:fokus/logic/caregiver/tasks_evaluation/tasks_evaluation_cubit.dart';
 
 import 'package:fokus/model/ui/task/ui_task_report.dart';
 import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/dialog_utils.dart';
-import 'package:fokus/utils/form_config.dart';
-import 'package:fokus/utils/theme_config.dart';
+import 'package:fokus/utils/ui/dialog_utils.dart';
+import 'package:fokus/utils/ui/form_config.dart';
+import 'package:fokus/utils/ui/theme_config.dart';
 import 'package:fokus/widgets/cards/report_card.dart';
 import 'package:fokus/widgets/chips/attribute_chip.dart';
 

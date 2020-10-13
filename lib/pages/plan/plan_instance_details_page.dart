@@ -1,9 +1,7 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fokus/logic/plan_instance_cubit.dart';
-import 'package:fokus/logic/timer/timer_cubit.dart';
+import 'package:fokus/logic/common/plan_instance_cubit.dart';
+import 'package:fokus/logic/common/timer/timer_cubit.dart';
 import 'package:fokus/model/db/plan/plan_instance_state.dart';
 import 'package:fokus/model/db/plan/task_status.dart';
 import 'package:fokus/model/ui/app_page.dart';
@@ -11,7 +9,7 @@ import 'package:fokus/model/ui/plan/ui_plan_instance.dart';
 import 'package:fokus/model/ui/task/ui_task_instance.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/duration_utils.dart';
-import 'package:fokus/utils/theme_config.dart';
+import 'package:fokus/utils/ui/theme_config.dart';
 import 'package:fokus/widgets/custom_app_bars.dart';
 import 'package:fokus/widgets/chips/attribute_chip.dart';
 import 'package:fokus/widgets/cards/item_card.dart';

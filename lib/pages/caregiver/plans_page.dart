@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:fokus/logic/caregiver_plans_cubit.dart';
+import 'package:fokus/logic/caregiver/caregiver_plans_cubit.dart';
 import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/ui/plan/ui_plan.dart';
 import 'package:fokus/model/ui/ui_button.dart';
 import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/theme_config.dart';
+import 'package:fokus/utils/ui/theme_config.dart';
 
 import 'package:fokus/widgets/app_navigation_bar.dart';
 import 'package:fokus/widgets/cards/item_card.dart';

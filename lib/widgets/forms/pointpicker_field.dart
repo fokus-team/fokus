@@ -5,10 +5,10 @@ import 'package:fokus/model/currency_type.dart';
 import 'package:fokus/model/ui/ui_button.dart';
 import 'package:fokus/model/ui/gamification/ui_currency.dart';
 import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/app_paths.dart';
-import 'package:fokus/utils/form_config.dart';
-import 'package:fokus/utils/icon_sets.dart';
-import 'package:fokus/utils/theme_config.dart';
+import 'package:fokus/utils/ui/app_paths.dart';
+import 'package:fokus/utils/ui/form_config.dart';
+import 'package:fokus/utils/ui/icon_sets.dart';
+import 'package:fokus/utils/ui/theme_config.dart';
 import 'package:fokus/widgets/buttons/bottom_sheet_bar_buttons.dart';
 import 'package:smart_select/smart_select.dart';
 

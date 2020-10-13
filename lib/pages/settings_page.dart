@@ -3,13 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus_auth/fokus_auth.dart';
 import 'package:smart_select/smart_select.dart';
 
-import 'package:fokus/logic/auth/auth_bloc/authentication_bloc.dart';
+import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
 import 'package:fokus/model/db/user/user_role.dart';
 import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/logic/settings/locale_cubit.dart';
-import 'package:fokus/utils/theme_config.dart';
+import 'package:fokus/logic/common/settings/locale_cubit.dart';
+import 'package:fokus/utils/ui/theme_config.dart';
 import 'package:fokus/model/ui/user/ui_caregiver.dart';
-import 'package:fokus/utils/dialog_utils.dart';
+import 'package:fokus/utils/ui/dialog_utils.dart';
 
 class SettingsPage extends StatefulWidget {
 	@override

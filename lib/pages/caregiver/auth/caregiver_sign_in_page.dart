@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 
-import 'package:fokus/logic/auth/caregiver/sign_in/caregiver_sign_in_cubit.dart';
+import 'package:fokus/logic/caregiver/auth/sign_in/caregiver_sign_in_cubit.dart';
 import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/ui/ui_button.dart';
 import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/theme_config.dart';
+import 'package:fokus/utils/ui/theme_config.dart';
 import 'package:fokus/widgets/auth/auth_input_field.dart';
 import 'package:fokus/model/ui/auth/email.dart';
 import 'package:fokus/services/exception/auth_exceptions.dart';
 import 'package:fokus/model/ui/auth/password.dart';
-import 'package:fokus/utils/snackbar_utils.dart';
+import 'package:fokus/utils/ui/snackbar_utils.dart';
 import 'package:fokus/widgets/auth/auth_button.dart';
 import 'package:fokus/widgets/auth/auth_widgets.dart';
 

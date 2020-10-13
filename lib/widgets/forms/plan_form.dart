@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fokus/logic/plan_form/plan_form_cubit.dart';
+import 'package:fokus/logic/caregiver/plan_form/plan_form_cubit.dart';
 import 'package:fokus/model/db/date/date.dart';
 import 'package:fokus/model/db/date_span.dart';
 import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/ui/ui_button.dart';
-import 'package:fokus/utils/form_config.dart';
+import 'package:fokus/utils/ui/form_config.dart';
 import 'package:fokus/widgets/buttons/bottom_sheet_bar_buttons.dart';
 import 'package:smart_select/smart_select.dart';
 import 'package:mongo_dart/mongo_dart.dart' as Mongo;
@@ -14,8 +14,8 @@ import 'package:fokus/model/ui/form/plan_form_model.dart';
 import 'package:fokus/model/ui/user/ui_child.dart';
 
 import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/icon_sets.dart';
-import 'package:fokus/utils/theme_config.dart';
+import 'package:fokus/utils/ui/icon_sets.dart';
+import 'package:fokus/utils/ui/theme_config.dart';
 
 import 'package:fokus/widgets/forms/datepicker_field.dart';
 import 'package:fokus/widgets/cards/item_card.dart';

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fokus/logic/caregiver_awards_cubit.dart';
+import 'package:fokus/logic/caregiver/caregiver_awards_cubit.dart';
 import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/ui/gamification/ui_badge.dart';
 import 'package:fokus/model/ui/ui_button.dart';
 import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/dialog_utils.dart';
-import 'package:fokus/utils/icon_sets.dart';
-import 'package:fokus/utils/snackbar_utils.dart';
-import 'package:fokus/utils/theme_config.dart';
+import 'package:fokus/utils/ui/dialog_utils.dart';
+import 'package:fokus/utils/ui/icon_sets.dart';
+import 'package:fokus/utils/ui/snackbar_utils.dart';
+import 'package:fokus/utils/ui/theme_config.dart';
 
 import 'package:fokus/widgets/custom_app_bars.dart';
 import 'package:fokus/widgets/app_navigation_bar.dart';

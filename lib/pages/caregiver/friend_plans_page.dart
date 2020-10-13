@@ -4,7 +4,6 @@ import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/ui/plan/ui_plan.dart';
 import 'package:fokus/model/ui/ui_button.dart';
 import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/theme_config.dart';
 import 'package:fokus/widgets/buttons/help_icon_button.dart';
 import 'package:fokus/widgets/buttons/popup_menu_list.dart';
 import 'package:fokus/widgets/cards/item_card.dart';

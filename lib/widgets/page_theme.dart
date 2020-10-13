@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fokus/model/db/user/user_role.dart';
-import 'package:fokus/utils/theme_config.dart';
+import 'package:fokus/utils/ui/theme_config.dart';
 
 class PageTheme extends StatelessWidget {
 	final Widget child;

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/animation.dart';
-import 'package:fokus/utils/theme_config.dart';
+import 'package:fokus/utils/ui/theme_config.dart';
 import 'package:lottie/lottie.dart';
 
 class AppLoader extends StatefulWidget {

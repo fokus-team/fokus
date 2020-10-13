@@ -7,7 +7,6 @@ import 'package:fokus/model/ui/plan/ui_plan_instance.dart';
 import 'package:fokus/model/ui/task/ui_task_instance.dart';
 import 'package:fokus/services/data/data_repository.dart';
 import 'package:fokus/services/ui_data_aggregator.dart';
-import 'package:fokus/services/plan_repeatability_service.dart';
 import 'package:fokus/services/task_instance_service.dart';
 import 'package:fokus/utils/duration_utils.dart';
 import 'package:get_it/get_it.dart';

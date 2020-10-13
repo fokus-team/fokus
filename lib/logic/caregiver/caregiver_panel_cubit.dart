@@ -5,10 +5,8 @@ import 'package:fokus/services/ui_data_aggregator.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
-import 'package:fokus/services/plan_repeatability_service.dart';
 import 'package:fokus/services/data/data_repository.dart';
 import 'package:fokus/model/ui/user/ui_child.dart';
-import 'package:fokus/model/db/date/date.dart';
 import 'package:fokus/model/ui/user/ui_caregiver.dart';
 import 'package:fokus/model/ui/user/ui_user.dart';
 import 'package:fokus/model/db/user/user_role.dart';

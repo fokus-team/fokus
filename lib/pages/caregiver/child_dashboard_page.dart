@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/logic/common/reloadable/reloadable_cubit.dart';
 import 'package:fokus/model/ui/user/ui_child.dart';
-import 'package:fokus/utils/string_utils.dart';
 import 'package:fokus/utils/ui/child_plans_util.dart';
 import 'package:fokus/widgets/general/app_loader.dart';
 import 'package:mongo_dart/mongo_dart.dart' as Mongo;
@@ -40,10 +39,10 @@ class CaregiverChildDashboardPage extends StatefulWidget {
 class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPage> with TickerProviderStateMixin {
 	static const String _pageKey = 'page.caregiverSection.childDashboard';
 	TabController _tabController;
-	final UIChild _initialChildProfile;
+	final UIChild _childProfile;
 	int _currentIndex;
 
-	_CaregiverChildDashboardPageState(Map<String, dynamic> args) : _currentIndex = args['tab'] ?? 0, _initialChildProfile = args['child'];
+	_CaregiverChildDashboardPageState(Map<String, dynamic> args) : _currentIndex = args['tab'] ?? 0, _childProfile = args['child'];
 
 	final double customBottomBarHeight = 40.0;
 	final Duration bottomBarAnimationDuration = Duration(milliseconds: 400);
@@ -71,7 +70,6 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 		_tabController.animation..addListener(() {
 			setState(() {
 				_currentIndex = (_tabController.animation.value).round();
-				context.bloc<ChildDashboardCubit>().loadTab(_currentIndex);
 			});
 		});
 	}
@@ -101,14 +99,23 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 	        content: TabBarView(
             controller: _tabController,
             children: [
-              _buildPlansTab(),
-              _buildRewardsTab(),
-              _buildAchievementsTab()
+	            _buildTab(
+		            tabState: (state) => state.plansTab,
+		            content: _buildPlansTab
+	            ),
+	            _buildTab(
+		            tabState: (state) => state.rewardsTab,
+		            content: _buildRewardsTab
+	            ),
+	            _buildTab(
+		            tabState: (state) => state.achievementsTab,
+		            content: _buildAchievementsTab
+	            ),
             ]
 					)
 	      ),
 		    loadingBuilder: (context, state) => _getPage(
-			    child: _initialChildProfile,
+			    child: _childProfile,
 			    content: Center(child: AppLoader())
 		    ),
 	    ),
@@ -177,7 +184,7 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 				);
 			},
 			child: _currentIndex != 1 ?
-				(_currentIndex == 0 ? _assignPlan() : _assignBadge())
+				(_currentIndex == 0 ? _assignPlan() : _buildBadgeSelect())
 				: SizedBox.shrink()
 		);
 	}
@@ -229,6 +236,15 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 	}
 
 	Widget _assignPlan() {
+		return _wrapWithBuilder<ChildDashboardPlansTabState>(
+			tabState: (state) => state.plansTab,
+			content: (state) => _buildPlanSelect(state.availablePlans),
+			loader: _buildPlanSelect()
+		);
+	}
+
+	Widget _buildPlanSelect([List<UIPlan> availablePlans = const []]) {
+		pickedPlans = availablePlans.where((element) => element.assignedTo.contains(_childProfile.id)).toList();
 		return _buildFloatingButtonPicker<UIPlan>(
 			buttonLabel: AppLocales.of(context).translate('$_pageKey.header.assignPlanButton'),
 			buttonIcon: Icons.description,
@@ -236,7 +252,7 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 			disabledDialogText: AppLocales.of(context).translate('$_pageKey.content.alerts.noPlansAdded'),
 			pickerTitle: AppLocales.of(context).translate('$_pageKey.header.assignPlanTitle'),
 			pickedValues: pickedPlans,
-			options: plans,
+			options: availablePlans,
 			onChange: (val) => setState(() {
 				pickedPlans = val;
 			}),
@@ -252,7 +268,7 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 						subtitle: AppLocales.of(context).translate(checked ? 'actions.selected' : 'actions.tapToSelect'),
 						icon: Padding(
 							padding: EdgeInsets.all(6.0).copyWith(right: 0.0),
-								child: CircleAvatar(
+							child: CircleAvatar(
 								backgroundColor: checked ? Colors.green : Colors.grey,
 								radius: 16.0,
 								child: checked ? Icon(Icons.check, color: Colors.white, size: 20.0) : SizedBox(height: 20)
@@ -266,7 +282,7 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 		);
 	}
 
-	Widget _assignBadge() {
+	Widget _buildBadgeSelect() {
 		return _buildFloatingButtonPicker<UIBadge>(
 			buttonLabel: AppLocales.of(context).translate('$_pageKey.header.assignBadgeButton'),
 			buttonIcon: Icons.star,
@@ -300,91 +316,93 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 		);
 	}
 
-	Widget _buildTabContent({List<Widget> children}) {
-		return ListView(
-			padding: EdgeInsets.zero,
-			physics: BouncingScrollPhysics(),
-			children: children
-		);
-	}
-
-	Widget _buildPlansTab() {
+	Widget _wrapWithBuilder<State>({State Function(ChildDashboardState) tabState, Widget Function(State) content, Widget loader}) {
 		return BlocBuilder<ChildDashboardCubit, LoadableState>(
 			buildWhen: (oldState, newState) => newState is ChildDashboardState &&
-					(oldState is DataLoadInProgress || (oldState as ChildDashboardState).plansTab != newState.plansTab),
+					(oldState is DataLoadInProgress || tabState(oldState as ChildDashboardState) != tabState(newState)),
 			builder: (context, state) {
-				var tabState = (state as ChildDashboardState).plansTab;
-				return _buildTabContent(
-					children: <Widget>[
-						if (tabState.unratedTasks)
-							AppAlert(
-								text: AppLocales.of(context).translate('$_pageKey.content.alerts.unratedTasksExist'),
-								onTap: () => Navigator.of(context).pushNamed(AppPage.caregiverRatingPage.name),
-							),
-						if (tabState.noPlansAdded)
-							AppAlert(
-								text: AppLocales.of(context).translate('$_pageKey.content.alerts.noPlansAdded'),
-								onTap: () => Navigator.of(context).pushNamed(AppPage.caregiverPlanForm.name),
-							),
-						...buildChildPlanSegments(tabState.plans, context),
-						SizedBox(height: 30.0)
-					]
-				);
-			},
+				if (state is! ChildDashboardState || tabState(state as ChildDashboardState) == null)
+					return loader ?? Center(child: AppLoader());
+				return content(tabState(state));
+			}
 		);
 	}
 
-	Widget _buildRewardsTab() {
-		return _buildTabContent(
-			children: <Widget>[
-				// Show only if there are no rewards child can buy
-				AppAlert(
-					text: AppLocales.of(context).translate('$_pageKey.content.alerts.noRewardsAdded'),
-					onTap: () => { /* Go to reward/badge list page */ },
-				),
-				Segment(
-					title: '$_pageKey.content.rewardsTitle',
-					noElementsMessage: '$_pageKey.content.noRewardsText',
-					elements: [
-						ItemCard(
-							title: "Wycieczka do Zoo", 
-							subtitle: "Odebrano dnia 25.08.2020 18:34",
-							graphicType: AssetType.rewards,
-							graphic: 16,
-							chips: <Widget>[
-								AttributeChip.withCurrency(content: "30", currencyType: CurrencyType.diamond)
-							],
-						)
-					]
-				)
-			]
+	Widget _buildTab<State>({State Function(ChildDashboardState) tabState, List<Widget> Function(State) content}) {
+		return _wrapWithBuilder(
+			tabState: tabState,
+			content: (state) => ListView(
+				padding: EdgeInsets.zero,
+				physics: BouncingScrollPhysics(),
+				children: content(state)
+			)
 		);
 	}
 
-	Widget _buildAchievementsTab() {
-		return _buildTabContent(
-			children: <Widget>[
-				// Show only if there are no badges child can get
+	List<Widget> _buildPlansTab(ChildDashboardPlansTabState state) {
+		return [
+			if (state.unratedTasks)
 				AppAlert(
-					text: AppLocales.of(context).translate('$_pageKey.content.alerts.noBadgesAdded'),
-					onTap: () => { /* Go to reward/badge list page */ },
+					text: AppLocales.of(context).translate('$_pageKey.content.alerts.unratedTasksExist'),
+					onTap: () => Navigator.of(context).pushNamed(AppPage.caregiverRatingPage.name),
 				),
-				Segment(
-					title: '$_pageKey.content.achievementsTitle',
-					noElementsMessage: '$_pageKey.content.noAchievementsText',
-					noElementsIcon: Icons.star,
-					elements: [
-						// ItemCard(
-						// 	title: "Super planista", 
-						// 	subtitle: "Przyznano dnia 26.08.2020 20:10",
-						// 	graphicType: AssetType.badgeIcons,
-						// 	graphic: 3,
-						// 	graphicHeight: 44.0,
-						// )
-					]
-				)
-			]
-		);
+			if (state.noPlansAdded)
+				AppAlert(
+					text: AppLocales.of(context).translate('$_pageKey.content.alerts.noPlansAdded'),
+					onTap: () => Navigator.of(context).pushNamed(AppPage.caregiverPlanForm.name),
+				),
+			...buildChildPlanSegments(state.childPlans, context),
+			SizedBox(height: 30.0)
+		];
+	}
+
+	List<Widget> _buildRewardsTab(ChildDashboardRewardsTabState state) {
+		return [
+			// Show only if there are no rewards child can buy
+			AppAlert(
+				text: AppLocales.of(context).translate('$_pageKey.content.alerts.noRewardsAdded'),
+				onTap: () => { /* Go to reward/badge list page */ },
+			),
+			Segment(
+				title: '$_pageKey.content.rewardsTitle',
+				noElementsMessage: '$_pageKey.content.noRewardsText',
+				elements: [
+					ItemCard(
+						title: "Wycieczka do Zoo",
+						subtitle: "Odebrano dnia 25.08.2020 18:34",
+						graphicType: AssetType.rewards,
+						graphic: 16,
+						chips: <Widget>[
+							AttributeChip.withCurrency(content: "30", currencyType: CurrencyType.diamond)
+						],
+					)
+				]
+			)
+		];
+	}
+
+	List<Widget> _buildAchievementsTab(ChildDashboardAchievementsTabState state) {
+		return [
+			// Show only if there are no badges child can get
+			AppAlert(
+				text: AppLocales.of(context).translate('$_pageKey.content.alerts.noBadgesAdded'),
+				onTap: () => { /* Go to reward/badge list page */ },
+			),
+			Segment(
+				title: '$_pageKey.content.achievementsTitle',
+				noElementsMessage: '$_pageKey.content.noAchievementsText',
+				noElementsIcon: Icons.star,
+				elements: [
+					// ItemCard(
+					// 	title: "Super planista",
+					// 	subtitle: "Przyznano dnia 26.08.2020 20:10",
+					// 	graphicType: AssetType.badgeIcons,
+					// 	graphic: 3,
+					// 	graphicHeight: 44.0,
+					// )
+				]
+			)
+		];
 	}
 
 }

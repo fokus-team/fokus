@@ -32,7 +32,7 @@ class UIDataAggregator {
 
 	Future<UIPlanInstance> loadPlanInstance({PlanInstance planInstance, ObjectId planInstanceId, Plan plan}) async {
 		planInstance ??= await _dataRepository.getPlanInstance(id: planInstanceId);
-		var completedTasks = await _dataRepository.getCompletedTaskCount(planInstanceId);
+		var completedTasks = await _dataRepository.getCompletedTaskCount(planInstance.id);
 		plan ??= await _dataRepository.getPlan(id: planInstance.planID, fields: ['_id', 'repeatability', 'name']);
 		var getDescription = (Plan plan, [Date instanceDate]) => _repeatabilityService.buildPlanDescription(plan.repeatability, instanceDate: instanceDate);
 		var elapsedTime = () => sumDurations(planInstance.duration).inSeconds;

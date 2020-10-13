@@ -1,6 +1,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
+import 'package:fokus/model/db/plan/plan.dart';
 import 'package:fokus/model/db/plan/task_status.dart';
+import 'package:fokus/model/ui/plan/ui_plan.dart';
 import 'package:fokus/model/ui/user/ui_child.dart';
 import 'package:get_it/get_it.dart';
 
@@ -29,30 +31,38 @@ class ChildDashboardCubit extends ReloadableCubit {
   }
 
   @override
-  void doLoadData() => loadTab(_initialTab);
-
-  Future loadTab(int tabIndex) {
-  	_initialTab = tabIndex.clamp(0, 3);
-    return _tabFunctions[tabIndex]();
+  void doLoadData() async {
+	  await loadTab(_initialTab);
+	  await loadTab((_initialTab + 1) % 3);
+	  await loadTab((_initialTab + 2) % 3);
   }
 
+  Future loadTab(int tabIndex) => _tabFunctions[tabIndex.clamp(0, 3)]();
+
 	Future _loadPlansTab() async {
+		var activeUser = _activeUser();
 		var planInstances = (await _dataRepository.getPlanInstances(childIDs: [childId], fields: ['_id'])).map((plan) => plan.id).toList();
   	var data = await Future.wait([
 		  _dataAggregator.loadPlanInstances(childId),
-		  _dataAggregator.loadChild(childId),
 		  _dataRepository.countTaskInstances(planInstancesId: planInstances, isCompleted: true, state: TaskState.notEvaluated),
-		  _dataRepository.countPlans(caregiverId: _activeUser().id),
+		  _dataRepository.countPlans(caregiverId: activeUser.id),
+		  _dataRepository.getPlans(caregiverId: activeUser.id, fields: ['_id', 'name', 'assignedTo']),
 	  ]);
-  	var plansTabState = ChildDashboardPlansTabState(plans: data[0], unratedTasks: (data[2] as int) > 0, noPlansAdded: (data[3] as int) == 0);
-		emit(ChildDashboardState(plansTab: plansTabState, child: data[1]));
+  	var availablePlans = (data[3] as List<Plan>).map((plan) => UIPlan.fromDBModel(plan)).toList();
+  	var tabState = ChildDashboardPlansTabState(childPlans: data[0], availablePlans: availablePlans, unratedTasks: (data[1] as int) > 0, noPlansAdded: (data[2] as int) == 0);
+		emit(ChildDashboardState.from(_getPreviousState(), plansTab: tabState, child: await _loadChildProfile()));
 	}
 
 	Future _loadRewardsTab() async {
-		emit(ChildDashboardState());
+  	var tabState = ChildDashboardRewardsTabState();
+		emit(ChildDashboardState.from(_getPreviousState(), rewardsTab: tabState, child: await _loadChildProfile()));
 	}
 
 	Future _loadAchievementsTab() async {
-		emit(ChildDashboardState());
+		var tabState = ChildDashboardAchievementsTabState();
+		emit(ChildDashboardState.from(_getPreviousState(), achievementsTab: tabState, child: await _loadChildProfile()));
 	}
+
+	Future<UIChild> _loadChildProfile() => state is ChildDashboardState ? null : _dataAggregator.loadChild(childId);
+	ChildDashboardState _getPreviousState() => state is ChildDashboardState ? state : null;
 }

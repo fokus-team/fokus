@@ -1,25 +1,29 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
-import 'package:fokus/model/ui/plan/ui_plan_instance.dart';
-import 'package:fokus/services/plan_instance_service.dart';
+import 'package:fokus/model/ui/user/ui_child.dart';
 import 'package:get_it/get_it.dart';
 
 import 'package:fokus/logic/common/reloadable/reloadable_cubit.dart';
 import 'package:fokus/model/ui/user/ui_user.dart';
+import 'package:fokus/model/ui/plan/ui_plan_instance.dart';
+import 'package:fokus/services/ui_data_aggregator.dart';
 import 'package:fokus/services/data/data_repository.dart';
+import 'package:mongo_dart/mongo_dart.dart';
 
 part 'child_dashboard_state.dart';
 
 class ChildDashboardCubit extends ReloadableCubit {
 	final ActiveUserFunction _activeUser;
+	final ObjectId childId;
+
 	int _initialTab;
 	List<Future Function()> _tabFunctions;
 
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
-	final PlanInstanceService _planService = GetIt.I<PlanInstanceService>();
+	final UIDataAggregator _dataAggregator = GetIt.I<UIDataAggregator>();
 
   ChildDashboardCubit(Map<String, dynamic> args, this._activeUser, ModalRoute pageRoute) :
-			_initialTab = args != null ? args['tab'] ?? 0 : 0, super(pageRoute) {
+			_initialTab = args['tab'] ?? 0, childId = (args['child'] as UIChild).id, super(pageRoute) {
 	  _tabFunctions = [_loadPlansTab, _loadRewardsTab, _loadAchievementsTab];
   }
 
@@ -32,15 +36,19 @@ class ChildDashboardCubit extends ReloadableCubit {
   }
 
 	Future _loadPlansTab() async {
-  	var plansTabState = ChildDashboardPlansTabState(await _planService.loadPlanInstances(_activeUser().connections.first));
-		emit(ChildDashboardState(initialTab: _initialTab, plansTab: plansTabState));
+  	var data = await Future.wait([
+		  _dataAggregator.loadPlanInstances(childId),
+		  _dataAggregator.loadChild(childId),
+	  ]);
+  	var plansTabState = ChildDashboardPlansTabState(data[0]);
+		emit(ChildDashboardState(plansTab: plansTabState, child: data[1]));
 	}
 
 	Future _loadRewardsTab() async {
-		emit(ChildDashboardState(initialTab: _initialTab));
+		emit(ChildDashboardState());
 	}
 
 	Future _loadAchievementsTab() async {
-		emit(ChildDashboardState(initialTab: _initialTab));
+		emit(ChildDashboardState());
 	}
 }

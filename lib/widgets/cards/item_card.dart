@@ -1,10 +1,14 @@
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:fokus/model/ui/gamification/ui_points.dart';
 import 'package:fokus/model/ui/ui_button.dart';
+import 'package:fokus/model/ui/user/ui_child.dart';
+import 'package:fokus/utils/string_utils.dart';
 import 'package:fokus/utils/ui/app_paths.dart';
 import 'package:fokus/utils/ui/icon_sets.dart';
 import 'package:fokus/utils/ui/theme_config.dart';
+import 'package:fokus/widgets/chips/attribute_chip.dart';
 import 'package:fokus/widgets/general/app_avatar.dart';
 import 'package:fokus/widgets/buttons/popup_menu_list.dart';
 
@@ -250,5 +254,28 @@ class ItemCard extends StatelessWidget {
 		}
 		return SizedBox(width: 0, height: 0);
 	}
+
+}
+
+class ChildItemCard extends StatelessWidget {
+	final UIChild child;
+	final Function onTapped;
+
+  const ChildItemCard({@required this.child, this.onTapped});
+
+  @override
+  Widget build(BuildContext context) {
+    return ItemCard(
+	    title: child.name,
+	    subtitle: getChildCardSubtitle(context, child),
+	    onTapped: onTapped,
+	    graphicType: AssetType.avatars,
+	    graphic: child.avatar,
+	    chips: <Widget>[
+		    for (UIPoints pointCurrency in child.points)
+			    AttributeChip.withCurrency(content: '${pointCurrency.quantity}', currencyType: pointCurrency.type)
+	    ]
+    );
+  }
 
 }

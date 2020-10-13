@@ -4,16 +4,16 @@ import 'package:get_it/get_it.dart';
 import 'package:fokus/logic/common/reloadable/reloadable_cubit.dart';
 import 'package:fokus/model/ui/plan/ui_plan_instance.dart';
 import 'package:fokus/model/ui/user/ui_user.dart';
-import 'package:fokus/services/plan_instance_service.dart';
+import 'package:fokus/services/ui_data_aggregator.dart';
 
 class ChildPlansCubit extends ReloadableCubit {
 
 	final ActiveUserFunction _activeUser;
-	final PlanInstanceService _planService = GetIt.I<PlanInstanceService>();
+	final UIDataAggregator _dataAggregator = GetIt.I<UIDataAggregator>();
 
   ChildPlansCubit(this._activeUser, ModalRoute pageRoute) : super(pageRoute);
 
-  void doLoadData() async => emit(ChildPlansLoadSuccess(await _planService.loadPlanInstances(_activeUser().id)));
+  void doLoadData() async => emit(ChildPlansLoadSuccess(await _dataAggregator.loadPlanInstances(_activeUser().id)));
 }
 
 class ChildPlansLoadSuccess extends DataLoadSuccess {

@@ -55,6 +55,10 @@ class PlanRepeatabilityService {
 		return filterPlansByDate(await _dataRepository.getPlans(childId: childId), date);
 	}
 
+	Future<int> getPlanCountByDate(ObjectId childId, Date date) async {
+		return (await filterPlansByDate(await _dataRepository.getPlans(childId: childId, fields: ['repeatability']), date)).length;
+	}
+
 	Future<List<Plan>> filterPlansByDate(List<Plan> plans, Date date, {bool activeOnly = true}) async {
 		return plans.where((plan) => _planInstanceExistsByDate(plan, date)).toList();
 	}

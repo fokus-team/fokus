@@ -7,7 +7,7 @@ import 'package:fokus/services/app_config/app_config_repository.dart';
 import 'package:fokus/services/app_config/app_shared_preferences_provider.dart';
 import 'package:fokus/services/data/data_repository.dart';
 import 'package:fokus/services/plan_repeatability_service.dart';
-import 'package:fokus/services/plan_instance_service.dart';
+import 'package:fokus/services/ui_data_aggregator.dart';
 import 'package:fokus/services/plan_keeper_service.dart';
 import 'package:fokus/services/task_instance_service.dart';
 import 'package:fokus/services/notifications/onesignal/onesignal_notification_service.dart';
@@ -24,7 +24,7 @@ Future registerServices(GlobalKey<NavigatorState> navigatorKey, RouteObserver<Pa
 	GetIt.I.registerSingleton<DataRepository>(DbDataRepository());
 	GetIt.I.registerSingleton<PlanRepeatabilityService>(PlanRepeatabilityService());
 	GetIt.I.registerSingleton<PlanKeeperService>(PlanKeeperService());
-	GetIt.I.registerSingleton<PlanInstanceService>(PlanInstanceService());
+	GetIt.I.registerSingleton<UIDataAggregator>(UIDataAggregator());
 	GetIt.I.registerSingleton<TaskInstanceService>(TaskInstanceService());
 	GetIt.I.registerSingleton<NotificationService>(OneSignalNotificationService());
 	GetIt.I.registerSingleton<LocaleService>(LocaleService());

@@ -6,7 +6,7 @@ import 'package:fokus/model/db/plan/task_instance.dart';
 import 'package:fokus/model/ui/plan/ui_plan_instance.dart';
 import 'package:fokus/model/ui/task/ui_task_instance.dart';
 import 'package:fokus/services/data/data_repository.dart';
-import 'package:fokus/services/plan_instance_service.dart';
+import 'package:fokus/services/ui_data_aggregator.dart';
 import 'package:fokus/services/plan_repeatability_service.dart';
 import 'package:fokus/services/task_instance_service.dart';
 import 'package:fokus/utils/duration_utils.dart';
@@ -16,7 +16,7 @@ import 'package:mongo_dart/mongo_dart.dart';
 class PlanInstanceCubit extends ReloadableCubit {
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final TaskInstanceService _taskInstancesService = GetIt.I<TaskInstanceService>();
-	final PlanInstanceService _planService = GetIt.I<PlanInstanceService>();
+	final UIDataAggregator _dataAggregator = GetIt.I<UIDataAggregator>();
 	final ObjectId _planInstanceId;
 
 	PlanInstanceCubit(this._planInstanceId, ModalRoute modalRoute) : super(modalRoute);
@@ -28,7 +28,7 @@ class PlanInstanceCubit extends ReloadableCubit {
 		planInstance = await _dataRepository.getPlanInstance(id: _planInstanceId);
 		if(planInstance.taskInstances == null || planInstance.taskInstances.isEmpty)
 			_taskInstancesService.createTaskInstances(planInstance);
-		var uiPlanInstance = await _planService.loadPlanInstance(planInstance: planInstance);
+		var uiPlanInstance = await _dataAggregator.loadPlanInstance(planInstance: planInstance);
 		var allTasksInstances = await _dataRepository.getTaskInstances(planInstanceId: _planInstanceId);
 
 		List<UITaskInstance> uiInstances = await _taskInstancesService.mapToUIModels(allTasksInstances);

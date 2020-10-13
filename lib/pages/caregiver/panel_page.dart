@@ -51,17 +51,7 @@ class _CaregiverPanelPageState extends State<CaregiverPanelPage> {
 				noElementsMessage: '$_pageKey.content.noChildProfilesAdded',
 				elements: <Widget>[
 					for (var child in state.children)
-						ItemCard(
-							title: child.name,
-							subtitle: getChildCardSubtitle(context, child),
-							onTapped: () => Navigator.of(context).pushNamed(AppPage.caregiverChildDashboard.name),
-							graphicType: AssetType.avatars,
-							graphic: child.avatar,
-							chips: <Widget>[
-								for (UIPoints pointCurrency in child.points)
-									AttributeChip.withCurrency(content: '${pointCurrency.quantity}', currencyType: pointCurrency.type)
-							]
-						)
+						ChildItemCard(child: child, onTapped: () => Navigator.of(context).pushNamed(AppPage.caregiverChildDashboard.name, arguments: {'child': child})),
 				]
 			),
 			Segment(

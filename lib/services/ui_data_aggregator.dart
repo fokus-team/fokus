@@ -1,7 +1,9 @@
 import 'package:fokus/model/db/date/date.dart';
 import 'package:fokus/model/db/plan/plan.dart';
 import 'package:fokus/model/db/plan/plan_instance.dart';
+import 'package:fokus/model/db/user/child.dart';
 import 'package:fokus/model/ui/plan/ui_plan_instance.dart';
+import 'package:fokus/model/ui/user/ui_child.dart';
 import 'package:fokus/services/data/data_repository.dart';
 import 'package:fokus/services/plan_repeatability_service.dart';
 import 'package:fokus/utils/duration_utils.dart';
@@ -9,11 +11,24 @@ import 'package:get_it/get_it.dart';
 import 'package:logging/logging.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
-class PlanInstanceService {
+class UIDataAggregator {
 	final Logger _logger = Logger('PlanInstanceService');
 
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final PlanRepeatabilityService _repeatabilityService = GetIt.I<PlanRepeatabilityService>();
+
+	Future<UIChild> loadChild(ObjectId id) async => (await loadChildren([await _dataRepository.getUser(id: id) as Child]))[0];
+
+	Future<List<UIChild>> loadChildren(List<Child> children) async {
+		var data = await Future.wait([
+			...children.map((child) => _repeatabilityService.getPlanCountByDate(child.id, Date.now())),
+			...children.map((child) => _dataRepository.hasActiveChildPlanInstance(child.id))
+		]);
+		List<UIChild> childList = [];
+		for (int i = 0; i < children.length; i++)
+			childList.add(UIChild.fromDBModel(children[i], todayPlanCount: data[i], hasActivePlan: data[children.length + i]));
+		return childList;
+	}
 
 	Future<UIPlanInstance> loadPlanInstance({PlanInstance planInstance, ObjectId planInstanceId, Plan plan}) async {
 		planInstance ??= await _dataRepository.getPlanInstance(id: planInstanceId);

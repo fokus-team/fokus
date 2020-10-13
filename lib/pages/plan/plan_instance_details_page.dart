@@ -50,28 +50,24 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
   Widget build(BuildContext context) {
 		return Scaffold(
 			body: LoadableBlocBuilder<PlanInstanceCubit>(
-				builder: (context, state) => _getView(state),
-				loadingBuilder: (context, state) => _getInitialView(),
+				builder: (context, state) => _getView(
+					planInstance: (state as ChildTasksLoadSuccess).planInstance,
+					content: AppSegments(segments: _buildPanelSegments(state))
+				),
+				loadingBuilder: (context, state) => _getView(
+					planInstance: widget.initialPlanInstance,
+					content: Expanded(child: Center(child: AppLoader()))
+				),
 			)
 		);
   }
 
-  Column _getInitialView() {
+  Column _getView({UIPlanInstance planInstance, Widget content}) {
 		return Column(
 			crossAxisAlignment: CrossAxisAlignment.start,
 			children: [
-				_getHeader(this.widget.initialPlanInstance),
-				Expanded(child: Center(child: AppLoader()))
-			],
-		);
-	}
-
-  Column _getView(ChildTasksLoadSuccess state) {
-		return Column(
-			crossAxisAlignment: CrossAxisAlignment.start,
-			children: [
-				_getHeader(state.planInstance),
-				AppSegments(segments: _buildPanelSegments(state))
+				_getHeader(planInstance),
+				content
 			],
 		);
 	}

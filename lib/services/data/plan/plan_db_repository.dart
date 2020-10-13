@@ -42,7 +42,7 @@ mixin PlanDbRepository implements DbRepository {
 		return dbClient.queryTyped(Collection.planInstance, query, (json) => PlanInstance.fromJson(json));
 	}
 
-	Future<bool> getActiveChildPlanInstance(ObjectId childId) {
+	Future<bool> hasActiveChildPlanInstance(ObjectId childId) {
 		return dbClient.exists(Collection.planInstance, _buildPlanQuery(childId: childId, state: PlanInstanceState.active));
 	}
 

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fokus/model/ui/user/ui_child.dart';
+import 'package:fokus/utils/string_utils.dart';
+import 'package:fokus/widgets/general/app_loader.dart';
 import 'package:mongo_dart/mongo_dart.dart' as Mongo;
 import 'package:smart_select/smart_select.dart';
 
@@ -24,16 +27,21 @@ import 'package:fokus/widgets/cards/item_card.dart';
 import 'package:fokus/widgets/buttons/popup_menu_list.dart';
 
 class CaregiverChildDashboardPage extends StatefulWidget {
-  @override
-  _CaregiverChildDashboardPageState createState() => new _CaregiverChildDashboardPageState();
+	final Map<String, dynamic> args;
+
+	CaregiverChildDashboardPage(this.args);
+
+	@override
+	_CaregiverChildDashboardPageState createState() => _CaregiverChildDashboardPageState(args);
 }
 
 class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPage> with TickerProviderStateMixin {
 	static const String _pageKey = 'page.caregiverSection.childDashboard';
 	TabController _tabController;
+	final UIChild _initialChildProfile;
 	int _currentIndex;
 
-	_CaregiverChildDashboardPageState();
+	_CaregiverChildDashboardPageState(Map<String, dynamic> args) : _currentIndex = args['tab'] ?? 0, _initialChildProfile = args['child'];
 
 	final double customBottomBarHeight = 40.0;
 	final Duration bottomBarAnimationDuration = Duration(milliseconds: 400);
@@ -53,6 +61,18 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 		UIBadge(name: "Puchar planowicza", icon: 12),
 	];
 	List<UIBadge> pickedBadges = List<UIBadge>();
+
+	@override
+	void initState() {
+		super.initState();
+		_tabController = TabController(initialIndex: _currentIndex, vsync: this, length: 3);
+		_tabController.animation..addListener(() {
+			setState(() {
+				_currentIndex = (_tabController.animation.value).round();
+				context.bloc<ChildDashboardCubit>().loadTab(_currentIndex);
+			});
+		});
+	}
 
   @override
   void dispose() {
@@ -74,33 +94,21 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
   Widget build(BuildContext context) {
 		return Scaffold(
 	    body: LoadableBlocBuilder<ChildDashboardCubit>(
-				builder: (context, state) {
-					if (_tabController == null) {
-						_tabController = TabController(initialIndex: (state as ChildDashboardState).initialTab, vsync: this, length: 3);
-						_tabController.animation..addListener(() {
-							setState(() {
-								_currentIndex = (_tabController.animation.value).round();
-								context.bloc<ChildDashboardCubit>().loadTab(_currentIndex);
-							});
-						});
-					}
-					return  Column(
-		        crossAxisAlignment: CrossAxisAlignment.start,
-		        children: [
-		          _buildAppHeader(context),
-		          Expanded(
-		            child: TabBarView(
-			            controller: _tabController,
-		              children: [
-		                _buildPlansTab(),
-		                _buildRewardsTab(),
-		                _buildAchievementsTab()
-		              ]
-		            )
-		          )
-		        ]
-		      );
-			  },
+				builder: (context, state) => _getPage(
+					child: (state as ChildDashboardState).child,
+	        content: TabBarView(
+            controller: _tabController,
+            children: [
+              _buildPlansTab(),
+              _buildRewardsTab(),
+              _buildAchievementsTab()
+            ]
+					)
+	      ),
+		    loadingBuilder: (context, state) => _getPage(
+			    child: _initialChildProfile,
+			    content: Center(child: AppLoader())
+		    ),
 	    ),
 	    bottomNavigationBar: _buildBottomBar(),
 	    floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -108,19 +116,21 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 		);
 	}
 
-  AppHeader _buildAppHeader(BuildContext context) {
+	Column _getPage({UIChild child, Widget content}) {
+		return Column(
+			crossAxisAlignment: CrossAxisAlignment.start,
+			children: [
+				_buildAppHeader(child),
+				Expanded(child: content)
+			]
+		);
+	}
+
+  AppHeader _buildAppHeader(UIChild child) {
     return AppHeader.widget(
       title: '$_pageKey.header.title',
-      appHeaderWidget: ItemCard(
-        // classic child card from caregiver panel
-        title: 'Maciek',
-        subtitle: '2 plany na dziś',
-        graphicType: AssetType.avatars,
-        graphic: 16,
-        chips: <Widget>[
-          AttributeChip.withCurrency(content: '69420', currencyType: CurrencyType.amethyst)
-        ]
-      ),
+      appHeaderWidget:
+      ChildItemCard(child: child),
       popupMenuWidget: PopupMenuList(
         lightTheme: true,
         items: [

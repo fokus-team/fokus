@@ -1,16 +1,17 @@
 part of 'child_dashboard_cubit.dart';
 
 class ChildDashboardState extends DataLoadSuccess {
-	final int initialTab;
+	final UIChild child;
+
 	final ChildDashboardPlansTabState plansTab;
 	final ChildDashboardRewardsTabState rewardsTab;
 	final ChildDashboardAchievementsTabState achievementsTab;
 
-	ChildDashboardState({this.initialTab, this.plansTab, this.rewardsTab, this.achievementsTab});
-	ChildDashboardState copyWith({ChildDashboardPlansTabState plansTab,
+	ChildDashboardState({this.child, this.plansTab, this.rewardsTab, this.achievementsTab});
+	ChildDashboardState copyWith({UIChild child, ChildDashboardPlansTabState plansTab,
 			ChildDashboardRewardsTabState rewardsTab, ChildDashboardAchievementsTabState achievementsTab}) {
 		return ChildDashboardState(
-			initialTab: initialTab,
+			child: child ?? this.child,
 			plansTab: plansTab ?? this.plansTab,
 			rewardsTab: rewardsTab ?? this.rewardsTab,
 			achievementsTab: achievementsTab ?? this.achievementsTab,
@@ -18,7 +19,7 @@ class ChildDashboardState extends DataLoadSuccess {
 	}
 
 	@override
-	List<Object> get props => [initialTab, plansTab, rewardsTab, achievementsTab];
+	List<Object> get props => [plansTab, rewardsTab, achievementsTab];
 }
 
 class ChildDashboardPlansTabState extends Equatable {

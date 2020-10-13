@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -42,9 +43,12 @@ class _TaskFormState extends State<TaskForm> {
 	bool isDataChanged = false;
 	TaskFormModel task;
 
+	List<TextFormField> _subtasks = [];
+
 	TextEditingController _titleController = TextEditingController();
 	TextEditingController _descriptionController = TextEditingController();
 	TextEditingController _pointsController = TextEditingController();
+	List<TextEditingController> _subtaskControllers = [];
 
 	bool formModeIsCreate() => widget.task == null;
 
@@ -63,6 +67,9 @@ class _TaskFormState extends State<TaskForm> {
 			_titleController.text = widget.task.title;
 			_descriptionController.text = widget.task.description;
 			_pointsController.text = widget.task.pointsValue != null ? widget.task.pointsValue.toString() : null;
+			for(var subtask in widget.task.subtasks) {
+
+			}
 		}
     super.initState();
   }
@@ -294,6 +301,26 @@ class _TaskFormState extends State<TaskForm> {
 		);
 	}
 
+	Widget buildSubtasksFields() {
+		return Padding(
+			padding: EdgeInsets.only(top: 5.0, bottom: 6.0, left: 20.0, right: 20.0),
+			child:TextFormField(
+				controller: _descriptionController,
+				decoration: AppFormProperties.longTextFieldDecoration(Icons.description).copyWith(
+					labelText: AppLocales.of(context).translate('$_pageKeyTaskForm.fields.taskDescription.label')
+				),
+				maxLength: AppFormProperties.longTextFieldMaxLength,
+				minLines: AppFormProperties.longTextMinLines,
+				maxLines: AppFormProperties.longTextMaxLines,
+				textCapitalization: TextCapitalization.sentences,
+				onChanged: (val) => setState(() {
+					isDataChanged = task.description != val;
+					task.description = val;
+				})
+			)
+		);
+	}
+
 	Widget buildPointsFields() {
 		return BlocBuilder<PlanFormCubit, PlanFormState>(
 			cubit: context.bloc<PlanFormCubit>(),
@@ -425,6 +452,26 @@ class _TaskFormState extends State<TaskForm> {
 				onChanged: (val) => setState(() => task.optional = val)
 			)
 		);
+	}
+
+	void _addSubtask({String text}) {
+		_subtaskControllers.add(TextEditingController());
+		if(text != null) _subtaskControllers.last.text = text;
+		setState(() {
+		  _subtasks.add(
+				TextFormField(
+					controller: _subtaskControllers.last,
+					decoration: AppFormProperties.longTextFieldDecoration(Icons.format_list_bulleted).copyWith(
+						labelText: AppLocales.of(context).translate('$_pageKeyTaskForm.fields.taskDescription.label')
+					),
+					maxLength: AppFormProperties.textFieldMaxLength,
+					textCapitalization: TextCapitalization.sentences,
+					onChanged: (val) => setState(() {
+						isDataChanged = task.description != val;
+						task.description = val;
+					})
+			));
+		});
 	}
 
 }

@@ -7,7 +7,7 @@ class Task {
   String description;
   ObjectId id;
   ObjectId planID;
-	List<ObjectId> subtasks;
+	List<String> subtasks;
 
   bool optional;
   Points points;
@@ -27,7 +27,7 @@ class Task {
       optional: json['optional'],
       planID: json['planID'],
       points: json['points'] != null ? Points.fromJson(json['points']) : null,
-      subtasks: json['subtasks'] != null ? new List<ObjectId>.from(json['subtasks']) : [],
+      subtasks: json['subtasks'] != null ? new List<String>.from(json['subtasks']) : [],
       timer: json['timer'],
     ) : null;
   }

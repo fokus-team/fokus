@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mongo_dart/mongo_dart.dart' as Mongo;
+import 'package:smart_select/smart_select.dart';
+
+import 'package:fokus/model/currency_type.dart';
 import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/ui/gamification/ui_badge.dart';
 import 'package:fokus/model/ui/plan/ui_plan.dart';
+import 'package:fokus/logic/caregiver/child_dashboard/child_dashboard_cubit.dart';
+import 'package:fokus/widgets/loadable_bloc_builder.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/ui/dialog_utils.dart';
 import 'package:fokus/utils/ui/icon_sets.dart';
@@ -10,24 +17,15 @@ import 'package:fokus/widgets/buttons/bottom_sheet_bar_buttons.dart';
 import 'package:fokus/widgets/dialogs/general_dialog.dart';
 import 'package:fokus/widgets/general/app_alert.dart';
 import 'package:fokus/widgets/segment.dart';
-import 'package:mongo_dart/mongo_dart.dart' as Mongo;
-
-import 'package:fokus/model/currency_type.dart';
 import 'package:fokus/model/ui/ui_button.dart';
 import 'package:fokus/widgets/app_header.dart';
 import 'package:fokus/widgets/chips/attribute_chip.dart';
 import 'package:fokus/widgets/cards/item_card.dart';
 import 'package:fokus/widgets/buttons/popup_menu_list.dart';
-import 'package:smart_select/smart_select.dart';
 
 class CaregiverChildDashboardPage extends StatefulWidget {
-	final int _currentIndex;
-
-  CaregiverChildDashboardPage(Map<String, dynamic> args) : _currentIndex = args != null ? args['tab'] ?? 0 : 0;
-
   @override
-  _CaregiverChildDashboardPageState createState() =>
-      new _CaregiverChildDashboardPageState(_currentIndex);
+  _CaregiverChildDashboardPageState createState() => new _CaregiverChildDashboardPageState();
 }
 
 class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPage> with TickerProviderStateMixin {
@@ -35,7 +33,7 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 	TabController _tabController;
 	int _currentIndex;
 
-	_CaregiverChildDashboardPageState(this._currentIndex);
+	_CaregiverChildDashboardPageState();
 
 	final double customBottomBarHeight = 40.0;
 	final Duration bottomBarAnimationDuration = Duration(milliseconds: 400);
@@ -57,18 +55,6 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 	List<UIBadge> pickedBadges = List<UIBadge>();
 
   @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(initialIndex: _currentIndex, vsync: this, length: 3);
-    _tabController.animation
-      ..addListener(() {
-        setState(() {
-          _currentIndex = (_tabController.animation.value).round();
-        });
-      });
-  }
-
-  @override
   void dispose() {
     _tabController.dispose();
     super.dispose();
@@ -87,57 +73,74 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
   @override
   Widget build(BuildContext context) {
 		return Scaffold(
-			body: Column(
-				crossAxisAlignment: CrossAxisAlignment.start,
-				children: [
-					AppHeader.widget(
-						title: '$_pageKey.header.title',
-						appHeaderWidget: ItemCard(
-							// classic child card from caregiver panel
-							title: 'Maciek',
-							subtitle: '2 plany na dziś',
-							graphicType: AssetType.avatars,
-							graphic: 16,
-							chips: <Widget>[
-								AttributeChip.withCurrency(content: '69420', currencyType: CurrencyType.amethyst)
-							]
-						),
-						popupMenuWidget: PopupMenuList(
-							lightTheme: true,
-							items: [
-								UIButton('$_pageKey.header.childCode', () => showCodeDialog('fa7462a054295e915a20755d')),
-								UIButton.ofType(ButtonType.edit, () => {}), // TODO edit name/awatar logic (form in pop-up?)
-								UIButton.ofType(ButtonType.unpair, () => {}) // TODO unpair logic (with dialog confirmation)
-							],
-						),
-						tabs: TabBar(
-							controller: _tabController,
-							indicatorColor: Colors.white,
-							indicatorWeight: 3.0,
-							tabs: [
-								Tab(text: AppLocales.of(context).translate('$_pageKey.header.tabs.plans')),
-								Tab(text: AppLocales.of(context).translate('$_pageKey.header.tabs.rewards')),
-								Tab(text: AppLocales.of(context).translate('$_pageKey.header.tabs.achievements'))
-							]
-						)
-					),
-					Expanded(
-						child: TabBarView(
-							controller: _tabController,
-							children: [
-								_buildPlansTab(),
-								_buildRewardsTab(),
-								_buildAchievementsTab()
-							]
-						)
-					)
-				]
-			),
-			bottomNavigationBar: _buildBottomBar(),
-			floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-			floatingActionButton: _buildFloatingButtonAnimation()
+	    body: LoadableBlocBuilder<ChildDashboardCubit>(
+				builder: (context, state) {
+					if (_tabController == null) {
+						_tabController = TabController(initialIndex: (state as ChildDashboardState).initialTab, vsync: this, length: 3);
+						_tabController.animation..addListener(() {
+							setState(() {
+								_currentIndex = (_tabController.animation.value).round();
+								context.bloc<ChildDashboardCubit>().loadTab(_currentIndex);
+							});
+						});
+					}
+					return  Column(
+		        crossAxisAlignment: CrossAxisAlignment.start,
+		        children: [
+		          _buildAppHeader(context),
+		          Expanded(
+		            child: TabBarView(
+			            controller: _tabController,
+		              children: [
+		                _buildPlansTab(),
+		                _buildRewardsTab(),
+		                _buildAchievementsTab()
+		              ]
+		            )
+		          )
+		        ]
+		      );
+			  },
+	    ),
+	    bottomNavigationBar: _buildBottomBar(),
+	    floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+	    floatingActionButton: _buildFloatingButtonAnimation()
 		);
 	}
+
+  AppHeader _buildAppHeader(BuildContext context) {
+    return AppHeader.widget(
+      title: '$_pageKey.header.title',
+      appHeaderWidget: ItemCard(
+        // classic child card from caregiver panel
+        title: 'Maciek',
+        subtitle: '2 plany na dziś',
+        graphicType: AssetType.avatars,
+        graphic: 16,
+        chips: <Widget>[
+          AttributeChip.withCurrency(content: '69420', currencyType: CurrencyType.amethyst)
+        ]
+      ),
+      popupMenuWidget: PopupMenuList(
+        lightTheme: true,
+        items: [
+          UIButton('$_pageKey.header.childCode', () => showCodeDialog('fa7462a054295e915a20755d')),
+          UIButton.ofType(ButtonType.edit, () => {}), // TODO edit name/awatar logic (form in pop-up?)
+          UIButton.ofType(ButtonType.unpair, () => {}) // TODO unpair logic (with dialog confirmation)
+        ],
+      ),
+      tabs: TabBar(
+	      controller: _tabController,
+        indicatorColor: Colors.white,
+        indicatorWeight: 3.0,
+        tabs: [
+          Tab(text: AppLocales.of(context).translate('$_pageKey.header.tabs.plans')),
+          Tab(text: AppLocales.of(context).translate('$_pageKey.header.tabs.rewards')),
+          Tab(text: AppLocales.of(context).translate('$_pageKey.header.tabs.achievements'))
+        ]
+      )
+    );
+  }
 
 	Widget _buildBottomBar() {
 		return AnimatedContainer(

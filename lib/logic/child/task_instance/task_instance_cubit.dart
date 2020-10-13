@@ -13,7 +13,7 @@ import 'package:fokus/model/ui/task/ui_task_instance.dart';
 import 'package:fokus/model/ui/user/ui_user.dart';
 import 'package:fokus/services/data/data_repository.dart';
 import 'package:fokus/services/notifications/notification_service.dart';
-import 'package:fokus/services/plan_keeper_service.dart';
+import 'package:fokus/services/plan_instance_service.dart';
 import 'package:fokus/utils/duration_utils.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mongo_dart/mongo_dart.dart';
@@ -26,7 +26,7 @@ class TaskInstanceCubit extends Cubit<TaskInstanceState> {
 
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final NotificationService _notificationService = GetIt.I<NotificationService>();
-	final PlanKeeperService _planService = GetIt.I<PlanKeeperService>();
+	final PlanInstanceService _planService = GetIt.I<PlanInstanceService>();
 
 	TaskInstanceCubit(this._taskInstanceId, this._activeUser) : super(TaskInstanceStateInitial());
 

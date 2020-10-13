@@ -6,11 +6,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
 import 'package:fokus/model/notification/notification_data.dart';
 import 'package:fokus/model/notification/notification_type.dart';
+import 'package:fokus/services/plan_instance_service.dart';
 import 'package:fokus/model/ui/gamification/ui_points.dart';
 import 'package:fokus/model/db/user/child.dart';
 import 'package:fokus/model/ui/gamification/ui_badge.dart';
 import 'package:fokus/model/ui/user/ui_child.dart';
-import 'package:fokus/services/plan_keeper_service.dart';
 import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/db/user/user_role.dart';
 import 'package:fokus/utils/ui/snackbar_utils.dart';
@@ -20,7 +20,7 @@ import 'package:fokus/services/notifications/notification_provider.dart';
 class OneSignalNotificationProvider extends NotificationProvider {
 	final String appId = 'ed3ee23f-aa7a-4fc7-91ab-9967fa7712e5';
 	final _navigatorKey = GetIt.I<GlobalKey<NavigatorState>>();
-	final PlanKeeperService _planService = GetIt.I<PlanKeeperService>();
+	final PlanInstanceService _planService = GetIt.I<PlanInstanceService>();
 
 	OneSignalNotificationProvider() {
 		_configureOneSignal();

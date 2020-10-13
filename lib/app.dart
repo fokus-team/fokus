@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:fokus/logic/caregiver/child_dashboard/child_dashboard_cubit.dart';
 
 import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
 import 'package:fokus/logic/caregiver/auth/sign_in/caregiver_sign_in_cubit.dart';
@@ -158,7 +159,7 @@ class _FokusAppState extends State<FokusApp> implements CurrentLocaleObserver {
 			AppPage.childSignInPage.name: (context) => _createPage(withCubit(ChildSignInPage(), ChildSignInCubit(authBloc(context))), context, ChildSignUpCubit(authBloc(context))),
 
 			AppPage.caregiverPanel.name: (context) => _createPage(CaregiverPanelPage(), context, CaregiverPanelCubit(getActiveUser(context), getRoute(context))),
-			AppPage.caregiverChildDashboard.name: (context) => _createPage(CaregiverChildDashboardPage(getParams(context)), context),
+			AppPage.caregiverChildDashboard.name: (context) => _createPage(CaregiverChildDashboardPage(), context, ChildDashboardCubit(getParams(context), getActiveUser(context), getRoute(context))),
 			AppPage.caregiverPlans.name: (context) => _createPage(CaregiverPlansPage(), context, CaregiverPlansCubit(getActiveUser(context), getRoute(context))),
 			AppPage.caregiverCalendar.name: (context) => _createPage(CaregiverCalendarPage(), context, CalendarCubit(getParams(context), getActiveUser(context))),
 			AppPage.caregiverPlanForm.name: (context) => _createPage(CaregiverPlanFormPage(), context, PlanFormCubit(getParams(context), getActiveUser(context))),

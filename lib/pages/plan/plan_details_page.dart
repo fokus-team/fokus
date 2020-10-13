@@ -13,7 +13,7 @@ import 'package:fokus/model/ui/ui_button.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/dialog_utils.dart';
 import 'package:fokus/utils/theme_config.dart';
-import 'package:fokus/widgets/app_header.dart';
+import 'package:fokus/widgets/custom_app_bars.dart';
 import 'package:fokus/widgets/chips/attribute_chip.dart';
 import 'package:fokus/widgets/dialogs/general_dialog.dart';
 import 'package:fokus/widgets/cards/item_card.dart';
@@ -44,9 +44,10 @@ class _PlanDetailsPageState extends State<PlanDetailsPage> {
 	Column _buildView(BuildContext context, CaregiverTasksLoadSuccess state) {
   	return Column(
 			crossAxisAlignment: CrossAxisAlignment.start,
+			verticalDirection: VerticalDirection.up,
 			children: [
-				_getCardHeader(state.uiPlan, state.children, context),
-				AppSegments(segments: _buildPanelSegments(state))
+				AppSegments(segments: _buildPanelSegments(state)),
+				_getCardHeader(state.uiPlan, state.children, context)
 			],
 		);
 	}
@@ -100,9 +101,9 @@ class _PlanDetailsPageState extends State<PlanDetailsPage> {
 		var currentUser = authenticationBloc.state.user;
 
 
-		return AppHeader.widget(
+		return CustomContentAppBar(
 			title: '$_pageKey.header.title',
-			appHeaderWidget: ItemCard(
+			content: ItemCard(
 				title: plan.name,
 				subtitle: plan.description(context),
 				//TODO: Open child page with click on chip

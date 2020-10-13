@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fokus/model/ui/gamification/ui_badge.dart';
+import 'package:fokus/model/ui/ui_button.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/app_paths.dart';
 import 'package:fokus/utils/icon_sets.dart';
@@ -92,13 +93,7 @@ class _BadgeDialogState extends State<BadgeDialog> with SingleTickerProviderStat
 								child: Row(
 									mainAxisAlignment: MainAxisAlignment.center,
 									children: <Widget>[
-										RoundedButton(
-											icon: Icons.close,
-											text: AppLocales.of(context).translate('actions.close'),
-											color: Colors.grey,
-											onPressed: () => Navigator.of(context).pop(),
-											dense: true
-										)
+										RoundedButton(button: UIButton('actions.close', () => Navigator.of(context).pop(), Colors.blueGrey, Icons.close))
 									]
 								)
 							)

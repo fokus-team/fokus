@@ -17,7 +17,7 @@ import 'package:fokus/model/ui/user/ui_child.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/icon_sets.dart';
 import 'package:fokus/utils/theme_config.dart';
-import 'package:fokus/widgets/app_header.dart';
+import 'package:fokus/widgets/custom_app_bars.dart';
 import 'package:fokus/widgets/cards/item_card.dart';
 import 'package:fokus/widgets/chips/attribute_chip.dart';
 import 'package:fokus/widgets/segment.dart';
@@ -63,28 +63,8 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 		return Scaffold(
 			body: Column(
 				crossAxisAlignment: CrossAxisAlignment.start,
+				verticalDirection: VerticalDirection.up,
 				children: [
-					AppHeader.widget(
-						title: '$_pageKey.header.title',
-						appHeaderWidget: Card(
-							margin: EdgeInsets.symmetric(horizontal: 12.0).copyWith(bottom: 6.0),
-							child: InkWell(
-								onTap: () => {},
-								child: Container(
-								  child: BlocBuilder<CalendarCubit, CalendarState>(
-                    buildWhen: (oldState, newState) => oldState.children != newState.children,
-									  builder: (context, state) {
-										  if (state.children == null) {
-											  context.bloc<CalendarCubit>().loadInitialData();
-											  return _buildChildPicker(loading: true);
-										  }
-									    return _buildChildPicker(children: state.children);
-									  },
-								  ),
-								)
-							)
-						)
-					),
 					AppSegments(
 						segments: [
 							Padding(
@@ -100,6 +80,27 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 								child: _buildPlanList()
 							)
 						]
+					),
+					CustomContentAppBar(
+						title: '$_pageKey.header.title',
+						content: Card(
+							margin: EdgeInsets.symmetric(horizontal: 20.0, vertical: 6.0).copyWith(bottom: 6.0),
+							child: InkWell(
+								onTap: () => {},
+								child: Container(
+								  child: BlocBuilder<CalendarCubit, CalendarState>(
+                    buildWhen: (oldState, newState) => oldState.children != newState.children,
+									  builder: (context, state) {
+										  if (state.children == null) {
+											  context.bloc<CalendarCubit>().loadInitialData();
+											  return _buildChildPicker(loading: true);
+										  }
+									    return _buildChildPicker(children: state.children);
+									  }
+								  )
+								)
+							)
+						)
 					)
 				]
 			)

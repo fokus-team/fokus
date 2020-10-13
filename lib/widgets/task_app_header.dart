@@ -8,24 +8,21 @@ import 'package:fokus/logic/timer/timer_cubit.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/duration_utils.dart';
 import 'package:fokus/utils/theme_config.dart';
-import 'package:fokus/widgets/app_header.dart';
+import 'package:fokus/widgets/custom_app_bars.dart';
 import 'package:logging/logging.dart';
 import 'package:vibration/vibration.dart';
-
-
 import 'chips/attribute_chip.dart';
 import 'large_timer.dart';
 
 class TaskAppHeader extends StatefulWidget with PreferredSizeWidget {
 	final double height;
 	final String title;
-	final String text;
-	final Widget appHeaderWidget;
+	final Widget content;
 	final String helpPage;
 	final Function breakPerformingTransition;
 	final TaskInstanceProvider state;
 
-	TaskAppHeader({Key key, @required this.height, @required this.state, this.title, this.text, this.appHeaderWidget, this.helpPage,this.breakPerformingTransition}) : super(key: key);
+	TaskAppHeader({Key key, @required this.height, @required this.state, this.title, this.content, this.helpPage,this.breakPerformingTransition}) : super(key: key);
 
 	@override
 	Size get preferredSize => Size.fromHeight(height);
@@ -48,7 +45,6 @@ class TaskAppHeaderState extends State<TaskAppHeader> with TickerProviderStateMi
 	Timer _updateTimer;
 	final Logger _logger = Logger('TaskAppHeader');
 
-
 	@override
   Widget build(BuildContext context) {
 		return Container(
@@ -57,12 +53,11 @@ class TaskAppHeaderState extends State<TaskAppHeader> with TickerProviderStateMi
 				mainAxisAlignment: MainAxisAlignment.spaceBetween,
 				mainAxisSize: MainAxisSize.min,
 				children: [
-					AppHeader.widget(
+					CustomContentAppBar(
 						title: this.widget.title,
-						text: this.widget.text,
-						appHeaderWidget: this.widget.appHeaderWidget,
+						content: this.widget.content,
 						helpPage: this.widget.helpPage,
-						isConstrained: true,
+						isConstrained: true
 					),
 					if(this.widget.state.taskInstance != null)
 					...[
@@ -70,7 +65,7 @@ class TaskAppHeaderState extends State<TaskAppHeader> with TickerProviderStateMi
 						_getCurrencyBar(),
 						_getConfettiCanons()
 					]
-				],
+				]
 			)
 		);
   }
@@ -116,8 +111,8 @@ class TaskAppHeaderState extends State<TaskAppHeader> with TickerProviderStateMi
 							mainAxisAlignment: MainAxisAlignment.center,
 						  children: [
 						    Text(AppLocales.of(context).translate('$_pageKey.content.motivate')),
-						  ],
-						),
+						  ]
+						)
 					)
 				)
 			)

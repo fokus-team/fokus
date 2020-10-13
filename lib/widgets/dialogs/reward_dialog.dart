@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fokus/model/ui/gamification/ui_reward.dart';
+import 'package:fokus/model/ui/ui_button.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/app_paths.dart';
 import 'package:fokus/utils/icon_sets.dart';
@@ -93,21 +94,9 @@ class _RewardDialogState extends State<RewardDialog> with SingleTickerProviderSt
 								child: Row(
 									mainAxisAlignment: MainAxisAlignment.center,
 									children: <Widget>[
-										RoundedButton(
-											icon: Icons.close,
-											text: AppLocales.of(context).translate('actions.close'),
-											color: Colors.grey,
-											onPressed: () => Navigator.of(context).pop(),
-											dense: true
-										),
+										RoundedButton(button: UIButton('actions.close', () => Navigator.of(context).pop(), Colors.blueGrey, Icons.close)),
 										if(widget.showHeader)
-											RoundedButton(
-												icon: Icons.add,
-												text: AppLocales.of(context).translate('$_pageKey.claimButton'),
-												color: AppColors.childButtonColor,
-												onPressed: () => widget.claimFeedback(),
-												dense: true
-											)
+											RoundedButton(button: UIButton('$_pageKey.claimButton', () => widget.claimFeedback(), AppColors.childButtonColor, Icons.add_shopping_cart))
 									]
 								)
 							)

@@ -100,7 +100,7 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 		return TaskAppHeader(
 			height: 330,
 			title: '$_pageKey.header.title',
-			appHeaderWidget: ItemCard(
+			content: ItemCard(
 				title: state.planInstance.name,
 				subtitle: state.planInstance.description(context),
 				isActive: true,

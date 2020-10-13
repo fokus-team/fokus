@@ -1,16 +1,17 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
 
 import 'package:fokus/logic/caregiver_panel_cubit.dart';
 import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/ui/gamification/ui_points.dart';
 import 'package:fokus/model/ui/ui_button.dart';
+import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/icon_sets.dart';
 import 'package:fokus/utils/string_utils.dart';
-import 'package:fokus/widgets/app_header.dart';
+import 'package:fokus/utils/theme_config.dart';
 import 'package:fokus/widgets/app_navigation_bar.dart';
 import 'package:fokus/widgets/cards/item_card.dart';
 import 'package:fokus/widgets/chips/attribute_chip.dart';
+import 'package:fokus/widgets/custom_app_bars.dart';
 import 'package:fokus/widgets/loadable_bloc_builder.dart';
 import 'package:fokus/widgets/segment.dart';
 
@@ -25,21 +26,18 @@ class _CaregiverPanelPageState extends State<CaregiverPanelPage> {
 	@override
 	Widget build(BuildContext context) {
     return Scaffold(
-			body: Column(
-				mainAxisAlignment: MainAxisAlignment.start,
-				children: <Widget>[
-					AppHeader.greetings(text: '$_pageKey.header.pageHint', headerActionButtons: [
-						HeaderActionButton.normal(Icons.add, '$_pageKey.header.addChild', 
-							() => { log("Dodaj dziecko") }),
-						HeaderActionButton.normal(Icons.rate_review, '$_pageKey.header.rateTasks',
-							() => { Navigator.of(context).pushNamed(AppPage.caregiverRatingPage.name) }, Colors.lightBlue)
-					]),
-					LoadableBlocBuilder<CaregiverPanelCubit>(
-						builder: (context, state) => AppSegments(segments: _buildPanelSegments(state)),
-						wrapWithExpanded: true,
-					),
-				]
+			appBar: CustomAppBar(type: CustomAppBarType.greetings),
+			body: LoadableBlocBuilder<CaregiverPanelCubit>(
+				builder: (context, state) => AppSegments(segments: _buildPanelSegments(state), fullBody: true),
 			),
+			floatingActionButton: FloatingActionButton.extended(
+				onPressed: () => Navigator.of(context).pushNamed(AppPage.caregiverRatingPage.name),
+				label: Text(AppLocales.of(context).translate('$_pageKey.header.rateTasks')),
+				icon: Icon(Icons.rate_review),
+				backgroundColor: Colors.lightBlue,
+				elevation: 4.0
+			),
+			floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
 			bottomNavigationBar: AppNavigationBar.caregiverPage(currentIndex: 0)
     );
 	}
@@ -48,7 +46,9 @@ class _CaregiverPanelPageState extends State<CaregiverPanelPage> {
 		return [
 			Segment(
 				title: '$_pageKey.content.childProfilesTitle',
+				subtitle: '$_pageKey.content.childProfilesSubtitle',
 				noElementsMessage: '$_pageKey.content.noChildProfilesAdded',
+				headerAction: UIButton('$_pageKey.header.addChild', () => {}, AppColors.caregiverButtonColor, Icons.add),
 				elements: <Widget>[
 					for (var child in state.children)
 						ItemCard(
@@ -66,15 +66,16 @@ class _CaregiverPanelPageState extends State<CaregiverPanelPage> {
 			),
 			Segment(
 				title: '$_pageKey.content.caregiverProfilesTitle',
+				subtitle: '$_pageKey.content.caregiverProfilesSubtitle',
 				noElementsMessage: '$_pageKey.content.noCaregiverProfilesAdded',
+				headerAction: UIButton('$_pageKey.header.addCaregiver', () => {}, AppColors.caregiverButtonColor, Icons.add),
 				elements: <Widget>[
 					if (state.friends != null)
 						for (var friend in state.friends.values)
 							ItemCard(
 								title: friend,
-								menuItems: [
-									UIButton.ofType(ButtonType.unpair, () => {log("unpair")})
-								],
+								rightIcon: Icon(Icons.chevron_right, color: Colors.grey),
+								onTapped: () => Navigator.of(context).pushNamed(AppPage.caregiverFriendPlans.name)
 							)
 				]
 			)

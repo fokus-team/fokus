@@ -10,6 +10,7 @@ import 'package:fokus/model/ui/plan/ui_plan_instance.dart';
 import 'package:fokus/model/ui/user/ui_child.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/duration_utils.dart';
+import 'package:fokus/utils/ui/child_plans_util.dart';
 import 'package:fokus/utils/ui/theme_config.dart';
 import 'package:fokus/widgets/app_header.dart';
 import 'package:fokus/widgets/app_navigation_bar.dart';
@@ -48,89 +49,20 @@ class _ChildPanelPageState extends State<ChildPanelPage> {
 
   List<Widget> _buildPanelSegments(ChildPlansLoadSuccess state) {
 		UIChild currentUser = context.bloc<AuthenticationBloc>().state.user;
-  	var activePlan = state.plans.firstWhere((plan) => plan.state == PlanInstanceState.active, orElse: () => null);
-  	var otherPlans = state.plans.where((plan) => (activePlan == null || plan.id != activePlan.id) && plan.state != PlanInstanceState.completed).toList();
-  	var completedPlans = state.plans.where((plan) => plan.state == PlanInstanceState.completed).toList();
 
     return [
-			if(activePlan != null)
-				isInProgress(activePlan.duration) ?
-					BlocProvider<TimerCubit>(
-						create: (_) => TimerCubit.up(activePlan.elapsedActiveTime)..startTimer(),
-						child: _getPlansSegment(
-							plans: [activePlan],
-							title: '$_pageKey.content.inProgress',
-							displayTimer: true
-						),
-					) :
-					_getPlansSegment(
-						plans: [activePlan],
-						title: '$_pageKey.content.inProgress',
-					),
-	    if (otherPlans.isNotEmpty || state.plans.isEmpty)
-		    _getPlansSegment(
-			    plans: otherPlans,
-			    title: '$_pageKey.content.' + (activePlan == null ? 'todaysPlans' : 'remainingTodaysPlans'),
-			    noElementsMessage: '$_pageKey.content.noPlans'
-		    ),
-	    if (completedPlans.isNotEmpty)
-		    _getPlansSegment(
-			    plans: completedPlans,
-			    title: '$_pageKey.content.completedPlans'
-		    ),
-				Row(
-					mainAxisAlignment: MainAxisAlignment.end,
-					children: <Widget>[
-						RoundedButton(
-							icon: Icons.calendar_today,
-							text: AppLocales.of(context).translate('$_pageKey.content.futurePlans'),
-							color: AppColors.childButtonColor,
-							onPressed: () => Navigator.of(context).pushNamed(AppPage.childCalendar.name, arguments: currentUser.id)
-						)
-					]
-				)
+			...buildChildPlanSegments(state.plans, context),
+			Row(
+				mainAxisAlignment: MainAxisAlignment.end,
+				children: <Widget>[
+					RoundedButton(
+						icon: Icons.calendar_today,
+						text: AppLocales.of(context).translate('$_pageKey.content.futurePlans'),
+						color: AppColors.childButtonColor,
+						onPressed: () => Navigator.of(context).pushNamed(AppPage.childCalendar.name, arguments: currentUser.id)
+					)
+				]
+			)
     ];
-  }
-
-  Segment _getPlansSegment({List<UIPlanInstance> plans, String title, String noElementsMessage, bool displayTimer = false}) {
-  	return Segment(
-		  title: title,
-		  noElementsMessage: noElementsMessage,
-		  elements: <Widget>[
-			  for (var plan in plans)
-				  ItemCard(
-						isActive: plan.state != PlanInstanceState.completed,
-					  title: plan.name,
-					  subtitle: plan.description(context),
-					  progressPercentage: plan.state.inProgress ? plan.completedTaskCount / plan.taskCount : null,
-					  chips: _getTaskChipForPlan(plan, displayTimer),
-						onTapped: () => Navigator.of(context).pushNamed(AppPage.planInstanceDetails.name, arguments: plan)
-				  )
-		  ],
-	  );
-  }
-
-  List<Widget> _getTaskChipForPlan(UIPlanInstance plan, bool displayTimer) {
-  	List<Widget> chips = [];
-		var taskDescriptionKey = '$_pageKey.content.' + (plan.completedTaskCount > 0 ? 'taskProgress' : 'noTaskCompleted');
-		if (displayTimer) chips.add(TimerChip(color: AppColors.childButtonColor));
-	  else if(plan.duration != null && plan.duration.isNotEmpty && !isInProgress(plan.duration))
-			chips.add(AttributeChip.withIcon(
-			icon: Icons.timer,
-			color: Colors.orange,
-			content: formatDuration(sumDurations(plan.duration))
-		));
-		if (!plan.state.inProgress)
-			chips.add(AttributeChip.withIcon(
-				icon: Icons.description,
-				color: AppColors.mainBackgroundColor,
-				content: AppLocales.of(context).translate('$_pageKey.content.tasks', {'NUM_TASKS': plan.taskCount})
-			));
-		else chips.add(AttributeChip.withIcon(
-			icon: Icons.description,
-			color: Colors.lightGreen,
-			content: AppLocales.of(context).translate(taskDescriptionKey, {'NUM_TASKS': plan.completedTaskCount, 'NUM_ALL_TASKS': plan.taskCount})
-		));
-	  return chips;
   }
 }

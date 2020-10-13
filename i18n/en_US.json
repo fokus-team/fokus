@@ -459,15 +459,7 @@
 					"garden": "Garden"
 				},
 				"content": {
-					"todaysPlans": "Today's plans",
-					"remainingTodaysPlans": "Remaining today's plans",
-					"inProgress": "In progress",
-					"noPlans": "No plans",
-					"completedPlans": "Completed plans",
-					"futurePlans": "Plans calendar",
-					"tasks": "{NUM_TASKS, plural, offset:0  one {# task} other {# tasks}}",
-					"noTaskCompleted": "{NUM_ALL_TASKS, plural, offset:0 one {# task} other {# tasks}} to complete",
-					"taskProgress": "{NUM_TASKS} out of {NUM_ALL_TASKS} tasks completed"
+					"futurePlans": "Plans calendar"
 				}
 			},
 			"planInProgress": {
@@ -568,6 +560,16 @@
 				}
 			}
 		}
+	},
+	"plans": {
+		"todaysPlans": "Today's plans",
+		"remainingTodaysPlans": "Remaining today's plans",
+		"inProgress": "In progress",
+		"noPlans": "No plans",
+		"completedPlans": "Completed plans",
+		"tasks": "{NUM_TASKS, plural, offset:0  one {# task} other {# tasks}}",
+		"noTaskCompleted": "{NUM_ALL_TASKS, plural, offset:0 one {# task} other {# tasks}} to complete",
+		"taskProgress": "{NUM_TASKS} out of {NUM_ALL_TASKS} tasks completed"
 	},
 	"repeatability": {
 		"once": "On {DAY}",

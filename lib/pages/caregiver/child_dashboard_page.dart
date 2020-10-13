@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fokus/logic/common/reloadable/reloadable_cubit.dart';
 import 'package:fokus/model/ui/user/ui_child.dart';
 import 'package:fokus/utils/string_utils.dart';
+import 'package:fokus/utils/ui/child_plans_util.dart';
 import 'package:fokus/widgets/general/app_loader.dart';
 import 'package:mongo_dart/mongo_dart.dart' as Mongo;
 import 'package:smart_select/smart_select.dart';
@@ -307,50 +309,28 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 	}
 
 	Widget _buildPlansTab() {
-		return _buildTabContent(
-			children: <Widget>[
-				// Show only if there are not rated tasks
-				AppAlert(
-					text: AppLocales.of(context).translate('$_pageKey.content.alerts.unratedTasksExist'),
-					onTap: () => Navigator.of(context).pushNamed(AppPage.caregiverRatingPage.name),
-				),
-				// Show only if there are no plans added
-				AppAlert(
-					text: AppLocales.of(context).translate('$_pageKey.content.alerts.noPlansAdded'),
-					onTap: () { /* Go to plans page */ },
-				),
-				Segment(
-					title: '$_pageKey.content.plansTitle',
-					noElementsMessage: '$_pageKey.content.noPlansText',
-					noElementsIcon: Icons.description,
-					noElementsAction: FlatButton(
-						onPressed: () {},
-						child: Text(AppLocales.of(context).translate('$_pageKey.content.openCalendarButton')),
-						color: AppColors.caregiverButtonColor,
-						textColor: AppColors.lightTextColor,
-					),
-					elements: [
-						ItemCard(
-							title: 'Sprzątanie pokoju',
-							subtitle: 'Rozpoczęty',
-							chips: [
-								AttributeChip.withIcon(
-									content: 'Wykonano 2/3',
-									color: Colors.lightGreen,
-									icon: Icons.layers
-								)
-							],
-							isActive: true,
-							progressPercentage: 0.33
-						),
-						ItemCard(
-							title: 'Jakiś inny plan',
-							subtitle: 'Oczekujący'
-						),
+		return BlocBuilder<ChildDashboardCubit, LoadableState>(
+			buildWhen: (oldState, newState) => oldState is DataLoadInProgress ||
+					(oldState as ChildDashboardState).plansTab != (newState as ChildDashboardState).plansTab,
+			builder: (context, state) {
+				var tabState = (state as ChildDashboardState).plansTab;
+				return _buildTabContent(
+					children: <Widget>[
+						if (true)
+							AppAlert(
+								text: AppLocales.of(context).translate('$_pageKey.content.alerts.unratedTasksExist'),
+								onTap: () => Navigator.of(context).pushNamed(AppPage.caregiverRatingPage.name),
+							),
+						if (true)
+							AppAlert(
+								text: AppLocales.of(context).translate('$_pageKey.content.alerts.noPlansAdded'),
+								onTap: () { /* Go to plans page */ },
+							),
+						...buildChildPlanSegments(tabState.plans, context),
+						SizedBox(height: 30.0)
 					]
-				),
-				SizedBox(height: 30.0)
-			]
+				);
+			},
 		);
 	}
 

@@ -459,15 +459,7 @@
 					"garden": "Ogród"
 				},
 				"content": {
-					"todaysPlans": "Dzisiejsze plany",
-					"remainingTodaysPlans": "Pozostałe dzisiejsze plany",
-					"inProgress": "W trakcie",
-					"noPlans": "Brak planów",
-					"completedPlans": "Zakończone plany",
-					"futurePlans": "Kalendarz planów",
-					"tasks": "{NUM_TASKS, plural, offset:0  zero {# zadań} one {# zadanie} two {# zadania} few {# zadania} other {# zadań}}",
-					"noTaskCompleted": "{NUM_ALL_TASKS, plural, offset:0 one {# zadanie} two {# zadania} few {# zadania} other {# zadań}} do wykonania",
-					"taskProgress": "Wykonano {NUM_TASKS} z {NUM_ALL_TASKS} zadań"
+					"futurePlans": "Kalendarz planów"
 				}
 			},
 			"planInProgress": {
@@ -568,6 +560,16 @@
 				}
 			}
 		}
+	},
+	"plans": {
+		"todaysPlans": "Dzisiejsze plany",
+		"remainingTodaysPlans": "Pozostałe dzisiejsze plany",
+		"inProgress": "W trakcie",
+		"noPlans": "Brak planów",
+		"completedPlans": "Zakończone plany",
+		"tasks": "{NUM_TASKS, plural, offset:0  zero {# zadań} one {# zadanie} two {# zadania} few {# zadania} other {# zadań}}",
+		"noTaskCompleted": "{NUM_ALL_TASKS, plural, offset:0 one {# zadanie} two {# zadania} few {# zadania} other {# zadań}} do wykonania",
+		"taskProgress": "Wykonano {NUM_TASKS} z {NUM_ALL_TASKS} zadań"
 	},
 	"repeatability": {
 		"once": "Dnia {DAY}",

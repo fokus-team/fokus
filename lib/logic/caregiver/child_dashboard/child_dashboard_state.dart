@@ -24,11 +24,13 @@ class ChildDashboardState extends DataLoadSuccess {
 
 class ChildDashboardPlansTabState extends Equatable {
 	final List<UIPlanInstance> plans;
+	final bool noPlansAdded;
+	final bool unratedTasks;
 
-	ChildDashboardPlansTabState(this.plans);
+	ChildDashboardPlansTabState({this.plans, this.noPlansAdded, this.unratedTasks});
 
 	@override
-	List<Object> get props => [plans];
+	List<Object> get props => [plans, noPlansAdded, unratedTasks];
 }
 
 class ChildDashboardRewardsTabState extends Equatable {

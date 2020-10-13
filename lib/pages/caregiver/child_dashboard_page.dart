@@ -310,21 +310,21 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 
 	Widget _buildPlansTab() {
 		return BlocBuilder<ChildDashboardCubit, LoadableState>(
-			buildWhen: (oldState, newState) => oldState is DataLoadInProgress ||
-					(oldState as ChildDashboardState).plansTab != (newState as ChildDashboardState).plansTab,
+			buildWhen: (oldState, newState) => newState is ChildDashboardState &&
+					(oldState is DataLoadInProgress || (oldState as ChildDashboardState).plansTab != newState.plansTab),
 			builder: (context, state) {
 				var tabState = (state as ChildDashboardState).plansTab;
 				return _buildTabContent(
 					children: <Widget>[
-						if (true)
+						if (tabState.unratedTasks)
 							AppAlert(
 								text: AppLocales.of(context).translate('$_pageKey.content.alerts.unratedTasksExist'),
 								onTap: () => Navigator.of(context).pushNamed(AppPage.caregiverRatingPage.name),
 							),
-						if (true)
+						if (tabState.noPlansAdded)
 							AppAlert(
 								text: AppLocales.of(context).translate('$_pageKey.content.alerts.noPlansAdded'),
-								onTap: () { /* Go to plans page */ },
+								onTap: () => Navigator.of(context).pushNamed(AppPage.caregiverPlanForm.name),
 							),
 						...buildChildPlanSegments(tabState.plans, context),
 						SizedBox(height: 30.0)

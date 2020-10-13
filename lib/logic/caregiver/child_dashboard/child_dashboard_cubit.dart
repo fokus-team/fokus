@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
+import 'package:fokus/model/db/plan/task_status.dart';
 import 'package:fokus/model/ui/user/ui_child.dart';
 import 'package:get_it/get_it.dart';
 
@@ -36,11 +37,14 @@ class ChildDashboardCubit extends ReloadableCubit {
   }
 
 	Future _loadPlansTab() async {
+		var planInstances = (await _dataRepository.getPlanInstances(childIDs: [childId], fields: ['_id'])).map((plan) => plan.id).toList();
   	var data = await Future.wait([
 		  _dataAggregator.loadPlanInstances(childId),
 		  _dataAggregator.loadChild(childId),
+		  _dataRepository.countTaskInstances(planInstancesId: planInstances, isCompleted: true, state: TaskState.notEvaluated),
+		  _dataRepository.countPlans(caregiverId: _activeUser().id),
 	  ]);
-  	var plansTabState = ChildDashboardPlansTabState(data[0]);
+  	var plansTabState = ChildDashboardPlansTabState(plans: data[0], unratedTasks: (data[2] as int) > 0, noPlansAdded: (data[3] as int) == 0);
 		emit(ChildDashboardState(plansTab: plansTabState, child: data[1]));
 	}
 

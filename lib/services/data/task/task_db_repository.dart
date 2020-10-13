@@ -40,6 +40,11 @@ mixin TaskDbRepository implements DbRepository {
 		return dbClient.queryTyped(Collection.taskInstance, query, (json) => TaskInstance.fromJson(json));
 	}
 
+	Future<int> countTaskInstances({List<ObjectId> planInstancesId, bool isCompleted, TaskState state}) {
+		var query = _buildTaskQuery(isCompleted: isCompleted, planInstancesId: planInstancesId, state: state);
+		return dbClient.count(Collection.taskInstance, query);
+	}
+
 	Future<int> getCompletedTaskCount(ObjectId planInstanceId) {
 		return dbClient.count(Collection.taskInstance, where.eq('planInstanceID', planInstanceId).and(where.eq('status.completed', true)));
 	}

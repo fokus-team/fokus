@@ -27,6 +27,12 @@ mixin PlanDbRepository implements DbRepository {
 		return dbClient.queryTyped(Collection.plan, query, (json) => Plan.fromJson(json));
 	}
 
+	Future<int> countPlans({List<ObjectId> ids, ObjectId caregiverId, ObjectId childId, bool active, bool oneDayOnly = false}) {
+		var query = _buildPlanQuery(caregiverId: caregiverId, childId: childId, active: active, ids: ids);
+		if (oneDayOnly)
+			query.and(where.ne('repeatability.untilCompleted', true));
+		return dbClient.count(Collection.plan, query);
+	}
 
 	Future<PlanInstance> getPlanInstance({ObjectId id, ObjectId childId, PlanInstanceState state, List<String> fields}) {
 		var query = _buildPlanQuery(id: id, childId: childId, state: state);

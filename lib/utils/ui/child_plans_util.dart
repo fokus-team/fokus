@@ -1,9 +1,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
 
 import 'package:fokus/logic/common/timer/timer_cubit.dart';
 import 'package:fokus/model/db/plan/plan_instance_state.dart';
+import 'package:fokus/model/db/user/user_role.dart';
 import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/ui/plan/ui_plan_instance.dart';
 import 'package:fokus/services/app_locales.dart';
@@ -55,6 +57,7 @@ List<Widget> buildChildPlanSegments(List<UIPlanInstance> plans, BuildContext con
 }
 
 Segment _getPlansSegment({BuildContext context, List<UIPlanInstance> plans, String title, String noElementsMessage, bool displayTimer = false}) {
+	var userRole = context.bloc<AuthenticationBloc>().state.user.role;
 	return Segment(
 		title: title,
 		noElementsMessage: noElementsMessage,
@@ -66,7 +69,7 @@ Segment _getPlansSegment({BuildContext context, List<UIPlanInstance> plans, Stri
 					subtitle: plan.description(context),
 					progressPercentage: plan.state.inProgress ? plan.completedTaskCount / plan.taskCount : null,
 					chips: _getTaskChipForPlan(context, plan, displayTimer),
-					onTapped: () => Navigator.of(context).pushNamed(AppPage.planInstanceDetails.name, arguments: plan)
+					onTapped: () => Navigator.of(context).pushNamed(AppPage.planInstanceDetails.name, arguments: {'plan': plan, 'actions': userRole == UserRole.child})
 				)
 		],
 	);

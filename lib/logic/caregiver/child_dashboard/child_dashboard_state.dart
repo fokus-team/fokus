@@ -16,7 +16,7 @@ class ChildDashboardState extends DataLoadSuccess {
 			achievementsTab = achievementsTab ?? original?.achievementsTab;
 
 	@override
-	List<Object> get props => [plansTab, rewardsTab, achievementsTab];
+	List<Object> get props => [child, plansTab, rewardsTab, achievementsTab];
 }
 
 class ChildDashboardPlansTabState extends Equatable {
@@ -27,8 +27,17 @@ class ChildDashboardPlansTabState extends Equatable {
 
 	ChildDashboardPlansTabState({this.childPlans, this.availablePlans, this.noPlansAdded, this.unratedTasks});
 
+	ChildDashboardPlansTabState copyWith({List<UIPlan> availablePlans, List<UIPlanInstance> childPlans}) {
+		return ChildDashboardPlansTabState(
+			childPlans: childPlans ?? this.childPlans,
+			availablePlans: availablePlans ?? this.availablePlans,
+			noPlansAdded: noPlansAdded,
+			unratedTasks: unratedTasks
+		);
+	}
+
 	@override
-	List<Object> get props => [childPlans, noPlansAdded, unratedTasks];
+	List<Object> get props => [childPlans, availablePlans, noPlansAdded, unratedTasks];
 }
 
 class ChildDashboardRewardsTabState extends Equatable {

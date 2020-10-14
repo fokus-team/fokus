@@ -175,7 +175,7 @@ class _FokusAppState extends State<FokusApp> implements CurrentLocaleObserver {
 			AppPage.childCalendar.name: (context) => _createPage(ChildCalendarPage(), context, CalendarCubit(getParams(context), getActiveUser(context))),
 			AppPage.childRewards.name: (context) => _createPage(ChildRewardsPage(), context, ChildRewardsCubit(getActiveUser(context), getRoute(context))),
 			AppPage.childAchievements.name: (context) => _createPage(ChildAchievementsPage(), context),
-			AppPage.planInstanceDetails.name: (context) => _createPage(PlanInstanceDetailsPage(initialPlanInstance: getParams(context)), context, PlanInstanceCubit((getParams(context) as UIPlanInstance).id, getRoute(context))),
+			AppPage.planInstanceDetails.name: (context) => _createPage(PlanInstanceDetailsPage(getParams(context)), context, PlanInstanceCubit(((getParams(context) as Map<String, dynamic>)['plan'] as UIPlanInstance).id, getRoute(context))),
 			AppPage.childTaskInProgress.name: (context) => _createPage(ChildTaskInProgressPage(initialPlanInstance: (getParams(context) as Map)["UIPlanInstance"]), context, TaskInstanceCubit((getParams(context) as Map)["TaskId"], getActiveUser(context)))
 		};
 	}

@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:fokus/model/db/date/date.dart';
 import 'package:fokus/model/db/plan/plan.dart';
 import 'package:fokus/model/db/plan/plan_instance.dart';
@@ -39,11 +40,11 @@ class UIDataAggregator {
 		return UIPlanInstance.fromDBModel(planInstance, plan.name, completedTasks, elapsedTime, getDescription(plan, planInstance.date));
 	}
 
-	Future<List<UIPlanInstance>> loadPlanInstances(ObjectId childId) async {
+	Future<List<UIPlanInstance>> loadPlanInstances({@required ObjectId childId, List<Plan> plans}) async {
 		var getDescription = (Plan plan, [Date instanceDate]) => _repeatabilityService.buildPlanDescription(plan.repeatability, instanceDate: instanceDate);
 
-		var allPlans = await _dataRepository.getPlans(childId: childId);
-		var todayPlans = await _repeatabilityService.filterPlansByDate(allPlans, Date.now());
+		var allPlans = plans ?? await _dataRepository.getPlans(childId: childId);
+		var todayPlans = _repeatabilityService.filterPlansByDate(allPlans, Date.now());
 		var todayPlanIds = todayPlans.map((plan) => plan.id).toList();
 		var untilCompletedPlans = allPlans.where((plan) => plan.repeatability.untilCompleted && !todayPlans.contains(plan.id)).map((plan) => plan.id).toList();
 

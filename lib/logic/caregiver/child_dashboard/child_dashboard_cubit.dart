@@ -1,9 +1,12 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
+import 'package:fokus/model/db/date/date.dart';
 import 'package:fokus/model/db/plan/plan.dart';
 import 'package:fokus/model/db/plan/task_status.dart';
 import 'package:fokus/model/ui/plan/ui_plan.dart';
 import 'package:fokus/model/ui/user/ui_child.dart';
+import 'package:fokus/services/plan_keeper_service.dart';
+import 'package:fokus/services/plan_repeatability_service.dart';
 import 'package:get_it/get_it.dart';
 
 import 'package:fokus/logic/common/reloadable/reloadable_cubit.dart';
@@ -21,9 +24,12 @@ class ChildDashboardCubit extends ReloadableCubit {
 
 	int _initialTab;
 	List<Future Function()> _tabFunctions;
+	List<Plan> _availablePlans;
 
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final UIDataAggregator _dataAggregator = GetIt.I<UIDataAggregator>();
+	final PlanKeeperService _planKeeperService = GetIt.I<PlanKeeperService>();
+	final PlanRepeatabilityService _repeatabilityService = GetIt.I<PlanRepeatabilityService>();
 
   ChildDashboardCubit(Map<String, dynamic> args, this._activeUser, ModalRoute pageRoute) :
 			_initialTab = args['tab'] ?? 0, childId = (args['child'] as UIChild).id, super(pageRoute) {
@@ -39,16 +45,41 @@ class ChildDashboardCubit extends ReloadableCubit {
 
   Future loadTab(int tabIndex) => _tabFunctions[tabIndex.clamp(0, 3)]();
 
+  Future assignPlans(List<ObjectId> ids) async {
+  	var tabState = (state as ChildDashboardState).plansTab;
+  	var filterAssigned = (bool Function(UIPlan) condition) => tabState.availablePlans.where(condition).map((plan) => plan.id).toList();
+	  var assignedIds = filterAssigned((plan) => ids.contains(plan.id) && !plan.assignedTo.contains(childId));
+	  var unassignedIds = filterAssigned((plan) => !ids.contains(plan.id) && plan.assignedTo.contains(childId));
+	  var assignedPlans = _availablePlans.where((plan) => assignedIds.contains(plan.id)).toList()..forEach((plan) => plan.assignedTo.add(childId));
+		await Future.wait([
+			_dataRepository.updatePlanFields(assignedIds, assign: childId),
+		  _dataRepository.updatePlanFields(unassignedIds, unassign: childId),
+	    _planKeeperService.createPlansForToday(assignedPlans, [childId])
+	  ]);
+		var updateAssigned = (UIPlan plan) {
+			var assignedTo = List.of(plan.assignedTo);
+			if (assignedIds.contains(plan.id))
+				assignedTo.add(childId);
+			else if (unassignedIds.contains(plan.id))
+				assignedTo.remove(childId);
+			return assignedTo;
+	  };
+		var newPlans = tabState.availablePlans.map((plan) => plan.copyWith(assignedTo: updateAssigned(plan))).toList();
+		var newChildPlans = List.of(tabState.childPlans)..addAll(await _dataAggregator.loadPlanInstances(childId: childId, plans: assignedPlans));
+		emit(ChildDashboardState.from(state, plansTab: tabState.copyWith(availablePlans: newPlans, childPlans: newChildPlans)));
+  }
+
 	Future _loadPlansTab() async {
 		var activeUser = _activeUser();
 		var planInstances = (await _dataRepository.getPlanInstances(childIDs: [childId], fields: ['_id'])).map((plan) => plan.id).toList();
   	var data = await Future.wait([
-		  _dataAggregator.loadPlanInstances(childId),
+		  _dataAggregator.loadPlanInstances(childId: childId),
 		  _dataRepository.countTaskInstances(planInstancesId: planInstances, isCompleted: true, state: TaskState.notEvaluated),
 		  _dataRepository.countPlans(caregiverId: activeUser.id),
-		  _dataRepository.getPlans(caregiverId: activeUser.id, fields: ['_id', 'name', 'assignedTo']),
+		  _dataRepository.getPlans(caregiverId: activeUser.id),
 	  ]);
-  	var availablePlans = (data[3] as List<Plan>).map((plan) => UIPlan.fromDBModel(plan)).toList();
+  	_availablePlans = data[3];
+  	var availablePlans = _availablePlans.map((plan) => UIPlan.fromDBModel(plan)).toList();
   	var tabState = ChildDashboardPlansTabState(childPlans: data[0], availablePlans: availablePlans, unratedTasks: (data[1] as int) > 0, noPlansAdded: (data[2] as int) == 0);
 		emit(ChildDashboardState.from(_getPreviousState(), plansTab: tabState, child: await _loadChildProfile()));
 	}

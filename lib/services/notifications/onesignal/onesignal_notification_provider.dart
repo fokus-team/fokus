@@ -55,7 +55,7 @@ class OneSignalNotificationProvider extends NotificationProvider {
 		dynamic arguments = data.subject;
 		if (data.type.redirectPage == AppPage.planInstanceDetails) {
 			arguments = await _dataAggregator.loadPlanInstance(planInstanceId: data.subject);
-			navigate(data.type.redirectPage, arguments);
+			navigate(data.type.redirectPage, {'plan': arguments});
 			return;
 		} else if (data.type.redirectPage == AppPage.caregiverChildDashboard) {
 			arguments = Map<String, dynamic>();

@@ -47,14 +47,6 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 	final double customBottomBarHeight = 40.0;
 	final Duration bottomBarAnimationDuration = Duration(milliseconds: 400);
 
-	// Mock-ups
-	List<UIPlan> plans = [
-		UIPlan(Mongo.ObjectId.fromHexString('fa7462a054295e915a20755d'), "Sprzątanie pokoju", true, 4, [], null),
-		UIPlan(Mongo.ObjectId.fromHexString('30e8cf66a27822d4ea56f383'), "Odrabianie pracy domowej", true, 1, [], null),
-		UIPlan(Mongo.ObjectId.fromHexString('c2248a28572d9f90a4f958f6'), "Inne bardzo długie zadanie, tekst tekst i tak dalej", true, 2, [], null)
-	];
-	List<UIPlan> pickedPlans = List<UIPlan>();
-
   // only not-assigned badges
 	List<UIBadge> badges = [
 		UIBadge(name: "Król czegośtam", icon: 0),
@@ -209,9 +201,10 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 			modalType: SmartSelectModalType.bottomSheet,
 			choiceConfig: SmartSelectChoiceConfig(builder: builder),
 			modalConfig: SmartSelectModalConfig(
+				useConfirmation: true,
 				trailing: ButtonSheetBarButtons(
 					buttons: [
-						UIButton('actions.confirm', () { onConfirm(); Navigator.pop(context); }, Colors.green, Icons.done)
+						UIButton('actions.confirm', () { Navigator.pop(context); onConfirm(); }, Colors.green, Icons.done)
 					],
 				)
 			),
@@ -244,21 +237,16 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 	}
 
 	Widget _buildPlanSelect([List<UIPlan> availablePlans = const []]) {
-		pickedPlans = availablePlans.where((element) => element.assignedTo.contains(_childProfile.id)).toList();
 		return _buildFloatingButtonPicker<UIPlan>(
 			buttonLabel: AppLocales.of(context).translate('$_pageKey.header.assignPlanButton'),
 			buttonIcon: Icons.description,
 			disabledDialogTitle: AppLocales.of(context).translate('$_pageKey.header.assignPlanButton'),
 			disabledDialogText: AppLocales.of(context).translate('$_pageKey.content.alerts.noPlansAdded'),
 			pickerTitle: AppLocales.of(context).translate('$_pageKey.header.assignPlanTitle'),
-			pickedValues: pickedPlans,
+			pickedValues: availablePlans.where((element) => element.assignedTo.contains(_childProfile.id)).toList(),
 			options: availablePlans,
-			onChange: (val) => setState(() {
-				pickedPlans = val;
-			}),
-			onConfirm: () => {
-				// new state is saved and ready for database query
-			},
+			onChange: (selected) => context.bloc<ChildDashboardCubit>().assignPlans(selected.map((plan) => plan.id).toList()),
+			onConfirm: () {},
 			getName: (plan) => plan.name,
 			builder: (item, checked, onChange) {
 				return Theme(

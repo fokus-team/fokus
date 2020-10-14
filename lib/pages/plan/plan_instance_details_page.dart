@@ -23,7 +23,7 @@ class PlanInstanceDetailsPage extends StatefulWidget {
 	final UIPlanInstance initialPlanInstance;
 	final bool showActions;
 
-  const PlanInstanceDetailsPage({Key key, @required this.initialPlanInstance, this.showActions = true}) : super(key: key);
+  PlanInstanceDetailsPage(Map<String, dynamic> args) : initialPlanInstance = args['plan'], showActions = args['actions'] ?? true;
 
   @override
   _PlanInstanceDetailsPageState createState() => new _PlanInstanceDetailsPageState();

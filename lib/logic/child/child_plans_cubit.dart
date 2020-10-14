@@ -13,7 +13,7 @@ class ChildPlansCubit extends ReloadableCubit {
 
   ChildPlansCubit(this._activeUser, ModalRoute pageRoute) : super(pageRoute);
 
-  void doLoadData() async => emit(ChildPlansLoadSuccess(await _dataAggregator.loadPlanInstances(_activeUser().id)));
+  void doLoadData() async => emit(ChildPlansLoadSuccess(await _dataAggregator.loadPlanInstances(childId: _activeUser().id)));
 }
 
 class ChildPlansLoadSuccess extends DataLoadSuccess {

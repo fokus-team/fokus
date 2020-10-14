@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/logic/common/reloadable/reloadable_cubit.dart';
 import 'package:fokus/model/ui/user/ui_child.dart';
 import 'package:fokus/utils/ui/child_plans_util.dart';
+import 'package:fokus/widgets/cards/model_cards.dart';
 import 'package:fokus/widgets/general/app_loader.dart';
 import 'package:mongo_dart/mongo_dart.dart' as Mongo;
 import 'package:smart_select/smart_select.dart';
@@ -346,24 +347,17 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 
 	List<Widget> _buildRewardsTab(ChildDashboardRewardsTabState state) {
 		return [
-			// Show only if there are no rewards child can buy
-			AppAlert(
-				text: AppLocales.of(context).translate('$_pageKey.content.alerts.noRewardsAdded'),
-				onTap: () => { /* Go to reward/badge list page */ },
-			),
+			if (state.noRewardsAdded)
+				AppAlert(
+					text: AppLocales.of(context).translate('$_pageKey.content.alerts.noRewardsAdded'),
+					onTap: () => { /* Go to reward/badge list page */ },
+				),
 			Segment(
 				title: '$_pageKey.content.rewardsTitle',
 				noElementsMessage: '$_pageKey.content.noRewardsText',
 				elements: [
-					ItemCard(
-						title: "Wycieczka do Zoo",
-						subtitle: "Odebrano dnia 25.08.2020 18:34",
-						graphicType: AssetType.rewards,
-						graphic: 16,
-						chips: <Widget>[
-							AttributeChip.withCurrency(content: "30", currencyType: CurrencyType.diamond)
-						],
-					)
+					for (var reward in state.childRewards)
+						RewardItemCard(reward: reward),
 				]
 			)
 		];

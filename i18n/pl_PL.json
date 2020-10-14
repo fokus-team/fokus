@@ -297,9 +297,6 @@
 					"noRewardsAdded": "Brak zdefiniowanych nagród, dodaj pierwszą teraz",
 					"addedBadgesTitle": "Zdefiniowane odznaki",
 					"noBadgesAdded": "Brak zdefiniowanych odznak, dodaj pierwszą teraz",
-					"pointCost": "Koszt punktowy nagrody",
-					"unlimitedReward": "Nagroda nielimitowana",
-					"limitedReward": "Limit {REWARD_LIMIT, plural, offset:0 one {jednej nagrody} other {# nagród}} na dziecko",
 					"noDescriptionSubtitle": "Brak opisu",
 					"removeRewardTitle": "Usuń nagrodę",
 					"removeRewardText": "Odebrane przez dzieci nagrody nie zostaną usunięte. Nagroda zniknie jednak z listy możliwych do odbioru. Na pewno chcesz usunąć tą nagrodę?",
@@ -544,8 +541,6 @@
 					"rewardsHint": "Zdobyte punkty możesz wymienić na nagrody",
 					"claimedRewardsTitle": "Odebrane nagrody",
 					"claimRewardTitle": "Odbierz nagrodę",
-					"claimCostLabel": "Koszt nagrody",
-					"claimDateLabel": "Odebrano dnia",
 					"claimButton": "Odbierz",
 					"rewardClaimedText": "Nagroda odebrana"
 				}
@@ -560,6 +555,12 @@
 				}
 			}
 		}
+	},
+	"rewards": {
+		"claimCostLabel": "Koszt nagrody",
+		"claimDateLabel": "Odebrano dnia",
+		"unlimitedReward": "Nagroda nielimitowana",
+		"limitedReward": "Limit {REWARD_LIMIT, plural, offset:0 one {jednej nagrody} other {# nagród}} na dziecko"
 	},
 	"plans": {
 		"todaysPlans": "Dzisiejsze plany",

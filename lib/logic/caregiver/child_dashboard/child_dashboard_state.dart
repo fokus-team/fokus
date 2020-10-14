@@ -41,10 +41,13 @@ class ChildDashboardPlansTabState extends Equatable {
 }
 
 class ChildDashboardRewardsTabState extends Equatable {
-	ChildDashboardRewardsTabState();
+	final List<UIReward> childRewards;
+	final bool noRewardsAdded;
+
+	ChildDashboardRewardsTabState({this.childRewards, this.noRewardsAdded});
 
 	@override
-	List<Object> get props => [];
+	List<Object> get props => [childRewards, noRewardsAdded];
 }
 
 class ChildDashboardAchievementsTabState extends Equatable {

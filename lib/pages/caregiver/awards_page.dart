@@ -12,6 +12,7 @@ import 'package:fokus/utils/ui/snackbar_utils.dart';
 import 'package:fokus/widgets/app_header.dart';
 import 'package:fokus/widgets/app_navigation_bar.dart';
 import 'package:fokus/widgets/cards/item_card.dart';
+import 'package:fokus/widgets/cards/model_cards.dart';
 import 'package:fokus/widgets/chips/attribute_chip.dart';
 import 'package:fokus/widgets/dialogs/general_dialog.dart';
 import 'package:fokus/widgets/loadable_bloc_builder.dart';
@@ -73,14 +74,13 @@ class _CaregiverAwardsPageState extends State<CaregiverAwardsPage> {
 				),
 				elements: <Widget>[
 					for (var reward in state.rewards)
-						ItemCard(
-							title: reward.name,
-							subtitle: AppLocales.of(context).translate((reward.limit != null || reward.limit == 0 ) ?
-								'$_pageKey.content.limitedReward' : '$_pageKey.content.unlimitedReward', {'REWARD_LIMIT': reward.limit.toString()}),
+						RewardItemCard(
+							reward: reward,
 							menuItems: [
 								UIButton.ofType(ButtonType.edit, () => { Navigator.of(context).pushNamed(AppPage.caregiverRewardForm.name, arguments: reward.id) }),
 								UIButton.ofType(ButtonType.delete, () {
-									showBasicDialog(context,
+									showBasicDialog(
+										context,
 										GeneralDialog.confirm(
 											title: AppLocales.of(context).translate('$_pageKey.content.removeRewardTitle'),
 											content: AppLocales.of(context).translate('$_pageKey.content.removeRewardText'),
@@ -91,13 +91,7 @@ class _CaregiverAwardsPageState extends State<CaregiverAwardsPage> {
 									);
 								})
 							],
-							graphicType: AssetType.rewards,
-							graphic: reward.icon,
 							onTapped: () => showRewardDialog(context, reward, showHeader: false),
-							chips: <Widget>[
-								if(reward.cost != null)
-									AttributeChip.withCurrency(content: reward.cost.quantity.toString(), currencyType: reward.cost.type, tooltip: '$_pageKey.content.pointCost')
-							],
 						)
 				]
 			),

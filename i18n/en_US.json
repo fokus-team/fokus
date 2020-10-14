@@ -297,9 +297,6 @@
 					"noRewardsAdded": "No rewards to display, add the first one now",
 					"addedBadgesTitle": "Added badges",
 					"noBadgesAdded": "No badges to display, add the first one now",
-					"pointCost": "Reward's point cost",
-					"unlimitedReward": "Unlimited reward",
-					"limitedReward": "Limited {REWARD_LIMIT, plural, offset:0 one {one reward} other {# rewards}} per child",
 					"noDescriptionSubtitle": "No description",
 					"removeRewardTitle": "Remove reward",
 					"removeRewardText": "Rewards claimed by children will not be removed, though this reward will no longer be available. Are you sure you want to remove this reward?",
@@ -544,8 +541,6 @@
 					"rewardsHint": "You can exchange your points for rewards",
 					"claimedRewardsTitle": "Claimed rewards",
 					"claimRewardTitle": "Claim reward",
-					"claimCostLabel": "Reward cost",
-					"claimDateLabel": "Claimed on",
 					"claimButton": "Claim",
 					"rewardClaimedText": "Reward claimed"
 				}
@@ -560,6 +555,12 @@
 				}
 			}
 		}
+	},
+	"rewards": {
+		"claimCostLabel": "Reward cost",
+		"claimDateLabel": "Claimed on",
+		"unlimitedReward": "Unlimited reward",
+		"limitedReward": "Limited {REWARD_LIMIT, plural, offset:0 one {one reward} other {# rewards}} per child"
 	},
 	"plans": {
 		"todaysPlans": "Today's plans",

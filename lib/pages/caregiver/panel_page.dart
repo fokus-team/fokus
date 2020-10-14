@@ -7,6 +7,7 @@ import 'package:fokus/model/ui/ui_button.dart';
 import 'package:fokus/widgets/app_header.dart';
 import 'package:fokus/widgets/app_navigation_bar.dart';
 import 'package:fokus/widgets/cards/item_card.dart';
+import 'package:fokus/widgets/cards/model_cards.dart';
 import 'package:fokus/widgets/loadable_bloc_builder.dart';
 import 'package:fokus/widgets/segment.dart';
 

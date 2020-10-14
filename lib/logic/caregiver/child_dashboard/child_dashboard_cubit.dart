@@ -3,6 +3,8 @@ import 'package:flutter/widgets.dart';
 import 'package:fokus/model/db/date/date.dart';
 import 'package:fokus/model/db/plan/plan.dart';
 import 'package:fokus/model/db/plan/task_status.dart';
+import 'package:fokus/model/db/user/child.dart';
+import 'package:fokus/model/ui/gamification/ui_reward.dart';
 import 'package:fokus/model/ui/plan/ui_plan.dart';
 import 'package:fokus/model/ui/user/ui_child.dart';
 import 'package:fokus/services/plan_keeper_service.dart';
@@ -25,11 +27,11 @@ class ChildDashboardCubit extends ReloadableCubit {
 	int _initialTab;
 	List<Future Function()> _tabFunctions;
 	List<Plan> _availablePlans;
+	Child child;
 
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final UIDataAggregator _dataAggregator = GetIt.I<UIDataAggregator>();
 	final PlanKeeperService _planKeeperService = GetIt.I<PlanKeeperService>();
-	final PlanRepeatabilityService _repeatabilityService = GetIt.I<PlanRepeatabilityService>();
 
   ChildDashboardCubit(Map<String, dynamic> args, this._activeUser, ModalRoute pageRoute) :
 			_initialTab = args['tab'] ?? 0, childId = (args['child'] as UIChild).id, super(pageRoute) {
@@ -38,6 +40,7 @@ class ChildDashboardCubit extends ReloadableCubit {
 
   @override
   void doLoadData() async {
+  	child = null;
 	  await loadTab(_initialTab);
 	  await loadTab((_initialTab + 1) % 3);
 	  await loadTab((_initialTab + 2) % 3);
@@ -85,11 +88,14 @@ class ChildDashboardCubit extends ReloadableCubit {
 	}
 
 	Future _loadRewardsTab() async {
-  	var tabState = ChildDashboardRewardsTabState();
+		child ??= await _dataRepository.getUser(id: childId);
+		var rewards = child.rewards.map((reward) => UIChildReward.fromDBModel(reward)).toList();
+  	var tabState = ChildDashboardRewardsTabState(childRewards: rewards, noRewardsAdded: await _dataRepository.countRewards(caregiverId: _activeUser().id) == 0);
 		emit(ChildDashboardState.from(_getPreviousState(), rewardsTab: tabState, child: await _loadChildProfile()));
 	}
 
 	Future _loadAchievementsTab() async {
+		child ??= await _dataRepository.getUser(id: childId);
 		var tabState = ChildDashboardAchievementsTabState();
 		emit(ChildDashboardState.from(_getPreviousState(), achievementsTab: tabState, child: await _loadChildProfile()));
 	}

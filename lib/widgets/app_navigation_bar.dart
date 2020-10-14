@@ -44,7 +44,7 @@ class AppNavigationBar extends StatefulWidget {
 		),
 		AppBottomNavigationItem(
 			navigationRoute: AppPage.childAchievements,
-			icon: Icon(Icons.assistant),
+			icon: Icon(Icons.emoji_events),
 			title: 'navigation.child.achievements',
 		),
 	];

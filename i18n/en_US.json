@@ -125,7 +125,7 @@
 					"childProfilesSubtitle": "Children earn points by doing tasks",
 					"noChildProfilesAdded": "No children assigned",
 					"caregiverProfilesTitle": "Friends",
-					"caregiverProfilesSubtitle": "Befriended caregivers and their plans",
+					"caregiverProfilesSubtitle": "List of befriended caregivers",
 					"noCaregiverProfilesAdded": "No befriended caregivers found",
 					"todayPlans": "{NUM_PLANS, plural, offset:0 zero {No plans} one {# plan} other {# plans}} for today",
 					"activePlan": "1 plan currently in progress"

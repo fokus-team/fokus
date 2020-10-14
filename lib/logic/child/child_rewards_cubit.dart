@@ -66,7 +66,6 @@ class ChildRewardsCubit extends ReloadableCubit {
 				Points.fromUICurrency(UICurrency(type: e.type, title: e.title), e.quantity, creator: e.createdBy)).toList()
 			);
 			await _notificationService.sendRewardBoughtNotification(model.id, model.name, child.connections.first, child);
-			// _authBloc.add(AuthenticationActiveUserUpdated(child.copyWith(points: List.from(child.points), rewards: List.from(child.rewards))));
 			emit(ChildRewardsLoadSuccess(
 				_updateRewardLimits((state as ChildRewardsLoadSuccess).rewards, child.rewards),
 				List.from(child.rewards),

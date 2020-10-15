@@ -14,7 +14,7 @@ import 'package:mongo_dart/mongo_dart.dart' as Mongo;
 
 import 'package:fokus/model/currency_type.dart';
 import 'package:fokus/model/ui/ui_button.dart';
-import 'package:fokus/widgets/app_header.dart';
+import 'package:fokus/widgets/custom_app_bars.dart';
 import 'package:fokus/widgets/chips/attribute_chip.dart';
 import 'package:fokus/widgets/cards/item_card.dart';
 import 'package:fokus/widgets/buttons/popup_menu_list.dart';
@@ -89,10 +89,21 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 		return Scaffold(
 			body: Column(
 				crossAxisAlignment: CrossAxisAlignment.start,
+				verticalDirection: VerticalDirection.up,
 				children: [
-					AppHeader.widget(
+					Expanded(
+						child: TabBarView(
+							controller: _tabController,
+							children: [
+								_buildPlansTab(),
+								_buildRewardsTab(),
+								_buildAchievementsTab()
+							]
+						)
+					),
+					CustomContentAppBar(
 						title: '$_pageKey.header.title',
-						appHeaderWidget: ItemCard(
+						content: ItemCard(
 							// classic child card from caregiver panel
 							title: 'Maciek',
 							subtitle: '2 plany na dziś',
@@ -118,16 +129,6 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 								Tab(text: AppLocales.of(context).translate('$_pageKey.header.tabs.plans')),
 								Tab(text: AppLocales.of(context).translate('$_pageKey.header.tabs.rewards')),
 								Tab(text: AppLocales.of(context).translate('$_pageKey.header.tabs.achievements'))
-							]
-						)
-					),
-					Expanded(
-						child: TabBarView(
-							controller: _tabController,
-							children: [
-								_buildPlansTab(),
-								_buildRewardsTab(),
-								_buildAchievementsTab()
 							]
 						)
 					)

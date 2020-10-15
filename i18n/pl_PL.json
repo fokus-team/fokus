@@ -6,7 +6,6 @@
 			"panel": "Panel",
 			"plans": "Plany",
 			"awards": "Nagrody",
-			"statistics": "Statystyki",
 			"currencies": "Waluty"
 		},
 		"child": {
@@ -119,13 +118,14 @@
 					"greetings": "Witaj",
 					"addChild": "Dodaj dziecko",
 					"addCaregiver": "Dodaj opiekuna",
-					"rateTasks": "Oceń zadania",
-					"pageHint": "Zarządzaj profilami dzieci i powiązanymi kontami opiekunów"
+					"rateTasks": "Oceń zadania"
 				},
 				"content": {
 					"childProfilesTitle": "Profile dzieci",
+					"childProfilesSubtitle": "Dzieci zdobywają punkty za wykonywanie zadań",
 					"noChildProfilesAdded": "Brak przypisanych dzieci",
-					"caregiverProfilesTitle": "Zaprzyjaźnieni opiekunowie",
+					"caregiverProfilesTitle": "Znajomi",
+					"caregiverProfilesSubtitle": "Lista zaprzyjaźnionych opiekunów",
 					"noCaregiverProfilesAdded": "Brak zaprzyjaźnionych opiekunów",
 					"todayPlans": "{NUM_PLANS, plural, offset:0 zero {Brak planów} one {# plan} two {# plany} few {# plany} other {# planów}} na dziś",
 					"activePlan": "1 plan w trakcie wykonywania"
@@ -175,16 +175,25 @@
 					"planNotAssignedToSubtitle": "Plan nieprzypisany"
 				}
 			},
+			"friendPlans": {
+				"content": {
+					"noPlansText": "Ten opiekun nie dodał jeszcze żadnego planu",
+					"plansTitle": "Plany znajomego",
+					"duplicateButton": "Stwórz plan na podstawie tego"
+				}
+			},
 			"plans": {
 				"header": {
 					"title": "Plany",
 					"addPlan": "Dodaj plan",
 					"calendar": "Kalendarz",
-					"pageHint": "Twórz, przypisuj i zarządzaj planami oraz zadaniami"
+					"pageHint": "Zarządzaj zadaniami dzieci"
 				},
 				"content": {
 					"addedActivePlansTitle": "Aktywne plany",
+					"addedActivePlansSubtitle": "Widoczne dla dzieci",
 					"addedDeactivatedPlansTitle": "Nieaktywne plany",
+					"addedDeactivatedPlansSubtitle": "Niewidoczne dla dzieci",
 					"noPlansAdded": "Brak planów",
 					"tasks": "{NUM_TASKS, plural, offset:0  zero {# zadań} one {# zadanie} two {# zadania} few {# zadania} other {# zadań}}"
 				}
@@ -290,12 +299,14 @@
 					"title": "Nagrody",
 					"addReward": "Dodaj nagrodę",
 					"addBadge": "Dodaj odznakę",
-					"pageHint": "Zwiększ motywację do wykonywania planów używając punktów, nagród i odznak"
+					"pageHint": "Zwiększ motywację do pracy"
 				},
 				"content": {
 					"addedRewardsTitle": "Zdefiniowane nagrody",
+					"addedRewardsSubtitle": "Nagrody mogą zostać odebrane za punkty",
 					"noRewardsAdded": "Brak zdefiniowanych nagród, dodaj pierwszą teraz",
 					"addedBadgesTitle": "Zdefiniowane odznaki",
+					"addedBadgesSubtitle": "Odznaki przyznawane są przez opiekuna",
 					"noBadgesAdded": "Brak zdefiniowanych odznak, dodaj pierwszą teraz",
 					"pointCost": "Koszt punktowy nagrody",
 					"unlimitedReward": "Nagroda nielimitowana",
@@ -365,17 +376,6 @@
 							"trophy": "Trofeum"
 						}
 					}
-				}
-			},
-			"statistics": {
-				"header": {
-					"title": "Statystyki",
-					"history": "Historia wydarzeń",
-					"pageHint": "Przeglądaj i analizuj wykonaną przez dzieci pracę"
-				},
-				"content": {
-					"basicStatisticsTitle": "Podstawowe statystyki",
-					"basicStatisticsSubtitle": "Ekran statystyk nie jest dostępny w tej wersji aplikacji"
 				}
 			},
 			"planDetails":  {
@@ -690,7 +690,8 @@
 		"reward_creation": "Tworzenie nagrody",
 		"badge_creation": "Tworzenie odznaki",
 		"plan_info": "Plany",
-		"currencies": "Waluty"
+		"currencies": "Waluty",
+		"friends": "Znajomi"
 	},
 	"assignedTo": "Przypisane do",
 	"points": "Punkty",

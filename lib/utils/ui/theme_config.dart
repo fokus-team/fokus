@@ -59,8 +59,10 @@ class AppBoxProperties {
   static final double cardListPadding = 5.0;
   static final double containerPadding = 10.0;
   static final double columnChildrenPadding = 5.0;
-  static final double sectionPadding = 15.0;
+  static final double sectionPadding = 20.0;
 	static final double standardBottomNavHeight = 60.0;
+	static final double customAppBarHeight = 84.0;
+	static final double customChildAppBarHeight = 130.0;
 
 	static final BoxDecoration elevatedContainer = BoxDecoration(
 		color: Colors.white,

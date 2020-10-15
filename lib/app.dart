@@ -45,9 +45,9 @@ import 'package:fokus/pages/caregiver/forms/badge_form_page.dart';
 import 'package:fokus/pages/caregiver/panel_page.dart';
 import 'package:fokus/pages/caregiver/forms/plan_form_page.dart';
 import 'package:fokus/pages/caregiver/plans_page.dart';
-import 'package:fokus/pages/caregiver/statistics_page.dart';
 import 'package:fokus/pages/caregiver/rating_page.dart';
 import 'package:fokus/pages/caregiver/currencies_page.dart';
+import 'package:fokus/pages/caregiver/friend_plans_page.dart';
 import 'package:fokus/pages/child/auth/child_profiles_page.dart';
 import 'package:fokus/pages/child/auth/child_sign_in_page.dart';
 import 'package:fokus/pages/child/rewards_page.dart';
@@ -67,7 +67,6 @@ import 'package:fokus/utils/service_injection.dart';
 import 'package:fokus/utils/bloc_utils.dart';
 import 'package:fokus/widgets/page_theme.dart';
 import 'model/ui/plan/ui_plan_instance.dart';
-
 
 void main() async {
 	WidgetsFlutterBinding.ensureInitialized();
@@ -114,11 +113,41 @@ class _FokusAppState extends State<FokusApp> implements CurrentLocaleObserver {
 			navigatorObservers: [widget._routeObserver],
 			initialRoute: AppPage.loadingPage.name,
 			routes: _createRoutes(),
+			onGenerateRoute: _onGenerateRoute,
 
 			theme: _createAppTheme(),
-			builder: _authenticationGateBuilder,
+			builder: _authenticationGateBuilder
 		);
 	}
+
+  Route<dynamic> _onGenerateRoute(RouteSettings settings) {
+		var getActiveUser = (BuildContext context) => () => context.bloc<AuthenticationBloc>().state.user;
+		var getRoute = (BuildContext context) => ModalRoute.of(context);
+		var authBloc = (BuildContext context) => context.bloc<AuthenticationBloc>();
+
+		Map<String, Function(BuildContext, Animation<double>, Animation<double>)> routesWithFadeTransition = {
+			// Caregiver pages
+			AppPage.caregiverPanel.name: (context, _, __) => _createPage(CaregiverPanelPage(), context, CaregiverPanelCubit(getActiveUser(context), getRoute(context))),
+			AppPage.caregiverPlans.name: (context, _, __) => _createPage(CaregiverPlansPage(), context, CaregiverPlansCubit(getActiveUser(context), getRoute(context))),
+			AppPage.caregiverAwards.name: (context, _, __) => _createPage(CaregiverAwardsPage(), context, CaregiverAwardsCubit(getActiveUser(context), getRoute(context))),
+			// Child pages
+			AppPage.childPanel.name: (context, _, __) =>  _createPage(ChildPanelPage(), context, ChildPlansCubit(getActiveUser(context), getRoute(context))),
+			AppPage.childRewards.name: (context, _, __) =>  _createPage(ChildRewardsPage(), context, ChildRewardsCubit(getActiveUser(context), getRoute(context), authBloc(context))),
+			AppPage.childAchievements.name: (context, _, __) =>  _createPage(ChildAchievementsPage(), context)
+		};
+		
+		if(routesWithFadeTransition.containsKey(settings.name))
+			return PageRouteBuilder(
+				pageBuilder: routesWithFadeTransition[settings.name],
+				transitionsBuilder: (context, animation, secondaryAnimation, child) {
+					return FadeTransition(
+						opacity: animation,
+						child: child
+					);
+				}
+			);
+		return null;
+  }
 
 	Widget _authenticationGateBuilder(BuildContext context, Widget child) {
 		return BlocListener<AuthenticationBloc, AuthenticationState>(
@@ -157,23 +186,17 @@ class _FokusAppState extends State<FokusApp> implements CurrentLocaleObserver {
 			AppPage.childProfilesPage.name: (context) => _createPage(ChildProfilesPage(), context, PreviousProfilesCubit(authBloc(context), getRoute(context))),
 			AppPage.childSignInPage.name: (context) => _createPage(withCubit(ChildSignInPage(), ChildSignInCubit(authBloc(context))), context, ChildSignUpCubit(authBloc(context))),
 
-			AppPage.caregiverPanel.name: (context) => _createPage(CaregiverPanelPage(), context, CaregiverPanelCubit(getActiveUser(context), getRoute(context))),
 			AppPage.caregiverChildDashboard.name: (context) => _createPage(CaregiverChildDashboardPage(getParams(context)), context),
-			AppPage.caregiverPlans.name: (context) => _createPage(CaregiverPlansPage(), context, CaregiverPlansCubit(getActiveUser(context), getRoute(context))),
 			AppPage.caregiverCalendar.name: (context) => _createPage(CaregiverCalendarPage(), context, CalendarCubit(getParams(context), getActiveUser(context))),
 			AppPage.caregiverPlanForm.name: (context) => _createPage(CaregiverPlanFormPage(), context, PlanFormCubit(getParams(context), getActiveUser(context))),
-			AppPage.caregiverAwards.name: (context) => _createPage(CaregiverAwardsPage(), context, CaregiverAwardsCubit(getActiveUser(context), getRoute(context))),
 			AppPage.caregiverRewardForm.name: (context) => _createPage(CaregiverRewardFormPage(), context, RewardFormCubit(getParams(context), getActiveUser(context))),
 			AppPage.caregiverBadgeForm.name: (context) => _createPage(CaregiverBadgeFormPage(), context, BadgeFormCubit(getParams(context), getActiveUser(context), authBloc(context))),
-			AppPage.caregiverStatistics.name: (context) => _createPage(CaregiverStatisticsPage(), context),
 			AppPage.caregiverRatingPage.name: (context) => _createPage(CaregiverRatingPage(), context, TasksEvaluationCubit(getActiveUser(context))),
 			AppPage.caregiverCurrencies.name: (context) => _createPage(CaregiverCurrenciesPage(), context, CaregiverCurrenciesCubit(getActiveUser(context), getActiveUser(context), authBloc(context))),
+			AppPage.caregiverFriendPlans.name: (context) => _createPage(CaregiverFriendPlansPage(), context),
 			AppPage.planDetails.name: (context) => _createPage(PlanDetailsPage(), context, PlanCubit(getParams(context), getRoute(context))),
 
-			AppPage.childPanel.name: (context) => _createPage(ChildPanelPage(), context, ChildPlansCubit(getActiveUser(context), getRoute(context))),
 			AppPage.childCalendar.name: (context) => _createPage(ChildCalendarPage(), context, CalendarCubit(getParams(context), getActiveUser(context))),
-			AppPage.childRewards.name: (context) => _createPage(ChildRewardsPage(), context, ChildRewardsCubit(getActiveUser(context), getRoute(context))),
-			AppPage.childAchievements.name: (context) => _createPage(ChildAchievementsPage(), context),
 			AppPage.planInstanceDetails.name: (context) => _createPage(PlanInstanceDetailsPage(initialPlanInstance: getParams(context)), context, PlanInstanceCubit((getParams(context) as UIPlanInstance).id, getRoute(context))),
 			AppPage.childTaskInProgress.name: (context) => _createPage(ChildTaskInProgressPage(initialPlanInstance: (getParams(context) as Map)["UIPlanInstance"]), context, TaskInstanceCubit((getParams(context) as Map)["TaskId"], getActiveUser(context)))
 		};

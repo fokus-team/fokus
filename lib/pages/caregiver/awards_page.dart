@@ -8,8 +8,9 @@ import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/ui/dialog_utils.dart';
 import 'package:fokus/utils/ui/icon_sets.dart';
 import 'package:fokus/utils/ui/snackbar_utils.dart';
+import 'package:fokus/utils/ui/theme_config.dart';
 
-import 'package:fokus/widgets/app_header.dart';
+import 'package:fokus/widgets/custom_app_bars.dart';
 import 'package:fokus/widgets/app_navigation_bar.dart';
 import 'package:fokus/widgets/cards/item_card.dart';
 import 'package:fokus/widgets/chips/attribute_chip.dart';
@@ -28,20 +29,10 @@ class _CaregiverAwardsPageState extends State<CaregiverAwardsPage> {
 	
 	@override
 	Widget build(BuildContext context) {
-    return Scaffold(
-			body: Column(
-				crossAxisAlignment: CrossAxisAlignment.start,
-				children: <Widget>[
-					AppHeader.normal(title: '$_pageKey.header.title', text: '$_pageKey.header.pageHint', headerActionButtons: [
-						HeaderActionButton.normal(Icons.add, '$_pageKey.header.addReward', 
-						() => Navigator.of(context).pushNamed(AppPage.caregiverRewardForm.name)),
-						HeaderActionButton.normal(Icons.add, '$_pageKey.header.addBadge', 
-						() => Navigator.of(context).pushNamed(AppPage.caregiverBadgeForm.name))
-					]),
-					LoadableBlocBuilder<CaregiverAwardsCubit>(
-						builder: (context, state) => AppSegments(segments: _buildPanelSegments(state, context))
-					)
-				]
+		return Scaffold(
+			appBar: CustomAppBar(type: CustomAppBarType.normal, title: '$_pageKey.header.title', subtitle: '$_pageKey.header.pageHint', icon: Icons.stars),
+			body: LoadableBlocBuilder<CaregiverAwardsCubit>(
+				builder: (context, state) => AppSegments(segments: _buildPanelSegments(state, context), fullBody: true),
 			),
 			bottomNavigationBar: AppNavigationBar.caregiverPage(currentIndex: 2)
     );
@@ -63,6 +54,8 @@ class _CaregiverAwardsPageState extends State<CaregiverAwardsPage> {
 		return [
 			Segment(
 				title: '$_pageKey.content.addedRewardsTitle',
+				subtitle: '$_pageKey.content.addedRewardsSubtitle',
+				headerAction: UIButton('$_pageKey.header.addReward', () => Navigator.of(context).pushNamed(AppPage.caregiverRewardForm.name), AppColors.caregiverButtonColor, Icons.add),
 				noElementsMessage: '$_pageKey.content.noRewardsAdded',
 				noElementsAction: RaisedButton(
 					child: Text(
@@ -103,6 +96,8 @@ class _CaregiverAwardsPageState extends State<CaregiverAwardsPage> {
 			),
 			Segment(
 				title: '$_pageKey.content.addedBadgesTitle',
+				subtitle: '$_pageKey.content.addedBadgesSubtitle',
+				headerAction: UIButton('$_pageKey.header.addBadge', () => Navigator.of(context).pushNamed(AppPage.caregiverBadgeForm.name), AppColors.caregiverButtonColor, Icons.add),
 				noElementsMessage: '$_pageKey.content.noBadgesAdded',
 				noElementsAction: RaisedButton(
 					child: Text(

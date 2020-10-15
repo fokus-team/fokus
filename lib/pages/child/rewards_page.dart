@@ -9,7 +9,7 @@ import 'package:fokus/utils/ui/icon_sets.dart';
 import 'package:fokus/utils/ui/snackbar_utils.dart';
 import 'package:fokus/utils/ui/theme_config.dart';
 import 'package:fokus/widgets/app_navigation_bar.dart';
-import 'package:fokus/widgets/app_header.dart';
+import 'package:fokus/widgets/custom_app_bars.dart';
 import 'package:fokus/widgets/cards/item_card.dart';
 import 'package:fokus/widgets/chips/attribute_chip.dart';
 import 'package:fokus/widgets/loadable_bloc_builder.dart';
@@ -25,15 +25,14 @@ class _ChildRewardsPageState extends State<ChildRewardsPage> {
   static const String _pageKey = 'page.childSection.rewards.content';
 
 	@override
-	Widget build(BuildContext context) {
-		return Scaffold(
-			body: Column(
-				crossAxisAlignment: CrossAxisAlignment.start,
-				mainAxisSize: MainAxisSize.min,
-				children: [
-					ChildCustomHeader(),
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Column(
+	      crossAxisAlignment: CrossAxisAlignment.start,
+				verticalDirection: VerticalDirection.up,
+	      children: [
 		      LoadableBlocBuilder<ChildRewardsCubit>(
-				    builder: (context, state) => 
+				    builder: (context, state) =>
 							AppSegments(
 								segments: [
 									Segment(
@@ -50,12 +49,15 @@ class _ChildRewardsPageState extends State<ChildRewardsPage> {
 								]
 							),
 						wrapWithExpanded: true,
-		      )
-				]
-			),
-			bottomNavigationBar: AppNavigationBar.childPage(currentIndex: 1)
-		);
-	}
+		      ),
+					BlocBuilder<ChildRewardsCubit, LoadableState>(
+						builder: (context, state) => CustomChildAppBar(points: state is DataLoadSuccess ? (state as ChildRewardsLoadSuccess).points : null)
+					)
+	      ]
+      ),
+      bottomNavigationBar: AppNavigationBar.childPage(currentIndex: 1)
+    );
+  }
 
 	void _claimReward(UIReward reward) {
 		context.bloc<ChildRewardsCubit>().claimReward(reward);

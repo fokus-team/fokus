@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
 import 'package:get_it/get_it.dart';
 
 import 'package:fokus/model/ui/user/ui_user.dart';
@@ -18,11 +19,11 @@ import 'package:mongo_dart/mongo_dart.dart';
 
 class ChildRewardsCubit extends ReloadableCubit {
 	final ActiveUserFunction _activeUser;
-
+	final AuthenticationBloc _authBloc;
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final NotificationService _notificationService = GetIt.I<NotificationService>();
 
-  ChildRewardsCubit(this._activeUser, ModalRoute pageRoute) : super(pageRoute);
+  ChildRewardsCubit(this._activeUser, ModalRoute pageRoute, this._authBloc) : super(pageRoute);
 
 	List<UIReward> _updateRewardLimits(List<UIReward> rewards, List<UIChildReward> claimedRewards) {
 		Map<ObjectId, int> claimedCount = Map<ObjectId, int>();

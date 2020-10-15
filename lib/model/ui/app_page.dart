@@ -20,9 +20,9 @@ enum AppPage {
 	caregiverAwards,
 	caregiverRewardForm,
 	caregiverBadgeForm,
-	caregiverStatistics,
 	caregiverRatingPage,
 	caregiverCurrencies,
+	caregiverFriendPlans,
 	// Child
 	childPanel,
 	childCalendar,
@@ -49,11 +49,11 @@ extension AppPageName on AppPage {
 		AppPage.caregiverCalendar: '/caregiver/calendar-page',
 		AppPage.caregiverPlans: '/caregiver/plans-page',
 		AppPage.caregiverPlanForm: '/caregiver/plan-form-page',
+		AppPage.caregiverFriendPlans: '/caregiver/friend-plans-page',
 
 		AppPage.caregiverAwards: '/caregiver/awards-page',
 		AppPage.caregiverRewardForm: '/caregiver/rewards-form-page',
 		AppPage.caregiverBadgeForm: '/caregiver/badges-form-page',
-		AppPage.caregiverStatistics: '/caregiver/statistics-page',
 		AppPage.caregiverRatingPage: '/caregiver/rating-page',
 		AppPage.caregiverCurrencies: '/caregiver/currencies-page',
 

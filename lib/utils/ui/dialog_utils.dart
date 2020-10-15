@@ -127,7 +127,7 @@ void showCurrencyEditDialog(BuildContext context, Function(String) callback, {St
 void showRewardDialog(BuildContext context, UIReward reward, {bool showHeader = true, Function claimFeedback}) {
 	showDialog(
 		context: context,
-		builder: (context) => RewardDialog(reward: reward, showHeader: showHeader, claimFeedback: claimFeedback,)
+		builder: (context) => RewardDialog(reward: reward, showHeader: showHeader, claimFeedback: claimFeedback)
 	);
 }
 

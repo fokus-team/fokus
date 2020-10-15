@@ -23,12 +23,7 @@ class AppNavigationBar extends StatefulWidget {
 			navigationRoute: AppPage.caregiverAwards,
 			icon: Icon(Icons.stars),
 			title: 'navigation.caregiver.awards',
-		),
-		// AppBottomNavigationItem(
-		// 	navigationRoute: AppPage.caregiverStatistics,
-		// 	icon: Icon(Icons.insert_chart),
-		// 	title: 'navigation.caregiver.statistics',
-		// ),
+		)
 	];
 
 	static final List<AppBottomNavigationItem> childNavigationItems = [
@@ -46,7 +41,7 @@ class AppNavigationBar extends StatefulWidget {
 			navigationRoute: AppPage.childAchievements,
 			icon: Icon(Icons.emoji_events),
 			title: 'navigation.child.achievements',
-		),
+		)
 	];
 	
 	AppNavigationBar({this.currentIndex, this.items});
@@ -90,7 +85,7 @@ class _AppNavigationBarState extends State<AppNavigationBar> {
 							child: Text(AppLocales.of(context).translate(navigationItem.title))
 						)
 					)
-			],
+			]
 		);
 	}
 }

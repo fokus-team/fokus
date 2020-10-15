@@ -10,7 +10,7 @@ import 'package:fokus/utils/ui/dialog_utils.dart';
 import 'package:fokus/utils/ui/icon_sets.dart';
 import 'package:fokus/utils/ui/theme_config.dart';
 import 'package:fokus/widgets/app_navigation_bar.dart';
-import 'package:fokus/widgets/app_header.dart';
+import 'package:fokus/widgets/custom_app_bars.dart';
 import 'package:fokus/widgets/general/app_hero.dart';
 import 'package:fokus/widgets/segment.dart';
 
@@ -33,8 +33,8 @@ class _ChildAchievementsPageState extends State<ChildAchievementsPage> {
 		return Scaffold(
 			body: Column(
 				crossAxisAlignment: CrossAxisAlignment.start,
+				verticalDirection: VerticalDirection.up,
 				children: [
-					ChildCustomHeader(),
 					AppSegments(
 						segments: [
 							Segment(
@@ -43,7 +43,8 @@ class _ChildAchievementsPageState extends State<ChildAchievementsPage> {
 								customContent: _buildBadgeShelves()
 							)
 						]
-					)
+					),
+					CustomChildAppBar()
 				]
 			),
 			bottomNavigationBar: AppNavigationBar.childPage(currentIndex: 2)

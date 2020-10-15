@@ -6,7 +6,6 @@
 			"panel": "Dashboard",
 			"plans": "Plans",
 			"awards": "Awards",
-			"statistics": "Statistics",
 			"currencies": "Currencies"
 		},
 		"child": {
@@ -119,13 +118,14 @@
 					"greetings": "Welcome",
 					"addChild": "Add child",
 					"addCaregiver": "Add caregiver",
-					"rateTasks": "Rate Tasks",
-					"pageHint": "Manage child profiles and connected caregiver accounts"
+					"rateTasks": "Rate Tasks"
 				},
 				"content": {
 					"childProfilesTitle": "Child profiles",
+					"childProfilesSubtitle": "Children earn points by doing tasks",
 					"noChildProfilesAdded": "No children assigned",
-					"caregiverProfilesTitle": "Befriended caregivers",
+					"caregiverProfilesTitle": "Friends",
+					"caregiverProfilesSubtitle": "List of befriended caregivers",
 					"noCaregiverProfilesAdded": "No befriended caregivers found",
 					"todayPlans": "{NUM_PLANS, plural, offset:0 zero {No plans} one {# plan} other {# plans}} for today",
 					"activePlan": "1 plan currently in progress"
@@ -175,16 +175,25 @@
 					"planNotAssignedToSubtitle": "Plan not assigned yet"
 				}
 			},
+			"friendPlans": {
+				"content": {
+					"noPlansText": "This friend didn't add any plans yet",
+					"plansTitle": "Friend's plan",
+					"duplicateButton": "Create plan basing on this one"
+				}
+			},
 			"plans": {
 				"header": {
 					"title": "Plans",
 					"addPlan": "Add plan",
 					"calendar": "Calendar",
-					"pageHint": "Create, assign and manage plans with tasks"
+					"pageHint": "Manage children's tasks"
 				},
 				"content": {
 					"addedActivePlansTitle": "Added plans",
+					"addedActivePlansSubtitle": "Visible for children",
 					"addedDeactivatedPlansTitle": "Deactivated plans",
+					"addedDeactivatedPlansSubtitle": "Not visible for children",
 					"noPlansAdded": "No plans to display",
 					"tasks": "{NUM_TASKS, plural, offset:0  =1 {# task} other {# tasks}}"
 				}
@@ -290,12 +299,14 @@
 					"title": "Awards",
 					"addReward": "Add reward",
 					"addBadge": "Add badge",
-					"pageHint": "Increase work motivation by using points, rewards and badges"
+					"pageHint": "Increase work motivation"
 				},
 				"content": {
 					"addedRewardsTitle": "Added rewards",
+					"addedRewardsSubtitle": "Rewards can be claimed using points",
 					"noRewardsAdded": "No rewards to display, add the first one now",
 					"addedBadgesTitle": "Added badges",
+					"addedBadgesSubtitle": "Badges are assigned by caregivers",
 					"noBadgesAdded": "No badges to display, add the first one now",
 					"noDescriptionSubtitle": "No description",
 					"removeRewardTitle": "Remove reward",
@@ -362,17 +373,6 @@
 							"trophy": "Trophy"
 						}
 					}
-				}
-			},
-			"statistics": {
-				"header": {
-					"title": "Statistics",
-					"history": "Event history",
-					"pageHint": "View and analyze the work done by children"
-				},
-				"content": {
-					"basicStatisticsTitle": "Basic statistics",
-					"basicStatisticsSubtitle": "This screen is not available in this version of the application"
 				}
 			},
 			"planDetails": {
@@ -693,7 +693,8 @@
 		"reward_creation": "Reward creation",
 		"badge_creation": "Badge creation",
 		"plan_info": "Plans",
-		"currencies": "Currencies"
+		"currencies": "Currencies",
+		"friends": "Friends"
 	},
 	"assignedTo": "Assigned to",
 	"points": "Points",

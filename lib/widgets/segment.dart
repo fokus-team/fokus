@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:fokus/model/ui/ui_button.dart';
 
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/ui/theme_config.dart';
-import 'package:fokus/widgets/buttons/help_icon_button.dart';
 import 'package:fokus/widgets/general/app_hero.dart';
 
 class Segment extends StatelessWidget {
 	final String title;
 	final Map<String, Object> titleArgs;
 	final String subtitle;
-	final String helpPage;
+	final UIButton headerAction;
 	final String noElementsMessage;
 	final IconData noElementsIcon;
 	final Widget noElementsAction;
@@ -20,7 +20,7 @@ class Segment extends StatelessWidget {
 		@required this.title, 
 		this.titleArgs,
 		this.subtitle, 
-		this.helpPage, 
+		this.headerAction, 
 		this.elements,
 		this.noElementsMessage,
 		this.noElementsIcon,
@@ -33,10 +33,11 @@ class Segment extends StatelessWidget {
 			padding: EdgeInsets.only(
 				left: AppBoxProperties.screenEdgePadding, 
 				right: AppBoxProperties.screenEdgePadding,
-				bottom: 4.0
+				bottom: 8.0
 			),
 			child: Row(
 				mainAxisAlignment: MainAxisAlignment.spaceBetween,
+				crossAxisAlignment: CrossAxisAlignment.center,
 				children: <Widget>[
 					Expanded(
 						child: Column(
@@ -58,8 +59,23 @@ class Segment extends StatelessWidget {
 							]
 						)
 					),
-					if(helpPage != null)
-						HelpIconButton(helpPage: helpPage, theme: Brightness.dark)
+					if(headerAction != null)
+						Tooltip(
+							message: AppLocales.of(context).translate(headerAction.textKey),
+							child: Padding(
+								padding: EdgeInsets.only(left: 10.0),
+								child: MaterialButton(
+									visualDensity: VisualDensity.compact,
+									materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+									child: Icon(headerAction.icon, color: Colors.white, size: 30),
+									color: headerAction.color ?? AppColors.caregiverButtonColor,
+									onPressed: headerAction.action,
+									padding: EdgeInsets.all(12.0),
+									shape: CircleBorder(),
+									minWidth: 0
+								)
+							)
+						)
 				]
 			)
 		);
@@ -70,7 +86,7 @@ class Segment extends StatelessWidget {
 		return ListView(
 			shrinkWrap: true,
 			padding: EdgeInsets.only(top: AppBoxProperties.sectionPadding),
-			physics: BouncingScrollPhysics(),
+			physics: NeverScrollableScrollPhysics(),
 			children: <Widget>[
 				buildSectionHeader(context),
 				if(customContent != null)
@@ -90,22 +106,25 @@ class Segment extends StatelessWidget {
 
 class AppSegments extends StatelessWidget {
 	final List<Widget> segments;
+	final bool fullBody;
 
-	AppSegments({@required this.segments});
+	AppSegments({@required this.segments, this.fullBody = false});
 	
 	@override
 	Widget build(BuildContext context) {
 		return Container(
-			child: Expanded(
-				child: ListView(
-					padding: EdgeInsets.zero,
-					physics: BouncingScrollPhysics(),
-					children: <Widget>[
-						...segments,
-						SizedBox(height: 30.0)
-					]
-				)
-			)
+			child: fullBody ? _buildList() : Expanded(child: _buildList())
+		);
+	}
+
+	Widget _buildList() {
+		return ListView(
+			padding: EdgeInsets.zero,
+			physics: BouncingScrollPhysics(),
+			children: <Widget>[
+				...segments,
+				SizedBox(height: 80.0)
+			]
 		);
 	}
 

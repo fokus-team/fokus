@@ -23,7 +23,7 @@ import 'package:fokus/widgets/dialogs/general_dialog.dart';
 import 'package:fokus/widgets/general/app_alert.dart';
 import 'package:fokus/widgets/segment.dart';
 import 'package:fokus/model/ui/ui_button.dart';
-import 'package:fokus/widgets/app_header.dart';
+import 'package:fokus/widgets/custom_app_bars.dart';
 import 'package:fokus/widgets/chips/attribute_chip.dart';
 import 'package:fokus/widgets/cards/item_card.dart';
 import 'package:fokus/widgets/buttons/popup_menu_list.dart';
@@ -121,18 +121,18 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 	Column _getPage({UIChild child, Widget content}) {
 		return Column(
 			crossAxisAlignment: CrossAxisAlignment.start,
+				verticalDirection: VerticalDirection.up,
 			children: [
+				Expanded(child: content),
 				_buildAppHeader(child),
-				Expanded(child: content)
 			]
 		);
 	}
 
-  AppHeader _buildAppHeader(UIChild child) {
-    return AppHeader.widget(
+	CustomContentAppBar _buildAppHeader(UIChild child) {
+    return CustomContentAppBar(
       title: '$_pageKey.header.title',
-      appHeaderWidget:
-      ChildItemCard(child: child),
+      content: ChildItemCard(child: child),
       popupMenuWidget: PopupMenuList(
         lightTheme: true,
         items: [

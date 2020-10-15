@@ -5,14 +5,12 @@ import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
 import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/ui/user/ui_child.dart';
 import 'package:fokus/services/app_locales.dart';
+import 'package:fokus/widgets/custom_app_bars.dart';
 import 'package:fokus/utils/ui/child_plans_util.dart';
 import 'package:fokus/utils/ui/theme_config.dart';
-import 'package:fokus/widgets/app_header.dart';
 import 'package:fokus/widgets/app_navigation_bar.dart';
-import 'package:fokus/widgets/buttons/rounded_button.dart';
 import 'package:fokus/widgets/loadable_bloc_builder.dart';
 import 'package:fokus/widgets/segment.dart';
-
 
 class ChildPanelPage extends StatefulWidget {
   @override
@@ -24,37 +22,28 @@ class _ChildPanelPageState extends State<ChildPanelPage> {
 
   @override
   Widget build(BuildContext context) {
+		UIChild currentUser = context.bloc<AuthenticationBloc>().state.user;
     return Scaffold(
       body: Column(
 	      crossAxisAlignment: CrossAxisAlignment.start,
+				verticalDirection: VerticalDirection.up,
 	      children: [
-	        ChildCustomHeader(),
 		      LoadableBlocBuilder<ChildPlansCubit>(
-				    builder: (context, state) => AppSegments(segments: _buildPanelSegments(state)),
+				    builder: (context, state) => AppSegments(segments: buildChildPlanSegments(state.plans, context)),
 						wrapWithExpanded: true,
-		      )
+		      ),
+	        CustomChildAppBar()
 	      ]
       ),
+			floatingActionButton: FloatingActionButton.extended(
+				onPressed: () => Navigator.of(context).pushNamed(AppPage.childCalendar.name, arguments: currentUser.id),
+				label: Text(AppLocales.of(context).translate('$_pageKey.content.futurePlans')),
+				icon: Icon(Icons.calendar_today),
+				backgroundColor: AppColors.childButtonColor,
+				elevation: 4.0
+			),
+			floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       bottomNavigationBar: AppNavigationBar.childPage(currentIndex: 0)
     );
-  }
-
-  List<Widget> _buildPanelSegments(ChildPlansLoadSuccess state) {
-		UIChild currentUser = context.bloc<AuthenticationBloc>().state.user;
-
-    return [
-			...buildChildPlanSegments(state.plans, context),
-			Row(
-				mainAxisAlignment: MainAxisAlignment.end,
-				children: <Widget>[
-					RoundedButton(
-						icon: Icons.calendar_today,
-						text: AppLocales.of(context).translate('$_pageKey.content.futurePlans'),
-						color: AppColors.childButtonColor,
-						onPressed: () => Navigator.of(context).pushNamed(AppPage.childCalendar.name, arguments: currentUser.id)
-					)
-				]
-			)
-    ];
   }
 }

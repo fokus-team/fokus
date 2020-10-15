@@ -51,8 +51,11 @@ class ChildDashboardRewardsTabState extends Equatable {
 }
 
 class ChildDashboardAchievementsTabState extends Equatable {
-	ChildDashboardAchievementsTabState();
+	final List<UIBadge> availableBadges;
+	final List<UIChildBadge> childBadges;
+
+	ChildDashboardAchievementsTabState({this.availableBadges, this.childBadges});
 
 	@override
-	List<Object> get props => [];
+	List<Object> get props => [availableBadges, childBadges];
 }

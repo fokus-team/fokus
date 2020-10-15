@@ -22,6 +22,7 @@ import 'package:fokus/widgets/general/app_alert.dart';
 import 'package:fokus/widgets/general/app_loader.dart';
 import 'package:fokus/widgets/loadable_bloc_builder.dart';
 import 'package:fokus/widgets/segment.dart';
+import 'package:intl/intl.dart';
 import 'package:smart_select/smart_select.dart';
 
 class CaregiverChildDashboardPage extends StatefulWidget {
@@ -43,14 +44,6 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 
 	final double customBottomBarHeight = 40.0;
 	final Duration bottomBarAnimationDuration = Duration(milliseconds: 400);
-
-  // only not-assigned badges
-	List<UIBadge> badges = [
-		UIBadge(name: "Król czegośtam", icon: 0),
-		UIBadge(name: "ehhhhh", icon: 5),
-		UIBadge(name: "Puchar planowicza", icon: 12),
-	];
-	List<UIBadge> pickedBadges = List<UIBadge>();
 
 	@override
 	void initState() {
@@ -172,9 +165,23 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 					)
 				);
 			},
-			child: _currentIndex != 1 ?
-				(_currentIndex == 0 ? _assignPlan() : _buildBadgeSelect())
-				: SizedBox.shrink()
+			child: _buildSelectPopup()
+		);
+	}
+
+	Widget _buildSelectPopup() {
+		if (_currentIndex == 1)
+			return SizedBox.shrink();
+		if (_currentIndex == 0)
+			return _buildSelect<UIPlan, ChildDashboardPlansTabState>(
+					content: _buildPlanSelect,
+					tabState: (state) => state.plansTab,
+					model: (tabState) => tabState.availablePlans
+			);
+		return _buildSelect<UIBadge, ChildDashboardAchievementsTabState>(
+				content: _buildBadgeSelect,
+				tabState: (state) => state.achievementsTab,
+				model: (tabState) => tabState.availableBadges
 		);
 	}
 	
@@ -225,11 +232,11 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 		);
 	}
 
-	Widget _assignPlan() {
-		return _wrapWithBuilder<ChildDashboardPlansTabState>(
-			tabState: (state) => state.plansTab,
-			content: (state) => _buildPlanSelect(state.availablePlans),
-			loader: _buildPlanSelect()
+	Widget _buildSelect<T, State>({Widget Function([List<T>]) content, State Function(ChildDashboardState) tabState, List<T> Function(State) model}) {
+		return _wrapWithBuilder<State>(
+			tabState: tabState,
+			content: (state) => content(model(state)),
+			loader: content()
 		);
 	}
 
@@ -267,21 +274,17 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 		);
 	}
 
-	Widget _buildBadgeSelect() {
+	Widget _buildBadgeSelect([List<UIBadge> availableBadges = const []]) {
 		return _buildFloatingButtonPicker<UIBadge>(
 			buttonLabel: AppLocales.of(context).translate('$_pageKey.header.assignBadgeButton'),
 			buttonIcon: Icons.star,
 			disabledDialogTitle: AppLocales.of(context).translate('$_pageKey.header.assignBadgeButton'),
 			disabledDialogText: AppLocales.of(context).translate('$_pageKey.header.noBadgesToAssignText'),
 			pickerTitle: AppLocales.of(context).translate('$_pageKey.header.assignBadgeTitle'),
-			pickedValues: pickedBadges,
-			options: badges,
-			onChange: (val) => setState(() {
-				pickedBadges = val;
-			}),
-			onConfirm: () => {
-				// new state is saved and ready for database query
-			},
+			pickedValues: [],
+			options: availableBadges,
+			onChange: (val) => (selected) => context.bloc<ChildDashboardCubit>().assignBadges(selected),
+			onConfirm: () => {},
 			getName: (badge) => badge.name,
 			builder: (item, checked, onChange) {
 				return Theme(
@@ -346,7 +349,7 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 			if (state.noRewardsAdded)
 				AppAlert(
 					text: AppLocales.of(context).translate('$_pageKey.content.alerts.noRewardsAdded'),
-					onTap: () => { /* Go to reward/badge list page */ },
+					onTap: () => Navigator.of(context).pushNamed(AppPage.caregiverRewardForm.name),
 				),
 			Segment(
 				title: '$_pageKey.content.rewardsTitle',
@@ -361,23 +364,25 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 
 	List<Widget> _buildAchievementsTab(ChildDashboardAchievementsTabState state) {
 		return [
-			// Show only if there are no badges child can get
-			AppAlert(
-				text: AppLocales.of(context).translate('$_pageKey.content.alerts.noBadgesAdded'),
-				onTap: () => { /* Go to reward/badge list page */ },
-			),
+			if (state.availableBadges.isEmpty && state.childBadges.isEmpty)
+				AppAlert(
+					text: AppLocales.of(context).translate('$_pageKey.content.alerts.noBadgesAdded'),
+					onTap: () => Navigator.of(context).pushNamed(AppPage.caregiverBadgeForm.name),
+				),
 			Segment(
 				title: '$_pageKey.content.achievementsTitle',
 				noElementsMessage: '$_pageKey.content.noAchievementsText',
 				noElementsIcon: Icons.star,
 				elements: [
-					// ItemCard(
-					// 	title: "Super planista",
-					// 	subtitle: "Przyznano dnia 26.08.2020 20:10",
-					// 	graphicType: AssetType.badgeIcons,
-					// 	graphic: 3,
-					// 	graphicHeight: 44.0,
-					// )
+					for (var badge in state.childBadges)
+						ItemCard(
+							title: badge.name,
+							subtitle: AppLocales.of(context).translate('page.childSection.achievements.content.earnedBadgeDate') + ': '
+									+ DateFormat.yMd(AppLocales.instance.locale.toString()).format(badge.date),
+							graphicType: AssetType.badges,
+							graphic: badge.icon,
+							graphicHeight: 44.0,
+						)
 				]
 			)
 		];

@@ -9,6 +9,7 @@ class UIBadge extends Equatable {
 	final int icon;
 
 	UIBadge({this.name, this.description, this.icon = 0});
+	UIBadge.from(UIBadge badge) : this(name: badge.name, description: badge.description, icon: badge.icon);
 	UIBadge.fromDBModel(Badge badge) : this(name: badge.name, description: badge.description, icon: badge.icon);
 
 	UIBadge copyWith({String name, String description, int icon}) {

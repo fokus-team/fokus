@@ -4,9 +4,11 @@ import 'package:fokus/logic/common/reloadable/reloadable_cubit.dart';
 import 'package:fokus/model/db/plan/plan.dart';
 import 'package:fokus/model/db/plan/task_status.dart';
 import 'package:fokus/model/db/user/child.dart';
+import 'package:fokus/model/ui/gamification/ui_badge.dart';
 import 'package:fokus/model/ui/gamification/ui_reward.dart';
 import 'package:fokus/model/ui/plan/ui_plan.dart';
 import 'package:fokus/model/ui/plan/ui_plan_instance.dart';
+import 'package:fokus/model/ui/user/ui_caregiver.dart';
 import 'package:fokus/model/ui/user/ui_child.dart';
 import 'package:fokus/model/ui/user/ui_user.dart';
 import 'package:fokus/services/data/data_repository.dart';
@@ -69,6 +71,10 @@ class ChildDashboardCubit extends ReloadableCubit {
 		emit(ChildDashboardState.from(state, plansTab: tabState.copyWith(availablePlans: newPlans, childPlans: newChildPlans)));
   }
 
+	Future assignBadges(List<UIBadge> badges) async {
+
+	}
+
 	Future _loadPlansTab() async {
 		var activeUser = _activeUser();
 		var planInstances = (await _dataRepository.getPlanInstances(childIDs: [childId], fields: ['_id'])).map((plan) => plan.id).toList();
@@ -85,15 +91,19 @@ class ChildDashboardCubit extends ReloadableCubit {
 	}
 
 	Future _loadRewardsTab() async {
-		child ??= await _dataRepository.getUser(id: childId);
+		child ??= await _dataRepository.getUser(id: childId, fields: ['rewards', 'badges']);
 		var rewards = child.rewards.map((reward) => UIChildReward.fromDBModel(reward)).toList();
   	var tabState = ChildDashboardRewardsTabState(childRewards: rewards, noRewardsAdded: await _dataRepository.countRewards(caregiverId: _activeUser().id) == 0);
 		emit(ChildDashboardState.from(_getPreviousState(), rewardsTab: tabState, child: await _loadChildProfile()));
 	}
 
 	Future _loadAchievementsTab() async {
+		UICaregiver activeUser = _activeUser();
 		child ??= await _dataRepository.getUser(id: childId);
-		var tabState = ChildDashboardAchievementsTabState();
+		var assignedUIBadges = child.badges.map((badge) => UIChildBadge.fromDBModel(badge)).toList();
+		var assignedBadges = assignedUIBadges.map((badge) => UIBadge.from(badge)).toList();
+		var availableBadges = activeUser.badges.where((badge) => !assignedBadges.any((assignedBadge) => badge == assignedBadge)).toList();
+		var tabState = ChildDashboardAchievementsTabState(availableBadges: availableBadges, childBadges: assignedUIBadges);
 		emit(ChildDashboardState.from(_getPreviousState(), achievementsTab: tabState, child: await _loadChildProfile()));
 	}
 

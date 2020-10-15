@@ -139,6 +139,9 @@ class _TaskFormState extends State<TaskForm> {
 
 	void saveTask() {
 		if(taskFormKey.currentState.validate()) {
+			setState(() {
+				task.subtasks = _subtasks.map((subtask) => subtask.controller.text).toList();
+			});
 			if(formModeIsCreate())
 				Future.wait([
 					Future(widget.createTaskCallback(task))
@@ -489,12 +492,14 @@ class _TaskFormState extends State<TaskForm> {
 					onPressed: () {
 						setState(() {
 							_subtasks.removeWhere((element) => element.controller == controller);
+							isDataChanged = true;
 						});
 					},
 					icon: Icon(Icons.delete)
 				)),
 			maxLength: AppFormProperties.textFieldMaxLength,
 			textCapitalization: TextCapitalization.sentences,
+			onChanged: (val) => setState(() => isDataChanged = true),
 		);
 	}
 }

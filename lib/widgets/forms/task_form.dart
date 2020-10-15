@@ -42,13 +42,13 @@ class _TaskFormState extends State<TaskForm> {
 	GlobalKey<FormState> taskFormKey;
 	bool isDataChanged = false;
 	TaskFormModel task;
+	int maxSubtasks = 10;
 
 	List<TextFormField> _subtasks = [];
 
 	TextEditingController _titleController = TextEditingController();
 	TextEditingController _descriptionController = TextEditingController();
 	TextEditingController _pointsController = TextEditingController();
-	List<TextEditingController> _subtaskControllers = [];
 
 	bool formModeIsCreate() => widget.task == null;
 
@@ -67,9 +67,14 @@ class _TaskFormState extends State<TaskForm> {
 			_titleController.text = widget.task.title;
 			_descriptionController.text = widget.task.description;
 			_pointsController.text = widget.task.pointsValue != null ? widget.task.pointsValue.toString() : null;
-			for(var subtask in widget.task.subtasks) {
-
-			}
+			_subtasks = List.from(
+				widget.task.subtasks.map((subtask) {
+					var controller = TextEditingController();
+					controller.text = subtask;
+					return _getSubtaskFormField(controller);
+					}
+				)
+			);
 		}
     super.initState();
   }
@@ -249,6 +254,7 @@ class _TaskFormState extends State<TaskForm> {
 			children: <Widget>[
 				buildNameField(),
 				buildDescriptionField(),
+				buildSubtasksFields(),
 				buildPointsFields(),
 				buildTimerField(),
 				Divider(),
@@ -296,7 +302,7 @@ class _TaskFormState extends State<TaskForm> {
 				onChanged: (val) => setState(() {
 					isDataChanged = task.description != val;
 					task.description = val;
-				})
+				}),
 			)
 		);
 	}
@@ -304,19 +310,30 @@ class _TaskFormState extends State<TaskForm> {
 	Widget buildSubtasksFields() {
 		return Padding(
 			padding: EdgeInsets.only(top: 5.0, bottom: 6.0, left: 20.0, right: 20.0),
-			child:TextFormField(
-				controller: _descriptionController,
-				decoration: AppFormProperties.longTextFieldDecoration(Icons.description).copyWith(
-					labelText: AppLocales.of(context).translate('$_pageKeyTaskForm.fields.taskDescription.label')
-				),
-				maxLength: AppFormProperties.longTextFieldMaxLength,
-				minLines: AppFormProperties.longTextMinLines,
-				maxLines: AppFormProperties.longTextMaxLines,
-				textCapitalization: TextCapitalization.sentences,
-				onChanged: (val) => setState(() {
-					isDataChanged = task.description != val;
-					task.description = val;
-				})
+			child:
+				Column(
+					children: [
+						for (var subtask in _subtasks)
+							Padding(
+							  padding:  EdgeInsets.only(top: 5.0, bottom: 6.0),
+							  child: subtask,
+							),
+						if (_subtasks.length < maxSubtasks)
+							Padding(
+							  padding: EdgeInsets.only(top: 5.0, bottom: 6.0),
+							  child: Row(
+							  	mainAxisAlignment: MainAxisAlignment.end,
+							    children: [
+							      Expanded(
+							        child: InputDecorator(
+							  			decoration: AppFormProperties.textFieldDecoration(Icons.add),
+							  			child: FlatButton(onPressed: _addSubtask, child: Text("Dodaj podzadanie"),)
+							  		),
+							      ),
+							    ],
+							  ),
+							)
+					],
 			)
 		);
 	}
@@ -455,23 +472,29 @@ class _TaskFormState extends State<TaskForm> {
 	}
 
 	void _addSubtask({String text}) {
-		_subtaskControllers.add(TextEditingController());
-		if(text != null) _subtaskControllers.last.text = text;
+		TextEditingController controller = TextEditingController();
+		if(text != null) controller.text = text;
+		FocusManager.instance.primaryFocus.unfocus();
 		setState(() {
-		  _subtasks.add(
-				TextFormField(
-					controller: _subtaskControllers.last,
-					decoration: AppFormProperties.longTextFieldDecoration(Icons.format_list_bulleted).copyWith(
-						labelText: AppLocales.of(context).translate('$_pageKeyTaskForm.fields.taskDescription.label')
-					),
-					maxLength: AppFormProperties.textFieldMaxLength,
-					textCapitalization: TextCapitalization.sentences,
-					onChanged: (val) => setState(() {
-						isDataChanged = task.description != val;
-						task.description = val;
-					})
-			));
+			_subtasks.add(_getSubtaskFormField(controller));
 		});
 	}
 
+	TextFormField _getSubtaskFormField(TextEditingController controller) {
+		return TextFormField(controller: controller,
+			autofocus: true,
+			decoration: AppFormProperties.textFieldDecoration(Icons.blur_circular).copyWith(
+				labelText: AppLocales.of(context).translate('$_pageKeyTaskForm.fields.subtaskDescription.label'),
+				suffixIcon: IconButton(
+					onPressed: () {
+						setState(() {
+							_subtasks.removeWhere((element) => element.controller == controller);
+						});
+					},
+					icon: Icon(Icons.delete)
+				)),
+			maxLength: AppFormProperties.textFieldMaxLength,
+			textCapitalization: TextCapitalization.sentences,
+		);
+	}
 }

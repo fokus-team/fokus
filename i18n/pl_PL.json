@@ -265,6 +265,10 @@
 					"taskDescription": {
 						"label": "Opis zadania"
 					},
+					"subtaskDescription": {
+						"label": "Opis podzadania",
+						"hint": "Add subtask"
+					},
 					"taskOrder": {
 						"label": "Kolejność wykonywania"
 					},

@@ -265,6 +265,10 @@
 					"taskDescription": {
 						"label": "Task description"
 					},
+					"subtaskDescription": {
+						"label": "Subtask description",
+						"hint": "Add subtask"
+					},
 					"taskOrder": {
 						"label": "Order execution"
 					},

@@ -125,7 +125,7 @@
 					"childProfilesSubtitle": "Dzieci zdobywają punkty za wykonywanie zadań",
 					"noChildProfilesAdded": "Brak przypisanych dzieci",
 					"caregiverProfilesTitle": "Znajomi",
-					"caregiverProfilesSubtitle": "Zaprzyjaźnieni opiekunowie i ich plany",
+					"caregiverProfilesSubtitle": "Lista zaprzyjaźnionych opiekunów",
 					"noCaregiverProfilesAdded": "Brak zaprzyjaźnionych opiekunów",
 					"todayPlans": "{NUM_PLANS, plural, offset:0 zero {Brak planów} one {# plan} two {# plany} few {# plany} other {# planów}} na dziś",
 					"activePlan": "1 plan w trakcie wykonywania"

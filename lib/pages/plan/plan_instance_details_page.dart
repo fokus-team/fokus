@@ -90,7 +90,7 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
     ];
   }
 
-  Segment _getTasksSegment({List<UITaskInstance> tasks,String title, String noElementsMessage, UIPlanInstance uiPlanInstance}) {
+  Segment _getTasksSegment({List<UITaskInstance> tasks,String title, UIPlanInstance uiPlanInstance}) {
     return Segment(
 			title: title,
 			noElementsMessage: '$_pageKey.content.noTasks',

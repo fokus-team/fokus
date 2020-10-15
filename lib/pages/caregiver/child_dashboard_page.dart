@@ -1,32 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fokus/logic/caregiver/child_dashboard/child_dashboard_cubit.dart';
 import 'package:fokus/logic/common/reloadable/reloadable_cubit.dart';
-import 'package:fokus/model/ui/user/ui_child.dart';
-import 'package:fokus/utils/ui/child_plans_util.dart';
-import 'package:fokus/widgets/cards/model_cards.dart';
-import 'package:fokus/widgets/general/app_loader.dart';
-import 'package:mongo_dart/mongo_dart.dart' as Mongo;
-import 'package:smart_select/smart_select.dart';
-
-import 'package:fokus/model/currency_type.dart';
 import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/ui/gamification/ui_badge.dart';
 import 'package:fokus/model/ui/plan/ui_plan.dart';
-import 'package:fokus/logic/caregiver/child_dashboard/child_dashboard_cubit.dart';
-import 'package:fokus/widgets/loadable_bloc_builder.dart';
+import 'package:fokus/model/ui/ui_button.dart';
+import 'package:fokus/model/ui/user/ui_child.dart';
 import 'package:fokus/services/app_locales.dart';
+import 'package:fokus/utils/ui/child_plans_util.dart';
 import 'package:fokus/utils/ui/dialog_utils.dart';
 import 'package:fokus/utils/ui/icon_sets.dart';
 import 'package:fokus/utils/ui/theme_config.dart';
 import 'package:fokus/widgets/buttons/bottom_sheet_bar_buttons.dart';
+import 'package:fokus/widgets/buttons/popup_menu_list.dart';
+import 'package:fokus/widgets/cards/item_card.dart';
+import 'package:fokus/widgets/cards/model_cards.dart';
+import 'package:fokus/widgets/custom_app_bars.dart';
 import 'package:fokus/widgets/dialogs/general_dialog.dart';
 import 'package:fokus/widgets/general/app_alert.dart';
+import 'package:fokus/widgets/general/app_loader.dart';
+import 'package:fokus/widgets/loadable_bloc_builder.dart';
 import 'package:fokus/widgets/segment.dart';
-import 'package:fokus/model/ui/ui_button.dart';
-import 'package:fokus/widgets/custom_app_bars.dart';
-import 'package:fokus/widgets/chips/attribute_chip.dart';
-import 'package:fokus/widgets/cards/item_card.dart';
-import 'package:fokus/widgets/buttons/popup_menu_list.dart';
+import 'package:smart_select/smart_select.dart';
 
 class CaregiverChildDashboardPage extends StatefulWidget {
 	final Map<String, dynamic> args;

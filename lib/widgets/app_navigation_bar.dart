@@ -80,10 +80,7 @@ class _AppNavigationBarState extends State<AppNavigationBar> {
 							padding: EdgeInsets.only(top: 4.0, bottom: 2.0),
 							child: navigationItem.icon
 						),
-						title: Padding(
-							padding: EdgeInsets.only(bottom: 2.0),
-							child: Text(AppLocales.of(context).translate(navigationItem.title))
-						)
+						label: AppLocales.of(context).translate(navigationItem.title),
 					)
 			]
 		);

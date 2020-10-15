@@ -124,7 +124,6 @@ class _FokusAppState extends State<FokusApp> implements CurrentLocaleObserver {
   Route<dynamic> _onGenerateRoute(RouteSettings settings) {
 		var getActiveUser = (BuildContext context) => () => context.bloc<AuthenticationBloc>().state.user;
 		var getRoute = (BuildContext context) => ModalRoute.of(context);
-		var authBloc = (BuildContext context) => context.bloc<AuthenticationBloc>();
 
 		Map<String, Function(BuildContext, Animation<double>, Animation<double>)> routesWithFadeTransition = {
 			// Caregiver pages
@@ -133,7 +132,7 @@ class _FokusAppState extends State<FokusApp> implements CurrentLocaleObserver {
 			AppPage.caregiverAwards.name: (context, _, __) => _createPage(CaregiverAwardsPage(), context, CaregiverAwardsCubit(getActiveUser(context), getRoute(context))),
 			// Child pages
 			AppPage.childPanel.name: (context, _, __) =>  _createPage(ChildPanelPage(), context, ChildPlansCubit(getActiveUser(context), getRoute(context))),
-			AppPage.childRewards.name: (context, _, __) =>  _createPage(ChildRewardsPage(), context, ChildRewardsCubit(getActiveUser(context), getRoute(context), authBloc(context))),
+			AppPage.childRewards.name: (context, _, __) =>  _createPage(ChildRewardsPage(), context, ChildRewardsCubit(getActiveUser(context), getRoute(context))),
 			AppPage.childAchievements.name: (context, _, __) =>  _createPage(ChildAchievementsPage(), context)
 		};
 

@@ -1,21 +1,18 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
-import 'package:fokus/model/db/date/date.dart';
+import 'package:fokus/logic/common/reloadable/reloadable_cubit.dart';
 import 'package:fokus/model/db/plan/plan.dart';
 import 'package:fokus/model/db/plan/task_status.dart';
 import 'package:fokus/model/db/user/child.dart';
 import 'package:fokus/model/ui/gamification/ui_reward.dart';
 import 'package:fokus/model/ui/plan/ui_plan.dart';
-import 'package:fokus/model/ui/user/ui_child.dart';
-import 'package:fokus/services/plan_keeper_service.dart';
-import 'package:fokus/services/plan_repeatability_service.dart';
-import 'package:get_it/get_it.dart';
-
-import 'package:fokus/logic/common/reloadable/reloadable_cubit.dart';
-import 'package:fokus/model/ui/user/ui_user.dart';
 import 'package:fokus/model/ui/plan/ui_plan_instance.dart';
-import 'package:fokus/services/ui_data_aggregator.dart';
+import 'package:fokus/model/ui/user/ui_child.dart';
+import 'package:fokus/model/ui/user/ui_user.dart';
 import 'package:fokus/services/data/data_repository.dart';
+import 'package:fokus/services/plan_keeper_service.dart';
+import 'package:fokus/services/ui_data_aggregator.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
 part 'child_dashboard_state.dart';

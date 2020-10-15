@@ -29,7 +29,7 @@ class _ChildPanelPageState extends State<ChildPanelPage> {
 				verticalDirection: VerticalDirection.up,
 	      children: [
 		      LoadableBlocBuilder<ChildPlansCubit>(
-				    builder: (context, state) => AppSegments(segments: buildChildPlanSegments(state.plans, context)),
+				    builder: (context, state) => AppSegments(segments: buildChildPlanSegments((state as ChildPlansLoadSuccess).plans, context)),
 						wrapWithExpanded: true,
 		      ),
 	        CustomChildAppBar()

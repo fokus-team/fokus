@@ -97,6 +97,7 @@ class NameEditDialog extends StatelessWidget {
 							labelKey: 'authentication.name',
 							icon: Icons.edit,
 							getErrorKey: (state) => [state.name.error.key],
+							clearable: true,
 						),
 					),
 				],

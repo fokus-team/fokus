@@ -1,3 +1,4 @@
+import 'package:fokus/model/db/gamification/child_badge.dart';
 import 'package:fokus/model/db/gamification/points.dart';
 import 'package:fokus/model/db/user/user.dart';
 import 'package:fokus/model/db/user/user_role.dart';
@@ -11,7 +12,7 @@ abstract class UserRepository {
 	Future<bool> userExists({ObjectId id, UserRole role});
 
 	Future createUser(User user);
-	Future updateUser(ObjectId userId, {List<ObjectId> newConnections, String name, String locale, List<Points> points});
+	Future updateUser(ObjectId userId, {List<ObjectId> newConnections, List<ChildBadge> badges, String name, String locale, List<Points> points});
 	Future removeUsers(List<ObjectId> ids);
 
 	Future insertNotificationID(ObjectId userId, String notificationId);

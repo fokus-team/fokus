@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fokus/logic/common/reloadable/reloadable_cubit.dart';
+import 'package:fokus/model/db/gamification/child_badge.dart';
 import 'package:fokus/model/db/plan/plan.dart';
 import 'package:fokus/model/db/plan/task_status.dart';
 import 'package:fokus/model/db/user/child.dart';
@@ -12,6 +13,7 @@ import 'package:fokus/model/ui/user/ui_caregiver.dart';
 import 'package:fokus/model/ui/user/ui_child.dart';
 import 'package:fokus/model/ui/user/ui_user.dart';
 import 'package:fokus/services/data/data_repository.dart';
+import 'package:fokus/services/notifications/notification_service.dart';
 import 'package:fokus/services/plan_keeper_service.dart';
 import 'package:fokus/services/ui_data_aggregator.dart';
 import 'package:get_it/get_it.dart';
@@ -31,6 +33,7 @@ class ChildDashboardCubit extends ReloadableCubit {
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final UIDataAggregator _dataAggregator = GetIt.I<UIDataAggregator>();
 	final PlanKeeperService _planKeeperService = GetIt.I<PlanKeeperService>();
+	final NotificationService _notificationService = GetIt.I<NotificationService>();
 
   ChildDashboardCubit(Map<String, dynamic> args, this._activeUser, ModalRoute pageRoute) :
 			_initialTab = args['tab'] ?? 0, childId = (args['child'] as UIChild).id, super(pageRoute) {
@@ -71,10 +74,6 @@ class ChildDashboardCubit extends ReloadableCubit {
 		emit(ChildDashboardState.from(state, plansTab: tabState.copyWith(availablePlans: newPlans, childPlans: newChildPlans)));
   }
 
-	Future assignBadges(List<UIBadge> badges) async {
-
-	}
-
 	Future _loadPlansTab() async {
 		var activeUser = _activeUser();
 		var planInstances = (await _dataRepository.getPlanInstances(childIDs: [childId], fields: ['_id'])).map((plan) => plan.id).toList();
@@ -97,13 +96,25 @@ class ChildDashboardCubit extends ReloadableCubit {
 		emit(ChildDashboardState.from(_getPreviousState(), rewardsTab: tabState, child: await _loadChildProfile()));
 	}
 
+	List<UIBadge> filterBadges(List<UIBadge> list, List<UIChildBadge> excluded) => list.where((badge) => !excluded.any((exclude) => badge.sameAs(exclude))).toList();
+
+	Future assignBadges(List<UIBadge> badges) async {
+		var badgeTab = (state as ChildDashboardState).achievementsTab;
+		var assignedBadges = badges.map((badge) => UIChildBadge.fromBadge(badge)).toList();
+		_dataRepository.updateUser(childId, badges: assignedBadges.map((badge) => ChildBadge.fromUIModel(badge)).toList());
+		for (var badge in badges)
+			_notificationService.sendBadgeAwardedNotification(badge.name, badge.icon, childId);
+		var newAssignedBadges = List.of(badgeTab.childBadges)..addAll(assignedBadges);
+		var newAvailableBadges = filterBadges(badgeTab.availableBadges, assignedBadges);
+		emit(ChildDashboardState.from(state, achievementsTab: badgeTab.copyWith(availableBadges: newAvailableBadges, childBadges: newAssignedBadges)));
+	}
+
 	Future _loadAchievementsTab() async {
 		UICaregiver activeUser = _activeUser();
 		child ??= await _dataRepository.getUser(id: childId);
-		var assignedUIBadges = child.badges.map((badge) => UIChildBadge.fromDBModel(badge)).toList();
-		var assignedBadges = assignedUIBadges.map((badge) => UIBadge.from(badge)).toList();
-		var availableBadges = activeUser.badges.where((badge) => !assignedBadges.any((assignedBadge) => badge == assignedBadge)).toList();
-		var tabState = ChildDashboardAchievementsTabState(availableBadges: availableBadges, childBadges: assignedUIBadges);
+		var assignedBadges = child.badges.map((badge) => UIChildBadge.fromDBModel(badge)).toList();
+		var availableBadges = filterBadges(activeUser.badges, assignedBadges);
+		var tabState = ChildDashboardAchievementsTabState(availableBadges: availableBadges, childBadges: assignedBadges);
 		emit(ChildDashboardState.from(_getPreviousState(), achievementsTab: tabState, child: await _loadChildProfile()));
 	}
 

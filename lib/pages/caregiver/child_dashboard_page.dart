@@ -283,7 +283,7 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 			pickerTitle: AppLocales.of(context).translate('$_pageKey.header.assignBadgeTitle'),
 			pickedValues: [],
 			options: availableBadges,
-			onChange: (val) => (selected) => context.bloc<ChildDashboardCubit>().assignBadges(selected),
+			onChange: (selected) => context.bloc<ChildDashboardCubit>().assignBadges(selected),
 			onConfirm: () => {},
 			getName: (badge) => badge.name,
 			builder: (item, checked, onChange) {

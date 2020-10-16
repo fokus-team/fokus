@@ -56,6 +56,13 @@ class ChildDashboardAchievementsTabState extends Equatable {
 
 	ChildDashboardAchievementsTabState({this.availableBadges, this.childBadges});
 
+	ChildDashboardAchievementsTabState copyWith({List<UIBadge> availableBadges, List<UIChildBadge> childBadges}) {
+		return ChildDashboardAchievementsTabState(
+			availableBadges: availableBadges ?? this.availableBadges,
+			childBadges: childBadges ?? this.childBadges,
+		);
+	}
+
 	@override
 	List<Object> get props => [availableBadges, childBadges];
 }

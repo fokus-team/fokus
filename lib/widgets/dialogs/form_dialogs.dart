@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fokus/model/db/user/user_role.dart';
 import 'package:fokus_auth/fokus_auth.dart';
 import 'package:formz/formz.dart';
 
@@ -72,17 +73,21 @@ class FormDialog extends StatelessWidget {
 const String _settingsPageKey = 'page.settings.content';
 
 class NameEditDialog extends StatelessWidget {
+	final UserRole _role;
+
+	NameEditDialog(this._role);
+
   @override
   Widget build(BuildContext context) {
     return BlocListener<NameChangeCubit, NameChangeState>(
 	    listener: (context, state) {
 		    if (state.status.isSubmissionSuccess) {
-			    Navigator.of(context).pop();
+			    Navigator.of(context).pop(state.name.value);
 			    showSuccessSnackbar(context, 'authentication.nameChanged');
 		    }
 	    },
       child: FormDialog(
-				title: AppLocales.of(context).translate('$_settingsPageKey.profile.editNameLabel'),
+				title: AppLocales.of(context).translate('$_settingsPageKey.profile.' + (_role == UserRole.caregiver ? 'editNameLabel' : 'editChildNameLabel')),
 				fields: [
 					Padding(
 						padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
@@ -102,6 +107,10 @@ class NameEditDialog extends StatelessWidget {
 }
 
 class AccountDeleteDialog extends StatelessWidget {
+	final UserRole _role;
+
+  const AccountDeleteDialog(this._role);
+  
   @override
   Widget build(BuildContext context) {
 	  var user = context.bloc<AuthenticationBloc>().state.user as UICaregiver;
@@ -110,6 +119,8 @@ class AccountDeleteDialog extends StatelessWidget {
 		  listener: (context, state) {
 			  if (state.status.isSubmissionFailure && state.error != null)
 				  showFailSnackbar(context, state.error.key);
+			  else if (state.status.isSubmissionSuccess && _role == UserRole.child)
+				  Navigator.of(context).pop(true);
 		  },
 		  child: FormDialog(
 			  title: getText('Label'),

@@ -84,6 +84,7 @@
 				"profile": {
 					"header": "Profil",
 					"editNameLabel": "Zmień imię",
+					"editChildNameLabel": "Zmień imię dziecka",
 					"changePasswordLabel": "Zmień hasło",
 					"deleteAccountLabel": "Usuń konto",
 					"deleteAccountHint": "Trwale usuń konto i profile dzieci",

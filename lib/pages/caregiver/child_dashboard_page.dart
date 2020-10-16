@@ -119,6 +119,7 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 	}
 
 	CustomContentAppBar _buildAppHeader(UIChild child) {
+		var cubit = context.bloc<ChildDashboardCubit>();
     return CustomContentAppBar(
       title: '$_pageKey.header.title',
       content: ChildItemCard(child: child),
@@ -126,8 +127,8 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
         lightTheme: true,
         items: [
           UIButton('$_pageKey.header.childCode', () => showCodeDialog('fa7462a054295e915a20755d')),
-          UIButton.ofType(ButtonType.edit, () => {}), // TODO edit name/awatar logic (form in pop-up?)
-          UIButton.ofType(ButtonType.unpair, () => {}) // TODO unpair logic (with dialog confirmation)
+          UIButton.ofType(ButtonType.edit, () => cubit.onNameDialogClosed(showNameEditDialog(context, _childProfile))),
+          UIButton.ofType(ButtonType.unpair, () => cubit.onAccountDeleteDialogClosed(showAccountDeleteDialog(context, _childProfile)))
         ],
       ),
       tabs: TabBar(

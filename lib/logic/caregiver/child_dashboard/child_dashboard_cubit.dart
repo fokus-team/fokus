@@ -74,6 +74,20 @@ class ChildDashboardCubit extends ReloadableCubit {
 		emit(ChildDashboardState.from(state, plansTab: tabState.copyWith(availablePlans: newPlans, childPlans: newChildPlans)));
   }
 
+	Future onNameDialogClosed(Future result) async {
+  	var value = await result;
+		if (value == null)
+			return;
+		child.name = value as String;
+		emit(ChildDashboardState.from(state, child: UIChild.from((state  as ChildDashboardState).child, name: value as String)));
+	}
+
+	Future onAccountDeleteDialogClosed(Future result) async {
+		if ((await result) ?? false)
+			return;
+
+	}
+
 	Future _loadPlansTab() async {
 		var activeUser = _activeUser();
 		var planInstances = (await _dataRepository.getPlanInstances(childIDs: [childId], fields: ['_id'])).map((plan) => plan.id).toList();

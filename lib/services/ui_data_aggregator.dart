@@ -43,7 +43,7 @@ class UIDataAggregator {
 	Future<List<UIPlanInstance>> loadPlanInstances({@required ObjectId childId, List<Plan> plans}) async {
 		var getDescription = (Plan plan, [Date instanceDate]) => _repeatabilityService.buildPlanDescription(plan.repeatability, instanceDate: instanceDate);
 
-		var allPlans = plans ?? await _dataRepository.getPlans(childId: childId);
+		var allPlans = (plans ?? await _dataRepository.getPlans(childId: childId)).where((plan) => plan.active).toList();
 		var todayPlans = _repeatabilityService.filterPlansByDate(allPlans, Date.now());
 		var todayPlanIds = todayPlans.map((plan) => plan.id).toList();
 		var untilCompletedPlans = allPlans.where((plan) => plan.repeatability.untilCompleted && !todayPlans.contains(plan.id)).map((plan) => plan.id).toList();

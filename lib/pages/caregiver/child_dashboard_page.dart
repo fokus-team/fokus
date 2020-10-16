@@ -128,7 +128,10 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
         items: [
           UIButton('$_pageKey.header.childCode', () => showCodeDialog('fa7462a054295e915a20755d')),
           UIButton.ofType(ButtonType.edit, () => cubit.onNameDialogClosed(showNameEditDialog(context, _childProfile))),
-          UIButton.ofType(ButtonType.unpair, () => cubit.onAccountDeleteDialogClosed(showAccountDeleteDialog(context, _childProfile)))
+          UIButton.ofType(ButtonType.unpair, () async {
+            if ((await showAccountDeleteDialog(context, _childProfile)) ?? false)
+	            Navigator.of(context).pop();
+          })
         ],
       ),
       tabs: TabBar(

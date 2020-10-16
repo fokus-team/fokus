@@ -165,20 +165,18 @@ class _FokusAppState extends State<FokusApp> implements CurrentLocaleObserver {
 		var getRoute = (BuildContext context) => ModalRoute.of(context);
 		var getParams = (BuildContext context) => getRoute(context).settings.arguments;
 		var authBloc = (BuildContext context) => context.bloc<AuthenticationBloc>();
+		var accountManaging = (BuildContext context, Widget page) => withCubit(
+			withCubit(page, NameChangeCubit(getActiveUser(context), authBloc(context), getParams(context))),
+			AccountDeleteCubit(getActiveUser(context), getParams(context))
+		);
 		return {
 			AppPage.loadingPage.name: (context) => _createPage(LoadingPage(), context),
 			AppPage.rolesPage.name: (context) => _createPage(RolesPage(), context),
       AppPage.notificationsPage.name: (context) => _createPage(NotificationsPage(), context),
 			AppPage.settingsPage.name:  (context) => _createPage(
 				withCubit(
-					withCubit(
-						withCubit(
-							SettingsPage(),
-							NameChangeCubit(getActiveUser(context), authBloc(context), getParams(context))
-						),
-						LocaleCubit(getActiveUser(context), authBloc(context))
-					),
-					AccountDeleteCubit(getActiveUser(context))
+					accountManaging(context, SettingsPage()),
+					LocaleCubit(getActiveUser(context), authBloc(context))
 				), context, PasswordChangeCubit()
 			),
 			AppPage.caregiverSignInPage.name: (context) => _createPage(CaregiverSignInPage(), context, CaregiverSignInCubit()),
@@ -187,10 +185,7 @@ class _FokusAppState extends State<FokusApp> implements CurrentLocaleObserver {
 			AppPage.childSignInPage.name: (context) => _createPage(withCubit(ChildSignInPage(), ChildSignInCubit(authBloc(context))), context, ChildSignUpCubit(authBloc(context))),
 
 			AppPage.caregiverChildDashboard.name: (context) => _createPage(
-				withCubit(
-					CaregiverChildDashboardPage(getParams(context)),
-					NameChangeCubit(getActiveUser(context), authBloc(context), getParams(context))
-				),
+				accountManaging(context, CaregiverChildDashboardPage(getParams(context))),
 				context, ChildDashboardCubit(getParams(context), getActiveUser(context), getRoute(context))
 			),
 			AppPage.caregiverCalendar.name: (context) => _createPage(CaregiverCalendarPage(), context, CalendarCubit(getParams(context), getActiveUser(context))),

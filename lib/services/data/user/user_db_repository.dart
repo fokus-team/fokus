@@ -38,10 +38,12 @@ mixin UserDbRepository implements DbRepository {
 
 	Future createUser(User user) => dbClient.insert(Collection.user, user.toJson());
 
-	Future updateUser(ObjectId userId, {List<ObjectId> newConnections, List<ChildBadge> badges, String name, String locale, List<Points> points}) {
+	Future updateUser(ObjectId userId, {List<ObjectId> newConnections, List<ObjectId> removedConnections, List<ChildBadge> badges, String name, String locale, List<Points> points}) {
 		var document = modify;
 		if (newConnections != null)
 			document.addAllToSet('connections', newConnections);
+		if (removedConnections != null)
+			document.pullAll('connections', removedConnections);
 		if (points != null)
 			document.set('points', points.map((point) => point.toJson()).toList());
 		if (name != null)

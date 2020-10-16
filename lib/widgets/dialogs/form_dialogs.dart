@@ -114,7 +114,7 @@ class AccountDeleteDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 	  var user = context.bloc<AuthenticationBloc>().state.user as UICaregiver;
-  	var getText = (String key) => AppLocales.of(context).translate('$_settingsPageKey.profile.deleteAccount$key');
+  	var getText = (String key, {bool customize = true}) => AppLocales.of(context).translate('$_settingsPageKey.profile.delete${_role == UserRole.child && customize ? 'Child' : ''}Account$key');
 	  return BlocListener<AccountDeleteCubit, AccountDeleteState>(
 		  listener: (context, state) {
 			  if (state.status.isSubmissionFailure && state.error != null)
@@ -137,11 +137,11 @@ class AccountDeleteDialog extends StatelessWidget {
 							    child: Text('• $point'),
 						    )),
 						    SizedBox(height: 10),
-						    Text(getText('Warning'), style: TextStyle(color: Colors.red)),
+						    Text(getText('Warning', customize: false), style: TextStyle(color: Colors.red)),
 						    SizedBox(height: 10),
 					      if (user.authMethod == AuthMethod.EMAIL)
 						      ...[
-						      	Text(getText('Confirm')),
+						      	Text(getText('Confirm', customize: false)),
 							      SizedBox(height: 10),
 							      AuthenticationInputField<AccountDeleteCubit, AccountDeleteState>(
 										  getField: (state) => state.password,

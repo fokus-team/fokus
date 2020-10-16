@@ -87,9 +87,12 @@
 					"editChildNameLabel": "Zmień imię dziecka",
 					"changePasswordLabel": "Zmień hasło",
 					"deleteAccountLabel": "Usuń konto",
+					"deleteChildAccountLabel": "Usuń konto dziecka",
 					"deleteAccountHint": "Trwale usuń konto i profile dzieci",
 					"deleteAccountDescription": "Czy na pewno chcesz usunąć swoje konto? Spowoduje to trwałe wymazanie wszystkich wprowadzonych w aplikacji danych włączając w to:",
+					"deleteChildAccountDescription": "Czy na pewno chcesz usunąć konto tego dziecka? Spowoduje to trwałe wymazanie wszystkich jego danych włączając w to:",
 					"deleteAccountDataList": "Plany|Zadania|Nagrody|Profile dzieci|Historię wykonanych zadań",
+					"deleteChildAccountDataList": "Profil|Nagrody|Punkty|Historię wykonanych zadań",
 					"deleteAccountWarning": "Tej akcji nie można cofnąć!",
 					"deleteAccountConfirm": "Wprowadź swoje hasło aby potwierdzić:"
 				},

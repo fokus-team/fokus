@@ -87,9 +87,12 @@
 					"editChildNameLabel": "Change child name",
 					"changePasswordLabel": "Change your password",
 					"deleteAccountLabel": "Delete your account",
+					"deleteChildAccountLabel": "Remove child account",
 					"deleteAccountHint": "Delete your and children's accounts",
 					"deleteAccountDescription": "Are you sure you want to delete your account? This will permanently erase all entered data including:",
+					"deleteChildAccountDescription": "Are you sure you want to delete this child's account? This will permanently erase all his data including:",
 					"deleteAccountDataList": "Plans|Tasks|Awards|Child profiles|Performed task history",
+					"deleteChildAccountDataList": "Profile|Awards|Points|Performed task history",
 					"deleteAccountWarning": "This action cannot be undone!",
 					"deleteAccountConfirm": "Enter your password to confirm:"
 				},

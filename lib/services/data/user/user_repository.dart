@@ -12,7 +12,7 @@ abstract class UserRepository {
 	Future<bool> userExists({ObjectId id, UserRole role});
 
 	Future createUser(User user);
-	Future updateUser(ObjectId userId, {List<ObjectId> newConnections, List<ChildBadge> badges, String name, String locale, List<Points> points});
+	Future updateUser(ObjectId userId, {List<ObjectId> newConnections, List<ObjectId> removedConnections, List<ChildBadge> badges, String name, String locale, List<Points> points});
 	Future removeUsers(List<ObjectId> ids);
 
 	Future insertNotificationID(ObjectId userId, String notificationId);

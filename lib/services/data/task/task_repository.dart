@@ -21,5 +21,5 @@ abstract class TaskRepository {
 	Future updateTaskInstanceFields(ObjectId taskInstanceId, {TaskState state, List<DateSpan<TimeDate>> duration, List<DateSpan<TimeDate>> breaks, bool isCompleted, int rating, int pointsAwarded});
 
 	Future removeTasks({List<ObjectId> planIds});
-	Future removeTaskInstances({List<ObjectId> tasksIds});
+	Future removeTaskInstances({List<ObjectId> tasksIds, List<ObjectId> planInstancesIds});
 }

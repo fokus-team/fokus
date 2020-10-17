@@ -2,12 +2,15 @@ import 'dart:math';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/widgets.dart';
+import 'package:fokus/logic/common/reloadable/reloadable_cubit.dart';
 import 'package:fokus/model/db/gamification/points.dart';
 import 'package:fokus/model/db/plan/plan_instance.dart';
 import 'package:fokus/model/db/plan/plan_instance_state.dart';
 import 'package:fokus/model/db/plan/task_instance.dart';
 import 'package:fokus/model/db/plan/task_status.dart';
 import 'package:fokus/model/db/user/child.dart';
+import 'package:fokus/model/notification/notification_type.dart';
 import 'package:fokus/model/ui/task/ui_task_instance.dart';
 import 'package:fokus/model/ui/task/ui_task_report.dart';
 import 'package:fokus/model/ui/user/ui_caregiver.dart';
@@ -21,7 +24,7 @@ import 'package:mongo_dart/mongo_dart.dart';
 
 part 'tasks_evaluation_state.dart';
 
-class TasksEvaluationCubit extends Cubit<TasksEvaluationState> {
+class TasksEvaluationCubit extends ReloadableCubit {
   final DataRepository _dataRepository = GetIt.I<DataRepository>();
   final TaskInstanceService _taskInstanceService = GetIt.I<TaskInstanceService>();
   final NotificationService _notificationService = GetIt.I<NotificationService>();
@@ -32,10 +35,14 @@ class TasksEvaluationCubit extends Cubit<TasksEvaluationState> {
 	Map<ObjectId, UIChild> _planInstanceToChild;
 	Map<ObjectId, String> _planInstanceToName;
 
+	TasksEvaluationCubit(ModalRoute pageRoute, this._activeUser) : super(pageRoute);
 
-	TasksEvaluationCubit(this._activeUser) : super(TasksEvaluationInitial());
+  @override
+  List<NotificationType> dataTypeSubscription() => [NotificationType.taskFinished];
 
-	void loadData() async {
+	@override
+	void doLoadData() async {
+		_reports = [];
 		var activeUser = _activeUser();
 		List<Child> children = (await _dataRepository.getUsers(ids: (activeUser as UICaregiver).connections, fields: ['_id', 'name', 'avatar'])).map((e) => e as Child).toList();
 		var _childMap = Map.fromEntries(children.map((child) => MapEntry(child.id, child)));
@@ -58,8 +65,9 @@ class TasksEvaluationCubit extends Cubit<TasksEvaluationState> {
 
 	void rateTask(UITaskReport report) async {
 		List<Future> updates = [];
+		Future Function() sendNotification;
 		if(report.ratingMark == UITaskReportMark.rejected) {
-			await _notificationService.sendTaskRejectedNotification(report.task.planInstanceId, report.task.name, report.child.id);
+			sendNotification = () => _notificationService.sendTaskRejectedNotification(report.task.planInstanceId, report.task.name, report.child.id);
 			updates.add(_dataRepository.updatePlanInstanceFields(report.task.planInstanceId, state: PlanInstanceState.notCompleted));
 			updates.add(_dataRepository.updateTaskInstanceFields(report.task.id, state:TaskState.rejected));
 		} else {
@@ -79,10 +87,11 @@ class TasksEvaluationCubit extends Cubit<TasksEvaluationState> {
 			  }
 				updates.add(_dataRepository.updateUser(child.id, points: newPoints));
 			}
-			await _notificationService.sendTaskApprovedNotification(report.task.planInstanceId, report.task.name, report.child.id,
+			sendNotification = () =>  _notificationService.sendTaskApprovedNotification(report.task.planInstanceId, report.task.name, report.child.id,
 					report.ratingMark.value, hasPoints ? report.task.points.type : null, hasPoints ? pointsAwarded : null);
 		}
 		await Future.wait(updates);
+		await sendNotification();
 		emit(TasksEvaluationSubmissionSuccess(_reports));
 	}
 

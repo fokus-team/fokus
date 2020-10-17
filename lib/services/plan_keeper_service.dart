@@ -1,9 +1,6 @@
 import 'dart:async';
 
-
 import 'package:fokus/model/db/user/user.dart';
-import 'package:fokus/model/ui/plan/ui_plan_instance.dart';
-import 'package:fokus/utils/duration_utils.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
@@ -60,17 +57,20 @@ class PlanKeeperService implements ActiveUserObserver {
 		var childrenIDs = _role == UserRole.caregiver ? children.map((child) => child.id).toList() : [_userId];
 
 		return Future.wait([
-			_createPlansForToday(plans, childrenIDs),
+			createPlansForToday(plans, childrenIDs),
 			_updateOutdatedData(plans, childrenIDs)
 		]);
 	}
 
-	Future _createPlansForToday(List<Plan> plans, List<ObjectId> childrenIDs) async {
-		var todayPlans = await _repeatabilityService.filterPlansByDate(plans.where((plan) => plan.active).toList(), Date.now());
+	Future createPlansForToday(List<Plan> plans, List<ObjectId> childrenIDs) {
+		var todayPlans = _repeatabilityService.filterPlansByDate(plans, Date.now());
+		List<Future> updates = [];
 		for (var plan in todayPlans) {
 			var instances = childrenIDs.where(plan.assignedTo.contains).map((child) => PlanInstance.fromPlan(plan, assignedTo: child)).toList();
-			await _dataRepository.createPlanInstances(instances);
+			if (instances.isNotEmpty)
+				updates.add(_dataRepository.createPlanInstances(instances));
 		}
+		return Future.wait(updates);
 	}
 
 	Future _updateOutdatedData(List<Plan> plans, List<ObjectId> childrenIDs) async {
@@ -88,14 +88,4 @@ class PlanKeeperService implements ActiveUserObserver {
 		return Future.wait(updates);
 		// TODO there are also 'to' fields in task instance last 'duration' and 'breaks' objects that could be left missing here - handle here or inside statistics code
 	}
-
-	Future<UIPlanInstance> loadPlanInstance({PlanInstance planInstance, ObjectId planInstanceId, Plan plan}) async {
-		planInstance ??= await _dataRepository.getPlanInstance(id: planInstanceId);
-		var completedTasks = await _dataRepository.getCompletedTaskCount(planInstanceId);
-		plan ??= await _dataRepository.getPlan(id: planInstance.planID, fields: ['_id', 'repeatability', 'name']);
-		var getDescription = (Plan plan, [Date instanceDate]) => _repeatabilityService.buildPlanDescription(plan.repeatability, instanceDate: instanceDate);
-		var elapsedTime = () => sumDurations(planInstance.duration).inSeconds;
-		return UIPlanInstance.fromDBModel(planInstance, plan.name, completedTasks, elapsedTime, getDescription(plan, planInstance.date));
-	}
-
 }

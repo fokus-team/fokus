@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:fokus/model/ui/form/task_form_model.dart';
+import 'package:fokus/services/plan_keeper_service.dart';
 import 'package:get_it/get_it.dart';
 
 import 'package:fokus/model/ui/app_page.dart';
@@ -21,6 +22,7 @@ part 'plan_form_state.dart';
 class PlanFormCubit extends Cubit<PlanFormState> {
 	final ActiveUserFunction _activeUser;
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
+	final PlanKeeperService _planKeeperService = GetIt.I<PlanKeeperService>();
 	final PlanRepeatabilityService _repeatabilityService = GetIt.I<PlanRepeatabilityService>();
 
   PlanFormCubit(Object argument, this._activeUser) : super(PlanFormInitial(argument == null ? AppFormType.create : AppFormType.edit, argument));
@@ -45,11 +47,13 @@ class PlanFormCubit extends Cubit<PlanFormState> {
 			updates = [
 		    _dataRepository.createPlan(plan),
 		    _dataRepository.createTasks(tasks),
+				_planKeeperService.createPlansForToday([plan], plan.assignedTo),
 			];
 		} else {
 	    updates = [
 				_dataRepository.updatePlan(plan),
 				_dataRepository.updateTasks(tasks),
+		    _planKeeperService.createPlansForToday([plan], plan.assignedTo),
 	    ];
 		}
 		await Future.value(updates);

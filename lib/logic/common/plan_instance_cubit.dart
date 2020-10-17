@@ -1,15 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:fokus/logic/common/reloadable/reloadable_cubit.dart';
-import 'package:fokus/model/db/date/date.dart';
-import 'package:fokus/model/db/plan/plan.dart';
 import 'package:fokus/model/db/plan/plan_instance.dart';
 import 'package:fokus/model/db/plan/plan_instance_state.dart';
 import 'package:fokus/model/db/plan/task_instance.dart';
+import 'package:fokus/model/notification/notification_type.dart';
 import 'package:fokus/model/ui/plan/ui_plan_instance.dart';
 import 'package:fokus/model/ui/task/ui_task_instance.dart';
 import 'package:fokus/services/data/data_repository.dart';
-import 'package:fokus/services/plan_keeper_service.dart';
-import 'package:fokus/services/plan_repeatability_service.dart';
+import 'package:fokus/services/ui_data_aggregator.dart';
 import 'package:fokus/services/task_instance_service.dart';
 import 'package:fokus/utils/duration_utils.dart';
 import 'package:get_it/get_it.dart';
@@ -18,11 +16,13 @@ import 'package:mongo_dart/mongo_dart.dart';
 class PlanInstanceCubit extends ReloadableCubit {
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final TaskInstanceService _taskInstancesService = GetIt.I<TaskInstanceService>();
-	final PlanRepeatabilityService _repeatabilityService = GetIt.I<PlanRepeatabilityService>();
-	final PlanKeeperService _planService = GetIt.I<PlanKeeperService>();
+	final UIDataAggregator _dataAggregator = GetIt.I<UIDataAggregator>();
 	final ObjectId _planInstanceId;
 
 	PlanInstanceCubit(this._planInstanceId, ModalRoute modalRoute) : super(modalRoute);
+
+	@override
+	List<NotificationType> dataTypeSubscription() => [NotificationType.taskApproved, NotificationType.taskRejected, NotificationType.taskFinished, NotificationType.taskUnfinished];
 
 	PlanInstance planInstance;
 
@@ -31,7 +31,7 @@ class PlanInstanceCubit extends ReloadableCubit {
 		planInstance = await _dataRepository.getPlanInstance(id: _planInstanceId);
 		if(planInstance.taskInstances == null || planInstance.taskInstances.isEmpty)
 			_taskInstancesService.createTaskInstances(planInstance);
-		var uiPlanInstance = await _planService.loadPlanInstance(planInstance: planInstance);
+		var uiPlanInstance = await _dataAggregator.loadPlanInstance(planInstance: planInstance);
 		var allTasksInstances = await _dataRepository.getTaskInstances(planInstanceId: _planInstanceId);
 
 		List<UITaskInstance> uiInstances = await _taskInstancesService.mapToUIModels(allTasksInstances);

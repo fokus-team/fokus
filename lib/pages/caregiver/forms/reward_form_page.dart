@@ -191,7 +191,7 @@ class _CaregiverRewardFormPageState extends State<CaregiverRewardFormPage> {
 				),
 				keyboardType: TextInputType.numberWithOptions(signed: true, decimal: false),
 				inputFormatters: <TextInputFormatter>[
-						WhitelistingTextInputFormatter.digitsOnly,
+						FilteringTextInputFormatter.digitsOnly,
 						LengthLimitingTextInputFormatter(9),
 				],
 				onChanged: (val) => setState(() {

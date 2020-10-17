@@ -15,11 +15,13 @@ part 'name_change_state.dart';
 class NameChangeCubit extends Cubit<NameChangeState> {
 	final ActiveUserFunction _activeUser;
 	final AuthenticationBloc _authBloc;
+	final UIUser _changedUser;
 
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final AuthenticationProvider _authenticationProvider = GetIt.I<AuthenticationProvider>();
 
-  NameChangeCubit(this._activeUser, this._authBloc) : super(NameChangeState());
+  NameChangeCubit(this._activeUser, this._authBloc, Map<String, dynamic> args) :
+		  _changedUser = args != null ? args['child'] : _activeUser(), super(NameChangeState(name: Name.pure((args != null ? args['child'] : _activeUser()).name)));
 
   Future nameChangeFormSubmitted() async {
 	  var state = this.state;
@@ -30,11 +32,14 @@ class NameChangeCubit extends Cubit<NameChangeState> {
 		  return;
 	  }
 	  emit(state.copyWith(status: FormzStatus.submissionInProgress));
+	  var changingCaregiver = _changedUser.id == _activeUser().id;
 		await Future.value([
-			_dataRepository.updateUser(_activeUser().id, name: state.name.value),
-			_authenticationProvider.changeName(state.name.value),
+			_dataRepository.updateUser(_changedUser.id, name: state.name.value),
+			if (changingCaregiver)
+				_authenticationProvider.changeName(state.name.value),
 		]);
-	  _authBloc.add(AuthenticationActiveUserUpdated(UICaregiver.from(_activeUser(), name: state.name.value)));
+		if (changingCaregiver)
+	    _authBloc.add(AuthenticationActiveUserUpdated(UICaregiver.from(_activeUser(), name: state.name.value)));
 	  emit(state.copyWith(status: FormzStatus.submissionSuccess));
   }
 

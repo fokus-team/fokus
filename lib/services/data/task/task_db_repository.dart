@@ -33,11 +33,18 @@ mixin TaskDbRepository implements DbRepository {
 		return dbClient.queryOneTyped(Collection.taskInstance, query, (json) => TaskInstance.fromJson(json));
 	}
 
-	Future<List<TaskInstance>> getTaskInstances({ObjectId planInstanceId, List<ObjectId> taskInstancesIds, List<ObjectId> planInstancesId, bool requiredOnly = false, bool optionalOnly = false, bool isCompleted, TaskState state, List<String> fields}) {
-		var query = _buildTaskQuery(planInstanceId: planInstanceId, ids: taskInstancesIds, requiredOnly: requiredOnly, optionalOnly: optionalOnly, isCompleted: isCompleted, planInstancesId: planInstancesId, state: state);
+	Future<List<TaskInstance>> getTaskInstances({ObjectId planInstanceId, List<ObjectId> taskInstancesIds, List<ObjectId> planInstancesId,
+		bool requiredOnly = false, bool optionalOnly = false, bool isCompleted, TaskState state, List<String> fields}) {
+		var query = _buildTaskQuery(planInstanceId: planInstanceId, ids: taskInstancesIds, requiredOnly: requiredOnly,
+				optionalOnly: optionalOnly, isCompleted: isCompleted, planInstancesIds: planInstancesId, state: state);
 		if (fields != null)
 			query.fields(fields);
 		return dbClient.queryTyped(Collection.taskInstance, query, (json) => TaskInstance.fromJson(json));
+	}
+
+	Future<int> countTaskInstances({List<ObjectId> planInstancesId, bool isCompleted, TaskState state}) {
+		var query = _buildTaskQuery(isCompleted: isCompleted, planInstancesIds: planInstancesId, state: state);
+		return dbClient.count(Collection.taskInstance, query);
 	}
 
 	Future<int> getCompletedTaskCount(ObjectId planInstanceId) {
@@ -77,12 +84,12 @@ mixin TaskDbRepository implements DbRepository {
 		var query = _buildTaskQuery(planIds: planIds);
 		return dbClient.remove(Collection.task, query);
 	}
-	Future removeTaskInstances({List<ObjectId> tasksIds}) {
-		var query = _buildTaskQuery(tasksIds: tasksIds);
+	Future removeTaskInstances({List<ObjectId> tasksIds, List<ObjectId> planInstancesIds}) {
+		var query = _buildTaskQuery(tasksIds: tasksIds, planInstancesIds: planInstancesIds);
 		return dbClient.remove(Collection.taskInstance, query);
 	}
 
-	SelectorBuilder _buildTaskQuery({ObjectId id, List<ObjectId> ids, List<ObjectId> planIds, List<ObjectId> tasksIds, ObjectId planId, ObjectId planInstanceId, List<ObjectId> planInstancesId, bool requiredOnly, bool optionalOnly, bool isCompleted, TaskState state}) {
+	SelectorBuilder _buildTaskQuery({ObjectId id, List<ObjectId> ids, List<ObjectId> planIds, List<ObjectId> tasksIds, ObjectId planId, ObjectId planInstanceId, List<ObjectId> planInstancesIds, bool requiredOnly, bool optionalOnly, bool isCompleted, TaskState state}) {
 		SelectorBuilder query = where;
 		if (planId != null && planInstanceId != null)
 			_logger.warning("Both plan and plan instance IDs specified in task query");
@@ -101,8 +108,8 @@ mixin TaskDbRepository implements DbRepository {
 			query.oneFrom('taskID', tasksIds);
 		if (planInstanceId != null)
 			query.eq('planInstanceID', planInstanceId);
-		if (planInstancesId != null)
-			query.oneFrom('planInstanceID', planInstancesId);
+		if (planInstancesIds != null)
+			query.oneFrom('planInstanceID', planInstancesIds);
 		if (requiredOnly ?? false)
 			query.notExists('optional').or(where.eq('optional', false));
 		if (optionalOnly ?? false)

@@ -18,6 +18,11 @@ mixin AwardDbRepository implements DbRepository {
 		var query = _buildRewardQuery(caregiverId: caregiverId);
 		return dbClient.queryTyped(Collection.reward, query, (json) => Reward.fromJson(json));
 	}
+
+	Future<int> countRewards({ObjectId caregiverId}) {
+		var query = _buildRewardQuery(caregiverId: caregiverId);
+		return dbClient.count(Collection.reward, query);
+	}
 	
 	Future updateReward(Reward reward) => dbClient.update(Collection.reward, _buildRewardQuery(id: reward.id), reward.toJson(), multiUpdate: false);
 	Future createReward(Reward reward) => dbClient.insert(Collection.reward, reward.toJson());

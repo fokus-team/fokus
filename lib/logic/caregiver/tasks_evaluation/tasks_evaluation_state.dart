@@ -1,14 +1,5 @@
 part of 'tasks_evaluation_cubit.dart';
 
-abstract class TasksEvaluationState extends Equatable {
-  const TasksEvaluationState();
-}
-
-class TasksEvaluationInitial extends TasksEvaluationState {
-  @override
-  List<Object> get props => [];
-}
-
 class TasksEvaluationLoadSuccess extends TasksEvaluationBaseState {
   TasksEvaluationLoadSuccess(List<UITaskReport> reports) : super(reports);
 }
@@ -21,7 +12,7 @@ class TasksEvaluationSubmissionSuccess extends TasksEvaluationBaseState {
   TasksEvaluationSubmissionSuccess(List<UITaskReport> reports) : super(reports);
 }
 
-class TasksEvaluationBaseState extends TasksEvaluationState {
+class TasksEvaluationBaseState extends DataLoadSuccess {
 	final List<UITaskReport> reports;
 
 	TasksEvaluationBaseState(this.reports);

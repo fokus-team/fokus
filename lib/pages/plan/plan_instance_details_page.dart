@@ -23,7 +23,7 @@ class PlanInstanceDetailsPage extends StatefulWidget {
 	final UIPlanInstance initialPlanInstance;
 	final bool showActions;
 
-  const PlanInstanceDetailsPage({Key key, @required this.initialPlanInstance, this.showActions = true}) : super(key: key);
+  PlanInstanceDetailsPage(Map<String, dynamic> args) : initialPlanInstance = args['plan'], showActions = args['actions'] ?? true;
 
   @override
   _PlanInstanceDetailsPageState createState() => new _PlanInstanceDetailsPageState();
@@ -48,30 +48,25 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
   Widget build(BuildContext context) {
 		return Scaffold(
 			body: LoadableBlocBuilder<PlanInstanceCubit>(
-				builder: (context, state) => _getView(state),
-				loadingBuilder: (context, state) => _getInitialView(),
+				builder: (context, state) => _getView(
+					planInstance: (state as ChildTasksLoadSuccess).planInstance,
+					content: AppSegments(segments: _buildPanelSegments(state))
+				),
+				loadingBuilder: (context, state) => _getView(
+					planInstance: widget.initialPlanInstance,
+					content: Expanded(child: Center(child: AppLoader()))
+				),
 			)
 		);
   }
 
-  Column _getInitialView() {
+  Column _getView({UIPlanInstance planInstance, Widget content}) {
 		return Column(
 			crossAxisAlignment: CrossAxisAlignment.start,
 			verticalDirection: VerticalDirection.up,
 			children: [
-				Expanded(child: Center(child: AppLoader())),
-				_getHeader(this.widget.initialPlanInstance)
-			],
-		);
-	}
-
-  Column _getView(ChildTasksLoadSuccess state) {
-		return Column(
-			crossAxisAlignment: CrossAxisAlignment.start,
-			verticalDirection: VerticalDirection.up,
-			children: [
-				AppSegments(segments: _buildPanelSegments(state)),
-				_getHeader(state.planInstance)
+				content,
+				_getHeader(planInstance),
 			],
 		);
 	}
@@ -95,7 +90,7 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
     ];
   }
 
-  Segment _getTasksSegment({List<UITaskInstance> tasks,String title, String noElementsMessage, UIPlanInstance uiPlanInstance}) {
+  Segment _getTasksSegment({List<UITaskInstance> tasks,String title, UIPlanInstance uiPlanInstance}) {
     return Segment(
 			title: title,
 			noElementsMessage: '$_pageKey.content.noTasks',
@@ -104,25 +99,35 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 					if(task.taskUiType == TaskUIType.completed)
 						getCompletedTaskCard(task)
 					else if(task.taskUiType == TaskUIType.available)
-							ItemCard(
-								title: task.name,
-								subtitle: task.description,
-								chips:<Widget>[
-									if (task.timer != null && task.timer > 0) getTimeChip(task),
-									if (task.points != null && task.points.quantity != 0) getCurrencyChip(task)
-								],
-								actionButton: widget.showActions ? ItemCardActionButton(color: AppColors.childButtonColor, icon: Icons.play_arrow, onTapped: () => navigate(context, task, uiPlanInstance)) : null,
-							)
+						ItemCard(
+							title: task.name,
+							subtitle: task.description,
+							chips:<Widget>[
+								if (task.timer != null && task.timer > 0) getTimeChip(task),
+								if (task.points != null && task.points.quantity != 0) getCurrencyChip(task)
+							],
+							actionButton: ItemCardActionButton(
+								color: AppColors.childButtonColor,
+								icon: Icons.play_arrow,
+								onTapped: () => navigate(context, task, uiPlanInstance),
+								disabled: !widget.showActions,
+							),
+						)
 					else if(task.taskUiType == TaskUIType.rejected)
-							ItemCard(
-								title: task.name,
-								subtitle: task.description,
-								chips:<Widget>[
-									if (task.timer != null && task.timer > 0) getTimeChip(task),
-									if (task.points != null && task.points.quantity != 0) getCurrencyChip(task)
-								],
-								actionButton: widget.showActions ? ItemCardActionButton(color: AppColors.childButtonColor, icon: Icons.refresh, onTapped: () => navigate(context, task, uiPlanInstance)) : null,
-							)
+						ItemCard(
+							title: task.name,
+							subtitle: task.description,
+							chips:<Widget>[
+								if (task.timer != null && task.timer > 0) getTimeChip(task),
+								if (task.points != null && task.points.quantity != 0) getCurrencyChip(task)
+							],
+							actionButton: ItemCardActionButton(
+								color: AppColors.childButtonColor,
+								icon: Icons.refresh,
+								onTapped: () => navigate(context, task, uiPlanInstance),
+								disabled: !widget.showActions
+							),
+						)
 					else if(task.taskUiType.inProgress)
 						BlocProvider<TimerCubit>(
 							create: (_) => TimerCubit.up(() => task.taskUiType == TaskUIType.currentlyPerformed ? sumDurations(task.duration).inSeconds : sumDurations(task.breaks).inSeconds)..startTimer(),
@@ -148,7 +153,12 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 											),
 										]
 								],
-								actionButton: widget.showActions ? ItemCardActionButton(color: AppColors.childActionColor, icon: Icons.launch, onTapped: () => navigate(context, task, uiPlanInstance)) : null,
+								actionButton: ItemCardActionButton(
+									color: AppColors.childActionColor,
+									icon: Icons.launch,
+									onTapped: () => navigate(context, task, uiPlanInstance),
+									disabled: !widget.showActions
+								),
 							)
 						)
 					else if(task.taskUiType == TaskUIType.queued)
@@ -160,7 +170,11 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 								if (task.points != null && task.points.quantity != 0) getCurrencyChip(task)
 							],
 							isActive: false,
-							actionButton: widget.showActions ? ItemCardActionButton(color: Colors.grey[400], icon: Icons.keyboard_arrow_up) : null,
+							actionButton: ItemCardActionButton(
+								color: Colors.grey[400],
+								icon: Icons.keyboard_arrow_up,
+								disabled: !widget.showActions
+							),
 						)
 			]
 		);
@@ -247,9 +261,11 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 							),
 						]
 			],
-			actionButton: widget.showActions ? ItemCardActionButton(
-				color: AppColors.childBackgroundColor, icon: Icons.check
-			) : null,
+			actionButton: ItemCardActionButton(
+				color: AppColors.childBackgroundColor,
+				icon: Icons.check,
+				disabled: !widget.showActions
+			),
 		);
 	}
 

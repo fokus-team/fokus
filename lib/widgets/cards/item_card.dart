@@ -5,8 +5,8 @@ import 'package:fokus/model/ui/ui_button.dart';
 import 'package:fokus/utils/ui/app_paths.dart';
 import 'package:fokus/utils/ui/icon_sets.dart';
 import 'package:fokus/utils/ui/theme_config.dart';
-import 'package:fokus/widgets/general/app_avatar.dart';
 import 'package:fokus/widgets/buttons/popup_menu_list.dart';
+import 'package:fokus/widgets/general/app_avatar.dart';
 
 class ItemCardActionButton {
 	final IconData icon;
@@ -56,7 +56,7 @@ class ItemCard extends StatelessWidget {
 		this.icon,
 		this.graphicType,
 		this.graphic,
-		this.graphicHeight = defaultImageHeight,
+		double graphicHeight,
 		this.graphicShowCheckmark,
 		this.progressPercentage,
 		this.chips,
@@ -67,7 +67,7 @@ class ItemCard extends StatelessWidget {
 		this.textMaxLines = 3,
 		this.rightIcon,
 		this.activeProgressBarColor = AppColors.childBackgroundColor
-	}) : assert(graphic != null ? graphicType != null : true);
+	}) : graphicHeight = defaultImageHeight ?? defaultImageHeight, assert(graphic != null ? graphicType != null : true);
 	
 	Widget headerImage() {
 		if (graphicType == AssetType.avatars)

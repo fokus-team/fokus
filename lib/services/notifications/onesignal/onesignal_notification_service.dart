@@ -1,6 +1,10 @@
 import 'package:bson/bson.dart';
+import 'package:flutter/widgets.dart';
+import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:meta/meta.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:fokus/model/notification/notification_text.dart';
 import 'package:fokus/model/notification/notification_button.dart';
@@ -19,6 +23,7 @@ class OneSignalNotificationService extends NotificationService {
 	final String _androidSmallIconId = 'ic_stat_onesignal_default';
 	@override
 	final OneSignalNotificationProvider provider = OneSignalNotificationProvider();
+	final _navigatorKey = GetIt.I<GlobalKey<NavigatorState>>();
 
 	@override
 	Future sendTaskFinishedNotification(ObjectId taskId, String taskName, ObjectId caregiverId, UIUser child, {@required bool completed}) {
@@ -96,7 +101,8 @@ class OneSignalNotificationService extends NotificationService {
 		  logNoUserToken(userId);
 		  return;
 	  }
-	  var data = NotificationData(type, userId, buttons: buttons, subject: subject);
+	  var activeUser = _navigatorKey.currentState.context.bloc<AuthenticationBloc>().state.user;
+	  var data = NotificationData(type: type, sender: activeUser.id, recipient: userId, buttons: buttons, subject: subject);
 	  var osButtons = buttons?.map((button) => OSActionButton(id: button.action, text: button.action))?.toList();
 	  var notification = OSCreateNotification(
 		  playerIds: tokens,

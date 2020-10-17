@@ -1,3 +1,4 @@
+import 'package:fokus/model/db/gamification/child_badge.dart';
 import 'package:fokus/model/db/gamification/points.dart';
 import 'package:logging/logging.dart';
 import 'package:mongo_dart/mongo_dart.dart';
@@ -37,14 +38,18 @@ mixin UserDbRepository implements DbRepository {
 
 	Future createUser(User user) => dbClient.insert(Collection.user, user.toJson());
 
-	Future updateUser(ObjectId userId, {List<ObjectId> newConnections, String name, String locale, List<Points> points}) {
+	Future updateUser(ObjectId userId, {List<ObjectId> newConnections, List<ObjectId> removedConnections, List<ChildBadge> badges, String name, String locale, List<Points> points}) {
 		var document = modify;
 		if (newConnections != null)
 			document.addAllToSet('connections', newConnections);
+		if (removedConnections != null)
+			document.pullAll('connections', removedConnections);
 		if (points != null)
-			document.set('points', points.map((v) => v.toJson()).toList());
+			document.set('points', points.map((point) => point.toJson()).toList());
 		if (name != null)
 			document.set('name', name);
+		if (badges != null)
+			document.addAllToSet('badges', badges.map((badge) => badge.toJson()).toList());
 		if (locale != null)
 			locale.isNotEmpty ? document.set('locale',  locale) : document.unset('locale');
 		return dbClient.update(Collection.user, where.eq('_id', userId), document);

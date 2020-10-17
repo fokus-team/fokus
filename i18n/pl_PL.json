@@ -84,11 +84,15 @@
 				"profile": {
 					"header": "Profil",
 					"editNameLabel": "Zmień imię",
+					"editChildNameLabel": "Zmień imię dziecka",
 					"changePasswordLabel": "Zmień hasło",
 					"deleteAccountLabel": "Usuń konto",
+					"deleteChildAccountLabel": "Usuń konto dziecka",
 					"deleteAccountHint": "Trwale usuń konto i profile dzieci",
 					"deleteAccountDescription": "Czy na pewno chcesz usunąć swoje konto? Spowoduje to trwałe wymazanie wszystkich wprowadzonych w aplikacji danych włączając w to:",
+					"deleteChildAccountDescription": "Czy na pewno chcesz usunąć konto tego dziecka? Spowoduje to trwałe wymazanie wszystkich jego danych włączając w to:",
 					"deleteAccountDataList": "Plany|Zadania|Nagrody|Profile dzieci|Historię wykonanych zadań",
+					"deleteChildAccountDataList": "Profil|Nagrody|Punkty|Historię wykonanych zadań",
 					"deleteAccountWarning": "Tej akcji nie można cofnąć!",
 					"deleteAccountConfirm": "Wprowadź swoje hasło aby potwierdzić:"
 				},
@@ -308,9 +312,6 @@
 					"addedBadgesTitle": "Zdefiniowane odznaki",
 					"addedBadgesSubtitle": "Odznaki przyznawane są przez opiekuna",
 					"noBadgesAdded": "Brak zdefiniowanych odznak, dodaj pierwszą teraz",
-					"pointCost": "Koszt punktowy nagrody",
-					"unlimitedReward": "Nagroda nielimitowana",
-					"limitedReward": "Limit {REWARD_LIMIT, plural, offset:0 one {jednej nagrody} other {# nagród}} na dziecko",
 					"noDescriptionSubtitle": "Brak opisu",
 					"removeRewardTitle": "Usuń nagrodę",
 					"removeRewardText": "Odebrane przez dzieci nagrody nie zostaną usunięte. Nagroda zniknie jednak z listy możliwych do odbioru. Na pewno chcesz usunąć tą nagrodę?",
@@ -459,15 +460,7 @@
 					"garden": "Ogród"
 				},
 				"content": {
-					"todaysPlans": "Dzisiejsze plany",
-					"remainingTodaysPlans": "Pozostałe dzisiejsze plany",
-					"inProgress": "W trakcie",
-					"noPlans": "Brak planów",
-					"completedPlans": "Zakończone plany",
-					"futurePlans": "Kalendarz planów",
-					"tasks": "{NUM_TASKS, plural, offset:0  zero {# zadań} one {# zadanie} two {# zadania} few {# zadania} other {# zadań}}",
-					"noTaskCompleted": "{NUM_ALL_TASKS, plural, offset:0 one {# zadanie} two {# zadania} few {# zadania} other {# zadań}} do wykonania",
-					"taskProgress": "Wykonano {NUM_TASKS} z {NUM_ALL_TASKS} zadań"
+					"futurePlans": "Kalendarz planów"
 				}
 			},
 			"planInProgress": {
@@ -552,8 +545,6 @@
 					"rewardsHint": "Zdobyte punkty możesz wymienić na nagrody",
 					"claimedRewardsTitle": "Odebrane nagrody",
 					"claimRewardTitle": "Odbierz nagrodę",
-					"claimCostLabel": "Koszt nagrody",
-					"claimDateLabel": "Odebrano dnia",
 					"claimButton": "Odbierz",
 					"rewardClaimedText": "Nagroda odebrana"
 				}
@@ -568,6 +559,22 @@
 				}
 			}
 		}
+	},
+	"rewards": {
+		"claimCostLabel": "Koszt nagrody",
+		"claimDateLabel": "Odebrano dnia",
+		"unlimitedReward": "Nagroda nielimitowana",
+		"limitedReward": "Limit {REWARD_LIMIT, plural, offset:0 one {jednej nagrody} other {# nagród}} na dziecko"
+	},
+	"plans": {
+		"todaysPlans": "Dzisiejsze plany",
+		"remainingTodaysPlans": "Pozostałe dzisiejsze plany",
+		"inProgress": "W trakcie",
+		"noPlans": "Brak planów",
+		"completedPlans": "Zakończone plany",
+		"tasks": "{NUM_TASKS, plural, offset:0  zero {# zadań} one {# zadanie} two {# zadania} few {# zadania} other {# zadań}}",
+		"noTaskCompleted": "{NUM_ALL_TASKS, plural, offset:0 one {# zadanie} two {# zadania} few {# zadania} other {# zadań}} do wykonania",
+		"taskProgress": "Wykonano {NUM_TASKS} z {NUM_ALL_TASKS} zadań"
 	},
 	"repeatability": {
 		"once": "Dnia {DAY}",

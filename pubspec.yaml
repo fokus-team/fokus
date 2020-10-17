@@ -62,7 +62,7 @@ dependencies:
     implicitly_animated_reorderable_list: ^0.2.3
     flutter_picker: ^1.1.5
     confetti: ^0.5.4+1
-    table_calendar: ^2.2.3
+    table_calendar: 2.2.3
     carousel_slider: ^2.2.1
     flutter_rating_bar: ^3.0.1+1
     vibration: ^1.5.0

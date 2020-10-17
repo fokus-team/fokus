@@ -267,31 +267,33 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 		if(stateSubtasks != null) subtasks = stateSubtasks;
 		return Padding(
 		  padding: EdgeInsets.only(top: topPadding),
-		  child: ListTileTheme(
-				shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppBoxProperties.roundedCornersRadius)),
-		    child: Column(
-		    	children: [
-		    		for(var subtask in subtasks)
-		    			Padding(
-		    			  padding: const EdgeInsets.only(top: 12.0),
-		    			  child: DecoratedBox(
-										decoration: BoxDecoration(
-											color: subtasks[subtasks.indexOf(subtask)].value ? Colors.grey[300] : Colors.white
-										),
-										child: CheckboxListTile(
+		  child: Column(
+		  	children: [
+		  		for(var subtask in subtasks)
+		  			Padding(
+		  			  padding: const EdgeInsets.only(top: 12.0),
+		  			  child: Card(
+								color: subtasks[subtasks.indexOf(subtask)].value ? Colors.grey[350] : Theme.of(context).cardColor,
+								shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppBoxProperties.roundedCornersRadius)),
+								child: InkWell(
+									splashColor: Colors.blueGrey[150],
+									onTap: () => {},
+									child: CheckboxListTile(
 											value: subtasks[subtasks.indexOf(subtask)].value,
-											title: Text(
-												subtask.key,
-												style: Theme.of(context).textTheme.subtitle1.copyWith(color: AppColors.darkTextColor, fontWeight: FontWeight.bold),
+											title: Padding(
+												padding: const EdgeInsets.symmetric(vertical: 4.0),
+												child: Text(
+													subtask.key,
+													style: Theme.of(context).textTheme.subtitle1.copyWith(color: AppColors.darkTextColor, decoration: subtasks[subtasks.indexOf(subtask)].value ? TextDecoration.lineThrough : TextDecoration.none),
+												),
 											),
-											secondary: Icon(Icons.blur_circular),
 											onChanged: (val) {
 												setState(() {
 													if(!_isCheckboxDisabled) {
 														_isCheckboxDisabled = true;
 														subtasks[subtasks.indexOf(subtask)] = MapEntry(subtask.key, val);
 														BlocProvider.of<TaskInstanceCubit>(context).updateChecks(subtasks);
-														Timer(Duration(seconds: 1), () {
+														Timer(Duration(milliseconds: 200), () {
 															_isCheckboxDisabled = false;
 														});
 													}
@@ -300,10 +302,10 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 											activeColor: Colors.blue,
 											checkColor: Colors.white,
 										),
-		    			  ),
-		    			)
-		    	],
-		    ),
+								),
+		  			  ),
+		  			)
+		  	],
 		  ),
 		);
 	}

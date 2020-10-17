@@ -3,15 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/logic/caregiver/caregiver_panel_cubit.dart';
 import 'package:fokus/model/ui/app_page.dart';
-import 'package:fokus/model/ui/gamification/ui_points.dart';
 import 'package:fokus/model/ui/ui_button.dart';
-import 'package:fokus/utils/ui/icon_sets.dart';
 import 'package:fokus/utils/ui/theme_config.dart';
-import 'package:fokus/utils/string_utils.dart';
 import 'package:fokus/widgets/app_navigation_bar.dart';
 import 'package:fokus/widgets/cards/item_card.dart';
-import 'package:fokus/widgets/chips/attribute_chip.dart';
 import 'package:fokus/widgets/custom_app_bars.dart';
+import 'package:fokus/widgets/cards/model_cards.dart';
 import 'package:fokus/widgets/loadable_bloc_builder.dart';
 import 'package:fokus/widgets/segment.dart';
 
@@ -51,17 +48,7 @@ class _CaregiverPanelPageState extends State<CaregiverPanelPage> {
 				headerAction: UIButton('$_pageKey.header.addChild', () => {}, AppColors.caregiverButtonColor, Icons.add),
 				elements: <Widget>[
 					for (var child in state.children)
-						ItemCard(
-							title: child.name,
-							subtitle: getChildCardSubtitle(context, child),
-							onTapped: () => Navigator.of(context).pushNamed(AppPage.caregiverChildDashboard.name),
-							graphicType: AssetType.avatars,
-							graphic: child.avatar,
-							chips: <Widget>[
-								for (UIPoints pointCurrency in child.points)
-									AttributeChip.withCurrency(content: '${pointCurrency.quantity}', currencyType: pointCurrency.type)
-							]
-						)
+						ChildItemCard(child: child, onTapped: () => Navigator.of(context).pushNamed(AppPage.caregiverChildDashboard.name, arguments: {'child': child})),
 				]
 			),
 			Segment(

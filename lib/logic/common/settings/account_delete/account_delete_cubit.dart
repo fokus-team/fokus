@@ -15,33 +15,48 @@ part 'account_delete_state.dart';
 
 class AccountDeleteCubit extends Cubit<AccountDeleteState> {
 	final ActiveUserFunction _activeUser;
+	final UIUser _removedUser;
 
 	final AuthenticationProvider _authenticationProvider = GetIt.I<AuthenticationProvider>();
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final AppConfigRepository _appConfigRepository = GetIt.I<AppConfigRepository>();
 
-  AccountDeleteCubit(this._activeUser) : super(AccountDeleteState());
+  AccountDeleteCubit(this._activeUser, Map<String, dynamic> args) :
+		  _removedUser = args != null ? args['child'] : _activeUser(), super(AccountDeleteState());
+	
+	Future _deleteChild() async {
+		var users = [_removedUser.id];
+		var plans = await _dataRepository.getPlanInstances(childIDs: users, fields: ['_id']);
+		await _authenticationProvider.confirmPassword(state.password.value);
 
-	Future _deleteAccount() async {
-		var user = _activeUser() as UICaregiver;
-		var plans = await _dataRepository.getPlans(caregiverId: user.id, fields: ['tasks', '_id']);
-		await _authenticationProvider.deleteAccount(state.password.value);
-
-		var users = [user.id];
-		var hasConnections = user.connections != null && user.connections.isNotEmpty;
-		if (hasConnections)
-			users.addAll(user.connections);
 		await Future.value([
 			_dataRepository.removeUsers(users),
-			_dataRepository.removePlans(caregiverId: user.id),
+			_dataRepository.updateUser(_activeUser().id, removedConnections: users),
+			_dataRepository.removePlanInstances(childIds: users),
+			_dataRepository.removeTaskInstances(planInstancesIds: plans.map((plan) => plan.id).toList()),
+		]);
+		_appConfigRepository.removeSavedChildProfiles(users);
+	}
+	
+	Future _deleteCaregiver() async {
+		var users = [_removedUser.id];
+		var plans = await _dataRepository.getPlans(caregiverId: _removedUser.id, fields: ['tasks', '_id']);
+		await _authenticationProvider.deleteAccount(state.password.value);
+
+		var hasConnections = _removedUser.connections != null && _removedUser.connections.isNotEmpty;
+		if (hasConnections)
+			users.addAll(_removedUser.connections);
+		await Future.value([
+			_dataRepository.removeUsers(users),
+			_dataRepository.removePlans(caregiverId: _removedUser.id),
 			if (hasConnections)
-				_dataRepository.removePlanInstances(childIds: user.connections),
+				_dataRepository.removePlanInstances(childIds: _removedUser.connections),
 			_dataRepository.removeTasks(planIds: plans.map((e) => e.id).toList()),
 			_dataRepository.removeTaskInstances(tasksIds: plans.fold<List<ObjectId>>([], (tasks, plan) => tasks..addAll(plan.tasks))),
-			_dataRepository.removeRewards(createdBy: user.id),
+			_dataRepository.removeRewards(createdBy: _removedUser.id),
 		]);
 		if (hasConnections)
-			_appConfigRepository.removeSavedChildProfiles(user.connections);
+			_appConfigRepository.removeSavedChildProfiles(_removedUser.connections);
 	}
 
   Future accountDeleteFormSubmitted() async {
@@ -56,7 +71,7 @@ class AccountDeleteCubit extends Cubit<AccountDeleteState> {
 	  }
 	  emit(state.copyWith(status: FormzStatus.submissionInProgress));
 	  try {
-	  	await _deleteAccount();
+	  	await (_removedUser.id == _activeUser().id ? _deleteCaregiver() : _deleteChild());
 		  emit(state.copyWith(status: FormzStatus.submissionSuccess));
 	  } on PasswordConfirmFailure catch (e) {
 		  emit(state.copyWith(status: FormzStatus.submissionFailure, error: e.reason));

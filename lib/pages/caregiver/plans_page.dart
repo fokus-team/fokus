@@ -66,7 +66,7 @@ class _CaregiverPlansPageState extends State<CaregiverPlansPage> {
 	  ];
   }
 
-  Segment _getPlansSegment({List<UIPlan> plans, String title, UIButton headerAction, String subtitle, String noElementsMessage, Widget noElementsAction, context}) {
+  Segment _getPlansSegment({List<UIPlan> plans, String title, UIButton headerAction, String subtitle, Widget noElementsAction, context}) {
 	  return Segment(
 		  title: title,
 			subtitle: subtitle,

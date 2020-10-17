@@ -5,6 +5,7 @@ import 'package:fokus/logic/common/settings/name_change/name_change_cubit.dart';
 import 'package:fokus/logic/common/settings/password_change/password_change_cubit.dart';
 import 'package:fokus/model/ui/gamification/ui_badge.dart';
 import 'package:fokus/model/ui/gamification/ui_reward.dart';
+import 'package:fokus/model/ui/user/ui_user.dart';
 
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/bloc_utils.dart';
@@ -96,10 +97,10 @@ void showAppInfoDialog(BuildContext context) {
 	);
 }
 
-void showNameEditDialog(BuildContext context) {
-	showDialog(
+Future showNameEditDialog(BuildContext context, UIUser user) {
+	return showDialog(
 		context: context,
-		builder: (_) => forwardCubit(NameEditDialog(), context.bloc<NameChangeCubit>())
+		builder: (_) => forwardCubit(NameEditDialog(user.role), context.bloc<NameChangeCubit>())
 	);
 }
 
@@ -110,10 +111,10 @@ void showPasswordChangeDialog(BuildContext context) {
 	);
 }
 
-void showAccountDeleteDialog(BuildContext context) {
-	showDialog(
+Future showAccountDeleteDialog(BuildContext context, UIUser user) {
+	return showDialog(
 		context: context,
-		builder: (_) => forwardCubit(AccountDeleteDialog(), context.bloc<AccountDeleteCubit>())
+		builder: (_) => forwardCubit(AccountDeleteDialog(user.role), context.bloc<AccountDeleteCubit>())
 	);
 }
 

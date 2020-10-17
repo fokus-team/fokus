@@ -13,7 +13,7 @@ import 'package:fokus/model/ui/task/ui_task_instance.dart';
 import 'package:fokus/model/ui/user/ui_user.dart';
 import 'package:fokus/services/data/data_repository.dart';
 import 'package:fokus/services/notifications/notification_service.dart';
-import 'package:fokus/services/plan_keeper_service.dart';
+import 'package:fokus/services/ui_data_aggregator.dart';
 import 'package:fokus/utils/duration_utils.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mongo_dart/mongo_dart.dart';
@@ -26,7 +26,7 @@ class TaskInstanceCubit extends Cubit<TaskInstanceState> {
 
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final NotificationService _notificationService = GetIt.I<NotificationService>();
-	final PlanKeeperService _planService = GetIt.I<PlanKeeperService>();
+	final UIDataAggregator _dataAggregator = GetIt.I<UIDataAggregator>();
 
 	TaskInstanceCubit(this._taskInstanceId, this._activeUser) : super(TaskInstanceStateInitial());
 
@@ -66,8 +66,8 @@ class TaskInstanceCubit extends Cubit<TaskInstanceState> {
 		await Future.value(updates);
 
 		UITaskInstance uiTaskInstance = UITaskInstance.singleWithTask(taskInstance: taskInstance, task: task);
-		if(isInProgress(uiTaskInstance.duration)) emit(TaskInstanceStateProgress(uiTaskInstance,  await _planService.loadPlanInstance(planInstance: planInstance, plan: plan)));
-		else  emit(TaskInstanceStateBreak(uiTaskInstance,  await _planService.loadPlanInstance(planInstance: planInstance, plan: plan)));
+		if(isInProgress(uiTaskInstance.duration)) emit(TaskInstanceStateProgress(uiTaskInstance,  await _dataAggregator.loadPlanInstance(planInstance: planInstance, plan: plan)));
+		else  emit(TaskInstanceStateBreak(uiTaskInstance,  await _dataAggregator.loadPlanInstance(planInstance: planInstance, plan: plan)));
 	}
 
 	void switchToBreak() async {
@@ -75,7 +75,7 @@ class TaskInstanceCubit extends Cubit<TaskInstanceState> {
 		taskInstance.breaks.add(DateSpan(from: TimeDate.now()));
 		await _dataRepository.updateTaskInstanceFields(taskInstance.id, duration: taskInstance.duration, breaks: taskInstance.breaks);
 		UITaskInstance uiTaskInstance = UITaskInstance.singleWithTask(taskInstance: taskInstance, task: task);
-		emit(TaskInstanceStateBreak(uiTaskInstance,  await _planService.loadPlanInstance(planInstance: planInstance, plan: plan)));
+		emit(TaskInstanceStateBreak(uiTaskInstance,  await _dataAggregator.loadPlanInstance(planInstance: planInstance, plan: plan)));
 	}
 
 	void switchToProgress() async {
@@ -83,17 +83,17 @@ class TaskInstanceCubit extends Cubit<TaskInstanceState> {
 		taskInstance.duration.add(DateSpan(from: TimeDate.now()));
 		await _dataRepository.updateTaskInstanceFields(taskInstance.id, duration: taskInstance.duration, breaks: taskInstance.breaks);
 		UITaskInstance uiTaskInstance = UITaskInstance.singleWithTask(taskInstance: taskInstance, task: task);
-		emit(TaskInstanceStateProgress(uiTaskInstance, await _planService.loadPlanInstance(planInstance: planInstance, plan: plan)));
+		emit(TaskInstanceStateProgress(uiTaskInstance, await _dataAggregator.loadPlanInstance(planInstance: planInstance, plan: plan)));
 	}
 
 	void markAsDone() async {
   	_notificationService.sendTaskFinishedNotification(_taskInstanceId, task.name, plan.createdBy, _activeUser(), completed: true);
-		emit(TaskInstanceStateDone(await _onCompletion(TaskState.notEvaluated), await _planService.loadPlanInstance(planInstance: planInstance, plan: plan)));
+		emit(TaskInstanceStateDone(await _onCompletion(TaskState.notEvaluated), await _dataAggregator.loadPlanInstance(planInstance: planInstance, plan: plan)));
   }
 
 	void markAsRejected() async {
 		_notificationService.sendTaskFinishedNotification(_taskInstanceId, task.name, plan.createdBy, _activeUser(), completed: false);
-		emit(TaskInstanceStateRejected(await _onCompletion(TaskState.rejected), await _planService.loadPlanInstance(planInstance: planInstance, plan: plan)));
+		emit(TaskInstanceStateRejected(await _onCompletion(TaskState.rejected), await _dataAggregator.loadPlanInstance(planInstance: planInstance, plan: plan)));
 	}
 
 	void updateChecks(List<MapEntry<String, bool>> subtasks) async {

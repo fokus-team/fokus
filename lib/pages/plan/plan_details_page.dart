@@ -69,7 +69,7 @@ class _PlanDetailsPageState extends State<PlanDetailsPage> {
 		];
 	}
 
-	Segment _getTasksSegment({String title, String noElementsMessage, List<UITask> tasks, bool isOptional = false}) {
+	Segment _getTasksSegment({String title, List<UITask> tasks, bool isOptional = false}) {
 		return Segment(
 			title: title,
 			noElementsMessage: '$_pageKey.content.noTasks',

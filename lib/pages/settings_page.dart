@@ -102,7 +102,7 @@ class _SettingsPageState extends State<SettingsPage> {
 					_buildBasicListTile(
 						title: AppLocales.of(context).translate('$_pageKey.profile.editNameLabel'),
 						icon: Icons.edit,
-						onTap: () => showNameEditDialog(context)
+						onTap: () => showNameEditDialog(context, user)
 					),
 					_buildBasicListTile(
 						title: AppLocales.of(context).translate('$_pageKey.profile.changePasswordLabel'),
@@ -115,7 +115,7 @@ class _SettingsPageState extends State<SettingsPage> {
 				subtitle: AppLocales.of(context).translate('$_pageKey.profile.deleteAccountHint'),
 				icon: Icons.delete,
 				color: Colors.red,
-				onTap: () => showAccountDeleteDialog(context)
+				onTap: () => showAccountDeleteDialog(context, user)
 			)
 		];
 	}

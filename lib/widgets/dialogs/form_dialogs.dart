@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fokus/model/db/user/user_role.dart';
 import 'package:fokus_auth/fokus_auth.dart';
 import 'package:formz/formz.dart';
 
@@ -72,17 +73,21 @@ class FormDialog extends StatelessWidget {
 const String _settingsPageKey = 'page.settings.content';
 
 class NameEditDialog extends StatelessWidget {
+	final UserRole _role;
+
+	NameEditDialog(this._role);
+
   @override
   Widget build(BuildContext context) {
     return BlocListener<NameChangeCubit, NameChangeState>(
 	    listener: (context, state) {
 		    if (state.status.isSubmissionSuccess) {
-			    Navigator.of(context).pop();
+			    Navigator.of(context).pop(state.name.value);
 			    showSuccessSnackbar(context, 'authentication.nameChanged');
 		    }
 	    },
       child: FormDialog(
-				title: AppLocales.of(context).translate('$_settingsPageKey.profile.editNameLabel'),
+				title: AppLocales.of(context).translate('$_settingsPageKey.profile.' + (_role == UserRole.caregiver ? 'editNameLabel' : 'editChildNameLabel')),
 				fields: [
 					Padding(
 						padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
@@ -92,6 +97,7 @@ class NameEditDialog extends StatelessWidget {
 							labelKey: 'authentication.name',
 							icon: Icons.edit,
 							getErrorKey: (state) => [state.name.error.key],
+							clearable: true,
 						),
 					),
 				],
@@ -102,14 +108,20 @@ class NameEditDialog extends StatelessWidget {
 }
 
 class AccountDeleteDialog extends StatelessWidget {
+	final UserRole _role;
+
+  const AccountDeleteDialog(this._role);
+  
   @override
   Widget build(BuildContext context) {
 	  var user = context.bloc<AuthenticationBloc>().state.user as UICaregiver;
-  	var getText = (String key) => AppLocales.of(context).translate('$_settingsPageKey.profile.deleteAccount$key');
+  	var getText = (String key, {bool customize = true}) => AppLocales.of(context).translate('$_settingsPageKey.profile.delete${_role == UserRole.child && customize ? 'Child' : ''}Account$key');
 	  return BlocListener<AccountDeleteCubit, AccountDeleteState>(
 		  listener: (context, state) {
 			  if (state.status.isSubmissionFailure && state.error != null)
 				  showFailSnackbar(context, state.error.key);
+			  else if (state.status.isSubmissionSuccess && _role == UserRole.child)
+				  Navigator.of(context).pop(true);
 		  },
 		  child: FormDialog(
 			  title: getText('Label'),
@@ -126,11 +138,11 @@ class AccountDeleteDialog extends StatelessWidget {
 							    child: Text('• $point'),
 						    )),
 						    SizedBox(height: 10),
-						    Text(getText('Warning'), style: TextStyle(color: Colors.red)),
+						    Text(getText('Warning', customize: false), style: TextStyle(color: Colors.red)),
 						    SizedBox(height: 10),
 					      if (user.authMethod == AuthMethod.EMAIL)
 						      ...[
-						      	Text(getText('Confirm')),
+						      	Text(getText('Confirm', customize: false)),
 							      SizedBox(height: 10),
 							      AuthenticationInputField<AccountDeleteCubit, AccountDeleteState>(
 										  getField: (state) => state.password,

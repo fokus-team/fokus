@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/logic/caregiver/tasks_evaluation/tasks_evaluation_cubit.dart';
-import 'package:fokus/widgets/general/app_loader.dart';
 import 'package:fokus/model/ui/task/ui_task_report.dart';
 
 
@@ -10,6 +8,7 @@ import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/ui/theme_config.dart';
 import 'package:fokus/widgets/cards/report_card.dart';
 import 'package:fokus/widgets/general/app_hero.dart';
+import 'package:fokus/widgets/loadable_bloc_builder.dart';
 
 class CaregiverRatingPage extends StatefulWidget {
   @override
@@ -21,7 +20,6 @@ class _CaregiverRatingPageState extends State<CaregiverRatingPage> {
 	CarouselController _carouselController;
 	int _currentRaport = 0;
 
-	// Mock for children task reports
 	List<UITaskReport> reports = [];
 
 	@override
@@ -32,37 +30,32 @@ class _CaregiverRatingPageState extends State<CaregiverRatingPage> {
 
   @override
   Widget build(BuildContext context) {
-		return BlocBuilder<TasksEvaluationCubit, TasksEvaluationState>(
-			builder: (context, state) {
-				if(state is TasksEvaluationInitial)
-					BlocProvider.of<TasksEvaluationCubit>(context).loadData();
-				else if(reports.isEmpty) reports = (state as TasksEvaluationBaseState).reports;
-				return Scaffold(
-					backgroundColor: AppColors.caregiverBackgroundColor,
-					appBar: AppBar(
-						title: Text(AppLocales.of(context).translate('$_pageKey.header.title')),
-						backgroundColor: Colors.transparent,
-						elevation: 0.0
-					),
-					body: Column(
+		return Scaffold(
+			backgroundColor: AppColors.caregiverBackgroundColor,
+			appBar: AppBar(
+				title: Text(AppLocales.of(context).translate('$_pageKey.header.title')),
+				backgroundColor: Colors.transparent,
+				elevation: 0.0
+			),
+			body: LoadableBlocBuilder<TasksEvaluationCubit>(
+				builder: (context, state) {
+					if (reports.isEmpty)
+						reports = (state as TasksEvaluationBaseState).reports;
+					return Column(
 						mainAxisSize: reports.isNotEmpty ? MainAxisSize.min : MainAxisSize.max,
 						mainAxisAlignment: MainAxisAlignment.center,
 						crossAxisAlignment: CrossAxisAlignment.center,
-						children: state is TasksEvaluationInitial ?
-							[Expanded(child: Center(child: AppLoader()),)]
-							: <Widget>[
-							reports.isNotEmpty ?
-								Expanded(child: _buildCarousel())
-								: AppHero(
-									title: AppLocales.of(context).translate('$_pageKey.content.noTasksToRate'),
-									color: Colors.white,
-									icon: Icons.done,
-									dense: true
-								)
-						]
-					)
-				);
-			}
+						children: [reports.isNotEmpty ? Expanded(child: _buildCarousel()) :
+							AppHero(
+							  title: AppLocales.of(context).translate('$_pageKey.content.noTasksToRate'),
+							  color: Colors.white,
+							  icon: Icons.done,
+							  dense: true
+						  )
+				    ]
+					);
+        }
+			)
 		);
 	}
 

@@ -86,7 +86,7 @@ class _PointPickerFieldState extends State<PointPickerField> {
 									},
 									keyboardType: TextInputType.numberWithOptions(signed: true, decimal: false),
 									inputFormatters: <TextInputFormatter>[
-											WhitelistingTextInputFormatter.digitsOnly
+											FilteringTextInputFormatter.digitsOnly
 									],
 									onChanged: (val) => widget.pointValueSetter(val)
 								)

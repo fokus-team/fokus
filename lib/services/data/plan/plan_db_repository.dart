@@ -27,6 +27,12 @@ mixin PlanDbRepository implements DbRepository {
 		return dbClient.queryTyped(Collection.plan, query, (json) => Plan.fromJson(json));
 	}
 
+	Future<int> countPlans({List<ObjectId> ids, ObjectId caregiverId, ObjectId childId, bool active, bool oneDayOnly = false}) {
+		var query = _buildPlanQuery(caregiverId: caregiverId, childId: childId, active: active, ids: ids);
+		if (oneDayOnly)
+			query.and(where.ne('repeatability.untilCompleted', true));
+		return dbClient.count(Collection.plan, query);
+	}
 
 	Future<PlanInstance> getPlanInstance({ObjectId id, ObjectId childId, PlanInstanceState state, List<String> fields}) {
 		var query = _buildPlanQuery(id: id, childId: childId, state: state);
@@ -42,7 +48,7 @@ mixin PlanDbRepository implements DbRepository {
 		return dbClient.queryTyped(Collection.planInstance, query, (json) => PlanInstance.fromJson(json));
 	}
 
-	Future<bool> getActiveChildPlanInstance(ObjectId childId) {
+	Future<bool> hasActiveChildPlanInstance(ObjectId childId) {
 		return dbClient.exists(Collection.planInstance, _buildPlanQuery(childId: childId, state: PlanInstanceState.active));
 	}
 
@@ -70,6 +76,16 @@ mixin PlanDbRepository implements DbRepository {
 		if (duration != null)
 			document.set('duration', duration.map((v) => v.toJson()).toList());
 		return dbClient.update(Collection.planInstance, where.eq('_id', instanceId), document);
+	}
+
+	Future updatePlanFields(List<ObjectId> planIDs, {ObjectId assign, ObjectId unassign}) {
+		var query = (ObjectId id) => where.eq('_id', id);
+		var planModify = modify;
+		if (assign != null)
+			planModify.addToSet('assignedTo', assign);
+		if (unassign != null)
+			planModify.pull('assignedTo', unassign);
+		return dbClient.updateAll(Collection.plan, planIDs.map((id) => query(id)).toList(), List.filled(planIDs.length, planModify));
 	}
 
 	Future updatePlanInstance(PlanInstance planInstance) => dbClient.update(Collection.planInstance, _buildPlanQuery(id: planInstance.id), planInstance.toJson(), multiUpdate: false);

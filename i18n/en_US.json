@@ -84,11 +84,15 @@
 				"profile": {
 					"header": "Profile",
 					"editNameLabel": "Change your name",
+					"editChildNameLabel": "Change child name",
 					"changePasswordLabel": "Change your password",
 					"deleteAccountLabel": "Delete your account",
+					"deleteChildAccountLabel": "Remove child account",
 					"deleteAccountHint": "Delete your and children's accounts",
 					"deleteAccountDescription": "Are you sure you want to delete your account? This will permanently erase all entered data including:",
+					"deleteChildAccountDescription": "Are you sure you want to delete this child's account? This will permanently erase all his data including:",
 					"deleteAccountDataList": "Plans|Tasks|Awards|Child profiles|Performed task history",
+					"deleteChildAccountDataList": "Profile|Awards|Points|Performed task history",
 					"deleteAccountWarning": "This action cannot be undone!",
 					"deleteAccountConfirm": "Enter your password to confirm:"
 				},
@@ -312,9 +316,6 @@
 					"addedBadgesTitle": "Added badges",
 					"addedBadgesSubtitle": "Badges are assigned by caregivers",
 					"noBadgesAdded": "No badges to display, add the first one now",
-					"pointCost": "Reward's point cost",
-					"unlimitedReward": "Unlimited reward",
-					"limitedReward": "Limited {REWARD_LIMIT, plural, offset:0 one {one reward} other {# rewards}} per child",
 					"noDescriptionSubtitle": "No description",
 					"removeRewardTitle": "Remove reward",
 					"removeRewardText": "Rewards claimed by children will not be removed, though this reward will no longer be available. Are you sure you want to remove this reward?",
@@ -463,15 +464,7 @@
 					"garden": "Garden"
 				},
 				"content": {
-					"todaysPlans": "Today's plans",
-					"remainingTodaysPlans": "Remaining today's plans",
-					"inProgress": "In progress",
-					"noPlans": "No plans",
-					"completedPlans": "Completed plans",
-					"futurePlans": "Plans calendar",
-					"tasks": "{NUM_TASKS, plural, offset:0  one {# task} other {# tasks}}",
-					"noTaskCompleted": "{NUM_ALL_TASKS, plural, offset:0 one {# task} other {# tasks}} to complete",
-					"taskProgress": "{NUM_TASKS} out of {NUM_ALL_TASKS} tasks completed"
+					"futurePlans": "Plans calendar"
 				}
 			},
 			"planInProgress": {
@@ -556,8 +549,6 @@
 					"rewardsHint": "You can exchange your points for rewards",
 					"claimedRewardsTitle": "Claimed rewards",
 					"claimRewardTitle": "Claim reward",
-					"claimCostLabel": "Reward cost",
-					"claimDateLabel": "Claimed on",
 					"claimButton": "Claim",
 					"rewardClaimedText": "Reward claimed"
 				}
@@ -568,10 +559,26 @@
 					"achievementsHint": "Click on the badge to show details",
 					"noAchievementsMessage": "No achievements to display",
 					"earnedBadgeTitle": "Earned badge",
-					"earnedBadgeDate": "Earning date"
+					"earnedBadgeDate": "Earned on"
 				}
 			}
 		}
+	},
+	"rewards": {
+		"claimCostLabel": "Reward cost",
+		"claimDateLabel": "Claimed on",
+		"unlimitedReward": "Unlimited reward",
+		"limitedReward": "Limited {REWARD_LIMIT, plural, offset:0 one {one reward} other {# rewards}} per child"
+	},
+	"plans": {
+		"todaysPlans": "Today's plans",
+		"remainingTodaysPlans": "Remaining today's plans",
+		"inProgress": "In progress",
+		"noPlans": "No plans",
+		"completedPlans": "Completed plans",
+		"tasks": "{NUM_TASKS, plural, offset:0  one {# task} other {# tasks}}",
+		"noTaskCompleted": "{NUM_ALL_TASKS, plural, offset:0 one {# task} other {# tasks}} to complete",
+		"taskProgress": "{NUM_TASKS} out of {NUM_ALL_TASKS} tasks completed"
 	},
 	"repeatability": {
 		"once": "On {DAY}",

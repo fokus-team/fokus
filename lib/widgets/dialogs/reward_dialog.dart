@@ -80,7 +80,7 @@ class _RewardDialogState extends State<RewardDialog> with SingleTickerProviderSt
 								spacing: 2.0,
 								children: [
 									Text(
-										AppLocales.of(context).translate('$_pageKey.claimCostLabel') + ': ',
+										AppLocales.of(context).translate('rewards.claimCostLabel') + ': ',
 										style: TextStyle(color: AppColors.mediumTextColor)
 									),
 									AttributeChip.withCurrency(

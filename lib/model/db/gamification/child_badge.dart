@@ -1,12 +1,13 @@
 import 'package:fokus/model/db/date/time_date.dart';
+import 'package:fokus/model/ui/gamification/ui_badge.dart';
 
-class ChildBadge {
-  String description;
+import 'badge.dart';
+
+class ChildBadge extends Badge {
   TimeDate date;
-  int icon;
-  String name;
 
-  ChildBadge({this.description, this.date, this.icon, this.name});
+  ChildBadge({String description, this.date, int icon, String name}) : super(description: description, name: name, icon: icon);
+  ChildBadge.fromUIModel(UIChildBadge badge) : this(name: badge.name, description: badge.description, icon: badge.icon, date: badge.date);
 
   factory ChildBadge.fromJson(Map<String, dynamic> json) {
     return json != null ? ChildBadge(
@@ -18,15 +19,9 @@ class ChildBadge {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.description != null)
-      data['description'] = this.description;
+    final Map<String, dynamic> data = super.toJson();
     if (this.date != null)
       data['date'] = this.date.toDBDate();
-    if (this.icon != null)
-      data['icon'] = this.icon;
-    if (this.name != null)
-      data['name'] = this.name;
     return data;
   }
 }

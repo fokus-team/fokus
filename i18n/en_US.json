@@ -280,7 +280,9 @@
 					},
 					"subtaskDescription": {
 						"label": "Subtask description",
-						"hint": "Add subtask"
+						"add": "Add subtask",
+						"sectionTitle": "Subtasks list",
+						"sectionSubtitle": "{NUM_TASKS, plural, offset:0  =1 {# subtask} other {# subtasks}}"
 					},
 					"taskOrder": {
 						"label": "Order execution"

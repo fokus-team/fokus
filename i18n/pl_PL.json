@@ -279,8 +279,10 @@
 						"label": "Opis zadania"
 					},
 					"subtaskDescription": {
-						"label": "Opis podzadania",
-						"hint": "Add subtask"
+						"label": "Nowe podzadanie",
+						"add": "Dodaj podzadanie",
+						"sectionTitle": "Lista podzadań",
+						"sectionSubtitle": "{NUM_SUBTASKS, plural, offset:0  zero {# podzadań} one {# podzadanie} two {# podzadania} few {# podzadania} other {# podzadań}}"
 					},
 					"taskOrder": {
 						"label": "Kolejność wykonywania"

@@ -5,6 +5,7 @@ import 'package:fokus/model/db/gamification/child_badge.dart';
 import 'package:fokus/model/db/plan/plan.dart';
 import 'package:fokus/model/db/plan/task_status.dart';
 import 'package:fokus/model/db/user/child.dart';
+import 'package:fokus/model/notification/notification_type.dart';
 import 'package:fokus/model/ui/gamification/ui_badge.dart';
 import 'package:fokus/model/ui/gamification/ui_reward.dart';
 import 'package:fokus/model/ui/plan/ui_plan.dart';
@@ -82,7 +83,10 @@ class ChildDashboardCubit extends ReloadableCubit {
 		emit(ChildDashboardState.from(state, child: UIChild.from((state  as ChildDashboardState).child, name: value as String)));
 	}
 
-	Future _loadPlansTab() async {
+	@override
+  List<NotificationType> dataTypeSubscription() => [NotificationType.rewardBought];
+
+  Future _loadPlansTab() async {
 		var activeUser = _activeUser();
 		var planInstances = (await _dataRepository.getPlanInstances(childIDs: [childId], fields: ['_id'])).map((plan) => plan.id).toList();
   	var data = await Future.wait([

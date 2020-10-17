@@ -6,12 +6,12 @@ import 'package:fokus/model/ui/plan/ui_plan_instance.dart';
 import 'package:fokus/model/ui/user/ui_user.dart';
 import 'package:fokus/services/ui_data_aggregator.dart';
 
-class ChildPlansCubit extends ReloadableCubit {
+class ChildPanelCubit extends ReloadableCubit {
 
 	final ActiveUserFunction _activeUser;
 	final UIDataAggregator _dataAggregator = GetIt.I<UIDataAggregator>();
 
-  ChildPlansCubit(this._activeUser, ModalRoute pageRoute) : super(pageRoute);
+  ChildPanelCubit(this._activeUser, ModalRoute pageRoute) : super(pageRoute);
 
   void doLoadData() async => emit(ChildPlansLoadSuccess(await _dataAggregator.loadPlanInstances(childId: _activeUser().id)));
 }

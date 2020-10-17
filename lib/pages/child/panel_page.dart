@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fokus/logic/child/child_plans_cubit.dart';
+import 'package:fokus/logic/child/child_panel_cubit.dart';
 import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
 import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/ui/user/ui_child.dart';
@@ -28,7 +28,7 @@ class _ChildPanelPageState extends State<ChildPanelPage> {
 	      crossAxisAlignment: CrossAxisAlignment.start,
 				verticalDirection: VerticalDirection.up,
 	      children: [
-		      LoadableBlocBuilder<ChildPlansCubit>(
+		      LoadableBlocBuilder<ChildPanelCubit>(
 				    builder: (context, state) => AppSegments(segments: buildChildPlanSegments((state as ChildPlansLoadSuccess).plans, context)),
 						wrapWithExpanded: true,
 		      ),

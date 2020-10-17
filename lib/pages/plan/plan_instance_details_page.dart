@@ -99,25 +99,35 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 					if(task.taskUiType == TaskUIType.completed)
 						getCompletedTaskCard(task)
 					else if(task.taskUiType == TaskUIType.available)
-							ItemCard(
-								title: task.name,
-								subtitle: task.description,
-								chips:<Widget>[
-									if (task.timer != null && task.timer > 0) getTimeChip(task),
-									if (task.points != null && task.points.quantity != 0) getCurrencyChip(task)
-								],
-								actionButton: widget.showActions ? ItemCardActionButton(color: AppColors.childButtonColor, icon: Icons.play_arrow, onTapped: () => navigate(context, task, uiPlanInstance)) : null,
-							)
+						ItemCard(
+							title: task.name,
+							subtitle: task.description,
+							chips:<Widget>[
+								if (task.timer != null && task.timer > 0) getTimeChip(task),
+								if (task.points != null && task.points.quantity != 0) getCurrencyChip(task)
+							],
+							actionButton: ItemCardActionButton(
+								color: AppColors.childButtonColor,
+								icon: Icons.play_arrow,
+								onTapped: () => navigate(context, task, uiPlanInstance),
+								disabled: !widget.showActions,
+							),
+						)
 					else if(task.taskUiType == TaskUIType.rejected)
-							ItemCard(
-								title: task.name,
-								subtitle: task.description,
-								chips:<Widget>[
-									if (task.timer != null && task.timer > 0) getTimeChip(task),
-									if (task.points != null && task.points.quantity != 0) getCurrencyChip(task)
-								],
-								actionButton: widget.showActions ? ItemCardActionButton(color: AppColors.childButtonColor, icon: Icons.refresh, onTapped: () => navigate(context, task, uiPlanInstance)) : null,
-							)
+						ItemCard(
+							title: task.name,
+							subtitle: task.description,
+							chips:<Widget>[
+								if (task.timer != null && task.timer > 0) getTimeChip(task),
+								if (task.points != null && task.points.quantity != 0) getCurrencyChip(task)
+							],
+							actionButton: ItemCardActionButton(
+								color: AppColors.childButtonColor,
+								icon: Icons.refresh,
+								onTapped: () => navigate(context, task, uiPlanInstance),
+								disabled: !widget.showActions
+							),
+						)
 					else if(task.taskUiType.inProgress)
 						BlocProvider<TimerCubit>(
 							create: (_) => TimerCubit.up(() => task.taskUiType == TaskUIType.currentlyPerformed ? sumDurations(task.duration).inSeconds : sumDurations(task.breaks).inSeconds)..startTimer(),
@@ -143,7 +153,12 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 											),
 										]
 								],
-								actionButton: widget.showActions ? ItemCardActionButton(color: AppColors.childActionColor, icon: Icons.launch, onTapped: () => navigate(context, task, uiPlanInstance)) : null,
+								actionButton: ItemCardActionButton(
+									color: AppColors.childActionColor,
+									icon: Icons.launch,
+									onTapped: () => navigate(context, task, uiPlanInstance),
+									disabled: !widget.showActions
+								),
 							)
 						)
 					else if(task.taskUiType == TaskUIType.queued)
@@ -155,7 +170,11 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 								if (task.points != null && task.points.quantity != 0) getCurrencyChip(task)
 							],
 							isActive: false,
-							actionButton: widget.showActions ? ItemCardActionButton(color: Colors.grey[400], icon: Icons.keyboard_arrow_up) : null,
+							actionButton: ItemCardActionButton(
+								color: Colors.grey[400],
+								icon: Icons.keyboard_arrow_up,
+								disabled: !widget.showActions
+							),
 						)
 			]
 		);
@@ -242,9 +261,11 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 							),
 						]
 			],
-			actionButton: widget.showActions ? ItemCardActionButton(
-				color: AppColors.childBackgroundColor, icon: Icons.check
-			) : null,
+			actionButton: ItemCardActionButton(
+				color: AppColors.childBackgroundColor,
+				icon: Icons.check,
+				disabled: !widget.showActions
+			),
 		);
 	}
 

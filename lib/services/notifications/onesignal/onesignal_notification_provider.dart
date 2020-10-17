@@ -60,7 +60,7 @@ class OneSignalNotificationProvider extends NotificationProvider {
 		} else if (data.type.redirectPage == AppPage.caregiverChildDashboard) {
 			arguments = Map<String, dynamic>();
 			arguments['tab'] = data.type == NotificationType.rewardBought ? 1 : 0;
-			arguments['child'] = await _dataAggregator.loadChild(data.recipient);
+			arguments['child'] = await _dataAggregator.loadChild(data.sender);
 			if (data.subject != null)
 				arguments['id'] = data.subject;
 		}

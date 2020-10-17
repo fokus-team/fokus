@@ -3,6 +3,7 @@ import 'package:fokus/logic/common/reloadable/reloadable_cubit.dart';
 import 'package:fokus/model/db/plan/plan_instance.dart';
 import 'package:fokus/model/db/plan/plan_instance_state.dart';
 import 'package:fokus/model/db/plan/task_instance.dart';
+import 'package:fokus/model/notification/notification_type.dart';
 import 'package:fokus/model/ui/plan/ui_plan_instance.dart';
 import 'package:fokus/model/ui/task/ui_task_instance.dart';
 import 'package:fokus/services/data/data_repository.dart';
@@ -19,6 +20,9 @@ class PlanInstanceCubit extends ReloadableCubit {
 	final ObjectId _planInstanceId;
 
 	PlanInstanceCubit(this._planInstanceId, ModalRoute modalRoute) : super(modalRoute);
+
+	@override
+	List<NotificationType> dataTypeSubscription() => [NotificationType.taskApproved, NotificationType.taskRejected, NotificationType.taskFinished, NotificationType.taskUnfinished];
 
 	PlanInstance planInstance;
 

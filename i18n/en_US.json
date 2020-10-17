@@ -283,7 +283,7 @@
 						"label": "Subtask description",
 						"add": "Add subtask",
 						"sectionTitle": "Subtasks list",
-						"sectionSubtitle": "{NUM_TASKS, plural, offset:0  =1 {# subtask} other {# subtasks}}"
+						"sectionSubtitle": "{NUM_SUBTASKS, plural, offset:0  =1 {# subtask} other {# subtasks}}"
 					},
 					"taskOrder": {
 						"label": "Order execution"

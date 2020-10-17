@@ -295,7 +295,7 @@ class _TaskFormState extends State<TaskForm> {
 
 	Widget buildDescriptionField() {
 		return Padding(
-			padding: EdgeInsets.only(top: 5.0, left: 20.0, right: 20.0),
+			padding: EdgeInsets.only(top: 5.0, bottom: 6.0, left: 20.0, right: 20.0),
 			child: TextFormField(
 				controller: _descriptionController,
 				decoration: AppFormProperties.longTextFieldDecoration(Icons.description).copyWith(

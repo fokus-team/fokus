@@ -20,7 +20,7 @@ class ItemCardActionButton {
 		this.color,
 		this.onTapped,
 		this.size = 40.0,
-		this.disabled = false,
+		this.disabled = false
 	});
 }
 
@@ -66,7 +66,7 @@ class ItemCard extends StatelessWidget {
 		this.isActive = true,
 		this.textMaxLines = 3,
 		this.rightIcon,
-		this.activeProgressBarColor = AppColors.childBackgroundColor,
+		this.activeProgressBarColor = AppColors.childBackgroundColor
 	}) : graphicHeight = defaultImageHeight ?? defaultImageHeight, assert(graphic != null ? graphicType != null : true);
 	
 	Widget headerImage() {
@@ -159,7 +159,6 @@ class ItemCard extends StatelessWidget {
 						child: Column(
 							crossAxisAlignment: CrossAxisAlignment.start,
 							mainAxisSize: MainAxisSize.max,
-							mainAxisAlignment: MainAxisAlignment.start,
 							children: <Widget>[
 								...buildTextSection(context),
 								if(chips != null && chips.isNotEmpty)
@@ -226,7 +225,7 @@ class ItemCard extends StatelessWidget {
 		}
 		if(actionButton != null) {
       return Container(
-        margin: EdgeInsets.all(actionButton.size <= 30 ? 0 : 8.0),
+        margin: EdgeInsets.all(8.0),
         child: Ink(
           decoration: ShapeDecoration(
             color: actionButton.disabled ? inactiveProgressBar : actionButton.color,					

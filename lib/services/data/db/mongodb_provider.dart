@@ -18,8 +18,8 @@ class MongoDbProvider {
 		}
 		_client = await MongoDBAuthenticator.authenticate(
 			timeoutConfig: TimeoutConfig(
-				connectionTimeout: 8000,
-				socketTimeout: 4000,
+				connectionTimeout: 6000,
+				socketTimeout: 3000,
 				keepAliveTime: 10 * 60
 			)
 		).catchError((e) => throw NoDbConnection(e));

@@ -16,23 +16,23 @@ Widget buildCalendar({
 	CalendarBuilders builders
 }) {
 	return TableCalendar(
-			calendarController: controller,
-			locale: AppLocales.of(context).locale.toString(),
-			availableGestures: AvailableGestures.horizontalSwipe,
-			startingDayOfWeek: StartingDayOfWeek.monday,
-			initialCalendarFormat: CalendarFormat.month,
-			headerStyle: HeaderStyle(
-				centerHeaderTitle: true,
-				formatButtonVisible: false
-			),
-			calendarStyle: CalendarStyle(
-				contentPadding: EdgeInsets.all(5.0)
-			),
-			events: events,
-			onDaySelected: onDaySelected,
-			onCalendarCreated: onCalendarCreated,
-			onVisibleDaysChanged: onVisibleDaysChanged,
-			builders: builders
+		calendarController: controller,
+		locale: AppLocales.of(context).locale.toString(),
+		availableGestures: AvailableGestures.horizontalSwipe,
+		startingDayOfWeek: StartingDayOfWeek.monday,
+		initialCalendarFormat: CalendarFormat.month,
+		headerStyle: HeaderStyle(
+			centerHeaderTitle: true,
+			formatButtonVisible: false
+		),
+		calendarStyle: CalendarStyle(
+			contentPadding: EdgeInsets.all(5.0)
+		),
+		events: events,
+		onDaySelected: onDaySelected,
+		onCalendarCreated: onCalendarCreated,
+		onVisibleDaysChanged: onVisibleDaysChanged,
+		builders: builders
 	);
 }
 

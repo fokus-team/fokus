@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
 import 'package:fokus/model/db/user/user_role.dart';
+import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/utils/ui/theme_config.dart';
 
 class PageTheme extends StatelessWidget {
@@ -20,13 +22,25 @@ class PageTheme extends StatelessWidget {
 		appHeaderColor: AppColors.childBackgroundColor
 	);
 
-	PageTheme({@required this.style, this.child});
-	PageTheme.loginSection({Widget child}) : this(style: loginSectionStyle, child: child);
-	PageTheme.caregiverSection({Widget child}) : this(style: caregiverSectionStyle, child: child);
-	PageTheme.childSection({Widget child}) : this(style: childSectionStyle, child: child);
+	static final Map<AppPageSection, AppSectionStyle> _styles = {
+		AppPageSection.login: PageTheme.loginSectionStyle,
+		AppPageSection.caregiver: PageTheme.caregiverSectionStyle,
+		AppPageSection.child: PageTheme.childSectionStyle,
+	};
 
-	factory PageTheme.parametrizedRoleSection({@required UserRole userRole, Widget child}) {
-		return userRole == UserRole.caregiver ? PageTheme.caregiverSection(child: child) : PageTheme.childSection(child: child);
+	PageTheme._({@required this.style, this.child});
+	PageTheme.loginSection({Widget child}) : this._(style: loginSectionStyle, child: child);
+	PageTheme.caregiverSection({Widget child}) : this._(style: caregiverSectionStyle, child: child);
+	PageTheme.childSection({Widget child}) : this._(style: childSectionStyle, child: child);
+
+	factory PageTheme.parametrizedSection({AuthenticationState authState, AppPageSection section, Widget child}) {
+		if (section == null) {
+			if (authState.status == AuthenticationStatus.authenticated)
+				section = authState.user.role == UserRole.caregiver ? AppPageSection.caregiver : AppPageSection.child;
+			else
+				section = AppPageSection.login;
+		}
+		return PageTheme._(style: _styles[section], child:  child);
 	}
 
 	@override

@@ -136,9 +136,22 @@ class _PlanDetailsPageState extends State<PlanDetailsPage> {
 						context,
 						GeneralDialog.confirm(
 							title: AppLocales.of(context).translate('alert.deletePlan'),
-							content: AppLocales.of(context).translate('alert.confirmPlanDeletion'),
+							richContent: RichText(
+								text: TextSpan(
+									text: AppLocales.of(context).translate('alert.confirmPlanDeletion') + '\n\n',
+									style: TextStyle(color: AppColors.darkTextColor),
+									children: [TextSpan(
+										text: AppLocales.of(context).translate('deleteWarning'),
+									  style: TextStyle(color: Colors.red),
+									)]
+								),
+							),
 							confirmText: 'actions.delete',
-							confirmAction: () => Navigator.of(context).pop(),
+							confirmAction: () async {
+								await context.bloc<PlanCubit>().deletePlan();
+								Navigator.of(context).pop();
+								Navigator.of(context).pop();
+							},
 							confirmColor: Colors.red
 						)
 					))

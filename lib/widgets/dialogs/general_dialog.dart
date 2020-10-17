@@ -7,6 +7,7 @@ enum GeneralDialogType { confirm, discard }
 class GeneralDialog extends StatelessWidget {
 	final String title;
 	final String content;
+	final RichText richContent;
 	final UIButton cancelButton;
 	final UIButton confirmButton;
 	final UIButton discardButton;
@@ -14,7 +15,8 @@ class GeneralDialog extends StatelessWidget {
 
 	GeneralDialog({
 		@required this.title,
-		@required this.content,
+		this.content,
+		this.richContent,
 		this.cancelButton,
 		this.confirmButton,
 		this.discardButton,
@@ -26,6 +28,7 @@ class GeneralDialog extends StatelessWidget {
 		String content,
 		String confirmText,
 		Color confirmColor,
+		RichText richContent,
 		Function confirmAction,
 		String cancelText,
 		Color cancelColor,
@@ -33,6 +36,7 @@ class GeneralDialog extends StatelessWidget {
 	}) : this(
 		title: title,
 		content: content,
+		richContent: richContent,
 		cancelButton: UIButton(
 			cancelText ?? 'actions.cancel',
 			cancelAction,
@@ -67,7 +71,7 @@ class GeneralDialog extends StatelessWidget {
   Widget build(BuildContext context) {
 		return AlertDialog(
 			title: Text(title),
-			content: Text(content),
+			content: richContent ?? Text(content),
 			actions: [
 				if(type == GeneralDialogType.discard)
 					discardButton.getWidget(context),

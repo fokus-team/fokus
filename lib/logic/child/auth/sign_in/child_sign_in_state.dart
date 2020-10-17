@@ -9,7 +9,7 @@ class ChildSignInState extends FormzState {
   }) : super(status);
 
   @override
-  List<Object> get props => [childCode];
+  List<Object> get props => [childCode, status];
 
   ChildSignInState copyWith({UserCode childCode, FormzStatus status}) {
 	  return ChildSignInState(

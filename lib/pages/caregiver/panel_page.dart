@@ -47,7 +47,7 @@ class _CaregiverPanelPageState extends State<CaregiverPanelPage> {
 				noElementsMessage: '$_pageKey.content.noChildProfilesAdded',
 				headerAction: UIButton(
 					'$_pageKey.header.addChild',
-					() => Navigator.of(context).pushNamed(AppPage.childSignInPage.name, arguments: {}),
+					() => Navigator.of(context).pushNamed(AppPage.childSignInPage.name),
 					AppColors.caregiverButtonColor,
 					Icons.add
 				),

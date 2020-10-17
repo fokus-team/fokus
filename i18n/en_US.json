@@ -44,6 +44,7 @@
 				"caregiverCode": "Caregiver code",
 				"profileAddTitle": "Add profile",
 				"profileAddHint": "Add existing profile using special child code or create a new profile by filling the form",
+				"profileAddHintSignedIn": "Create a new child profile connected with your account",
 				"createNewProfile": "Create a new child profile",
 				"addProfile": "Add profile",
 				"avatarGroups": {
@@ -52,6 +53,7 @@
 				}
 			},
 			"backToLoginPage": "Back to login page",
+			"backToApp": "Back to the application",
 			"backToStartPage": "Back to start page"
 		},
 		"notifications": {

@@ -41,6 +41,7 @@ class _TaskFormState extends State<TaskForm> {
 
 	GlobalKey<FormState> taskFormKey;
 	bool isDataChanged = false;
+	bool wereSubtasksLoaded = false;
 	TaskFormModel task;
 	int maxSubtasks = 10;
 
@@ -67,14 +68,6 @@ class _TaskFormState extends State<TaskForm> {
 			_titleController.text = widget.task.title;
 			_descriptionController.text = widget.task.description;
 			_pointsController.text = widget.task.pointsValue != null ? widget.task.pointsValue.toString() : null;
-			_subtasks = List.from(
-				widget.task.subtasks.map((subtask) {
-					var controller = TextEditingController();
-					controller.text = subtask;
-					return _getSubtaskFormField(controller);
-					}
-				)
-			);
 		}
     super.initState();
   }
@@ -140,7 +133,7 @@ class _TaskFormState extends State<TaskForm> {
 	void saveTask() {
 		if(taskFormKey.currentState.validate()) {
 			setState(() {
-				task.subtasks = _subtasks.map((subtask) => subtask.controller.text).toList();
+				task.subtasks = _subtasks.where((subtask) => subtask.controller.text.isNotEmpty).toList().map((subtask) => subtask.controller.text).toList();
 			});
 			if(formModeIsCreate())
 				Future.wait([
@@ -311,6 +304,18 @@ class _TaskFormState extends State<TaskForm> {
 	}
 
 	Widget buildSubtasksFields() {
+		if(!wereSubtasksLoaded && widget.task != null && widget.task.subtasks != null) {
+			_subtasks = List.from(
+				widget.task.subtasks.map((subtask) {
+					var controller = TextEditingController();
+					controller.text = subtask;
+					return _getSubtaskFormField(controller);
+				})
+			);
+			setState(() {
+			  wereSubtasksLoaded = true;
+			});
+		}
 		return Padding(
 			padding: EdgeInsets.only(top: 5.0, bottom: 6.0, left: 20.0, right: 20.0),
 			child:
@@ -485,7 +490,7 @@ class _TaskFormState extends State<TaskForm> {
 
 	TextFormField _getSubtaskFormField(TextEditingController controller) {
 		return TextFormField(controller: controller,
-			autofocus: true,
+			autofocus: wereSubtasksLoaded,
 			decoration: AppFormProperties.textFieldDecoration(Icons.blur_circular).copyWith(
 				labelText: AppLocales.of(context).translate('$_pageKeyTaskForm.fields.subtaskDescription.label'),
 				suffixIcon: IconButton(
@@ -496,7 +501,8 @@ class _TaskFormState extends State<TaskForm> {
 						});
 					},
 					icon: Icon(Icons.delete)
-				)),
+				)
+			),
 			maxLength: AppFormProperties.textFieldMaxLength,
 			textCapitalization: TextCapitalization.sentences,
 			onChanged: (val) => setState(() => isDataChanged = true),

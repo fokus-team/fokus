@@ -1,7 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:fokus/logic/common/reloadable/reloadable_cubit.dart';
-import 'package:fokus/model/db/date/date.dart';
-import 'package:fokus/model/db/plan/plan.dart';
 import 'package:fokus/model/db/plan/plan_instance.dart';
 import 'package:fokus/model/db/plan/plan_instance_state.dart';
 import 'package:fokus/model/db/plan/task_instance.dart';
@@ -18,7 +16,6 @@ import 'package:mongo_dart/mongo_dart.dart';
 class PlanInstanceCubit extends ReloadableCubit {
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final TaskInstanceService _taskInstancesService = GetIt.I<TaskInstanceService>();
-	final PlanRepeatabilityService _repeatabilityService = GetIt.I<PlanRepeatabilityService>();
 	final PlanKeeperService _planService = GetIt.I<PlanKeeperService>();
 	final ObjectId _planInstanceId;
 

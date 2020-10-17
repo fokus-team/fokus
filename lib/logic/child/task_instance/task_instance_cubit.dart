@@ -96,6 +96,10 @@ class TaskInstanceCubit extends Cubit<TaskInstanceState> {
 		emit(TaskInstanceStateRejected(await _onCompletion(TaskState.rejected), await _planService.loadPlanInstance(planInstance: planInstance, plan: plan)));
 	}
 
+	void updateChecks(List<MapEntry<String, bool>> subtasks) async {
+		await _dataRepository.updateTaskInstanceFields(taskInstance.id, subtasks: subtasks);
+	}
+
 	Future<UITaskInstance> _onCompletion(TaskState state) async {
 		taskInstance.status.state = state;
 		taskInstance.status.completed = true;

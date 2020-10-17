@@ -34,7 +34,9 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 	Animation<Offset> _taskListFabAnimation;
 	AnimationController _bottomBarController;
 	bool _isButtonDisabled = false;
+	bool _isCheckboxDisabled = false;
 	TimerCubit _timerBreakCubit;
+	List<MapEntry<String, bool>> subtasks = [];
 
 	final GlobalKey<SlidingCardState> _breakCard = GlobalKey<SlidingCardState>();
 	final GlobalKey<SlidingCardState> _completingCard = GlobalKey<SlidingCardState>();
@@ -171,6 +173,7 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 					_getAnimation('assets/animation/jumping_little_man.json'),
 					_getTitle(state.taskInstance.name, translate: false),
 					if(state.taskInstance.description != null) _getSubtitle(state.taskInstance.description ,alignment: TextAlign.justify, translate: false, topPadding: 8),
+					if(state.taskInstance.subtasks != null && state.taskInstance.subtasks.isNotEmpty) subtasks.isEmpty ? _getSubtasks(stateSubtasks: state.taskInstance.subtasks) : _getSubtasks()
 				],
 				showFirst: state is TaskInstanceStateProgress,
 			),
@@ -257,6 +260,51 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 				style: Theme.of(context).textTheme.subtitle1.copyWith(color: AppColors.lightTextColor, fontWeight: FontWeight.bold),
 				textAlign: alignment,
 			)
+		);
+	}
+
+	Widget _getSubtasks({List<MapEntry<String, bool>> stateSubtasks, double topPadding = 24.0}) {
+		if(stateSubtasks != null) subtasks = stateSubtasks;
+		return Padding(
+		  padding: EdgeInsets.only(top: topPadding),
+		  child: ListTileTheme(
+				shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppBoxProperties.roundedCornersRadius)),
+		    child: Column(
+		    	children: [
+		    		for(var subtask in subtasks)
+		    			Padding(
+		    			  padding: const EdgeInsets.only(top: 12.0),
+		    			  child: DecoratedBox(
+										decoration: BoxDecoration(
+											color: subtasks[subtasks.indexOf(subtask)].value ? Colors.grey[300] : Colors.white
+										),
+										child: CheckboxListTile(
+											value: subtasks[subtasks.indexOf(subtask)].value,
+											title: Text(
+												subtask.key,
+												style: Theme.of(context).textTheme.subtitle1.copyWith(color: AppColors.darkTextColor, fontWeight: FontWeight.bold),
+											),
+											secondary: Icon(Icons.blur_circular),
+											onChanged: (val) {
+												setState(() {
+													if(!_isCheckboxDisabled) {
+														_isCheckboxDisabled = true;
+														subtasks[subtasks.indexOf(subtask)] = MapEntry(subtask.key, val);
+														BlocProvider.of<TaskInstanceCubit>(context).updateChecks(subtasks);
+														Timer(Duration(seconds: 1), () {
+															_isCheckboxDisabled = false;
+														});
+													}
+												});
+											},
+											activeColor: Colors.blue,
+											checkColor: Colors.white,
+										),
+		    			  ),
+		    			)
+		    	],
+		    ),
+		  ),
 		);
 	}
 

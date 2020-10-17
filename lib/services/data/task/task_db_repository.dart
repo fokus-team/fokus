@@ -56,7 +56,7 @@ mixin TaskDbRepository implements DbRepository {
 
 	Future updateTaskInstance(TaskInstance taskInstance) => dbClient.update(Collection.taskInstance, _buildTaskQuery(id: taskInstance.id), taskInstance.toJson(), multiUpdate: false);
 
-	Future updateTaskInstanceFields(ObjectId taskInstanceId, {TaskState state, List<DateSpan<TimeDate>> duration, List<DateSpan<TimeDate>> breaks, bool isCompleted, int rating, int pointsAwarded}) {
+	Future updateTaskInstanceFields(ObjectId taskInstanceId, {TaskState state, List<DateSpan<TimeDate>> duration, List<DateSpan<TimeDate>> breaks, bool isCompleted, int rating, int pointsAwarded, List<MapEntry<String, bool>> subtasks}) {
 		var document = modify;
 		if (state != null)
 			document.set('status.state', state.index);
@@ -70,6 +70,8 @@ mixin TaskDbRepository implements DbRepository {
 			document.set('status.rating', rating);
 		if (pointsAwarded != null)
 			document.set('status.pointsAwarded', pointsAwarded);
+		if(subtasks != null)
+			document.set('subtasks', subtasks.map((v) => {v.key: v.value}).toList());
 		return dbClient.update(Collection.taskInstance, where.eq('_id', taskInstanceId), document);
 	}
 

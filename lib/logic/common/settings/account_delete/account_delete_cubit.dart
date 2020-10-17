@@ -28,14 +28,14 @@ class AccountDeleteCubit extends Cubit<AccountDeleteState> {
 	
 	Future _deleteChild() async {
 		var users = [_removedUser.id];
-		var plans = await _dataRepository.getPlanInstances(childIDs: users, fields: ['_id']);
+		var planInstances = await _dataRepository.getPlanInstances(childIDs: users, fields: ['_id']);
 		await _authenticationProvider.confirmPassword(state.password.value);
 
 		await Future.value([
 			_dataRepository.removeUsers(users),
 			_dataRepository.updateUser(_activeUser().id, removedConnections: users),
 			_dataRepository.removePlanInstances(childIds: users),
-			_dataRepository.removeTaskInstances(planInstancesIds: plans.map((plan) => plan.id).toList()),
+			_dataRepository.removeTaskInstances(planInstancesIds: planInstances.map((plan) => plan.id).toList()),
 		]);
 		_appConfigRepository.removeSavedChildProfiles(users);
 	}

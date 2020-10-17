@@ -25,11 +25,21 @@ class PlanCubit extends ReloadableCubit{
 		emit(CaregiverTasksLoadSuccess(UIPlan.fromDBModel(plan, getDescription(plan)), tasks.map((task) => UITask.fromDBModel(task: task)).toList(), children));
 	}
 
+	Future deletePlan() async {
+		var instances = await _dataRepository.getPlanInstances(planId: _planId, fields: ['_id']);
+		return Future.wait([
+			_dataRepository.removePlans(ids: [_planId]),
+			_dataRepository.removePlanInstances(planId: _planId),
+			_dataRepository.removeTasks(planIds: [_planId]),
+			_dataRepository.removeTaskInstances(planInstancesIds: instances.map((plan) => plan.id).toList()),
+		]);
+	}
 }
-	class CaregiverTasksLoadSuccess extends DataLoadSuccess{
-		final UIPlan uiPlan;
-		final List<UITask> tasks;
-		final Map<ObjectId, String> children;
+
+class CaregiverTasksLoadSuccess extends DataLoadSuccess{
+	final UIPlan uiPlan;
+	final List<UITask> tasks;
+	final Map<ObjectId, String> children;
 
   CaregiverTasksLoadSuccess(this.uiPlan, this.tasks, this.children);
 

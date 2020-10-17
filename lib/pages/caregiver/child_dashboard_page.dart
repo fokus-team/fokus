@@ -22,6 +22,7 @@ import 'package:fokus/widgets/general/app_alert.dart';
 import 'package:fokus/widgets/general/app_loader.dart';
 import 'package:fokus/widgets/loadable_bloc_builder.dart';
 import 'package:fokus/widgets/segment.dart';
+import 'package:fokus_auth/fokus_auth.dart';
 import 'package:intl/intl.dart';
 import 'package:smart_select/smart_select.dart';
 
@@ -126,7 +127,7 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
       popupMenuWidget: PopupMenuList(
         lightTheme: true,
         items: [
-          UIButton('$_pageKey.header.childCode', () => showCodeDialog('fa7462a054295e915a20755d')),
+          UIButton('$_pageKey.header.childCode', () => showCodeDialog(getCodeFromId(child.id))),
           UIButton.ofType(ButtonType.edit, () => cubit.onNameDialogClosed(showNameEditDialog(context, _childProfile))),
           UIButton.ofType(ButtonType.unpair, () async {
             if ((await showAccountDeleteDialog(context, _childProfile)) ?? false)

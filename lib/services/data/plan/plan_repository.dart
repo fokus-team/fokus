@@ -15,7 +15,7 @@ abstract class PlanRepository {
 	Future<int> countPlans({List<ObjectId> ids, ObjectId caregiverId, ObjectId childId, bool active, bool oneDayOnly = false});
 
 	Future<PlanInstance> getPlanInstance({ObjectId id, ObjectId childId, PlanInstanceState state, List<String> fields});
-	Future<List<PlanInstance>> getPlanInstances({List<ObjectId> childIDs, PlanInstanceState state, List<ObjectId> planIDs, Date date, DateSpan<Date> between, List<String> fields});
+	Future<List<PlanInstance>> getPlanInstances({List<ObjectId> childIDs, PlanInstanceState state, ObjectId planId, Date date, DateSpan<Date> between, List<String> fields});
 
 	Future<bool> hasActiveChildPlanInstance(ObjectId childId);
 	Future<List<PlanInstance>> getPlanInstancesForPlans(ObjectId childId, List<ObjectId> planIDs, [Date date]);
@@ -34,5 +34,5 @@ abstract class PlanRepository {
 	Future createPlan(Plan plan);
 
 	Future removePlans({List<ObjectId> ids, ObjectId caregiverId});
-	Future removePlanInstances({List<ObjectId> ids, List<ObjectId> childIds});
+	Future removePlanInstances({ObjectId planId, List<ObjectId> ids, List<ObjectId> childIds});
 }

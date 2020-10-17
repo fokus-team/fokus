@@ -44,6 +44,7 @@
 				"caregiverCode": "Kod opiekuna",
 				"profileAddTitle": "Dodaj profil",
 				"profileAddHint": "Dodaj istniejący profil za pomocą specjalnego kodu dziecka lub stwórz nowy wypełniając formularz",
+				"profileAddHintSignedIn": "Stwórz nowy profil dziecka połączony z twoim kontem",
 				"createNewProfile": "Stwórz nowy profil dziecka",
 				"addProfile": "Dodaj profil",
 				"avatarGroups": {
@@ -52,6 +53,7 @@
 				}
 			},
 			"backToLoginPage": "Powrót do ekranu logowania",
+			"backToApp": "Powrót do aplikacji",
 			"backToStartPage": "Powrót do ekranu startowego"
 		},
 		"notifications": {
@@ -93,7 +95,6 @@
 					"deleteChildAccountDescription": "Czy na pewno chcesz usunąć konto tego dziecka? Spowoduje to trwałe wymazanie wszystkich jego danych włączając w to:",
 					"deleteAccountDataList": "Plany|Zadania|Nagrody|Profile dzieci|Historię wykonanych zadań",
 					"deleteChildAccountDataList": "Profil|Nagrody|Punkty|Historię wykonanych zadań",
-					"deleteAccountWarning": "Tej akcji nie można cofnąć!",
 					"deleteAccountConfirm": "Wprowadź swoje hasło aby potwierdzić:"
 				},
 				"appSettings": {
@@ -598,8 +599,8 @@
 		"genericRangeOverflowValue": "Wartość musi mieścić się w zakresie {A}-{B}",
 		"unsavedProgressTitle": "Niezapisane zmiany",
 		"unsavedProgressMessage": "Posiadasz niezapisane zmiany. Czy jesteś pewien, że chcesz wyjść?",
-		"deletePlan": "Usuwanie planu",
-		"confirmPlanDeletion": "Czy na pewno chcesz usunąć plan?"
+		"deletePlan": "Usuń plan",
+		"confirmPlanDeletion": "Czy na pewno chcesz usunąć ten plan? Spowoduje to trwałe wymazanie wszystkich związanych z nim danych włączając w to historię wykonanych zadań tego planu."
 	},
 	"actions": {
 		"ok": "Ok",
@@ -705,5 +706,6 @@
 	"and": "i",
 	"or": "lub",
 	"hour": "godz.",
-	"minute": "min"
+	"minute": "min",
+	"deleteWarning": "Tej akcji nie można cofnąć!"
 }

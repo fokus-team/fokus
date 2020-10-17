@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
+import 'package:fokus/model/ui/user/ui_user.dart';
 import 'package:formz/formz.dart';
 import 'package:smart_select/smart_select.dart';
 
@@ -21,52 +23,63 @@ class ChildSignInPage extends StatelessWidget {
 	
   @override
   Widget build(BuildContext context) {
+  	var activeUser = context.bloc<AuthenticationBloc>().state.user;
 	  return Scaffold(
 		  body: SafeArea(
-			  child: ListView(
-					padding: EdgeInsets.symmetric(vertical: AppBoxProperties.screenEdgePadding),
-					shrinkWrap: true,
-					children: [
-						_buildSignUpForm(context),
-						AuthFloatingButton(
-							icon: Icons.arrow_back,
-							action: () => Navigator.of(context).pop(),
-							text: AppLocales.of(context).translate('page.loginSection.backToLoginPage')
-						)
-					]
-				)
+			  child: BlocListener<ChildSignUpCubit, ChildSignUpState>(
+				  listener: (context, state) {
+					  if (state.status.isSubmissionSuccess && activeUser != null)
+						  Navigator.of(context).pop();
+				  },
+				  child: ListView(
+						padding: EdgeInsets.symmetric(vertical: AppBoxProperties.screenEdgePadding),
+						shrinkWrap: true,
+						children: [
+							_buildForms(context, activeUser),
+							AuthFloatingButton(
+								icon: Icons.arrow_back,
+								action: () => Navigator.of(context).pop(),
+								text: AppLocales.of(context).translate('page.loginSection.backTo${activeUser != null ? 'App' : 'LoginPage'}')
+							)
+						]
+					)
+			  ),
 		  ),
 	  );
   }
 
-  Widget _buildSignUpForm(BuildContext context) {
+  Widget _buildForms(BuildContext context, UIUser activeUser) {
 	  return AuthGroup(
 			title: AppLocales.of(context).translate('$_pageKey.profileAddTitle'),
-			hint: AppLocales.of(context).translate('$_pageKey.profileAddHint'),
+			hint: AppLocales.of(context).translate('$_pageKey.profileAddHint${activeUser != null ? 'SignedIn' : ''}'),
 			content: ListView(
 				shrinkWrap: true,
 				children: <Widget>[
-					AuthenticationInputField<ChildSignInCubit, ChildSignInState>(
-						getField: (state) => state.childCode, // temp
-						changedAction: (cubit, value) => cubit.childCodeChanged(value), // temp
-						labelKey: '$_pageKey.childCode',
-						icon: Icons.screen_lock_portrait,
-						getErrorKey: (state) => [state.childCode.error.key], // temp
-					),
-					AuthButton(
-						button: UIButton(
-							'$_pageKey.addProfile',
-							() => context.bloc<ChildSignInCubit>().signInNewChild(),
-							Colors.orange
-						)
-					),
-					AuthDivider(),
+					if (activeUser == null)
+						...[
+							AuthenticationInputField<ChildSignInCubit, ChildSignInState>(
+								getField: (state) => state.childCode, // temp
+								changedAction: (cubit, value) => cubit.childCodeChanged(value), // temp
+								labelKey: '$_pageKey.childCode',
+								icon: Icons.screen_lock_portrait,
+								getErrorKey: (state) => [state.childCode.error.key], // temp
+							),
+							AuthButton(
+								button: UIButton(
+									'$_pageKey.addProfile',
+									() => context.bloc<ChildSignInCubit>().signInNewChild(),
+									Colors.orange
+								)
+							),
+							AuthDivider(),
+						],
 					AuthenticationInputField<ChildSignUpCubit, ChildSignUpState>(
 						getField: (state) => state.caregiverCode,
 						changedAction: (cubit, value) => cubit.caregiverCodeChanged(value),
 						labelKey: '$_pageKey.caregiverCode',
 						icon: Icons.phonelink_lock,
 						getErrorKey: (state) => [state.caregiverCode.error.key],
+						disabled: activeUser != null,
 					),
 					AuthenticationInputField<ChildSignUpCubit, ChildSignUpState>(
 						getField: (state) => state.name,
@@ -90,7 +103,7 @@ class ChildSignInPage extends StatelessWidget {
 
 	Widget _buildAvatarPicker(BuildContext context) {
 		return BlocBuilder<ChildSignUpCubit, ChildSignUpState>(
-			buildWhen: (oldState, newState) => oldState.avatar != newState.avatar || oldState.caregiverCode != newState.caregiverCode,
+			buildWhen: (oldState, newState) => oldState.avatar != newState.avatar || oldState.takenAvatars != newState.takenAvatars,
 			cubit: BlocProvider.of<ChildSignUpCubit>(context),
 			builder: (context, state) {
 				return Padding(

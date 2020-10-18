@@ -6,7 +6,7 @@ import 'package:fokus/model/db/date_span.dart';
 import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/ui/ui_button.dart';
 import 'package:fokus/utils/ui/form_config.dart';
-import 'package:fokus/widgets/buttons/bottom_sheet_bar_buttons.dart';
+import 'package:fokus/widgets/buttons/bottom_sheet_confirm_button.dart';
 import 'package:smart_select/smart_select.dart';
 import 'package:mongo_dart/mongo_dart.dart' as Mongo;
 
@@ -152,7 +152,8 @@ class _PlanFormState extends State<PlanForm> {
 			modalType: SmartSelectModalType.bottomSheet,
 			modalConfig: SmartSelectModalConfig(
 				searchBarHint: AppLocales.of(context).translate('actions.search'),
-				trailing: buildBottomSheetBar(context, children.length > 1, children, widget.plan.children)
+				useConfirmation: true,
+				confirmationBuilder: (context, callback) => ButtonSheetConfirmButton(callback: () => callback)
 			),
 			leading: Padding(padding: EdgeInsets.all(8.0), child: Icon(Icons.people)),
 			onChange: (val) => setState(() {
@@ -177,19 +178,6 @@ class _PlanFormState extends State<PlanForm> {
 		}
 	}
 
-	Widget buildBottomSheetBar(BuildContext context, bool selectAllButton, List<dynamic> sourceList, List<dynamic> valueList) {
-		return ButtonSheetBarButtons(
-			buttons: [
-				// if(selectAllButton)
-				// 	if(sourceList.length == valueList.length)
-				// 		UIButton('actions.deselectAll', () => onSelectAll(sourceList, valueList), AppColors.mainBackgroundColor, Icons.close)
-				// 	else
-				// 		UIButton('actions.selectAll', () => onSelectAll(sourceList, valueList), AppColors.mainBackgroundColor, Icons.playlist_add_check),
-				UIButton('actions.confirm', () => { Navigator.pop(context) }, Colors.green, Icons.done)
-			]
-		);
-	}
-
 	Widget buildRepeatabilityTypeField() {
 		return SmartSelect<PlanFormRepeatability>.single(
 			title: AppLocales.of(context).translate('$_pageKey.repeatability.label'),
@@ -203,6 +191,10 @@ class _PlanFormState extends State<PlanForm> {
 			],
 			isTwoLine: true,
 			modalType: SmartSelectModalType.bottomSheet,
+			modalConfig: SmartSelectModalConfig(
+				useConfirmation: true,
+				confirmationBuilder: (context, callback) => ButtonSheetConfirmButton(callback: () => callback)
+			),
 			leading: Padding(padding: EdgeInsets.all(8.0), child: Icon(Icons.refresh)),
 			onChange: (val) {
 				FocusManager.instance.primaryFocus.unfocus();
@@ -239,6 +231,10 @@ class _PlanFormState extends State<PlanForm> {
 					],
 					isTwoLine: true,
 					modalType: SmartSelectModalType.bottomSheet,
+					modalConfig: SmartSelectModalConfig(
+						useConfirmation: true,
+						confirmationBuilder: (context, callback) => ButtonSheetConfirmButton(callback: () => callback)
+					),
 					leading: Padding(padding: EdgeInsets.all(8.0), child: Icon(Icons.event)),
 					onChange: (val) => setState(() {
 						FocusManager.instance.primaryFocus.unfocus();
@@ -257,7 +253,8 @@ class _PlanFormState extends State<PlanForm> {
 					choiceType: SmartSelectChoiceType.chips,
 					modalType: SmartSelectModalType.bottomSheet,
 					modalConfig: SmartSelectModalConfig(
-						trailing: buildBottomSheetBar(context, true, dayList, widget.plan.days)
+						useConfirmation: true,
+						confirmationBuilder: (context, callback) => ButtonSheetConfirmButton(callback: () => callback)
 					),
 					builder: (context, state, callback) {
 						return ListTile(

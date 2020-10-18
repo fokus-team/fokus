@@ -6,7 +6,7 @@ import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/ui/plan/ui_plan.dart';
 import 'package:fokus/model/ui/ui_button.dart';
 import 'package:fokus/utils/ui/calendar_utils.dart';
-import 'package:fokus/widgets/buttons/bottom_sheet_bar_buttons.dart';
+import 'package:fokus/widgets/buttons/bottom_sheet_confirm_button.dart';
 import 'package:intl/intl.dart';
 import 'package:smart_select/smart_select.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -276,11 +276,8 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 	    ),
 	    modalType: SmartSelectModalType.bottomSheet,
 			modalConfig: SmartSelectModalConfig(
-				trailing: ButtonSheetBarButtons(
-					buttons: [
-						UIButton('actions.confirm', () { Navigator.pop(context); }, Colors.green, Icons.done)
-					],
-				)
+				useConfirmation: true,
+				confirmationBuilder: (context, callback) => ButtonSheetConfirmButton(callback: () => callback)
 			),
 	    onChange: (val) {
 				setState(() { _selectedChildren = val; });

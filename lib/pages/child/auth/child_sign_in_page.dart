@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
 import 'package:fokus/model/ui/user/ui_user.dart';
+import 'package:fokus/widgets/buttons/bottom_sheet_confirm_button.dart';
 import 'package:formz/formz.dart';
 import 'package:smart_select/smart_select.dart';
 
@@ -156,6 +157,10 @@ class ChildSignInPage extends StatelessWidget {
 							}
 						),
 						modalType: SmartSelectModalType.bottomSheet,
+						modalConfig: SmartSelectModalConfig(
+							useConfirmation: true,
+							confirmationBuilder: (context, callback) => ButtonSheetConfirmButton(callback: () => callback)
+						),
 						onChange: (val) {
 							FocusManager.instance.primaryFocus.unfocus();
 							context.bloc<ChildSignUpCubit>().avatarChanged(val);

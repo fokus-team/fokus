@@ -12,7 +12,7 @@ import 'package:fokus/utils/ui/child_plans_util.dart';
 import 'package:fokus/utils/ui/dialog_utils.dart';
 import 'package:fokus/utils/ui/icon_sets.dart';
 import 'package:fokus/utils/ui/theme_config.dart';
-import 'package:fokus/widgets/buttons/bottom_sheet_bar_buttons.dart';
+import 'package:fokus/widgets/buttons/bottom_sheet_confirm_button.dart';
 import 'package:fokus/widgets/buttons/popup_menu_list.dart';
 import 'package:fokus/widgets/cards/item_card.dart';
 import 'package:fokus/widgets/cards/model_cards.dart';
@@ -185,7 +185,7 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 	Widget _buildFloatingButtonPicker<T>({
 		String buttonLabel, IconData buttonIcon, String disabledDialogTitle, String disabledDialogText,
 		String pickerTitle, List<T> pickedValues, List<T> options,
-		Function builder, Function(List<T>) onChange, Function(T) getName, Function onConfirm
+		Function builder, Function(List<T>) onChange, Function(T) getName
 	}) {
 		bool buttonDisabled = options.isEmpty;
 		return SmartSelect<T>.multiple(
@@ -203,11 +203,7 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 			choiceConfig: SmartSelectChoiceConfig(builder: builder),
 			modalConfig: SmartSelectModalConfig(
 				useConfirmation: true,
-				trailing: ButtonSheetBarButtons(
-					buttons: [
-						UIButton('actions.confirm', () { Navigator.pop(context); onConfirm(); }, Colors.green, Icons.done)
-					],
-				)
+				confirmationBuilder: (context, callback) => ButtonSheetConfirmButton(callback: () => callback)
 			),
 			builder: (context, state, function) {
 				return FloatingActionButton.extended(
@@ -247,7 +243,6 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 			pickedValues: availablePlans.where((element) => element.assignedTo.contains(_childProfile.id)).toList(),
 			options: availablePlans,
 			onChange: (selected) => context.bloc<ChildDashboardCubit>().assignPlans(selected.map((plan) => plan.id).toList()),
-			onConfirm: () {},
 			getName: (plan) => plan.name,
 			builder: (item, checked, onChange) {
 				return Theme(
@@ -281,7 +276,6 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 			pickedValues: [],
 			options: availableBadges,
 			onChange: (selected) => context.bloc<ChildDashboardCubit>().assignBadges(selected),
-			onConfirm: () => {},
 			getName: (badge) => badge.name,
 			builder: (item, checked, onChange) {
 				return Theme(

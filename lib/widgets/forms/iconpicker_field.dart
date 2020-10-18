@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/ui/app_paths.dart';
 import 'package:fokus/utils/ui/icon_sets.dart';
+import 'package:fokus/widgets/buttons/bottom_sheet_confirm_button.dart';
 import 'package:smart_select/smart_select.dart';
 
 enum IconPickerType { reward, badge }
@@ -86,6 +87,10 @@ class _IconPickerFieldState extends State<IconPickerField> {
 					}
 				),
 				modalType: SmartSelectModalType.bottomSheet,
+				modalConfig: SmartSelectModalConfig(
+					useConfirmation: true,
+					confirmationBuilder: (context, callback) => ButtonSheetConfirmButton(callback: () => callback)
+				),
 				onChange: (val) => widget.callback(val)
 			)
 		);

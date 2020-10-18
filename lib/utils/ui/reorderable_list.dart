@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorderable_list.dart';
+import 'theme_config.dart';
 
-final Duration _insertDuration = Duration(milliseconds: 800);
-final Duration _removeDuration = Duration(milliseconds: 800);
-final Duration _dragDuration = Duration(milliseconds: 200);
 
 Widget buildReorderableList<Type>({Widget header, Widget Function(Type) child, List<Type> items, Key Function(Type) getKey,
 		void Function(Type, int) onReorderStarted, void Function(Type, int, int, List<Type>) onReorderFinished}) {
@@ -14,9 +12,9 @@ Widget buildReorderableList<Type>({Widget header, Widget Function(Type) child, L
 		areItemsTheSame: (a, b) => getKey(a) == getKey(b),
 		onReorderStarted: onReorderStarted,
 		onReorderFinished: onReorderFinished,
-		insertDuration: _insertDuration,
-		removeDuration: _removeDuration,
-		dragDuration: _dragDuration,
+		insertDuration: AnimationsProperties.insertDuration,
+		removeDuration: AnimationsProperties.removeDuration,
+		dragDuration: AnimationsProperties.dragDuration,
 		itemBuilder: (_context, itemAnimation, item, index) {
 			return Reorderable(
 				key: getKey(item),

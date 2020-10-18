@@ -96,8 +96,10 @@ class TaskInstanceCubit extends Cubit<TaskInstanceState> {
 		emit(TaskInstanceStateRejected(await _onCompletion(TaskState.rejected), await _dataAggregator.loadPlanInstance(planInstance: planInstance, plan: plan)));
 	}
 
-	void updateChecks(List<MapEntry<String, bool>> subtasks) async {
-		await _dataRepository.updateTaskInstanceFields(taskInstance.id, subtasks: subtasks);
+	void updateChecks(MapEntry<String, bool> subtask) async {
+  	taskInstance.subtasks[taskInstance.subtasks.indexWhere((e) => e.key == subtask.key)] = subtask;
+		await _dataRepository.updateTaskInstanceFields(taskInstance.id, subtasks: taskInstance.subtasks);
+		emit(TaskInstanceStateSubtaskChanged(UITaskInstance.singleWithTask(taskInstance: taskInstance, task: task), await _dataAggregator.loadPlanInstance(planInstance: planInstance, plan: plan)));
 	}
 
 	Future<UITaskInstance> _onCompletion(TaskState state) async {

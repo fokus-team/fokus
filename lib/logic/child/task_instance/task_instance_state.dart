@@ -9,6 +9,10 @@ class TaskInstanceStateInitial extends TaskInstanceState {
   List<Object> get props => [];
 }
 
+class TaskInstanceStateSubtaskChanged extends TaskInstanceStateProgress {
+  TaskInstanceStateSubtaskChanged(UITaskInstance taskInstance, UIPlanInstance planInstance) : super(taskInstance, planInstance);
+}
+
 class TaskInstanceStateBreak extends TaskInstanceProvider {
   TaskInstanceStateBreak(UITaskInstance taskInstance, UIPlanInstance planInstance) : super(taskInstance, planInstance);
 }
@@ -19,12 +23,10 @@ class TaskInstanceStateProgress extends TaskInstanceProvider {
 
 class TaskInstanceStateDone extends TaskInstanceProvider {
   TaskInstanceStateDone(UITaskInstance taskInstance, UIPlanInstance planInstance) : super(taskInstance, planInstance);
-
 }
 
 class TaskInstanceStateRejected extends TaskInstanceProvider {
   TaskInstanceStateRejected(UITaskInstance taskInstance, UIPlanInstance planInstance) : super(taskInstance, planInstance);
-
 }
 
 class TaskInstanceProvider extends TaskInstanceState {

@@ -186,8 +186,8 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 					physics: NeverScrollableScrollPhysics(),
 					items: optionalTasks.toList(),
 					areItemsTheSame: (a, b) => a.key == b.key,
-					insertDuration: insertDuration,
-					removeDuration: removeDuration,
+					insertDuration: AnimationsProperties.insertDuration,
+					removeDuration: AnimationsProperties.removeDuration,
 					itemBuilder: (context, itemAnimation, item, index) {
 						final offsetAnimation = Tween<Offset>(begin: Offset(-2.0, 0.0), end: Offset(0.0, 0.0)).animate(CurvedAnimation(
 							curve: Interval(0.6, 1, curve: Curves.easeOutCubic),

@@ -51,6 +51,12 @@ class AppColors {
 
 }
 
+class AnimationsProperties {
+	static final Duration insertDuration = Duration(milliseconds: 800);
+	static final Duration removeDuration = Duration(milliseconds: 800);
+	static final Duration dragDuration = Duration(milliseconds: 200);
+}
+
 class AppBoxProperties {
 	// Paddings, margins, borders and box shadows goes here
   static final double buttonIconPadding = 4.0;

@@ -189,7 +189,7 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 	}
 
   Widget getCardHeader(UIPlanInstance _planInstance) {
-		var taskDescriptionKey = 'page.childSection.panel.content.' + (_planInstance.completedTaskCount > 0 ? 'taskProgress' : 'noTaskCompleted');
+		var taskDescriptionKey = 'plans.' + (_planInstance.completedTaskCount > 0 ? 'taskProgress' : 'noTaskCompleted');
 		var card = ItemCard(
 			title: _planInstance.name,
 			subtitle: _planInstance.description(context),

@@ -20,7 +20,7 @@ class TaskAppHeader extends StatefulWidget with PreferredSizeWidget {
 	final Widget content;
 	final String helpPage;
 	final Function breakPerformingTransition;
-	final TaskInstanceProvider state;
+	final TaskInstanceLoaded state;
 
 	TaskAppHeader({Key key, @required this.height, @required this.state, this.title, this.content, this.helpPage,this.breakPerformingTransition}) : super(key: key);
 
@@ -148,7 +148,7 @@ class TaskAppHeaderState extends State<TaskAppHeader> with TickerProviderStateMi
 
 	Widget _getButtonWidget() {
 		if(isBreakNow == null) setState(() {
-			isBreakNow = this.widget.state is TaskInstanceStateBreak;
+			isBreakNow = this.widget.state is TaskInstanceInBreak;
 			_buttonController = AnimationController(duration: Duration(milliseconds: 450), vsync: this);
 			if(isBreakNow) _buttonController.forward();
 		});
@@ -184,7 +184,7 @@ class TaskAppHeaderState extends State<TaskAppHeader> with TickerProviderStateMi
 			),
 			onPressed: () => {
 				this.widget.breakPerformingTransition(this.widget.state),
-				this.widget.state is TaskInstanceStateProgress ? _timerCompletionCubit.pauseTimer() : _timerCompletionCubit.resumeTimer()
+				this.widget.state is TaskInstanceInProgress ? _timerCompletionCubit.pauseTimer() : _timerCompletionCubit.resumeTimer()
 			},
 			elevation: 4.0
 		);
@@ -224,7 +224,7 @@ class TaskAppHeaderState extends State<TaskAppHeader> with TickerProviderStateMi
 			}
 			else _timerCompletionCubit = TimerCubit.up(() => _getDuration());
 		}
-  	if(this.widget.state is TaskInstanceStateProgress)
+  	if(this.widget.state is TaskInstanceInProgress)
 			return (_) => _timerCompletionCubit..startTimer();
   	else return (_) => _timerCompletionCubit..startTimer(paused: true);
 	}

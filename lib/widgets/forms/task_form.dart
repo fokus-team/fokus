@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,11 +12,13 @@ import 'package:fokus/model/ui/gamification/ui_currency.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/ui/dialog_utils.dart';
 import 'package:fokus/utils/ui/form_config.dart';
+import 'package:fokus/utils/ui/reorderable_list.dart';
 import 'package:fokus/utils/ui/theme_config.dart';
 import 'package:fokus/widgets/buttons/back_icon_button.dart';
 import 'package:fokus/widgets/buttons/help_icon_button.dart';
 import 'package:fokus/widgets/dialogs/general_dialog.dart';
 import 'package:fokus/widgets/forms/pointpicker_field.dart';
+import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorderable_list.dart';
 
 class TaskForm extends StatefulWidget {
 	final TaskFormModel task;
@@ -41,10 +44,18 @@ class _TaskFormState extends State<TaskForm> {
 	GlobalKey<FormState> taskFormKey;
 	bool isDataChanged = false;
 	TaskFormModel task;
+	int maxSubtasks = 10;
+	List<MapEntry<Key, String>> subtasksKeys = [];
+	bool inReorder = false;
+
 
 	TextEditingController _titleController = TextEditingController();
 	TextEditingController _descriptionController = TextEditingController();
 	TextEditingController _pointsController = TextEditingController();
+	TextEditingController _subtasksController = TextEditingController();
+
+	Duration dragDelayDuration = Duration(milliseconds: 600);
+	Duration defaultSwitchDuration = Duration(milliseconds: 400);
 
 	bool formModeIsCreate() => widget.task == null;
 
@@ -63,6 +74,8 @@ class _TaskFormState extends State<TaskForm> {
 			_titleController.text = widget.task.title;
 			_descriptionController.text = widget.task.description;
 			_pointsController.text = widget.task.pointsValue != null ? widget.task.pointsValue.toString() : null;
+			for(var subtask in widget.task.subtasks)
+				subtasksKeys.add(MapEntry(ValueKey(DateTime.now().toString()), subtask));
 		}
     super.initState();
   }
@@ -127,6 +140,7 @@ class _TaskFormState extends State<TaskForm> {
 
 	void saveTask() {
 		if(taskFormKey.currentState.validate()) {
+			task.subtasks = subtasksKeys.map((e) => e.value).toList();
 			if(formModeIsCreate())
 				Future.wait([
 					Future(widget.createTaskCallback(task))
@@ -238,10 +252,14 @@ class _TaskFormState extends State<TaskForm> {
 
 	Widget buildFormFields() {
 		return ListView(
+			physics: inReorder ? NeverScrollableScrollPhysics() : BouncingScrollPhysics(),
 			shrinkWrap: true,
 			children: <Widget>[
 				buildNameField(),
 				buildDescriptionField(),
+				buildSubtasksFields(),
+				Divider(),
+				SizedBox(height: 16.0),
 				buildPointsFields(),
 				buildTimerField(),
 				Divider(),
@@ -289,8 +307,46 @@ class _TaskFormState extends State<TaskForm> {
 				onChanged: (val) => setState(() {
 					isDataChanged = task.description != val;
 					task.description = val;
-				})
+				}),
 			)
+		);
+	}
+
+	Widget buildSubtasksFields() {
+		return Column(
+		  children: [
+			  buildReorderableList<MapEntry<Key, String>>(
+				  child: (item) => Handle(
+					  vibrate: true,
+					  delay: dragDelayDuration,
+					  child: _getSubtaskCard(item)
+				  ),
+				  items: subtasksKeys,
+				  getKey: (item) => item.key,
+				  onReorderStarted: (item, index) => setState(() => inReorder = true),
+				  onReorderFinished: (item, from, to, newItems) {
+					  setState(() {
+						  subtasksKeys..clear()..addAll(newItems);
+						  inReorder = false;
+						  isDataChanged = true;
+					  });
+				  },
+				  header: AnimatedSwitcher(
+					  duration: defaultSwitchDuration,
+					  child: subtasksKeys.isNotEmpty ?
+					  Padding(
+						  padding: const EdgeInsets.only(right: 4.0),
+						  child: ListTile(
+							  leading: Padding(padding: EdgeInsets.all(8.0), child: Icon(Icons.playlist_add_check)),
+							  title: Text(AppLocales.of(context).translate('$_pageKeyTaskForm.fields.subtaskDescription.sectionTitle')),
+							  subtitle: Text(AppLocales.of(context).translate('$_pageKeyTaskForm.fields.subtaskDescription.sectionSubtitle', {'NUM_SUBTASKS': subtasksKeys.length})),
+						  ),
+					  ) : SizedBox.shrink()
+				  )
+			  ),
+				if (subtasksKeys.length < maxSubtasks)
+					_getSubtaskFormField()
+		  ],
 		);
 	}
 
@@ -316,6 +372,11 @@ class _TaskFormState extends State<TaskForm> {
 			labelCurrencyText: AppLocales.of(context).translate('$_pageKeyTaskForm.fields.taskPoints.currencyLabel'),
 			pointValueSetter: (val) {
 				setState(() {
+					if(val == null || int.tryParse(val) == 0) {
+						isDataChanged = task.pointsValue == null;
+						task.pointsValue = null;
+						return;
+					}
 					isDataChanged = task.pointsValue != int.tryParse(val);
 					task.pointsValue = int.tryParse(val);
 				});
@@ -427,4 +488,101 @@ class _TaskFormState extends State<TaskForm> {
 		);
 	}
 
+
+	Widget _getSubtaskFormField() {
+		return Padding(
+			padding: EdgeInsets.only(top: 20.0, bottom: 12.0, left: 20.0, right: 20.0),
+			child: Row(
+		    children: [
+		      Expanded(
+		        child: TextFormField(controller: _subtasksController,
+		        	decoration: AppFormProperties.textFieldDecoration(Icons.playlist_add).copyWith(
+		        		labelText: AppLocales.of(context).translate('$_pageKeyTaskForm.fields.subtaskDescription.label'),
+		        	),
+		        	maxLength: AppFormProperties.textFieldMaxLength,
+		        	textCapitalization: TextCapitalization.sentences,
+		        	onChanged: (val) => setState(() => isDataChanged = true),
+		        ),
+		      ),
+		  		Padding(
+		  		  padding: EdgeInsets.only(right: 24, bottom: 24),
+		  		  child: Tooltip(
+		  		  	message: AppLocales.of(context).translate('$_pageKeyTaskForm.fields.subtaskDescription.add'),
+		  		  	child: Padding(
+		  		  		padding: EdgeInsets.only(left: 8.0),
+		  		  		child: AnimatedSwitcher(
+									duration: defaultSwitchDuration,
+		  		  		  child: MaterialButton(
+		  		  		  	visualDensity: VisualDensity.compact,
+		  		  		  	materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+		  		  		  	child: Icon(Icons.add, color: Colors.white, size: 30),
+		  		  		  	color: AppColors.caregiverButtonColor,
+		  		  		  	onPressed: _subtasksController.text == "" ? null : () {
+		  		  		  		if(_subtasksController.text != "")
+		  		  		  				setState(() {
+		  		  		  					subtasksKeys.add(MapEntry(ValueKey(DateTime.now().toString()) ,_subtasksController.text));
+		  		  		  					isDataChanged = true;
+		  		  		  					_subtasksController.text = "";
+		  		  		  				});
+		  		  		  		},
+										disabledColor: Theme.of(context).dividerColor,
+		  		  		  	padding: EdgeInsets.all(12.0),
+		  		  		  	shape: CircleBorder(),
+		  		  		  	minWidth: 0
+		  		  		  ),
+		  		  		)
+		  		  	)
+		  		  ),
+		  		)
+		    ],
+		  ),
+		);
+	}
+
+	Widget _getSubtaskCard(MapEntry<Key, String> subtask) {
+		return Padding(
+			padding: EdgeInsets.only(left: 64, right: 16),
+			child: IntrinsicHeight(
+			  child: Card(
+					shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppBoxProperties.roundedCornersRadius)),
+			  	child: InkWell(
+						splashColor: Colors.blueGrey[50],
+						highlightColor: Colors.blueGrey[50],
+						onTap: () => {},
+			  	  child: Row(
+			  	  	crossAxisAlignment: CrossAxisAlignment.start,
+			  	  	children: [
+			  	  		Expanded(
+			  	  		  child: Column(
+									crossAxisAlignment: CrossAxisAlignment.start,
+			  	  				mainAxisAlignment: MainAxisAlignment.center,
+			  	  		    children: [
+			  	  		      Padding(
+			  	  		        padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8),
+			  	  		        child: Text(
+			  	  		        	subtask.value,
+			  	  		        	style: Theme.of(context).textTheme.subtitle1,
+			  	  		  			overflow: TextOverflow.ellipsis,
+			  	  		  			maxLines: 6,
+			  	  		        ),
+			  	  		      ),
+			  	  		    ],
+			  	  		  ),
+			  	  		),
+			  	  		IconButton(
+			  	  				icon: Icon(Icons.delete, size: 24, color: Colors.grey),
+			  	  				onPressed: () {
+			  	  					setState(() {
+			  	  						subtasksKeys.remove(subtask);
+			  	  						isDataChanged = true;
+			  	  					});
+			  	  				},
+			  	  			)
+			  	  	],
+			  	  ),
+			  	),
+			  ),
+			),
+		);
+	}
 }

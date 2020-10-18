@@ -9,29 +9,34 @@ class TaskInstanceStateInitial extends TaskInstanceState {
   List<Object> get props => [];
 }
 
-class TaskInstanceStateBreak extends TaskInstanceProvider {
-  TaskInstanceStateBreak(UITaskInstance taskInstance, UIPlanInstance planInstance) : super(taskInstance, planInstance);
+class TaskInstanceInBreak extends TaskInstanceLoaded {
+  TaskInstanceInBreak(UITaskInstance taskInstance, UIPlanInstance planInstance) : super(taskInstance, planInstance);
 }
 
-class TaskInstanceStateProgress extends TaskInstanceProvider {
-  TaskInstanceStateProgress(UITaskInstance taskInstance, UIPlanInstance planInstance) : super(taskInstance, planInstance);
+class TaskInstanceInProgress extends TaskInstanceLoaded {
+  TaskInstanceInProgress(UITaskInstance taskInstance, UIPlanInstance planInstance) : super(taskInstance, planInstance);
+
+  TaskInstanceInProgress copyWith({UITaskInstance taskInstance}) {
+  	return TaskInstanceInProgress(
+		  taskInstance ?? this.taskInstance,
+		  planInstance
+	  );
+  }
 }
 
-class TaskInstanceStateDone extends TaskInstanceProvider {
-  TaskInstanceStateDone(UITaskInstance taskInstance, UIPlanInstance planInstance) : super(taskInstance, planInstance);
-
+class TaskInstanceDone extends TaskInstanceLoaded {
+  TaskInstanceDone(UITaskInstance taskInstance, UIPlanInstance planInstance) : super(taskInstance, planInstance);
 }
 
-class TaskInstanceStateRejected extends TaskInstanceProvider {
-  TaskInstanceStateRejected(UITaskInstance taskInstance, UIPlanInstance planInstance) : super(taskInstance, planInstance);
-
+class TaskInstanceRejected extends TaskInstanceLoaded {
+  TaskInstanceRejected(UITaskInstance taskInstance, UIPlanInstance planInstance) : super(taskInstance, planInstance);
 }
 
-class TaskInstanceProvider extends TaskInstanceState {
+class TaskInstanceLoaded extends TaskInstanceState {
 	final UITaskInstance taskInstance;
 	final UIPlanInstance planInstance;
 
-  TaskInstanceProvider(this.taskInstance, this.planInstance);
+  TaskInstanceLoaded(this.taskInstance, this.planInstance);
 
   @override
   List<Object> get props => [this.taskInstance, this.planInstance];

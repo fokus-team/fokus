@@ -12,6 +12,7 @@ import 'package:fokus/model/ui/gamification/ui_currency.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/ui/dialog_utils.dart';
 import 'package:fokus/utils/ui/form_config.dart';
+import 'package:fokus/utils/ui/reorderable_list.dart';
 import 'package:fokus/utils/ui/theme_config.dart';
 import 'package:fokus/widgets/buttons/back_icon_button.dart';
 import 'package:fokus/widgets/buttons/help_icon_button.dart';
@@ -53,10 +54,6 @@ class _TaskFormState extends State<TaskForm> {
 	TextEditingController _pointsController = TextEditingController();
 	TextEditingController _subtasksController = TextEditingController();
 
-
-	Duration insertDuration = Duration(milliseconds: 800);
-	Duration removeDuration = Duration(milliseconds: 800);
-	Duration dragDuration = Duration(milliseconds: 200);
 	Duration dragDelayDuration = Duration(milliseconds: 600);
 	Duration defaultSwitchDuration = Duration(milliseconds: 400);
 
@@ -316,64 +313,35 @@ class _TaskFormState extends State<TaskForm> {
 	Widget buildSubtasksFields() {
 		return Column(
 		  children: [
-				ImplicitlyAnimatedReorderableList<MapEntry<Key, String>>(
-					shrinkWrap: true,
-					physics: NeverScrollableScrollPhysics(),
-					items: subtasksKeys,
-					areItemsTheSame: (a, b) => a.key == b.key,
-					onReorderStarted: ((item, index) => setState(() => inReorder = true)),
-					onReorderFinished: (item, from, to, newItems) {
-						setState(() {
-							subtasksKeys..clear()..addAll(newItems);
-							inReorder = false;
-							isDataChanged = true;
-						});
-					},
-					insertDuration: insertDuration,
-					removeDuration: removeDuration,
-					dragDuration: dragDuration,
-					itemBuilder: (_context, itemAnimation, item, index) {
-						return Reorderable(
-							key: item.key,
-							builder: (context, dragAnimation, inDrag) {
-								final offsetAnimation = Tween<Offset>(begin: Offset(-2.0, 0.0), end: Offset(0.0, 0.0)).animate(CurvedAnimation(
-									curve: Interval(0.6, 1, curve: Curves.easeOutCubic),
-									parent: itemAnimation,
-								));
-								return SizeTransition(
-									axis: Axis.vertical,
-									sizeFactor: CurvedAnimation(
-										curve: Interval(0, 0.5, curve: Curves.easeOutCubic),
-										parent: itemAnimation,
-									),
-									child: SlideTransition(
-										position: offsetAnimation,
-										child: Transform.scale(
-											scale: 1.0 + 0.05*dragAnimation.value,
-											child: Handle(
-												vibrate: true,
-												delay: dragDelayDuration,
-												child: _getSubtaskCard(item)
-											)
-										)
-									)
-								);
-							}
-						);
-					},
-					header: AnimatedSwitcher(
-						duration: defaultSwitchDuration,
-						child: subtasksKeys.isNotEmpty ?
-							Padding(
-							  padding: const EdgeInsets.only(right: 4.0),
-							  child: ListTile(
-							  	leading: Padding(padding: EdgeInsets.all(8.0), child: Icon(Icons.playlist_add_check)),
-							  	title: Text(AppLocales.of(context).translate('$_pageKeyTaskForm.fields.subtaskDescription.sectionTitle')),
-							  	subtitle: Text(AppLocales.of(context).translate('$_pageKeyTaskForm.fields.subtaskDescription.sectionSubtitle'		, {'NUM_SUBTASKS': subtasksKeys.length})),
-							  ),
-							) : SizedBox.shrink(),
-					),
-				),
+			  buildReorderableList<MapEntry<Key, String>>(
+				  child: (item) => Handle(
+					  vibrate: true,
+					  delay: dragDelayDuration,
+					  child: _getSubtaskCard(item)
+				  ),
+				  items: subtasksKeys,
+				  getKey: (item) => item.key,
+				  onReorderStarted: (item, index) => setState(() => inReorder = true),
+				  onReorderFinished: (item, from, to, newItems) {
+					  setState(() {
+						  subtasksKeys..clear()..addAll(newItems);
+						  inReorder = false;
+						  isDataChanged = true;
+					  });
+				  },
+				  header: AnimatedSwitcher(
+					  duration: defaultSwitchDuration,
+					  child: subtasksKeys.isNotEmpty ?
+					  Padding(
+						  padding: const EdgeInsets.only(right: 4.0),
+						  child: ListTile(
+							  leading: Padding(padding: EdgeInsets.all(8.0), child: Icon(Icons.playlist_add_check)),
+							  title: Text(AppLocales.of(context).translate('$_pageKeyTaskForm.fields.subtaskDescription.sectionTitle')),
+							  subtitle: Text(AppLocales.of(context).translate('$_pageKeyTaskForm.fields.subtaskDescription.sectionSubtitle'		, {'NUM_SUBTASKS': subtasksKeys.length})),
+						  ),
+					  ) : SizedBox.shrink(),
+				  )
+			  ),
 				if (subtasksKeys.length < maxSubtasks)
 					_getSubtaskFormField()
 		  ],

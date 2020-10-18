@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/logic/caregiver/plan_form/plan_form_cubit.dart';
 import 'package:fokus/utils/bloc_utils.dart';
+import 'package:fokus/utils/ui/reorderable_list.dart';
 import 'package:fokus/widgets/cards/task_card.dart';
 import 'package:fokus/widgets/general/app_hero.dart';
 import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorderable_list.dart';
@@ -39,9 +40,6 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 
 	final int maxTaskCount = 20;
 
-	Duration insertDuration = Duration(milliseconds: 800);
-	Duration removeDuration = Duration(milliseconds: 800);
-	Duration dragDuration = Duration(milliseconds: 200);
 	Duration dragDelayDuration = Duration(milliseconds: 600);
 	Duration defaultSwitchDuration = Duration(milliseconds: 400);
 
@@ -57,7 +55,7 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 					child: ListView(
 						physics: inReorder ? NeverScrollableScrollPhysics() : BouncingScrollPhysics(),
 						children: [
-							buildReordableTaskList(context),
+							buildReorderableTaskList(context),
 							buildOptionalTaskList(context),
 							buildNoTasksAddedMessage(context),
 							SizedBox(height: 32.0)
@@ -150,55 +148,25 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
     });
   }
 
-	Widget buildReordableTaskList(BuildContext context) {
+	Widget buildReorderableTaskList(BuildContext context) {
 		final requiredTasks = widget.plan.tasks.where((element) => element.optional == false);
-		return ImplicitlyAnimatedReorderableList<TaskFormModel>(
-			shrinkWrap: true,
-			physics: NeverScrollableScrollPhysics(),
+		return buildReorderableList<TaskFormModel>(
 			items: requiredTasks.toList(),
-			areItemsTheSame: (a, b) => a.key == b.key,
+			child: (item) => Container(
+				margin: EdgeInsets.symmetric(horizontal: 16.0),
+				child: Handle(
+					vibrate: true,
+					delay: dragDelayDuration,
+					child: buildTaskCard(item, false)
+				)
+			),
+			getKey: (item) => item.key,
 			onReorderStarted: (item, index) => setState(() => inReorder = true),
 			onReorderFinished: (item, from, to, newItems) => onReorderFinished(newItems),
-			insertDuration: insertDuration,
-			removeDuration: removeDuration,
-			dragDuration: dragDuration,
-			itemBuilder: (_context, itemAnimation, item, index) {
-				return Reorderable(
-					key: item.key,
-					builder: (context, dragAnimation, inDrag) {
-						final offsetAnimation = Tween<Offset>(begin: Offset(-2.0, 0.0), end: Offset(0.0, 0.0)).animate(CurvedAnimation(
-							curve: Interval(0.6, 1, curve: Curves.easeOutCubic),
-							parent: itemAnimation,
-						));
-						return SizeTransition(
-							axis: Axis.vertical,
-							sizeFactor: CurvedAnimation(
-							curve: Interval(0, 0.5, curve: Curves.easeOutCubic),
-								parent: itemAnimation,
-							),
-							child: SlideTransition(
-								position: offsetAnimation,
-								child: Transform.scale(
-									scale: 1.0 + 0.05*dragAnimation.value,
-									child: Container(
-										margin: EdgeInsets.symmetric(horizontal: 16.0),
-										child: Handle(
-											vibrate: true,
-											delay: dragDelayDuration,
-											child: buildTaskCard(_context, item, false)
-										)
-									)
-								)
-							) 
-						);
-					}
-				);
-			},
 			header: AnimatedSwitcher(
 				duration: defaultSwitchDuration,
 				child: widget.plan.tasks.isNotEmpty ?
-					buildTaskListHeader(context, AppLocales.of(context).translate('$_pageKey.requiredTaskListTitle'), requiredTasks.length)
-					: SizedBox.shrink()
+				buildTaskListHeader(context, AppLocales.of(context).translate('$_pageKey.requiredTaskListTitle'), requiredTasks.length) : SizedBox.shrink()
 			)
 		);
 	}
@@ -235,7 +203,7 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 								position: offsetAnimation,
 								child: Container(
 									margin: EdgeInsets.symmetric(horizontal: 16.0),
-									child: buildTaskCard(context, item, true)
+									child: buildTaskCard(item, true)
 								)
 							) 
 						);
@@ -275,7 +243,7 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 		);
 	}
 
-	Widget buildTaskCard(BuildContext context, TaskFormModel task, bool optional) {
+	Widget buildTaskCard(TaskFormModel task, bool optional) {
 		int index = (widget.plan.tasks..where((element) => element.optional == optional)).indexOf(task);
 		return TaskCard(task: task, index: index, onTap: editTask);
 	}

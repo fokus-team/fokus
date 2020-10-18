@@ -12,6 +12,9 @@ import 'package:fokus/services/task_instance_service.dart';
 import 'package:fokus/utils/duration_utils.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mongo_dart/mongo_dart.dart';
+import 'package:fokus/model/db/plan/task_status.dart';
+import 'package:fokus/model/db/date/time_date.dart';
+
 
 class PlanInstanceCubit extends ReloadableCubit {
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
@@ -19,12 +22,12 @@ class PlanInstanceCubit extends ReloadableCubit {
 	final UIDataAggregator _dataAggregator = GetIt.I<UIDataAggregator>();
 	final ObjectId _planInstanceId;
 
+	PlanInstance planInstance;
+
 	PlanInstanceCubit(this._planInstanceId, ModalRoute modalRoute) : super(modalRoute);
 
 	@override
 	List<NotificationType> dataTypeSubscription() => [NotificationType.taskApproved, NotificationType.taskRejected, NotificationType.taskFinished, NotificationType.taskUnfinished];
-
-	PlanInstance planInstance;
 
 	@override
 	void doLoadData() async {
@@ -51,6 +54,39 @@ class PlanInstanceCubit extends ReloadableCubit {
 			}
 		}
 		return false;
+	}
+
+	void completePlan() async {
+		List<Future> updates = [];
+		planInstance.state = PlanInstanceState.completed;
+		var uiPlanInstance = await _dataAggregator.loadPlanInstance(planInstance: planInstance);
+		var allTasksInstances = await _dataRepository.getTaskInstances(planInstanceId: _planInstanceId);
+		List<TaskInstance> updatedTaskInstances = [];
+		for(var taskInstance in allTasksInstances) {
+			if(!taskInstance.status.completed) {
+				taskInstance.status.state = TaskState.rejected;
+				taskInstance.status.completed = true;
+				if(isInProgress(taskInstance.duration)) {
+					taskInstance.duration.last.to = TimeDate.now();
+					updates.add(_dataRepository.updateTaskInstanceFields(taskInstance.id, state: taskInstance.status.state, isCompleted: taskInstance.status.completed, duration: taskInstance.duration));
+				}
+				else if(isInProgress(taskInstance.breaks)) {
+					taskInstance.breaks.last.to = TimeDate.now();
+					updates.add(_dataRepository.updateTaskInstanceFields(taskInstance.id, state: taskInstance.status.state, isCompleted: taskInstance.status.completed, breaks: taskInstance.breaks));
+				}
+				else updates.add(_dataRepository.updateTaskInstanceFields(taskInstance.id, state: taskInstance.status.state, isCompleted: taskInstance.status.completed));
+			}
+			updatedTaskInstances.add(taskInstance);
+		}
+		if(isInProgress(planInstance.duration)) {
+			planInstance.duration.last.to =  TimeDate.now();
+			updates.add(_dataRepository.updatePlanInstanceFields(planInstance.id, state: PlanInstanceState.completed, duration: planInstance.duration));
+		}
+		else updates.add(_dataRepository.updatePlanInstanceFields(planInstance.id, state: PlanInstanceState.completed));
+		List<UITaskInstance> uiInstances = await _taskInstancesService.mapToUIModels(updatedTaskInstances);
+
+		Future.wait(updates);
+		emit(ChildTasksLoadSuccess(uiInstances, uiPlanInstance));
 	}
 }
 

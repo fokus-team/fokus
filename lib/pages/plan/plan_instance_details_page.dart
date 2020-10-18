@@ -6,6 +6,7 @@ import 'package:fokus/model/db/plan/plan_instance_state.dart';
 import 'package:fokus/model/db/plan/task_status.dart';
 import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/ui/plan/ui_plan_instance.dart';
+import 'package:fokus/utils/ui/snackbar_utils.dart';
 import 'package:fokus/model/ui/task/ui_task_instance.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/duration_utils.dart';
@@ -31,6 +32,8 @@ class PlanInstanceDetailsPage extends StatefulWidget {
 
 class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 	final String _pageKey = 'page.childSection.planInProgress';
+	bool _wasPlanCompleted = false;
+	UIPlanInstance updatedUiPlanInstance;
 
 	void navigate(context, UITaskInstance task, UIPlanInstance plan) async {
 		if(await BlocProvider.of<PlanInstanceCubit>(context).isOtherPlanInProgressDbCheck(tappedTaskInstance: task.id)) {
@@ -41,7 +44,12 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 				)
 			);
 		}
-		else Navigator.of(context).pushNamed(AppPage.childTaskInProgress.name, arguments: {"TaskId" : task.id, "UIPlanInstance" : plan});
+		else {
+			final result = await Navigator.of(context).pushNamed(AppPage.childTaskInProgress.name, arguments: {"TaskId" : task.id, "UIPlanInstance" : plan});
+			if(result != null) setState(() {
+				updatedUiPlanInstance =  (result as Map<String, dynamic>)['plan'];
+			});
+		}
 	}
 
 	@override
@@ -53,10 +61,20 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 					content: AppSegments(segments: _buildPanelSegments(state))
 				),
 				loadingBuilder: (context, state) => _getView(
-					planInstance: widget.initialPlanInstance,
+					planInstance: updatedUiPlanInstance ?? widget.initialPlanInstance,
 					content: Expanded(child: Center(child: AppLoader()))
 				),
-			)
+			),
+			floatingActionButton: widget.initialPlanInstance.state.ended || _wasPlanCompleted || !widget.showActions || (updatedUiPlanInstance!= null && updatedUiPlanInstance.state.ended) ?
+				null :
+				FloatingActionButton.extended(
+				onPressed: _planCompletion,
+				label: Text(AppLocales.of(context).translate('$_pageKey.content.fab.completePlan')),
+				icon: Icon(Icons.rule),
+				backgroundColor: AppColors.childActionColor,
+				elevation: 4.0
+			),
+			floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
 		);
   }
 
@@ -308,6 +326,25 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 			icon: Icons.timer,
 			color: Colors.orange,
 			tooltip: '$_pageKey.content.taskTimer.label',
+		);
+	}
+
+	void _planCompletion() {
+		showDialog(context: context,
+			builder: (_) => GeneralDialog.confirm(
+				title: AppLocales.of(context).translate('$_pageKey.content.fab.dialogTitle'),
+				content: AppLocales.of(context).translate('$_pageKey.content.fab.dialogContent'),
+				confirmColor: Colors.red,
+				confirmText: 'actions.confirm',
+				confirmAction: () {
+					BlocProvider.of<PlanInstanceCubit>(context).completePlan();
+					Navigator.pop(context);
+					setState(() {
+						_wasPlanCompleted = true;
+					});
+					showSuccessSnackbar(context, '$_pageKey.content.fab.completed');
+				}
+			),
 		);
 	}
 }

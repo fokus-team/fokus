@@ -95,7 +95,7 @@ class _ChildCalendarPageState extends State<ChildCalendarPage> with TickerProvid
 										AttributeChip.withIcon(
 											icon: Icons.description,
 											color: AppColors.mainBackgroundColor,
-											content: AppLocales.of(context).translate('page.childSection.panel.content.tasks', {'NUM_TASKS': plan.taskCount})
+											content: AppLocales.of(context).translate('plans.tasks', {'NUM_TASKS': plan.taskCount})
 										)
 									]
 								)

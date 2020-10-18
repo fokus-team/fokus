@@ -57,10 +57,12 @@ class _CaregiverPlanFormPageState extends State<CaregiverPlanFormPage> {
     return BlocConsumer<PlanFormCubit, PlanFormState>(
 			listener: (context, state) {
 				if (state is PlanFormSubmissionSuccess) {
-					if(formType == AppFormType.copy)
+					if(formType == AppFormType.copy) {
+						Navigator.of(context).popUntil(ModalRoute.withName(AppPage.planDetails.name));
 						Navigator.of(context).pushNamed(AppPage.caregiverPlans.name);
-					else
+					} else {
 						Navigator.of(context).pop();
+					}
 					showSuccessSnackbar(context, formType == AppFormType.edit ? '$_pageKey.planEditedText' : '$_pageKey.planCreatedText');
 				} else if (state is PlanFormDataLoadSuccess)
 					setState(() => plan = PlanFormModel.from(state.planForm));

@@ -135,7 +135,7 @@
 					"noCaregiverProfilesAdded": "No befriended caregivers found",
 					"caregiverCode": "Caregiver code",
 					"caregiverAddedText": "New friend added",
-					"caregiverAlreadyBefriended": "This caregiver is already befriended",
+					"caregiverAlreadyBefriended": "This caregiver is already your friend",
 					"enteredOwnCaregiverCodeError": "You can't befriend yourself",
 					"todayPlans": "{NUM_PLANS, plural, offset:0 zero {No plans} one {# plan} other {# plans}} for today",
 					"activePlan": "1 plan currently in progress"
@@ -188,9 +188,9 @@
 			"friendPlans": {
 				"content": {
 					"noPlansText": "This friend didn't add any plans yet",
-					"plansTitle": "Friend's plan",
+					"plansTitle": "Friend's plans",
 					"duplicateButton": "Create plan basing on this one",
-					"removeFriendTitle": "Unfriend",
+					"removeFriendTitle": "Remove from friends",
 					"removeFriendText": "You will lose access to plans created by that friend. Are you sure you want to remove this friend?",
 					"friendRemovedText": "Friend has been removed"
 				}
@@ -600,7 +600,7 @@
 	},
 	"date": {
 		"weekday": "{WEEKDAY, select, 1 {Monday} 2 {Tuesday} 3 {Wednesday} 4 {Thursday} 5 {Friday} 6 {Saturday} 7 {Sunday} other {}}",
-		"everyday": "Codziennie"
+		"everyday": "Everyday"
 	},
 	"alert": {
 		"errorOccurred": "Error occurred",

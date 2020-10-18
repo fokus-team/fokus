@@ -65,6 +65,9 @@ class PlanFormCubit extends Cubit<PlanFormState> {
 		var model = PlanFormModel.fromDBModel(plan);
 		var tasks = await _dataRepository.getTasks(planId: state.planId);
 		model.tasks = plan.tasks.map((id) => TaskFormModel.fromDBModel(tasks.firstWhere((task) => task.id == id))).toList();
+		if(state.formType == AppFormType.copy) {
+			model.children = [];
+		}
 		return model;
   }
 }

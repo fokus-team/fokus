@@ -611,7 +611,7 @@
 		"genericRangeOverflowValue": "Wartość musi mieścić się w zakresie {A}-{B}",
 		"unsavedProgressTitle": "Niezapisane zmiany",
 		"unsavedProgressMessage": "Posiadasz niezapisane zmiany. Czy jesteś pewien, że chcesz wyjść?",
-		"codeCopied": "Kod skopiowano do schowka",
+		"codeCopied": "Kod został skopiowany do schowka",
 		"deletePlan": "Usuń plan",
 		"confirmPlanDeletion": "Czy na pewno chcesz usunąć ten plan? Spowoduje to trwałe wymazanie wszystkich związanych z nim danych włączając w to historię wykonanych zadań tego planu."
 	},

@@ -14,7 +14,7 @@ class Task {
   int timer;
 
   Task.fromTaskForm(TaskFormModel taskForm, ObjectId planId, ObjectId creator) : this._(name: taskForm.title, description: taskForm.description,
-		  planID: planId, optional: taskForm.optional, timer: taskForm.timer > 0 ? taskForm.timer : null, id: taskForm.id ?? ObjectId(),
+		  planID: planId, subtasks: taskForm.subtasks, optional: taskForm.optional, timer: taskForm.timer > 0 ? taskForm.timer : null, id: taskForm.id ?? ObjectId(),
 		  points: taskForm.pointsValue != null ? Points.fromUICurrency(taskForm.pointCurrency, taskForm.pointsValue, creator: creator) : null);
 
   Task._({this.description, this.id, this.name, this.optional, this.planID, this.points, this.subtasks, this.timer});

@@ -16,6 +16,7 @@ class TaskFormModel extends Equatable {
 	UICurrency pointCurrency;
 	int timer;
 	bool optional;
+	List<String> subtasks;
 
 	TaskFormModel({
 		@required this.key, 
@@ -26,17 +27,18 @@ class TaskFormModel extends Equatable {
 		this.id,
 		this.timer = 0,
 		this.optional = false,
+		this.subtasks
 	});
 
 	TaskFormModel.fromDBModel(Task task) : this(id: task.id, key: ValueKey(task.id), title: task.name,
-			description: task.description, timer: task.timer ?? 0, optional: task.optional ?? false, pointsValue: task.points?.quantity,
+			description: task.description, timer: task.timer ?? 0, optional: task.optional ?? false, subtasks: task.subtasks, pointsValue: task.points?.quantity,
 			pointCurrency: task.points != null ? UICurrency.fromDBModel(task.points) : UICurrency(type: CurrencyType.diamond));
 
 	TaskFormModel.from(TaskFormModel task) : this(id: task.id, key: task.key, title: task.title, description: task.description,
-			pointsValue: task.pointsValue, pointCurrency: UICurrency.from(task.pointCurrency), timer: task.timer, optional: task.optional);
+			pointsValue: task.pointsValue, pointCurrency: UICurrency.from(task.pointCurrency), timer: task.timer, optional: task.optional, subtasks: task.subtasks);
 
 	@override
-	List<Object> get props => [id, title, description, pointsValue, pointCurrency, timer, optional];
+	List<Object> get props => [id, title, description, pointsValue, pointCurrency, timer, optional, subtasks];
 
 	void copy(TaskFormModel task) {
 		key = task.key;
@@ -47,5 +49,6 @@ class TaskFormModel extends Equatable {
 		timer = task.timer;
 		optional = task.optional;
 		id = task.id;
+		subtasks = task.subtasks;
 	}
 }

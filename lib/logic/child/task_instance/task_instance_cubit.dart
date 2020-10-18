@@ -66,8 +66,8 @@ class TaskInstanceCubit extends Cubit<TaskInstanceState> {
 		await Future.value(updates);
 
 		UITaskInstance uiTaskInstance = UITaskInstance.singleWithTask(taskInstance: taskInstance, task: task);
-		if(isInProgress(uiTaskInstance.duration)) emit(TaskInstanceStateProgress(uiTaskInstance,  await _dataAggregator.loadPlanInstance(planInstance: planInstance, plan: plan)));
-		else  emit(TaskInstanceStateBreak(uiTaskInstance,  await _dataAggregator.loadPlanInstance(planInstance: planInstance, plan: plan)));
+		if(isInProgress(uiTaskInstance.duration)) emit(TaskInstanceInProgress(uiTaskInstance,  await _dataAggregator.loadPlanInstance(planInstance: planInstance, plan: plan)));
+		else  emit(TaskInstanceInBreak(uiTaskInstance,  await _dataAggregator.loadPlanInstance(planInstance: planInstance, plan: plan)));
 	}
 
 	void switchToBreak() async {
@@ -75,7 +75,7 @@ class TaskInstanceCubit extends Cubit<TaskInstanceState> {
 		taskInstance.breaks.add(DateSpan(from: TimeDate.now()));
 		await _dataRepository.updateTaskInstanceFields(taskInstance.id, duration: taskInstance.duration, breaks: taskInstance.breaks);
 		UITaskInstance uiTaskInstance = UITaskInstance.singleWithTask(taskInstance: taskInstance, task: task);
-		emit(TaskInstanceStateBreak(uiTaskInstance,  await _dataAggregator.loadPlanInstance(planInstance: planInstance, plan: plan)));
+		emit(TaskInstanceInBreak(uiTaskInstance,  await _dataAggregator.loadPlanInstance(planInstance: planInstance, plan: plan)));
 	}
 
 	void switchToProgress() async {
@@ -83,17 +83,23 @@ class TaskInstanceCubit extends Cubit<TaskInstanceState> {
 		taskInstance.duration.add(DateSpan(from: TimeDate.now()));
 		await _dataRepository.updateTaskInstanceFields(taskInstance.id, duration: taskInstance.duration, breaks: taskInstance.breaks);
 		UITaskInstance uiTaskInstance = UITaskInstance.singleWithTask(taskInstance: taskInstance, task: task);
-		emit(TaskInstanceStateProgress(uiTaskInstance, await _dataAggregator.loadPlanInstance(planInstance: planInstance, plan: plan)));
+		emit(TaskInstanceInProgress(uiTaskInstance, await _dataAggregator.loadPlanInstance(planInstance: planInstance, plan: plan)));
 	}
 
 	void markAsDone() async {
   	_notificationService.sendTaskFinishedNotification(_taskInstanceId, task.name, plan.createdBy, _activeUser(), completed: true);
-		emit(TaskInstanceStateDone(await _onCompletion(TaskState.notEvaluated), await _dataAggregator.loadPlanInstance(planInstance: planInstance, plan: plan)));
+		emit(TaskInstanceDone(await _onCompletion(TaskState.notEvaluated), await _dataAggregator.loadPlanInstance(planInstance: planInstance, plan: plan)));
   }
 
 	void markAsRejected() async {
 		_notificationService.sendTaskFinishedNotification(_taskInstanceId, task.name, plan.createdBy, _activeUser(), completed: false);
-		emit(TaskInstanceStateRejected(await _onCompletion(TaskState.rejected), await _dataAggregator.loadPlanInstance(planInstance: planInstance, plan: plan)));
+		emit(TaskInstanceRejected(await _onCompletion(TaskState.rejected), await _dataAggregator.loadPlanInstance(planInstance: planInstance, plan: plan)));
+	}
+
+	void updateChecks(int index, MapEntry<String, bool> subtask) async {
+  	taskInstance.subtasks[index] = subtask;
+		await _dataRepository.updateTaskInstanceFields(taskInstance.id, subtasks: taskInstance.subtasks);
+		emit((state as TaskInstanceInProgress).copyWith(taskInstance: UITaskInstance.singleWithTask(taskInstance: taskInstance, task: task)));
 	}
 
 	Future<UITaskInstance> _onCompletion(TaskState state) async {

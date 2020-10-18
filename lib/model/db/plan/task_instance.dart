@@ -9,7 +9,7 @@ class TaskInstance {
 	ObjectId id;
 	ObjectId taskID;
 	ObjectId planInstanceID;
-	List<ObjectId> subtasks;
+	List<MapEntry<String, bool>> subtasks;
 
 	bool optional;
 	int timer;
@@ -18,7 +18,7 @@ class TaskInstance {
   List<DateSpan<TimeDate>> duration;
 
   TaskInstance._({this.id, this.taskID, this.planInstanceID, this.breaks, this.duration, this.status, this.optional, this.subtasks, this.timer});
-	TaskInstance.fromTask(Task task, ObjectId planInstanceId) : this._(id: ObjectId(), taskID: task.id, planInstanceID: planInstanceId, status: TaskStatus(completed: false, state: TaskState.notEvaluated), optional: task.optional, timer: task.timer);
+	TaskInstance.fromTask(Task task, ObjectId planInstanceId) : this._(id: ObjectId(), taskID: task.id, planInstanceID: planInstanceId, status: TaskStatus(completed: false, state: TaskState.notEvaluated), optional: task.optional, timer: task.timer, subtasks: task.subtasks.map((subtask) => MapEntry(subtask, false)).toList());
 
   factory TaskInstance.fromJson(Map<String, dynamic> json) {
     return json != null ? TaskInstance._(
@@ -28,7 +28,7 @@ class TaskInstance {
 	    optional: json['optional'],
       planInstanceID: json['planInstanceID'],
       status: json['status'] != null ? TaskStatus.fromJson(json['status']) : null,
-      subtasks: json['subtasks'] != null ? new List<ObjectId>.from(json['subtasks']) : [],
+      subtasks: json['subtasks'] != null ? (json['subtasks'] as List).map((i) => MapEntry((i as Map).keys.first as String, (i as Map).values.first as bool)).toList() : [],
       taskID: json['taskID'],
       timer: json['timer'],
     ) : null;
@@ -53,7 +53,7 @@ class TaskInstance {
     if (this.status != null)
       data['status'] = this.status.toJson();
     if (this.subtasks != null)
-      data['subtasks'] = this.subtasks;
+      data['subtasks'] = this.subtasks.map((v) => {v.key: v.value}).toList();
     return data;
   }
 }

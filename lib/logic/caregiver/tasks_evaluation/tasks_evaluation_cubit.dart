@@ -1,7 +1,5 @@
 import 'dart:math';
 
-import 'package:bloc/bloc.dart';
-import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fokus/logic/common/reloadable/reloadable_cubit.dart';
 import 'package:fokus/model/db/gamification/points.dart';

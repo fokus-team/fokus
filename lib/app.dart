@@ -184,7 +184,7 @@ class _FokusAppState extends State<FokusApp> implements CurrentLocaleObserver {
 			AppPage.caregiverSignInPage.name: (context) => _createPage(CaregiverSignInPage(), context, CaregiverSignInCubit()),
 			AppPage.caregiverSignUpPage.name: (context) => _createPage(CaregiverSignUpPage(), context, CaregiverSignUpCubit()),
 			AppPage.childProfilesPage.name: (context) => _createPage(ChildProfilesPage(), context, PreviousProfilesCubit(authBloc(context), getRoute(context))),
-			AppPage.childSignInPage.name: (context) => _createPage(withCubit(ChildSignInPage(), ChildSignInCubit(authBloc(context))), context, ChildSignUpCubit(authBloc(context))),
+			AppPage.childSignInPage.name: (context) => _createPage(withCubit(ChildSignInPage(), ChildSignInCubit(authBloc(context))), context, ChildSignUpCubit(authBloc(context)), AppPageSection.login),
 
 			AppPage.caregiverChildDashboard.name: (context) => _createPage(
 				accountManaging(context, CaregiverChildDashboardPage(getParams(context))),
@@ -205,16 +205,14 @@ class _FokusAppState extends State<FokusApp> implements CurrentLocaleObserver {
 		};
 	}
 
-	Widget _createPage<CubitType extends Cubit>(Widget page, BuildContext context, [CubitType pageCubit]) {
+	Widget _createPage<CubitType extends Cubit>(Widget page, BuildContext context, [CubitType pageCubit, AppPageSection section]) {
 		if (pageCubit != null)
 			page = withCubit(page, pageCubit);
-		var authState = context.bloc<AuthenticationBloc>().state;
-		if (authState.status == AuthenticationStatus.authenticated)
-			return PageTheme.parametrizedRoleSection(
-				userRole: authState.user.role,
-				child: page
-			);
-		return PageTheme.loginSection(child: page);
+		return PageTheme.parametrizedSection(
+			authState: context.bloc<AuthenticationBloc>().state,
+			section: section,
+			child: page
+		);
 	}
 
 	ThemeData _createAppTheme() {

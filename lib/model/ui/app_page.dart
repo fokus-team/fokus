@@ -76,3 +76,7 @@ class AppFormArgument {
 	AppFormArgument({this.type, this.id});
 	
 }
+
+enum AppPageSection {
+	login, caregiver, child
+}

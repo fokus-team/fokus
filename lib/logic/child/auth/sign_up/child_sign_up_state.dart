@@ -16,7 +16,7 @@ class ChildSignUpState extends FormzState {
 	}) : super(status);
 
 	@override
-	List<Object> get props => [caregiverCode, name, avatar];
+	List<Object> get props => [caregiverCode, name, avatar, status, takenAvatars];
 
 	ChildSignUpState copyWith({UserCode caregiverCode, Name name, int avatar, Set<int> takenAvatars, FormzStatus status, bool clearableAvatar = false}) {
 		return ChildSignUpState(

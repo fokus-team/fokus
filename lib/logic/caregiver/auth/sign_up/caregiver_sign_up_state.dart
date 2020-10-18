@@ -18,7 +18,7 @@ class CaregiverSignUpState extends CaregiverAuthStateBase {
 	}) : super(status, signInError);
 
 	@override
-	List<Object> get props => super.props..addAll([name, email, password, confirmedPassword, status, signUpError]);
+	List<Object> get props => super.props..addAll([name, email, password, confirmedPassword, signUpError]);
 
 	CaregiverSignUpState copyWith({Name name, Email email, Password password, ConfirmedPassword confirmedPassword, EmailSignInError signInError, EmailSignUpError signUpError, FormzStatus status}) {
 		return CaregiverSignUpState(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fokus/utils/ui/theme_config.dart';
 import 'package:formz/formz.dart';
 
 import 'package:fokus/services/app_locales.dart';
@@ -16,7 +17,7 @@ class AuthenticationInputField<Bloc extends Cubit<State>, State extends FormzSta
 	final bool hideInput;
 	final IconData icon;
 	final bool clearable;
-
+	final bool disabled;
 
   AuthenticationInputField({
 		this.getField,
@@ -27,6 +28,7 @@ class AuthenticationInputField<Bloc extends Cubit<State>, State extends FormzSta
 		this.hideInput = false,
 		this.icon = Icons.edit,
 	  this.clearable = false,
+	  this.disabled = false,
 	});
 
   @override
@@ -47,9 +49,11 @@ class _AuthenticationInputFieldState<Bloc extends Cubit<CubitState>, CubitState 
 			  return Padding(
 			    padding: const EdgeInsets.all(8.0),
 			    child: TextField(
+				    enabled: !widget.disabled,
 					  controller: _controller,
 					  keyboardType: widget.inputType,
 					  obscureText: widget.hideInput,
+						style: widget.disabled ? TextStyle(color: AppColors.mediumTextColor) : null,
 						decoration: InputDecoration(
 							icon: Padding(padding: EdgeInsets.all(5.0), child: Icon(widget.icon)),
 							contentPadding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),

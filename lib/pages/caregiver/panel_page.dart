@@ -47,7 +47,12 @@ class _CaregiverPanelPageState extends State<CaregiverPanelPage> {
 				title: '$_pageKey.content.childProfilesTitle',
 				subtitle: '$_pageKey.content.childProfilesSubtitle',
 				noElementsMessage: '$_pageKey.content.noChildProfilesAdded',
-				headerAction: UIButton('$_pageKey.header.addChild', () => {}, AppColors.caregiverButtonColor, Icons.add),
+				headerAction: UIButton(
+					'$_pageKey.header.addChild',
+					() => Navigator.of(context).pushNamed(AppPage.childSignInPage.name),
+					AppColors.caregiverButtonColor,
+					Icons.add
+				),
 				elements: <Widget>[
 					for (var child in state.children)
 						ChildItemCard(child: child, onTapped: () => Navigator.of(context).pushNamed(AppPage.caregiverChildDashboard.name, arguments: {'child': child})),

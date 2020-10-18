@@ -11,7 +11,7 @@ extension UserCodeValidationErrorTextKey on UserCodeValidationError {
 }
 
 class UserCode extends FormzInput<String, UserCodeValidationError> {
-	static const int userCodeLength = 24;
+	static const int userCodeLength = 16;
 	final bool exists;
 
 	const UserCode.pure([String value = '', this.exists = true]) : super.pure(value);

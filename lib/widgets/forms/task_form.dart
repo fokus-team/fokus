@@ -370,6 +370,11 @@ class _TaskFormState extends State<TaskForm> {
 			labelCurrencyText: AppLocales.of(context).translate('$_pageKeyTaskForm.fields.taskPoints.currencyLabel'),
 			pointValueSetter: (val) {
 				setState(() {
+					if(val == null || int.tryParse(val) == 0) {
+						isDataChanged = task.pointsValue == null;
+						task.pointsValue = null;
+						return;
+					}
 					isDataChanged = task.pointsValue != int.tryParse(val);
 					task.pointsValue = int.tryParse(val);
 				});

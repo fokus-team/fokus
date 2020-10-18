@@ -54,7 +54,7 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 					isInitial = true;
 				}
 				return  Scaffold(
-					appBar: isInitial ? _getHeader(TaskInstanceProvider(null, this.widget.initialPlanInstance)) : _getHeader(state),
+					appBar: isInitial ? _getHeader(TaskInstanceLoaded(null, this.widget.initialPlanInstance)) : _getHeader(state),
 					body: isInitial ? Center(child: AppLoader())
 						: Padding(
 						padding: EdgeInsets.only(bottom: 0.0),
@@ -97,7 +97,7 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 		);
   }
 
-  Widget _getHeader(TaskInstanceProvider state) {
+  Widget _getHeader(TaskInstanceLoaded state) {
 		return TaskAppHeader(
 			height: 330,
 			title: '$_pageKey.header.title',
@@ -163,7 +163,7 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 		);
 	}
 
-  List<Widget> _getAllCards(TaskInstanceProvider state) {
+  List<Widget> _getAllCards(TaskInstanceLoaded state) {
 		return [
 			SlidingCard(
 				key: _completingCard,
@@ -172,9 +172,9 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 					_getAnimation('assets/animation/jumping_little_man.json'),
 					_getTitle(state.taskInstance.name, translate: false),
 					if(state.taskInstance.description != null) _getSubtitle(state.taskInstance.description ,alignment: TextAlign.justify, translate: false, topPadding: 8),
-					if(state.taskInstance.subtasks != null && state.taskInstance.subtasks.isNotEmpty) _getSubtasks(state)
+					if(state.taskInstance.subtasks != null && state.taskInstance.subtasks.isNotEmpty) _getSubtasks(state.taskInstance.subtasks)
 				],
-				showFirst: state is TaskInstanceStateProgress,
+				showFirst: state is TaskInstanceInProgress,
 			),
 			SlidingCard(
 				key: _breakCard,
@@ -194,7 +194,7 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 						)
 					)
 				],
-				showFirst: state is TaskInstanceStateBreak,
+				showFirst: state is TaskInstanceInBreak,
 			),
 			SlidingCard(
 				key: _rejectCard,
@@ -239,7 +239,7 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 		if(_timerBreakCubit == null) {
 			_timerBreakCubit = TimerCubit.up(() => sumDurations(state.taskInstance.breaks).inSeconds);
 		}
-		if(state is TaskInstanceStateProgress) return (_) => _timerBreakCubit..startTimer(paused: true);
+		if(state is TaskInstanceInProgress) return (_) => _timerBreakCubit..startTimer(paused: true);
 		else return (_) => _timerBreakCubit..startTimer();
 	}
 
@@ -262,34 +262,34 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 		);
 	}
 
-	Widget _getSubtasks(state, {double topPadding = 24.0}) {
+	Widget _getSubtasks(List<MapEntry<String, bool>> subtasks, {double topPadding = 24.0}) {
 		return Padding(
 			padding: EdgeInsets.only(top: topPadding),
 			child: Column(
 				children: [
-					for(var subtask in state.taskInstance.subtasks)
+					for (int i = 0; i < subtasks.length; i++)
 						Padding(
 							padding: const EdgeInsets.only(top: 12.0),
 							child: Card(
-								color: subtask.value ? Colors.grey[350] : Theme.of(context).cardColor,
+								color: subtasks[i].value ? Colors.grey[350] : Theme.of(context).cardColor,
 								shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppBoxProperties.roundedCornersRadius)),
 								child: InkWell(
 									splashColor: Colors.blueGrey[150],
 									onTap: () => {},
 									child: CheckboxListTile(
-											value: subtask.value,
+											value: subtasks[i].value,
 											title: Padding(
 												padding: const EdgeInsets.symmetric(vertical: 4.0),
 												child: Text(
-													subtask.key,
-													style: Theme.of(context).textTheme.subtitle1.copyWith(color: AppColors.darkTextColor, decoration: subtask.value ? TextDecoration.lineThrough : TextDecoration.none),
+													subtasks[i].key,
+													style: Theme.of(context).textTheme.subtitle1.copyWith(color: AppColors.darkTextColor, decoration: subtasks[i].value ? TextDecoration.lineThrough : TextDecoration.none),
 												),
 											),
 											onChanged: (val) {
 												setState(() {
 													if(!_isCheckboxDisabled) {
 														_isCheckboxDisabled = true;
-														BlocProvider.of<TaskInstanceCubit>(context).updateChecks(MapEntry(subtask.key, val));
+														BlocProvider.of<TaskInstanceCubit>(context).updateChecks(i, MapEntry(subtasks[i].key, val));
 														Timer(Duration(milliseconds: 200), () {
 															_isCheckboxDisabled = false;
 														});
@@ -333,14 +333,14 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
  void _breakPerformingTransition(state) {
   	if(!_isButtonDisabled) setState(() {
   		_isButtonDisabled = true;
-  		if(state is TaskInstanceStateProgress) {
+  		if(state is TaskInstanceInProgress) {
 				BlocProvider.of<TaskInstanceCubit>(context).switchToBreak();
 				_completingCard.currentState.closeCard();
   			_breakCard.currentState.openCard();
   			this._header.currentState.animateButton();
   			_timerBreakCubit.resumeTimer();
 			}
-  		else if(state is TaskInstanceStateBreak) {
+  		else if(state is TaskInstanceInBreak) {
 				BlocProvider.of<TaskInstanceCubit>(context).switchToProgress();
 				_breakCard.currentState.closeCard();
 				_completingCard.currentState.openCard();
@@ -354,7 +354,7 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
   }
 
   void _onCompletion(state) {
-		if(state is! TaskInstanceStateRejected && state is! TaskInstanceStateDone)
+		if(state is! TaskInstanceRejected && state is! TaskInstanceDone)
 			setState(() {
 				BlocProvider.of<TaskInstanceCubit>(context).markAsDone();
 				_closeWidgetsOnFinish(state);
@@ -365,7 +365,7 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 	}
 
 	void _onRejection(state) {
-		if(state is! TaskInstanceStateRejected && state is! TaskInstanceStateDone)
+		if(state is! TaskInstanceRejected && state is! TaskInstanceDone)
 			setState(() {
 				BlocProvider.of<TaskInstanceCubit>(context).markAsRejected();
 				_closeWidgetsOnFinish(state);
@@ -375,7 +375,7 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 	}
 
 	void _closeWidgetsOnFinish(state) {
-		if(state is TaskInstanceStateProgress)
+		if(state is TaskInstanceInProgress)
 			_completingCard.currentState.closeCard();
 		else _breakCard.currentState.closeCard();
 		_bottomBarController.forward();

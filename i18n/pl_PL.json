@@ -6,7 +6,8 @@
 			"panel": "Panel",
 			"plans": "Plany",
 			"awards": "Nagrody",
-			"currencies": "Waluty"
+			"currencies": "Waluty",
+			"caregiverCode": "Mój kod opiekuna"
 		},
 		"child": {
 			"plans": "Plany",
@@ -121,7 +122,7 @@
 				"header": {
 					"greetings": "Witaj",
 					"addChild": "Dodaj dziecko",
-					"addCaregiver": "Dodaj opiekuna",
+					"addCaregiver": "Dodaj znajomego",
 					"rateTasks": "Oceń zadania"
 				},
 				"content": {
@@ -131,6 +132,10 @@
 					"caregiverProfilesTitle": "Znajomi",
 					"caregiverProfilesSubtitle": "Lista zaprzyjaźnionych opiekunów",
 					"noCaregiverProfilesAdded": "Brak zaprzyjaźnionych opiekunów",
+					"caregiverCode": "Kod opiekuna",
+					"caregiverAddedText": "Dodano nowego znajomego",
+					"caregiverAlreadyBefriendedError": "Ten opiekun jest już twoim znajomym",
+					"enteredOwnCaregiverCodeError": "Nie możesz dodać siebie do znajomych",
 					"todayPlans": "{NUM_PLANS, plural, offset:0 zero {Brak planów} one {# plan} two {# plany} few {# plany} other {# planów}} na dziś",
 					"activePlan": "1 plan w trakcie wykonywania"
 				}
@@ -183,7 +188,10 @@
 				"content": {
 					"noPlansText": "Ten opiekun nie dodał jeszcze żadnego planu",
 					"plansTitle": "Plany znajomego",
-					"duplicateButton": "Stwórz plan na podstawie tego"
+					"duplicateButton": "Stwórz plan na podstawie tego",
+					"removeFriendTitle": "Usuń ze znajomych",
+					"removeFriendText": "Stracisz dostęp do planów stworzonych przez tego znajomego. Na pewno chcesz usunąć tego znajomego?",
+					"friendRemovedText": "Usunięto znajomego"
 				}
 			},
 			"plans": {
@@ -205,6 +213,9 @@
 			"planForm": {
 				"createPlanTitle": "Dodawanie nowego planu",
 				"editPlanTitle": "Edytowanie planu",
+				"copyPlanTitle": "Kopiowanie planu",
+				"planCreatedText": "Plan został stworzony",
+				"planEditedText": "Zmiany zostały zapisane",
 				"step": "Krok {NUM_STEP}",
 				"stepOneTitle": "Parametry planu",
 				"stepTwoTitle": "Lista zadań",
@@ -387,7 +398,8 @@
 				"content": {
 					"mandatoryTasks": "Zadania obowiązkowe",
 					"additionalTasks": "Zadania dodatkowe",
-					"noTasks": "Brak zadań"
+					"noTasks": "Brak zadań",
+					"copyPlanButton": "Skopiuj plan"
 				}
 			},
 			"rating":  {
@@ -599,7 +611,8 @@
 		"unsavedProgressTitle": "Niezapisane zmiany",
 		"unsavedProgressMessage": "Posiadasz niezapisane zmiany. Czy jesteś pewien, że chcesz wyjść?",
 		"deletePlan": "Usuwanie planu",
-		"confirmPlanDeletion": "Czy na pewno chcesz usunąć plan?"
+		"confirmPlanDeletion": "Czy na pewno chcesz usunąć plan?",
+		"codeCopied": "Kod skopiowano do schowka"
 	},
 	"actions": {
 		"ok": "Ok",
@@ -625,7 +638,8 @@
 		"signIn": "Zaloguj",
 		"signUp": "Załóż konto",
 		"signOut": "Wyloguj się",
-		"return": "Powrót"
+		"return": "Powrót",
+		"copyCode": "Skopiuj kod"
 	},
 	"authentication": {
 		"name": "Imię",

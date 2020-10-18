@@ -6,7 +6,8 @@
 			"panel": "Dashboard",
 			"plans": "Plans",
 			"awards": "Awards",
-			"currencies": "Currencies"
+			"currencies": "Currencies",
+			"caregiverCode": "My caregiver code"
 		},
 		"child": {
 			"plans": "Plans",
@@ -121,7 +122,7 @@
 				"header": {
 					"greetings": "Welcome",
 					"addChild": "Add child",
-					"addCaregiver": "Add caregiver",
+					"addCaregiver": "Add friend",
 					"rateTasks": "Rate Tasks"
 				},
 				"content": {
@@ -131,6 +132,10 @@
 					"caregiverProfilesTitle": "Friends",
 					"caregiverProfilesSubtitle": "List of befriended caregivers",
 					"noCaregiverProfilesAdded": "No befriended caregivers found",
+					"caregiverCode": "Caregiver code",
+					"caregiverAddedText": "New friend added",
+					"caregiverAlreadyBefriended": "This caregiver is already befriended",
+					"enteredOwnCaregiverCodeError": "You can't befriend yourself",
 					"todayPlans": "{NUM_PLANS, plural, offset:0 zero {No plans} one {# plan} other {# plans}} for today",
 					"activePlan": "1 plan currently in progress"
 				}
@@ -183,7 +188,10 @@
 				"content": {
 					"noPlansText": "This friend didn't add any plans yet",
 					"plansTitle": "Friend's plan",
-					"duplicateButton": "Create plan basing on this one"
+					"duplicateButton": "Create plan basing on this one",
+					"removeFriendTitle": "Unfriend",
+					"removeFriendText": "You will lose access to plans created by that friend. Are you sure you want to remove this friend?",
+					"friendRemovedText": "Friend has been removed"
 				}
 			},
 			"plans": {
@@ -205,6 +213,9 @@
 			"planForm": {
 				"createPlanTitle": "Creating new plan",
 				"editPlanTitle": "Editing existing plan",
+				"copyPlanTitle": "Copying plan",
+				"planCreatedText": "Plan created",
+				"planEditedText": "Changes saved",
 				"step": "Step {NUM_STEP}",
 				"stepOneTitle": "Plan parameters",
 				"stepTwoTitle": "Task list",
@@ -387,7 +398,8 @@
 				"content": {
 					"mandatoryTasks": "Mandatory tasks",
 					"additionalTasks": "Additional tasks",
-					"noTasks": "No tasks"
+					"noTasks": "No tasks",
+					"copyPlanButton": "Copy plan"
 				}
 			},
 			"rating":  {
@@ -599,7 +611,8 @@
 		"unsavedProgressTitle": "Unsaved progress",
 		"unsavedProgressMessage": "You have unsaved progress. Are you sure you want to exit?",
 		"deletePlan": "Deleting the plan",
-		"confirmPlanDeletion": "Are you sure you want to delete the plan?"
+		"confirmPlanDeletion": "Are you sure you want to delete the plan?",
+		"codeCopied": "Code copied to the clipboard"
 	},
 	"actions": {
 		"ok": "Ok",
@@ -625,7 +638,8 @@
 		"signIn": "Login",
 		"signUp": "Sign up",
 		"signOut": "Sign out",
-		"return": "Return"
+		"return": "Return",
+		"copyCode": "Copy code"
 	},
 	"authentication": {
 		"name": "First name",

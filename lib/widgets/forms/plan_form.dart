@@ -204,7 +204,10 @@ class _PlanFormState extends State<PlanForm> {
 			isTwoLine: true,
 			modalType: SmartSelectModalType.bottomSheet,
 			leading: Padding(padding: EdgeInsets.all(8.0), child: Icon(Icons.refresh)),
-			onChange: (val) => setState(() => widget.plan.repeatability = val)
+			onChange: (val) {
+				FocusManager.instance.primaryFocus.unfocus();
+				setState(() => widget.plan.repeatability = val);
+			}
 		);
 	}
 
@@ -238,6 +241,7 @@ class _PlanFormState extends State<PlanForm> {
 					modalType: SmartSelectModalType.bottomSheet,
 					leading: Padding(padding: EdgeInsets.all(8.0), child: Icon(Icons.event)),
 					onChange: (val) => setState(() {
+						FocusManager.instance.primaryFocus.unfocus();
 						widget.plan.repeatabilityRage = val;
 						widget.plan.days.clear();
 					}),
@@ -269,7 +273,10 @@ class _PlanFormState extends State<PlanForm> {
 							onTap: () => callback(context)
 						);
 					},
-					onChange: (val) => setState(() => { widget.plan.days = val })
+					onChange: (val) {
+						FocusManager.instance.primaryFocus.unfocus();
+						setState(() => { widget.plan.days = val });
+					}
 				),
 				Divider(),
 				buildDateRangeFields()

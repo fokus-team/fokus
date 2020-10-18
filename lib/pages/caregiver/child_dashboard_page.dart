@@ -22,6 +22,7 @@ import 'package:fokus/widgets/general/app_alert.dart';
 import 'package:fokus/widgets/general/app_loader.dart';
 import 'package:fokus/widgets/loadable_bloc_builder.dart';
 import 'package:fokus/widgets/segment.dart';
+import 'package:fokus_auth/fokus_auth.dart';
 import 'package:intl/intl.dart';
 import 'package:smart_select/smart_select.dart';
 
@@ -61,16 +62,6 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
     _tabController.dispose();
     super.dispose();
   }
-
-	void showCodeDialog(String code) {
-		// TODO show popup with QR
-		showBasicDialog(context,
-			GeneralDialog.discard(
-				title: AppLocales.of(context).translate('$_pageKey.header.childCode'),
-				content: code
-			)
-		);
-	}
 
   @override
   Widget build(BuildContext context) {
@@ -126,12 +117,14 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
       popupMenuWidget: PopupMenuList(
         lightTheme: true,
         items: [
-          UIButton('$_pageKey.header.childCode', () => showCodeDialog('fa7462a054295e915a20755d')),
-          UIButton.ofType(ButtonType.edit, () => cubit.onNameDialogClosed(showNameEditDialog(context, _childProfile))),
+          UIButton('$_pageKey.header.childCode',() => showUserCodeDialog(context, '$_pageKey.header.childCode', getCodeFromId(child.id)),
+						null, Icons.screen_lock_portrait ),
+          UIButton.ofType(ButtonType.edit, () => cubit.onNameDialogClosed(showNameEditDialog(context, _childProfile)),
+						null, Icons.edit),
           UIButton.ofType(ButtonType.unpair, () async {
-            if ((await showAccountDeleteDialog(context, _childProfile)) ?? false)
-	            Navigator.of(context).pop();
-          })
+            	if ((await showAccountDeleteDialog(context, _childProfile)) ?? false)
+	            	Navigator.of(context).pop();
+						}, null, Icons.person_remove)
         ],
       ),
       tabs: TabBar(

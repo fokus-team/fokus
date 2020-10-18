@@ -22,10 +22,10 @@ class UICaregiver extends UIUser {
 		  currencies = [UICurrency(type: CurrencyType.diamond)]..addAll(caregiver.currencies?.map((currency) => UICurrency.fromDBModel(currency)) ?? []),
 		  super.fromDBModel(caregiver);
 
-	UICaregiver.from(UICaregiver original, {List<UICurrency> currencies, List<UIBadge> badges, String locale, String name}) :
+	UICaregiver.from(UICaregiver original, {List<UICurrency> currencies, List<UIBadge> badges, String locale, String name, List<ObjectId> friends}) :
 			currencies = currencies ?? original.currencies,
 			badges = badges ?? original.badges,
-			friends = original.friends,
+			friends = friends ?? original.friends,
 			authMethod = original.authMethod,
 			super.from(original, locale: locale, name: name);
 

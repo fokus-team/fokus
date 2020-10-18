@@ -111,7 +111,7 @@ class CalendarCubit extends Cubit<CalendarState> {
 		var planWithAssigned = (MapEntry<ObjectId, List<PlanInstance>> planEntry) {
 			var plan = pastPlans[planEntry.key];
 		  return UIPlan(plan.id, plan.name, plan.active, plan.tasks.length, planEntry.value.map(
-					(instance) => instance.assignedTo).toList(), _repeatabilityService.buildPlanDescription(plan.repeatability));
+					(instance) => instance.assignedTo).toList(), _repeatabilityService.buildPlanDescription(plan.repeatability), plan.createdBy);
 		};
 	  Map<Date, List<UIPlan>> events = {};
 		for (var entry in dateMap.entries) {

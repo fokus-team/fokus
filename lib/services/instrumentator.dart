@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:isolate';
 
 import 'package:bloc/bloc.dart';
+import 'package:fokus/model/db/user/caregiver.dart';
+import 'package:fokus/model/db/user/user.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/ui/dialog_utils.dart';
 import 'package:fokus/widgets/dialogs/general_dialog.dart';
@@ -13,12 +15,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 import 'exception/db_exceptions.dart';
+import 'observers/active_user_observer.dart';
 
-class Instrumentator {
+class Instrumentator implements ActiveUserObserver {
 	final Logger _logger = Logger('Instrumentator');
 	final _navigatorKey = GetIt.I<GlobalKey<NavigatorState>>();
 
-	Instrumentator.runAppGuarded(Widget app) {
+	void runAppGuarded(Widget app) {
 		Bloc.observer = FokusBlocObserver();
 		_setupLogger();
 		_setupCrashlytics();
@@ -79,6 +82,18 @@ class Instrumentator {
 		}
 		return false;
 	}
+
+  @override
+  void onUserSignIn(User user) {
+	  Crashlytics.instance.setUserIdentifier(user.id.toHexString());
+	  Crashlytics.instance.setUserName(user.name);
+  }
+
+  @override
+  void onUserSignOut(User user) {
+	  Crashlytics.instance.setUserIdentifier(null);
+	  Crashlytics.instance.setUserName(null);
+  }
 }
 
 class FokusBlocObserver extends BlocObserver {

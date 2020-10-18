@@ -67,6 +67,7 @@ import 'package:fokus/utils/ui/theme_config.dart';
 import 'package:fokus/utils/service_injection.dart';
 import 'package:fokus/utils/bloc_utils.dart';
 import 'package:fokus/widgets/page_theme.dart';
+import 'package:get_it/get_it.dart';
 import 'model/ui/plan/ui_plan_instance.dart';
 
 void main() async {
@@ -76,7 +77,7 @@ void main() async {
 	var routeObserver = RouteObserver<PageRoute>();
 	await registerServices(navigatorKey, routeObserver);
 
-	Instrumentator.runAppGuarded(
+	GetIt.I<Instrumentator>().runAppGuarded(
 		BlocProvider<AuthenticationBloc>(
 			create: (context) => AuthenticationBloc(),
 			child: FokusApp(navigatorKey, routeObserver),

@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
 
 import 'package:fokus/model/ui/gamification/ui_points.dart';
+import 'package:fokus/model/ui/user/ui_caregiver.dart';
 import 'package:fokus/model/ui/user/ui_child.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/ui/dialog_utils.dart';
@@ -54,6 +55,8 @@ class _CustomAppBarState extends State<CustomAppBar>{
 
 	Widget _headerImage(UIUser user) {
 		if(user.role == UserRole.caregiver) {
+			if((user as UICaregiver).authMethod == AuthMethod.GOOGLE)
+				return AppAvatar(0, caregiverPhotoURL: (user as UICaregiver).photoURL);
 			return Image.asset('assets/image/sunflower_logo.png', height: 64);
 		} else {
 			return AppAvatar(user.avatar, color: childAvatars[user.avatar].color);

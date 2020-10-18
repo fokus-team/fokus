@@ -10,13 +10,14 @@ import 'package:fokus_auth/fokus_auth.dart';
 
 class UICaregiver extends UIUser {
 	final AuthMethod authMethod;
+	final String photoURL;
 	final List<ObjectId> friends;
 	final List<UICurrency> currencies;
 	final List<UIBadge> badges;
 
-  UICaregiver({ObjectId id, String name, this.currencies, this.badges, this.authMethod, this.friends = const [], List<ObjectId> connections = const []}) :
+  UICaregiver({ObjectId id, String name, this.currencies, this.badges, this.authMethod, this.photoURL, this.friends = const [], List<ObjectId> connections = const []}) :
 			super(id, name, role: UserRole.caregiver, connections: connections);
-  UICaregiver.fromDBModel(Caregiver caregiver, [this.authMethod]) :
+  UICaregiver.fromDBModel(Caregiver caregiver, [this.authMethod, this.photoURL]) :
 		  friends = caregiver.friends,
 			badges = caregiver.badges?.map((badge) => UIBadge.fromDBModel(badge))?.toList() ?? [],
 		  currencies = [UICurrency(type: CurrencyType.diamond)]..addAll(caregiver.currencies?.map((currency) => UICurrency.fromDBModel(currency)) ?? []),
@@ -27,8 +28,9 @@ class UICaregiver extends UIUser {
 			badges = badges ?? original.badges,
 			friends = friends ?? original.friends,
 			authMethod = original.authMethod,
+			photoURL = original.photoURL,
 			super.from(original, locale: locale, name: name);
 
 	@override
-  List<Object> get props => super.props..addAll([friends, currencies, badges, authMethod]);
+  List<Object> get props => super.props..addAll([friends, currencies, badges, authMethod, photoURL]);
 }

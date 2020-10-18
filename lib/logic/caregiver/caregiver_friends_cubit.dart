@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/logic/common/formz_state.dart';
+import 'package:fokus/logic/common/user_code_verifier.dart';
 import 'package:fokus/model/db/user/user_role.dart';
 import 'package:fokus/model/ui/auth/user_code.dart';
 import 'package:fokus/model/ui/user/ui_caregiver.dart';
@@ -11,9 +12,8 @@ import 'package:fokus/model/ui/user/ui_user.dart';
 import 'package:fokus/services/data/data_repository.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
-class CaregiverFriendsCubit extends Cubit<CaregiverFriendsState> {
+class CaregiverFriendsCubit extends Cubit<CaregiverFriendsState> with UserCodeVerifier<CaregiverFriendsState> {
 	final ActiveUserFunction _activeUser;
-	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 
   CaregiverFriendsCubit(this._activeUser) : super(CaregiverFriendsState());
 
@@ -33,7 +33,7 @@ class CaregiverFriendsCubit extends Cubit<CaregiverFriendsState> {
 		} else if(user.id == caregiverId) {
 			emit(state.copyWith(status: FormzStatus.submissionFailure, error: 'enteredOwnCaregiverCodeError'));
 		} else {
-			await _dataRepository.updateUser(user.id, friends: caregiverFriends..add(caregiverId));
+			await dataRepository.updateUser(user.id, friends: caregiverFriends..add(caregiverId));
 			emit(state.copyWith(status: FormzStatus.submissionSuccess));
 		}
   }
@@ -52,18 +52,7 @@ class CaregiverFriendsCubit extends Cubit<CaregiverFriendsState> {
 	void removeFriend(ObjectId friendID) async {
     UICaregiver user = _activeUser();
 		var caregiverFriends = user.friends ?? [];
-		await _dataRepository.updateUser(user.id, friends: caregiverFriends..remove(friendID));
-	}
-	
-	Future<bool> verifyUserCode(String code, UserRole role) async {
-		try {
-			var userExists = await _dataRepository.userExists(id: getIdFromCode(code), role: role);
-			if (!userExists)
-				return false;
-		} catch (e) {
-			return false;
-		}
-		return true;
+		await dataRepository.updateUser(user.id, friends: caregiverFriends..remove(friendID));
 	}
 }
 

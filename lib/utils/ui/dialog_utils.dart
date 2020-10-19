@@ -139,10 +139,10 @@ Future showAccountDeleteDialog(BuildContext context, UIUser user) {
 	);
 }
 
-Future showAddFriendDialog(BuildContext context, Function refreshPanel) {
+Future showAddFriendDialog(BuildContext context) {
 	return showDialog(
 		context: context,
-		builder: (_) => forwardCubit(AddFriendDialog(refreshPanel: refreshPanel), context.bloc<CaregiverFriendsCubit>())
+		builder: (_) => forwardCubit(AddFriendDialog(), context.bloc<CaregiverFriendsCubit>())
 	);
 }
 

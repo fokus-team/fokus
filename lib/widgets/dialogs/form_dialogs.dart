@@ -272,17 +272,12 @@ class _CurrencyEditDialogState extends State<CurrencyEditDialog> {
 const String _panelPageKey = 'page.caregiverSection.panel';
 
 class AddFriendDialog extends StatelessWidget {
-	final Function refreshPanel;
-
-	AddFriendDialog({this.refreshPanel});
-
   @override
   Widget build(BuildContext context) {
     return BlocListener<CaregiverFriendsCubit, CaregiverFriendsState>(
 	    listener: (context, state) {
 		    if (state.status.isSubmissionSuccess) {
 			    Navigator.of(context).pop();
-					refreshPanel();
 			    showSuccessSnackbar(context, '$_panelPageKey.content.caregiverAddedText');
 		    }
 		    if (state.status.isSubmissionFailure && state.error != null) {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
 
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/logic/caregiver/caregiver_panel_cubit.dart';
@@ -26,8 +27,13 @@ class _CaregiverPanelPageState extends State<CaregiverPanelPage> {
 	Widget build(BuildContext context) {
     return Scaffold(
 			appBar: CustomAppBar(type: CustomAppBarType.greetings),
-			body: LoadableBlocBuilder<CaregiverPanelCubit>(
-				builder: (context, state) => AppSegments(segments: _buildPanelSegments(state), fullBody: true),
+			body: BlocListener<AuthenticationBloc, AuthenticationState>(
+				listener: (context, state) {
+				  context.bloc<CaregiverPanelCubit>().reload();
+				},
+				child: LoadableBlocBuilder<CaregiverPanelCubit>(
+					builder: (context, state) => AppSegments(segments: _buildPanelSegments(state), fullBody: true),
+				),
 			),
 			floatingActionButton: FloatingActionButton.extended(
 				onPressed: () => Navigator.of(context).pushNamed(AppPage.caregiverRatingPage.name),
@@ -62,7 +68,7 @@ class _CaregiverPanelPageState extends State<CaregiverPanelPage> {
 				title: '$_pageKey.content.caregiverProfilesTitle',
 				subtitle: '$_pageKey.content.caregiverProfilesSubtitle',
 				noElementsMessage: '$_pageKey.content.noCaregiverProfilesAdded',
-				headerAction: UIButton('$_pageKey.header.addCaregiver', () => showAddFriendDialog(context, () => context.bloc<CaregiverPanelCubit>().doLoadData()), AppColors.caregiverButtonColor, Icons.add),
+				headerAction: UIButton('$_pageKey.header.addCaregiver', () => showAddFriendDialog(context), AppColors.caregiverButtonColor, Icons.add),
 				elements: <Widget>[
 					if (state.friends != null)
 						for (var friend in state.friends.entries)

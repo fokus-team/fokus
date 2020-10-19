@@ -126,10 +126,11 @@ class _FokusAppState extends State<FokusApp> implements CurrentLocaleObserver {
 		var getActiveUser = (BuildContext context) => () => context.bloc<AuthenticationBloc>().state.user;
 		var getRoute = (BuildContext context) => ModalRoute.of(context);
 		var getParams = (BuildContext context) => getRoute(context).settings.arguments;
+		var authBloc = (BuildContext context) => context.bloc<AuthenticationBloc>();
 
 		Map<String, Function(BuildContext, Animation<double>, Animation<double>)> routesWithFadeTransition = {
 			// Caregiver pages
-			AppPage.caregiverPanel.name: (context, _, __) => _createPage(withCubit(CaregiverPanelPage(), CaregiverFriendsCubit(getActiveUser(context))), context, CaregiverPanelCubit(getActiveUser(context), getRoute(context))),
+			AppPage.caregiverPanel.name: (context, _, __) => _createPage(withCubit(CaregiverPanelPage(), CaregiverFriendsCubit(getActiveUser(context), authBloc(context))), context, CaregiverPanelCubit(getActiveUser(context), getRoute(context))),
 			AppPage.caregiverPlans.name: (context, _, __) => _createPage(CaregiverPlansPage(), context, CaregiverPlansCubit(getActiveUser(context), getRoute(context), getParams(context))),
 			AppPage.caregiverAwards.name: (context, _, __) => _createPage(CaregiverAwardsPage(), context, CaregiverAwardsCubit(getActiveUser(context), getRoute(context))),
 			// Child pages
@@ -196,7 +197,7 @@ class _FokusAppState extends State<FokusApp> implements CurrentLocaleObserver {
 			AppPage.caregiverBadgeForm.name: (context) => _createPage(CaregiverBadgeFormPage(), context, BadgeFormCubit(getParams(context), getActiveUser(context), authBloc(context))),
 			AppPage.caregiverRatingPage.name: (context) => _createPage(CaregiverRatingPage(), context, TasksEvaluationCubit(getRoute(context), getActiveUser(context))),
 			AppPage.caregiverCurrencies.name: (context) => _createPage(CaregiverCurrenciesPage(), context, CaregiverCurrenciesCubit(getActiveUser(context), getActiveUser(context), authBloc(context))),
-			AppPage.caregiverFriendPlans.name: (context) => _createPage(withCubit(CaregiverFriendPlansPage(), CaregiverFriendsCubit(getActiveUser(context))), context, CaregiverPlansCubit(getActiveUser(context), getRoute(context), getParams(context))),
+			AppPage.caregiverFriendPlans.name: (context) => _createPage(withCubit(CaregiverFriendPlansPage(), CaregiverFriendsCubit(getActiveUser(context), authBloc(context))), context, CaregiverPlansCubit(getActiveUser(context), getRoute(context), getParams(context))),
 			AppPage.planDetails.name: (context) => _createPage(PlanDetailsPage(), context, PlanCubit(getParams(context), getRoute(context))),
 
 			AppPage.childCalendar.name: (context) => _createPage(ChildCalendarPage(), context, CalendarCubit(getParams(context), getActiveUser(context))),

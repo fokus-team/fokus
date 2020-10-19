@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fokus/logic/caregiver/caregiver_friends_cubit.dart';
+import 'package:fokus/logic/caregiver/caregiver_panel_cubit.dart';
 import 'package:fokus/model/db/user/user_role.dart';
 import 'package:fokus_auth/fokus_auth.dart';
 import 'package:formz/formz.dart';
@@ -16,6 +18,7 @@ import 'package:fokus/model/ui/user/ui_caregiver.dart';
 import 'package:fokus/utils/ui/theme_config.dart';
 import 'package:fokus/widgets/auth/auth_input_field.dart';
 import 'package:fokus/utils/ui/snackbar_utils.dart';
+import 'package:fokus/model/ui/auth/user_code.dart';
 import 'package:fokus/services/exception/auth_exceptions.dart';
 
 class FormDialog extends StatelessWidget {
@@ -263,5 +266,42 @@ class _CurrencyEditDialogState extends State<CurrencyEditDialog> {
 			  Navigator.of(context).pop();
 			}
 		);
+  }
+}
+
+const String _panelPageKey = 'page.caregiverSection.panel';
+
+class AddFriendDialog extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return BlocListener<CaregiverFriendsCubit, CaregiverFriendsState>(
+	    listener: (context, state) {
+		    if (state.status.isSubmissionSuccess) {
+			    Navigator.of(context).pop();
+			    showSuccessSnackbar(context, '$_panelPageKey.content.caregiverAddedText');
+		    }
+		    if (state.status.isSubmissionFailure && state.error != null) {
+			    Navigator.of(context).pop();
+			    showFailSnackbar(context, '$_panelPageKey.content.${state.error}');
+				}
+	    },
+      child: FormDialog(
+				title: AppLocales.of(context).translate('$_panelPageKey.header.addCaregiver'),
+				fields: [
+					Padding(
+						padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+						child: AuthenticationInputField<CaregiverFriendsCubit, CaregiverFriendsState>(
+							getField: (state) => state.caregiverCode,
+							changedAction: (cubit, value) => cubit.caregiverCodeChanged(value),
+							labelKey: '$_panelPageKey.content.caregiverCode',
+							icon: Icons.phonelink_lock,
+							getErrorKey: (state) => [state.caregiverCode.error.key],
+							clearable: true
+						)
+					)
+				],
+				onConfirm: () => context.bloc<CaregiverFriendsCubit>().addNewFriend()
+			)
+    );
   }
 }

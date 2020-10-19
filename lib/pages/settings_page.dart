@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fokus/widgets/buttons/bottom_sheet_confirm_button.dart';
 import 'package:fokus_auth/fokus_auth.dart';
 import 'package:smart_select/smart_select.dart';
 
@@ -135,6 +136,10 @@ class _SettingsPageState extends State<SettingsPage> {
 						value: context.bloc<LocaleCubit>().state.languageKey,
 						title: AppLocales.of(context).translate('$_pageKey.appSettings.changeLanguageLabel'),
 						modalType: SmartSelectModalType.bottomSheet,
+						modalConfig: SmartSelectModalConfig(
+							useConfirmation: true,
+							confirmationBuilder: (context, callback) => ButtonSheetConfirmButton(callback: () => callback)
+						),
 						options: [
 							for(String lang in languages)
 								SmartSelectOption(

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fokus/logic/caregiver/caregiver_friends_cubit.dart';
 import 'package:fokus/logic/common/settings/account_delete/account_delete_cubit.dart';
 import 'package:fokus/logic/common/settings/name_change/name_change_cubit.dart';
 import 'package:fokus/logic/common/settings/password_change/password_change_cubit.dart';
@@ -9,6 +11,7 @@ import 'package:fokus/model/ui/user/ui_user.dart';
 
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/bloc_utils.dart';
+import 'package:fokus/utils/ui/snackbar_utils.dart';
 import 'package:fokus/widgets/dialogs/app_info_dialog.dart';
 import 'package:fokus/widgets/dialogs/reward_dialog.dart';
 import 'package:fokus/widgets/dialogs/badge_dialog.dart';
@@ -90,6 +93,24 @@ Future<bool> showExitFormDialog(BuildContext context, bool isSystemPop, bool isD
 	);
 }
 
+void showUserCodeDialog(BuildContext context, String title, String code) {
+	// TODO show popup with QR
+	showBasicDialog(
+		context, 
+		GeneralDialog.confirm(
+			title: AppLocales.of(context).translate(title),
+			content: code,
+			cancelText: 'actions.close',
+			confirmText: 'actions.copyCode',
+			confirmAction: () {
+				Clipboard.setData(ClipboardData(text: code));
+				Navigator.of(context).pop();
+				showSuccessSnackbar(context, 'alert.codeCopied');
+			}
+		)
+	);
+}
+
 void showAppInfoDialog(BuildContext context) {
 	showDialog(
 		context: context,
@@ -115,6 +136,13 @@ Future showAccountDeleteDialog(BuildContext context, UIUser user) {
 	return showDialog(
 		context: context,
 		builder: (_) => forwardCubit(AccountDeleteDialog(user.role), context.bloc<AccountDeleteCubit>())
+	);
+}
+
+Future showAddFriendDialog(BuildContext context) {
+	return showDialog(
+		context: context,
+		builder: (_) => forwardCubit(AddFriendDialog(), context.bloc<CaregiverFriendsCubit>())
 	);
 }
 

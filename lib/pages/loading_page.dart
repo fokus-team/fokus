@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/ui/theme_config.dart';
+import 'package:fokus/widgets/general/app_loader.dart';
 
 class LoadingPage extends StatelessWidget {
 	@override
@@ -13,8 +14,7 @@ class LoadingPage extends StatelessWidget {
 					mainAxisAlignment: MainAxisAlignment.center,
 					crossAxisAlignment: CrossAxisAlignment.center,
 					children: <Widget>[
-						// TODO Change Circular Indicator to our sunflower animation
-						Padding(padding: EdgeInsets.only(bottom: 20.0), child: CircularProgressIndicator(backgroundColor: Colors.white)),
+						AppLoader(),
 						Text('${AppLocales.of(context).translate("loading")}...', style: Theme.of(context).textTheme.bodyText1)
 					]
 				),

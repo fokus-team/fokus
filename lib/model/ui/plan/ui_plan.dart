@@ -9,9 +9,10 @@ class UIPlan extends UIPlanBase {
 	final int taskCount;
 	final bool isActive;
 	final List<ObjectId> assignedTo;
+	final ObjectId createdBy;
 
-  UIPlan(ObjectId id, String name, this.isActive, this.taskCount, this.assignedTo, TranslateFunc description) : super(id, name, description);
-	UIPlan.fromDBModel(Plan plan, [TranslateFunc description]) : this(plan.id, plan.name, plan.active, plan.tasks.length, plan.assignedTo, description);
+  UIPlan(ObjectId id, String name, this.isActive, this.taskCount, this.assignedTo, TranslateFunc description, this.createdBy) : super(id, name, description);
+	UIPlan.fromDBModel(Plan plan, [TranslateFunc description]) : this(plan.id, plan.name, plan.active, plan.tasks.length, plan.assignedTo, description, plan.createdBy);
 	UIPlan copyWith({ObjectId id, String name, bool isActive, int taskCount, List<ObjectId> assignedTo, TranslateFunc description}) {
 		return UIPlan(
 			id ?? this.id,
@@ -19,12 +20,13 @@ class UIPlan extends UIPlanBase {
 			isActive ?? this.isActive,
 			taskCount ?? this.taskCount,
 			assignedTo ?? List.from(this.assignedTo),
-			description ?? this.description
+			description ?? this.description,
+			createdBy ?? this.createdBy
 		);
 	}
 
   @override
-  List<Object> get props => super.props..addAll([taskCount, assignedTo, isActive]);
+  List<Object> get props => super.props..addAll([taskCount, assignedTo, isActive, createdBy]);
 
 	@override
   String toString() {

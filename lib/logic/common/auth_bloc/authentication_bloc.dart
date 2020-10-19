@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:fokus/services/instrumentator.dart';
 import 'package:fokus_auth/fokus_auth.dart';
 import 'package:logging/logging.dart';
 import 'package:get_it/get_it.dart';
@@ -37,6 +38,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 	  observeUserChanges(GetIt.I<PlanKeeperService>());
 	  observeUserChanges(GetIt.I<NotificationService>());
 	  observeUserChanges(GetIt.I<LocaleService>());
+	  observeUserChanges(GetIt.I<Instrumentator>());
 	  _userSubscription = _authenticationProvider.user.listen((user) => add(AuthenticationUserChanged(user)));
   }
 
@@ -82,12 +84,12 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 			user = Caregiver.fromAuthUser(event.user);
 			await _dataRepository.createUser(user);
 		}
-		return _signInUser(user, event.user.authMethod);
+		return _signInUser(user, event.user.authMethod, event.user.photoURL);
   }
 
-	Future<AuthenticationState> _signInUser(User user, [AuthMethod authMethod]) async {
+	Future<AuthenticationState> _signInUser(User user, [AuthMethod authMethod, String photoURL]) async {
 	  _onUserSignIn(user);
-	  return AuthenticationState.authenticated(UIUser.typedFromDBModel(user, authMethod));
+	  return AuthenticationState.authenticated(UIUser.typedFromDBModel(user, authMethod, photoURL));
   }
 
 	@override

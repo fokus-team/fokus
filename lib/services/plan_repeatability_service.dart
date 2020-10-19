@@ -98,9 +98,13 @@ class PlanRepeatabilityService {
 			else {
 				String andWord = AppLocales.of(context).translate('and');
 			  if (rules.type == RepeatabilityType.weekly) {
-					List<String> weekdays = rules.days.map((day) => AppLocales.of(context).translate('repeatability.weekday', {'WEEKDAY': '$day'})).toList();
-					String weekdayString = displayJoin(weekdays, andWord);
-				  description += '${AppLocales.of(context).translate('repeatability.weekly', {'WEEKDAY': '${rules.days[0]}'})} $weekdayString';
+					if(rules.days.length == 7) {
+						description += AppLocales.of(context).translate('date.everyday');
+					} else {
+						List<String> weekdays = rules.days.map((day) => AppLocales.of(context).translate('repeatability.weekday', {'WEEKDAY': '$day'})).toList();
+						String weekdayString = displayJoin(weekdays, andWord);
+						description += '${AppLocales.of(context).translate('repeatability.weekly', {'WEEKDAY': '${rules.days[0]}'})} $weekdayString';
+					}
 			  }
 			  else if (rules.type == RepeatabilityType.monthly) {
 				  String dayString = displayJoin(rules.days.map((day) => '$day').toList(), andWord);

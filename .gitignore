@@ -1,5 +1,6 @@
-# Firebase config
+# Configs
 android/app/google-services.json
+android/key.properties
 
 # Miscellaneous
 *.class

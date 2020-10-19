@@ -25,7 +25,7 @@ class PlanFormCubit extends Cubit<PlanFormState> {
 	final PlanKeeperService _planKeeperService = GetIt.I<PlanKeeperService>();
 	final PlanRepeatabilityService _repeatabilityService = GetIt.I<PlanRepeatabilityService>();
 
-  PlanFormCubit(Object argument, this._activeUser) : super(PlanFormInitial(argument == null ? AppFormType.create : AppFormType.edit, argument));
+  PlanFormCubit(AppFormArgument argument, this._activeUser) : super(PlanFormInitial(argument?.type ?? AppFormType.create, argument?.id));
 
   void loadFormData() async {
 	  var user = _activeUser();
@@ -38,12 +38,12 @@ class PlanFormCubit extends Cubit<PlanFormState> {
 		emit(PlanFormSubmissionInProgress(state));
 		var userId = _activeUser().id;
 
-		var plan = Plan.fromPlanForm(planForm, userId, _repeatabilityService.mapRepeatabilityModel(planForm), state.planId);
-		var tasks = planForm.tasks.map((task) => Task.fromTaskForm(task, plan.id, userId)).toList();
+		var plan = Plan.fromPlanForm(planForm, userId, _repeatabilityService.mapRepeatabilityModel(planForm), state.formType == AppFormType.edit ? state.planId: null);
+		var tasks = planForm.tasks.map((task) => Task.fromTaskForm(task, plan.id, userId, state.formType == AppFormType.edit ? task.id : null)).toList();
 		plan.tasks = tasks.map((task) => task.id).toList();
 
 		List<Future> updates;
-		if (state.formType == AppFormType.create) {
+		if (state.formType == AppFormType.create || state.formType == AppFormType.copy) {
 			updates = [
 		    _dataRepository.createPlan(plan),
 		    _dataRepository.createTasks(tasks),
@@ -65,6 +65,9 @@ class PlanFormCubit extends Cubit<PlanFormState> {
 		var model = PlanFormModel.fromDBModel(plan);
 		var tasks = await _dataRepository.getTasks(planId: state.planId);
 		model.tasks = plan.tasks.map((id) => TaskFormModel.fromDBModel(tasks.firstWhere((task) => task.id == id))).toList();
+		if(state.formType == AppFormType.copy) {
+			model.children = [];
+		}
 		return model;
   }
 }

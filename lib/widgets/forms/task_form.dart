@@ -258,6 +258,8 @@ class _TaskFormState extends State<TaskForm> {
 				buildNameField(),
 				buildDescriptionField(),
 				buildSubtasksFields(),
+				Divider(),
+				SizedBox(height: 16.0),
 				buildPointsFields(),
 				buildTimerField(),
 				Divider(),
@@ -337,9 +339,9 @@ class _TaskFormState extends State<TaskForm> {
 						  child: ListTile(
 							  leading: Padding(padding: EdgeInsets.all(8.0), child: Icon(Icons.playlist_add_check)),
 							  title: Text(AppLocales.of(context).translate('$_pageKeyTaskForm.fields.subtaskDescription.sectionTitle')),
-							  subtitle: Text(AppLocales.of(context).translate('$_pageKeyTaskForm.fields.subtaskDescription.sectionSubtitle'		, {'NUM_SUBTASKS': subtasksKeys.length})),
+							  subtitle: Text(AppLocales.of(context).translate('$_pageKeyTaskForm.fields.subtaskDescription.sectionSubtitle', {'NUM_SUBTASKS': subtasksKeys.length})),
 						  ),
-					  ) : SizedBox.shrink(),
+					  ) : SizedBox.shrink()
 				  )
 			  ),
 				if (subtasksKeys.length < maxSubtasks)
@@ -489,7 +491,7 @@ class _TaskFormState extends State<TaskForm> {
 
 	Widget _getSubtaskFormField() {
 		return Padding(
-			padding: EdgeInsets.only(top: 6.0, bottom: 12.0, left: 20.0, right: 20.0),
+			padding: EdgeInsets.only(top: 20.0, bottom: 12.0, left: 20.0, right: 20.0),
 			child: Row(
 		    children: [
 		      Expanded(

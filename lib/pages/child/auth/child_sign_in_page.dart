@@ -73,15 +73,15 @@ class ChildSignInPage extends StatelessWidget {
 								)
 							),
 							AuthDivider(),
+							AuthenticationInputField<ChildSignUpCubit, ChildSignUpState>(
+								getField: (state) => state.caregiverCode,
+								changedAction: (cubit, value) => cubit.caregiverCodeChanged(value),
+								labelKey: '$_pageKey.caregiverCode',
+								icon: Icons.phonelink_lock,
+								getErrorKey: (state) => [state.caregiverCode.error.key],
+								disabled: activeUser != null,
+							),
 						],
-					AuthenticationInputField<ChildSignUpCubit, ChildSignUpState>(
-						getField: (state) => state.caregiverCode,
-						changedAction: (cubit, value) => cubit.caregiverCodeChanged(value),
-						labelKey: '$_pageKey.caregiverCode',
-						icon: Icons.phonelink_lock,
-						getErrorKey: (state) => [state.caregiverCode.error.key],
-						disabled: activeUser != null,
-					),
 					AuthenticationInputField<ChildSignUpCubit, ChildSignUpState>(
 						getField: (state) => state.name,
 						changedAction: (cubit, value) => cubit.nameChanged(value),

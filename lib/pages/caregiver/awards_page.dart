@@ -57,13 +57,6 @@ class _CaregiverAwardsPageState extends State<CaregiverAwardsPage> {
 				subtitle: '$_pageKey.content.addedRewardsSubtitle',
 				headerAction: UIButton('$_pageKey.header.addReward', () => Navigator.of(context).pushNamed(AppPage.caregiverRewardForm.name), AppColors.caregiverButtonColor, Icons.add),
 				noElementsMessage: '$_pageKey.content.noRewardsAdded',
-				noElementsAction: RaisedButton(
-					child: Text(
-						AppLocales.of(context).translate('$_pageKey.header.addReward'),
-						style: Theme.of(context).textTheme.button
-					),
-					onPressed: () => { Navigator.of(context).pushNamed(AppPage.caregiverRewardForm.name) }
-				),
 				elements: <Widget>[
 					for (var reward in state.rewards)
 						RewardItemCard(
@@ -92,13 +85,6 @@ class _CaregiverAwardsPageState extends State<CaregiverAwardsPage> {
 				subtitle: '$_pageKey.content.addedBadgesSubtitle',
 				headerAction: UIButton('$_pageKey.header.addBadge', () => Navigator.of(context).pushNamed(AppPage.caregiverBadgeForm.name), AppColors.caregiverButtonColor, Icons.add),
 				noElementsMessage: '$_pageKey.content.noBadgesAdded',
-				noElementsAction: RaisedButton(
-					child: Text(
-						AppLocales.of(context).translate('$_pageKey.header.addBadge'),
-						style: Theme.of(context).textTheme.button
-					),
-					onPressed: () => { Navigator.of(context).pushNamed(AppPage.caregiverBadgeForm.name) }
-				),
 				elements: <Widget>[
 					for (var badge in state.badges)
 						ItemCard(

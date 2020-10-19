@@ -240,7 +240,6 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 							}),
 							icon: Icons.star,
 							color: AppColors.chipRatingColors[task.status.rating],
-							tooltip:'$_pageKey.content.taskTimer.break',
 						),
 						if (task.points != null && task.points.quantity != 0) getCurrencyChip(task, pointsAwarded: true),
 					]

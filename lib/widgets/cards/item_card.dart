@@ -67,7 +67,7 @@ class ItemCard extends StatelessWidget {
 		this.textMaxLines = 3,
 		this.rightIcon,
 		this.activeProgressBarColor = AppColors.childBackgroundColor
-	}) : graphicHeight = defaultImageHeight ?? defaultImageHeight, assert(graphic != null ? graphicType != null : true);
+	}) : graphicHeight = graphicHeight ?? defaultImageHeight, assert(graphic != null ? graphicType != null : true);
 	
 	Widget headerImage() {
 		if (graphicType == AssetType.avatars)

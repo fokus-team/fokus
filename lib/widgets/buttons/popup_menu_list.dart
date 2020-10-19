@@ -5,8 +5,9 @@ import 'package:fokus/services/app_locales.dart';
 class PopupMenuList extends StatelessWidget {
   final List<UIButton> items;
 	final bool lightTheme;
+	final bool includeDivider;
 
-	PopupMenuList({this.items, this.lightTheme = false});
+	PopupMenuList({this.items, this.lightTheme = false, this.includeDivider = false});
 
   @override
   Widget build(BuildContext context) {
@@ -26,12 +27,20 @@ class PopupMenuList extends StatelessWidget {
 			popupMenuEntries.add(
 				PopupMenuItem(
 					value: item.action,
-					child: Text(
-						AppLocales.of(context).translate(item.textKey),
-					),
+					child: Row(
+						children: <Widget>[
+							Padding(
+								padding: EdgeInsets.only(right: 10.0),
+								child: Icon(item.icon, color: Colors.grey[600])
+							),
+							Text(AppLocales.of(context).translate(item.textKey)),
+						]
+					)
 				)
 			);
 		}
+		if(includeDivider)
+			popupMenuEntries.insert(popupMenuEntries.length-1, PopupMenuDivider());
   	return popupMenuEntries;
 	}
 }

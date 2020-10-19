@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
 import 'package:fokus/logic/common/plan_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fokus/model/db/plan/plan.dart';
 import 'package:fokus/model/db/user/user_role.dart';
 import 'package:fokus/model/ui/plan/ui_plan.dart';
 import 'package:fokus/model/ui/task/ui_task.dart';
@@ -24,21 +25,35 @@ import 'package:mongo_dart/mongo_dart.dart' as Mongo;
 
 class PlanDetailsPage extends StatefulWidget {
   @override
-  _PlanDetailsPageState createState() =>
-      new _PlanDetailsPageState();
+  _PlanDetailsPageState createState() => new _PlanDetailsPageState();
 }
 
 class _PlanDetailsPageState extends State<PlanDetailsPage> {
 	static const String _pageKey = 'page.caregiverSection.planDetails';
 
-
   @override
   Widget build(BuildContext context) {
 		return Scaffold(
-			body: LoadableBlocBuilder<PlanCubit>(
-				builder: (context, state) => _buildView(context, state)
-			),
+			body: LoadableBlocBuilder<PlanCubit>(builder: (context, state) => _buildView(context, state), loadingBuilder: (_, __) => SizedBox.shrink()),
+			floatingActionButton: LoadableBlocBuilder<PlanCubit>(builder: (context, state) => _buildFloatingButton(state)),
+			floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat
 		);
+	}
+
+	Widget _buildFloatingButton(CaregiverTasksLoadSuccess state) {
+		// ignore: close_sinks
+		var authenticationBloc = context.bloc<AuthenticationBloc>();
+		var currentUser = authenticationBloc.state.user;
+
+		return (state.uiPlan?.createdBy != currentUser.id && currentUser.role == UserRole.caregiver) ? FloatingActionButton.extended(
+			heroTag: null,
+			materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+			backgroundColor: AppColors.formColor,
+			elevation: 4.0,
+			icon: Icon(Icons.control_point_duplicate),
+			label: Text(AppLocales.of(context).translate('$_pageKey.content.copyPlanButton')),
+			onPressed: () => Navigator.of(context).pushNamed(AppPage.caregiverPlanForm.name, arguments: AppFormArgument(type: AppFormType.copy, id: state.uiPlan.id)),
+		) : SizedBox.shrink();
 	}
 
 	Column _buildView(BuildContext context, CaregiverTasksLoadSuccess state) {
@@ -93,13 +108,11 @@ class _PlanDetailsPageState extends State<PlanDetailsPage> {
 		);
 	}
 
-
 	Widget _getCardHeader(UIPlan plan, Map<Mongo.ObjectId, String> children, BuildContext context) {
   	int i = 0;
-// ignore: close_sinks
+		// ignore: close_sinks
 		var authenticationBloc = context.bloc<AuthenticationBloc>();
 		var currentUser = authenticationBloc.state.user;
-
 
 		return CustomContentAppBar(
 			title: '$_pageKey.header.title',
@@ -108,7 +121,7 @@ class _PlanDetailsPageState extends State<PlanDetailsPage> {
 				subtitle: plan.description(context),
 				//TODO: Open child page with click on chip
 				chips: <Widget>[
-					if (currentUser.role == UserRole.child)
+					if (currentUser.role == UserRole.child || currentUser.id != plan.createdBy)
 						AttributeChip.withIcon(
 							content: AppLocales.of(context).translate('page.caregiverSection.plans.content.tasks', {'NUM_TASKS': plan.taskCount}),
 							color: Colors.indigo,
@@ -128,34 +141,40 @@ class _PlanDetailsPageState extends State<PlanDetailsPage> {
 				]
 			),
 			helpPage: 'plan_info',
-			popupMenuWidget: currentUser.role == UserRole.caregiver ? PopupMenuList(
+			popupMenuWidget: currentUser.id == plan.createdBy ? PopupMenuList(
 				lightTheme: true,
 				items: [
-					UIButton.ofType(ButtonType.edit, () => Navigator.of(context).pushNamed(AppPage.caregiverPlanForm.name, arguments: plan.id)),
+					UIButton.ofType(ButtonType.edit, () => Navigator.of(context).pushNamed(
+							AppPage.caregiverPlanForm.name,
+							arguments: AppFormArgument(type: AppFormType.edit, id: plan.id)
+						),
+						null, Icons.edit
+					),
 					UIButton.ofType(ButtonType.delete, () => showBasicDialog(
-						context,
-						GeneralDialog.confirm(
-							title: AppLocales.of(context).translate('alert.deletePlan'),
-							richContent: RichText(
-								text: TextSpan(
-									text: AppLocales.of(context).translate('alert.confirmPlanDeletion') + '\n\n',
-									style: TextStyle(color: AppColors.darkTextColor),
-									children: [TextSpan(
-										text: AppLocales.of(context).translate('deleteWarning'),
-									  style: TextStyle(color: Colors.red),
-									)]
+							context,
+							GeneralDialog.confirm(
+								title: AppLocales.of(context).translate('alert.deletePlan'),
+								richContent: RichText(
+									text: TextSpan(
+										text: AppLocales.of(context).translate('alert.confirmPlanDeletion') + '\n\n',
+										style: TextStyle(color: AppColors.darkTextColor),
+										children: [TextSpan(
+											text: AppLocales.of(context).translate('deleteWarning'),
+											style: TextStyle(color: Colors.red),
+										)]
+									),
 								),
-							),
-							confirmText: 'actions.delete',
-							confirmAction: () async {
-								await context.bloc<PlanCubit>().deletePlan();
-								Navigator.of(context).pop();
-								Navigator.of(context).pop();
-							},
-							confirmColor: Colors.red
-						)
-					))
-				],
+								confirmText: 'actions.delete',
+								confirmAction: () async {
+									await context.bloc<PlanCubit>().deletePlan();
+									Navigator.of(context).pop();
+									Navigator.of(context).pop();
+								},
+								confirmColor: Colors.red
+							)
+						), null, Icons.delete
+					)
+				]
 			) : null
 		);
 	}

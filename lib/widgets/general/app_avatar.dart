@@ -11,19 +11,19 @@ class AppAvatar extends StatelessWidget {
 	final bool checked;
 	final bool disabled;
 	final bool blankAvatar;
-	//final UserType type; // in case of caregivers having avatars
+	final String caregiverPhotoURL;
 
 	static final Color greyOut = Colors.grey[100];
 
 	AppAvatar(
 		this.avatar,
 		{
-			//this.type = UserType.child,
 			this.size = 64,
 			this.color,
 			this.checked,
 			this.disabled = false,
-			this.blankAvatar = false
+			this.blankAvatar = false,
+			this.caregiverPhotoURL
 		}
 	);
 
@@ -31,6 +31,17 @@ class AppAvatar extends StatelessWidget {
 
 	@override
   Widget build(BuildContext context) {
+		if(caregiverPhotoURL != null) {
+			return Container(
+				width: size,
+				height: size,
+				child: CircleAvatar(
+					radius: 64.0,
+					backgroundImage: NetworkImage(caregiverPhotoURL),
+					backgroundColor: Colors.transparent
+				)
+			);
+		}
 		return Badge(
 			badgeContent: Icon(Icons.check, color: Colors.white, size: 16.0),
 			badgeColor: Colors.green,

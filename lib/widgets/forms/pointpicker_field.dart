@@ -9,7 +9,7 @@ import 'package:fokus/utils/ui/app_paths.dart';
 import 'package:fokus/utils/ui/form_config.dart';
 import 'package:fokus/utils/ui/icon_sets.dart';
 import 'package:fokus/utils/ui/theme_config.dart';
-import 'package:fokus/widgets/buttons/bottom_sheet_bar_buttons.dart';
+import 'package:fokus/widgets/buttons/bottom_sheet_confirm_button.dart';
 import 'package:smart_select/smart_select.dart';
 
 class PointPickerField extends StatefulWidget {
@@ -49,6 +49,14 @@ class PointPickerField extends StatefulWidget {
 }
 
 class _PointPickerFieldState extends State<PointPickerField> {
+	UICurrency pickedCurrency;
+
+	@override
+  void initState() {
+		pickedCurrency = UICurrency.from(widget.pickedCurrency);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
 		return SmartSelect<UICurrency>.single(
@@ -148,8 +156,13 @@ class _PointPickerFieldState extends State<PointPickerField> {
 				builder: (item, checked, onChange) {
 					return RadioListTile<UICurrency>(
 						value: item.value,
-						groupValue: widget.pickedCurrency,
-						onChanged: (val) => {onChange(item.value, !checked)},
+						groupValue: pickedCurrency,
+						onChanged: (val) {
+							onChange(item.value, !checked);
+							setState(() {
+							  pickedCurrency = item.value;
+							});
+						},
 						title: Row(
 							children: [
 								Padding(
@@ -164,11 +177,8 @@ class _PointPickerFieldState extends State<PointPickerField> {
 			),
 			modalType: SmartSelectModalType.bottomSheet,
 			modalConfig: SmartSelectModalConfig(
-				trailing: ButtonSheetBarButtons(
-					buttons: [
-						UIButton('actions.confirm', () => { Navigator.pop(context) }, Colors.green, Icons.done)
-					],
-				)
+				useConfirmation: true,
+				confirmationBuilder: (context, callback) => ButtonSheetConfirmButton(callback: () => callback)
 			),
 			onChange: (val) => widget.pointCurrencySetter(val)
 		);

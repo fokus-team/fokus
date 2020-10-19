@@ -9,7 +9,7 @@ import 'package:fokus/services/plan_repeatability_service.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
-class PlanCubit extends ReloadableCubit{
+class PlanCubit extends ReloadableCubit {
 	final ObjectId _planId;
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final PlanRepeatabilityService _repeatabilityService = GetIt.I<PlanRepeatabilityService>();

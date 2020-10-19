@@ -69,7 +69,7 @@ class _CaregiverAwardsPageState extends State<CaregiverAwardsPage> {
 						RewardItemCard(
 							reward: reward,
 							menuItems: [
-								UIButton.ofType(ButtonType.edit, () => { Navigator.of(context).pushNamed(AppPage.caregiverRewardForm.name, arguments: reward.id) }),
+								UIButton.ofType(ButtonType.edit, () => Navigator.of(context).pushNamed(AppPage.caregiverRewardForm.name, arguments: reward.id), null, Icons.edit),
 								UIButton.ofType(ButtonType.delete, () {
 									showBasicDialog(
 										context,
@@ -81,7 +81,7 @@ class _CaregiverAwardsPageState extends State<CaregiverAwardsPage> {
 											confirmAction: () => _deleteReward(reward.id)
 										)
 									);
-								})
+								}, null, Icons.delete)
 							],
 							onTapped: () => showRewardDialog(context, reward, showHeader: false),
 						)
@@ -115,7 +115,7 @@ class _CaregiverAwardsPageState extends State<CaregiverAwardsPage> {
 											confirmAction: () => _deleteBadge(badge)
 										)
 									);
-								})
+								}, null, Icons.delete)
 							],
 							onTapped: () => showBadgeDialog(context, badge, showHeader: false),
 							graphicType: AssetType.badges,

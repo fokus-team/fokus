@@ -6,6 +6,7 @@ import 'package:fokus/model/ui/form/plan_form_model.dart';
 
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/ui/dialog_utils.dart';
+import 'package:fokus/utils/ui/snackbar_utils.dart';
 import 'package:fokus/utils/ui/theme_config.dart';
 import 'package:fokus/widgets/dialogs/general_dialog.dart';
 import 'package:fokus/logic/caregiver/plan_form/plan_form_cubit.dart';
@@ -26,7 +27,7 @@ class _CaregiverPlanFormPageState extends State<CaregiverPlanFormPage> {
 	static const String _pageKey = 'page.caregiverSection.planForm';
 	final int screenTransitionDuration = 500;
 	AppFormType formType;
-	PlanFormModel plan = PlanFormModel(); // TODO Edit mode for the form
+	PlanFormModel plan = PlanFormModel();
 
 	PlanFormStep currentStep = PlanFormStep.planParameters;
 
@@ -55,35 +56,47 @@ class _CaregiverPlanFormPageState extends State<CaregiverPlanFormPage> {
 		formKey = GlobalKey<FormState>();
     return BlocConsumer<PlanFormCubit, PlanFormState>(
 			listener: (context, state) {
-				if (state is PlanFormSubmissionSuccess)
-					Navigator.of(context).pop(); // TODO also show some visual feedback?
-				else if (state is PlanFormDataLoadSuccess)
+				if (state is PlanFormSubmissionSuccess) {
+					if(formType == AppFormType.copy) {
+						Navigator.of(context).popUntil(ModalRoute.withName(AppPage.planDetails.name));
+						Navigator.of(context).pushNamed(AppPage.caregiverPlans.name);
+					} else {
+						Navigator.of(context).pop();
+					}
+					showSuccessSnackbar(context, formType == AppFormType.edit ? '$_pageKey.planEditedText' : '$_pageKey.planCreatedText');
+				} else if (state is PlanFormDataLoadSuccess)
 					setState(() => plan = PlanFormModel.from(state.planForm));
 			},
 	    builder: (context, state) {
-				List<Widget> children = [Scaffold(
-					appBar: AppBar(
-						title: Text(AppLocales.of(context).translate(
-							formType == AppFormType.create ? '$_pageKey.createPlanTitle' : '$_pageKey.editPlanTitle'
-						)),
-						actions: <Widget>[
-							HelpIconButton(helpPage: 'plan_creation')
-						],
-					),
-					body: buildStepper()
-				)];
+				List<Widget> children = [buildStepper()];
 				if (state is PlanFormInitial) {
-					formType = state.formType; // works?
+					formType = state.formType;
 					context.bloc<PlanFormCubit>().loadFormData();
-					if (formType == AppFormType.edit)
-						children.add(Center(child: AppLoader()));
+					if (formType != AppFormType.create) {
+						children.add(Positioned(
+							child: Center(child: AppLoader(hasOverlay: true))
+						));
+					}
 				}
 				else if (state is PlanFormSubmissionInProgress)
-					children.add(Center(child: AppLoader()));
+					children.add(Positioned(
+						child: Center(child: AppLoader(hasOverlay: true))
+					));
 		    return WillPopScope(
 					onWillPop: () => showExitFormDialog(context, true, state is PlanFormDataLoadSuccess && plan != state.planForm),
-					child: Stack(
-					  children: children
+					child: Scaffold(
+						appBar: AppBar(
+							title: Text(AppLocales.of(context).translate(
+								formType == AppFormType.create ? '$_pageKey.createPlanTitle' : 
+									formType == AppFormType.edit ? '$_pageKey.editPlanTitle' : '$_pageKey.copyPlanTitle'
+							)),
+							actions: <Widget>[
+								HelpIconButton(helpPage: 'plan_creation')
+							],
+						),
+						body: Stack(
+							children: children
+						)
 					)
 				);
 			},
@@ -105,7 +118,7 @@ class _CaregiverPlanFormPageState extends State<CaregiverPlanFormPage> {
 		plan: plan,
 		goBackCallback: back,
 		submitCallback: submit,
-		isCreateMode: formType == AppFormType.create,
+		isCreateMode: formType != AppFormType.edit,
 	);
 
 	Widget buildStepper() {

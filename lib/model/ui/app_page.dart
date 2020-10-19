@@ -1,3 +1,5 @@
+import 'package:mongo_dart/mongo_dart.dart';
+
 enum AppPage {
 	// Shared
 	loadingPage,
@@ -65,8 +67,16 @@ extension AppPageName on AppPage {
 	}[this];
 }
 
+enum AppFormType { create, edit, copy }
+
+class AppFormArgument {
+	final AppFormType type;
+	final ObjectId id;
+
+	AppFormArgument({this.type, this.id});
+	
+}
+
 enum AppPageSection {
 	login, caregiver, child
 }
-
-enum AppFormType { create, edit }

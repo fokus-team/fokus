@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:fokus/logic/caregiver/caregiver_friends_cubit.dart';
 import 'package:fokus/logic/caregiver/child_dashboard/child_dashboard_cubit.dart';
 
 import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
@@ -125,11 +126,13 @@ class _FokusAppState extends State<FokusApp> implements CurrentLocaleObserver {
   Route<dynamic> _onGenerateRoute(RouteSettings settings) {
 		var getActiveUser = (BuildContext context) => () => context.bloc<AuthenticationBloc>().state.user;
 		var getRoute = (BuildContext context) => ModalRoute.of(context);
+		var getParams = (BuildContext context) => getRoute(context).settings.arguments;
+		var authBloc = (BuildContext context) => context.bloc<AuthenticationBloc>();
 
 		Map<String, Function(BuildContext, Animation<double>, Animation<double>)> routesWithFadeTransition = {
 			// Caregiver pages
-			AppPage.caregiverPanel.name: (context, _, __) => _createPage(CaregiverPanelPage(), context, CaregiverPanelCubit(getActiveUser(context), getRoute(context))),
-			AppPage.caregiverPlans.name: (context, _, __) => _createPage(CaregiverPlansPage(), context, CaregiverPlansCubit(getActiveUser(context), getRoute(context))),
+			AppPage.caregiverPanel.name: (context, _, __) => _createPage(withCubit(CaregiverPanelPage(), CaregiverFriendsCubit(getActiveUser(context), authBloc(context))), context, CaregiverPanelCubit(getActiveUser(context), getRoute(context))),
+			AppPage.caregiverPlans.name: (context, _, __) => _createPage(CaregiverPlansPage(), context, CaregiverPlansCubit(getActiveUser(context), getRoute(context), getParams(context))),
 			AppPage.caregiverAwards.name: (context, _, __) => _createPage(CaregiverAwardsPage(), context, CaregiverAwardsCubit(getActiveUser(context), getRoute(context))),
 			// Child pages
 			AppPage.childPanel.name: (context, _, __) =>  _createPage(ChildPanelPage(), context, ChildPanelCubit(getActiveUser(context), getRoute(context))),
@@ -195,7 +198,7 @@ class _FokusAppState extends State<FokusApp> implements CurrentLocaleObserver {
 			AppPage.caregiverBadgeForm.name: (context) => _createPage(CaregiverBadgeFormPage(), context, BadgeFormCubit(getParams(context), getActiveUser(context), authBloc(context))),
 			AppPage.caregiverRatingPage.name: (context) => _createPage(CaregiverRatingPage(), context, TasksEvaluationCubit(getRoute(context), getActiveUser(context))),
 			AppPage.caregiverCurrencies.name: (context) => _createPage(CaregiverCurrenciesPage(), context, CaregiverCurrenciesCubit(getActiveUser(context), getActiveUser(context), authBloc(context))),
-			AppPage.caregiverFriendPlans.name: (context) => _createPage(CaregiverFriendPlansPage(), context),
+			AppPage.caregiverFriendPlans.name: (context) => _createPage(withCubit(CaregiverFriendPlansPage(), CaregiverFriendsCubit(getActiveUser(context), authBloc(context))), context, CaregiverPlansCubit(getActiveUser(context), getRoute(context), getParams(context))),
 			AppPage.planDetails.name: (context) => _createPage(PlanDetailsPage(), context, PlanCubit(getParams(context), getRoute(context))),
 
 			AppPage.childCalendar.name: (context) => _createPage(ChildCalendarPage(), context, CalendarCubit(getParams(context), getActiveUser(context))),

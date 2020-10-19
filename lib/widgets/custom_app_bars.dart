@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
 
 import 'package:fokus/model/ui/gamification/ui_points.dart';
+import 'package:fokus/model/ui/user/ui_caregiver.dart';
 import 'package:fokus/model/ui/user/ui_child.dart';
 import 'package:fokus/services/app_locales.dart';
+import 'package:fokus/utils/ui/dialog_utils.dart';
+import 'package:fokus/utils/ui/snackbar_utils.dart';
 import 'package:fokus/utils/ui/theme_config.dart';
 import 'package:fokus/widgets/chips/attribute_chip.dart';
 import 'package:fokus/widgets/buttons/help_icon_button.dart';
@@ -16,7 +20,9 @@ import 'package:fokus/model/ui/ui_button.dart';
 import 'package:fokus/model/ui/user/ui_user.dart';
 import 'package:fokus/utils/ui/icon_sets.dart';
 import 'package:fokus/widgets/buttons/popup_menu_list.dart';
+import 'package:fokus/widgets/dialogs/general_dialog.dart';
 import 'package:fokus/widgets/general/app_avatar.dart';
+import 'package:fokus_auth/fokus_auth.dart';
 
 enum CustomAppBarType { greetings, normal }
 
@@ -49,6 +55,8 @@ class _CustomAppBarState extends State<CustomAppBar>{
 
 	Widget _headerImage(UIUser user) {
 		if(user.role == UserRole.caregiver) {
+			if((user as UICaregiver).authMethod == AuthMethod.GOOGLE)
+				return AppAvatar(0, caregiverPhotoURL: (user as UICaregiver).photoURL);
 			return Image.asset('assets/image/sunflower_logo.png', height: 64);
 		} else {
 			return AppAvatar(user.avatar, color: childAvatars[user.avatar].color);
@@ -60,11 +68,18 @@ class _CustomAppBarState extends State<CustomAppBar>{
 		var auth = context.bloc<AuthenticationBloc>();
 		return PopupMenuList(
 			lightTheme: true,
+			includeDivider: true,
 			items: [
-				UIButton('navigation.settings', () => Navigator.of(context).pushNamed(AppPage.settingsPage.name)),
+				UIButton('navigation.settings', () => Navigator.of(context).pushNamed(AppPage.settingsPage.name),
+					null, Icons.settings),
 				if(auth.state.user?.role == UserRole.caregiver)
-					UIButton('navigation.caregiver.currencies', () => Navigator.of(context).pushNamed(AppPage.caregiverCurrencies.name)),
-				UIButton('actions.signOut', () => auth.add(AuthenticationSignOutRequested()))
+					UIButton('navigation.caregiver.currencies', () => Navigator.of(context).pushNamed(AppPage.caregiverCurrencies.name),
+						null, Icons.account_balance_wallet),
+				if(auth.state.user?.role == UserRole.caregiver)
+					UIButton('navigation.caregiver.caregiverCode', () => showUserCodeDialog(context, 'navigation.caregiver.caregiverCode', getCodeFromId(auth.state.user?.id)),
+						null, Icons.phonelink_lock),
+				UIButton('actions.signOut', () => auth.add(AuthenticationSignOutRequested()),
+					null, Icons.exit_to_app)
 			]
 		);
 	}

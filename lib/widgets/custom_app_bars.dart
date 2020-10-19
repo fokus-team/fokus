@@ -86,6 +86,7 @@ class _CustomAppBarState extends State<CustomAppBar>{
 
 	Widget _buildBarContent() {
 		return BlocBuilder<AuthenticationBloc, AuthenticationState>(
+			buildWhen: (oldState, newState) => newState.status != AuthenticationStatus.unauthenticated,
 			builder: (context, state) {
 				return SafeArea(
 					child: Padding(

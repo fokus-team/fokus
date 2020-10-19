@@ -47,6 +47,7 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 		else {
 			final result = await Navigator.of(context).pushNamed(AppPage.childTaskInProgress.name, arguments: {"TaskId" : task.id, "UIPlanInstance" : plan});
 			if(result != null) setState(() {
+				_wasPlanCompleted = false;
 				updatedUiPlanInstance =  (result as Map<String, dynamic>)['plan'];
 			});
 		}

@@ -43,8 +43,8 @@ class AttributeChip extends StatelessWidget {
 	@override
 	Widget build(BuildContext context) {
 		return Tooltip(
-			message: (tooltip != null) ? AppLocales.of(context).translate(tooltip) : 
-				(content != null) ? content : AppLocales.of(context).translate('alert.noHint'),
+			message: (tooltip != null) ? (tooltip == 'points' ? AppLocales.of(context).translate(tooltip) : tooltip)
+				: (content != null) ? content : AppLocales.of(context).translate('alert.noHint'),
 			child: Chip(
 				avatar: icon,
 				materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,

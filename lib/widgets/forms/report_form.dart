@@ -132,7 +132,8 @@ class _ReportFormState extends State<ReportForm> {
 		int points = TasksEvaluationCubit.getPointsAwarded(totalPoints, mark.value);
 		return AttributeChip.withCurrency(
 			currencyType: widget.report.task.points.type,
-			content: points.toString() + ' / ' + totalPoints.toString()
+			content: points.toString() + ' / ' + totalPoints.toString(),
+			tooltip: widget.report.task.points.title
 		);
 	}
 
@@ -160,7 +161,7 @@ class _ReportFormState extends State<ReportForm> {
 							RatingBar(
 								minRating: 0.0,
 								maxRating: 5.0,
-								initialRating: 3,
+								initialRating: mark.value.toDouble() ?? 3,
 								itemCount: 5,
 								itemSize: 50.0,
 								unratedColor: Colors.grey[300],

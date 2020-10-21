@@ -62,7 +62,8 @@ class TaskCard extends StatelessWidget {
 													if(haveSetPoints)
 														AttributeChip.withCurrency(
 															content: task.pointsValue.toString(),
-															currencyType: task.pointCurrency.type
+															currencyType: task.pointCurrency.type,
+															tooltip: task.pointCurrency.title
 														),
 													if(haveSetTimer)
 														AttributeChip.withIcon(

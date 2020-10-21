@@ -23,6 +23,7 @@ class RewardDialog extends StatefulWidget {
 class _RewardDialogState extends State<RewardDialog> with SingleTickerProviderStateMixin {
   static const String _pageKey = 'page.childSection.rewards.content';
 	AnimationController _rotationController;
+	bool claimButtonClicked = false;
 
 	@override
 	void initState() {
@@ -85,7 +86,8 @@ class _RewardDialogState extends State<RewardDialog> with SingleTickerProviderSt
 									),
 									AttributeChip.withCurrency(
 										currencyType: widget.reward.cost.type,
-										content: widget.reward.cost.quantity.toString()
+										content: widget.reward.cost.quantity.toString(),
+										tooltip: widget.reward.cost.title
 									)
 								]
 							),
@@ -96,7 +98,12 @@ class _RewardDialogState extends State<RewardDialog> with SingleTickerProviderSt
 									children: <Widget>[
 										RoundedButton(button: UIButton('actions.close', () => Navigator.of(context).pop(), Colors.blueGrey, Icons.close)),
 										if(widget.showHeader)
-											RoundedButton(button: UIButton('$_pageKey.claimButton', () => widget.claimFeedback(), AppColors.childButtonColor, Icons.add_shopping_cart))
+											RoundedButton(button: UIButton('$_pageKey.claimButton', () {
+												if(!claimButtonClicked) {
+													setState(() {claimButtonClicked = true;});
+													widget.claimFeedback();
+												}
+											}, claimButtonClicked ? Colors.grey: AppColors.childButtonColor, Icons.add_shopping_cart))
 									]
 								)
 							)

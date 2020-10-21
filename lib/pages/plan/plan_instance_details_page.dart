@@ -195,7 +195,7 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 			subtitle: _planInstance.description(context),
 			isActive: _planInstance.state != PlanInstanceState.completed,
 			activeProgressBarColor: AppColors.childActionColor,
-			progressPercentage: _planInstance.state.inProgress ? _planInstance.completedTaskCount.ceilToDouble() / _planInstance.taskCount.ceilToDouble() : null,
+			progressPercentage: (_planInstance.state.inProgress ||  _planInstance.state.ended) ? _planInstance.completedTaskCount.ceilToDouble() / _planInstance.taskCount.ceilToDouble() : null,
 			chips: [
 				if(_planInstance.state.inProgress)
 				...[
@@ -203,7 +203,8 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 					AttributeChip.withIcon(
 						icon: Icons.timer,
 						color: Colors.orange,
-						content: formatDuration(sumDurations(_planInstance.duration))
+						content: formatDuration(sumDurations(_planInstance.duration)),
+						tooltip: AppLocales.of(context).translate('$_pageKey.content.chips.timer')
 					),
 					AttributeChip.withIcon(
 						icon: Icons.description,
@@ -212,11 +213,19 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 					)
 				]
 				else
+				...[
+					AttributeChip.withIcon(
+						icon: Icons.timer,
+						color: Colors.orange,
+						content: formatDuration(sumDurations(_planInstance.duration)),
+						tooltip: AppLocales.of(context).translate('$_pageKey.content.chips.timer')
+					),
 					AttributeChip.withIcon(
 						icon: Icons.description,
 						color: AppColors.mainBackgroundColor,
 						content: AppLocales.of(context).translate('$_pageKey.content.tasks', {'NUM_TASKS': _planInstance.taskCount})
 					)
+				]
 			]);
   	if(isInProgress(_planInstance.duration))
   		return BlocProvider<TimerCubit>(
@@ -248,7 +257,7 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 						content: AppLocales.of(context).translate('$_pageKey.content.chips.rejected'),
 						icon: Icons.close,
 						color: Colors.red,
-						tooltip:'$_pageKey.content.chips.rejectedTooltip',
+						tooltip: AppLocales.of(context).translate('$_pageKey.content.chips.rejectedTooltip'),
 					)
 				else if(task.status.state == TaskState.notEvaluated)
 						...[
@@ -256,7 +265,7 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 								content: AppLocales.of(context).translate('$_pageKey.content.chips.notEvaluated'),
 								icon: Icons.assignment_late,
 								color: Colors.amber,
-								tooltip:'$_pageKey.content.chips.notEvaluatedTooltip',
+								tooltip: AppLocales.of(context).translate('$_pageKey.content.chips.notEvaluatedTooltip'),
 							),
 						]
 			],
@@ -272,7 +281,7 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
   	return AttributeChip.withCurrency(
 			content: pointsAwarded ? task.status.pointsAwarded.toString() : task.points.quantity.toString(),
 			currencyType: task.points.type,
-			tooltip: tooltip
+			tooltip: tooltip ?? task.points.title
 		);
 	}
 
@@ -283,7 +292,7 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 			}),
 			icon: Icons.free_breakfast,
 			color: Colors.indigo,
-			tooltip:'$_pageKey.content.taskTimer.break',
+			tooltip: AppLocales.of(context).translate('$_pageKey.content.taskTimer.break'),
 		);
 	}
 
@@ -294,7 +303,7 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 			}),
 			icon: Icons.access_time,
 			color: task.timer == null || task.timer > sumDurations(task.duration).inMinutes ? Colors.lightGreen : Colors.deepOrange,
-			tooltip: '$_pageKey.content.taskTimer.duration',
+			tooltip: AppLocales.of(context).translate('$_pageKey.content.taskTimer.duration'),
 		);
 	}
 
@@ -306,7 +315,7 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 			}),
 			icon: Icons.timer,
 			color: Colors.orange,
-			tooltip: '$_pageKey.content.taskTimer.label',
+			tooltip: AppLocales.of(context).translate('$_pageKey.content.taskTimer.label'),
 		);
 	}
 }

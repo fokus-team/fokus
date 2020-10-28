@@ -415,7 +415,7 @@
 				},
 				"content": {
 					"noTasksToRate": "No tasks to rate",
-					"notRatedTasksLeft": "{TASKS_NUM, plural, offset:0 zero {All tasks rated!} one {# not rated task} other {# not rated tasks}}",
+					"notRatedTasksLeft": "{TASKS_NUM, plural, offset:0 zero {All tasks rated!} one {# unrated task} other {# unrated tasks}}",
 					"rateTaskButton": "Rate task",
 					"previousTaskButton": "Previous",
 					"nextTaskButton": "Next",

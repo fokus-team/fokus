@@ -40,8 +40,8 @@ dependencies:
     googleapis: ^0.55.0
 
     get_it: ^4.0.2
-    bloc: ^6.0.1
-    flutter_bloc: ^6.0.1
+    bloc: 6.0.1
+    flutter_bloc: 6.0.1
 
     package_info: '>=0.4.3 <2.0.0'
     equatable: ^1.1.0
@@ -64,7 +64,7 @@ dependencies:
     confetti: ^0.5.4+1
     table_calendar: 2.2.3
     carousel_slider: ^2.2.1
-    flutter_rating_bar: ^3.0.1+1
+    flutter_rating_bar: 3.0.1+1
     vibration: ^1.5.0
     flushbar: ^1.10.4
 

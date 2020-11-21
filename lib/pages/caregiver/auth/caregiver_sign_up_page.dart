@@ -90,7 +90,7 @@ class CaregiverSignUpPage extends StatelessWidget {
 							AuthButton(
 								button: UIButton.ofType(
 									ButtonType.signUp,
-									() => context.bloc<CaregiverSignUpCubit>().signUpFormSubmitted(),
+									() => BlocProvider.of<CaregiverSignUpCubit>(context).signUpFormSubmitted(),
 									Colors.teal
 								)
 							),
@@ -98,7 +98,7 @@ class CaregiverSignUpPage extends StatelessWidget {
 							AuthButton.google(
 								UIButton(
 									'authentication.googleSignUp',
-									() => context.bloc<CaregiverSignUpCubit>().logInWithGoogle()
+									() => BlocProvider.of<CaregiverSignUpCubit>(context).logInWithGoogle()
 								)
 							)
 						]

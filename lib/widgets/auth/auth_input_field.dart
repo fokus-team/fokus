@@ -44,7 +44,7 @@ class _AuthenticationInputFieldState<Bloc extends Cubit<CubitState>, CubitState 
 		  buildWhen: (previous, current) => widget.getField(previous).status != widget.getField(current).status,
 		  builder: (context, state) {
 			  _controller ??= TextEditingController(text: widget.getField(state).value)..addListener(() {
-			    return widget.changedAction(context.bloc<Bloc>(), _controller.value.text);
+			    return widget.changedAction(BlocProvider.of<Bloc>(context), _controller.value.text);
 			  });
 			  return Padding(
 			    padding: const EdgeInsets.all(8.0),

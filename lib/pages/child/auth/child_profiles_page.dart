@@ -37,7 +37,7 @@ class ChildProfilesPage extends StatelessWidget {
 	Widget _buildSavedProfiles(BuildContext context) {
 		return BlocBuilder<PreviousProfilesCubit, LoadableState>(
 			builder: (context, state) {
-				var cubit = context.bloc<PreviousProfilesCubit>();
+				var cubit = BlocProvider.of<PreviousProfilesCubit>(context);
 				if (state is DataLoadInitial)
 					cubit.loadData();
 

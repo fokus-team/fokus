@@ -39,13 +39,13 @@ class _CaregiverAwardsPageState extends State<CaregiverAwardsPage> {
 	}
 
 	void _deleteReward(Mongo.ObjectId id) {
-		context.bloc<CaregiverAwardsCubit>().removeReward(id);
+		BlocProvider.of<CaregiverAwardsCubit>(context).removeReward(id);
 		Navigator.of(context).pop(); // closing confirm dialog before pushing snackbar
 		showSuccessSnackbar(context, '$_pageKey.content.rewardRemovedText');
 	}
 
 	void _deleteBadge(UIBadge badge) {
-		context.bloc<CaregiverAwardsCubit>().removeBadge(badge);
+		BlocProvider.of<CaregiverAwardsCubit>(context).removeBadge(badge);
 		Navigator.of(context).pop(); // closing confirm dialog before pushing snackbar
 		showSuccessSnackbar(context, '$_pageKey.content.badgeRemovedText');
 	}

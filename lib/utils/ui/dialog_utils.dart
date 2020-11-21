@@ -121,28 +121,28 @@ void showAppInfoDialog(BuildContext context) {
 Future showNameEditDialog(BuildContext context, UIUser user) {
 	return showDialog(
 		context: context,
-		builder: (_) => forwardCubit(NameEditDialog(user.role), context.bloc<NameChangeCubit>())
+		builder: (_) => forwardCubit(NameEditDialog(user.role), BlocProvider.of<NameChangeCubit>(context))
 	);
 }
 
 void showPasswordChangeDialog(BuildContext context) {
 	showDialog(
 		context: context,
-		builder: (_) => forwardCubit(PasswordChangeDialog(), context.bloc<PasswordChangeCubit>())
+		builder: (_) => forwardCubit(PasswordChangeDialog(), BlocProvider.of<PasswordChangeCubit>(context))
 	);
 }
 
 Future showAccountDeleteDialog(BuildContext context, UIUser user) {
 	return showDialog(
 		context: context,
-		builder: (_) => forwardCubit(AccountDeleteDialog(user.role), context.bloc<AccountDeleteCubit>())
+		builder: (_) => forwardCubit(AccountDeleteDialog(user.role), BlocProvider.of<AccountDeleteCubit>(context))
 	);
 }
 
 Future showAddFriendDialog(BuildContext context) {
 	return showDialog(
 		context: context,
-		builder: (_) => forwardCubit(AddFriendDialog(), context.bloc<CaregiverFriendsCubit>())
+		builder: (_) => forwardCubit(AddFriendDialog(), BlocProvider.of<CaregiverFriendsCubit>(context))
 	);
 }
 

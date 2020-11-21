@@ -30,7 +30,7 @@ class _CaregiverPanelPageState extends State<CaregiverPanelPage> {
 			body: BlocListener<AuthenticationBloc, AuthenticationState>(
 				listenWhen: (oldState, newState) => newState.status != AuthenticationStatus.unauthenticated,
 				listener: (context, state) {
-				  context.bloc<CaregiverPanelCubit>().reload();
+				  BlocProvider.of<CaregiverPanelCubit>(context).reload();
 				},
 				child: LoadableBlocBuilder<CaregiverPanelCubit>(
 					builder: (context, state) => AppSegments(segments: _buildPanelSegments(state), fullBody: true),

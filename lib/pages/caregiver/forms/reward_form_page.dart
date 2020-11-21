@@ -66,7 +66,7 @@ class _CaregiverRewardFormPageState extends State<CaregiverRewardFormPage> {
 	    builder: (context, state) {
 				if (state is RewardFormInitial) {
 					formType = state.formType;
-					context.bloc<RewardFormCubit>().loadFormData();
+					BlocProvider.of<RewardFormCubit>(context).loadFormData();
 				}
 				return WillPopScope(
 					onWillPop: () => showExitFormDialog(context, true, isDataChanged),
@@ -105,7 +105,7 @@ class _CaregiverRewardFormPageState extends State<CaregiverRewardFormPage> {
 
 	void saveReward(BuildContext context) {
 		if(rewardFormKey.currentState.validate()) {
-			context.bloc<RewardFormCubit>().submitRewardForm(reward);
+			BlocProvider.of<RewardFormCubit>(context).submitRewardForm(reward);
 		}
 	}
 

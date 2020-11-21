@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/model/db/date/date.dart';
 import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/ui/plan/ui_plan.dart';
-import 'package:fokus/model/ui/ui_button.dart';
 import 'package:fokus/utils/ui/calendar_utils.dart';
 import 'package:fokus/widgets/buttons/bottom_sheet_confirm_button.dart';
 import 'package:intl/intl.dart';
@@ -92,7 +91,7 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
                     buildWhen: (oldState, newState) => oldState.children != newState.children,
 									  builder: (context, state) {
 										  if (state.children == null) {
-											  context.bloc<CalendarCubit>().loadInitialData();
+											  BlocProvider.of<CalendarCubit>(context).loadInitialData();
 											  return _buildChildPicker(loading: true);
 										  }
 									    return _buildChildPicker(children: state.children);
@@ -176,12 +175,12 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 	}
 
 	void onDayChanged(DateTime day, List<dynamic> events) {
-		context.bloc<CalendarCubit>().dayChanged(Date.fromDate(day));
+		BlocProvider.of<CalendarCubit>(context).dayChanged(Date.fromDate(day));
 		_animationController.forward(from: 0.0);
 	}
 
 	void onCalendarCreated(DateTime first, DateTime last, CalendarFormat format) {
-		context.bloc<CalendarCubit>().monthChanged(Date.fromDate(_calendarController.focusedDay));
+		BlocProvider.of<CalendarCubit>(context).monthChanged(Date.fromDate(_calendarController.focusedDay));
 	}
 
 	void onMonthChanged(DateTime first, DateTime last, CalendarFormat format) {
@@ -284,7 +283,7 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 	      Map<UIChild, bool> filter = {};
 				for(var child in children.keys)
 					filter[child] = val.contains(child);
-	      context.bloc<CalendarCubit>().childFilterChanged(filter);
+	      BlocProvider.of<CalendarCubit>(context).childFilterChanged(filter);
 	    }
 	  );
 	}

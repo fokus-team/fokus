@@ -124,10 +124,10 @@ class _FokusAppState extends State<FokusApp> implements CurrentLocaleObserver {
 	}
 
   Route<dynamic> _onGenerateRoute(RouteSettings settings) {
-		var getActiveUser = (BuildContext context) => () => context.bloc<AuthenticationBloc>().state.user;
+		var getActiveUser = (BuildContext context) => () => BlocProvider.of<AuthenticationBloc>(context).state.user;
 		var getRoute = (BuildContext context) => ModalRoute.of(context);
 		var getParams = (BuildContext context) => getRoute(context).settings.arguments;
-		var authBloc = (BuildContext context) => context.bloc<AuthenticationBloc>();
+		var authBloc = (BuildContext context) => BlocProvider.of<AuthenticationBloc>(context);
 
 		Map<String, Function(BuildContext, Animation<double>, Animation<double>)> routesWithFadeTransition = {
 			// Caregiver pages
@@ -165,10 +165,10 @@ class _FokusAppState extends State<FokusApp> implements CurrentLocaleObserver {
 	}
 
 	Map<String, WidgetBuilder> _createRoutes() {
-		var getActiveUser = (BuildContext context) => () => context.bloc<AuthenticationBloc>().state.user;
+		var getActiveUser = (BuildContext context) => () => BlocProvider.of<AuthenticationBloc>(context).state.user;
 		var getRoute = (BuildContext context) => ModalRoute.of(context);
 		var getParams = (BuildContext context) => getRoute(context).settings.arguments;
-		var authBloc = (BuildContext context) => context.bloc<AuthenticationBloc>();
+		var authBloc = (BuildContext context) => BlocProvider.of<AuthenticationBloc>(context);
 		var accountManaging = (BuildContext context, Widget page) => withCubit(
 			withCubit(page, NameChangeCubit(getActiveUser(context), authBloc(context), getParams(context))),
 			AccountDeleteCubit(getActiveUser(context), getParams(context))
@@ -211,7 +211,7 @@ class _FokusAppState extends State<FokusApp> implements CurrentLocaleObserver {
 		if (pageCubit != null)
 			page = withCubit(page, pageCubit);
 		return PageTheme.parametrizedSection(
-			authState: context.bloc<AuthenticationBloc>().state,
+			authState: BlocProvider.of<AuthenticationBloc>(context).state,
 			section: section,
 			child: page
 		);

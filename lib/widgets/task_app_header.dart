@@ -212,7 +212,7 @@ class TaskAppHeaderState extends State<TaskAppHeader> with TickerProviderStateMi
 		});
 	}
 
-	CreateBloc _getTimerFun() {
+	TimerCubit Function(BuildContext) _getTimerFun() {
   	if(_timerCompletionCubit == null) {
 			if(this.widget.state.taskInstance.timer != null) {
 				if(_getTimerInSeconds() - _getDuration() > 0) {

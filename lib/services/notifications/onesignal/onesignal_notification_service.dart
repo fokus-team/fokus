@@ -101,7 +101,7 @@ class OneSignalNotificationService extends NotificationService {
 		  logNoUserToken(userId);
 		  return;
 	  }
-	  var activeUser = _navigatorKey.currentState.context.bloc<AuthenticationBloc>().state.user;
+	  var activeUser = BlocProvider.of<AuthenticationBloc>(_navigatorKey.currentState.context).state.user;
 	  var data = NotificationData(type: type, sender: activeUser.id, recipient: userId, buttons: buttons, subject: subject);
 	  var osButtons = buttons?.map((button) => OSActionButton(id: button.action, text: button.action))?.toList();
 	  var notification = OSCreateNotification(

@@ -174,7 +174,7 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 		);
 	}
 
-	void onDayChanged(DateTime day, List<dynamic> events) {
+	void onDayChanged(DateTime day, List<dynamic> events, List<dynamic> holidays) {
 		BlocProvider.of<CalendarCubit>(context).dayChanged(Date.fromDate(day));
 		_animationController.forward(from: 0.0);
 	}

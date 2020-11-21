@@ -133,7 +133,7 @@ class _ChildCalendarPageState extends State<ChildCalendarPage> with TickerProvid
 		);
 	}
 
-	void onDayChanged(DateTime day, List<dynamic> events) {
+	void onDayChanged(DateTime day, List<dynamic> events, List<dynamic> holidays) {
 		BlocProvider.of<CalendarCubit>(context).dayChanged(Date.fromDate(day));
 		_animationController.forward(from: 0.0);
 	}

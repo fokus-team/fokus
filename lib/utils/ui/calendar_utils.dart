@@ -10,7 +10,7 @@ Widget buildCalendar({
 	CalendarController controller,
 	BuildContext context,
 	Map<Date, List<UIPlan>> events,
-	Function(DateTime, List<dynamic>) onDaySelected,
+	Function(DateTime, List<dynamic>, List<dynamic>) onDaySelected,
 	Function(DateTime, DateTime, CalendarFormat) onCalendarCreated,
 	Function(DateTime, DateTime, CalendarFormat) onVisibleDaysChanged,
 	CalendarBuilders builders

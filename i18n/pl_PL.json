@@ -661,6 +661,7 @@
 		"passwordChanged": "Hasło zmienione",
 		"nameChanged": "Imię zmienione",
 		"signInPrompt": "Musisz się najpierw ponownie zalogować",
+		"emailVerificationSent": "E-mail z kodem weryfikacyjnym został wysłany",
 
 		"error": {
 			"incorrectData": "Nieprawidłowy e-mail lub hasło",
@@ -676,7 +677,8 @@
 			"passwordNotLongEnough": "Hasło musi być przynajmniej {LENGTH} znakowe",
 			"noPasswordMatch": "Hasła nie pasują",
 			"passwordEmpty": "Hasło nie może być puste",
-			"avatarEmpty": "Należy wybrać awatar dziecka"
+			"avatarEmpty": "Należy wybrać awatar dziecka",
+			"accountNotVerified": "Adres e-mail nie został zweryfikowany"
 		}
 	},
 	"notification": {

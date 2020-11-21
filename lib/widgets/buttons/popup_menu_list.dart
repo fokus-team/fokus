@@ -38,9 +38,9 @@ class PopupMenuList extends StatelessWidget {
 					)
 				)
 			);
+			if(includeDivider && popupMenuEntries.length > 1)
+				popupMenuEntries.insert(popupMenuEntries.length-1, PopupMenuDivider());
 		}
-		if(includeDivider)
-			popupMenuEntries.insert(popupMenuEntries.length-1, PopupMenuDivider());
   	return popupMenuEntries;
 	}
 }

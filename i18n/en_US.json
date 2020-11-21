@@ -650,7 +650,7 @@
 	},
 	"authentication": {
 		"name": "First name",
-		"email": "E-mail address",
+		"email": "Email address",
 		"password": "Password",
 		"currentPassword": "Current password",
 		"newPassword": "New password",
@@ -661,22 +661,24 @@
 		"passwordChanged": "Password changed",
 		"nameChanged": "Name changed",
 		"signInPrompt": "You need to log back first",
+		"emailVerificationSent": "Email verification code has been sent",
 
 		"error": {
-			"incorrectData": "Incorrect e-mail or password",
+			"incorrectData": "Incorrect email or password",
 			"incorrectPassword": "Incorrect password",
-			"emailAlreadyUsed": "E-mail address is already used",
-			"emailInvalid": "E-mail address is invalid",
+			"emailAlreadyUsed": "Email address is already taken",
+			"emailInvalid": "Email address is invalid",
 			"nameEmpty": "Name can not be empty",
 			"userDisabled": "User has been disabled",
-			"invalidEmail": "Invalid e-mail address",
+			"invalidEmail": "Invalid email address",
 			"userCodeToShort": "Code is to short",
 			"userCodeToLong": "Code is to long",
 			"noSuchUser": "User does not exist",
 			"passwordNotLongEnough": "Password must have at least {LENGTH, plural, offset:0 one {# character} other {# characters}} long",
 			"noPasswordMatch": "Passwords do not match",
 			"passwordEmpty": "Password can not be empty",
-			"avatarEmpty": "You must pick child's avatar"
+			"avatarEmpty": "You must pick child's avatar",
+			"accountNotVerified": "Email address has not been verified"
 		}
 	},
 	"notification": {

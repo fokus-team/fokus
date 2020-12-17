@@ -1,0 +1,3 @@
+enum PasswordChangeType {
+	change, reset
+}

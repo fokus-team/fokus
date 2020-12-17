@@ -10,7 +10,7 @@ part 'caregiver_sign_in_state.dart';
 
 
 class CaregiverSignInCubit extends CaregiverAuthCubitBase<CaregiverSignInState> {
-  CaregiverSignInCubit() : super(CaregiverSignInState());
+  CaregiverSignInCubit(String email) : super(CaregiverSignInState(email: Email.pure(email ?? '')));
 
 	Future<void> logInWithCredentials() async {
 		var state = _validateFields();

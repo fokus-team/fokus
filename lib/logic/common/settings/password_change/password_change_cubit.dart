@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:fokus/model/ui/auth/password_change_type.dart';
 import 'package:formz/formz.dart';
 import 'package:get_it/get_it.dart';
 
@@ -12,7 +13,7 @@ part 'password_change_state.dart';
 class PasswordChangeCubit extends Cubit<PasswordChangeState> {
 	final AuthenticationProvider _authenticationProvider = GetIt.I<AuthenticationProvider>();
 
-  PasswordChangeCubit() : super(PasswordChangeState());
+  PasswordChangeCubit(PasswordChangeType type) : super(PasswordChangeState(formType: type));
 
   Future changePasswordFormSubmitted() async {
 	  var state = _validateFields();

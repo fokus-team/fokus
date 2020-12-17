@@ -28,6 +28,7 @@
 				"logInTitle": "Log in",
 				"logInHint": "Access your account",
 				"registerTitle": "New account",
+				"changeResetLabel": "Reset your password",
 				"registerHint": "Create new caregiver account to use the app"
 			},
 			"caregiverSignUp": {

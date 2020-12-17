@@ -28,6 +28,7 @@
 				"logInTitle": "Zaloguj się",
 				"logInHint": "Uzyskaj dostęp do swojego konta",
 				"registerTitle": "Nowe konto",
+				"changeResetLabel": "Zresetuj hasło",
 				"registerHint": "Załóż nowe konto opiekuna aby móc korzystać z aplikacji"
 			},
 			"caregiverSignUp": {

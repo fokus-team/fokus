@@ -37,7 +37,7 @@ dependencies:
             url: https://github.com/fokus-team/flutter_local_notifications.git
             path: flutter_local_notifications
 
-    googleapis: ^0.55.0
+    googleapis: ^0.56.1
 
     get_it: ^5.0.1
     bloc: ^6.1.0

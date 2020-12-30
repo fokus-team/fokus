@@ -28,6 +28,14 @@
 			        android:scheme="https"
 			        android:host="@string/app_link_host" />
 	        </intent-filter>
+	        <intent-filter>
+		        <action android:name="android.intent.action.VIEW"/>
+		        <category android:name="android.intent.category.DEFAULT"/>
+		        <category android:name="android.intent.category.BROWSABLE"/>
+		        <data
+			        android:host="fokusapp.page.link"
+			        android:scheme="https"/>
+	        </intent-filter>
         </activity>
 	    <service android:name=".OneSignalNotificationService"
 		    android:permission="android.permission.BIND_JOB_SERVICE"

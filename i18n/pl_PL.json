@@ -29,7 +29,10 @@
 				"logInHint": "Uzyskaj dostęp do swojego konta",
 				"registerTitle": "Nowe konto",
 				"changeResetLabel": "Zresetuj hasło",
-				"registerHint": "Załóż nowe konto opiekuna aby móc korzystać z aplikacji"
+				"registerHint": "Załóż nowe konto opiekuna aby móc korzystać z aplikacji",
+				"passwordForgotten": "Nie pamiętasz hasła?",
+				"resetPassword": "Zresetuj hasło",
+				"enterEmail": "Wprowadź swój adres e-mail aby zresetować hasło"
 			},
 			"caregiverSignUp": {
 				"registerTitle": "Stwórz nowe konto",
@@ -663,9 +666,11 @@
 		"nameChanged": "Imię zmienione",
 		"signInPrompt": "Musisz się najpierw ponownie zalogować",
 		"emailVerificationSent": "E-mail z kodem weryfikacyjnym został wysłany",
+		"passwordReset": "Hasło zostało zresetowane",
 
 		"error": {
 			"incorrectData": "Nieprawidłowy e-mail lub hasło",
+			"incorrectEmail": "Nieprawidłowy adres e-mail",
 			"incorrectPassword": "Nieprawidłowe hasło",
 			"emailAlreadyUsed": "Adres e-mail jest już zajęty",
 			"emailInvalid": "Adres e-mail jest nieprawidłowy",
@@ -679,7 +684,9 @@
 			"noPasswordMatch": "Hasła nie pasują",
 			"passwordEmpty": "Hasło nie może być puste",
 			"avatarEmpty": "Należy wybrać awatar dziecka",
-			"accountNotVerified": "Adres e-mail nie został zweryfikowany"
+			"accountNotVerified": "Adres e-mail nie został zweryfikowany",
+			"passwordResetCodeInvalid": "Ten link resetujący hasło jest nieprawidłowy - wygeneruj nowy",
+			"passwordResetCodeExpired": "Ten link resetujący hasło wygasł - wygeneruj nowy"
 		}
 	},
 	"notification": {

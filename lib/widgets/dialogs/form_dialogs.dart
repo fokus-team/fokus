@@ -173,7 +173,7 @@ class PasswordChangeDialog extends StatelessWidget {
 	    listener: (context, state) {
 	    	if (state.status.isSubmissionSuccess) {
 			    Navigator.of(context).pop();
-			    showSuccessSnackbar(context, 'authentication.passwordChanged');
+			    showSuccessSnackbar(context, 'authentication.${state.formType.key}');
 		    } else if (state.status.isSubmissionFailure && state.error != null)
 			    showFailSnackbar(context, state.error.key);
 	    },

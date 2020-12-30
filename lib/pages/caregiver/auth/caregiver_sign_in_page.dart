@@ -69,7 +69,15 @@ class CaregiverSignInPage extends StatelessWidget {
 								labelKey: 'authentication.password',
 								icon: Icons.lock,
 								getErrorKey: (state) => [state.password.error.key],
-								hideInput: true
+								hideInput: true,
+								suffixButton: IconButton(
+									icon: Icon(Icons.help_outline),
+									tooltip: AppLocales.instance.translate('$_pageKey.resetPassword'),
+									onPressed: () async {
+										if (!await context.read<CaregiverSignInCubit>().resetPassword())
+											showInfoSnackbar(context, '$_pageKey.enterEmail');
+									},
+								),
 							),
 							AuthButton(
 								button: UIButton.ofType(

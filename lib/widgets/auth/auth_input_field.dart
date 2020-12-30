@@ -18,6 +18,7 @@ class AuthenticationInputField<Bloc extends Cubit<State>, State extends FormzSta
 	final IconData icon;
 	final bool clearable;
 	final bool disabled;
+	final IconButton suffixButton;
 
   AuthenticationInputField({
 		this.getField,
@@ -29,6 +30,7 @@ class AuthenticationInputField<Bloc extends Cubit<State>, State extends FormzSta
 		this.icon = Icons.edit,
 	  this.clearable = false,
 	  this.disabled = false,
+	  this.suffixButton
 	});
 
   @override
@@ -60,10 +62,11 @@ class _AuthenticationInputFieldState<Bloc extends Cubit<CubitState>, CubitState 
 							border: OutlineInputBorder(),
 							labelText: AppLocales.of(context).translate(widget.labelKey),
 						  errorText: widget.getField(state).invalid ? Function.apply(AppLocales.of(context).translate, widget.getErrorKey(state)) : null,
-							suffixIcon: widget.clearable ? IconButton(
+							suffixIcon: widget.suffixButton ?? (widget.clearable ? IconButton(
 								onPressed: () => _controller.clear(),
 								icon: Icon(Icons.clear),
-							) : null,
+								tooltip: AppLocales.instance.translate('actions.clear'),
+							) : null),
 						)
 			    ),
 			  );

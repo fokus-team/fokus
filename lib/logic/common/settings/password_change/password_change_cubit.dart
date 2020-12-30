@@ -13,7 +13,7 @@ part 'password_change_state.dart';
 class PasswordChangeCubit extends Cubit<PasswordChangeState> {
 	final AuthenticationProvider _authenticationProvider = GetIt.I<AuthenticationProvider>();
 
-  PasswordChangeCubit(PasswordChangeType type) : super(PasswordChangeState(formType: type));
+  PasswordChangeCubit(PasswordChangeType type, {String passwordResetCode}) : super(PasswordChangeState(formType: type, passwordResetCode: passwordResetCode));
 
   Future changePasswordFormSubmitted() async {
 	  var state = _validateFields();
@@ -23,7 +23,10 @@ class PasswordChangeCubit extends Cubit<PasswordChangeState> {
 	  }
 	  emit(state.copyWith(status: FormzStatus.submissionInProgress));
 	  try {
-		  await _authenticationProvider.changePassword(state.currentPassword.value, state.newPassword.value);
+	  	if (state.formType == PasswordChangeType.change)
+		    await _authenticationProvider.changePassword(state.currentPassword.value, state.newPassword.value);
+		  else if (state.formType == PasswordChangeType.reset)
+		  	await _authenticationProvider.completePasswordReset(password: state.newPassword.value, resetCode: state.passwordResetCode);
 		  emit(state.copyWith(status: FormzStatus.submissionSuccess));
 	  } on PasswordConfirmFailure catch (e) {
 		  emit(state.copyWith(status: FormzStatus.submissionFailure, error: e.reason));
@@ -37,7 +40,10 @@ class PasswordChangeCubit extends Cubit<PasswordChangeState> {
 	  state = state.copyWith(currentPassword: Password.dirty(state.currentPassword.value, false));
 	  state = state.copyWith(newPassword: Password.dirty(state.newPassword.value));
 	  state = state.copyWith(confirmedPassword: state.confirmedPassword.copyDirty(original: state.newPassword));
-	  return state.copyWith(status: Formz.validate([state.currentPassword, state.newPassword, state.confirmedPassword, state.confirmedPassword]));
+	  List<FormzInput> fields = [state.newPassword, state.confirmedPassword];
+	  if (state.formType != PasswordChangeType.reset)
+	  	fields.add(state.currentPassword);
+	  return state.copyWith(status: Formz.validate(fields));
   }
 
   void currentPasswordChanged(String value) => emit(state.copyWith(currentPassword: Password.pure(value, false), status: FormzStatus.pure));

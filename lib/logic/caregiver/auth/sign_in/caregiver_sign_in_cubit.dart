@@ -42,6 +42,8 @@ class CaregiverSignInCubit extends CaregiverAuthCubitBase<CaregiverSignInState> 
 			await authenticationProvider.beginPasswordReset(state.email.value);
 		} on SignInFailure catch (e) {
 			emit(state.copyWith(status: FormzStatus.submissionFailure, signInError: e.reason));
+		} on PasswordResetFailure catch (e) {
+			emit(state.copyWith(status: FormzStatus.submissionFailure, passwordResetError: e.reason));
 		}
 	  return true;
   }

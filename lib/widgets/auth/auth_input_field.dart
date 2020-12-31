@@ -18,7 +18,7 @@ class AuthenticationInputField<Bloc extends Cubit<State>, State extends FormzSta
 	final IconData icon;
 	final bool clearable;
 	final bool disabled;
-	final IconButton suffixButton;
+	final Widget suffixButton;
 
   AuthenticationInputField({
 		this.getField,

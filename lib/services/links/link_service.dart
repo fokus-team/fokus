@@ -11,6 +11,7 @@ import 'package:fokus/model/ui/auth/password_change_type.dart';
 import 'package:fokus/utils/ui/dialog_utils.dart';
 import 'package:fokus/utils/ui/snackbar_utils.dart';
 import 'package:fokus_auth/fokus_auth.dart';
+import 'package:fokus/services/exception/auth_exceptions.dart';
 
 abstract class LinkService {
 	@protected
@@ -34,9 +35,13 @@ abstract class LinkService {
 		if (navigator == null)
 			return;
 		var payload = AppLinkPayload.fromLink(link);
-		if (payload.type == AppLinkType.passwordReset && !await _authenticationProvider.verifyPasswordResetCode(payload.oobCode)){
-			showFailSnackbar(navigator.context, 'authentication.error.passwordResetCodeInvalid');
-			return;
+		if (payload.type == AppLinkType.passwordReset) {
+			try {
+				await _authenticationProvider.verifyPasswordResetCode(payload.oobCode);
+			} on PasswordResetFailure catch (e) {
+				showFailSnackbar(navigator.context, e.reason.key);
+				return;
+			}
 		}
 		// ignore: close_sinks
 		var authBloc = BlocProvider.of<AuthenticationBloc>(navigator.context);

@@ -7,7 +7,7 @@ class AppLinkPayload {
 
   AppLinkPayload._({this.email, this.type, this.oobCode});
   AppLinkPayload.fromLink(Uri link) : this._(
-	  email: link.queryParameters['email'],
+	  email: Uri.parse(Uri.decodeFull(link.queryParameters['continueUrl'])).queryParameters['email'],
 	  type: AppLinkType.values.firstWhere((element) => element.key == link.queryParameters['mode'], orElse: () => null),
     oobCode: link.queryParameters['oobCode']
   );

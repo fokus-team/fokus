@@ -15,8 +15,15 @@ extension EmailSignInErrorTextKey on EmailSignInError {
 	}[this];
 }
 
-extension PasswordChangeErrorCode on PasswordConfirmError {
+extension PasswordChangeErrorTextKey on PasswordConfirmError {
 	String get key => const {
 		PasswordConfirmError.wrongPassword: 'authentication.error.incorrectPassword',
+	}[this];
+}
+
+extension PasswordResetErrorTextKey on PasswordResetError {
+	String get key => const {
+		PasswordResetError.invalidCode: 'authentication.error.passwordResetCodeInvalid',
+		PasswordResetError.codeExpired: 'authentication.error.passwordResetCodeExpired',
 	}[this];
 }

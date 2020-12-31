@@ -24,8 +24,8 @@ class CaregiverSignInPage extends StatelessWidget {
 	    body: SafeArea(
 			  child: BlocListener<CaregiverSignInCubit, CaregiverSignInState>(
 				  listener: (context, state) {
-					  if (state.status.isSubmissionFailure && state.signInError != null)
-							showFailSnackbar(context, state.signInError.key);
+					  if (state.status.isSubmissionFailure && (state.passwordResetError != null || state.signInError != null))
+							showFailSnackbar(context, state.passwordResetError?.key ?? state.signInError?.key);
 				  },
 				  child: ListView(
 						padding: EdgeInsets.symmetric(vertical: AppBoxProperties.screenEdgePadding),
@@ -71,13 +71,13 @@ class CaregiverSignInPage extends StatelessWidget {
 								getErrorKey: (state) => [state.password.error.key],
 								hideInput: true,
 								suffixButton: IconButton(
-									icon: Icon(Icons.help_outline),
+									icon: Icon(Icons.support), // alt: settings_backup_restore
 									tooltip: AppLocales.instance.translate('$_pageKey.resetPassword'),
 									onPressed: () async {
 										if (!await context.read<CaregiverSignInCubit>().resetPassword())
 											showInfoSnackbar(context, '$_pageKey.enterEmail');
 									},
-								),
+								)
 							),
 							AuthButton(
 								button: UIButton.ofType(

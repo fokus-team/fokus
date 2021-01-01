@@ -28,6 +28,7 @@ dependencies:
     firebase_core: ^0.5.2
     firebase_analytics: ^6.2.0
     firebase_crashlytics: ^0.2.3
+    firebase_dynamic_links: ^0.6.3
 
     firebase_messaging: ^7.0.3
     onesignal_flutter:

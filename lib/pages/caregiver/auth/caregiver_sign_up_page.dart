@@ -27,6 +27,8 @@ class CaregiverSignUpPage extends StatelessWidget {
 				  listener: (context, state) {
 					  if (state.status.isSubmissionFailure && (state.signInError != null || state.signUpError != null))
 							showFailSnackbar(context, state.signUpError?.key ?? state.signInError.key);
+					  else if (state.status.isSubmissionSuccess)
+					  	showSuccessSnackbar(context, 'authentication.emailVerificationSent');
 				  },
 					child: ListView(
 						padding: EdgeInsets.symmetric(vertical: AppBoxProperties.screenEdgePadding),

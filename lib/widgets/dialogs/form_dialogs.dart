@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/logic/caregiver/caregiver_friends_cubit.dart';
 import 'package:fokus/model/db/user/user_role.dart';
+import 'package:fokus/model/ui/auth/password_change_type.dart';
 import 'package:fokus_auth/fokus_auth.dart';
 import 'package:formz/formz.dart';
 
@@ -168,53 +169,57 @@ class AccountDeleteDialog extends StatelessWidget {
 class PasswordChangeDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocListener<PasswordChangeCubit, PasswordChangeState>(
+    return BlocConsumer<PasswordChangeCubit, PasswordChangeState>(
 	    listener: (context, state) {
 	    	if (state.status.isSubmissionSuccess) {
 			    Navigator.of(context).pop();
-			    showSuccessSnackbar(context, 'authentication.passwordChanged');
+			    showSuccessSnackbar(context, 'authentication.${state.formType.key}');
 		    } else if (state.status.isSubmissionFailure && state.error != null)
 			    showFailSnackbar(context, state.error.key);
 	    },
-      child: FormDialog(
-				title: AppLocales.of(context).translate('$_settingsPageKey.profile.changePasswordLabel'),
-				fields: [
-					Padding(
-						padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-						child: AuthenticationInputField<PasswordChangeCubit, PasswordChangeState>(
-							getField: (state) => state.currentPassword,
-							changedAction: (cubit, value) => cubit.currentPasswordChanged(value),
-							labelKey: 'authentication.currentPassword',
-							icon: Icons.lock_open,
-							getErrorKey: (state) => [state.currentPassword.error.key],
-							hideInput: true
-						),
-					),
-					Padding(
-						padding: EdgeInsets.symmetric(horizontal: 20.0),
-						child: AuthenticationInputField<PasswordChangeCubit, PasswordChangeState>(
-							getField: (state) => state.newPassword,
-							changedAction: (cubit, value) => cubit.newPasswordChanged(value),
-							labelKey: 'authentication.newPassword',
-							icon: Icons.lock,
-							getErrorKey: (state) => [state.newPassword.error.key, {'LENGTH': Password.minPasswordLength}],
-							hideInput: true
-						),
-					),
-					Padding(
-						padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-						child: AuthenticationInputField<PasswordChangeCubit, PasswordChangeState>(
-							getField: (state) => state.confirmedPassword,
-							changedAction: (cubit, value) => cubit.confirmedPasswordChanged(value),
-							labelKey: 'authentication.confirmPassword',
-							icon: Icons.lock,
-							getErrorKey: (state) => [state.confirmedPassword.error.key],
-							hideInput: true
-						),
-					),
-				],
-				onConfirm: () => BlocProvider.of<PasswordChangeCubit>(context).changePasswordFormSubmitted(),
-			),
+	    builder: (context, state) {
+	    	var titleKey = state.formType == PasswordChangeType.change ? '$_settingsPageKey.profile.changePasswordLabel' : 'page.loginSection.caregiverSignIn.changeResetLabel';
+	    	return FormDialog(
+			    title: AppLocales.of(context).translate(titleKey),
+			    fields: [
+			    	if (state.formType == PasswordChangeType.change)
+					    Padding(
+						    padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+						    child: AuthenticationInputField<PasswordChangeCubit, PasswordChangeState>(
+							    getField: (state) => state.currentPassword,
+							    changedAction: (cubit, value) => cubit.currentPasswordChanged(value),
+							    labelKey: 'authentication.currentPassword',
+							    icon: Icons.lock_open,
+							    getErrorKey: (state) => [state.currentPassword.error.key],
+							    hideInput: true
+						    ),
+					    ),
+				    Padding(
+					    padding: EdgeInsets.symmetric(horizontal: 20.0),
+					    child: AuthenticationInputField<PasswordChangeCubit, PasswordChangeState>(
+						    getField: (state) => state.newPassword,
+						    changedAction: (cubit, value) => cubit.newPasswordChanged(value),
+						    labelKey: 'authentication.newPassword',
+						    icon: Icons.lock,
+						    getErrorKey: (state) => [state.newPassword.error.key, {'LENGTH': Password.minPasswordLength}],
+						    hideInput: true
+					    ),
+				    ),
+				    Padding(
+					    padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+					    child: AuthenticationInputField<PasswordChangeCubit, PasswordChangeState>(
+						    getField: (state) => state.confirmedPassword,
+						    changedAction: (cubit, value) => cubit.confirmedPasswordChanged(value),
+						    labelKey: 'authentication.confirmPassword',
+						    icon: Icons.lock,
+						    getErrorKey: (state) => [state.confirmedPassword.error.key],
+						    hideInput: true
+					    ),
+				    ),
+			    ],
+			    onConfirm: () => BlocProvider.of<PasswordChangeCubit>(context).changePasswordFormSubmitted(),
+		    );
+	    },
     );
   }
 }

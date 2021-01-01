@@ -125,10 +125,12 @@ Future showNameEditDialog(BuildContext context, UIUser user) {
 	);
 }
 
-void showPasswordChangeDialog(BuildContext context) {
+void showPasswordChangeDialog(BuildContext context, {PasswordChangeCubit cubit, bool dismissible = true}) {
 	showDialog(
 		context: context,
-		builder: (_) => forwardCubit(PasswordChangeDialog(), BlocProvider.of<PasswordChangeCubit>(context))
+		barrierDismissible: dismissible,
+		builder: (_) => cubit == null ? forwardCubit(PasswordChangeDialog(), BlocProvider.of<PasswordChangeCubit>(context)):
+			withCubit(PasswordChangeDialog(), cubit)
 	);
 }
 

@@ -11,7 +11,8 @@ extension EmailSignInErrorTextKey on EmailSignInError {
 	String get key => const {
 		EmailSignInError.wrongPassword: 'authentication.error.incorrectData',
 		EmailSignInError.userNotFound: 'authentication.error.incorrectEmail',
-		EmailSignInError.userDisabled: 'authentication.error.userDisabled',
+    EmailSignInError.userDisabled: 'authentication.error.userDisabled',
+    EmailSignInError.accountNotVerified: 'authentication.error.accountNotVerified',
 	}[this];
 }
 

@@ -81,6 +81,15 @@ class CaregiverSignInPage extends StatelessWidget {
 									},
 								)
 							),
+							FlatButton(
+                onPressed: () async {
+                  if (!await context.read<CaregiverSignInCubit>().resendVerificationEmail())
+                    showInfoSnackbar(context, '$_pageKey.enterEmail');
+                  else
+                    showSuccessSnackbar(context, 'authentication.emailVerificationSent');
+                },
+                child: Text(AppLocales.instance.translate('$_pageKey.resetVerificationEmail'))
+              ),
 							AuthButton(
 								button: UIButton.ofType(
 									ButtonType.signIn,

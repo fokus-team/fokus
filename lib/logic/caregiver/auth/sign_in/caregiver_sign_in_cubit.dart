@@ -33,11 +33,8 @@ class CaregiverSignInCubit extends CaregiverAuthCubitBase<CaregiverSignInState> 
 	}
 
   Future<bool> resetPassword() async {
-	  var state = this.state.copyWith(email: Email.dirty(this.state.email.value.trim()));
-	  if (state.email.invalid) {
-			emit(state);
-		  return false;
-	  }
+	  if (!_checkEmailInputField())
+	    return false;
 		try {
 			await authenticationProvider.beginPasswordReset(state.email.value);
 		} on SignInFailure catch (e) {
@@ -46,6 +43,21 @@ class CaregiverSignInCubit extends CaregiverAuthCubitBase<CaregiverSignInState> 
 			emit(state.copyWith(status: FormzStatus.submissionFailure, passwordResetError: e.reason));
 		}
 	  return true;
+  }
+
+  Future<bool> resendVerificationEmail() async {
+    if (!_checkEmailInputField())
+      return false;
+    await authenticationProvider.sendEmailVerification(state.email.value);
+    return true;
+  }
+
+	bool _checkEmailInputField() {
+    var state = this.state.copyWith(email: Email.dirty(this.state.email.value.trim()));
+    if (state.email.invalid) {
+      emit(state);
+      return false;
+    }
   }
 
   CaregiverSignInState _validateFields() {

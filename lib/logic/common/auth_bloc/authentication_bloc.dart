@@ -74,6 +74,8 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 		  else
 		    return const AuthenticationState.unauthenticated();
 	  }
+  	if (event.user.authMethod == AuthMethod.EMAIL && !event.user.emailVerified)
+      return const AuthenticationState.unauthenticated();
 		user = await _dataRepository.getUser(authenticationId: event.user.id);
 		if (user == null) {
 			if (! (await _authenticationProvider.userExists(event.user.email))) {

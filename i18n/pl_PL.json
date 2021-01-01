@@ -32,8 +32,9 @@
 				"registerHint": "Załóż nowe konto opiekuna aby móc korzystać z aplikacji",
 				"passwordForgotten": "Nie pamiętasz hasła?",
 				"resetPassword": "Zresetuj hasło",
-				"enterEmail": "Wprowadź swój adres e-mail aby zresetować hasło",
-				"resetEmailSent": "E-mail z linkiem resetującym hasło został wysłany"
+				"enterEmail": "Wprowadź adres e-mail",
+				"resetEmailSent": "E-mail z linkiem resetującym hasło został wysłany",
+				"resetVerificationEmail": "Wyślij ponownie email weryfikacyjny"
 			},
 			"caregiverSignUp": {
 				"registerTitle": "Stwórz nowe konto",
@@ -666,7 +667,7 @@
 		"passwordChanged": "Hasło zmienione",
 		"nameChanged": "Imię zmienione",
 		"signInPrompt": "Musisz się najpierw ponownie zalogować",
-		"emailVerificationSent": "E-mail z kodem weryfikacyjnym został wysłany",
+		"emailVerificationSent": "E-mail z linkiem weryfikacyjnym został wysłany",
 		"passwordReset": "Hasło zostało zresetowane",
 
 		"error": {

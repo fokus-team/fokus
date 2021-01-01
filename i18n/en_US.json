@@ -32,7 +32,8 @@
 				"registerHint": "Create new caregiver account to use the app",
 				"passwordForgotten": "Forgot your password?",
 				"resetPassword": "Reset password",
-				"enterEmail": "Enter your email address to reset the password"
+				"enterEmail": "Enter your email address to reset the password",
+				"resetEmailSent": "Email with a reset link was sent"
 			},
 			"caregiverSignUp": {
 				"registerTitle": "Create new account",

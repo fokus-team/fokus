@@ -76,6 +76,8 @@ class CaregiverSignInPage extends StatelessWidget {
 									onPressed: () async {
 										if (!await context.read<CaregiverSignInCubit>().resetPassword())
 											showInfoSnackbar(context, '$_pageKey.enterEmail');
+										else
+											showSuccessSnackbar(context, '$_pageKey.resetEmailSent');
 									},
 								)
 							),

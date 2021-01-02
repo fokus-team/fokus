@@ -17,7 +17,7 @@ class PreviousProfilesCubit extends ReloadableCubit {
   PreviousProfilesCubit(this.authenticationBloc, ModalRoute pageRoute) : super(pageRoute);
 
   void doLoadData() async {
-	  var savedIds = _appConfigRepository.getSavedChildProfiles() ?? [];
+	  var savedIds = _appConfigRepository.getSavedChildProfiles();
 	  var children = await _dataRepository.getUsers(ids: savedIds, fields: ['_id', 'name', 'avatar']);
 	  emit(PreviousProfilesLoadSuccess(children.map((child) => UIChild.fromDBModel(child)).toList()));
   }

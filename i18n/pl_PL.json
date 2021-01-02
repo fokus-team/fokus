@@ -668,6 +668,7 @@
 		"nameChanged": "Imię zmienione",
 		"signInPrompt": "Musisz się najpierw ponownie zalogować",
 		"emailVerificationSent": "E-mail z linkiem weryfikacyjnym został wysłany",
+		"accountVerified": "Konto zostało pomyślnie zweryfikowane",
 		"passwordReset": "Hasło zostało zresetowane",
 
 		"error": {
@@ -687,8 +688,8 @@
 			"passwordEmpty": "Hasło nie może być puste",
 			"avatarEmpty": "Należy wybrać awatar dziecka",
 			"accountNotVerified": "Adres e-mail nie został zweryfikowany",
-			"passwordResetCodeInvalid": "Ten link resetujący hasło jest nieprawidłowy - wygeneruj nowy",
-			"passwordResetCodeExpired": "Ten link resetujący hasło wygasł - wygeneruj nowy"
+			"passwordResetCodeInvalid": "Ten link {TYPE, select, 0 {resetujący hasło} 1 {weryfikujący konto} other {}} jest nieprawidłowy - wygeneruj nowy",
+			"passwordResetCodeExpired": "Ten link {TYPE, select, 0 {resetujący hasło} 1 {weryfikujący konto} other {}} wygasł - wygeneruj nowy"
 		}
 	},
 	"notification": {

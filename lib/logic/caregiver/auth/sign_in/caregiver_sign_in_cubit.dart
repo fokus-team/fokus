@@ -39,7 +39,7 @@ class CaregiverSignInCubit extends CaregiverAuthCubitBase<CaregiverSignInState> 
 			await authenticationProvider.beginPasswordReset(state.email.value);
 		} on SignInFailure catch (e) {
 			emit(state.copyWith(status: FormzStatus.submissionFailure, signInError: e.reason));
-		} on PasswordResetFailure catch (e) {
+		} on EmailCodeFailure catch (e) {
 			emit(state.copyWith(status: FormzStatus.submissionFailure, passwordResetError: e.reason));
 		}
 	  return true;
@@ -58,6 +58,7 @@ class CaregiverSignInCubit extends CaregiverAuthCubitBase<CaregiverSignInState> 
       emit(state);
       return false;
     }
+    return true;
   }
 
   CaregiverSignInState _validateFields() {

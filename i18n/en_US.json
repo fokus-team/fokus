@@ -668,6 +668,7 @@
 		"nameChanged": "Name changed",
 		"signInPrompt": "You need to log back first",
 		"emailVerificationSent": "Email verification link has been sent",
+		"accountVerified": "Account has been successfully verified",
 		"passwordReset": "Password was reset",
 
 		"error": {
@@ -687,8 +688,8 @@
 			"passwordEmpty": "Password can not be empty",
 			"avatarEmpty": "You must pick child's avatar",
 			"accountNotVerified": "Email address has not been verified",
-			"passwordResetCodeInvalid": "This password reset link is invalid - generate a new one",
-			"passwordResetCodeExpired": "This password reset link has expired - generate a new one"
+			"passwordResetCodeInvalid": "This {TYPE, select, 0 {password reset} 1 {account verification} other {}} link is invalid - generate a new one",
+			"passwordResetCodeExpired": "This {TYPE, select, 0 {password reset} 1 {account verification} other {}} link has expired - generate a new one"
 		}
 	},
 	"notification": {

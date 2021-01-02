@@ -22,9 +22,9 @@ extension PasswordChangeErrorTextKey on PasswordConfirmError {
 	}[this];
 }
 
-extension PasswordResetErrorTextKey on PasswordResetError {
+extension PasswordResetErrorTextKey on EmailCodeError {
 	String get key => const {
-		PasswordResetError.invalidCode: 'authentication.error.passwordResetCodeInvalid',
-		PasswordResetError.codeExpired: 'authentication.error.passwordResetCodeExpired',
+    EmailCodeError.invalidCode: 'authentication.error.passwordResetCodeInvalid',
+    EmailCodeError.codeExpired: 'authentication.error.passwordResetCodeExpired',
 	}[this];
 }

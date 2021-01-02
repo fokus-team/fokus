@@ -20,11 +20,6 @@ abstract class LinkService {
 	final _navigatorKey = GetIt.I<GlobalKey<NavigatorState>>();
 	final AuthenticationProvider _authenticationProvider = GetIt.I<AuthenticationProvider>();
 
-	LinkService() {
-		initialize();
-	}
-
-	@protected
 	void initialize();
 
 	void handleLink(Uri link) async {
@@ -38,8 +33,8 @@ abstract class LinkService {
 		if (payload.type == AppLinkType.passwordReset) {
 			try {
 				await _authenticationProvider.verifyPasswordResetCode(payload.oobCode);
-			} on PasswordResetFailure catch (e) {
-				showFailSnackbar(navigator.context, e.reason.key);
+			} on EmailCodeFailure catch (e) {
+				showFailSnackbar(navigator.context, e.reason.key, {"TYPE": '${payload.type.index}'});
 				return;
 			}
 		}
@@ -52,8 +47,16 @@ abstract class LinkService {
 				logger.warning("Current user was not signed out");
 		}
 		navigator.pushNamed(AppPage.caregiverSignInPage.name, arguments: payload.email);
-		if (payload.type == AppLinkType.passwordReset) {
+		if (payload.type == AppLinkType.passwordReset)
 			showPasswordChangeDialog(navigator.context, cubit: PasswordChangeCubit(PasswordChangeType.reset, passwordResetCode: payload.oobCode), dismissible: false);
+		else {
+      try {
+        await _authenticationProvider.verifyAccount(payload.oobCode);
+      } on EmailCodeFailure catch (e) {
+        showFailSnackbar(navigator.context, e.reason.key, {"TYPE": '${payload.type.index}'});
+        return;
+      }
+		  showSuccessSnackbar(navigator.context, 'authentication.accountVerified');
 		}
 	}
 }

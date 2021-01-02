@@ -3,7 +3,7 @@ part of 'caregiver_sign_in_cubit.dart';
 class CaregiverSignInState extends CaregiverAuthStateBase {
 	final Email email;
 	final Password password;
-	final PasswordResetError passwordResetError;
+	final EmailCodeError passwordResetError;
 
 	CaregiverSignInState({
 		this.email = const Email.pure(),
@@ -16,7 +16,7 @@ class CaregiverSignInState extends CaregiverAuthStateBase {
 	@override
 	List<Object> get props => super.props..addAll([email, password, passwordResetError]);
 
-	CaregiverSignInState copyWith({Email email, Password password, FormzStatus status, EmailSignInError signInError, PasswordResetError passwordResetError}) {
+	CaregiverSignInState copyWith({Email email, Password password, FormzStatus status, EmailSignInError signInError, EmailCodeError passwordResetError}) {
 		return CaregiverSignInState(
 			email: email ?? this.email,
 			password: password ?? this.password,

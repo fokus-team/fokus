@@ -5,12 +5,14 @@ import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart';
 
 import 'package:fokus/model/notification/notification_type.dart';
+import 'package:fokus/services/app_route_observer.dart';
 import 'package:fokus/services/notifications/notification_service.dart';
 import 'package:fokus/services/observers/data_update_observer.dart';
+
 part 'loadable_state.dart';
 
 abstract class ReloadableCubit extends Cubit<LoadableState> with DataUpdateObserver implements RouteAware {
-	final _routeObserver = GetIt.I<RouteObserver<PageRoute>>();
+	final _routeObserver = GetIt.I<AppRouteObserver>();
 	final NotificationService _notificationService = GetIt.I<NotificationService>();
 
   ReloadableCubit(ModalRoute pageRoute) : super(DataLoadInitial()) {

@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:fokus/services/app_route_observer.dart';
 import 'package:get_it/get_it.dart';
 import 'package:logging/logging.dart';
 
@@ -11,36 +12,38 @@ import 'package:fokus/model/ui/auth/password_change_type.dart';
 import 'package:fokus/utils/ui/dialog_utils.dart';
 import 'package:fokus/utils/ui/snackbar_utils.dart';
 import 'package:fokus_auth/fokus_auth.dart';
-import 'package:fokus/services/exception/auth_exceptions.dart';
 
 abstract class LinkService {
 	@protected
 	final Logger logger = Logger('LinkService');
 
 	final _navigatorKey = GetIt.I<GlobalKey<NavigatorState>>();
+  final _routeObserver = GetIt.I<AppRouteObserver>();
 	final AuthenticationProvider _authenticationProvider = GetIt.I<AuthenticationProvider>();
 
+  LinkService() {
+    initialize();
+  }
+
+  @protected
 	void initialize();
 
 	void handleLink(Uri link) async {
 		if (link == null)
 			return;
+		await _routeObserver.navigatorInitialized;
 		logger.fine('AppLink received $link');
 		var navigator = _navigatorKey.currentState;
 		if (navigator == null)
 			return;
 		var payload = AppLinkPayload.fromLink(link);
-		if (payload.type == AppLinkType.passwordReset) {
-			try {
-				await _authenticationProvider.verifyPasswordResetCode(payload.oobCode);
-			} on EmailCodeFailure catch (e) {
-				showFailSnackbar(navigator.context, e.reason.key, {"TYPE": '${payload.type.index}'});
-				return;
-			}
-		}
+		if (payload.type == AppLinkType.passwordReset &&
+          !(await runGuarded(_authenticationProvider.verifyPasswordResetCode, payload, navigator.context)))
+		    return;
 		// ignore: close_sinks
 		var authBloc = BlocProvider.of<AuthenticationBloc>(navigator.context);
-		if (authBloc.state.status == AuthenticationStatus.authenticated) {
+    var userState = (await authBloc.firstWhere((element) => element.status != AuthenticationStatus.initial));
+		if (userState.status == AuthenticationStatus.authenticated) {
 			authBloc.add(AuthenticationSignOutRequested());
 			var nextState = (await authBloc.first);
 			if (nextState.status != AuthenticationStatus.unauthenticated)
@@ -50,13 +53,22 @@ abstract class LinkService {
 		if (payload.type == AppLinkType.passwordReset)
 			showPasswordChangeDialog(navigator.context, cubit: PasswordChangeCubit(PasswordChangeType.reset, passwordResetCode: payload.oobCode), dismissible: false);
 		else {
-      try {
-        await _authenticationProvider.verifyAccount(payload.oobCode);
-      } on EmailCodeFailure catch (e) {
-        showFailSnackbar(navigator.context, e.reason.key, {"TYPE": '${payload.type.index}'});
+      if (!await runGuarded(_authenticationProvider.verifyAccount, payload, navigator.context))
         return;
-      }
 		  showSuccessSnackbar(navigator.context, 'authentication.accountVerified');
 		}
 	}
+	
+	Future<bool> runGuarded(Future Function(String) function, AppLinkPayload payload, BuildContext context) async {
+    try {
+      await function(payload.oobCode);
+    } on EmailCodeFailure catch (e) {
+      showFailSnackbar(context, 'authentication.error.emailLink', {
+        'TYPE': '${payload.type.index}',
+        'ERR': '${e.reason.index}'
+      });
+      return false;
+    }
+    return true;
+  }
 }

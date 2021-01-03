@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:fokus/services/app_route_observer.dart';
 import 'package:get_it/get_it.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,8 +20,10 @@ import 'package:fokus/services/notifications/notification_provider.dart';
 
 class OneSignalNotificationProvider extends NotificationProvider {
 	final String appId = 'ed3ee23f-aa7a-4fc7-91ab-9967fa7712e5';
+
 	final _navigatorKey = GetIt.I<GlobalKey<NavigatorState>>();
 	final UIDataAggregator _dataAggregator = GetIt.I<UIDataAggregator>();
+  final _routeObserver = GetIt.I<AppRouteObserver>();
 
 	OneSignalNotificationProvider() {
 		_configureOneSignal();
@@ -41,6 +44,7 @@ class OneSignalNotificationProvider extends NotificationProvider {
 	}
 
 	void _onNotificationOpened(OSNotificationOpenedResult result) async {
+    await _routeObserver.navigatorInitialized;
 		logger.fine("onOpenMessage: $result");
 		var navigate = (AppPage page, [dynamic arguments]) => _navigatorKey.currentState.pushNamed(page.name, arguments: arguments);
 		var context = _navigatorKey.currentState.context;
@@ -69,6 +73,7 @@ class OneSignalNotificationProvider extends NotificationProvider {
 
   void _configureNotificationHandlers() {
 	  OneSignal.shared.setNotificationReceivedHandler((OSNotification notification) async {
+      await _routeObserver.navigatorInitialized;
 		  logger.fine("onMessage: $notification");
 		  var context = _navigatorKey.currentState.context;
 		  var data = NotificationData.fromJson(notification.payload.additionalData);

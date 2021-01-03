@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fokus_auth/fokus_auth.dart';
 import 'package:formz/formz.dart';
 
 import 'package:fokus/logic/caregiver/auth/sign_in/caregiver_sign_in_cubit.dart';
@@ -25,7 +26,10 @@ class CaregiverSignInPage extends StatelessWidget {
 			  child: BlocListener<CaregiverSignInCubit, CaregiverSignInState>(
 				  listener: (context, state) {
 					  if (state.status.isSubmissionFailure && (state.passwordResetError != null || state.signInError != null))
-							showFailSnackbar(context, state.passwordResetError?.key ?? state.signInError?.key);
+							showFailSnackbar(context, state.signInError?.key ?? 'authentication.error.emailLink', {
+                'TYPE': '${AppLinkType.passwordReset.index}',
+                'ERR': '${state.passwordResetError.index}'
+              });
 				  },
 				  child: ListView(
 						padding: EdgeInsets.symmetric(vertical: AppBoxProperties.screenEdgePadding),

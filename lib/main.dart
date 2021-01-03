@@ -62,6 +62,7 @@ import 'package:fokus/pages/child/achievements_page.dart';
 import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/db/user/user_role.dart';
 import 'package:fokus/services/app_locales.dart';
+import 'package:fokus/services/app_route_observer.dart';
 import 'package:fokus/services/instrumentator.dart';
 import 'package:fokus/services/locale_provider.dart';
 import 'package:fokus/services/observers/current_locale_observer.dart';
@@ -76,7 +77,7 @@ void main() async {
 	WidgetsFlutterBinding.ensureInitialized();
 	await Firebase.initializeApp();
 	var navigatorKey = GlobalKey<NavigatorState>();
-	var routeObserver = RouteObserver<PageRoute>();
+	var routeObserver = AppRouteObserver();
 	await registerServices(navigatorKey, routeObserver);
 
 	GetIt.I<Instrumentator>().runAppGuarded(
@@ -98,8 +99,6 @@ class FokusApp extends StatefulWidget {
 }
 
 class _FokusAppState extends State<FokusApp> implements CurrentLocaleObserver {
-
-
 	@override
 	Widget build(BuildContext context) {
 		return MaterialApp(

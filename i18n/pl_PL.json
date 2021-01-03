@@ -688,8 +688,7 @@
 			"passwordEmpty": "Hasło nie może być puste",
 			"avatarEmpty": "Należy wybrać awatar dziecka",
 			"accountNotVerified": "Adres e-mail nie został zweryfikowany",
-			"passwordResetCodeInvalid": "Ten link {TYPE, select, 0 {resetujący hasło} 1 {weryfikujący konto} other {}} jest nieprawidłowy - wygeneruj nowy",
-			"passwordResetCodeExpired": "Ten link {TYPE, select, 0 {resetujący hasło} 1 {weryfikujący konto} other {}} wygasł - wygeneruj nowy"
+			"emailLink": "Ten link {TYPE, select, 0 {resetujący hasło} 1 {weryfikujący konto} other {}} {ERR, select, 0 {jest nieprawidłowy} 1 {wygasł} other {}} - wygeneruj nowy"
 		}
 	},
 	"notification": {

@@ -21,10 +21,3 @@ extension PasswordChangeErrorTextKey on PasswordConfirmError {
 		PasswordConfirmError.wrongPassword: 'authentication.error.incorrectPassword',
 	}[this];
 }
-
-extension PasswordResetErrorTextKey on EmailCodeError {
-	String get key => const {
-    EmailCodeError.invalidCode: 'authentication.error.passwordResetCodeInvalid',
-    EmailCodeError.codeExpired: 'authentication.error.passwordResetCodeExpired',
-	}[this];
-}

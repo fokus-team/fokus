@@ -46,6 +46,8 @@ abstract class NotificationProvider implements ActiveUserObserver, CurrentLocale
 
   @override
 	void onUserSignIn(User user) async {
+  	if (user == null)
+  		return;
 		activeUser = user;
 		logger.info('sign in ${await userToken}');
 		addUserToken(await userToken);

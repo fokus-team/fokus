@@ -25,11 +25,15 @@ class CaregiverSignInPage extends StatelessWidget {
 	    body: SafeArea(
 			  child: BlocListener<CaregiverSignInCubit, CaregiverSignInState>(
 				  listener: (context, state) {
-					  if (state.status.isSubmissionFailure && (state.passwordResetError != null || state.signInError != null))
-							showFailSnackbar(context, state.signInError?.key ?? 'authentication.error.emailLink', {
-                'TYPE': '${AppLinkType.passwordReset.index}',
-                'ERR': '${state.passwordResetError.index}'
-              });
+					  if (state.status.isSubmissionFailure) {
+					  	if (state.signInError != null)
+							  showFailSnackbar(context, state.signInError?.key);
+					  	else if (state.passwordResetError != null)
+								showFailSnackbar(context, 'authentication.error.emailLink', {
+	                'TYPE': '${AppLinkType.passwordReset.index}',
+	                'ERR': '${state.passwordResetError.index}'
+	              });
+				    }
 				  },
 				  child: ListView(
 						padding: EdgeInsets.symmetric(vertical: AppBoxProperties.screenEdgePadding),
@@ -73,27 +77,8 @@ class CaregiverSignInPage extends StatelessWidget {
 								labelKey: 'authentication.password',
 								icon: Icons.lock,
 								getErrorKey: (state) => [state.password.error.key],
-								hideInput: true,
-								suffixButton: IconButton(
-									icon: Icon(Icons.support, color: AppColors.caregiverButtonColor), // alt: settings_backup_restore
-									tooltip: AppLocales.instance.translate('$_pageKey.resetPassword'),
-									onPressed: () async {
-										if (!await context.read<CaregiverSignInCubit>().resetPassword())
-											showInfoSnackbar(context, '$_pageKey.enterEmail');
-										else
-											showSuccessSnackbar(context, '$_pageKey.resetEmailSent');
-									},
-								)
+								hideInput: true
 							),
-							FlatButton(
-                onPressed: () async {
-                  if (!await context.read<CaregiverSignInCubit>().resendVerificationEmail())
-                    showInfoSnackbar(context, '$_pageKey.enterEmail');
-                  else
-                    showSuccessSnackbar(context, 'authentication.emailVerificationSent');
-                },
-                child: Text(AppLocales.instance.translate('$_pageKey.resetVerificationEmail'))
-              ),
 							AuthButton(
 								button: UIButton.ofType(
 									ButtonType.signIn,
@@ -101,6 +86,7 @@ class CaregiverSignInPage extends StatelessWidget {
 									Colors.teal
 								)
 							),
+							buildEmailOptionButtons(context),
 							AuthDivider(),
 							AuthButton.google(
 								UIButton(
@@ -112,6 +98,36 @@ class CaregiverSignInPage extends StatelessWidget {
 					)
 				);
 			}
+		);
+  }
+
+	Row buildEmailOptionButtons(BuildContext context) {
+  	var buttonText = (String key) => Text(
+		  AppLocales.instance.translate('$_pageKey.$key'),
+		  style: Theme.of(context).textTheme.subtitle2.copyWith(color: AppColors.mainBackgroundColor, fontWeight: FontWeight.bold)
+	  );
+    return Row(
+			mainAxisAlignment: MainAxisAlignment.center,
+			children: [
+				FlatButton(
+					onPressed: () async {
+						if (!await context.read<CaregiverSignInCubit>().resetPassword())
+							showInfoSnackbar(context, '$_pageKey.enterEmail');
+						else
+							showSuccessSnackbar(context, '$_pageKey.resetEmailSent');
+					},
+					child: buttonText('resetPassword')
+				),
+				FlatButton(
+					onPressed: () async {
+						if (!await context.read<CaregiverSignInCubit>().resendVerificationEmail())
+							showInfoSnackbar(context, '$_pageKey.enterEmail');
+						else
+							showSuccessSnackbar(context, 'authentication.emailVerificationSent');
+					},
+					child: buttonText('resetVerificationEmail')
+				),
+			],
 		);
   }
 	

@@ -18,7 +18,7 @@ class LocaleCubit extends Cubit<LocaleState> {
 	final LocaleService _localeProvider = GetIt.I<LocaleService>();
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 
-  LocaleCubit(this._activeUser, this._authenticationBloc) : super(LocaleState(_getLocaleCode(_activeUser().locale)));
+  LocaleCubit(this._activeUser, this._authenticationBloc) : super(LocaleState(_getLocaleCode(_activeUser()?.locale)));
 
   void setLocale({Locale locale, bool setDefault = false}) {
   	var activeUser = _activeUser();

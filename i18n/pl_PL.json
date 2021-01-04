@@ -34,7 +34,7 @@
 				"resetPassword": "Zresetuj hasło",
 				"enterEmail": "Wprowadź adres e-mail",
 				"resetEmailSent": "E-mail z linkiem resetującym hasło został wysłany",
-				"resetVerificationEmail": "Wyślij ponownie email weryfikacyjny"
+				"resetVerificationEmail": "Wyślij email weryfikacyjny"
 			},
 			"caregiverSignUp": {
 				"registerTitle": "Stwórz nowe konto",
@@ -687,7 +687,7 @@
 			"noPasswordMatch": "Hasła nie pasują",
 			"passwordEmpty": "Hasło nie może być puste",
 			"avatarEmpty": "Należy wybrać awatar dziecka",
-			"accountNotVerified": "Adres e-mail nie został zweryfikowany",
+			"accountNotVerified": "Konto nie zostało zweryfikowane",
 			"emailLink": "Ten link {TYPE, select, 0 {resetujący hasło} 1 {weryfikujący konto} other {}} {ERR, select, 0 {jest nieprawidłowy} 1 {wygasł} other {}} - wygeneruj nowy"
 		}
 	},

@@ -34,7 +34,7 @@
 				"resetPassword": "Reset password",
 				"enterEmail": "Enter the email address",
 				"resetEmailSent": "Email with a reset link was sent",
-				"resetVerificationEmail": "Resend the verification email"
+				"resetVerificationEmail": "Send verification email"
 			},
 			"caregiverSignUp": {
 				"registerTitle": "Create new account",
@@ -687,7 +687,7 @@
 			"noPasswordMatch": "Passwords do not match",
 			"passwordEmpty": "Password can not be empty",
 			"avatarEmpty": "You must pick child's avatar",
-			"accountNotVerified": "Email address has not been verified",
+			"accountNotVerified": "Account has not been verified",
 			"emailLink": "This {TYPE, select, 0 {password reset} 1 {account verification} other {}} link {ERR, select, 0 {is invalid} 1 {has expired} other {}} - generate a new one"
 		}
 	},

@@ -61,7 +61,7 @@ abstract class NotificationProvider implements ActiveUserObserver, CurrentLocale
 
 	@protected
 	void addUserToken(String token) async {
-		if (token == null)
+		if (activeUser == null)
 			return;
 		dataRepository.removeNotificationID(token);
 		dataRepository.insertNotificationID(activeUser.id, token);

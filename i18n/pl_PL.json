@@ -669,7 +669,7 @@
 		"signInPrompt": "Musisz się najpierw ponownie zalogować",
 		"emailVerificationSent": "E-mail z linkiem weryfikacyjnym został wysłany",
 		"accountVerified": "Konto zostało pomyślnie zweryfikowane",
-		"passwordReset": "Hasło zostało zresetowane",
+		"passwordReset": "Hasło zostało zmienione",
 
 		"error": {
 			"incorrectData": "Nieprawidłowy e-mail lub hasło",

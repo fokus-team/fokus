@@ -669,7 +669,7 @@
 		"signInPrompt": "You need to log back first",
 		"emailVerificationSent": "Email verification link has been sent",
 		"accountVerified": "Account has been successfully verified",
-		"passwordReset": "Password was reset",
+		"passwordReset": "Password was changed",
 
 		"error": {
 			"incorrectData": "Incorrect email or password",

@@ -7,11 +7,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
 import 'package:fokus/logic/common/settings/password_change/password_change_cubit.dart';
 import 'package:fokus/model/ui/app_page.dart';
-import 'package:fokus/model/ui/auth/app_link_payload.dart';
+import 'package:fokus/model/ui/auth/link_payload.dart';
 import 'package:fokus/model/ui/auth/password_change_type.dart';
 import 'package:fokus/utils/ui/dialog_utils.dart';
 import 'package:fokus/utils/ui/snackbar_utils.dart';
 import 'package:fokus_auth/fokus_auth.dart';
+
+enum AppState {
+	opened, running
+}
 
 abstract class LinkService {
 	@protected
@@ -28,38 +32,51 @@ abstract class LinkService {
   @protected
 	void initialize();
 
-	void handleLink(Uri link) async {
+	void handleLink(Uri link, AppState appState) async {
 		if (link == null)
 			return;
+		// Wait for the navigator
 		await _routeObserver.navigatorInitialized;
 		logger.fine('AppLink received $link');
 		var navigator = _navigatorKey.currentState;
 		if (navigator == null)
 			return;
-		var payload = AppLinkPayload.fromLink(link);
-		if (payload.type == AppLinkType.passwordReset &&
-          !(await runGuarded(_authenticationProvider.verifyPasswordResetCode, payload, navigator.context)))
-		    return;
+		var payload = LinkPayload.fromLink(link);
+		if (!(await _navigateToCaregiverSignInPage(navigator: navigator, payload: payload)))
+			return;
+		
+		if (payload.type == AppLinkType.passwordReset)
+			showPasswordChangeDialog(navigator.context, cubit: PasswordChangeCubit(PasswordChangeType.reset, passwordResetCode: payload.oobCode), dismissible: false);
+		else {
+      if (!await _runGuarded(_authenticationProvider.verifyAccount, payload, navigator.context))
+        return;
+		  showSuccessSnackbar(navigator.context, 'authentication.accountVerified');
+		}
+	}
+	
+	Future<bool> _navigateToCaregiverSignInPage({NavigatorState navigator, LinkPayload payload}) async {
 		// ignore: close_sinks
 		var authBloc = BlocProvider.of<AuthenticationBloc>(navigator.context);
-    var userState = (await authBloc.firstWhere((element) => element.status != AuthenticationStatus.initial));
+		var userState = authBloc.state;
+		// If the app was opened wait for the first auth state to figure out if we need to sign out anyone
+		if (userState.status == AuthenticationStatus.initial)
+			userState = (await authBloc.firstWhere((element) => element.status != AuthenticationStatus.initial));
+		// Bail out early if the code is not valid
+		if (payload.type == AppLinkType.passwordReset && !(await _runGuarded(_authenticationProvider.verifyPasswordResetCode, payload, navigator.context)))
+			return false;
+		// Sign out a user if necessary
 		if (userState.status == AuthenticationStatus.authenticated) {
 			authBloc.add(AuthenticationSignOutRequested());
 			var nextState = (await authBloc.first);
 			if (nextState.status != AuthenticationStatus.unauthenticated)
 				logger.warning("Current user was not signed out");
 		}
+		// Redirect to caregiver sign in page
 		navigator.pushNamed(AppPage.caregiverSignInPage.name, arguments: payload.email);
-		if (payload.type == AppLinkType.passwordReset)
-			showPasswordChangeDialog(navigator.context, cubit: PasswordChangeCubit(PasswordChangeType.reset, passwordResetCode: payload.oobCode), dismissible: false);
-		else {
-      if (!await runGuarded(_authenticationProvider.verifyAccount, payload, navigator.context))
-        return;
-		  showSuccessSnackbar(navigator.context, 'authentication.accountVerified');
-		}
+		return true;
 	}
 	
-	Future<bool> runGuarded(Future Function(String) function, AppLinkPayload payload, BuildContext context) async {
+	Future<bool> _runGuarded(Future Function(String) function, LinkPayload payload, BuildContext context) async {
     try {
       await function(payload.oobCode);
     } on EmailCodeFailure catch (e) {

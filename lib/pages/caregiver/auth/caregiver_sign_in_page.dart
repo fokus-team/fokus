@@ -120,9 +120,7 @@ class CaregiverSignInPage extends StatelessWidget {
 				),
 				FlatButton(
 					onPressed: () async {
-						if (!await context.read<CaregiverSignInCubit>().resendVerificationEmail())
-							showInfoSnackbar(context, '$_pageKey.enterEmail');
-						else
+						if (await context.read<CaregiverSignInCubit>().resendVerificationEmail())
 							showSuccessSnackbar(context, 'authentication.emailVerificationSent');
 					},
 					child: buttonText('resetVerificationEmail')

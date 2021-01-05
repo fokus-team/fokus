@@ -57,7 +57,7 @@ List<Widget> buildChildPlanSegments(List<UIPlanInstance> plans, BuildContext con
 }
 
 Segment _getPlansSegment({BuildContext context, List<UIPlanInstance> plans, String title, String noElementsMessage, bool displayTimer = false}) {
-	var userRole = context.bloc<AuthenticationBloc>().state.user?.role;
+	var userRole = BlocProvider.of<AuthenticationBloc>(context).state.user?.role;
 	return Segment(
 		title: title,
 		noElementsMessage: noElementsMessage,

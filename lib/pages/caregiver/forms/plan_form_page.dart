@@ -47,7 +47,7 @@ class _CaregiverPlanFormPageState extends State<CaregiverPlanFormPage> {
 				)
 			);
 		} else {
-			context.bloc<PlanFormCubit>().submitPlanForm(plan);
+			BlocProvider.of<PlanFormCubit>(context).submitPlanForm(plan);
 		}
 	}
 
@@ -71,7 +71,7 @@ class _CaregiverPlanFormPageState extends State<CaregiverPlanFormPage> {
 				List<Widget> children = [buildStepper()];
 				if (state is PlanFormInitial) {
 					formType = state.formType;
-					context.bloc<PlanFormCubit>().loadFormData();
+					BlocProvider.of<PlanFormCubit>(context).loadFormData();
 					if (formType != AppFormType.create) {
 						children.add(Positioned(
 							child: Center(child: AppLoader(hasOverlay: true))

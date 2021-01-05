@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
 import 'package:fokus/logic/common/plan_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fokus/model/db/plan/plan.dart';
 import 'package:fokus/model/db/user/user_role.dart';
 import 'package:fokus/model/ui/plan/ui_plan.dart';
 import 'package:fokus/model/ui/task/ui_task.dart';
@@ -42,7 +41,7 @@ class _PlanDetailsPageState extends State<PlanDetailsPage> {
 
 	Widget _buildFloatingButton(CaregiverTasksLoadSuccess state) {
 		// ignore: close_sinks
-		var authenticationBloc = context.bloc<AuthenticationBloc>();
+		var authenticationBloc = BlocProvider.of<AuthenticationBloc>(context);
 		var currentUser = authenticationBloc.state.user;
 
 		return (state.uiPlan?.createdBy != currentUser.id && currentUser.role == UserRole.caregiver) ? FloatingActionButton.extended(
@@ -111,7 +110,7 @@ class _PlanDetailsPageState extends State<PlanDetailsPage> {
 	Widget _getCardHeader(UIPlan plan, Map<Mongo.ObjectId, String> children, BuildContext context) {
   	int i = 0;
 		// ignore: close_sinks
-		var authenticationBloc = context.bloc<AuthenticationBloc>();
+		var authenticationBloc = BlocProvider.of<AuthenticationBloc>(context);
 		var currentUser = authenticationBloc.state.user;
 
 		return CustomContentAppBar(
@@ -166,7 +165,7 @@ class _PlanDetailsPageState extends State<PlanDetailsPage> {
 								),
 								confirmText: 'actions.delete',
 								confirmAction: () async {
-									await context.bloc<PlanCubit>().deletePlan();
+									await BlocProvider.of<PlanCubit>(context).deletePlan();
 									Navigator.of(context).pop();
 									Navigator.of(context).pop();
 								},

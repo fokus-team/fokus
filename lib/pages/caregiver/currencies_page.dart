@@ -56,7 +56,7 @@ class _CaregiverCurrenciesPageState extends State<CaregiverCurrenciesPage> {
 			},
 	    builder: (context, state) {
 				if(state is CaregiverCurrenciesInitial) {
-					context.bloc<CaregiverCurrenciesCubit>().doLoadData();
+					BlocProvider.of<CaregiverCurrenciesCubit>(context).doLoadData();
 				}
 				return WillPopScope(
 					onWillPop: () => showExitFormDialog(context, true, isDataChanged),
@@ -93,7 +93,7 @@ class _CaregiverCurrenciesPageState extends State<CaregiverCurrenciesPage> {
 
 	void saveCurrencies(BuildContext context) {
 		if(currenciesKey.currentState.validate()) {
-			context.bloc<CaregiverCurrenciesCubit>().updateCurrencies(
+			BlocProvider.of<CaregiverCurrenciesCubit>(context).updateCurrencies(
 				currencyList.entries
 					.where((element) => element.value != null)
 					.map((currency) => UICurrency(type: currency.key, title: currency.value))

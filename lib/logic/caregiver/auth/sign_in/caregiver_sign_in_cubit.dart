@@ -10,7 +10,7 @@ part 'caregiver_sign_in_state.dart';
 
 
 class CaregiverSignInCubit extends CaregiverAuthCubitBase<CaregiverSignInState> {
-  CaregiverSignInCubit() : super(CaregiverSignInState());
+  CaregiverSignInCubit(String email) : super(CaregiverSignInState(email: Email.pure(email ?? '')));
 
 	Future<void> logInWithCredentials() async {
 		var state = _validateFields();
@@ -25,12 +25,28 @@ class CaregiverSignInCubit extends CaregiverAuthCubitBase<CaregiverSignInState> 
 				password: state.password.value,
 			);
 			emit(state.copyWith(status: FormzStatus.submissionSuccess));
-		} on EmailSignInFailure catch (e) {
+		} on SignInFailure catch (e) {
 			emit(state.copyWith(status: FormzStatus.submissionFailure, signInError: e.reason));
 		} on Exception {
 			emit(state.copyWith(status: FormzStatus.submissionFailure));
 		}
 	}
+
+  Future<bool> resetPassword() async {
+	  var state = this.state.copyWith(email: Email.dirty(this.state.email.value.trim()));
+	  if (state.email.invalid) {
+			emit(state);
+		  return false;
+	  }
+		try {
+			await authenticationProvider.beginPasswordReset(state.email.value);
+		} on SignInFailure catch (e) {
+			emit(state.copyWith(status: FormzStatus.submissionFailure, signInError: e.reason));
+		} on PasswordResetFailure catch (e) {
+			emit(state.copyWith(status: FormzStatus.submissionFailure, passwordResetError: e.reason));
+		}
+	  return true;
+  }
 
   CaregiverSignInState _validateFields() {
 	  var state = this.state;

@@ -110,7 +110,7 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 	}
 
 	CustomContentAppBar _buildAppHeader(UIChild child) {
-		var cubit = context.bloc<ChildDashboardCubit>();
+		var cubit = BlocProvider.of<ChildDashboardCubit>(context);
     return CustomContentAppBar(
       title: '$_pageKey.header.title',
       content: ChildItemCard(child: child),
@@ -242,7 +242,7 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 			pickerTitle: AppLocales.of(context).translate('$_pageKey.header.assignPlanTitle'),
 			pickedValues: availablePlans.where((element) => element.assignedTo.contains(_childProfile.id)).toList(),
 			options: availablePlans,
-			onChange: (selected) => context.bloc<ChildDashboardCubit>().assignPlans(selected.map((plan) => plan.id).toList()),
+			onChange: (selected) => BlocProvider.of<ChildDashboardCubit>(context).assignPlans(selected.map((plan) => plan.id).toList()),
 			getName: (plan) => plan.name,
 			builder: (item, checked, onChange) {
 				return Theme(
@@ -275,7 +275,7 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 			pickerTitle: AppLocales.of(context).translate('$_pageKey.header.assignBadgeTitle'),
 			pickedValues: [],
 			options: availableBadges,
-			onChange: (selected) => context.bloc<ChildDashboardCubit>().assignBadges(selected),
+			onChange: (selected) => BlocProvider.of<ChildDashboardCubit>(context).assignBadges(selected),
 			getName: (badge) => badge.name,
 			builder: (item, checked, onChange) {
 				return Theme(

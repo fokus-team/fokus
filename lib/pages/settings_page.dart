@@ -26,7 +26,7 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
 	  // ignore: close_sinks
-    var authenticationBloc = context.bloc<AuthenticationBloc>();
+    var authenticationBloc = BlocProvider.of<AuthenticationBloc>(context);
     var isCurrentUserCaregiver = authenticationBloc.state.user.role == UserRole.caregiver;
 
 		// Loading current locale (don't work with "default" option)
@@ -96,7 +96,7 @@ class _SettingsPageState extends State<SettingsPage> {
 	}
 
 	List<Widget> _getProfileFields() {
-  	var user = context.bloc<AuthenticationBloc>().state.user as UICaregiver;
+  	var user = BlocProvider.of<AuthenticationBloc>(context).state.user as UICaregiver;
 		return [
 			if (user.authMethod == AuthMethod.EMAIL)
 				...[
@@ -123,9 +123,9 @@ class _SettingsPageState extends State<SettingsPage> {
 
 	void _setLanguage(String langKey) {
 		if (langKey == LocaleCubit.defaultLanguageKey)
-			context.bloc<LocaleCubit>().setLocale(setDefault: true);
+			BlocProvider.of<LocaleCubit>(context).setLocale(setDefault: true);
 		else
-			context.bloc<LocaleCubit>().setLocale(locale: AppLocalesDelegate.supportedLocales.firstWhere((locale) => '$locale' == langKey));
+			BlocProvider.of<LocaleCubit>(context).setLocale(locale: AppLocalesDelegate.supportedLocales.firstWhere((locale) => '$locale' == langKey));
 	}
 
 	List<Widget> _getSettingsFields() {
@@ -133,7 +133,7 @@ class _SettingsPageState extends State<SettingsPage> {
 			BlocBuilder<LocaleCubit, LocaleState>(
 				builder: (context, state) {
 					return SmartSelect.single(
-						value: context.bloc<LocaleCubit>().state.languageKey,
+						value: BlocProvider.of<LocaleCubit>(context).state.languageKey,
 						title: AppLocales.of(context).translate('$_pageKey.appSettings.changeLanguageLabel'),
 						modalType: SmartSelectModalType.bottomSheet,
 						modalConfig: SmartSelectModalConfig(

@@ -108,7 +108,7 @@ class _ReportCardState extends State<ReportCard> {
 							AppLocales.of(context).translate('$_pageKey.raportCard.timeFormat', {
 								'HOURS_NUM': sumDurations(widget.report.task.duration).inHours,
 								'MINUTES_NUM': sumDurations(widget.report.task.duration).inMinutes.remainder(60),
-								'SECONDS_NUM': sumDurations(widget.report.task.breaks).inSeconds.remainder(60)
+								'SECONDS_NUM': sumDurations(widget.report.task.duration).inSeconds.remainder(60)
 							}),
 							softWrap: false,
 							overflow: TextOverflow.fade,

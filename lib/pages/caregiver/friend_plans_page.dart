@@ -62,7 +62,7 @@ class _CaregiverFriendPlansPageState extends State<CaregiverFriendPlansPage> {
 	}
 
 	void _deleteFriend(Mongo.ObjectId friendID) {
-		context.bloc<CaregiverFriendsCubit>().removeFriend(friendID);
+		BlocProvider.of<CaregiverFriendsCubit>(context).removeFriend(friendID);
 		Navigator.of(context).pop(); // closing confirm dialog before pushing snackbar
 		Navigator.of(context).popAndPushNamed(AppPage.caregiverPanel.name);
 		showSuccessSnackbar(context, '$_pageKey.content.friendRemovedText');

@@ -157,7 +157,7 @@ class _ReportFormState extends State<ReportForm> {
 					child: Column(
 						crossAxisAlignment: CrossAxisAlignment.center,
 						children: [
-							RatingBar(
+							RatingBar.builder(
 								minRating: 0.0,
 								maxRating: 5.0,
 								initialRating: 3,

@@ -24,7 +24,7 @@ class ChildSignInPage extends StatelessWidget {
 	
   @override
   Widget build(BuildContext context) {
-  	var activeUser = context.bloc<AuthenticationBloc>().state.user;
+  	var activeUser = BlocProvider.of<AuthenticationBloc>(context).state.user;
 	  return Scaffold(
 		  body: SafeArea(
 			  child: BlocListener<ChildSignUpCubit, ChildSignUpState>(
@@ -68,20 +68,20 @@ class ChildSignInPage extends StatelessWidget {
 							AuthButton(
 								button: UIButton(
 									'$_pageKey.addProfile',
-									() => context.bloc<ChildSignInCubit>().signInNewChild(),
+									() => BlocProvider.of<ChildSignInCubit>(context).signInNewChild(),
 									Colors.orange
 								)
 							),
 							AuthDivider(),
+							AuthenticationInputField<ChildSignUpCubit, ChildSignUpState>(
+								getField: (state) => state.caregiverCode,
+								changedAction: (cubit, value) => cubit.caregiverCodeChanged(value),
+								labelKey: '$_pageKey.caregiverCode',
+								icon: Icons.phonelink_lock,
+								getErrorKey: (state) => [state.caregiverCode.error.key],
+								disabled: activeUser != null,
+							),
 						],
-					AuthenticationInputField<ChildSignUpCubit, ChildSignUpState>(
-						getField: (state) => state.caregiverCode,
-						changedAction: (cubit, value) => cubit.caregiverCodeChanged(value),
-						labelKey: '$_pageKey.caregiverCode',
-						icon: Icons.phonelink_lock,
-						getErrorKey: (state) => [state.caregiverCode.error.key],
-						disabled: activeUser != null,
-					),
 					AuthenticationInputField<ChildSignUpCubit, ChildSignUpState>(
 						getField: (state) => state.name,
 						changedAction: (cubit, value) => cubit.nameChanged(value),
@@ -93,7 +93,7 @@ class ChildSignInPage extends StatelessWidget {
 					AuthButton(
 						button: UIButton(
 							'$_pageKey.createNewProfile',
-							() => context.bloc<ChildSignUpCubit>().signUpFormSubmitted(),
+							() => BlocProvider.of<ChildSignUpCubit>(context).signUpFormSubmitted(),
 							Colors.orange
 						)
 					)
@@ -163,7 +163,7 @@ class ChildSignInPage extends StatelessWidget {
 						),
 						onChange: (val) {
 							FocusManager.instance.primaryFocus.unfocus();
-							context.bloc<ChildSignUpCubit>().avatarChanged(val);
+							BlocProvider.of<ChildSignUpCubit>(context).avatarChanged(val);
 						}
 					)
 				);

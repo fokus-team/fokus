@@ -60,7 +60,7 @@ class _ChildCalendarPageState extends State<ChildCalendarPage> with TickerProvid
 								child: BlocBuilder<CalendarCubit, CalendarState>(
 									builder: (context, state) {
 										if (state.children == null)
-											context.bloc<CalendarCubit>().loadInitialData();
+											BlocProvider.of<CalendarCubit>(context).loadInitialData();
 										return _buildCalendar(state.events, state.children);
 									},
 								)
@@ -133,13 +133,13 @@ class _ChildCalendarPageState extends State<ChildCalendarPage> with TickerProvid
 		);
 	}
 
-	void onDayChanged(DateTime day, List<dynamic> events) {
-		context.bloc<CalendarCubit>().dayChanged(Date.fromDate(day));
+	void onDayChanged(DateTime day, List<dynamic> events, List<dynamic> holidays) {
+		BlocProvider.of<CalendarCubit>(context).dayChanged(Date.fromDate(day));
 		_animationController.forward(from: 0.0);
 	}
 
 	void onCalendarCreated(DateTime first, DateTime last, CalendarFormat format) {
-		context.bloc<CalendarCubit>().monthChanged(Date.fromDate(_calendarController.focusedDay));
+		BlocProvider.of<CalendarCubit>(context).monthChanged(Date.fromDate(_calendarController.focusedDay));
 	}
 
 	void onMonthChanged(DateTime first, DateTime last, CalendarFormat format) {

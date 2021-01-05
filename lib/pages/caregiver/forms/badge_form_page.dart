@@ -87,7 +87,7 @@ class _CaregiverBadgeFormPageState extends State<CaregiverBadgeFormPage> {
 
 	void saveBadge(BuildContext context) {
 		if(badgeFormKey.currentState.validate()) {
-			context.bloc<BadgeFormCubit>().submitBadgeForm(badge);
+			BlocProvider.of<BadgeFormCubit>(context).submitBadgeForm(badge);
 		}
 	}
 

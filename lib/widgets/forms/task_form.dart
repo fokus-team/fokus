@@ -352,7 +352,7 @@ class _TaskFormState extends State<TaskForm> {
 
 	Widget buildPointsFields() {
 		return BlocBuilder<PlanFormCubit, PlanFormState>(
-			cubit: context.bloc<PlanFormCubit>(),
+			cubit: BlocProvider.of<PlanFormCubit>(context),
 			builder: (context, state) {
 				if (state is PlanFormDataLoadSuccess)
 					return getPointsFields(currencies: state.currencies);

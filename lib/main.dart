@@ -30,6 +30,7 @@ import 'package:fokus/logic/child/task_instance/task_instance_cubit.dart';
 import 'package:fokus/logic/caregiver/reward_form/reward_form_cubit.dart';
 import 'package:fokus/logic/caregiver/badge_form/badge_form_cubit.dart';
 import 'package:fokus/logic/caregiver/tasks_evaluation/tasks_evaluation_cubit.dart';
+import 'package:fokus/model/ui/auth/password_change_type.dart';
 import 'package:fokus/pages/child/calendar_page.dart';
 
 import 'package:fokus/pages/loading_page.dart';
@@ -124,10 +125,10 @@ class _FokusAppState extends State<FokusApp> implements CurrentLocaleObserver {
 	}
 
   Route<dynamic> _onGenerateRoute(RouteSettings settings) {
-		var getActiveUser = (BuildContext context) => () => context.bloc<AuthenticationBloc>().state.user;
+		var getActiveUser = (BuildContext context) => () => BlocProvider.of<AuthenticationBloc>(context).state.user;
 		var getRoute = (BuildContext context) => ModalRoute.of(context);
 		var getParams = (BuildContext context) => getRoute(context).settings.arguments;
-		var authBloc = (BuildContext context) => context.bloc<AuthenticationBloc>();
+		var authBloc = (BuildContext context) => BlocProvider.of<AuthenticationBloc>(context);
 
 		Map<String, Function(BuildContext, Animation<double>, Animation<double>)> routesWithFadeTransition = {
 			// Caregiver pages
@@ -165,10 +166,10 @@ class _FokusAppState extends State<FokusApp> implements CurrentLocaleObserver {
 	}
 
 	Map<String, WidgetBuilder> _createRoutes() {
-		var getActiveUser = (BuildContext context) => () => context.bloc<AuthenticationBloc>().state.user;
+		var getActiveUser = (BuildContext context) => () => BlocProvider.of<AuthenticationBloc>(context).state.user;
 		var getRoute = (BuildContext context) => ModalRoute.of(context);
 		var getParams = (BuildContext context) => getRoute(context).settings.arguments;
-		var authBloc = (BuildContext context) => context.bloc<AuthenticationBloc>();
+		var authBloc = (BuildContext context) => BlocProvider.of<AuthenticationBloc>(context);
 		var accountManaging = (BuildContext context, Widget page) => withCubit(
 			withCubit(page, NameChangeCubit(getActiveUser(context), authBloc(context), getParams(context))),
 			AccountDeleteCubit(getActiveUser(context), getParams(context))
@@ -181,9 +182,9 @@ class _FokusAppState extends State<FokusApp> implements CurrentLocaleObserver {
 				withCubit(
 					accountManaging(context, SettingsPage()),
 					LocaleCubit(getActiveUser(context), authBloc(context))
-				), context, PasswordChangeCubit()
+				), context, PasswordChangeCubit(PasswordChangeType.change)
 			),
-			AppPage.caregiverSignInPage.name: (context) => _createPage(CaregiverSignInPage(), context, CaregiverSignInCubit()),
+			AppPage.caregiverSignInPage.name: (context) => _createPage(CaregiverSignInPage(), context, CaregiverSignInCubit(getParams(context))),
 			AppPage.caregiverSignUpPage.name: (context) => _createPage(CaregiverSignUpPage(), context, CaregiverSignUpCubit()),
 			AppPage.childProfilesPage.name: (context) => _createPage(ChildProfilesPage(), context, PreviousProfilesCubit(authBloc(context), getRoute(context))),
 			AppPage.childSignInPage.name: (context) => _createPage(withCubit(ChildSignInPage(), ChildSignInCubit(authBloc(context))), context, ChildSignUpCubit(authBloc(context)), AppPageSection.login),
@@ -211,7 +212,7 @@ class _FokusAppState extends State<FokusApp> implements CurrentLocaleObserver {
 		if (pageCubit != null)
 			page = withCubit(page, pageCubit);
 		return PageTheme.parametrizedSection(
-			authState: context.bloc<AuthenticationBloc>().state,
+			authState: BlocProvider.of<AuthenticationBloc>(context).state,
 			section: section,
 			child: page
 		);

@@ -7,10 +7,8 @@ import 'package:fokus/model/ui/auth/user_code.dart';
 import 'package:fokus/model/ui/user/ui_caregiver.dart';
 import 'package:fokus_auth/fokus_auth.dart';
 import 'package:formz/formz.dart';
-import 'package:get_it/get_it.dart';
 
 import 'package:fokus/model/ui/user/ui_user.dart';
-import 'package:fokus/services/data/data_repository.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
 class CaregiverFriendsCubit extends Cubit<CaregiverFriendsState> with UserCodeVerifier<CaregiverFriendsState> {

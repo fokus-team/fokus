@@ -49,11 +49,6 @@ class _CaregiverPlansPageState extends State<CaregiverPlansPage> {
 			  title: '$_pageKey.content.addedActivePlansTitle',
 				subtitle: '$_pageKey.content.addedActivePlansSubtitle',
 				headerAction: UIButton('$_pageKey.header.addPlan', () => Navigator.of(context).pushNamed(AppPage.caregiverPlanForm.name), AppColors.caregiverButtonColor, Icons.add),
-			  noElementsAction: deactivatedPlans.isEmpty ? RaisedButton(
-				  child: Text(AppLocales.of(context).translate('$_pageKey.header.addPlan'),
-						  style: Theme.of(context).textTheme.button),
-				  onPressed: () => Navigator.of(context).pushNamed(AppPage.caregiverPlanForm.name)
-			  ) : SizedBox.shrink(),
 			  context: context
 		  ),
 		  if (deactivatedPlans.isNotEmpty)
@@ -66,13 +61,12 @@ class _CaregiverPlansPageState extends State<CaregiverPlansPage> {
 	  ];
   }
 
-  Segment _getPlansSegment({List<UIPlan> plans, String title, UIButton headerAction, String subtitle, Widget noElementsAction, context}) {
+  Segment _getPlansSegment({List<UIPlan> plans, String title, UIButton headerAction, String subtitle, context}) {
 	  return Segment(
 		  title: title,
 			subtitle: subtitle,
 			headerAction: headerAction,
 		  noElementsMessage: '$_pageKey.content.noPlansAdded',
-		  noElementsAction: noElementsAction,
 		  elements: <Widget>[
 			  for (var plan in plans)
 				  ItemCard(

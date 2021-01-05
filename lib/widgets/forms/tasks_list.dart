@@ -106,7 +106,7 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 						]);
 					}
 				),
-				context.bloc<PlanFormCubit>()
+				BlocProvider.of<PlanFormCubit>(context)
 			)
 		));
 	}
@@ -134,7 +134,7 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 						]);
 					}
 				),
-				context.bloc<PlanFormCubit>()
+				BlocProvider.of<PlanFormCubit>(context)
 			)
 		));
 	}

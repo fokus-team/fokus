@@ -90,7 +90,6 @@ class TasksEvaluationCubit extends ReloadableCubit {
 		}
 		await Future.wait(updates);
 		await sendNotification();
-		emit(TasksEvaluationSubmissionSuccess(_reports));
 	}
 
 	static int getPointsAwarded(int quantity, int ratingMark) => max((quantity*ratingMark/5).round(), 1);

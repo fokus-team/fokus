@@ -12,8 +12,9 @@ import 'package:intl/intl.dart';
 class ReportCard extends StatefulWidget {
 	final UITaskReport report;
 	final bool hideBottomBar;
+	final Function returnCallback;
 
-	ReportCard({@required this.report, this.hideBottomBar = false});
+	ReportCard({@required this.report, this.hideBottomBar = false, this.returnCallback});
 
   @override
   _ReportCardState createState() => new _ReportCardState();
@@ -175,7 +176,8 @@ class _ReportCardState extends State<ReportCard> {
 							materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
 							padding: EdgeInsets.symmetric(vertical: 8.0),
 							colorBrightness: Brightness.dark,
-							onPressed: () { 
+							onPressed: () async {
+								widget.returnCallback();
 								Navigator.of(context).push(MaterialPageRoute(
 									builder: (context) => ReportForm(
 										report: widget.report,

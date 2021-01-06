@@ -5,7 +5,6 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/logic/child/task_instance/task_instance_cubit.dart';
 import 'package:fokus/logic/common/timer/timer_cubit.dart';
-import 'package:fokus/model/ui/plan/ui_plan_instance.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/duration_utils.dart';
 import 'package:fokus/utils/ui/theme_config.dart';
@@ -20,9 +19,8 @@ import 'package:lottie/lottie.dart';
 
 
 class ChildTaskInProgressPage extends StatefulWidget {
-	final UIPlanInstance initialPlanInstance;
 
-  const ChildTaskInProgressPage({Key key, @required this.initialPlanInstance}) : super(key: key);
+  const ChildTaskInProgressPage({Key key}) : super(key: key);
 
   @override
   _ChildTaskInProgressPageState createState() => _ChildTaskInProgressPageState();
@@ -59,7 +57,7 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 						return false;
 					},
 				  child: Scaffold(
-				  	appBar: isInitial ? _getHeader(TaskInstanceLoaded(null, this.widget.initialPlanInstance)) : _getHeader(state),
+				  	appBar: isInitial ? _getHeader(TaskInstanceLoaded(null, BlocProvider.of<TaskInstanceCubit>(context).uiPlanInstance)) : _getHeader(state),
 				  	body: isInitial ? Center(child: AppLoader())
 				  		: Padding(
 				  		padding: EdgeInsets.only(bottom: 0.0),

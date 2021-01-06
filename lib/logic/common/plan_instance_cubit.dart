@@ -20,22 +20,22 @@ class PlanInstanceCubit extends ReloadableCubit {
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final TaskInstanceService _taskInstancesService = GetIt.I<TaskInstanceService>();
 	final UIDataAggregator _dataAggregator = GetIt.I<UIDataAggregator>();
-	final ObjectId _planInstanceId;
+	UIPlanInstance uiPlanInstance;
 
 	PlanInstance planInstance;
 
-	PlanInstanceCubit(this._planInstanceId, ModalRoute modalRoute) : super(modalRoute);
+	PlanInstanceCubit(this.uiPlanInstance, ModalRoute modalRoute) : super(modalRoute);
 
 	@override
 	List<NotificationType> dataTypeSubscription() => [NotificationType.taskApproved, NotificationType.taskRejected, NotificationType.taskFinished, NotificationType.taskUnfinished];
 
 	@override
 	void doLoadData() async {
-		planInstance = await _dataRepository.getPlanInstance(id: _planInstanceId);
+		planInstance = await _dataRepository.getPlanInstance(id: uiPlanInstance.id);
 		if(planInstance.taskInstances == null || planInstance.taskInstances.isEmpty)
 			_taskInstancesService.createTaskInstances(planInstance);
-		var uiPlanInstance = await _dataAggregator.loadPlanInstance(planInstance: planInstance);
-		var allTasksInstances = await _dataRepository.getTaskInstances(planInstanceId: _planInstanceId);
+		uiPlanInstance = await _dataAggregator.loadPlanInstance(planInstance: planInstance);
+		var allTasksInstances = await _dataRepository.getTaskInstances(planInstanceId: uiPlanInstance.id);
 
 		List<UITaskInstance> uiInstances = await _taskInstancesService.mapToUIModels(allTasksInstances);
 		emit(ChildTasksLoadSuccess(uiInstances, uiPlanInstance));
@@ -59,8 +59,7 @@ class PlanInstanceCubit extends ReloadableCubit {
 	void completePlan() async {
 		List<Future> updates = [];
 		planInstance.state = PlanInstanceState.completed;
-		var uiPlanInstance = await _dataAggregator.loadPlanInstance(planInstance: planInstance);
-		var allTasksInstances = await _dataRepository.getTaskInstances(planInstanceId: _planInstanceId);
+		var allTasksInstances = await _dataRepository.getTaskInstances(planInstanceId: uiPlanInstance.id);
 		List<TaskInstance> updatedTaskInstances = [];
 		for(var taskInstance in allTasksInstances) {
 			if(!taskInstance.status.completed) {
@@ -86,6 +85,7 @@ class PlanInstanceCubit extends ReloadableCubit {
 		List<UITaskInstance> uiInstances = await _taskInstancesService.mapToUIModels(updatedTaskInstances);
 
 		Future.wait(updates);
+		uiPlanInstance = await _dataAggregator.loadPlanInstance(planInstance: planInstance);
 		emit(ChildTasksLoadSuccess(uiInstances, uiPlanInstance));
 	}
 }

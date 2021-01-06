@@ -28,8 +28,9 @@ class TaskInstanceCubit extends Cubit<TaskInstanceState> {
 	final NotificationService _notificationService = GetIt.I<NotificationService>();
 	final UIDataAggregator _dataAggregator = GetIt.I<UIDataAggregator>();
 
-	TaskInstanceCubit(this._taskInstanceId, this._activeUser) : super(TaskInstanceStateInitial());
+	TaskInstanceCubit(this._taskInstanceId, this._activeUser, this.uiPlanInstance) : super(TaskInstanceStateInitial());
 
+	UIPlanInstance uiPlanInstance;
 	TaskInstance taskInstance;
 	PlanInstance planInstance;
 	Task task;

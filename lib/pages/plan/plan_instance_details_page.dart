@@ -21,10 +21,9 @@ import 'package:fokus/widgets/loadable_bloc_builder.dart';
 import 'package:fokus/widgets/segment.dart';
 
 class PlanInstanceDetailsPage extends StatefulWidget {
-	final UIPlanInstance initialPlanInstance;
 	final bool showActions;
 
-  PlanInstanceDetailsPage(Map<String, dynamic> args) : initialPlanInstance = args['plan'], showActions = args['actions'] ?? true;
+  PlanInstanceDetailsPage(Map<String, dynamic> args) : showActions = args['actions'] ?? true;
 
   @override
   _PlanInstanceDetailsPageState createState() => new _PlanInstanceDetailsPageState();
@@ -33,7 +32,6 @@ class PlanInstanceDetailsPage extends StatefulWidget {
 class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 	final String _pageKey = 'page.childSection.planInProgress';
 	bool _wasPlanCompleted = false;
-	UIPlanInstance updatedUiPlanInstance;
 
 	void navigate(context, UITaskInstance task, UIPlanInstance plan) async {
 		if(await BlocProvider.of<PlanInstanceCubit>(context).isOtherPlanInProgressDbCheck(tappedTaskInstance: task.id)) {
@@ -48,7 +46,7 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 			final result = await Navigator.of(context).pushNamed(AppPage.childTaskInProgress.name, arguments: {"TaskId" : task.id, "UIPlanInstance" : plan});
 			if(result != null) setState(() {
 				_wasPlanCompleted = false;
-				updatedUiPlanInstance =  (result as Map<String, dynamic>)['plan'];
+				BlocProvider.of<PlanInstanceCubit>(context).uiPlanInstance = (result as Map<String, dynamic>)['plan'];
 			});
 		}
 	}
@@ -62,11 +60,11 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 					content: AppSegments(segments: _buildPanelSegments(state))
 				),
 				loadingBuilder: (context, state) => _getView(
-					planInstance: updatedUiPlanInstance ?? widget.initialPlanInstance,
+					planInstance: BlocProvider.of<PlanInstanceCubit>(context).uiPlanInstance,
 					content: Expanded(child: Center(child: AppLoader()))
 				),
 			),
-			floatingActionButton: widget.initialPlanInstance.state.ended || _wasPlanCompleted || !widget.showActions || (updatedUiPlanInstance!= null && updatedUiPlanInstance.state.ended) ?
+			floatingActionButton: BlocProvider.of<PlanInstanceCubit>(context).uiPlanInstance.state.ended || _wasPlanCompleted || !widget.showActions ?
 				null :
 				FloatingActionButton.extended(
 				onPressed: _planCompletion,

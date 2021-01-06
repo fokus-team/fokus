@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
 import 'package:fokus/logic/common/formz_state.dart';
@@ -39,6 +41,11 @@ class CaregiverFriendsCubit extends Cubit<CaregiverFriendsState> with UserCodeVe
 			emit(state.copyWith(status: FormzStatus.submissionSuccess));
 		}
   }
+
+	Future clearCode() async {
+	  var state = this.state;
+		emit(state.copyWith(caregiverCode: UserCode.pure('')));
+	}
 
   Future<CaregiverFriendsState> _validateFields() async {
 	  var state = this.state;

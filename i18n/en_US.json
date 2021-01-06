@@ -514,7 +514,7 @@
 						"rejectedTooltip" : "Task has been rejected by caregiver",
 						"notEvaluatedTooltip" : "Ask caregiver to rate task",
 						"pointsPossible" : "Max points to earn",
-						"timer": "Plan time"
+						"timer": "Plan execution time"
 					},
 					"taskInProgressDialog" : {
 						"title": "Different task in progress",

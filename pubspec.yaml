@@ -25,11 +25,12 @@ dependencies:
     mongo_dart:
         git: https://github.com/fokus-team/mongo_dart.git
 
-    firebase_core: ^0.5.0
-    firebase_analytics: ^6.0.0
-    firebase_crashlytics: ^0.1.4+1
+    firebase_core: ^0.5.2
+    firebase_analytics: ^6.2.0
+    firebase_crashlytics: ^0.2.3
+    firebase_dynamic_links: ^0.6.3
 
-    firebase_messaging: ^6.0.16
+    firebase_messaging: ^7.0.3
     onesignal_flutter:
         git: https://github.com/fokus-team/OneSignal-Flutter-SDK.git
     flutter_local_notifications:
@@ -37,21 +38,22 @@ dependencies:
             url: https://github.com/fokus-team/flutter_local_notifications.git
             path: flutter_local_notifications
 
-    googleapis: ^0.55.0
+    googleapis: ^0.56.1
 
-    get_it: ^4.0.2
-    bloc: ^6.0.1
-    flutter_bloc: ^6.0.1
+    get_it: ^5.0.1
+    bloc: ^6.1.0
+    flutter_bloc: ^6.1.1
 
     package_info: '>=0.4.3 <2.0.0'
     equatable: ^1.1.0
-    meta: ^1.1.6
+    meta: ^1.2.4
     date_utils: ^0.1.0+3
     logging: ^0.11.4
     intl: ^0.16.1
     formz: ^0.3.0
     shared_preferences: ^0.5.8
     url_launcher: ^5.5.2
+    uni_links: ^0.4.0
 
     cupertino_icons: ^1.0.0
     lottie: ^0.4.0+1
@@ -62,9 +64,9 @@ dependencies:
     implicitly_animated_reorderable_list: ^0.2.3
     flutter_picker: ^1.1.5
     confetti: ^0.5.4+1
-    table_calendar: 2.2.3
+    table_calendar: ^2.3.0
     carousel_slider: ^2.2.1
-    flutter_rating_bar: ^3.0.1+1
+    flutter_rating_bar: ^3.2.0+1
     vibration: ^1.5.0
     flushbar: ^1.10.4
 

@@ -57,7 +57,7 @@ class _ChildRewardsPageState extends State<ChildRewardsPage> {
   }
 
 	void _claimReward(UIReward reward) {
-		context.bloc<ChildRewardsCubit>().claimReward(reward);
+		BlocProvider.of<ChildRewardsCubit>(context).claimReward(reward);
 		Navigator.of(context).pop(); // closing confirm dialog before pushing snackbar
 		showSuccessSnackbar(context, '$_pageKey.rewardClaimedText');
 	}

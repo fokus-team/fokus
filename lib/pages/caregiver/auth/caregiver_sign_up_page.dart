@@ -27,6 +27,8 @@ class CaregiverSignUpPage extends StatelessWidget {
 				  listener: (context, state) {
 					  if (state.status.isSubmissionFailure && (state.signInError != null || state.signUpError != null))
 							showFailSnackbar(context, state.signUpError?.key ?? state.signInError.key);
+					  else if (state.status.isSubmissionSuccess)
+					  	showSuccessSnackbar(context, 'authentication.emailVerificationSent');
 				  },
 					child: ListView(
 						padding: EdgeInsets.symmetric(vertical: AppBoxProperties.screenEdgePadding),
@@ -90,7 +92,7 @@ class CaregiverSignUpPage extends StatelessWidget {
 							AuthButton(
 								button: UIButton.ofType(
 									ButtonType.signUp,
-									() => context.bloc<CaregiverSignUpCubit>().signUpFormSubmitted(),
+									() => BlocProvider.of<CaregiverSignUpCubit>(context).signUpFormSubmitted(),
 									Colors.teal
 								)
 							),
@@ -98,7 +100,7 @@ class CaregiverSignUpPage extends StatelessWidget {
 							AuthButton.google(
 								UIButton(
 									'authentication.googleSignUp',
-									() => context.bloc<CaregiverSignUpCubit>().logInWithGoogle()
+									() => BlocProvider.of<CaregiverSignUpCubit>(context).logInWithGoogle()
 								)
 							)
 						]

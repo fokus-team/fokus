@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
 
@@ -8,7 +7,6 @@ import 'package:fokus/model/ui/user/ui_caregiver.dart';
 import 'package:fokus/model/ui/user/ui_child.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/ui/dialog_utils.dart';
-import 'package:fokus/utils/ui/snackbar_utils.dart';
 import 'package:fokus/utils/ui/theme_config.dart';
 import 'package:fokus/widgets/chips/attribute_chip.dart';
 import 'package:fokus/widgets/buttons/help_icon_button.dart';
@@ -20,7 +18,6 @@ import 'package:fokus/model/ui/ui_button.dart';
 import 'package:fokus/model/ui/user/ui_user.dart';
 import 'package:fokus/utils/ui/icon_sets.dart';
 import 'package:fokus/widgets/buttons/popup_menu_list.dart';
-import 'package:fokus/widgets/dialogs/general_dialog.dart';
 import 'package:fokus/widgets/general/app_avatar.dart';
 import 'package:fokus_auth/fokus_auth.dart';
 
@@ -65,7 +62,7 @@ class _CustomAppBarState extends State<CustomAppBar>{
 
 	Widget _popUpMenu() {
   	// ignore: close_sinks
-		var auth = context.bloc<AuthenticationBloc>();
+		var auth = BlocProvider.of<AuthenticationBloc>(context);
 		return PopupMenuList(
 			lightTheme: true,
 			includeDivider: true,

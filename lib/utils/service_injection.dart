@@ -1,5 +1,4 @@
 import 'package:flutter/widgets.dart';
-import 'package:fokus/services/instrumentator.dart';
 import 'package:get_it/get_it.dart';
 import 'package:fokus_auth/fokus_auth.dart';
 
@@ -14,6 +13,9 @@ import 'package:fokus/services/task_instance_service.dart';
 import 'package:fokus/services/notifications/onesignal/onesignal_notification_service.dart';
 import 'package:fokus/services/notifications/notification_service.dart';
 import 'package:fokus/services/locale_provider.dart';
+import 'package:fokus/services/links/firebase_link_service.dart';
+import 'package:fokus/services/links/link_service.dart';
+import 'package:fokus/services/instrumentator.dart';
 
 Future registerServices(GlobalKey<NavigatorState> navigatorKey, RouteObserver<PageRoute> routeObserver) {
 	// Semi-services needed for context and navigation state sharing
@@ -30,6 +32,7 @@ Future registerServices(GlobalKey<NavigatorState> navigatorKey, RouteObserver<Pa
 	GetIt.I.registerSingleton<NotificationService>(OneSignalNotificationService());
 	GetIt.I.registerSingleton<LocaleService>(LocaleService());
 	GetIt.I.registerSingleton<Instrumentator>(Instrumentator());
+	GetIt.I.registerSingleton<LinkService>(FirebaseDynamicLinkService());
 
 	return GetIt.I.allReady();
 }

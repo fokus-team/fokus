@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:isolate';
 
 import 'package:bloc/bloc.dart';
-import 'package:fokus/model/db/user/caregiver.dart';
 import 'package:fokus/model/db/user/user.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/ui/dialog_utils.dart';
@@ -32,7 +31,7 @@ class Instrumentator implements ActiveUserObserver {
 			_logger.severe('', error, stackTrace);
 			if (_handleError(error, stackTrace))
 				return;
-			Crashlytics.instance.recordError(error, stackTrace);
+			FirebaseCrashlytics.instance.recordError(error, stackTrace);
 		});
 	}
 
@@ -56,11 +55,11 @@ class Instrumentator implements ActiveUserObserver {
 	}
 
 	void _setupCrashlytics() {
-		Crashlytics.instance.enableInDevMode = true;
-		FlutterError.onError = Crashlytics.instance.recordFlutterError;
+		FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
+		FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
 		Isolate.current.addErrorListener(RawReceivePort((pair) async {
 			final List<dynamic> errorAndStacktrace = pair;
-			await Crashlytics.instance.recordError(
+			await FirebaseCrashlytics.instance.recordError(
 				errorAndStacktrace.first,
 				errorAndStacktrace.last,
 			);
@@ -85,14 +84,12 @@ class Instrumentator implements ActiveUserObserver {
 
   @override
   void onUserSignIn(User user) {
-	  Crashlytics.instance.setUserIdentifier(user.id.toHexString());
-	  Crashlytics.instance.setUserName(user.name);
+	  FirebaseCrashlytics.instance.setUserIdentifier(user.id.toHexString());
   }
 
   @override
   void onUserSignOut(User user) {
-	  Crashlytics.instance.setUserIdentifier(null);
-	  Crashlytics.instance.setUserName(null);
+	  FirebaseCrashlytics.instance.setUserIdentifier('');
   }
 }
 

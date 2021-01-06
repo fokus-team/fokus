@@ -22,7 +22,7 @@ class _ChildPanelPageState extends State<ChildPanelPage> {
 
   @override
   Widget build(BuildContext context) {
-		UIChild currentUser = context.bloc<AuthenticationBloc>().state.user;
+		UIChild currentUser = BlocProvider.of<AuthenticationBloc>(context).state.user;
     return Scaffold(
       body: Column(
 	      crossAxisAlignment: CrossAxisAlignment.start,

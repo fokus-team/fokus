@@ -45,7 +45,7 @@ class OneSignalNotificationProvider extends NotificationProvider {
 		var navigate = (AppPage page, [dynamic arguments]) => _navigatorKey.currentState.pushNamed(page.name, arguments: arguments);
 		var context = _navigatorKey.currentState.context;
 		var data = NotificationData.fromJson(result.notification.payload.additionalData);
-		var activeUser = context.bloc<AuthenticationBloc>().state.user;
+		var activeUser = BlocProvider.of<AuthenticationBloc>(context).state.user;
 		if (activeUser == null || activeUser.id != data.recipient) {
 			if (activeUser == null)
 				navigate(data.type.recipient.signInPage);
@@ -72,15 +72,15 @@ class OneSignalNotificationProvider extends NotificationProvider {
 		  logger.fine("onMessage: $notification");
 		  var context = _navigatorKey.currentState.context;
 		  var data = NotificationData.fromJson(notification.payload.additionalData);
-		  var activeUser = context.bloc<AuthenticationBloc>().state.user;
+		  var activeUser = BlocProvider.of<AuthenticationBloc>(context).state.user;
 		  if (activeUser == null || activeUser.id != data.recipient)
 		  	return;
 		  if (data.type == NotificationType.badgeAwarded) {
 			  Child user = await dataRepository.getUser(id: activeUser.id, fields: ['badges']);
-			  context.bloc<AuthenticationBloc>().add(AuthenticationActiveUserUpdated(UIChild.from(activeUser, badges: user.badges.map((badge) => UIChildBadge.fromDBModel(badge)).toList())));
+			  BlocProvider.of<AuthenticationBloc>(context).add(AuthenticationActiveUserUpdated(UIChild.from(activeUser, badges: user.badges.map((badge) => UIChildBadge.fromDBModel(badge)).toList())));
 		  } else if (data.type == NotificationType.taskApproved) {
 			  Child user = await dataRepository.getUser(id: activeUser.id, fields: ['points']);
-			  context.bloc<AuthenticationBloc>().add(AuthenticationActiveUserUpdated(UIChild.from(activeUser, points: user.points.map((points) => UIPoints.fromDBModel(points)).toList())));
+			  BlocProvider.of<AuthenticationBloc>(context).add(AuthenticationActiveUserUpdated(UIChild.from(activeUser, points: user.points.map((points) => UIPoints.fromDBModel(points)).toList())));
 		  }
 		  onNotificationReceived(data.type);
 	  });

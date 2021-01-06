@@ -10,7 +10,7 @@ extension PasswordValidationErrorTextKey on PasswordValidationError {
 }
 
 class Password extends FormzInput<String, PasswordValidationError> {
-	static const int minPasswordLength = 8;
+	static const int minPasswordLength = 6;
 	final bool fullValidation;
 
 	const Password.pure([String value = '', this.fullValidation = true]) : super.pure(value);

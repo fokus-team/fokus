@@ -1,0 +1,1 @@
+Rewards are items that your child can claim for earned points. For example, this could be "*1 hour of console game*" or "*Ice cream*". The prize has a name, a graphic icon and a point cost in the selected currency. The number of available instances of the prize may also be limited.

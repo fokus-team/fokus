@@ -21,13 +21,15 @@ class HelpDialog extends StatelessWidget {
       shape: RoundedRectangleBorder(),
       elevation: 0.0,
       backgroundColor: Colors.transparent,
-      child: _buildDialogContent(context)
+      child: SingleChildScrollView(
+				child: _buildDialogContent(context)
+			)
     );
   }
 
   Widget _buildDialogContent(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 12.0),
+      padding: EdgeInsets.symmetric(vertical: 12.0),
       decoration: new BoxDecoration(
         color: Colors.white,
         shape: BoxShape.rectangle,
@@ -36,25 +38,16 @@ class HelpDialog extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.only(left: 8.0, right: 10.0),
-                child: Icon(Icons.help_outline)
-              ),
-              Text(AppLocales.of(context).translate('help.' + helpPage), style: Theme.of(context).textTheme.headline2)
-            ],
-          ),
-          SizedBox(height: 6.0),
-          Divider(),
+          Text(AppLocales.of(context).translate('help.' + helpPage), style: Theme.of(context).textTheme.headline3),
+          SizedBox(height: 12.0),
+          Divider(height: 1),
           FutureBuilder(
             future: rootBundle.loadString(helpPagePath(context, helpPage)),
             builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
               if (snapshot.hasData) {
                 return Markdown(
                   shrinkWrap: true,
-                  padding: EdgeInsets.all(8.0),
+                  padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                   styleSheet: MarkdownStyleSheet(
                     h1: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
                     p: Theme.of(context).textTheme.bodyText2

@@ -183,8 +183,7 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 	CustomContentAppBar _getHeader(UIPlanInstance planInstance) {
 		return CustomContentAppBar(
 			title: '$_pageKey.header.title',
-			content: getCardHeader(planInstance),
-			helpPage: 'plan_info'
+			content: getCardHeader(planInstance)
 		);
 	}
 

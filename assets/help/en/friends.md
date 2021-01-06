@@ -1,0 +1,1 @@
+A friend's profile shows all their plans. Each of them can be duplicated, expanded and saved as your plan. After clicking the "*Copy plan*" button you will be redirected to the plan creation form with a completed list of tasks. Remember that you are sharing your plans when being somebody’s friend.

@@ -6,6 +6,7 @@ import 'package:fokus/model/ui/task/ui_task_report.dart';
 
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/ui/theme_config.dart';
+import 'package:fokus/widgets/buttons/help_icon_button.dart';
 import 'package:fokus/widgets/cards/report_card.dart';
 import 'package:fokus/widgets/general/app_hero.dart';
 import 'package:fokus/widgets/loadable_bloc_builder.dart';
@@ -35,7 +36,10 @@ class _CaregiverRatingPageState extends State<CaregiverRatingPage> {
 			appBar: AppBar(
 				title: Text(AppLocales.of(context).translate('$_pageKey.header.title')),
 				backgroundColor: Colors.transparent,
-				elevation: 0.0
+				elevation: 0.0,
+				actions: <Widget>[
+					HelpIconButton(helpPage: 'rating')
+				]
 			),
 			body: LoadableBlocBuilder<TasksEvaluationCubit>(
 				builder: (context, state) {

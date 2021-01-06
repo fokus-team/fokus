@@ -730,7 +730,8 @@
 		"badge_creation": "Badge creation",
 		"plan_info": "Plans",
 		"currencies": "Currencies",
-		"friends": "Friends"
+		"friends": "Friends",
+		"rating": "Task rating"
 	},
 	"assignedTo": "Assigned to",
 	"points": "Points",

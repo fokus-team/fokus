@@ -132,7 +132,7 @@ class _ReportFormState extends State<ReportForm> {
 		int points = TasksEvaluationCubit.getPointsAwarded(totalPoints, mark.value);
 		return AttributeChip.withCurrency(
 			currencyType: widget.report.task.points.type,
-			content: points.toString() + ' / ' + totalPoints.toString(),
+			content: '$points / $totalPoints',
 			tooltip: widget.report.task.points.title
 		);
 	}

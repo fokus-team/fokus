@@ -122,7 +122,6 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 					)
 				],
 			),
-			helpPage: 'plan_info',
 			key: _header,
 			breakPerformingTransition: _breakPerformingTransition,
 			state: state

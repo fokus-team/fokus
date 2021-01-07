@@ -105,7 +105,8 @@ class TaskAppHeaderState extends State<TaskAppHeader> with TickerProviderStateMi
 								Text(AppLocales.of(context).translate('$_pageKey.content.pointsToGet')),
 								AttributeChip.withCurrency(
 									content: "+" + this.widget.state.taskInstance.points.quantity.toString(),
-									currencyType: this.widget.state.taskInstance.points.type
+									currencyType: this.widget.state.taskInstance.points.type,
+									tooltip: this.widget.state.taskInstance.points.title
 								)
 							]
 						) :

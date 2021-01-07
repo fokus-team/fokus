@@ -411,7 +411,8 @@
 					"mandatoryTasks": "Zadania obowiązkowe",
 					"additionalTasks": "Zadania dodatkowe",
 					"noTasks": "Brak zadań",
-					"copyPlanButton": "Skopiuj plan"
+					"copyPlanButton": "Skopiuj plan",
+					"planRemovedText": "Usunięto plan"
 				}
 			},
 			"rating":  {
@@ -512,7 +513,8 @@
 						"notEvaluated" : "Nieocenione",
 						"rejectedTooltip" : "Zadanie odrzucone przez opiekuna",
 						"notEvaluatedTooltip" : "Poproś opiekuna o ocenę",
-						"pointsPossible" : "Możliwe do zdobycia"
+						"pointsPossible" : "Możliwe do zdobycia",
+						"timer": "Czas wykonywania planu"
 					},
 					"taskInProgressDialog" : {
 						"title": "Inne zadanie w trakcie wykonywania",
@@ -736,7 +738,8 @@
 		"badge_creation": "Tworzenie odznaki",
 		"plan_info": "Plany",
 		"currencies": "Waluty",
-		"friends": "Znajomi"
+		"friends": "Znajomi",
+		"rating": "Ocena zadań"
 	},
 	"assignedTo": "Przypisane do",
 	"points": "Punkty",

@@ -1,0 +1,1 @@
+Nagrody to elementy, które dziecko może odebrać za zdobyte punkty. Może być to na przykład “*1 godzina gry na konsoli*” lub “*Porcja lodów*”. Nagroda opatrzona jest nazwą, graficzną ikoną oraz kosztem punktowym w wybranej walucie. Liczba dostępnych wystąpień nagrody może być również limitowana.

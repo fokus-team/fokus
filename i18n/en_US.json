@@ -411,7 +411,8 @@
 					"mandatoryTasks": "Mandatory tasks",
 					"additionalTasks": "Additional tasks",
 					"noTasks": "No tasks",
-					"copyPlanButton": "Copy plan"
+					"copyPlanButton": "Copy plan",
+					"planRemovedText": "Plan has been removed"
 				}
 			},
 			"rating":  {
@@ -512,7 +513,8 @@
 						"rating" : "{RATING}/5",
 						"rejectedTooltip" : "Task has been rejected by caregiver",
 						"notEvaluatedTooltip" : "Ask caregiver to rate task",
-						"pointsPossible" : "Max points to earn"
+						"pointsPossible" : "Max points to earn",
+						"timer": "Plan execution time"
 					},
 					"taskInProgressDialog" : {
 						"title": "Different task in progress",
@@ -736,7 +738,8 @@
 		"badge_creation": "Badge creation",
 		"plan_info": "Plans",
 		"currencies": "Currencies",
-		"friends": "Friends"
+		"friends": "Friends",
+		"rating": "Task rating"
 	},
 	"assignedTo": "Assigned to",
 	"points": "Points",

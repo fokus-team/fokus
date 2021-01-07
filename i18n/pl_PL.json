@@ -519,6 +519,12 @@
 					"taskInProgressDialog" : {
 						"title": "Inne zadanie w trakcie wykonywania",
 						"content": "Nie możesz wykonywać dwóch zadań jednocześnie. Zakończ aktualne zadanie i spróbuj ponownie."
+					},
+					"fab" : {
+						"completePlan": "Zakończ plan",
+						"completed": "Plan został zakończony",
+						"dialogTitle": "Kończenie planu",
+						"dialogContent": "Zakończenie planu spowoduje odrzucenie niewykonanych zadań. Będziesz mógł je wykonać ponownie do końca dnia. Czy na pewno chcesz kontynuować?"
 					}
 				}
 			},

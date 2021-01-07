@@ -5,7 +5,6 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/logic/child/task_instance/task_instance_cubit.dart';
 import 'package:fokus/logic/common/timer/timer_cubit.dart';
-import 'package:fokus/model/ui/plan/ui_plan_instance.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/duration_utils.dart';
 import 'package:fokus/utils/ui/theme_config.dart';
@@ -20,9 +19,8 @@ import 'package:lottie/lottie.dart';
 
 
 class ChildTaskInProgressPage extends StatefulWidget {
-	final UIPlanInstance initialPlanInstance;
 
-  const ChildTaskInProgressPage({Key key, @required this.initialPlanInstance}) : super(key: key);
+  const ChildTaskInProgressPage({Key key}) : super(key: key);
 
   @override
   _ChildTaskInProgressPageState createState() => _ChildTaskInProgressPageState();
@@ -53,44 +51,50 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 					BlocProvider.of<TaskInstanceCubit>(context).loadTaskInstance();
 					isInitial = true;
 				}
-				return  Scaffold(
-					appBar: isInitial ? _getHeader(TaskInstanceLoaded(null, this.widget.initialPlanInstance)) : _getHeader(state),
-					body: isInitial ? Center(child: AppLoader())
-						: Padding(
-						padding: EdgeInsets.only(bottom: 0.0),
-						child: Stack(
-							children: _getAllCards(state)
-						)
-					),
-					extendBody: true,
-					bottomNavigationBar: isInitial ? SizedBox.shrink() : _getBottomNavBar(),
-					floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-					floatingActionButton: isInitial ? SizedBox.shrink()
-						: Row(
-						mainAxisAlignment: MainAxisAlignment.spaceBetween,
-						children: <Widget>[
-							_getFab(true, state),
-							SlideTransition(
-								position: _taskListFabAnimation,
-								child: FloatingActionButton.extended(
-									label:
-									Row(
-										children: [
-											Icon(Icons.format_list_bulleted,),
-											Padding(
-												padding: const EdgeInsets.only(left: 8.0),
-												child: Text(AppLocales.of(context).translate('actions.return')),
-											),
-										],
-									),
-									onPressed: () => Navigator.of(context).pop(),
-									heroTag: "fabTasks",
-									backgroundColor: AppColors.childTaskColor,
-								),
-							),
-							_getFab(false, state)
-						],
-					),
+				return  WillPopScope(
+				  onWillPop: () async {
+						Navigator.of(context).pop({"plan" : state is TaskInstanceLoaded ? state.planInstance : null});
+						return false;
+					},
+				  child: Scaffold(
+				  	appBar: isInitial ? _getHeader(TaskInstanceLoaded(null, (state as TaskInstanceStateInitial).planInstance)) : _getHeader(state),
+				  	body: isInitial ? Center(child: AppLoader())
+				  		: Padding(
+				  		padding: EdgeInsets.only(bottom: 0.0),
+				  		child: Stack(
+				  			children: _getAllCards(state)
+				  		)
+				  	),
+				  	extendBody: true,
+				  	bottomNavigationBar: isInitial ? SizedBox.shrink() : _getBottomNavBar(),
+				  	floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+				  	floatingActionButton: isInitial ? SizedBox.shrink()
+				  		: Row(
+				  		mainAxisAlignment: MainAxisAlignment.spaceBetween,
+				  		children: <Widget>[
+				  			_getFab(true, state),
+				  			SlideTransition(
+				  				position: _taskListFabAnimation,
+				  				child: FloatingActionButton.extended(
+				  					label:
+				  					Row(
+				  						children: [
+				  							Icon(Icons.format_list_bulleted,),
+				  							Padding(
+				  								padding: const EdgeInsets.only(left: 8.0),
+				  								child: Text(AppLocales.of(context).translate('actions.return')),
+				  							),
+				  						],
+				  					),
+				  					onPressed: () => Navigator.of(context).pop({"plan" : state is TaskInstanceLoaded ? state.planInstance : null}),
+				  					heroTag: "fabTasks",
+				  					backgroundColor: AppColors.childTaskColor,
+				  				),
+				  			),
+				  			_getFab(false, state)
+				  		],
+				  	),
+				  ),
 				);
 
 			}
@@ -101,6 +105,7 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 		return TaskAppHeader(
 			height: 330,
 			title: '$_pageKey.header.title',
+			popArgs: {"plan" : state is TaskInstanceLoaded ? state.planInstance : null},
 			content: ItemCard(
 				title: state.planInstance.name,
 				subtitle: state.planInstance.description(context),

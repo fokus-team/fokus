@@ -139,8 +139,9 @@ class CustomContentAppBar extends StatelessWidget {
 	final Widget popupMenuWidget;
 	final TabBar tabs;
 	final bool isConstrained;
+	final dynamic popArgs;
 
-	CustomContentAppBar({this.title, this.content, this.helpPage, this.popupMenuWidget, this.tabs, this.isConstrained = false});
+	CustomContentAppBar({this.title, this.content, this.helpPage, this.popupMenuWidget, this.tabs, this.isConstrained = false, this.popArgs});
 
 	@override
 	Widget build(BuildContext context) {
@@ -171,7 +172,7 @@ class CustomContentAppBar extends StatelessWidget {
 													this.popupMenuWidget != null ? popupMenuWidget : SizedBox.shrink()
 												],
 											),
-											leading: BackIconButton(),
+											leading: BackIconButton(args: popArgs),
 											title: Padding(
 												padding: EdgeInsets.only(left: 4.0),
 												child: Text(

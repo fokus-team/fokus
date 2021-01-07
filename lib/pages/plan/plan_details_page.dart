@@ -3,6 +3,7 @@ import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
 import 'package:fokus/logic/common/plan_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/model/db/user/user_role.dart';
+import 'package:fokus/model/pages/app_form_type.dart';
 import 'package:fokus/model/ui/plan/ui_plan.dart';
 import 'package:fokus/model/ui/task/ui_task.dart';
 import 'package:fokus/utils/ui/snackbar_utils.dart';
@@ -52,7 +53,7 @@ class _PlanDetailsPageState extends State<PlanDetailsPage> {
 			elevation: 4.0,
 			icon: Icon(Icons.control_point_duplicate),
 			label: Text(AppLocales.of(context).translate('$_pageKey.content.copyPlanButton')),
-			onPressed: () => Navigator.of(context).pushNamed(AppPage.caregiverPlanForm.name, arguments: {"type": AppFormArgument(type: AppFormType.copy, id: state.uiPlan.id)}),
+			onPressed: () => Navigator.of(context).pushNamed(AppPage.caregiverPlanForm.name, arguments: AppFormArgument(type: AppFormType.copy, id: state.uiPlan.id)),
 		) : SizedBox.shrink();
 	}
 
@@ -146,7 +147,7 @@ class _PlanDetailsPageState extends State<PlanDetailsPage> {
 				items: [
 					UIButton.ofType(ButtonType.edit, () => Navigator.of(context).pushNamed(
 							AppPage.caregiverPlanForm.name,
-							arguments: {"type": AppFormArgument(type: AppFormType.edit, id: plan.id)}
+							arguments: AppFormArgument(type: AppFormType.edit, id: plan.id)
 						),
 						null, Icons.edit
 					),

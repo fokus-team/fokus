@@ -2,7 +2,7 @@ import 'package:date_utils/date_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/model/db/date/date.dart';
-import 'package:fokus/model/pages/app_form_type.dart';
+import 'package:fokus/model/pages/plan_form_params.dart';
 import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/ui/plan/ui_plan.dart';
 import 'package:fokus/utils/ui/calendar_utils.dart';
@@ -105,7 +105,7 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 				]
 			),
 			floatingActionButton: canAddPlan ? FloatingActionButton.extended(
-				onPressed: () => Navigator.of(context).pushNamed(AppPage.caregiverPlanForm.name, arguments: AppFormArgument(type: AppFormType.create, date: Date.fromDate(_calendarController.focusedDay))),
+				onPressed: () => Navigator.of(context).pushNamed(AppPage.caregiverPlanForm.name, arguments: PlanFormParams(type: AppFormType.create, date: Date.fromDate(_calendarController.focusedDay))),
 				label: Text(AppLocales.of(context).translate('$_pageKey.content.addPlan')),
 				icon: Icon(Icons.insert_invitation),
 				backgroundColor: Colors.lightBlue,

@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:fokus/model/pages/app_form_type.dart';
+import 'package:fokus/model/pages/plan_form_params.dart';
 import 'package:fokus/model/ui/form/task_form_model.dart';
 import 'package:fokus/services/plan_keeper_service.dart';
 import 'package:get_it/get_it.dart';
@@ -24,7 +24,7 @@ class PlanFormCubit extends Cubit<PlanFormState> {
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final PlanKeeperService _planKeeperService = GetIt.I<PlanKeeperService>();
 	final PlanRepeatabilityService _repeatabilityService = GetIt.I<PlanRepeatabilityService>();
-	final AppFormArgument argument;
+	final PlanFormParams argument;
 
   PlanFormCubit(this.argument, this._activeUser) : super(PlanFormInitial(argument?.type ?? AppFormType.create, argument?.id));
 

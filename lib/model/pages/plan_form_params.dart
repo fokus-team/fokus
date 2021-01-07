@@ -3,10 +3,10 @@ import 'package:mongo_dart/mongo_dart.dart';
 
 enum AppFormType { create, edit, copy }
 
-class AppFormArgument {
+class PlanFormParams {
 	final AppFormType type;
 	final ObjectId id;
 	final Date date;
 
-	AppFormArgument({this.type, this.id, this.date});
+	PlanFormParams({this.type, this.id, this.date});
 }

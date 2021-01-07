@@ -412,7 +412,8 @@
 					"mandatoryTasks": "Mandatory tasks",
 					"additionalTasks": "Additional tasks",
 					"noTasks": "No tasks",
-					"copyPlanButton": "Copy plan"
+					"copyPlanButton": "Copy plan",
+					"planRemovedText": "Plan has been removed"
 				}
 			},
 			"rating":  {
@@ -513,11 +514,18 @@
 						"rating" : "{RATING}/5",
 						"rejectedTooltip" : "Task has been rejected by caregiver",
 						"notEvaluatedTooltip" : "Ask caregiver to rate task",
-						"pointsPossible" : "Max points to earn"
+						"pointsPossible" : "Max points to earn",
+						"timer": "Plan execution time"
 					},
 					"taskInProgressDialog" : {
 						"title": "Different task in progress",
 						"content": "You can't perform two tasks at the same time. Complete the current one and try again."
+					},
+					"fab" : {
+						"completePlan": "Complete plan",
+						"completed": "Plan has been completed",
+						"dialogTitle": "Completing the plan",
+						"dialogContent": "Completion of the plan will result in the discarding of incomplete tasks. You will be able to do them again by the end of the day. Are you sure you want to continue?"
 					}
 				}
 			},
@@ -731,7 +739,8 @@
 		"badge_creation": "Badge creation",
 		"plan_info": "Plans",
 		"currencies": "Currencies",
-		"friends": "Friends"
+		"friends": "Friends",
+		"rating": "Task rating"
 	},
 	"assignedTo": "Assigned to",
 	"points": "Points",

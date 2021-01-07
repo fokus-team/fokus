@@ -33,10 +33,9 @@ class ChildSignUpCubit extends ChildAuthCubitBase<ChildSignUpState> {
 	  var child = Child.create(name: state.name.value, avatar: state.avatar, connections: [caregiverId]);
 	  child.id = await dataRepository.createUser(child);
 	  await dataRepository.updateUser(caregiverId, newConnections: [child.id]);
-	  if (!codeFixed()) {
-		  appConfigRepository.saveChildProfile(child.id);
+	  appConfigRepository.saveChildProfile(child.id);
+	  if (!codeFixed())
 		  authenticationBloc.add(AuthenticationChildSignInRequested(child));
-	  }
 	  emit(state.copyWith(status: FormzStatus.submissionSuccess));
   }
 

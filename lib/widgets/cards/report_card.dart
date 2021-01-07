@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/logic/caregiver/tasks_evaluation/tasks_evaluation_cubit.dart';
+import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/ui/task/ui_task_report.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/duration_utils.dart';
@@ -12,9 +13,8 @@ import 'package:intl/intl.dart';
 class ReportCard extends StatefulWidget {
 	final UITaskReport report;
 	final bool hideBottomBar;
-	final Function returnCallback;
 
-	ReportCard({@required this.report, this.hideBottomBar = false, this.returnCallback});
+	ReportCard({@required this.report, this.hideBottomBar = false});
 
   @override
   _ReportCardState createState() => new _ReportCardState();
@@ -88,6 +88,7 @@ class _ReportCardState extends State<ReportCard> {
 					Tooltip(
 						message: AppLocales.of(context).translate('$_pageKey.raportCard.carriedOutBy'),
 						child: ListTile(
+							onTap: () => Navigator.of(context).pushNamed(AppPage.caregiverChildDashboard.name, arguments: {'child': widget.report.child}),
 							leading: AppAvatar(widget.report.child.avatar, size: 48.0),
 							title: Text(widget.report.child.name),
 							visualDensity: VisualDensity.compact
@@ -177,7 +178,6 @@ class _ReportCardState extends State<ReportCard> {
 							padding: EdgeInsets.symmetric(vertical: 8.0),
 							colorBrightness: Brightness.dark,
 							onPressed: () async {
-								widget.returnCallback();
 								Navigator.of(context).push(MaterialPageRoute(
 									builder: (context) => ReportForm(
 										report: widget.report,

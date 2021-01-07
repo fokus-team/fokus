@@ -21,8 +21,9 @@ class TaskAppHeader extends StatefulWidget with PreferredSizeWidget {
 	final String helpPage;
 	final Function breakPerformingTransition;
 	final TaskInstanceLoaded state;
+	final dynamic popArgs;
 
-	TaskAppHeader({Key key, @required this.height, @required this.state, this.title, this.content, this.helpPage,this.breakPerformingTransition}) : super(key: key);
+	TaskAppHeader({Key key, @required this.height, @required this.state, this.title, this.content, this.helpPage,this.breakPerformingTransition, this.popArgs}) : super(key: key);
 
 	@override
 	Size get preferredSize => Size.fromHeight(height);
@@ -57,7 +58,8 @@ class TaskAppHeaderState extends State<TaskAppHeader> with TickerProviderStateMi
 						title: this.widget.title,
 						content: this.widget.content,
 						helpPage: this.widget.helpPage,
-						isConstrained: true
+						isConstrained: true,
+						popArgs: widget.popArgs
 					),
 					if(this.widget.state.taskInstance != null)
 					...[
@@ -103,7 +105,8 @@ class TaskAppHeaderState extends State<TaskAppHeader> with TickerProviderStateMi
 								Text(AppLocales.of(context).translate('$_pageKey.content.pointsToGet')),
 								AttributeChip.withCurrency(
 									content: "+" + this.widget.state.taskInstance.points.quantity.toString(),
-									currencyType: this.widget.state.taskInstance.points.type
+									currencyType: this.widget.state.taskInstance.points.type,
+									tooltip: this.widget.state.taskInstance.points.title
 								)
 							]
 						) :

@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/model/db/user/user_role.dart';
 import 'package:fokus/model/ui/plan/ui_plan.dart';
 import 'package:fokus/model/ui/task/ui_task.dart';
+import 'package:fokus/utils/ui/snackbar_utils.dart';
 import 'package:fokus/widgets/loadable_bloc_builder.dart';
 import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/ui/gamification/ui_currency.dart';
@@ -168,6 +169,7 @@ class _PlanDetailsPageState extends State<PlanDetailsPage> {
 									await BlocProvider.of<PlanCubit>(context).deletePlan();
 									Navigator.of(context).pop();
 									Navigator.of(context).pop();
+									showSuccessSnackbar(context, '$_pageKey.content.planRemovedText');
 								},
 								confirmColor: Colors.red
 							)

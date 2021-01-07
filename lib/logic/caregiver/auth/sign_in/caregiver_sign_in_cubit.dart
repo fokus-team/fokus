@@ -15,7 +15,7 @@ class CaregiverSignInCubit extends CaregiverAuthCubitBase<CaregiverSignInState> 
 	Future<void> logInWithCredentials() async {
 		if (!_validateFields())
 			return false;
-		emit(state.copyWith(status: FormzStatus.submissionInProgress));
+		emit(state.copyWith(status: FormzStatus.submissionInProgress, authMethod: AuthMethod.EMAIL));
 		try {
 			await authenticationProvider.signInWithEmail(
 				email: state.email.value,

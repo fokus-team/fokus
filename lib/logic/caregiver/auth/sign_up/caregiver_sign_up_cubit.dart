@@ -19,7 +19,7 @@ class CaregiverSignUpCubit extends CaregiverAuthCubitBase<CaregiverSignUpState> 
 		  emit(state);
 		  return;
 	  }
-	  emit(state.copyWith(status: FormzStatus.submissionInProgress));
+	  emit(state.copyWith(status: FormzStatus.submissionInProgress, authMethod: AuthMethod.EMAIL));
 	  try {
 		  await authenticationProvider.signUpWithEmail(
 			  email: state.email.value,

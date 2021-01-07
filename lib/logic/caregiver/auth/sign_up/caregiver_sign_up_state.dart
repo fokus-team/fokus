@@ -15,12 +15,14 @@ class CaregiverSignUpState extends CaregiverAuthStateBase {
 		this.signUpError,
 		EmailSignInError signInError,
 		FormzStatus status = FormzStatus.pure,
-	}) : super(status, signInError);
+		AuthMethod authMethod
+	}) : super(status, signInError, authMethod);
 
 	@override
 	List<Object> get props => super.props..addAll([name, email, password, confirmedPassword, signUpError]);
 
-	CaregiverSignUpState copyWith({Name name, Email email, Password password, ConfirmedPassword confirmedPassword, EmailSignInError signInError, EmailSignUpError signUpError, FormzStatus status}) {
+	CaregiverSignUpState copyWith({Name name, Email email, Password password, ConfirmedPassword confirmedPassword,
+			EmailSignInError signInError, EmailSignUpError signUpError, FormzStatus status, AuthMethod authMethod}) {
 		return CaregiverSignUpState(
 			name: name ?? this.name,
 			email: email ?? this.email,
@@ -28,7 +30,8 @@ class CaregiverSignUpState extends CaregiverAuthStateBase {
 			confirmedPassword: confirmedPassword ?? this.confirmedPassword,
 			status: status ?? this.status,
 			signUpError: signUpError,
-			signInError: signInError
+			signInError: signInError,
+			authMethod: authMethod ?? this.authMethod
 		);
 	}
 }

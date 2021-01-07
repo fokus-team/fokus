@@ -4,6 +4,7 @@ import 'package:fokus/utils/ui/snackbar_utils.dart';
 import 'package:fokus/utils/ui/theme_config.dart';
 import 'package:fokus/widgets/auth/auth_button.dart';
 import 'package:fokus/widgets/auth/auth_widgets.dart';
+import 'package:fokus_auth/fokus_auth.dart';
 import 'package:formz/formz.dart';
 
 import 'package:fokus/logic/caregiver/auth/sign_up/caregiver_sign_up_cubit.dart';
@@ -27,7 +28,7 @@ class CaregiverSignUpPage extends StatelessWidget {
 				  listener: (context, state) {
 					  if (state.status.isSubmissionFailure && (state.signInError != null || state.signUpError != null))
 							showFailSnackbar(context, state.signUpError?.key ?? state.signInError.key);
-					  else if (state.status.isSubmissionSuccess)
+					  else if (state.status.isSubmissionSuccess && state.authMethod == AuthMethod.EMAIL)
 					  	showSuccessSnackbar(context, 'authentication.emailVerificationSent');
 				  },
 					child: ListView(

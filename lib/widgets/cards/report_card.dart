@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/logic/caregiver/tasks_evaluation/tasks_evaluation_cubit.dart';
+import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/ui/task/ui_task_report.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/duration_utils.dart';
@@ -87,6 +88,7 @@ class _ReportCardState extends State<ReportCard> {
 					Tooltip(
 						message: AppLocales.of(context).translate('$_pageKey.raportCard.carriedOutBy'),
 						child: ListTile(
+							onTap: () => Navigator.of(context).pushNamed(AppPage.caregiverChildDashboard.name, arguments: {'child': widget.report.child}),
 							leading: AppAvatar(widget.report.child.avatar, size: 48.0),
 							title: Text(widget.report.child.name),
 							visualDensity: VisualDensity.compact

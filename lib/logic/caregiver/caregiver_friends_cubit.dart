@@ -40,6 +40,11 @@ class CaregiverFriendsCubit extends Cubit<CaregiverFriendsState> with UserCodeVe
 		}
   }
 
+	Future clearCode() async {
+	  var state = this.state;
+		emit(state.copyWith(caregiverCode: UserCode.pure('')));
+	}
+
   Future<CaregiverFriendsState> _validateFields() async {
 	  var state = this.state;
 	  var caregiverField = UserCode.dirty(state.caregiverCode.value.trim());

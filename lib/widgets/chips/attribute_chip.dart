@@ -12,10 +12,11 @@ class AttributeChip extends StatelessWidget {
 	final Color color;
 	final Widget icon;
 	final String tooltip;
+	final bool isDefaultPoints;
 
 	final Color defaultColor = Colors.grey[200];
 
-	AttributeChip({this.content, this.color, this.icon, this.tooltip});
+	AttributeChip({this.content, this.color, this.icon, this.tooltip, this.isDefaultPoints = false});
 
 	AttributeChip.withIcon({
 		String content,
@@ -37,14 +38,28 @@ class AttributeChip extends StatelessWidget {
 		content: content,
 		color: AppColors.currencyColor[currencyType],
 		icon: SvgPicture.asset(AssetType.currencies.getPath(currencyType.index), width: 22, fit: BoxFit.cover),
-		tooltip: tooltip
+		tooltip: tooltip,
+		isDefaultPoints: currencyType == CurrencyType.diamond
 	);
+
+	String tooltipMessage(BuildContext context) {
+		String message;
+		if(isDefaultPoints) {
+			message = AppLocales.of(context).translate('points');
+		} else if (tooltip != null) {
+			message = tooltip;
+		} else if (content != null) {
+			message = content;
+		} else {
+			message = AppLocales.of(context).translate('alert.noHint');
+		}
+		return message;
+	}
 
 	@override
 	Widget build(BuildContext context) {
 		return Tooltip(
-			message: (tooltip != null) ? AppLocales.of(context).translate(tooltip) : 
-				(content != null) ? content : AppLocales.of(context).translate('alert.noHint'),
+			message: tooltipMessage(context), 
 			child: Chip(
 				avatar: icon,
 				materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,

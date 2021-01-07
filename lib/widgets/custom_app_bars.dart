@@ -243,7 +243,7 @@ class _CustomChildAppBarState extends State<CustomChildAppBar> {
 												style: Theme.of(context).textTheme.button.copyWith(color: AppColors.darkTextColor)
 											),
 										for (UIPoints pointCurrency in points)
-											AttributeChip.withCurrency(content: '${pointCurrency.quantity}', currencyType: pointCurrency.type)
+											AttributeChip.withCurrency(content: '${pointCurrency.quantity}', currencyType: pointCurrency.type, tooltip: pointCurrency.title)
 									]
 								)
 							);

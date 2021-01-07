@@ -187,7 +187,8 @@
 					"plansOnDateTitle": "Plany na dzień {DATE}",
 					"noPlansOnDateTitle": "Brak aktywnych planów na ten dzień",
 					"planAssignedToSubtitle": "Przypisany do",
-					"planNotAssignedToSubtitle": "Plan nieprzypisany"
+					"planNotAssignedToSubtitle": "Plan nieprzypisany",
+					"addPlan": "Dodaj plan"
 				}
 			},
 			"friendPlans": {

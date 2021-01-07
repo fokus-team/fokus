@@ -19,6 +19,10 @@ import 'package:fokus/widgets/general/app_loader.dart';
 enum PlanFormStep { planParameters, taskList }
 
 class CaregiverPlanFormPage extends StatefulWidget {
+	final DateTime calendarDate;
+
+  const CaregiverPlanFormPage({Key key, this.calendarDate}) : super(key: key);
+
 	@override
 	_CaregiverPlanFormPageState createState() => new _CaregiverPlanFormPageState();
 }
@@ -50,6 +54,15 @@ class _CaregiverPlanFormPageState extends State<CaregiverPlanFormPage> {
 			BlocProvider.of<PlanFormCubit>(context).submitPlanForm(plan);
 		}
 	}
+
+	@override
+  void initState() {
+    super.initState();
+    if(widget.calendarDate != null) {
+			plan.onlyOnceDate = widget.calendarDate;
+			plan.repeatability = PlanFormRepeatability.onlyOnce;
+		}
+  }
 
 	@override
 	Widget build(BuildContext context) {

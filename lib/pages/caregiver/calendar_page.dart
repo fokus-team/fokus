@@ -184,9 +184,7 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 
 	void onDayChanged(DateTime day, List<dynamic> events, List<dynamic> holidays) {
 		setState(() {
-			if(Date.fromDate(day).isAtSameMomentAs(Date.fromDate(DateTime.now())) || Date.fromDate(day).isAfter(Date.fromDate(DateTime.now())))
-				canAddPlan = true;
-			else canAddPlan = false;
+			canAddPlan = Date.fromDate(day) >= Date..now()
 		});
 		BlocProvider.of<CalendarCubit>(context).dayChanged(Date.fromDate(day));
 		_animationController.forward(from: 0.0);

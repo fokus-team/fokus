@@ -57,7 +57,7 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 						return false;
 					},
 				  child: Scaffold(
-				  	appBar: isInitial ? _getHeader(TaskInstanceLoaded(null, BlocProvider.of<TaskInstanceCubit>(context).uiPlanInstance)) : _getHeader(state),
+				  	appBar: isInitial ? _getHeader(TaskInstanceLoaded(null, (state as TaskInstanceStateInitial).planInstance)) : _getHeader(state),
 				  	body: isInitial ? Center(child: AppLoader())
 				  		: Padding(
 				  		padding: EdgeInsets.only(bottom: 0.0),

@@ -22,7 +22,7 @@ class PlanInstanceCubit extends ReloadableCubit {
 	final UIDataAggregator _dataAggregator = GetIt.I<UIDataAggregator>();
 	UIPlanInstance uiPlanInstance;
 
-	PlanInstance planInstance;
+	PlanInstance _planInstance;
 
 	PlanInstanceCubit(this.uiPlanInstance, ModalRoute modalRoute) : super(modalRoute);
 
@@ -31,10 +31,10 @@ class PlanInstanceCubit extends ReloadableCubit {
 
 	@override
 	void doLoadData() async {
-		planInstance = await _dataRepository.getPlanInstance(id: uiPlanInstance.id);
-		if(planInstance.taskInstances == null || planInstance.taskInstances.isEmpty)
-			_taskInstancesService.createTaskInstances(planInstance);
-		uiPlanInstance = await _dataAggregator.loadPlanInstance(planInstance: planInstance);
+		_planInstance = await _dataRepository.getPlanInstance(id: uiPlanInstance.id);
+		if(_planInstance.taskInstances == null || _planInstance.taskInstances.isEmpty)
+			_taskInstancesService.createTaskInstances(_planInstance);
+		uiPlanInstance = await _dataAggregator.loadPlanInstance(planInstance: _planInstance);
 		var allTasksInstances = await _dataRepository.getTaskInstances(planInstanceId: uiPlanInstance.id);
 
 		List<UITaskInstance> uiInstances = await _taskInstancesService.mapToUIModels(allTasksInstances);
@@ -43,7 +43,7 @@ class PlanInstanceCubit extends ReloadableCubit {
 
 
 	Future<bool> isOtherPlanInProgressDbCheck({ObjectId tappedTaskInstance}) async {
-		PlanInstance activePlanInstance = await _dataRepository.getPlanInstance(childId: planInstance.assignedTo, state: PlanInstanceState.active, fields: ["_id"]);
+		PlanInstance activePlanInstance = await _dataRepository.getPlanInstance(childId: _planInstance.assignedTo, state: PlanInstanceState.active, fields: ["_id"]);
 		if(activePlanInstance != null) {
 			List<TaskInstance> taskInstances = await _dataRepository.getTaskInstances(planInstanceId: activePlanInstance.id);
 			for(var instance in taskInstances) {
@@ -58,7 +58,7 @@ class PlanInstanceCubit extends ReloadableCubit {
 
 	void completePlan() async {
 		List<Future> updates = [];
-		planInstance.state = PlanInstanceState.completed;
+		_planInstance.state = PlanInstanceState.completed;
 		var allTasksInstances = await _dataRepository.getTaskInstances(planInstanceId: uiPlanInstance.id);
 		List<TaskInstance> updatedTaskInstances = [];
 		for(var taskInstance in allTasksInstances) {
@@ -77,15 +77,15 @@ class PlanInstanceCubit extends ReloadableCubit {
 			}
 			updatedTaskInstances.add(taskInstance);
 		}
-		if(isInProgress(planInstance.duration)) {
-			planInstance.duration.last.to =  TimeDate.now();
-			updates.add(_dataRepository.updatePlanInstanceFields(planInstance.id, state: PlanInstanceState.completed, duration: planInstance.duration));
+		if(isInProgress(_planInstance.duration)) {
+			_planInstance.duration.last.to =  TimeDate.now();
+			updates.add(_dataRepository.updatePlanInstanceFields(_planInstance.id, state: PlanInstanceState.completed, duration: _planInstance.duration));
 		}
-		else updates.add(_dataRepository.updatePlanInstanceFields(planInstance.id, state: PlanInstanceState.completed));
+		else updates.add(_dataRepository.updatePlanInstanceFields(_planInstance.id, state: PlanInstanceState.completed));
 		List<UITaskInstance> uiInstances = await _taskInstancesService.mapToUIModels(updatedTaskInstances);
 
 		Future.wait(updates);
-		uiPlanInstance = await _dataAggregator.loadPlanInstance(planInstance: planInstance);
+		uiPlanInstance = await _dataAggregator.loadPlanInstance(planInstanceId: _planInstance.id);
 		emit(ChildTasksLoadSuccess(uiInstances, uiPlanInstance));
 	}
 }

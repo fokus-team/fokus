@@ -51,7 +51,7 @@ class _PlanDetailsPageState extends State<PlanDetailsPage> {
 			elevation: 4.0,
 			icon: Icon(Icons.control_point_duplicate),
 			label: Text(AppLocales.of(context).translate('$_pageKey.content.copyPlanButton')),
-			onPressed: () => Navigator.of(context).pushNamed(AppPage.caregiverPlanForm.name, arguments: AppFormArgument(type: AppFormType.copy, id: state.uiPlan.id)),
+			onPressed: () => Navigator.of(context).pushNamed(AppPage.caregiverPlanForm.name, arguments: {"type": AppFormArgument(type: AppFormType.copy, id: state.uiPlan.id)}),
 		) : SizedBox.shrink();
 	}
 
@@ -145,7 +145,7 @@ class _PlanDetailsPageState extends State<PlanDetailsPage> {
 				items: [
 					UIButton.ofType(ButtonType.edit, () => Navigator.of(context).pushNamed(
 							AppPage.caregiverPlanForm.name,
-							arguments: AppFormArgument(type: AppFormType.edit, id: plan.id)
+							arguments: {"type": AppFormArgument(type: AppFormType.edit, id: plan.id)}
 						),
 						null, Icons.edit
 					),

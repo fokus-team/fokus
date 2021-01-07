@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:fokus/model/db/date/date.dart';
 import 'package:fokus/model/ui/form/task_form_model.dart';
 import 'package:fokus/services/plan_keeper_service.dart';
 import 'package:get_it/get_it.dart';
@@ -24,13 +25,18 @@ class PlanFormCubit extends Cubit<PlanFormState> {
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final PlanKeeperService _planKeeperService = GetIt.I<PlanKeeperService>();
 	final PlanRepeatabilityService _repeatabilityService = GetIt.I<PlanRepeatabilityService>();
+	final Date _date;
 
-  PlanFormCubit(AppFormArgument argument, this._activeUser) : super(PlanFormInitial(argument?.type ?? AppFormType.create, argument?.id));
+  PlanFormCubit(AppFormArgument argument, this._activeUser, this._date) : super(PlanFormInitial(argument?.type ?? AppFormType.create, argument?.id));
 
   void loadFormData() async {
 	  var user = _activeUser();
 		var children = await _dataRepository.getUsers(role: UserRole.child, connected: user.id);
-	  var planForm = state.formType == AppFormType.create ? PlanFormModel() : await _fillPlanFormModel();
+		var planForm;
+		if(_date != null) {
+			planForm = _createPlanFOrmModelWithDate();
+		}
+	  else planForm = state.formType == AppFormType.create ? PlanFormModel() : await _fillPlanFormModel();
 		emit(PlanFormDataLoadSuccess(state, children.map((child) => UIChild.fromDBModel(child)).toList(), (user as UICaregiver).currencies, planForm));
   }
 
@@ -70,4 +76,11 @@ class PlanFormCubit extends Cubit<PlanFormState> {
 		}
 		return model;
   }
+
+	PlanFormModel _createPlanFOrmModelWithDate() {
+  	var model = PlanFormModel();
+  	model.repeatability = PlanFormRepeatability.onlyOnce;
+  	model.onlyOnceDate = _date;
+  	return model;
+	}
 }

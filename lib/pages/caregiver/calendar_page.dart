@@ -104,7 +104,7 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 				]
 			),
 			floatingActionButton: canAddPlan ? FloatingActionButton.extended(
-				onPressed: () => Navigator.of(context).pushNamed(AppPage.caregiverPlanForm.name, arguments: _calendarController.focusedDay),
+				onPressed: () => Navigator.of(context).pushNamed(AppPage.caregiverPlanForm.name, arguments: {"date": Date.fromDate(_calendarController.focusedDay)}),
 				label: Text(AppLocales.of(context).translate('$_pageKey.content.addPlan')),
 				icon: Icon(Icons.insert_invitation),
 				backgroundColor: Colors.lightBlue,

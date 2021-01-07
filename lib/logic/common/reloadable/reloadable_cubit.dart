@@ -11,11 +11,17 @@ import 'package:fokus/services/observers/data_update_observer.dart';
 
 part 'loadable_state.dart';
 
+enum ReloadableOption {
+	doNotReloadOnPopNext
+}
+
 abstract class ReloadableCubit extends Cubit<LoadableState> with DataUpdateObserver implements RouteAware {
 	final _routeObserver = GetIt.I<AppRouteObserver>();
 	final NotificationService _notificationService = GetIt.I<NotificationService>();
+	@protected
+	final List<ReloadableOption> options;
 
-  ReloadableCubit(ModalRoute pageRoute) : super(DataLoadInitial()) {
+  ReloadableCubit(ModalRoute pageRoute, {this.options = const []}) : super(DataLoadInitial()) {
 	  _subscribeToUserChanges();
 	  _routeObserver.subscribe(this, pageRoute);
   }
@@ -48,7 +54,8 @@ abstract class ReloadableCubit extends Cubit<LoadableState> with DataUpdateObser
 	@override
 	void didPopNext() {
 		_subscribeToUserChanges();
-	  reload();
+		if (!options.contains(ReloadableOption.doNotReloadOnPopNext))
+	    reload();
 	}
 
 	@override

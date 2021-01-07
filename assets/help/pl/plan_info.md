@@ -1,0 +1,1 @@
+Plan to zbiór tematycznie powiązanych zadań do wykonania. Jeden plan może być przypisany do wielu dzieci. W skład listy zadań wchodzą zadania obowiązkowe z określoną kolejnością wykonywania oraz zadania opcjonalne.

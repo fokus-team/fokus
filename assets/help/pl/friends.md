@@ -1,0 +1,1 @@
+Na profilu znajomego wyświetlane są stworzone przez niego plany. Każdy z nich możesz zduplikować, rozbudować i zapisać jako swój plan. Po kliknięciu przycisku “*Skopiuj plan*” zostaniesz przekierowana/y do formularza tworzenia planu z uzupełnioną listą zadań. Pamiętaj, że będąc kogoś znajomym udostępniasz swoje plany innym.

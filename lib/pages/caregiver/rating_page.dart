@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:fokus/logic/caregiver/tasks_evaluation/tasks_evaluation_cubit.dart';
 import 'package:fokus/model/ui/task/ui_task_report.dart';
-
-
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/ui/theme_config.dart';
+import 'package:fokus/widgets/buttons/help_icon_button.dart';
 import 'package:fokus/widgets/cards/report_card.dart';
 import 'package:fokus/widgets/general/app_hero.dart';
 import 'package:fokus/widgets/loadable_bloc_builder.dart';
+
 
 class CaregiverRatingPage extends StatefulWidget {
   @override
@@ -19,7 +19,6 @@ class _CaregiverRatingPageState extends State<CaregiverRatingPage> {
 	static const String _pageKey = 'page.caregiverSection.rating';
 	CarouselController _carouselController;
 	int _currentRaport = 0;
-
 	List<UITaskReport> reports = [];
 
 	@override
@@ -28,6 +27,7 @@ class _CaregiverRatingPageState extends State<CaregiverRatingPage> {
 		_carouselController = CarouselController();
   }
 
+
   @override
   Widget build(BuildContext context) {
 		return Scaffold(
@@ -35,7 +35,10 @@ class _CaregiverRatingPageState extends State<CaregiverRatingPage> {
 			appBar: AppBar(
 				title: Text(AppLocales.of(context).translate('$_pageKey.header.title')),
 				backgroundColor: Colors.transparent,
-				elevation: 0.0
+				elevation: 0.0,
+				actions: <Widget>[
+					HelpIconButton(helpPage: 'rating')
+				]
 			),
 			body: LoadableBlocBuilder<TasksEvaluationCubit>(
 				builder: (context, state) {
@@ -54,7 +57,7 @@ class _CaregiverRatingPageState extends State<CaregiverRatingPage> {
 						  )
 				    ]
 					);
-        }
+				}
 			)
 		);
 	}

@@ -67,7 +67,7 @@ Segment _getPlansSegment({BuildContext context, List<UIPlanInstance> plans, Stri
 					isActive: plan.state != PlanInstanceState.completed,
 					title: plan.name,
 					subtitle: plan.description(context),
-					progressPercentage: plan.state.inProgress ? plan.completedTaskCount / plan.taskCount : null,
+					progressPercentage: (plan.state.inProgress || plan.state.ended) ? plan.completedTaskCount / plan.taskCount : null,
 					chips: _getTaskChipForPlan(context, plan, displayTimer),
 					onTapped: () => Navigator.of(context).pushNamed(AppPage.planInstanceDetails.name, arguments: {'plan': plan, 'actions': userRole == UserRole.child})
 				)

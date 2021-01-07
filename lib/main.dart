@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:fokus/logic/caregiver/caregiver_friends_cubit.dart';
@@ -118,6 +119,7 @@ class _FokusAppState extends State<FokusApp> implements CurrentLocaleObserver {
 			routes: _createRoutes(),
 			onGenerateRoute: _onGenerateRoute,
 
+			themeMode: ThemeMode.light,
 			theme: _createAppTheme(),
 			builder: _authenticationGateBuilder
 		);
@@ -219,10 +221,10 @@ class _FokusAppState extends State<FokusApp> implements CurrentLocaleObserver {
 
 	ThemeData _createAppTheme() {
 		return ThemeData(
+			brightness: Brightness.light,
 			primaryColor: AppColors.mainBackgroundColor,
 			fontFamily: 'Lato',
 			textTheme: TextTheme(
-				// Will probably change over time
 				headline1: TextStyle(fontSize: 26.0, fontWeight: FontWeight.bold, color: AppColors.darkTextColor), // Scaffold/appbar headline
 				headline2: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold, color: AppColors.darkTextColor), // Main headline before lists
 				headline3: TextStyle(fontSize: 20.0, fontWeight: FontWeight.normal, color: AppColors.darkTextColor), //For headers inside list elements

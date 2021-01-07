@@ -58,7 +58,7 @@ class RewardItemCard extends StatelessWidget {
 					AttributeChip.withCurrency(
 						currencyType: reward.cost.type,
 						content: reward.cost.quantity.toString(),
-						tooltip: '$_rewardsKey.claimCostLabel'
+						tooltip: AppLocales.of(context).translate('$_rewardsKey.claimCostLabel')
 					)
 			],
 			isActive: active
@@ -82,7 +82,7 @@ class ChildItemCard extends StatelessWidget {
 				graphic: child.avatar,
 				chips: <Widget>[
 					for (UIPoints pointCurrency in child.points)
-						AttributeChip.withCurrency(content: '${pointCurrency.quantity}', currencyType: pointCurrency.type)
+						AttributeChip.withCurrency(content: '${pointCurrency.quantity}', currencyType: pointCurrency.type, tooltip: pointCurrency.title)
 				]
 		);
 	}

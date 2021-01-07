@@ -278,6 +278,7 @@ const String _panelPageKey = 'page.caregiverSection.panel';
 class AddFriendDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+		BlocProvider.of<CaregiverFriendsCubit>(context).clearCode();
     return BlocListener<CaregiverFriendsCubit, CaregiverFriendsState>(
 	    listener: (context, state) {
 		    if (state.status.isSubmissionSuccess) {

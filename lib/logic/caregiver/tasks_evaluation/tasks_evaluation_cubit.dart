@@ -33,7 +33,7 @@ class TasksEvaluationCubit extends ReloadableCubit {
 	Map<ObjectId, UIChild> _planInstanceToChild;
 	Map<ObjectId, String> _planInstanceToName;
 
-	TasksEvaluationCubit(ModalRoute pageRoute, this._activeUser) : super(pageRoute);
+	TasksEvaluationCubit(ModalRoute pageRoute, this._activeUser) : super(pageRoute, options: [ReloadableOption.doNotReloadOnPopNext]);
 
   @override
   List<NotificationType> dataTypeSubscription() => [NotificationType.taskFinished];
@@ -62,6 +62,7 @@ class TasksEvaluationCubit extends ReloadableCubit {
 	}
 
 	void rateTask(UITaskReport report) async {
+		emit(TasksEvaluationSubmissionInProgress(_reports));
 		List<Future> updates = [];
 		Future Function() sendNotification;
 		if(report.ratingMark == UITaskReportMark.rejected) {
@@ -90,7 +91,7 @@ class TasksEvaluationCubit extends ReloadableCubit {
 		}
 		await Future.wait(updates);
 		await sendNotification();
-		emit(TasksEvaluationSubmissionSuccess(_reports));
+		emit(TasksEvaluationLoadSuccess(_reports));
 	}
 
 	static int getPointsAwarded(int quantity, int ratingMark) => max((quantity*ratingMark/5).round(), 1);

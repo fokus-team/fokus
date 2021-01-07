@@ -33,7 +33,7 @@ class TasksEvaluationCubit extends ReloadableCubit {
 	Map<ObjectId, UIChild> _planInstanceToChild;
 	Map<ObjectId, String> _planInstanceToName;
 
-	TasksEvaluationCubit(ModalRoute pageRoute, this._activeUser) : super(pageRoute);
+	TasksEvaluationCubit(ModalRoute pageRoute, this._activeUser) : super(pageRoute, options: [ReloadableOption.doNotReloadOnPopNext]);
 
   @override
   List<NotificationType> dataTypeSubscription() => [NotificationType.taskFinished];

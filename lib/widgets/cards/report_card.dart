@@ -177,7 +177,7 @@ class _ReportCardState extends State<ReportCard> {
 							materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
 							padding: EdgeInsets.symmetric(vertical: 8.0),
 							colorBrightness: Brightness.dark,
-							onPressed: () { 
+							onPressed: () async {
 								Navigator.of(context).push(MaterialPageRoute(
 									builder: (context) => ReportForm(
 										report: widget.report,

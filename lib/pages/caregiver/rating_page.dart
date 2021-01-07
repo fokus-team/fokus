@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:fokus/logic/caregiver/tasks_evaluation/tasks_evaluation_cubit.dart';
@@ -20,8 +18,6 @@ class _CaregiverRatingPageState extends State<CaregiverRatingPage> {
 	static const String _pageKey = 'page.caregiverSection.rating';
 	CarouselController _carouselController;
 	int _currentRaport = 0;
-	bool isReturning = false;
-
 	List<UITaskReport> reports = [];
 
 	@override
@@ -30,16 +26,6 @@ class _CaregiverRatingPageState extends State<CaregiverRatingPage> {
 		_carouselController = CarouselController();
   }
 
-  void _returnCallback() {
-		isReturning = true;
-	}
-
-	void _animateAfterReturn() {
-		if(isReturning && _carouselController.ready) {
-			_carouselController.animateToPage(_currentRaport, duration: Duration(milliseconds: min(max(_currentRaport*100, 500), 2000)));
-			isReturning = false;
-		}
-	}
 
   @override
   Widget build(BuildContext context) {
@@ -73,8 +59,6 @@ class _CaregiverRatingPageState extends State<CaregiverRatingPage> {
 	}
 
 	Widget _buildCarousel() {
-		WidgetsBinding.instance
-			.addPostFrameCallback((_) => _animateAfterReturn());
 		int notRatedCount = reports.where((element) => element.ratingMark == UITaskReportMark.notRated).length;
 		return Column(
 			children: [
@@ -137,7 +121,7 @@ class _CaregiverRatingPageState extends State<CaregiverRatingPage> {
 						items: reports.map((report) => 
 							Hero(
 								tag: report.task.id.toString() + report.task.duration.last.to.toString(),
-								child: ReportCard(report: report, returnCallback: _returnCallback)
+								child: ReportCard(report: report)
 							)
 						).toList()
 					)

@@ -62,6 +62,7 @@ class TasksEvaluationCubit extends ReloadableCubit {
 	}
 
 	void rateTask(UITaskReport report) async {
+		emit(TasksEvaluationSubmissionInProgress(_reports));
 		List<Future> updates = [];
 		Future Function() sendNotification;
 		if(report.ratingMark == UITaskReportMark.rejected) {
@@ -90,6 +91,7 @@ class TasksEvaluationCubit extends ReloadableCubit {
 		}
 		await Future.wait(updates);
 		await sendNotification();
+		emit(TasksEvaluationLoadSuccess(_reports));
 	}
 
 	static int getPointsAwarded(int quantity, int ratingMark) => max((quantity*ratingMark/5).round(), 1);

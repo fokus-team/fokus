@@ -1,11 +1,11 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:fokus/model/db/gamification/reward.dart';
+import 'package:fokus/model/pages/plan_form_params.dart';
 import 'package:fokus/model/ui/form/reward_form_model.dart';
 import 'package:fokus/model/ui/user/ui_caregiver.dart';
 import 'package:get_it/get_it.dart';
 
-import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/ui/gamification/ui_currency.dart';
 import 'package:fokus/services/data/data_repository.dart';
 import 'package:fokus/model/ui/user/ui_user.dart';

@@ -81,7 +81,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 	  }
 	  user = await _dataRepository.getUser(authenticationId: event.user.id);
   	// Discard unverified email users
-  	if (event.user.authMethod == AuthMethod.EMAIL && !event.user.emailVerified) {
+  	if (event.user.authMethod == AuthMethod.EMAIL && !event.user.emailVerified && await _authenticationProvider.verificationEnforced()) {
   		if (user != null)
 		    showFailSnackbar(_navigatorKey.currentState.context, EmailSignInError.accountNotVerified.key);
 			_authenticationProvider.signOut();

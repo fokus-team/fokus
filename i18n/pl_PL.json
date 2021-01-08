@@ -697,7 +697,8 @@
 			"passwordEmpty": "Hasło nie może być puste",
 			"avatarEmpty": "Należy wybrać awatar dziecka",
 			"accountNotVerified": "Konto nie zostało zweryfikowane",
-			"emailLink": "Ten link {TYPE, select, 0 {resetujący hasło} 1 {weryfikujący konto} other {}} {ERR, select, 0 {jest nieprawidłowy} 1 {wygasł} other {}} - wygeneruj nowy"
+			"emailLink": "Ten link {TYPE, select, 0 {resetujący hasło} 1 {weryfikujący konto} other {}} {ERR, select, 0 {jest nieprawidłowy} 1 {wygasł} other {}} - wygeneruj nowy",
+			"accountAlreadyVerified": "Konto już zostało zweryfikowane"
 		}
 	},
 	"notification": {

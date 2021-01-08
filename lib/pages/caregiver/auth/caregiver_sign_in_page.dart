@@ -120,8 +120,11 @@ class CaregiverSignInPage extends StatelessWidget {
 				),
 				FlatButton(
 					onPressed: () async {
-						if (await context.read<CaregiverSignInCubit>().resendVerificationEmail())
+						var result = await context.read<CaregiverSignInCubit>().resendVerificationEmail();
+						if (result == VerificationAttemptOutcome.emailSent)
 							showSuccessSnackbar(context, 'authentication.emailVerificationSent');
+						else if (result == VerificationAttemptOutcome.accountAlreadyVerified)
+							showInfoSnackbar(context, 'authentication.error.accountAlreadyVerified');
 					},
 					child: buttonText('resetVerificationEmail')
 				),

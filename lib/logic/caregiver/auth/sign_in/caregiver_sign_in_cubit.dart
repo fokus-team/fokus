@@ -45,15 +45,15 @@ class CaregiverSignInCubit extends CaregiverAuthCubitBase<CaregiverSignInState> 
 	  return true;
   }
 
-  Future<bool> resendVerificationEmail() async {
+  Future<VerificationAttemptOutcome> resendVerificationEmail() async {
     if (!_validateFields())
-      return false;
+      return null;
     try {
-	    await authenticationProvider.sendEmailVerification(email: state.email.value, password: state.password.value);
+	    return await authenticationProvider.sendEmailVerification(email: state.email.value, password: state.password.value);
     } on SignInFailure catch (e) {
 	    emit(state.copyWith(status: FormzStatus.submissionFailure, signInError: e.reason));
+	    return null;
     }
-    return true;
   }
 
   bool _validateFields() {

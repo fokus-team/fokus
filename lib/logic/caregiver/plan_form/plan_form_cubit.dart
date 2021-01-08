@@ -1,10 +1,10 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:fokus/model/pages/plan_form_params.dart';
 import 'package:fokus/model/ui/form/task_form_model.dart';
 import 'package:fokus/services/plan_keeper_service.dart';
 import 'package:get_it/get_it.dart';
 
-import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/db/user/user_role.dart';
 import 'package:fokus/model/ui/gamification/ui_currency.dart';
 import 'package:fokus/model/ui/user/ui_caregiver.dart';
@@ -24,13 +24,18 @@ class PlanFormCubit extends Cubit<PlanFormState> {
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final PlanKeeperService _planKeeperService = GetIt.I<PlanKeeperService>();
 	final PlanRepeatabilityService _repeatabilityService = GetIt.I<PlanRepeatabilityService>();
+	final PlanFormParams argument;
 
-  PlanFormCubit(AppFormArgument argument, this._activeUser) : super(PlanFormInitial(argument?.type ?? AppFormType.create, argument?.id));
+  PlanFormCubit(this.argument, this._activeUser) : super(PlanFormInitial(argument?.type ?? AppFormType.create, argument?.id));
 
   void loadFormData() async {
 	  var user = _activeUser();
 		var children = await _dataRepository.getUsers(role: UserRole.child, connected: user.id);
-	  var planForm = state.formType == AppFormType.create ? PlanFormModel() : await _fillPlanFormModel();
+		var planForm;
+		if(argument?.date != null) {
+			planForm = _createPlanFormModelWithDate();
+		}
+	  else planForm = state.formType == AppFormType.create ? PlanFormModel() : await _fillPlanFormModel();
 		emit(PlanFormDataLoadSuccess(state, children.map((child) => UIChild.fromDBModel(child)).toList(), (user as UICaregiver).currencies, planForm));
   }
 
@@ -70,4 +75,11 @@ class PlanFormCubit extends Cubit<PlanFormState> {
 		}
 		return model;
   }
+
+	PlanFormModel _createPlanFormModelWithDate() {
+  	var model = PlanFormModel();
+  	model.repeatability = PlanFormRepeatability.onlyOnce;
+  	model.onlyOnceDate = argument.date;
+  	return model;
+	}
 }

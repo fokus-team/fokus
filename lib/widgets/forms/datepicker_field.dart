@@ -54,7 +54,7 @@ class _DatePickerFieldState extends State<DatePickerField> {
 			context: context,
 			helpText: widget.labelText,
 			fieldLabelText: widget.labelText,
-			firstDate: (widget.rangeDate != null && widget.rangeDate.from != null) ? widget.rangeDate.from : DateTime.now(),
+			firstDate: (widget.rangeDate != null && widget.rangeDate.from != null) ? widget.rangeDate.from : DateTime(2020),
 			lastDate: (widget.rangeDate != null && widget.rangeDate.to != null) ? widget.rangeDate.to : DateTime(2100),
 			initialDate: initial
 		);

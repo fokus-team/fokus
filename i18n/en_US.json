@@ -188,7 +188,8 @@
 					"plansOnDateTitle": "Plans on {DATE}",
 					"noPlansOnDateTitle": "No active plans on this day",
 					"planAssignedToSubtitle": "Assigned to",
-					"planNotAssignedToSubtitle": "Plan not assigned yet"
+					"planNotAssignedToSubtitle": "Plan not assigned yet",
+					"addPlan": "Add plan"
 				}
 			},
 			"friendPlans": {
@@ -520,6 +521,12 @@
 					"taskInProgressDialog" : {
 						"title": "Different task in progress",
 						"content": "You can't perform two tasks at the same time. Complete the current one and try again."
+					},
+					"fab" : {
+						"completePlan": "Complete plan",
+						"completed": "Plan has been completed",
+						"dialogTitle": "Completing the plan",
+						"dialogContent": "Completion of the plan will result in the discarding of incomplete tasks. You will be able to do them again by the end of the day. Are you sure you want to continue?"
 					}
 				}
 			},

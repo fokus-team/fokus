@@ -5,8 +5,12 @@ abstract class TaskInstanceState extends Equatable {
 }
 
 class TaskInstanceStateInitial extends TaskInstanceState {
-  @override
-  List<Object> get props => [];
+	final UIPlanInstance planInstance;
+
+  TaskInstanceStateInitial(this.planInstance);
+
+	@override
+  List<Object> get props => [planInstance];
 }
 
 class TaskInstanceInBreak extends TaskInstanceLoaded {

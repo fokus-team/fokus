@@ -19,7 +19,7 @@ class UIUser extends Equatable {
 	final List<ObjectId> connections;
 
 	UIUser(this.id, this.name, {this.locale, this.role, this.connections, this.avatar = -1});
-	UIUser.fromDBModel(User user) : this(user.id, user.name, role: user.role, connections: user.connections, avatar: user.avatar, locale: user.locale);
+	UIUser.fromDBModel(User user) : this(user.id, user.name, role: user.role, connections: user.connections ?? [], avatar: user.avatar, locale: user.locale);
 
 	factory UIUser.typedFromDBModel(User user, [AuthMethod authMethod, String photoURL]) => user.role == UserRole.caregiver ? UICaregiver.fromDBModel(user, authMethod, photoURL) : UIChild.fromDBModel(user);
 

@@ -3,6 +3,7 @@ import 'package:get_it/get_it.dart';
 import 'package:fokus_auth/fokus_auth.dart';
 
 import 'package:fokus/services/data/db/db_data_repository.dart';
+import 'package:fokus/services/app_route_observer.dart';
 import 'package:fokus/services/app_config/app_config_repository.dart';
 import 'package:fokus/services/app_config/app_shared_preferences_provider.dart';
 import 'package:fokus/services/data/data_repository.dart';
@@ -17,10 +18,10 @@ import 'package:fokus/services/links/firebase_link_service.dart';
 import 'package:fokus/services/links/link_service.dart';
 import 'package:fokus/services/instrumentator.dart';
 
-Future registerServices(GlobalKey<NavigatorState> navigatorKey, RouteObserver<PageRoute> routeObserver) {
+Future registerServices(GlobalKey<NavigatorState> navigatorKey, AppRouteObserver routeObserver) {
 	// Semi-services needed for context and navigation state sharing
 	GetIt.I.registerSingleton<GlobalKey<NavigatorState>>(navigatorKey);
-	GetIt.I.registerSingleton<RouteObserver<PageRoute>>(routeObserver);
+	GetIt.I.registerSingleton<AppRouteObserver>(routeObserver);
 
 	GetIt.I.registerSingleton<AuthenticationProvider>(AuthenticationProvider.instance);
 	GetIt.I.registerSingletonAsync<AppConfigRepository>(() => AppConfigRepository(AppSharedPreferencesProvider()).initialize());

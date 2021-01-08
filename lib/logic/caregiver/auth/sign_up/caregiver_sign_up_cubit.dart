@@ -19,7 +19,7 @@ class CaregiverSignUpCubit extends CaregiverAuthCubitBase<CaregiverSignUpState> 
 		  emit(state);
 		  return;
 	  }
-	  emit(state.copyWith(status: FormzStatus.submissionInProgress));
+	  emit(state.copyWith(status: FormzStatus.submissionInProgress, authMethod: AuthMethod.EMAIL));
 	  try {
 		  await authenticationProvider.signUpWithEmail(
 			  email: state.email.value,
@@ -50,4 +50,6 @@ class CaregiverSignUpCubit extends CaregiverAuthCubitBase<CaregiverSignUpState> 
   void passwordChanged(String value) => emit(state.copyWith(password: Password.pure(value), status: FormzStatus.pure));
 
   void confirmedPasswordChanged(String value) => emit(state.copyWith(confirmedPassword: state.confirmedPassword.copyPure(value: value), status: FormzStatus.pure));
+
+  Future<bool> verificationEnforced() => authenticationProvider.verificationEnforced();
 }

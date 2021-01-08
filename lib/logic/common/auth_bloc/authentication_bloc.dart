@@ -2,12 +2,15 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:fokus/services/instrumentator.dart';
-import 'package:fokus_auth/fokus_auth.dart';
+import 'package:flutter/widgets.dart';
 import 'package:logging/logging.dart';
 import 'package:get_it/get_it.dart';
 
 import 'package:fokus/model/db/user/child.dart';
+import 'package:fokus/services/instrumentator.dart';
+import 'package:fokus/utils/ui/snackbar_utils.dart';
+import 'package:fokus_auth/fokus_auth.dart';
+import 'package:fokus/services/exception/auth_exceptions.dart';
 import 'package:fokus/model/ui/user/ui_user.dart';
 import 'package:fokus/model/db/user/caregiver.dart';
 import 'package:fokus/model/db/user/user_role.dart';
@@ -30,6 +33,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 	final AuthenticationProvider _authenticationProvider = GetIt.I<AuthenticationProvider>();
 	final AppConfigRepository _appConfigRepository = GetIt.I<AppConfigRepository>();
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
+	final _navigatorKey = GetIt.I<GlobalKey<NavigatorState>>();
 
 	StreamSubscription<AuthenticatedUser> _userSubscription;
 	List<ActiveUserObserver> _userObservers = [];
@@ -63,19 +67,28 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 
 	Future<AuthenticationState> _processUserChangedEvent(AuthenticationUserChanged event) async {
   	User user;
-	  var noSignedInCaregiver = event.user == AuthenticatedUser.empty;
+	  var noSignedInUser = event.user == AuthenticatedUser.empty;
 	  var wasAppOpened = state.status == AuthenticationStatus.initial;
-	  if (noSignedInCaregiver && !wasAppOpened)
+	  if (noSignedInUser && !wasAppOpened)
 		  return const AuthenticationState.unauthenticated();
-  	if (noSignedInCaregiver && wasAppOpened) {
+  	if (noSignedInUser && wasAppOpened) {
+  		// Sign in a child
 		  var signedInChild = _appConfigRepository.getSignedInChild();
 		  if (signedInChild != null)
 			  return _signInUser(await _dataRepository.getUser(id: signedInChild));
 		  else
 		    return const AuthenticationState.unauthenticated();
 	  }
-		user = await _dataRepository.getUser(authenticationId: event.user.id);
+	  user = await _dataRepository.getUser(authenticationId: event.user.id);
+  	// Discard unverified email users
+  	if (event.user.authMethod == AuthMethod.EMAIL && !event.user.emailVerified && await _authenticationProvider.verificationEnforced()) {
+  		if (user != null)
+		    showFailSnackbar(_navigatorKey.currentState.context, EmailSignInError.accountNotVerified.key);
+			_authenticationProvider.signOut();
+		  return const AuthenticationState.unauthenticated();
+	  }
 		if (user == null) {
+			// New caregiver account
 			if (! (await _authenticationProvider.userExists(event.user.email))) {
 				await _authenticationProvider.signOut();
 				return const AuthenticationState.unauthenticated();

@@ -13,12 +13,9 @@ class CaregiverSignInCubit extends CaregiverAuthCubitBase<CaregiverSignInState> 
   CaregiverSignInCubit(String email) : super(CaregiverSignInState(email: Email.pure(email ?? '')));
 
 	Future<void> logInWithCredentials() async {
-		var state = _validateFields();
-		if (!state.status.isValidated) {
-			emit(state);
-			return;
-		}
-		emit(state.copyWith(status: FormzStatus.submissionInProgress));
+		if (!_validateFields())
+			return false;
+		emit(state.copyWith(status: FormzStatus.submissionInProgress, authMethod: AuthMethod.EMAIL));
 		try {
 			await authenticationProvider.signInWithEmail(
 				email: state.email.value,
@@ -35,24 +32,40 @@ class CaregiverSignInCubit extends CaregiverAuthCubitBase<CaregiverSignInState> 
   Future<bool> resetPassword() async {
 	  var state = this.state.copyWith(email: Email.dirty(this.state.email.value.trim()));
 	  if (state.email.invalid) {
-			emit(state);
+		  emit(state);
 		  return false;
 	  }
 		try {
 			await authenticationProvider.beginPasswordReset(state.email.value);
 		} on SignInFailure catch (e) {
 			emit(state.copyWith(status: FormzStatus.submissionFailure, signInError: e.reason));
-		} on PasswordResetFailure catch (e) {
+		} on EmailCodeFailure catch (e) {
 			emit(state.copyWith(status: FormzStatus.submissionFailure, passwordResetError: e.reason));
 		}
 	  return true;
   }
 
-  CaregiverSignInState _validateFields() {
+  Future<VerificationAttemptOutcome> resendVerificationEmail() async {
+    if (!_validateFields())
+      return null;
+    try {
+	    return await authenticationProvider.sendEmailVerification(email: state.email.value, password: state.password.value);
+    } on SignInFailure catch (e) {
+	    emit(state.copyWith(status: FormzStatus.submissionFailure, signInError: e.reason));
+	    return null;
+    }
+  }
+
+  bool _validateFields() {
 	  var state = this.state;
 	  state = state.copyWith(email: Email.dirty(state.email.value.trim()));
 	  state = state.copyWith(password: Password.dirty(state.password.value, false));
-	  return state.copyWith(status: Formz.validate([state.email, state.password]));
+	  state = state.copyWith(status: Formz.validate([state.email, state.password]));
+	  if (!state.status.isValidated) {
+		  emit(state);
+		  return false;
+	  }
+	  return true;
   }
 
   void emailChanged(String value) => emit(state.copyWith(email: Email.pure(value), status: FormzStatus.pure));

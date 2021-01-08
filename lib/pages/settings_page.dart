@@ -27,7 +27,7 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
 	  // ignore: close_sinks
     var authenticationBloc = BlocProvider.of<AuthenticationBloc>(context);
-    var isCurrentUserCaregiver = authenticationBloc.state.user.role == UserRole.caregiver;
+    var isCurrentUserCaregiver = authenticationBloc.state.user?.role == UserRole.caregiver;
 
 		// Loading current locale (don't work with "default" option)
     _pickedLanguage = _pickedLanguage ?? AppLocales.of(context).locale.languageCode;

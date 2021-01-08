@@ -32,8 +32,9 @@
 				"registerHint": "Załóż nowe konto opiekuna aby móc korzystać z aplikacji",
 				"passwordForgotten": "Nie pamiętasz hasła?",
 				"resetPassword": "Zresetuj hasło",
-				"enterEmail": "Wprowadź swój adres e-mail aby zresetować hasło",
-				"resetEmailSent": "E-mail z linkiem resetującym hasło został wysłany"
+				"enterEmail": "Wprowadź adres e-mail",
+				"resetEmailSent": "E-mail z linkiem resetującym hasło został wysłany",
+				"resetVerificationEmail": "Wyślij email weryfikacyjny"
 			},
 			"caregiverSignUp": {
 				"registerTitle": "Stwórz nowe konto",
@@ -675,8 +676,9 @@
 		"passwordChanged": "Hasło zmienione",
 		"nameChanged": "Imię zmienione",
 		"signInPrompt": "Musisz się najpierw ponownie zalogować",
-		"emailVerificationSent": "E-mail z kodem weryfikacyjnym został wysłany",
-		"passwordReset": "Hasło zostało zresetowane",
+		"emailVerificationSent": "E-mail z linkiem weryfikacyjnym został wysłany",
+		"accountVerified": "Konto zostało pomyślnie zweryfikowane",
+		"passwordReset": "Hasło zostało zmienione",
 
 		"error": {
 			"incorrectData": "Nieprawidłowy e-mail lub hasło",
@@ -694,9 +696,9 @@
 			"noPasswordMatch": "Hasła nie pasują",
 			"passwordEmpty": "Hasło nie może być puste",
 			"avatarEmpty": "Należy wybrać awatar dziecka",
-			"accountNotVerified": "Adres e-mail nie został zweryfikowany",
-			"passwordResetCodeInvalid": "Ten link resetujący hasło jest nieprawidłowy - wygeneruj nowy",
-			"passwordResetCodeExpired": "Ten link resetujący hasło wygasł - wygeneruj nowy"
+			"accountNotVerified": "Konto nie zostało zweryfikowane",
+			"emailLink": "Ten link {TYPE, select, 0 {resetujący hasło} 1 {weryfikujący konto} other {}} {ERR, select, 0 {jest nieprawidłowy} 1 {wygasł} other {}} - wygeneruj nowy",
+			"accountAlreadyVerified": "Konto już zostało zweryfikowane"
 		}
 	},
 	"notification": {

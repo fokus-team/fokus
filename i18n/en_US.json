@@ -32,8 +32,9 @@
 				"registerHint": "Create new caregiver account to use the app",
 				"passwordForgotten": "Forgot your password?",
 				"resetPassword": "Reset password",
-				"enterEmail": "Enter your email address to reset the password",
-				"resetEmailSent": "Email with a reset link was sent"
+				"enterEmail": "Enter the email address",
+				"resetEmailSent": "Email with a reset link was sent",
+				"resetVerificationEmail": "Send verification email"
 			},
 			"caregiverSignUp": {
 				"registerTitle": "Create new account",
@@ -675,8 +676,9 @@
 		"passwordChanged": "Password changed",
 		"nameChanged": "Name changed",
 		"signInPrompt": "You need to log back first",
-		"emailVerificationSent": "Email verification code has been sent",
-		"passwordReset": "Password was reset",
+		"emailVerificationSent": "Email verification link has been sent",
+		"accountVerified": "Account has been successfully verified",
+		"passwordReset": "Password was changed",
 
 		"error": {
 			"incorrectData": "Incorrect email or password",
@@ -694,9 +696,9 @@
 			"noPasswordMatch": "Passwords do not match",
 			"passwordEmpty": "Password can not be empty",
 			"avatarEmpty": "You must pick child's avatar",
-			"accountNotVerified": "Email address has not been verified",
-			"passwordResetCodeInvalid": "This password reset link is invalid - generate a new one",
-			"passwordResetCodeExpired": "This password reset link has expired - generate a new one"
+			"accountNotVerified": "Account has not been verified",
+			"emailLink": "This {TYPE, select, 0 {password reset} 1 {account verification} other {}} link {ERR, select, 0 {is invalid} 1 {has expired} other {}} - generate a new one",
+			"accountAlreadyVerified": "Account is already verified"
 		}
 	},
 	"notification": {

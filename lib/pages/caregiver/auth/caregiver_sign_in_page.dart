@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fokus_auth/fokus_auth.dart';
 import 'package:formz/formz.dart';
 
 import 'package:fokus/logic/caregiver/auth/sign_in/caregiver_sign_in_cubit.dart';
@@ -24,8 +25,15 @@ class CaregiverSignInPage extends StatelessWidget {
 	    body: SafeArea(
 			  child: BlocListener<CaregiverSignInCubit, CaregiverSignInState>(
 				  listener: (context, state) {
-					  if (state.status.isSubmissionFailure && (state.passwordResetError != null || state.signInError != null))
-							showFailSnackbar(context, state.passwordResetError?.key ?? state.signInError?.key);
+					  if (state.status.isSubmissionFailure) {
+					  	if (state.signInError != null)
+							  showFailSnackbar(context, state.signInError?.key);
+					  	else if (state.passwordResetError != null)
+								showFailSnackbar(context, 'authentication.error.emailLink', {
+	                'TYPE': '${AppLinkType.passwordReset.index}',
+	                'ERR': '${state.passwordResetError.index}'
+	              });
+				    }
 				  },
 				  child: ListView(
 						padding: EdgeInsets.symmetric(vertical: AppBoxProperties.screenEdgePadding),
@@ -69,17 +77,7 @@ class CaregiverSignInPage extends StatelessWidget {
 								labelKey: 'authentication.password',
 								icon: Icons.lock,
 								getErrorKey: (state) => [state.password.error.key],
-								hideInput: true,
-								suffixButton: IconButton(
-									icon: Icon(Icons.support, color: AppColors.caregiverButtonColor), // alt: settings_backup_restore
-									tooltip: AppLocales.instance.translate('$_pageKey.resetPassword'),
-									onPressed: () async {
-										if (!await context.read<CaregiverSignInCubit>().resetPassword())
-											showInfoSnackbar(context, '$_pageKey.enterEmail');
-										else
-											showSuccessSnackbar(context, '$_pageKey.resetEmailSent');
-									},
-								)
+								hideInput: true
 							),
 							AuthButton(
 								button: UIButton.ofType(
@@ -88,6 +86,7 @@ class CaregiverSignInPage extends StatelessWidget {
 									Colors.teal
 								)
 							),
+							buildEmailOptionButtons(context),
 							AuthDivider(),
 							AuthButton.google(
 								UIButton(
@@ -99,6 +98,37 @@ class CaregiverSignInPage extends StatelessWidget {
 					)
 				);
 			}
+		);
+  }
+
+	Row buildEmailOptionButtons(BuildContext context) {
+  	var buttonText = (String key) => Text(
+		  AppLocales.instance.translate('$_pageKey.$key'),
+		  style: Theme.of(context).textTheme.subtitle2.copyWith(color: AppColors.mainBackgroundColor, fontWeight: FontWeight.bold)
+	  );
+    return Row(
+			mainAxisAlignment: MainAxisAlignment.center,
+			children: [
+				FlatButton(
+					onPressed: () async {
+						if (!await context.read<CaregiverSignInCubit>().resetPassword())
+							showInfoSnackbar(context, '$_pageKey.enterEmail');
+						else
+							showSuccessSnackbar(context, '$_pageKey.resetEmailSent');
+					},
+					child: buttonText('resetPassword')
+				),
+				FlatButton(
+					onPressed: () async {
+						var result = await context.read<CaregiverSignInCubit>().resendVerificationEmail();
+						if (result == VerificationAttemptOutcome.emailSent)
+							showSuccessSnackbar(context, 'authentication.emailVerificationSent');
+						else if (result == VerificationAttemptOutcome.accountAlreadyVerified)
+							showInfoSnackbar(context, 'authentication.error.accountAlreadyVerified');
+					},
+					child: buttonText('resetVerificationEmail')
+				),
+			],
 		);
   }
 	

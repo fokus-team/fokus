@@ -188,7 +188,9 @@
 				"header": {
 					"title": "Kalendarz planów",
 					"filterPlansTitle": "Filtruj wyświetlane plany",
-					"showPlansForTitle": "Wyświetlaj plany przypisane do"
+					"showPlansForTitle": "Wyświetlaj plany przypisane do",
+					"emptyListHeader": "Filtrowanie planów niedostępne",
+					"emptyListText": "Nie dodano jeszcze do konta żadnego profilu dziecka"
 				},
 				"content": {
 					"plansOnDateTitle": "Plany na dzień {DATE}",
@@ -256,7 +258,8 @@
 					"assignedChildren": {
 						"label": "Przypisane dzieci",
 						"hint": "Wybierz jedno lub więcej dzieci",
-						"emptyList": "Nie dodano jeszcze do konta żadnego profilu dziecka, można jednak kontynuować tworzenie planu bez ich przypisywania."
+						"emptyListHeader": "Przypisywanie dzieci niedostępne",
+						"emptyListText": "Nie dodano jeszcze do konta żadnego profilu dziecka, można jednak kontynuować tworzenie planu bez ich przypisywania."
 					},
 					"repeatability": {
 						"label": "Powtarzalność",

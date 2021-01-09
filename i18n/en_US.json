@@ -188,7 +188,9 @@
 				"header": {
 					"title": "Plan calendar",
 					"filterPlansTitle": "Filter displayed plans",
-					"showPlansForTitle": "Show plans assigned to"
+					"showPlansForTitle": "Show plans assigned to",
+					"emptyListHeader": "You can't filter right now",
+					"emptyListText": "You haven't added any child profile to your account yet"
 				},
 				"content": {
 					"plansOnDateTitle": "Plans on {DATE}",
@@ -256,7 +258,8 @@
 					"assignedChildren": {
 						"label": "Assigned children",
 						"hint": "Choose one or more children",
-						"emptyList": "You haven't added any child profile to your account yet, but you can continue creating a plan without assigning children."
+						"emptyListHeader": "You can't assign children",
+						"emptyListText": "You haven't added any child profile to your account yet, but you can continue creating a plan without assigning children."
 					},
 					"repeatability": {
 						"label": "Repeatability",

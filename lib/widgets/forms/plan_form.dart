@@ -150,7 +150,8 @@ class _PlanFormState extends State<PlanForm> {
 				),
 				emptyBuilder: (str) => AppHero(
 					icon: Icons.warning,
-					title: AppLocales.of(context).translate('$_pageKey.assignedChildren.emptyList'),
+					header: AppLocales.of(context).translate('$_pageKey.assignedChildren.emptyListHeader'),
+					title: AppLocales.of(context).translate('$_pageKey.assignedChildren.emptyListText')
 				)
 			),
 			modalType: SmartSelectModalType.bottomSheet,

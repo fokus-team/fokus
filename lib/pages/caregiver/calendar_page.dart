@@ -287,7 +287,8 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 	      ),
 				emptyBuilder: (str) => AppHero(
 					icon: Icons.warning,
-					title: AppLocales.of(context).translate('page.caregiverSection.planForm.fields.assignedChildren.emptyList'),
+					header: AppLocales.of(context).translate('$_pageKey.header.emptyListHeader'),
+					title: AppLocales.of(context).translate('$_pageKey.header.emptyListText'),
 				)
 	    ),
 	    modalType: SmartSelectModalType.bottomSheet,

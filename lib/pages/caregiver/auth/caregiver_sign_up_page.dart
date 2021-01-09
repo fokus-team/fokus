@@ -28,7 +28,7 @@ class CaregiverSignUpPage extends StatelessWidget {
 				  listener: (context, state) async {
 					  if (state.status.isSubmissionFailure && (state.signInError != null || state.signUpError != null))
 							showFailSnackbar(context, state.signUpError?.key ?? state.signInError.key);
-					  else if (state.status.isSubmissionSuccess && state.authMethod == AuthMethod.EMAIL && await context.read<CaregiverSignUpCubit>().verificationEnforced())
+					  else if (state.status.isSubmissionSuccess && state.authMethod == AuthMethod.email && await context.read<CaregiverSignUpCubit>().verificationEnforced())
 					  	showSuccessSnackbar(context, 'authentication.emailVerificationSent');
 				  },
 					child: ListView(

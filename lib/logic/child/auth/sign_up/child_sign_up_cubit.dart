@@ -1,3 +1,4 @@
+import 'package:fokus/services/analytics_service.dart';
 import 'package:formz/formz.dart';
 
 import 'package:fokus/model/ui/auth/name.dart';
@@ -8,11 +9,13 @@ import 'package:fokus_auth/fokus_auth.dart';
 import 'package:fokus/model/db/user/child.dart';
 import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
 import 'package:fokus/logic/common/formz_state.dart';
+import 'package:get_it/get_it.dart';
 
 part 'child_sign_up_state.dart';
 
 class ChildSignUpCubit extends ChildAuthCubitBase<ChildSignUpState> {
 	final AuthenticationBloc _authBloc;
+	final AnalyticsService _analyticsService = GetIt.I<AnalyticsService>();
 
   ChildSignUpCubit(this._authBloc) : super(_authBloc, ChildSignUpState(
 	  caregiverCode: UserCode.pure(_authBloc.state.user != null ? getCodeFromId(_authBloc.state.user.id) : ''),
@@ -36,6 +39,7 @@ class ChildSignUpCubit extends ChildAuthCubitBase<ChildSignUpState> {
 	  appConfigRepository.saveChildProfile(child.id);
 	  if (!codeFixed())
 		  authenticationBloc.add(AuthenticationChildSignInRequested(child));
+	  _analyticsService.logChildSignUp();
 	  emit(state.copyWith(status: FormzStatus.submissionSuccess));
   }
 

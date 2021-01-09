@@ -60,7 +60,7 @@ class AccountDeleteCubit extends Cubit<AccountDeleteState> {
 	}
 
   Future accountDeleteFormSubmitted() async {
-	  if ((_activeUser() as UICaregiver).authMethod == AuthMethod.EMAIL) {
+	  if ((_activeUser() as UICaregiver).authMethod == AuthMethod.email) {
 		  var state = this.state;
 		  state = state.copyWith(password: Password.dirty(state.password.value, false));
 		  state = state.copyWith(status: Formz.validate([state.password]));

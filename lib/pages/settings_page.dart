@@ -98,7 +98,7 @@ class _SettingsPageState extends State<SettingsPage> {
 	List<Widget> _getProfileFields() {
   	var user = BlocProvider.of<AuthenticationBloc>(context).state.user as UICaregiver;
 		return [
-			if (user.authMethod == AuthMethod.EMAIL)
+			if (user.authMethod == AuthMethod.email)
 				...[
 					_buildBasicListTile(
 						title: AppLocales.of(context).translate('$_pageKey.profile.editNameLabel'),

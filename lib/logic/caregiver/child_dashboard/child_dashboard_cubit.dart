@@ -13,6 +13,7 @@ import 'package:fokus/model/ui/plan/ui_plan_instance.dart';
 import 'package:fokus/model/ui/user/ui_caregiver.dart';
 import 'package:fokus/model/ui/user/ui_child.dart';
 import 'package:fokus/model/ui/user/ui_user.dart';
+import 'package:fokus/services/analytics_service.dart';
 import 'package:fokus/services/data/data_repository.dart';
 import 'package:fokus/services/notifications/notification_service.dart';
 import 'package:fokus/services/plan_keeper_service.dart';
@@ -33,6 +34,7 @@ class ChildDashboardCubit extends ReloadableCubit {
 
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final UIDataAggregator _dataAggregator = GetIt.I<UIDataAggregator>();
+	final AnalyticsService _analyticsService = GetIt.I<AnalyticsService>();
 	final PlanKeeperService _planKeeperService = GetIt.I<PlanKeeperService>();
 	final NotificationService _notificationService = GetIt.I<NotificationService>();
 
@@ -113,9 +115,12 @@ class ChildDashboardCubit extends ReloadableCubit {
 	Future assignBadges(List<UIBadge> badges) async {
 		var badgeTab = (state as ChildDashboardState).achievementsTab;
 		var assignedBadges = badges.map((badge) => UIChildBadge.fromBadge(badge)).toList();
-		_dataRepository.updateUser(childId, badges: assignedBadges.map((badge) => ChildBadge.fromUIModel(badge)).toList());
+		var childBadges = assignedBadges.map((badge) => ChildBadge.fromUIModel(badge)).toList();
+		_dataRepository.updateUser(childId, badges: childBadges);
 		for (var badge in badges)
 			_notificationService.sendBadgeAwardedNotification(badge.name, badge.icon, childId);
+		childBadges.forEach((badge) => _analyticsService.logBadgeAwarded(badge));
+
 		var newAssignedBadges = List.of(badgeTab.childBadges)..addAll(assignedBadges);
 		var newAvailableBadges = filterBadges(badgeTab.availableBadges, assignedBadges);
 		emit(ChildDashboardState.from(state, achievementsTab: badgeTab.copyWith(availableBadges: newAvailableBadges, childBadges: newAssignedBadges)));

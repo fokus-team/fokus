@@ -358,9 +358,9 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
   }
 
   void _onCompletion(state) {
-		if(state is! TaskInstanceRejected && state is! TaskInstanceDone)
+		if(state is! TaskInstanceNotFinished && state is! TaskInstanceFinished)
 			setState(() {
-				BlocProvider.of<TaskInstanceCubit>(context).markAsDone();
+				BlocProvider.of<TaskInstanceCubit>(context).markAsFinished();
 				_closeWidgetsOnFinish(state);
 				_doneCard.currentState.openCard();
 				this._header.currentState.animateSuccess();
@@ -369,9 +369,9 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 	}
 
 	void _onRejection(state) {
-		if(state is! TaskInstanceRejected && state is! TaskInstanceDone)
+		if(state is! TaskInstanceNotFinished && state is! TaskInstanceFinished)
 			setState(() {
-				BlocProvider.of<TaskInstanceCubit>(context).markAsRejected();
+				BlocProvider.of<TaskInstanceCubit>(context).markAsNotFinished();
 				_closeWidgetsOnFinish(state);
 				_rejectCard.currentState.openCard();
 				this._header.currentState.onFinish();

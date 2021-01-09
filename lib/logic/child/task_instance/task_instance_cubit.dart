@@ -11,6 +11,7 @@ import 'package:fokus/model/db/plan/task_status.dart';
 import 'package:fokus/model/ui/plan/ui_plan_instance.dart';
 import 'package:fokus/model/ui/task/ui_task_instance.dart';
 import 'package:fokus/model/ui/user/ui_user.dart';
+import 'package:fokus/services/analytics_service.dart';
 import 'package:fokus/services/data/data_repository.dart';
 import 'package:fokus/services/notifications/notification_service.dart';
 import 'package:fokus/services/ui_data_aggregator.dart';
@@ -27,6 +28,7 @@ class TaskInstanceCubit extends Cubit<TaskInstanceState> {
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final NotificationService _notificationService = GetIt.I<NotificationService>();
 	final UIDataAggregator _dataAggregator = GetIt.I<UIDataAggregator>();
+	final AnalyticsService _analyticsService = GetIt.I<AnalyticsService>();
 
 	TaskInstanceCubit(this._taskInstanceId, this._activeUser, UIPlanInstance _uiPlanInstance) : super(TaskInstanceStateInitial(_uiPlanInstance));
 
@@ -49,10 +51,15 @@ class TaskInstanceCubit extends Cubit<TaskInstanceState> {
 			_planInstance.state = PlanInstanceState.active;
 			wasPlanStateChanged = true;
 
+			if (_planInstance.state == PlanInstanceState.notStarted)
+				_analyticsService.logPlanStarted(_planInstance);
+			else if (_planInstance.state == PlanInstanceState.notCompleted)
+				_analyticsService.logPlanResumed(_planInstance);
 			var childId = _activeUser().id;
 			updates.add(_dataRepository.updateActivePlanInstanceState(childId, PlanInstanceState.notCompleted));
 		}
 		if(!isInProgress(_taskInstance.duration) && !isInProgress(_taskInstance.breaks)) {
+			_analyticsService.logTaskStarted(_taskInstance);
 			if(_taskInstance.duration == null) _taskInstance.duration = [];
 			_taskInstance.duration.add(DateSpan(from: TimeDate.now()));
 			updates.add(_dataRepository.updateTaskInstanceFields(_taskInstance.id, duration: _taskInstance.duration, isCompleted: _taskInstance.status.completed ? false : null));
@@ -62,12 +69,19 @@ class TaskInstanceCubit extends Cubit<TaskInstanceState> {
 			_planInstance.duration.add(DateSpan(from: TimeDate.now()));
 			wasPlanDurationChanged = true;
 		}
-		if(wasPlanStateChanged || wasPlanDurationChanged) updates.add(_dataRepository.updatePlanInstanceFields(_planInstance.id, state:wasPlanStateChanged ? PlanInstanceState.active : null, duration: wasPlanDurationChanged ? _planInstance.duration : null));
+		if(wasPlanStateChanged || wasPlanDurationChanged)
+			updates.add(_dataRepository.updatePlanInstanceFields(
+					_planInstance.id,
+					state: wasPlanStateChanged ? PlanInstanceState.active : null,
+					duration: wasPlanDurationChanged ? _planInstance.duration : null)
+			);
 		await Future.value(updates);
 
 		UITaskInstance uiTaskInstance = UITaskInstance.singleWithTask(taskInstance: _taskInstance, task: _task);
-		if(isInProgress(uiTaskInstance.duration)) emit(TaskInstanceInProgress(uiTaskInstance,  await _dataAggregator.loadPlanInstance(planInstance: _planInstance, plan: _plan)));
-		else  emit(TaskInstanceInBreak(uiTaskInstance,  await _dataAggregator.loadPlanInstance(planInstance: _planInstance, plan: _plan)));
+		if(isInProgress(uiTaskInstance.duration))
+		  emit(TaskInstanceInProgress(uiTaskInstance,  await _dataAggregator.loadPlanInstance(planInstance: _planInstance, plan: _plan)));
+		else
+		  emit(TaskInstanceInBreak(uiTaskInstance,  await _dataAggregator.loadPlanInstance(planInstance: _planInstance, plan: _plan)));
 	}
 
 	void switchToBreak() async {
@@ -75,6 +89,7 @@ class TaskInstanceCubit extends Cubit<TaskInstanceState> {
 		_taskInstance.breaks.add(DateSpan(from: TimeDate.now()));
 		await _dataRepository.updateTaskInstanceFields(_taskInstance.id, duration: _taskInstance.duration, breaks: _taskInstance.breaks);
 		UITaskInstance uiTaskInstance = UITaskInstance.singleWithTask(taskInstance: _taskInstance, task: _task);
+		_analyticsService.logTaskPaused(_taskInstance);
 		emit(TaskInstanceInBreak(uiTaskInstance,  await _dataAggregator.loadPlanInstance(planInstance: _planInstance, plan: _plan)));
 	}
 
@@ -83,17 +98,20 @@ class TaskInstanceCubit extends Cubit<TaskInstanceState> {
 		_taskInstance.duration.add(DateSpan(from: TimeDate.now()));
 		await _dataRepository.updateTaskInstanceFields(_taskInstance.id, duration: _taskInstance.duration, breaks: _taskInstance.breaks);
 		UITaskInstance uiTaskInstance = UITaskInstance.singleWithTask(taskInstance: _taskInstance, task: _task);
+		_analyticsService.logTaskResumed(_taskInstance);
 		emit(TaskInstanceInProgress(uiTaskInstance, await _dataAggregator.loadPlanInstance(planInstance: _planInstance, plan: _plan)));
 	}
 
-	void markAsDone() async {
+	void markAsFinished() async {
   	_notificationService.sendTaskFinishedNotification(_taskInstanceId, _task.name, _plan.createdBy, _activeUser(), completed: true);
-		emit(TaskInstanceDone(await _onCompletion(TaskState.notEvaluated), await _dataAggregator.loadPlanInstance(planInstance: _planInstance, plan: _plan)));
+	  _analyticsService.logTaskFinished(_taskInstance);
+		emit(TaskInstanceFinished(await _onCompletion(TaskState.notEvaluated), await _dataAggregator.loadPlanInstance(planInstance: _planInstance, plan: _plan)));
   }
 
-	void markAsRejected() async {
+	void markAsNotFinished() async {
 		_notificationService.sendTaskFinishedNotification(_taskInstanceId, _task.name, _plan.createdBy, _activeUser(), completed: false);
-		emit(TaskInstanceRejected(await _onCompletion(TaskState.rejected), await _dataAggregator.loadPlanInstance(planInstance: _planInstance, plan: _plan)));
+		_analyticsService.logTaskNotFinished(_taskInstance);
+		emit(TaskInstanceNotFinished(await _onCompletion(TaskState.rejected), await _dataAggregator.loadPlanInstance(planInstance: _planInstance, plan: _plan)));
 	}
 
 	void updateChecks(int index, MapEntry<String, bool> subtask) async {
@@ -116,6 +134,7 @@ class TaskInstanceCubit extends Cubit<TaskInstanceState> {
 
 		if(await _dataRepository.getCompletedTaskCount(_planInstance.id) == _planInstance.taskInstances.length) {
 			_planInstance.state = PlanInstanceState.completed;
+			_analyticsService.logPlanCompleted(_planInstance);
 		}
 		_planInstance.duration.last.to = TimeDate.now();
 		await _dataRepository.updatePlanInstanceFields(_planInstance.id, duration: _planInstance.duration, state: _planInstance.state == PlanInstanceState.completed ? PlanInstanceState.completed : null);

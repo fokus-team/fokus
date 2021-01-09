@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:fokus/services/analytics_service.dart';
 import 'package:get_it/get_it.dart';
 
 import 'package:fokus/model/ui/user/ui_user.dart';
@@ -20,6 +21,7 @@ class ChildRewardsCubit extends ReloadableCubit {
 	final ActiveUserFunction _activeUser;
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final NotificationService _notificationService = GetIt.I<NotificationService>();
+	final AnalyticsService _analyticsService = GetIt.I<AnalyticsService>();
 
   ChildRewardsCubit(this._activeUser, ModalRoute pageRoute) : super(pageRoute);
 
@@ -63,7 +65,7 @@ class ChildRewardsCubit extends ReloadableCubit {
 			await _dataRepository.claimChildReward(child.id, reward: model, points: points.map((e) =>
 				Points.fromUICurrency(UICurrency(type: e.type, title: e.title), e.quantity, creator: e.createdBy)).toList()
 			);
-
+			_analyticsService.logRewardBought(reward);
 			await _notificationService.sendRewardBoughtNotification(model.id, model.name, child.connections.first, child);
 			emit(ChildRewardsLoadSuccess(
 				_updateRewardLimits((state as ChildRewardsLoadSuccess).rewards, child.rewards),

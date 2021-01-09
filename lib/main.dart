@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -62,6 +63,7 @@ import 'package:fokus/pages/child/achievements_page.dart';
 
 import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/db/user/user_role.dart';
+import 'package:fokus/services/analytics_service.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/services/app_route_observer.dart';
 import 'package:fokus/services/instrumentator.dart';
@@ -81,19 +83,21 @@ void main() async {
 	var routeObserver = AppRouteObserver();
 	await registerServices(navigatorKey, routeObserver);
 
+	var analytics = GetIt.I<AnalyticsService>()..logAppOpen();
 	GetIt.I<Instrumentator>().runAppGuarded(
 		BlocProvider<AuthenticationBloc>(
 			create: (context) => AuthenticationBloc(),
-			child: FokusApp(navigatorKey, routeObserver),
+			child: FokusApp(navigatorKey, routeObserver, analytics.pageObserver),
 		)
 	);
 }
 
 class FokusApp extends StatefulWidget {
 	final GlobalKey<NavigatorState> _navigatorKey;
-	final _routeObserver;
+	final RouteObserver<PageRoute> _routeObserver;
+	final FirebaseAnalyticsObserver _pageObserver;
 
-  FokusApp(this._navigatorKey, this._routeObserver);
+  FokusApp(this._navigatorKey, this._routeObserver, this._pageObserver);
 
   @override
   _FokusAppState createState() => _FokusAppState();
@@ -114,7 +118,7 @@ class _FokusAppState extends State<FokusApp> implements CurrentLocaleObserver {
 			localeListResolutionCallback: LocaleService.localeSelector,
 
 			navigatorKey: widget._navigatorKey,
-			navigatorObservers: [widget._routeObserver],
+			navigatorObservers: [widget._routeObserver, widget._pageObserver],
 			initialRoute: AppPage.loadingPage.name,
 			routes: _createRoutes(),
 			onGenerateRoute: _onGenerateRoute,

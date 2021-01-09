@@ -4,6 +4,7 @@ import 'package:fokus/model/db/gamification/reward.dart';
 import 'package:fokus/model/pages/plan_form_params.dart';
 import 'package:fokus/model/ui/form/reward_form_model.dart';
 import 'package:fokus/model/ui/user/ui_caregiver.dart';
+import 'package:fokus/services/analytics_service.dart';
 import 'package:get_it/get_it.dart';
 
 import 'package:fokus/model/ui/gamification/ui_currency.dart';
@@ -16,6 +17,7 @@ part 'reward_form_state.dart';
 class RewardFormCubit extends Cubit<RewardFormState> {
 	final ActiveUserFunction _activeUser;
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
+	final AnalyticsService _analyticsService = GetIt.I<AnalyticsService>();
 	
   RewardFormCubit(Object argument, this._activeUser) : super(RewardFormInitial(argument == null ? AppFormType.create : AppFormType.edit, argument));
   
@@ -32,6 +34,7 @@ class RewardFormCubit extends Cubit<RewardFormState> {
 
 		if (state.formType == AppFormType.create) {
 			await _dataRepository.createReward(reward);
+			_analyticsService.logRewardCreated(reward);
 		} else {
 	    await _dataRepository.updateReward(reward);
 		}

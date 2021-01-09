@@ -143,7 +143,7 @@ class AccountDeleteDialog extends StatelessWidget {
 						    SizedBox(height: 10),
 						    Text(AppLocales.of(context).translate('deleteWarning'), style: TextStyle(color: Colors.red)),
 						    SizedBox(height: 10),
-					      if (user.authMethod == AuthMethod.EMAIL)
+					      if (user.authMethod == AuthMethod.email)
 						      ...[
 						      	Text(getText('Confirm', customize: false)),
 							      SizedBox(height: 10),

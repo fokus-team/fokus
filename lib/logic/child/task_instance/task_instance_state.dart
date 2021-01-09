@@ -28,12 +28,12 @@ class TaskInstanceInProgress extends TaskInstanceLoaded {
   }
 }
 
-class TaskInstanceDone extends TaskInstanceLoaded {
-  TaskInstanceDone(UITaskInstance taskInstance, UIPlanInstance planInstance) : super(taskInstance, planInstance);
+class TaskInstanceFinished extends TaskInstanceLoaded {
+  TaskInstanceFinished(UITaskInstance taskInstance, UIPlanInstance planInstance) : super(taskInstance, planInstance);
 }
 
-class TaskInstanceRejected extends TaskInstanceLoaded {
-  TaskInstanceRejected(UITaskInstance taskInstance, UIPlanInstance planInstance) : super(taskInstance, planInstance);
+class TaskInstanceNotFinished extends TaskInstanceLoaded {
+  TaskInstanceNotFinished(UITaskInstance taskInstance, UIPlanInstance planInstance) : super(taskInstance, planInstance);
 }
 
 class TaskInstanceLoaded extends TaskInstanceState {

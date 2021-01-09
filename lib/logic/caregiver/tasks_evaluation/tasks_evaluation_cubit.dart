@@ -14,6 +14,7 @@ import 'package:fokus/model/ui/task/ui_task_report.dart';
 import 'package:fokus/model/ui/user/ui_caregiver.dart';
 import 'package:fokus/model/ui/user/ui_child.dart';
 import 'package:fokus/model/ui/user/ui_user.dart';
+import 'package:fokus/services/analytics_service.dart';
 import 'package:fokus/services/data/data_repository.dart';
 import 'package:fokus/services/notifications/notification_service.dart';
 import 'package:fokus/services/task_instance_service.dart';
@@ -24,6 +25,7 @@ part 'tasks_evaluation_state.dart';
 
 class TasksEvaluationCubit extends ReloadableCubit {
   final DataRepository _dataRepository = GetIt.I<DataRepository>();
+  final AnalyticsService _analyticsService = GetIt.I<AnalyticsService>();
   final TaskInstanceService _taskInstanceService = GetIt.I<TaskInstanceService>();
   final NotificationService _notificationService = GetIt.I<NotificationService>();
 
@@ -69,6 +71,7 @@ class TasksEvaluationCubit extends ReloadableCubit {
 			sendNotification = () => _notificationService.sendTaskRejectedNotification(report.task.planInstanceId, report.task.name, report.child.id);
 			updates.add(_dataRepository.updatePlanInstanceFields(report.task.planInstanceId, state: PlanInstanceState.notCompleted));
 			updates.add(_dataRepository.updateTaskInstanceFields(report.task.id, state:TaskState.rejected));
+			_analyticsService.logTaskRejected(report);
 		} else {
 			int pointsAwarded;
 			bool hasPoints = report.task.points != null;
@@ -86,6 +89,7 @@ class TasksEvaluationCubit extends ReloadableCubit {
 			  }
 				updates.add(_dataRepository.updateUser(child.id, points: newPoints));
 			}
+			_analyticsService.logTaskApproved(report);
 			sendNotification = () =>  _notificationService.sendTaskApprovedNotification(report.task.planInstanceId, report.task.name, report.child.id,
 					report.ratingMark.value, hasPoints ? report.task.points.type : null, hasPoints ? pointsAwarded : null);
 		}

@@ -20,21 +20,13 @@
 	            <category android:name="android.intent.category.DEFAULT" />
 	            <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
-	        <intent-filter android:autoVerify="true">
-		        <action android:name="android.intent.action.VIEW" />
-		        <category android:name="android.intent.category.DEFAULT" />
-		        <category android:name="android.intent.category.BROWSABLE" />
-		        <data
-			        android:scheme="https"
-			        android:host="@string/app_link_host" />
-	        </intent-filter>
 	        <intent-filter>
 		        <action android:name="android.intent.action.VIEW"/>
 		        <category android:name="android.intent.category.DEFAULT"/>
 		        <category android:name="android.intent.category.BROWSABLE"/>
 		        <data
-			        android:host="fokusapp.page.link"
-			        android:scheme="https"/>
+			        android:scheme="https"
+			        android:host="@string/app_link_host"/>
 	        </intent-filter>
         </activity>
 	    <service android:name=".OneSignalNotificationService"

@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:fokus/services/analytics_service.dart';
 import 'package:get_it/get_it.dart';
 import 'package:fokus_auth/fokus_auth.dart';
 
@@ -32,6 +33,7 @@ Future registerServices(GlobalKey<NavigatorState> navigatorKey, AppRouteObserver
 	GetIt.I.registerSingleton<TaskInstanceService>(TaskInstanceService());
 	GetIt.I.registerSingleton<NotificationService>(OneSignalNotificationService());
 	GetIt.I.registerSingleton<LocaleService>(LocaleService());
+	GetIt.I.registerSingleton<AnalyticsService>(AnalyticsService());
 	GetIt.I.registerSingleton<Instrumentator>(Instrumentator());
 	GetIt.I.registerSingleton<LinkService>(FirebaseDynamicLinkService());
 

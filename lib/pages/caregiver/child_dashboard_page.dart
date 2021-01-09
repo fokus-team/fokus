@@ -12,6 +12,7 @@ import 'package:fokus/utils/ui/child_plans_util.dart';
 import 'package:fokus/utils/ui/dialog_utils.dart';
 import 'package:fokus/utils/ui/icon_sets.dart';
 import 'package:fokus/utils/ui/theme_config.dart';
+import 'package:fokus/utils/ui/snackbar_utils.dart';
 import 'package:fokus/widgets/buttons/bottom_sheet_confirm_button.dart';
 import 'package:fokus/widgets/buttons/popup_menu_list.dart';
 import 'package:fokus/widgets/cards/item_card.dart';
@@ -122,8 +123,10 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
           UIButton.ofType(ButtonType.edit, () => cubit.onNameDialogClosed(showNameEditDialog(context, _childProfile)),
 						null, Icons.edit),
           UIButton.ofType(ButtonType.unpair, () async {
-            	if ((await showAccountDeleteDialog(context, _childProfile)) ?? false)
+            	if ((await showAccountDeleteDialog(context, _childProfile)) ?? false) {
 	            	Navigator.of(context).pop();
+								showSuccessSnackbar(context, 'page.settings.content.profile.accountChildDeletedText');
+							}
 						}, null, Icons.person_remove)
         ],
       ),

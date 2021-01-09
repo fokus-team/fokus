@@ -105,7 +105,9 @@
 					"deleteChildAccountDescription": "Czy na pewno chcesz usunąć konto tego dziecka? Spowoduje to trwałe wymazanie wszystkich jego danych włączając w to:",
 					"deleteAccountDataList": "Plany|Zadania|Nagrody|Profile dzieci|Historię wykonanych zadań",
 					"deleteChildAccountDataList": "Profil|Nagrody|Punkty|Historię wykonanych zadań",
-					"deleteAccountConfirm": "Wprowadź swoje hasło aby potwierdzić:"
+					"deleteAccountConfirm": "Wprowadź swoje hasło aby potwierdzić:",
+					"accountDeletedText": "Konto zostało pomyślnie usunięte",
+					"accountChildDeletedText": "Profil dziecka został pomyślnie usunięty"
 				},
 				"appSettings": {
 					"header": "Ustawienia aplikacji",
@@ -253,7 +255,8 @@
 					},
 					"assignedChildren": {
 						"label": "Przypisane dzieci",
-						"hint": "Wybierz jedno lub więcej dzieci"
+						"hint": "Wybierz jedno lub więcej dzieci",
+						"emptyList": "Nie dodano jeszcze do konta żadnego profilu dziecka, można jednak kontynuować tworzenie planu bez ich przypisywania."
 					},
 					"repeatability": {
 						"label": "Powtarzalność",

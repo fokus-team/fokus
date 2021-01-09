@@ -700,6 +700,7 @@
 			"noPasswordMatch": "Passwords do not match",
 			"passwordEmpty": "Password can not be empty",
 			"avatarEmpty": "You must pick child's avatar",
+			"agreementNotAccepted": "You must agree to the terms and conditions",
 			"accountNotVerified": "Account has not been verified",
 			"emailLink": "This {TYPE, select, 0 {password reset} 1 {account verification} other {}} link {ERR, select, 0 {is invalid} 1 {has expired} other {}} - generate a new one",
 			"accountAlreadyVerified": "Account is already verified"

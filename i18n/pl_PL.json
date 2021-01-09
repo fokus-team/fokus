@@ -40,8 +40,8 @@
 				"registerTitle": "Stwórz nowe konto",
 				"registerHint": "Uzupełnij poniższy formularz lub użyj konta Google",
 				"agreement": "Akceptuję",
-				"termsOfUse": "Warunki korzystania",
-				"privacyPolicy": "Politykę prywatności"
+				"termsOfUse": "warunki korzystania",
+				"privacyPolicy": "politykę prywatności"
 			},
 			"childProfiles": {
 				"addProfile": "Dodaj profil",
@@ -700,6 +700,7 @@
 			"noPasswordMatch": "Hasła nie pasują",
 			"passwordEmpty": "Hasło nie może być puste",
 			"avatarEmpty": "Należy wybrać awatar dziecka",
+			"agreementNotAccepted": "Należy zaakceptować warunki",
 			"accountNotVerified": "Konto nie zostało zweryfikowane",
 			"emailLink": "Ten link {TYPE, select, 0 {resetujący hasło} 1 {weryfikujący konto} other {}} {ERR, select, 0 {jest nieprawidłowy} 1 {wygasł} other {}} - wygeneruj nowy",
 			"accountAlreadyVerified": "Konto już zostało zweryfikowane"

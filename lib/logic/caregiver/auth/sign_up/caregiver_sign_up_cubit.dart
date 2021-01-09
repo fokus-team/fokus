@@ -5,6 +5,7 @@ import 'package:fokus/model/ui/auth/confirmed_password.dart';
 import 'package:fokus/model/ui/auth/email.dart';
 import 'package:fokus/model/ui/auth/name.dart';
 import 'package:fokus/model/ui/auth/password.dart';
+import 'package:fokus/model/ui/auth/agreement.dart';
 import 'package:fokus/logic/caregiver/auth/caregiver_auth_cubit_base.dart';
 import 'package:fokus/logic/caregiver/auth/caregiver_auth_state_base.dart';
 
@@ -39,8 +40,9 @@ class CaregiverSignUpCubit extends CaregiverAuthCubitBase<CaregiverSignUpState> 
 	  state = state.copyWith(email: Email.dirty(state.email.value.trim()));
 	  state = state.copyWith(name: Name.dirty(state.name.value.trim()));
 	  state = state.copyWith(password: Password.dirty(state.password.value));
+	  state = state.copyWith(agreement: Agreement.dirty(state.agreement.value));
 	  state = state.copyWith(confirmedPassword: state.confirmedPassword.copyDirty(original: state.password));
-	  return state.copyWith(status: Formz.validate([state.email, state.password, state.name, state.confirmedPassword]));
+	  return state.copyWith(status: Formz.validate([state.email, state.password, state.name, state.confirmedPassword, state.agreement]));
   }
 
 	void nameChanged(String value) => emit(state.copyWith(name: Name.pure(value), status: FormzStatus.pure));
@@ -50,6 +52,8 @@ class CaregiverSignUpCubit extends CaregiverAuthCubitBase<CaregiverSignUpState> 
   void passwordChanged(String value) => emit(state.copyWith(password: Password.pure(value), status: FormzStatus.pure));
 
   void confirmedPasswordChanged(String value) => emit(state.copyWith(confirmedPassword: state.confirmedPassword.copyPure(value: value), status: FormzStatus.pure));
+
+	void agreementChanged(bool value) => emit(state.copyWith(agreement: Agreement.pure(value), status: FormzStatus.pure));
 
   Future<bool> verificationEnforced() => authenticationProvider.verificationEnforced();
 }

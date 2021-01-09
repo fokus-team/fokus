@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/ui/dialog_utils.dart';
 import 'package:fokus/utils/ui/theme_config.dart';
-import 'package:fokus/widgets/dialogs/general_dialog.dart';
 import 'package:lottie/lottie.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:package_info/package_info.dart';
+import 'package:fokus/model/ui/external_url.dart';
 
 class AppInfoDialog extends StatefulWidget {
 	@override
@@ -16,25 +15,7 @@ class _AppInfoDialogState extends State<AppInfoDialog> {
 	final String _settingsKey = 'page.settings.content.appSettings.appInfo';
 
 	PackageInfo _packageInfo = PackageInfo();
-
 	final String creators = 'Stanisław Góra, Mateusz Janicki,\nMikołaj Mirko, Jan Czubiak';
-	final String githubURL = 'https://github.com/fokus-team/fokus';
-	final String termsURL = 'https://fokus-team.github.io/terms_of_use.html';
-	final String privacyURL = 'https://fokus-team.github.io/privacy_policy.html';
-
-	_openBrowserpage(BuildContext context, String url) async {
-		if (await canLaunch(url)) {
-			await launch(url);
-		} else {
-			showBasicDialog(
-				context,
-				GeneralDialog.discard(
-					title: AppLocales.of(context).translate('alert.errorOccurred'),
-					content: AppLocales.of(context).translate('alert.noConnection')
-				)
-			);
-		}
-	}
 
 	@override
 	void initState() {
@@ -96,7 +77,7 @@ class _AppInfoDialogState extends State<AppInfoDialog> {
 											child: Icon(Icons.keyboard_arrow_right, color: Colors.grey)
 										),
 										leading: Icon(Icons.filter_vintage),
-										onTap: () => _openBrowserpage(context, githubURL)
+										onTap: () => ExternalURL.github.openBrowserPage(context)
 									),
 									ListTile(
 										title: Text(AppLocales.of(context).translate('$_settingsKey.termsOfUse')),
@@ -105,7 +86,7 @@ class _AppInfoDialogState extends State<AppInfoDialog> {
 											child: Icon(Icons.keyboard_arrow_right, color: Colors.grey)
 										),
 										leading: Icon(Icons.description),
-										onTap: () => _openBrowserpage(context, termsURL)
+										onTap: () => ExternalURL.termsOfUse.openBrowserPage(context)
 									),
 									ListTile(
 										title: Text(AppLocales.of(context).translate('$_settingsKey.privacyPolicy')),
@@ -114,7 +95,7 @@ class _AppInfoDialogState extends State<AppInfoDialog> {
 											child: Icon(Icons.keyboard_arrow_right, color: Colors.grey)
 										),
 										leading: Icon(Icons.lock_clock),
-										onTap: () => _openBrowserpage(context, privacyURL)
+										onTap: () => ExternalURL.privacyPolicy.openBrowserPage(context)
 									)
 								]
 							)

@@ -77,7 +77,7 @@ class _AppInfoDialogState extends State<AppInfoDialog> {
 											child: Icon(Icons.keyboard_arrow_right, color: Colors.grey)
 										),
 										leading: Icon(Icons.filter_vintage),
-										onTap: () => ExternalURL.github.openBrowserPage(context)
+										onTap: () => ExternalURL.webpage.openBrowserPage(context)
 									),
 									ListTile(
 										title: Text(AppLocales.of(context).translate('$_settingsKey.termsOfUse')),

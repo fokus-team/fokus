@@ -18,6 +18,7 @@ import 'package:fokus/utils/ui/theme_config.dart';
 
 import 'package:fokus/widgets/forms/datepicker_field.dart';
 import 'package:fokus/widgets/cards/item_card.dart';
+import 'package:fokus/widgets/general/app_hero.dart';
 
 class PlanForm extends StatefulWidget {
 	final PlanFormModel plan;
@@ -146,6 +147,11 @@ class _PlanFormState extends State<PlanForm> {
 						onTapped: onChange != null ? () => onChange(item.value, !checked) : null,
 						isActive: checked
 					)
+				),
+				emptyBuilder: (str) => AppHero(
+					icon: Icons.warning,
+					header: AppLocales.of(context).translate('$_pageKey.assignedChildren.emptyListHeader'),
+					title: AppLocales.of(context).translate('$_pageKey.assignedChildren.emptyListText')
 				)
 			),
 			modalType: SmartSelectModalType.bottomSheet,

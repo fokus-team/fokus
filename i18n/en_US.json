@@ -38,7 +38,10 @@
 			},
 			"caregiverSignUp": {
 				"registerTitle": "Create new account",
-				"registerHint": "Fill the form below or use your Google account"
+				"registerHint": "Fill the form below or use your Google account",
+				"agreement": "I agree to the",
+				"termsOfUse": "Terms of Use",
+				"privacyPolicy": "Privacy Policy"
 			},
 			"childProfiles": {
 				"addProfile": "Add profile",
@@ -102,7 +105,9 @@
 					"deleteChildAccountDescription": "Are you sure you want to delete this child's account? This will permanently erase all his data including:",
 					"deleteAccountDataList": "Plans|Tasks|Awards|Child profiles|Performed task history",
 					"deleteChildAccountDataList": "Profile|Awards|Points|Performed task history",
-					"deleteAccountConfirm": "Enter your password to confirm:"
+					"deleteAccountConfirm": "Enter your password to confirm:",
+					"accountDeletedText": "Account was successfully deleted",
+					"accountChildDeletedText": "Child profile was successfully deleted"
 				},
 				"appSettings": {
 					"header": "App settings",
@@ -119,7 +124,8 @@
 						"creators": "Created by",
 						"licences": "Licences",
 						"projectPage": "Project page",
-						"terms": "Terms of service"
+						"termsOfUse": "Terms of Use",
+						"privacyPolicy": "Privacy Policy"
 					}
 				}
 			}
@@ -182,7 +188,9 @@
 				"header": {
 					"title": "Plan calendar",
 					"filterPlansTitle": "Filter displayed plans",
-					"showPlansForTitle": "Show plans assigned to"
+					"showPlansForTitle": "Show plans assigned to",
+					"emptyListHeader": "You can't filter right now",
+					"emptyListText": "You haven't added any child profile to your account yet"
 				},
 				"content": {
 					"plansOnDateTitle": "Plans on {DATE}",
@@ -249,7 +257,9 @@
 					},
 					"assignedChildren": {
 						"label": "Assigned children",
-						"hint": "Choose one or more children"
+						"hint": "Choose one or more children",
+						"emptyListHeader": "You can't assign children",
+						"emptyListText": "You haven't added any child profile to your account yet, but you can continue creating a plan without assigning children."
 					},
 					"repeatability": {
 						"label": "Repeatability",
@@ -696,6 +706,7 @@
 			"noPasswordMatch": "Passwords do not match",
 			"passwordEmpty": "Password can not be empty",
 			"avatarEmpty": "You must pick child's avatar",
+			"agreementNotAccepted": "You must agree to the terms and conditions",
 			"accountNotVerified": "Account has not been verified",
 			"emailLink": "This {TYPE, select, 0 {password reset} 1 {account verification} other {}} link {ERR, select, 0 {is invalid} 1 {has expired} other {}} - generate a new one",
 			"accountAlreadyVerified": "Account is already verified"

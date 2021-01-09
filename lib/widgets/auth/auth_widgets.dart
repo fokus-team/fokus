@@ -9,12 +9,14 @@ class AuthGroup extends StatelessWidget {
 	final Widget content;
 	final EdgeInsets padding;
 	final bool isLoading;
+	final Widget action;
 
 	AuthGroup({
 		this.title,
 		this.hint,
 		this.isLoading = false,
 		this.padding,
+		this.action,
 		@required this.content
 	});
 
@@ -26,16 +28,29 @@ class AuthGroup extends StatelessWidget {
 			child: Column(
 				crossAxisAlignment: CrossAxisAlignment.start,
 				children: [
-					if(title != null)
-						Padding(
-							padding: EdgeInsets.symmetric(horizontal: 10.0),
-							child: Text(title, style: Theme.of(context).textTheme.headline1.copyWith(color: Colors.white))
-						),
-					if(hint != null)
-						Padding(
-							padding: EdgeInsets.symmetric(horizontal: 10.0),
-							child: Text(hint, style: Theme.of(context).textTheme.bodyText1)
-						),
+					Row(
+						children: [
+							Expanded(
+								child: Column(
+									crossAxisAlignment: CrossAxisAlignment.start,
+									children: [
+										if(title != null)
+											Padding(
+												padding: EdgeInsets.symmetric(horizontal: 10.0),
+												child: Text(title, style: Theme.of(context).textTheme.headline1.copyWith(color: Colors.white))
+											),
+										if(hint != null)
+											Padding(
+												padding: EdgeInsets.symmetric(horizontal: 10.0),
+												child: Text(hint, style: Theme.of(context).textTheme.bodyText1)
+											)
+									]
+								)
+							),
+							if(action != null)
+								action
+						]
+					),
 					Container(
 						decoration: BoxDecoration(
 							color: Colors.white,

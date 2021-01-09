@@ -15,6 +15,7 @@ import 'package:fokus/model/ui/auth/password.dart';
 import 'package:fokus/utils/ui/snackbar_utils.dart';
 import 'package:fokus/widgets/auth/auth_button.dart';
 import 'package:fokus/widgets/auth/auth_widgets.dart';
+import 'package:fokus/widgets/buttons/popup_menu_list.dart';
 
 class CaregiverSignInPage extends StatelessWidget {
 	static const String _pageKey = 'page.loginSection.caregiverSignIn';
@@ -61,6 +62,11 @@ class CaregiverSignInPage extends StatelessWidget {
 					title: AppLocales.of(context).translate('$_pageKey.logInTitle'),
 					hint: AppLocales.of(context).translate('$_pageKey.logInHint'),
 					isLoading: state.status.isSubmissionInProgress,
+					action: PopupMenuList(
+						lightTheme: true,
+						customIcon: Icons.settings,
+						items: _buildAdditionalLoginSettings(context)
+					),
 					content: Column(
 						children: <Widget>[
 							AuthenticationInputField<CaregiverSignInCubit, CaregiverSignInState>(
@@ -86,7 +92,6 @@ class CaregiverSignInPage extends StatelessWidget {
 									Colors.teal
 								)
 							),
-							buildEmailOptionButtons(context),
 							AuthDivider(),
 							AuthButton.google(
 								UIButton(
@@ -101,35 +106,32 @@ class CaregiverSignInPage extends StatelessWidget {
 		);
   }
 
-	Row buildEmailOptionButtons(BuildContext context) {
-  	var buttonText = (String key) => Text(
-		  AppLocales.instance.translate('$_pageKey.$key'),
-		  style: Theme.of(context).textTheme.subtitle2.copyWith(color: AppColors.mainBackgroundColor, fontWeight: FontWeight.bold)
-	  );
-    return Row(
-			mainAxisAlignment: MainAxisAlignment.center,
-			children: [
-				FlatButton(
-					onPressed: () async {
-						if (!await context.read<CaregiverSignInCubit>().resetPassword())
-							showInfoSnackbar(context, '$_pageKey.enterEmail');
-						else
-							showSuccessSnackbar(context, '$_pageKey.resetEmailSent');
-					},
-					child: buttonText('resetPassword')
-				),
-				FlatButton(
-					onPressed: () async {
-						var result = await context.read<CaregiverSignInCubit>().resendVerificationEmail();
-						if (result == VerificationAttemptOutcome.emailSent)
-							showSuccessSnackbar(context, 'authentication.emailVerificationSent');
-						else if (result == VerificationAttemptOutcome.accountAlreadyVerified)
-							showInfoSnackbar(context, 'authentication.error.accountAlreadyVerified');
-					},
-					child: buttonText('resetVerificationEmail')
-				),
-			],
-		);
+	List<UIButton> _buildAdditionalLoginSettings(BuildContext context) {
+		return [
+			UIButton(
+				'$_pageKey.resetPassword',
+				() async {
+					if (!await context.read<CaregiverSignInCubit>().resetPassword())
+						showInfoSnackbar(context, '$_pageKey.enterEmail');
+					else
+						showSuccessSnackbar(context, '$_pageKey.resetEmailSent');
+				},
+				null,
+				Icons.settings_backup_restore
+			),
+			UIButton(
+				'$_pageKey.resetVerificationEmail',
+				() async {
+					var result = await context.read<CaregiverSignInCubit>().resendVerificationEmail();
+					if (result == VerificationAttemptOutcome.emailSent)
+						showSuccessSnackbar(context, 'authentication.emailVerificationSent');
+					else if (result == VerificationAttemptOutcome.accountAlreadyVerified)
+						showInfoSnackbar(context, 'authentication.error.accountAlreadyVerified');
+				},
+				null,
+				Icons.mark_email_read
+			),
+		];
   }
 	
   Widget _buildSignUpButtons(BuildContext context) {

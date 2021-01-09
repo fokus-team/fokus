@@ -6,16 +6,19 @@ class PopupMenuList extends StatelessWidget {
   final List<UIButton> items;
 	final bool lightTheme;
 	final bool includeDivider;
+	final IconData customIcon;
+	final String tooltip;
 
-	PopupMenuList({this.items, this.lightTheme = false, this.includeDivider = false});
+	PopupMenuList({this.items, this.lightTheme = false, this.includeDivider = false, this.customIcon = Icons.more_vert, this.tooltip});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
 			customBorder: new CircleBorder(),
 			child: PopupMenuButton(
+				tooltip: tooltip,
 				onSelected: (Function a) => a(),
-				icon: lightTheme ? Icon(Icons.more_vert, size: 26.0, color: Colors.white,) : Icon(Icons.more_vert, size: 26.0, color: Colors.black),
+				icon: lightTheme ? Icon(customIcon, size: 26.0, color: Colors.white,) : Icon(customIcon, size: 26.0, color: Colors.black),
 				itemBuilder: (BuildContext context) => _menuItemFactory(items,  context),
 			)
 		);

@@ -6,6 +6,7 @@ import 'package:fokus/model/db/plan/task_instance.dart';
 import 'package:fokus/model/notification/notification_type.dart';
 import 'package:fokus/model/ui/plan/ui_plan_instance.dart';
 import 'package:fokus/model/ui/task/ui_task_instance.dart';
+import 'package:fokus/services/analytics_service.dart';
 import 'package:fokus/services/data/data_repository.dart';
 import 'package:fokus/services/ui_data_aggregator.dart';
 import 'package:fokus/services/task_instance_service.dart';
@@ -20,8 +21,9 @@ class PlanInstanceCubit extends ReloadableCubit {
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final TaskInstanceService _taskInstancesService = GetIt.I<TaskInstanceService>();
 	final UIDataAggregator _dataAggregator = GetIt.I<UIDataAggregator>();
-	UIPlanInstance uiPlanInstance;
+	final AnalyticsService _analyticsService = GetIt.I<AnalyticsService>();
 
+	UIPlanInstance uiPlanInstance;
 	PlanInstance _planInstance;
 
 	PlanInstanceCubit(this.uiPlanInstance, ModalRoute modalRoute) : super(modalRoute);
@@ -83,6 +85,7 @@ class PlanInstanceCubit extends ReloadableCubit {
 		}
 		else updates.add(_dataRepository.updatePlanInstanceFields(_planInstance.id, state: PlanInstanceState.completed));
 		List<UITaskInstance> uiInstances = await _taskInstancesService.mapToUIModels(updatedTaskInstances);
+		_analyticsService.logPlanCompleted(_planInstance);
 
 		Future.wait(updates);
 		uiPlanInstance = await _dataAggregator.loadPlanInstance(planInstanceId: _planInstance.id);

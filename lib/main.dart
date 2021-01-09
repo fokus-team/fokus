@@ -83,10 +83,11 @@ void main() async {
 	var routeObserver = AppRouteObserver();
 	await registerServices(navigatorKey, routeObserver);
 
+	var analytics = GetIt.I<AnalyticsService>()..logAppOpen();
 	GetIt.I<Instrumentator>().runAppGuarded(
 		BlocProvider<AuthenticationBloc>(
 			create: (context) => AuthenticationBloc(),
-			child: FokusApp(navigatorKey, routeObserver, GetIt.I<AnalyticsService>().pageObserver),
+			child: FokusApp(navigatorKey, routeObserver, analytics.pageObserver),
 		)
 	);
 }

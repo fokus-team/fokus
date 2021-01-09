@@ -33,9 +33,9 @@ Future registerServices(GlobalKey<NavigatorState> navigatorKey, AppRouteObserver
 	GetIt.I.registerSingleton<TaskInstanceService>(TaskInstanceService());
 	GetIt.I.registerSingleton<NotificationService>(OneSignalNotificationService());
 	GetIt.I.registerSingleton<LocaleService>(LocaleService());
+	GetIt.I.registerSingleton<AnalyticsService>(AnalyticsService());
 	GetIt.I.registerSingleton<Instrumentator>(Instrumentator());
 	GetIt.I.registerSingleton<LinkService>(FirebaseDynamicLinkService());
-	GetIt.I.registerSingleton<AnalyticsService>(AnalyticsService());
 
 	return GetIt.I.allReady();
 }

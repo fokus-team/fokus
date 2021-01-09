@@ -13,12 +13,14 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
+import 'analytics_service.dart';
 import 'exception/db_exceptions.dart';
 import 'observers/active_user_observer.dart';
 
 class Instrumentator implements ActiveUserObserver {
 	final Logger _logger = Logger('Instrumentator');
 	final _navigatorKey = GetIt.I<GlobalKey<NavigatorState>>();
+	final AnalyticsService _analyticsService = GetIt.I<AnalyticsService>();
 
 	void runAppGuarded(Widget app) {
 		Bloc.observer = FokusBlocObserver();
@@ -84,12 +86,15 @@ class Instrumentator implements ActiveUserObserver {
 
   @override
   void onUserSignIn(User user) {
-	  FirebaseCrashlytics.instance.setUserIdentifier(user.id.toHexString());
+		var id = user.id.toHexString();
+	  FirebaseCrashlytics.instance.setUserIdentifier(id);
+	  _analyticsService.setUserId(id);
   }
 
   @override
   void onUserSignOut(User user) {
 	  FirebaseCrashlytics.instance.setUserIdentifier('');
+	  _analyticsService.setUserId('');
   }
 }
 

@@ -19,7 +19,8 @@ class _AppInfoDialogState extends State<AppInfoDialog> {
 
 	final String creators = 'Stanisław Góra, Mateusz Janicki,\nMikołaj Mirko, Jan Czubiak';
 	final String githubURL = 'https://github.com/fokus-team/fokus';
-	final String termsURL = 'https://github.com/fokus-team/fokus'; // TODO Write and direct to terms of use
+	final String termsURL = 'https://fokus-team.github.io/terms_of_use.html';
+	final String privacyURL = 'https://fokus-team.github.io/privacy_policy.html';
 
 	_openBrowserpage(BuildContext context, String url) async {
 		if (await canLaunch(url)) {
@@ -98,13 +99,22 @@ class _AppInfoDialogState extends State<AppInfoDialog> {
 										onTap: () => _openBrowserpage(context, githubURL)
 									),
 									ListTile(
-										title: Text(AppLocales.of(context).translate('$_settingsKey.terms')),
+										title: Text(AppLocales.of(context).translate('$_settingsKey.termsOfUse')),
 										trailing: Padding(
 											padding: EdgeInsets.only(left: 4.0, top: 2.0),
 											child: Icon(Icons.keyboard_arrow_right, color: Colors.grey)
 										),
 										leading: Icon(Icons.description),
 										onTap: () => _openBrowserpage(context, termsURL)
+									),
+									ListTile(
+										title: Text(AppLocales.of(context).translate('$_settingsKey.privacyPolicy')),
+										trailing: Padding(
+											padding: EdgeInsets.only(left: 4.0, top: 2.0),
+											child: Icon(Icons.keyboard_arrow_right, color: Colors.grey)
+										),
+										leading: Icon(Icons.lock_clock),
+										onTap: () => _openBrowserpage(context, privacyURL)
 									)
 								]
 							)

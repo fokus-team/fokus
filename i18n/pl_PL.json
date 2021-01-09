@@ -38,7 +38,10 @@
 			},
 			"caregiverSignUp": {
 				"registerTitle": "Stwórz nowe konto",
-				"registerHint": "Uzupełnij poniższy formularz lub użyj konta Google"
+				"registerHint": "Uzupełnij poniższy formularz lub użyj konta Google",
+				"agreement": "Akceptuję",
+				"termsOfUse": "Warunki korzystania",
+				"privacyPolicy": "Politykę prywatności"
 			},
 			"childProfiles": {
 				"addProfile": "Dodaj profil",
@@ -119,7 +122,8 @@
 						"creators": "Autorzy",
 						"licences": "Licencje",
 						"projectPage": "Strona projektu",
-						"terms": "Warunki usługi"
+						"termsOfUse": "Warunki korzystania",
+						"privacyPolicy": "Polityka prywatności"
 					}
 				}
 			}

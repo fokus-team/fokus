@@ -38,7 +38,10 @@
 			},
 			"caregiverSignUp": {
 				"registerTitle": "Create new account",
-				"registerHint": "Fill the form below or use your Google account"
+				"registerHint": "Fill the form below or use your Google account",
+				"agreement": "I agree to the",
+				"termsOfUse": "Terms of Use",
+				"privacyPolicy": "Privacy Policy"
 			},
 			"childProfiles": {
 				"addProfile": "Add profile",
@@ -119,7 +122,8 @@
 						"creators": "Created by",
 						"licences": "Licences",
 						"projectPage": "Project page",
-						"terms": "Terms of service"
+						"termsOfUse": "Terms of Use",
+						"privacyPolicy": "Privacy Policy"
 					}
 				}
 			}

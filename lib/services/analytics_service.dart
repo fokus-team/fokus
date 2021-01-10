@@ -56,7 +56,6 @@ class AnalyticsService {
 extension LogPlanInstance on PlanInstance {
 	Map<String, dynamic> get logRecord => {
 		'id': id.toHexString(),
-		'id': id.toHexString(),
 		'plan_id': planID.toHexString()
 	};
 }

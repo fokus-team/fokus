@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter/gestures.dart';
 import 'package:fokus/utils/ui/snackbar_utils.dart';
 import 'package:fokus/utils/ui/theme_config.dart';
 import 'package:fokus/widgets/auth/auth_button.dart';
 import 'package:fokus/widgets/auth/auth_widgets.dart';
 import 'package:fokus_auth/fokus_auth.dart';
 import 'package:formz/formz.dart';
+import 'package:fokus/model/ui/external_url.dart';
 
 import 'package:fokus/logic/caregiver/auth/sign_up/caregiver_sign_up_cubit.dart';
 import 'package:fokus/model/ui/ui_button.dart';
@@ -90,6 +92,7 @@ class CaregiverSignUpPage extends StatelessWidget {
 								getErrorKey: (state) => [state.confirmedPassword.error.key],
 								hideInput: true
 							),
+							_buildAgreementCheckbox(context),
 							AuthButton(
 								button: UIButton.ofType(
 									ButtonType.signUp,
@@ -105,6 +108,87 @@ class CaregiverSignUpPage extends StatelessWidget {
 								)
 							)
 						]
+					)
+				);
+			}
+		);
+	}
+
+	Widget _buildAgreementCheckbox(BuildContext context) {
+		TextStyle linkTextStyle = TextStyle(
+			color: Colors.blueAccent,
+			decoration: TextDecoration.underline,
+		);
+		return BlocBuilder<CaregiverSignUpCubit, CaregiverSignUpState>(
+			cubit: BlocProvider.of<CaregiverSignUpCubit>(context),
+			builder: (context, state) {
+				return InkWell(
+					onTap: () {
+						BlocProvider.of<CaregiverSignUpCubit>(context).agreementChanged(!state.agreement.value);
+					},
+					child: Padding(
+						padding: EdgeInsets.symmetric(horizontal: 2.0, vertical: 6.0),
+						child: Column(
+							crossAxisAlignment: CrossAxisAlignment.start,
+							children: [
+								Row(
+									children: <Widget>[
+										Padding(
+											padding: EdgeInsets.only(right: 8.0),
+											child: Checkbox(
+												value: state.agreement.value,
+												onChanged: (bool newValue) {
+													BlocProvider.of<CaregiverSignUpCubit>(context).agreementChanged(newValue);
+												}
+											)
+										),
+										Expanded(
+											child: RichText(
+												text: TextSpan(
+													text: '${AppLocales.of(context).translate('$_pageKey.agreement')} ',
+													style: Theme.of(context).textTheme.bodyText2,
+													children: [
+														TextSpan(
+															text: AppLocales.of(context).translate('$_pageKey.termsOfUse'),
+															style: linkTextStyle,
+															recognizer: TapGestureRecognizer()..onTap = () {
+																ExternalURL.termsOfUse.openBrowserPage(context);
+															}
+														),
+														TextSpan(
+															text: ' ${AppLocales.of(context).translate('and')} ',
+															style: Theme.of(context).textTheme.bodyText2
+														),
+														TextSpan(
+															text: AppLocales.of(context).translate('$_pageKey.privacyPolicy'),
+															style: linkTextStyle,
+															recognizer: TapGestureRecognizer()..onTap = () {
+																ExternalURL.privacyPolicy.openBrowserPage(context);
+															}
+														),
+														TextSpan(
+															text: '.',
+															style: Theme.of(context).textTheme.bodyText2
+														)
+													]
+												)
+											)
+										)
+									]
+								),
+								if(state.agreement.invalid)
+									Padding(
+										padding: EdgeInsets.only(left: 68.0, top: 2.0, bottom: 4.0),
+										child: Text(
+											AppLocales.of(context).translate('authentication.error.agreementNotAccepted'),
+											style: TextStyle(
+												color: Theme.of(context).errorColor,
+												fontSize: 12.0,
+											)
+										)
+									)
+							]
+						)
 					)
 				);
 			}

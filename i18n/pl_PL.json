@@ -38,7 +38,10 @@
 			},
 			"caregiverSignUp": {
 				"registerTitle": "Stwórz nowe konto",
-				"registerHint": "Uzupełnij poniższy formularz lub użyj konta Google"
+				"registerHint": "Uzupełnij poniższy formularz lub użyj konta Google",
+				"agreement": "Akceptuję",
+				"termsOfUse": "warunki korzystania",
+				"privacyPolicy": "politykę prywatności"
 			},
 			"childProfiles": {
 				"addProfile": "Dodaj profil",
@@ -102,7 +105,9 @@
 					"deleteChildAccountDescription": "Czy na pewno chcesz usunąć konto tego dziecka? Spowoduje to trwałe wymazanie wszystkich jego danych włączając w to:",
 					"deleteAccountDataList": "Plany|Zadania|Nagrody|Profile dzieci|Historię wykonanych zadań",
 					"deleteChildAccountDataList": "Profil|Nagrody|Punkty|Historię wykonanych zadań",
-					"deleteAccountConfirm": "Wprowadź swoje hasło aby potwierdzić:"
+					"deleteAccountConfirm": "Wprowadź swoje hasło aby potwierdzić:",
+					"accountDeletedText": "Konto zostało pomyślnie usunięte",
+					"accountChildDeletedText": "Profil dziecka został pomyślnie usunięty"
 				},
 				"appSettings": {
 					"header": "Ustawienia aplikacji",
@@ -119,7 +124,8 @@
 						"creators": "Autorzy",
 						"licences": "Licencje",
 						"projectPage": "Strona projektu",
-						"terms": "Warunki usługi"
+						"termsOfUse": "Warunki korzystania",
+						"privacyPolicy": "Polityka prywatności"
 					}
 				}
 			}
@@ -182,7 +188,9 @@
 				"header": {
 					"title": "Kalendarz planów",
 					"filterPlansTitle": "Filtruj wyświetlane plany",
-					"showPlansForTitle": "Wyświetlaj plany przypisane do"
+					"showPlansForTitle": "Wyświetlaj plany przypisane do",
+					"emptyListHeader": "Filtrowanie planów niedostępne",
+					"emptyListText": "Nie dodano jeszcze do konta żadnego profilu dziecka"
 				},
 				"content": {
 					"plansOnDateTitle": "Plany na dzień {DATE}",
@@ -249,7 +257,9 @@
 					},
 					"assignedChildren": {
 						"label": "Przypisane dzieci",
-						"hint": "Wybierz jedno lub więcej dzieci"
+						"hint": "Wybierz jedno lub więcej dzieci",
+						"emptyListHeader": "Przypisywanie dzieci niedostępne",
+						"emptyListText": "Nie dodano jeszcze do konta żadnego profilu dziecka, można jednak kontynuować tworzenie planu bez ich przypisywania."
 					},
 					"repeatability": {
 						"label": "Powtarzalność",
@@ -696,6 +706,7 @@
 			"noPasswordMatch": "Hasła nie pasują",
 			"passwordEmpty": "Hasło nie może być puste",
 			"avatarEmpty": "Należy wybrać awatar dziecka",
+			"agreementNotAccepted": "Należy zaakceptować warunki",
 			"accountNotVerified": "Konto nie zostało zweryfikowane",
 			"emailLink": "Ten link {TYPE, select, 0 {resetujący hasło} 1 {weryfikujący konto} other {}} {ERR, select, 0 {jest nieprawidłowy} 1 {wygasł} other {}} - wygeneruj nowy",
 			"accountAlreadyVerified": "Konto już zostało zweryfikowane"

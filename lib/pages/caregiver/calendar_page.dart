@@ -21,6 +21,7 @@ import 'package:fokus/utils/ui/theme_config.dart';
 import 'package:fokus/widgets/cards/item_card.dart';
 import 'package:fokus/widgets/chips/attribute_chip.dart';
 import 'package:fokus/widgets/segment.dart';
+import 'package:fokus/widgets/general/app_hero.dart';
 
 class CaregiverCalendarPage extends StatefulWidget {
 	@override
@@ -283,7 +284,12 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 	          onTapped: onChange != null ? () => onChange(item.value, !checked) : null,
 	          isActive: checked
 	        )
-	      )
+	      ),
+				emptyBuilder: (str) => AppHero(
+					icon: Icons.warning,
+					header: AppLocales.of(context).translate('$_pageKey.header.emptyListHeader'),
+					title: AppLocales.of(context).translate('$_pageKey.header.emptyListText'),
+				)
 	    ),
 	    modalType: SmartSelectModalType.bottomSheet,
 			modalConfig: SmartSelectModalConfig(

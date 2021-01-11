@@ -1,11 +1,12 @@
 import 'package:flutter/widgets.dart';
-import 'package:fokus/services/app_route_observer.dart';
 import 'package:get_it/get_it.dart';
+import 'package:flutter/foundation.dart' as Foundation;
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
 import 'package:fokus/model/notification/notification_data.dart';
+import 'package:fokus/services/app_route_observer.dart';
 import 'package:fokus/model/notification/notification_type.dart';
 import 'package:fokus/services/ui_data_aggregator.dart';
 import 'package:fokus/model/ui/gamification/ui_points.dart';
@@ -19,7 +20,7 @@ import 'package:fokus/services/notifications/notification_provider.dart';
 
 
 class OneSignalNotificationProvider extends NotificationProvider {
-	final String appId = 'ed3ee23f-aa7a-4fc7-91ab-9967fa7712e5';
+	final String appId = Foundation.kReleaseMode ? 'ed3ee23f-aa7a-4fc7-91ab-9967fa7712e5' : 'f82c17d5-95cb-48ef-b8dc-ca8a95406221';
 
 	final _navigatorKey = GetIt.I<GlobalKey<NavigatorState>>();
 	final UIDataAggregator _dataAggregator = GetIt.I<UIDataAggregator>();

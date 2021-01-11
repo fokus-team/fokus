@@ -46,8 +46,11 @@ class OneSignalNotificationProvider extends NotificationProvider {
 	void _onNotificationOpened(OSNotificationOpenedResult result) async {
     await _routeObserver.navigatorInitialized;
 		logger.fine("onOpenMessage: $result");
-		var navigate = (AppPage page, [dynamic arguments]) => _navigatorKey.currentState.pushNamed(page.name, arguments: arguments);
-		var context = _navigatorKey.currentState.context;
+    var context = _navigatorKey.currentState.context;
+		var navigate = (AppPage page, [dynamic arguments]) {
+			if (ModalRoute.of(context).settings.name != page.name)
+		    return _navigatorKey.currentState.pushNamed(page.name, arguments: arguments);
+		};
 		var data = NotificationData.fromJson(result.notification.payload.additionalData);
 		var activeUser = BlocProvider.of<AuthenticationBloc>(context).state.user;
 		if (activeUser == null || activeUser.id != data.recipient) {

@@ -20,7 +20,7 @@ class MongoDbProvider {
 			timeoutConfig: TimeoutConfig(
 				connectionTimeout: 6000,
 				socketTimeout: 3000,
-				keepAliveTime: 10 * 60
+				keepAliveTime: 20 * 60
 			)
 		).catchError((e) => throw NoDbConnection(e));
 	}

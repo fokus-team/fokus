@@ -35,11 +35,11 @@ import 'package:fokus/logic/caregiver/tasks_evaluation/tasks_evaluation_cubit.da
 import 'package:fokus/model/ui/auth/password_change_type.dart';
 import 'package:fokus/pages/child/calendar_page.dart';
 
-import 'package:fokus/pages/loading_page.dart';
-import 'package:fokus/pages/plan/plan_details_page.dart';
-import 'package:fokus/pages/roles_page.dart';
-import 'package:fokus/pages/notifications_page.dart';
-import 'package:fokus/pages/settings_page.dart';
+import 'package:fokus/pages/common/loading_page.dart';
+import 'package:fokus/pages/common/plan_details_page.dart';
+import 'package:fokus/pages/common/roles_page.dart';
+import 'package:fokus/pages/common/notifications_page.dart';
+import 'package:fokus/pages/common/settings_page.dart';
 import 'package:fokus/pages/caregiver/auth/caregiver_sign_in_page.dart';
 import 'package:fokus/pages/caregiver/auth/caregiver_sign_up_page.dart';
 import 'package:fokus/pages/caregiver/awards_page.dart';
@@ -57,7 +57,7 @@ import 'package:fokus/pages/child/auth/child_profiles_page.dart';
 import 'package:fokus/pages/child/auth/child_sign_in_page.dart';
 import 'package:fokus/pages/child/rewards_page.dart';
 import 'package:fokus/pages/child/panel_page.dart';
-import 'package:fokus/pages/plan/plan_instance_details_page.dart';
+import 'package:fokus/pages/common/plan_instance_details_page.dart';
 import 'package:fokus/pages/child/task_in_progress_page.dart';
 import 'package:fokus/pages/child/achievements_page.dart';
 

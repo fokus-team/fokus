@@ -28,7 +28,7 @@ import 'package:fokus/logic/common/settings/account_delete/account_delete_cubit.
 import 'package:fokus/logic/common/settings/name_change/name_change_cubit.dart';
 import 'package:fokus/logic/common/settings/password_change/password_change_cubit.dart';
 import 'package:fokus/logic/common/settings/locale_cubit.dart';
-import 'package:fokus/logic/child/task_instance/task_instance_cubit.dart';
+import 'package:fokus/logic/child/task_completion/task_completion_cubit.dart';
 import 'package:fokus/logic/caregiver/reward_form/reward_form_cubit.dart';
 import 'package:fokus/logic/caregiver/badge_form/badge_form_cubit.dart';
 import 'package:fokus/logic/caregiver/tasks_evaluation/tasks_evaluation_cubit.dart';
@@ -209,7 +209,7 @@ class _FokusAppState extends State<FokusApp> implements CurrentLocaleObserver {
 
 			AppPage.childCalendar.name: (context) => _createPage(ChildCalendarPage(), context, CalendarCubit(getParams(context), getActiveUser(context))),
 			AppPage.planInstanceDetails.name: (context) => _createPage(PlanInstanceDetailsPage(getParams(context)), context, PlanInstanceCubit(((getParams(context) as Map<String, dynamic>)['plan'] as UIPlanInstance), getRoute(context))),
-			AppPage.childTaskInProgress.name: (context) => _createPage(ChildTaskInProgressPage(), context, TaskInstanceCubit((getParams(context) as Map)["TaskId"], getActiveUser(context), (getParams(context) as Map)["UIPlanInstance"]))
+			AppPage.childTaskInProgress.name: (context) => _createPage(ChildTaskInProgressPage(), context, TaskCompletionCubit((getParams(context) as Map)["TaskId"], getActiveUser(context), (getParams(context) as Map)["UIPlanInstance"]))
 		};
 	}
 

@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fokus/logic/child/task_instance/task_instance_cubit.dart';
+import 'package:fokus/logic/child/task_completion/task_completion_cubit.dart';
 import 'package:fokus/logic/common/timer/timer_cubit.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/duration_utils.dart';
@@ -19,8 +19,8 @@ class TaskAppHeader extends StatefulWidget with PreferredSizeWidget {
 	final String title;
 	final Widget content;
 	final String helpPage;
-	final Function breakPerformingTransition;
-	final TaskInstanceLoaded state;
+	final Function(TaskCompletionStateLoaded) breakPerformingTransition;
+	final TaskCompletionStateLoaded state;
 	final dynamic popArgs;
 
 	TaskAppHeader({Key key, @required this.height, @required this.state, this.title, this.content, this.helpPage,this.breakPerformingTransition, this.popArgs}) : super(key: key);
@@ -151,7 +151,7 @@ class TaskAppHeaderState extends State<TaskAppHeader> with TickerProviderStateMi
 
 	Widget _getButtonWidget() {
 		if(isBreakNow == null) setState(() {
-			isBreakNow = this.widget.state is TaskInstanceInBreak;
+			isBreakNow = this.widget.state.current == TaskCompletionStateType.inBreak;
 			_buttonController = AnimationController(duration: Duration(milliseconds: 450), vsync: this);
 			if(isBreakNow) _buttonController.forward();
 		});
@@ -187,7 +187,7 @@ class TaskAppHeaderState extends State<TaskAppHeader> with TickerProviderStateMi
 			),
 			onPressed: () => {
 				this.widget.breakPerformingTransition(this.widget.state),
-				this.widget.state is TaskInstanceInProgress ? _timerCompletionCubit.pauseTimer() : _timerCompletionCubit.resumeTimer()
+				this.widget.state.current == TaskCompletionStateType.inProgress ? _timerCompletionCubit.pauseTimer() : _timerCompletionCubit.resumeTimer()
 			},
 			elevation: 4.0
 		);
@@ -227,7 +227,7 @@ class TaskAppHeaderState extends State<TaskAppHeader> with TickerProviderStateMi
 			}
 			else _timerCompletionCubit = TimerCubit.up(() => _getDuration());
 		}
-  	if(this.widget.state is TaskInstanceInProgress)
+  	if(this.widget.state.current == TaskCompletionStateType.inProgress)
 			return (_) => _timerCompletionCubit..startTimer();
   	else return (_) => _timerCompletionCubit..startTimer(paused: true);
 	}

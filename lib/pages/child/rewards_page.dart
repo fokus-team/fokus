@@ -47,7 +47,13 @@ class _ChildRewardsPageState extends State<ChildRewardsPage> {
 							),
 						wrapWithExpanded: true,
 		      ),
-					BlocBuilder<ChildRewardsCubit, LoadableState>(
+					BlocConsumer<ChildRewardsCubit, LoadableState>(
+						listener: (context, state) {
+							if (state is DataSubmissionInProgress)
+								Navigator.of(context).pop(); // closing confirm dialog before pushing snackbar
+							else if (state is DataSubmissionSuccess)
+								showSuccessSnackbar(context, '$_pageKey.rewardClaimedText');
+						},
 						builder: (context, state) => CustomChildAppBar(points: state is DataLoadSuccess ? (state as ChildRewardsLoadSuccess).points : null)
 					)
 	      ]
@@ -55,12 +61,6 @@ class _ChildRewardsPageState extends State<ChildRewardsPage> {
       bottomNavigationBar: AppNavigationBar.childPage(currentIndex: 1)
     );
   }
-
-	void _claimReward(UIReward reward) {
-		BlocProvider.of<ChildRewardsCubit>(context).claimReward(reward);
-		Navigator.of(context).pop(); // closing confirm dialog before pushing snackbar
-		showSuccessSnackbar(context, '$_pageKey.rewardClaimedText');
-	}
 
 	List<Widget> _buildRewardShop(ChildRewardsLoadSuccess state, BuildContext context) {
 		return state.rewards.map((reward) {
@@ -74,7 +74,7 @@ class _ChildRewardsPageState extends State<ChildRewardsPage> {
 					color: AppColors.currencyColor[reward.cost.type],
 					icon: Icons.add,
 					disabled: percentage < 1.0,
-					onTapped: () => showRewardDialog(context, reward, claimFeedback: () => _claimReward(reward))
+					onTapped: () => showRewardDialog(context, reward, claimFeedback: () => BlocProvider.of<ChildRewardsCubit>(context).claimReward(reward))
 				)
 			);
 		}).toList();

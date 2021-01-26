@@ -23,6 +23,8 @@ class ChildRewardsCubit extends ReloadableCubit {
 	final NotificationService _notificationService = GetIt.I<NotificationService>();
 	final AnalyticsService _analyticsService = GetIt.I<AnalyticsService>();
 
+	List<UIReward> _rewards;
+
   ChildRewardsCubit(this._activeUser, ModalRoute pageRoute) : super(pageRoute);
 
 	List<UIReward> _updateRewardLimits(List<UIReward> rewards, List<UIChildReward> claimedRewards) {
@@ -35,18 +37,21 @@ class ChildRewardsCubit extends ReloadableCubit {
 	  UIChild child = _activeUser();
 		ObjectId caregiverID = child.connections.first;
 
-		List<Reward> rewards = [];
-		if(caregiverID != null) 
-			rewards = await _dataRepository.getRewards(caregiverId: caregiverID);
+		if(caregiverID != null && _rewards == null)
+			_rewards = (await _dataRepository.getRewards(caregiverId: caregiverID)).map((reward) => UIReward.fromDBModel(reward)).toList();
 
 	  emit(ChildRewardsLoadSuccess(
-			_updateRewardLimits(rewards.map((reward) => UIReward.fromDBModel(reward)).toList(), child.rewards),
+			_updateRewardLimits(_rewards, child.rewards),
 			List.from(child.rewards),
 			List.from(child.points)
 		));
   }
 
 	void claimReward(UIReward reward) async {
+		if (state is! DataLoadSuccess)
+			return;
+		emit(DataSubmissionInProgress());
+
     UIChild child = _activeUser();
 		List<UIPoints> points = child.points;
 		List<UIChildReward> rewards = child.rewards;
@@ -67,11 +72,7 @@ class ChildRewardsCubit extends ReloadableCubit {
 			);
 			_analyticsService.logRewardBought(reward);
 			await _notificationService.sendRewardBoughtNotification(model.id, model.name, child.connections.first, child);
-			emit(ChildRewardsLoadSuccess(
-				_updateRewardLimits((state as ChildRewardsLoadSuccess).rewards, child.rewards),
-				List.from(child.rewards),
-				List.from(child.points)
-			));
+			emit(DataSubmissionSuccess());
 		}
 	}
 

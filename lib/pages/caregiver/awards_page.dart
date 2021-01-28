@@ -76,7 +76,7 @@ class _CaregiverAwardsPageState extends State<CaregiverAwardsPage> {
 									);
 								}, null, Icons.delete)
 							],
-							onTapped: () => showRewardDialog(context, reward, showHeader: false),
+							onTapped: () => showRewardDialog(context, reward),
 						)
 				]
 			),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/logic/caregiver/caregiver_friends_cubit.dart';
+import 'package:fokus/logic/child/child_rewards_cubit.dart';
 import 'package:fokus/logic/common/settings/account_delete/account_delete_cubit.dart';
 import 'package:fokus/logic/common/settings/name_change/name_change_cubit.dart';
 import 'package:fokus/logic/common/settings/password_change/password_change_cubit.dart';
@@ -155,10 +156,10 @@ void showCurrencyEditDialog(BuildContext context, Function(String) callback, {St
 	);
 }
 
-void showRewardDialog(BuildContext context, UIReward reward, {bool showHeader = true, Function claimFeedback}) {
+void showRewardDialog(BuildContext context, UIReward reward, {Function claimFeedback}) {
 	showDialog(
 		context: context,
-		builder: (context) => RewardDialog(reward: reward, showHeader: showHeader, claimFeedback: claimFeedback)
+		builder: (_) => tryForwardCubit<ChildRewardsCubit>(RewardDialog(reward: reward, claimFeedback: claimFeedback), context)
 	);
 }
 

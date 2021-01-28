@@ -22,6 +22,7 @@ class RoundedButton extends StatelessWidget {
         padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 16.0).copyWith(right: 16.0),
         color: button.color,
         onPressed: button.action,
+				disabledColor: Colors.grey,
 				icon: Icon(button.icon, color: Colors.white),
 				label: Text(AppLocales.of(context).translate(button.textKey), style: Theme.of(context).textTheme.button)
       )

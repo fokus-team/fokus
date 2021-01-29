@@ -65,32 +65,32 @@ extension LogTaskInstance on TaskInstance {
 		'id': id.toHexString(),
 		'task_id': taskID.toHexString(),
 		'plan_id': planInstanceID.toHexString(),
-		'subtask_count': subtasks.length
+		'subtask_count': '${subtasks.length}'
 	};
 }
 
 extension LogUITaskReport on UITaskReport {
 	Map<String, dynamic> get logRecord => {
-		'child_id': child.id,
+		'child_id': child.id.toHexString(),
 		'id': task.id.toHexString(),
-		'x': ratingMark.value
+		'rating': '${ratingMark.value}'
 	};
 }
 
 extension LogReward on Reward {
 	Map<String, dynamic> get logRecord => {
 		'id': id.toHexString(),
-		'cost': cost.quantity,
-		'currency': cost.icon.index,
-		'limit': limit
+		'cost': '${cost.quantity}',
+		'currency': '${cost.icon.index}',
+		'limit': '$limit'
 	};
 }
 
 extension LogUIReward on UIReward {
 	Map<String, dynamic> get logRecord => {
 		'id': id.toHexString(),
-		'cost': cost.quantity,
-		'currency': icon,
-		'limit': limit
+		'cost': '${cost.quantity}',
+		'currency': '$icon',
+		'limit': '$limit'
 	};
 }

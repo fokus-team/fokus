@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:fokus/logic/common/reloadable/reloadable_cubit.dart';
 import 'package:fokus/model/db/gamification/child_badge.dart';
 import 'package:fokus/model/db/plan/plan.dart';
+import 'package:fokus/model/db/plan/plan_instance.dart';
 import 'package:fokus/model/db/plan/task_status.dart';
 import 'package:fokus/model/db/user/child.dart';
 import 'package:fokus/model/notification/notification_type.dart';
@@ -73,8 +74,14 @@ class ChildDashboardCubit extends ReloadableCubit {
 			return assignedTo;
 	  };
 		var newPlans = tabState.availablePlans.map((plan) => plan.copyWith(assignedTo: updateAssigned(plan))).toList();
-		var newChildPlans = List.of(tabState.childPlans)..addAll(await _dataAggregator.loadPlanInstances(childId: childId, plans: assignedPlans));
-		emit(ChildDashboardState.from(state, plansTab: tabState.copyWith(availablePlans: newPlans, childPlans: newChildPlans)));
+	  var existingChildPlanIds = tabState.childPlans.map((plan) => plan.planId).toSet();
+	  var newChildPlans = assignedPlans.where((plan) => !existingChildPlanIds.contains(plan.id)).toList();
+	  List<UIPlanInstance> childPlans;
+	  if (newChildPlans.isNotEmpty) {
+		  var newChildPlanInstances = newChildPlans.map((e) => PlanInstance.fromPlan(e, assignedTo: childId)).toList();
+		  childPlans = List.of(tabState.childPlans)..addAll(await _dataAggregator.getUIPlanInstances(plans: newChildPlans, instances: newChildPlanInstances));
+	  }
+		emit(ChildDashboardState.from(state, plansTab: tabState.copyWith(availablePlans: newPlans, childPlans: childPlans)));
   }
 
 	Future onNameDialogClosed(Future result) async {
@@ -92,7 +99,7 @@ class ChildDashboardCubit extends ReloadableCubit {
 		var activeUser = _activeUser();
 		var planInstances = (await _dataRepository.getPlanInstances(childIDs: [childId], fields: ['_id'])).map((plan) => plan.id).toList();
   	var data = await Future.wait([
-		  _dataAggregator.loadPlanInstances(childId: childId),
+		  _dataAggregator.loadTodaysPlanInstances(childId: childId),
 		  _dataRepository.countTaskInstances(planInstancesId: planInstances, isCompleted: true, state: TaskState.notEvaluated),
 		  _dataRepository.countPlans(caregiverId: activeUser.id),
 		  _dataRepository.getPlans(caregiverId: activeUser.id),

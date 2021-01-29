@@ -18,19 +18,19 @@ mixin PlanDbRepository implements DbRepository {
 		return dbClient.queryOneTyped(Collection.plan, query, (json) => Plan.fromJson(json));
 	}
 
-	Future<List<Plan>> getPlans({List<ObjectId> ids, ObjectId caregiverId, ObjectId childId, bool active, bool oneDayOnly = false, List<String> fields}) {
+	Future<List<Plan>> getPlans({List<ObjectId> ids, ObjectId caregiverId, ObjectId childId, bool active, bool untilCompleted, List<String> fields}) {
 		var query = _buildPlanQuery(caregiverId: caregiverId, childId: childId, active: active, ids: ids);
-		if (oneDayOnly)
-			query.and(where.ne('repeatability.untilCompleted', true));
+		if (untilCompleted != null)
+			query.and(where.eq('repeatability.untilCompleted', untilCompleted));
 		if (fields != null)
 			query.fields(fields);
 		return dbClient.queryTyped(Collection.plan, query, (json) => Plan.fromJson(json));
 	}
 
-	Future<int> countPlans({List<ObjectId> ids, ObjectId caregiverId, ObjectId childId, bool active, bool oneDayOnly = false}) {
+	Future<int> countPlans({List<ObjectId> ids, ObjectId caregiverId, ObjectId childId, bool active, bool untilCompleted}) {
 		var query = _buildPlanQuery(caregiverId: caregiverId, childId: childId, active: active, ids: ids);
-		if (oneDayOnly)
-			query.and(where.ne('repeatability.untilCompleted', true));
+		if (untilCompleted != null)
+			query.and(where.eq('repeatability.untilCompleted', untilCompleted));
 		return dbClient.count(Collection.plan, query);
 	}
 

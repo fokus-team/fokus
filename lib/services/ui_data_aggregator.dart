@@ -13,8 +13,6 @@ import 'package:logging/logging.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
 class UIDataAggregator {
-	final Logger _logger = Logger('PlanInstanceService');
-
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final PlanRepeatabilityService _repeatabilityService = GetIt.I<PlanRepeatabilityService>();
 
@@ -40,27 +38,27 @@ class UIDataAggregator {
 		return UIPlanInstance.fromDBModel(planInstance, plan.name, completedTasks, elapsedTime, getDescription(plan, planInstance.date));
 	}
 
-	Future<List<UIPlanInstance>> loadPlanInstances({@required ObjectId childId, List<Plan> plans}) async {
+	Future<List<UIPlanInstance>> loadTodaysPlanInstances({@required ObjectId childId}) async {
+		var planFields = ['_id', 'name', 'repeatability'];
+
+		var instances = await _dataRepository.getPlanInstances(childIDs: [childId], date: Date.now());
+		var plans = await _dataRepository.getPlans(ids: instances.map((plan) => plan.planID).toList(), fields: planFields);
+		var untilCompletedPlans = await _dataRepository.getPlans(childId: childId, untilCompleted: true, active: true, fields: planFields);
+		plans.addAll(untilCompletedPlans);
+		instances.addAll(await _dataRepository.getPastNotCompletedPlanInstances([childId], untilCompletedPlans.map((plan) => plan.id).toList(), Date.now()));
+		return getUIPlanInstances(plans: plans, instances: instances);
+	}
+
+	Future<List<UIPlanInstance>> getUIPlanInstances({List<Plan> plans, List<PlanInstance> instances}) async {
 		var getDescription = (Plan plan, [Date instanceDate]) => _repeatabilityService.buildPlanDescription(plan.repeatability, instanceDate: instanceDate);
-
-		var allPlans = (plans ?? await _dataRepository.getPlans(childId: childId)).where((plan) => plan.active).toList();
-		var todayPlans = _repeatabilityService.filterPlansByDate(allPlans, Date.now());
-		var todayPlanIds = todayPlans.map((plan) => plan.id).toList();
-		var untilCompletedPlans = allPlans.where((plan) => plan.repeatability.untilCompleted && !todayPlans.contains(plan.id)).map((plan) => plan.id).toList();
-
-		var instances = await _dataRepository.getPlanInstancesForPlans(childId, todayPlanIds, Date.now());
-		instances.addAll(await _dataRepository.getPastNotCompletedPlanInstances([childId], untilCompletedPlans, Date.now()));
-		var planMap = Map.fromEntries(instances.map((instance) => MapEntry(instance, allPlans.firstWhere((plan) => plan.id == instance.planID))));
+		var planMap = Map.fromEntries(instances.map((instance) => MapEntry(instance.id, plans.firstWhere((plan) => plan.id == instance.planID))));
 
 		List<UIPlanInstance> uiInstances = [];
 		for (var instance in instances) {
 			var elapsedTime = () => sumDurations(instance.duration).inSeconds;
 			var completedTasks = await _dataRepository.getCompletedTaskCount(instance.id);
-			uiInstances.add(UIPlanInstance.fromDBModel(instance, planMap[instance].name, completedTasks, elapsedTime, getDescription(planMap[instance], instance.date)));
+			uiInstances.add(UIPlanInstance.fromDBModel(instance, planMap[instance.id].name, completedTasks, elapsedTime, getDescription(planMap[instance.id], instance.date)));
 		}
-		var noInstancePlans = todayPlans.where((plan) => !planMap.values.contains(plan)).toList();
-		if (noInstancePlans.isNotEmpty)
-			_logger.warning('${noInstancePlans.length} plans have no instances: ' + noInstancePlans.map((plan) => plan.name).join(', '));
 		return uiInstances;
 	}
 }

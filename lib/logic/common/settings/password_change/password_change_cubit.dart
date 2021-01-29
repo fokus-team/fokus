@@ -16,6 +16,8 @@ class PasswordChangeCubit extends Cubit<PasswordChangeState> {
   PasswordChangeCubit(PasswordChangeType type, {String passwordResetCode}) : super(PasswordChangeState(formType: type, passwordResetCode: passwordResetCode));
 
   Future changePasswordFormSubmitted() async {
+	  if (this.state.status != FormzStatus.pure)
+		  return;
 	  var state = _validateFields();
 	  if (!state.status.isValidated) {
 		  emit(state);

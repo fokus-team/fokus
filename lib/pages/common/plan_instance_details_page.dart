@@ -56,7 +56,7 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 		return Scaffold(
 			body: LoadableBlocBuilder<PlanInstanceCubit>(
 				builder: (context, state) => _getView(
-					planInstance: (state as ChildTasksLoadSuccess).planInstance,
+					planInstance: (state as PlanInstanceStateLoadSuccess).planInstance,
 					content: AppSegments(segments: _buildPanelSegments(state))
 				),
 				loadingBuilder: (context, state) => _getView(
@@ -88,7 +88,7 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 		);
 	}
 
-  List<Widget> _buildPanelSegments(ChildTasksLoadSuccess state) {
+  List<Widget> _buildPanelSegments(PlanInstanceStateLoadSuccess state) {
   	var mandatoryTasks = state.tasks.where((task) => task.optional == false).toList();
   	var optionalTasks = state.tasks.where((task) => task.optional == true).toList();
     return [

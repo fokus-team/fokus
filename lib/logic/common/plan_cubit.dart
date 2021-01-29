@@ -22,7 +22,7 @@ class PlanCubit extends ReloadableCubit {
 		Plan plan = await _dataRepository.getPlan(id: _planId);
 		var children = await _dataRepository.getUserNames(plan.assignedTo);
 		List<Task> tasks = await _dataRepository.getTasks(planId: _planId);
-		emit(CaregiverTasksLoadSuccess(UIPlan.fromDBModel(plan, getDescription(plan)), tasks.map((task) => UITask.fromDBModel(task: task)).toList(), children));
+		emit(PlanStateLoadSuccess(UIPlan.fromDBModel(plan, getDescription(plan)), tasks.map((task) => UITask.fromDBModel(task: task)).toList(), children));
 	}
 
 	Future deletePlan() async {
@@ -36,12 +36,12 @@ class PlanCubit extends ReloadableCubit {
 	}
 }
 
-class CaregiverTasksLoadSuccess extends DataLoadSuccess{
+class PlanStateLoadSuccess extends DataLoadSuccess{
 	final UIPlan uiPlan;
 	final List<UITask> tasks;
 	final Map<ObjectId, String> children;
 
-  CaregiverTasksLoadSuccess(this.uiPlan, this.tasks, this.children);
+  PlanStateLoadSuccess(this.uiPlan, this.tasks, this.children);
 
   @override
   List<Object> get props => [uiPlan, tasks];

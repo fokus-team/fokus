@@ -64,6 +64,8 @@ class TasksEvaluationCubit extends ReloadableCubit {
 	}
 
 	void rateTask(UITaskReport report) async {
+		if (state is! TasksEvaluationLoadSuccess)
+			return;
 		emit(TasksEvaluationSubmissionInProgress(_reports));
 		List<Future> updates = [];
 		Future Function() sendNotification;

@@ -41,7 +41,7 @@ class _PlanDetailsPageState extends State<PlanDetailsPage> {
 		);
 	}
 
-	Widget _buildFloatingButton(CaregiverTasksLoadSuccess state) {
+	Widget _buildFloatingButton(PlanStateLoadSuccess state) {
 		// ignore: close_sinks
 		var authenticationBloc = BlocProvider.of<AuthenticationBloc>(context);
 		var currentUser = authenticationBloc.state.user;
@@ -57,7 +57,7 @@ class _PlanDetailsPageState extends State<PlanDetailsPage> {
 		) : SizedBox.shrink();
 	}
 
-	Column _buildView(BuildContext context, CaregiverTasksLoadSuccess state) {
+	Column _buildView(BuildContext context, PlanStateLoadSuccess state) {
   	return Column(
 			crossAxisAlignment: CrossAxisAlignment.start,
 			verticalDirection: VerticalDirection.up,
@@ -68,7 +68,7 @@ class _PlanDetailsPageState extends State<PlanDetailsPage> {
 		);
 	}
 
-	List<Widget> _buildPanelSegments(CaregiverTasksLoadSuccess state) {
+	List<Widget> _buildPanelSegments(PlanStateLoadSuccess state) {
   	List<UITask> mandatoryTasks = state.tasks.where((task) => task.optional == false).toList();
 		List<UITask> optionalTasks = state.tasks.where((task) => task.optional == true).toList();
 

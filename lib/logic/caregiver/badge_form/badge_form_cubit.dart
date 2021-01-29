@@ -22,6 +22,8 @@ class BadgeFormCubit extends Cubit<BadgeFormState> {
   BadgeFormCubit(Object argument, this._activeUser, this._authBloc) : super(BadgeFormInitial());
   
   void submitBadgeForm(BadgeFormModel badgeForm) async {
+  	if (state is! BadgeFormInitial)
+  		return;
 		emit(BadgeFormSubmissionInProgress(state));
 		UICaregiver user = _activeUser();
 		var badge = Badge.fromBadgeForm(badgeForm);

@@ -13,6 +13,8 @@ class ChildSignInCubit extends ChildAuthCubitBase<ChildSignInState> {
   ChildSignInCubit(AuthenticationBloc authenticationBloc) : super(authenticationBloc, ChildSignInState());
 
   void signInNewChild() async {
+	  if (this.state.status != FormzStatus.pure)
+		  return;
 	  var state = await _validateFields();
 	  if (!state.status.isValidated) {
 		  emit(state);

@@ -40,7 +40,7 @@ class PlanInstanceCubit extends ReloadableCubit {
 		var allTasksInstances = await _dataRepository.getTaskInstances(planInstanceId: uiPlanInstance.id);
 
 		List<UITaskInstance> uiInstances = await _taskInstancesService.mapToUIModels(allTasksInstances);
-		emit(ChildTasksLoadSuccess(uiInstances, uiPlanInstance));
+		emit(PlanInstanceStateLoadSuccess(uiInstances, uiPlanInstance));
 	}
 
 
@@ -89,15 +89,15 @@ class PlanInstanceCubit extends ReloadableCubit {
 
 		Future.wait(updates);
 		uiPlanInstance = await _dataAggregator.loadPlanInstance(planInstanceId: _planInstance.id);
-		emit(ChildTasksLoadSuccess(uiInstances, uiPlanInstance));
+		emit(PlanInstanceStateLoadSuccess(uiInstances, uiPlanInstance));
 	}
 }
 
-class ChildTasksLoadSuccess extends DataLoadSuccess {
+class PlanInstanceStateLoadSuccess extends DataLoadSuccess {
 	final List<UITaskInstance> tasks;
 	final UIPlanInstance planInstance;
 
-	ChildTasksLoadSuccess(this.tasks, this.planInstance);
+	PlanInstanceStateLoadSuccess(this.tasks, this.planInstance);
 
 	@override
 	List<Object> get props => [tasks, planInstance];

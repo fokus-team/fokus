@@ -28,6 +28,8 @@ class RewardFormCubit extends Cubit<RewardFormState> {
   }
 	
   void submitRewardForm(RewardFormModel rewardForm) async {
+		if (state is! RewardFormDataLoadSuccess)
+			return;
 		emit(RewardFormSubmissionInProgress(state));
 		var userId = _activeUser().id;
 		var reward = Reward.fromRewardForm(rewardForm, userId, state.rewardId);

@@ -9,7 +9,6 @@ import 'package:fokus/model/db/date/time_date.dart';
 import 'package:fokus/model/db/gamification/child_reward.dart';
 import 'package:fokus/model/db/gamification/points.dart';
 import 'package:fokus/model/notification/notification_type.dart';
-import 'package:fokus/model/db/gamification/reward.dart';
 import 'package:fokus/model/ui/gamification/ui_currency.dart';
 import 'package:fokus/model/ui/gamification/ui_points.dart';
 import 'package:fokus/model/ui/gamification/ui_reward.dart';

@@ -10,7 +10,7 @@ import 'package:fokus/utils/ui/dialog_utils.dart';
 import 'package:fokus/utils/ui/snackbar_utils.dart';
 import 'package:fokus/utils/ui/theme_config.dart';
 import 'package:fokus/widgets/dialogs/general_dialog.dart';
-import 'package:fokus/logic/caregiver/plan_form/plan_form_cubit.dart';
+import 'package:fokus/logic/caregiver/forms/plan/plan_form_cubit.dart';
 
 import 'package:fokus/widgets/forms/tasks_list.dart';
 import 'package:fokus/widgets/forms/plan_form.dart';

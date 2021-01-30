@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_picker/flutter_picker.dart';
 
-import 'package:fokus/logic/caregiver/plan_form/plan_form_cubit.dart';
+import 'package:fokus/logic/caregiver/forms/plan/plan_form_cubit.dart';
 import 'package:fokus/model/currency_type.dart';
 import 'package:fokus/model/pages/plan_form_params.dart';
 import 'package:fokus/model/ui/form/task_form_model.dart';

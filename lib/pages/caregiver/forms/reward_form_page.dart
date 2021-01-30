@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fokus/logic/caregiver/reward_form/reward_form_cubit.dart';
+import 'package:fokus/logic/caregiver/forms/reward/reward_form_cubit.dart';
 import 'package:fokus/model/pages/plan_form_params.dart';
 import 'package:fokus/model/ui/form/reward_form_model.dart';
 import 'package:fokus/utils/ui/dialog_utils.dart';

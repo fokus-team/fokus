@@ -9,7 +9,6 @@ import 'package:fokus/services/data/data_repository.dart';
 import 'package:fokus/services/plan_repeatability_service.dart';
 import 'package:fokus/utils/duration_utils.dart';
 import 'package:get_it/get_it.dart';
-import 'package:logging/logging.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
 class UIDataAggregator {

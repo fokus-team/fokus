@@ -4,10 +4,11 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+
 import 'package:fokus/logic/caregiver/caregiver_friends_cubit.dart';
 import 'package:fokus/logic/caregiver/child_dashboard/child_dashboard_cubit.dart';
-
 import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
 import 'package:fokus/logic/caregiver/auth/sign_in/caregiver_sign_in_cubit.dart';
 import 'package:fokus/logic/caregiver/auth/sign_up/caregiver_sign_up_cubit.dart';
@@ -23,18 +24,17 @@ import 'package:fokus/logic/caregiver/caregiver_panel_cubit.dart';
 import 'package:fokus/logic/caregiver/caregiver_plans_cubit.dart';
 import 'package:fokus/logic/child/child_panel_cubit.dart';
 import 'package:fokus/logic/child/child_rewards_cubit.dart';
-import 'package:fokus/logic/caregiver/plan_form/plan_form_cubit.dart';
+import 'package:fokus/logic/caregiver/forms/plan/plan_form_cubit.dart';
 import 'package:fokus/logic/common/settings/account_delete/account_delete_cubit.dart';
 import 'package:fokus/logic/common/settings/name_change/name_change_cubit.dart';
 import 'package:fokus/logic/common/settings/password_change/password_change_cubit.dart';
 import 'package:fokus/logic/common/settings/locale_cubit.dart';
 import 'package:fokus/logic/child/task_completion/task_completion_cubit.dart';
-import 'package:fokus/logic/caregiver/reward_form/reward_form_cubit.dart';
-import 'package:fokus/logic/caregiver/badge_form/badge_form_cubit.dart';
+import 'package:fokus/logic/caregiver/forms/reward/reward_form_cubit.dart';
+import 'package:fokus/logic/caregiver/forms/badge/badge_form_cubit.dart';
 import 'package:fokus/logic/caregiver/tasks_evaluation/tasks_evaluation_cubit.dart';
-import 'package:fokus/model/ui/auth/password_change_type.dart';
-import 'package:fokus/pages/child/calendar_page.dart';
 
+import 'package:fokus/pages/child/calendar_page.dart';
 import 'package:fokus/pages/common/loading_page.dart';
 import 'package:fokus/pages/common/plan_details_page.dart';
 import 'package:fokus/pages/common/roles_page.dart';
@@ -63,18 +63,20 @@ import 'package:fokus/pages/child/achievements_page.dart';
 
 import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/db/user/user_role.dart';
+import 'package:fokus/model/ui/auth/password_change_type.dart';
+import 'package:fokus/model/ui/plan/ui_plan_instance.dart';
+
 import 'package:fokus/services/analytics_service.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/services/app_route_observer.dart';
 import 'package:fokus/services/instrumentator.dart';
 import 'package:fokus/services/locale_provider.dart';
 import 'package:fokus/services/observers/current_locale_observer.dart';
+
 import 'package:fokus/utils/ui/theme_config.dart';
 import 'package:fokus/utils/service_injection.dart';
 import 'package:fokus/utils/bloc_utils.dart';
 import 'package:fokus/widgets/page_theme.dart';
-import 'package:get_it/get_it.dart';
-import 'model/ui/plan/ui_plan_instance.dart';
 
 void main() async {
 	WidgetsFlutterBinding.ensureInitialized();

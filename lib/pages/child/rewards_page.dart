@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/logic/child/child_rewards_cubit.dart';
 import 'package:fokus/logic/common/reloadable/reloadable_cubit.dart';
-import 'package:fokus/model/ui/gamification/ui_reward.dart';
 import 'package:fokus/utils/ui/dialog_utils.dart';
 import 'package:fokus/utils/ui/snackbar_utils.dart';
 import 'package:fokus/utils/ui/theme_config.dart';

@@ -26,30 +26,18 @@ class ChildRewardsCubit extends ReloadableCubit {
 
   ChildRewardsCubit(this._activeUser, ModalRoute pageRoute) : super(pageRoute);
 
-	List<UIReward> _updateRewardLimits(List<UIReward> rewards, List<UIChildReward> claimedRewards) {
-		Map<ObjectId, int> claimedCount = Map<ObjectId, int>();
-		claimedRewards.forEach((element) => claimedCount[element.id] = !claimedCount.containsKey(element.id) ? 1 : claimedCount[element.id] + 1);
-		return rewards.where((reward) => reward.limit != null ? reward.limit > (claimedCount[reward.id] ?? 0) : true).toList();
-	}
-
   void doLoadData() async {
-	  UIChild child = _activeUser();
-		ObjectId caregiverID = child.connections.first;
-
+		ObjectId caregiverID = _activeUser().connections.first;
 		if(caregiverID != null && _rewards == null)
 			_rewards = (await _dataRepository.getRewards(caregiverId: caregiverID)).map((reward) => UIReward.fromDBModel(reward)).toList();
-
-	  emit(ChildRewardsLoadSuccess(
-			_updateRewardLimits(_rewards, child.rewards),
-			List.from(child.rewards),
-			List.from(child.points)
-		));
+	  _refreshRewardState();
   }
 
 	void claimReward(UIReward reward) async {
-		if (state is! DataLoadSuccess)
+		ChildRewardsLoadSuccess state = this.state;
+		if (state.submissionInProgress)
 			return;
-		emit(DataSubmissionInProgress());
+		emit(state.copyWith(submissionState: DataSubmissionState.submissionInProgress));
 
     UIChild child = _activeUser();
 		List<UIPoints> points = child.points;
@@ -71,21 +59,41 @@ class ChildRewardsCubit extends ReloadableCubit {
 			);
 			_analyticsService.logRewardBought(reward);
 			await _notificationService.sendRewardBoughtNotification(model.id, model.name, child.connections.first, child);
-			emit(DataSubmissionSuccess());
+			emit(state.copyWith(submissionState: DataSubmissionState.submissionSuccess));
 		}
+	}
+
+	void _refreshRewardState() {
+		UIChild child = _activeUser();
+		Map<ObjectId, int> claimedCount = Map<ObjectId, int>();
+		child.rewards.forEach((element) => claimedCount[element.id] = !claimedCount.containsKey(element.id) ? 1 : claimedCount[element.id] + 1);
+		emit(ChildRewardsLoadSuccess(
+			rewards: _rewards.where((reward) => reward.limit != null ? reward.limit > (claimedCount[reward.id] ?? 0) : true).toList(),
+			claimedRewards: List.from(child.rewards),
+			points: List.from(child.points)
+		));
 	}
 
 	@override
 	List<NotificationType> dataTypeSubscription() => [NotificationType.taskApproved];
 }
 
-class ChildRewardsLoadSuccess extends DataLoadSuccess {
+class ChildRewardsLoadSuccess extends SubmittableDataLoadSuccess {
 	final List<UIReward> rewards;
 	final List<UIChildReward> claimedRewards;
 	final List<UIPoints> points;
 
-	ChildRewardsLoadSuccess(this.rewards, this.claimedRewards, this.points);
+	ChildRewardsLoadSuccess({this.rewards, this.claimedRewards, this.points, DataSubmissionState submissionState}) : super(submissionState);
+
+	ChildRewardsLoadSuccess copyWith({DataSubmissionState submissionState}) {
+		return ChildRewardsLoadSuccess(
+			rewards: rewards,
+			claimedRewards: claimedRewards,
+			points: points,
+			submissionState: submissionState ?? this.submissionState
+		);
+	}
 
 	@override
-	List<Object> get props => [rewards, claimedRewards, points];
+	List<Object> get props => super.props..addAll([rewards, claimedRewards, points]);
 }

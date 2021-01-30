@@ -15,7 +15,7 @@ class LoadableBlocBuilder<CubitType extends ReloadableCubit> extends StatelessWi
   Widget build(BuildContext context) {
     return BlocBuilder<CubitType, LoadableState>(
 	    builder: (context, state) {
-		    if (state is DataLoadInitial || state is DataSubmissionSuccess || state is DataSubmissionFailure)
+		    if (state is DataLoadInitial)
 			    BlocProvider.of<CubitType>(context).loadData();
 		    else if (state is DataLoadSuccess)
 			    return builder(context, state);

@@ -48,10 +48,12 @@ class _ChildRewardsPageState extends State<ChildRewardsPage> {
 		      ),
 					BlocConsumer<ChildRewardsCubit, LoadableState>(
 						listener: (context, state) {
-							if (state is DataSubmissionInProgress)
-								Navigator.of(context).pop(); // closing confirm dialog before pushing snackbar
-							else if (state is DataSubmissionSuccess)
-								showSuccessSnackbar(context, '$_pageKey.rewardClaimedText');
+							if (state is SubmittableDataLoadSuccess) {
+								if (state.submissionInProgress)
+									Navigator.of(context).pop(); // closing confirm dialog before pushing snackbar
+								else if (state.submissionState == DataSubmissionState.submissionSuccess)
+									showSuccessSnackbar(context, '$_pageKey.rewardClaimedText');
+							}
 						},
 						builder: (context, state) => CustomChildAppBar(points: state is DataLoadSuccess ? (state as ChildRewardsLoadSuccess).points : null)
 					)

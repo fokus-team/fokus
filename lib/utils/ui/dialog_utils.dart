@@ -119,7 +119,7 @@ void showAppInfoDialog(BuildContext context) {
 	);
 }
 
-Future showNameEditDialog(BuildContext context, UIUser user) {
+Future<String> showNameEditDialog(BuildContext context, UIUser user) {
 	return showDialog(
 		context: context,
 		builder: (_) => forwardCubit(NameEditDialog(user.role), BlocProvider.of<NameChangeCubit>(context))

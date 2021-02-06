@@ -17,7 +17,7 @@ class CaregiverCurrenciesCubit extends Cubit<CaregiverCurrenciesState> {
 
   CaregiverCurrenciesCubit(Object argument, this._activeUser, this._authBloc) : super(CaregiverCurrenciesInitial());
 
-	void doLoadData() async {
+	Future doLoadData() async {
 		emit(CaregiverCurrenciesInProgress());
     var user = _activeUser();
 		var currencies = await _dataRepository.getCurrencies(user.id);

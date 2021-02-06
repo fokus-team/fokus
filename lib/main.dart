@@ -12,12 +12,15 @@ import 'package:fokus/logic/caregiver/child_dashboard/child_dashboard_cubit.dart
 import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
 import 'package:fokus/logic/caregiver/auth/sign_in/caregiver_sign_in_cubit.dart';
 import 'package:fokus/logic/caregiver/auth/sign_up/caregiver_sign_up_cubit.dart';
-import 'package:fokus/logic/child/auth/prev_profiles_cubit.dart';
+import 'package:fokus/logic/child/auth/saved_child_profiles_cubit.dart';
 import 'package:fokus/logic/child/auth/sign_in/child_sign_in_cubit.dart';
 import 'package:fokus/logic/child/auth/sign_up/child_sign_up_cubit.dart';
 import 'package:fokus/logic/caregiver/caregiver_awards_cubit.dart';
 import 'package:fokus/logic/caregiver/caregiver_currencies_cubit.dart';
 import 'package:fokus/logic/common/plan_cubit.dart';
+import 'package:fokus/logic/caregiver/child_dashboard/dashboard_achievements_cubit.dart';
+import 'package:fokus/logic/caregiver/child_dashboard/dashboard_plans_cubit.dart';
+import 'package:fokus/logic/caregiver/child_dashboard/dashboard_rewards_cubit.dart';
 import 'package:fokus/logic/common/plan_instance_cubit.dart';
 import 'package:fokus/logic/common/calendar_cubit.dart';
 import 'package:fokus/logic/caregiver/caregiver_panel_cubit.dart';
@@ -31,8 +34,8 @@ import 'package:fokus/logic/common/settings/password_change/password_change_cubi
 import 'package:fokus/logic/common/settings/locale_cubit.dart';
 import 'package:fokus/logic/child/task_completion/task_completion_cubit.dart';
 import 'package:fokus/logic/caregiver/forms/reward/reward_form_cubit.dart';
-import 'package:fokus/logic/caregiver/forms/badge/badge_form_cubit.dart';
-import 'package:fokus/logic/caregiver/tasks_evaluation/tasks_evaluation_cubit.dart';
+import 'package:fokus/logic/caregiver/forms/badge_form_cubit.dart';
+import 'package:fokus/logic/caregiver/tasks_evaluation_cubit.dart';
 
 import 'package:fokus/pages/child/calendar_page.dart';
 import 'package:fokus/pages/common/loading_page.dart';
@@ -193,13 +196,18 @@ class _FokusAppState extends State<FokusApp> implements CurrentLocaleObserver {
 			),
 			AppPage.caregiverSignInPage.name: (context) => _createPage(CaregiverSignInPage(), context, CaregiverSignInCubit(getParams(context))),
 			AppPage.caregiverSignUpPage.name: (context) => _createPage(CaregiverSignUpPage(), context, CaregiverSignUpCubit()),
-			AppPage.childProfilesPage.name: (context) => _createPage(ChildProfilesPage(), context, PreviousProfilesCubit(authBloc(context), getRoute(context))),
+			AppPage.childProfilesPage.name: (context) => _createPage(ChildProfilesPage(), context, SavedChildProfilesCubit(authBloc(context), getRoute(context))),
 			AppPage.childSignInPage.name: (context) => _createPage(withCubit(ChildSignInPage(), ChildSignInCubit(authBloc(context))), context, ChildSignUpCubit(authBloc(context)), AppPageSection.login),
 
-			AppPage.caregiverChildDashboard.name: (context) => _createPage(
-				accountManaging(context, CaregiverChildDashboardPage(getParams(context))),
-				context, ChildDashboardCubit(getParams(context), getActiveUser(context), getRoute(context))
-			),
+			AppPage.caregiverChildDashboard.name: (context) {
+				var plans = DashboardPlansCubit(getActiveUser(context), getRoute(context));
+				var rewards = DashboardRewardsCubit(getActiveUser(context), getRoute(context));
+				var achievements = DashboardAchievementsCubit(getActiveUser(context), getRoute(context));
+			  return _createPage(
+					withCubit(withCubit(withCubit(accountManaging(context, CaregiverChildDashboardPage(getParams(context))), plans), achievements), rewards),
+					context, ChildDashboardCubit(getParams(context), getRoute(context), plans, rewards, achievements)
+				);
+			},
 			AppPage.caregiverCalendar.name: (context) => _createPage(CaregiverCalendarPage(), context, CalendarCubit(getParams(context), getActiveUser(context))),
 			AppPage.caregiverPlanForm.name: (context) => _createPage(CaregiverPlanFormPage(), context, PlanFormCubit(getParams(context), getActiveUser(context))),
 			AppPage.caregiverRewardForm.name: (context) => _createPage(CaregiverRewardFormPage(), context, RewardFormCubit(getParams(context), getActiveUser(context))),

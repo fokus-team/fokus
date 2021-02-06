@@ -17,14 +17,9 @@ import 'package:fokus/widgets/loadable_bloc_builder.dart';
 import 'package:fokus/widgets/segment.dart';
 import 'package:mongo_dart/mongo_dart.dart' as Mongo;
 
-class CaregiverFriendPlansPage extends StatefulWidget {
-	@override
-	_CaregiverFriendPlansPageState createState() => new _CaregiverFriendPlansPageState();
-}
-
-class _CaregiverFriendPlansPageState extends State<CaregiverFriendPlansPage> {
+class CaregiverFriendPlansPage extends StatelessWidget {
 	static const String _pageKey = 'page.caregiverSection.friendPlans';
-	
+
 	@override
 	Widget build(BuildContext context) {
 		final MapEntry<Mongo.ObjectId, String> friend = ModalRoute.of(context).settings.arguments;
@@ -46,7 +41,7 @@ class _CaregiverFriendPlansPageState extends State<CaregiverFriendPlansPage> {
 											content: AppLocales.of(context).translate('$_pageKey.content.removeFriendText'),
 											confirmColor: Colors.red,
 											confirmText: 'actions.delete',
-											confirmAction: () => _deleteFriend(friend.key)
+											confirmAction: () => _deleteFriend(friend.key, context)
 										)
 									);
 								},
@@ -61,7 +56,7 @@ class _CaregiverFriendPlansPageState extends State<CaregiverFriendPlansPage> {
     );
 	}
 
-	void _deleteFriend(Mongo.ObjectId friendID) {
+	void _deleteFriend(Mongo.ObjectId friendID, BuildContext context) {
 		BlocProvider.of<CaregiverFriendsCubit>(context).removeFriend(friendID);
 		Navigator.of(context).pop(); // closing confirm dialog before pushing snackbar
 		Navigator.of(context).popAndPushNamed(AppPage.caregiverPanel.name);
@@ -69,12 +64,12 @@ class _CaregiverFriendPlansPageState extends State<CaregiverFriendPlansPage> {
 	}
 
 	Widget _buildFriendPlans() {
-		return LoadableBlocBuilder<CaregiverPlansCubit>(
+		return LoadableBlocBuilder<CaregiverPlansCubit, CaregiverPlansState>(
 			builder: (context, state) => Segment(
 				title: '$_pageKey.content.plansTitle',
 				noElementsMessage: '$_pageKey.content.noPlansText',
 				elements: <Widget>[
-					for (var plan in (state as CaregiverPlansLoadSuccess).plans)
+					for (var plan in state.plans)
 						ItemCard(
 							title: plan.name,
 							subtitle: plan.description(context),

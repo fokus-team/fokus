@@ -27,35 +27,31 @@ class _ChildRewardsPageState extends State<ChildRewardsPage> {
 	      crossAxisAlignment: CrossAxisAlignment.start,
 				verticalDirection: VerticalDirection.up,
 	      children: [
-		      LoadableBlocBuilder<ChildRewardsCubit>(
-				    builder: (context, state) =>
-							AppSegments(
-								segments: [
+		      LoadableBlocBuilder<ChildRewardsCubit, ChildRewardsLoadSuccess>(
+				    builder: (context, state) => AppSegments(
+							segments: [
+								Segment(
+									title: '$_pageKey.rewardsTitle',
+									subtitle: '$_pageKey.rewardsHint',
+									noElementsMessage: '$_pageKey.noRewardsMessage',
+									elements: _buildRewardShop(state, context)
+								),
+								if(state.claimedRewards.isNotEmpty)
 									Segment(
-										title: '$_pageKey.rewardsTitle',
-										subtitle: '$_pageKey.rewardsHint',
-										noElementsMessage: '$_pageKey.noRewardsMessage',
-										elements: _buildRewardShop(state, context)
-									),
-									if((state as ChildRewardsLoadSuccess).claimedRewards.isNotEmpty)
-										Segment(
-											title: '$_pageKey.claimedRewardsTitle',
-											elements: _buildRewardHistory(state)
-										)
-								]
-							),
-						wrapWithExpanded: true,
+										title: '$_pageKey.claimedRewardsTitle',
+										elements: _buildRewardHistory(state)
+									)
+							]
+						),
+			      listener: (context, state) {
+				      if (state.submitted)
+					      showSuccessSnackbar(context, '$_pageKey.rewardClaimedText');
+			      },
+						expandLoader: true,
+			      popOnSubmit: true,
 		      ),
-					BlocConsumer<ChildRewardsCubit, LoadableState>(
-						listener: (context, state) {
-							if (state is SubmittableDataLoadSuccess) {
-								if (state.submissionInProgress)
-									Navigator.of(context).pop(); // closing confirm dialog before pushing snackbar
-								else if (state.submissionState == DataSubmissionState.submissionSuccess)
-									showSuccessSnackbar(context, '$_pageKey.rewardClaimedText');
-							}
-						},
-						builder: (context, state) => CustomChildAppBar(points: state is DataLoadSuccess ? (state as ChildRewardsLoadSuccess).points : null)
+					BlocBuilder<ChildRewardsCubit, LoadableState>(
+						builder: (context, state) => CustomChildAppBar(points: state is ChildRewardsLoadSuccess ? state.points : null)
 					)
 	      ]
       ),

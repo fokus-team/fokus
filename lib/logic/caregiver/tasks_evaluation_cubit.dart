@@ -1,6 +1,9 @@
 import 'dart:math';
 
 import 'package:flutter/widgets.dart';
+import 'package:get_it/get_it.dart';
+import 'package:mongo_dart/mongo_dart.dart';
+
 import 'package:fokus/logic/common/reloadable/reloadable_cubit.dart';
 import 'package:fokus/model/db/gamification/points.dart';
 import 'package:fokus/model/db/plan/plan_instance.dart';
@@ -18,10 +21,6 @@ import 'package:fokus/services/analytics_service.dart';
 import 'package:fokus/services/data/data_repository.dart';
 import 'package:fokus/services/notifications/notification_service.dart';
 import 'package:fokus/services/task_instance_service.dart';
-import 'package:get_it/get_it.dart';
-import 'package:mongo_dart/mongo_dart.dart';
-
-part 'tasks_evaluation_state.dart';
 
 class TasksEvaluationCubit extends ReloadableCubit {
   final DataRepository _dataRepository = GetIt.I<DataRepository>();
@@ -35,13 +34,13 @@ class TasksEvaluationCubit extends ReloadableCubit {
 	Map<ObjectId, UIChild> _planInstanceToChild;
 	Map<ObjectId, String> _planInstanceToName;
 
-	TasksEvaluationCubit(ModalRoute pageRoute, this._activeUser) : super(pageRoute, options: [ReloadableOption.skipOnPopNextReload]);
+	TasksEvaluationCubit(ModalRoute pageRoute, this._activeUser) : super(pageRoute, options: [ReloadableOption.skipOnPopNextReload, ReloadableOption.repeatableSubmission]);
 
   @override
   List<NotificationType> dataTypeSubscription() => [NotificationType.taskFinished];
 
 	@override
-	void doLoadData() async {
+	Future doLoadData() async {
 		_reports = [];
 		var activeUser = _activeUser();
 		List<Child> children = (await _dataRepository.getUsers(ids: (activeUser as UICaregiver).connections, fields: ['_id', 'name', 'avatar'])).map((e) => e as Child).toList();
@@ -60,13 +59,12 @@ class TasksEvaluationCubit extends ReloadableCubit {
 				child: _planInstanceToChild[taskInstance.planInstanceId],
 			));
 		}
-		emit(TasksEvaluationLoadSuccess(_reports));
+		emit(TasksEvaluationState(_reports));
 	}
 
 	void rateTask(UITaskReport report) async {
-		if (state is! TasksEvaluationLoadSuccess)
+		if (!beginSubmit())
 			return;
-		emit(TasksEvaluationSubmissionInProgress(_reports));
 		List<Future> updates = [];
 		Future Function() sendNotification;
 		if(report.ratingMark == UITaskReportMark.rejected) {
@@ -97,8 +95,20 @@ class TasksEvaluationCubit extends ReloadableCubit {
 		}
 		await Future.wait(updates);
 		await sendNotification();
-		emit(TasksEvaluationLoadSuccess(_reports));
+		emit(state.submissionSuccess());
 	}
 
 	static int getPointsAwarded(int quantity, int ratingMark) => max((quantity*ratingMark/5).round(), 1);
+}
+
+class TasksEvaluationState extends LoadableState {
+	final List<UITaskReport> reports;
+
+	TasksEvaluationState(this.reports, [DataSubmissionState submissionState]) : super.loaded(submissionState);
+
+	@override
+  LoadableState withSubmitState(DataSubmissionState submissionState) => TasksEvaluationState(reports, submissionState);
+
+  @override
+	List<Object> get props => super.props..addAll([reports]);
 }

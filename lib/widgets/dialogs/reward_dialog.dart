@@ -106,7 +106,7 @@ class _RewardDialogState extends State<RewardDialog> with SingleTickerProviderSt
 												builder: (context, state) => RoundedButton(
 													button: UIButton(
 														'$_pageKey.claimButton',
-														(state as SubmittableDataLoadSuccess).submissionInProgress ? null : widget.claimFeedback,
+														state.submissionInProgress ? null : widget.claimFeedback,
 														AppColors.childButtonColor,
 														Icons.add_shopping_cart
 													)

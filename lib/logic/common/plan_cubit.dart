@@ -14,7 +14,7 @@ class PlanCubit extends ReloadableCubit {
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final PlanRepeatabilityService _repeatabilityService = GetIt.I<PlanRepeatabilityService>();
 
-  PlanCubit( this._planId, ModalRoute pageRoute) : super(pageRoute);
+  PlanCubit(this._planId, ModalRoute pageRoute) : super(pageRoute);
 
   @override
   doLoadData() async {
@@ -22,27 +22,37 @@ class PlanCubit extends ReloadableCubit {
 		Plan plan = await _dataRepository.getPlan(id: _planId);
 		var children = await _dataRepository.getUserNames(plan.assignedTo);
 		List<Task> tasks = await _dataRepository.getTasks(planId: _planId);
-		emit(PlanStateLoadSuccess(UIPlan.fromDBModel(plan, getDescription(plan)), tasks.map((task) => UITask.fromDBModel(task: task)).toList(), children));
+		emit(PlanCubitState(
+			uiPlan: UIPlan.fromDBModel(plan, getDescription(plan)),
+			tasks: tasks.map((task) => UITask.fromDBModel(task: task)).toList(),
+			children: children
+		));
 	}
 
 	Future deletePlan() async {
+  	if (!beginSubmit())
+  		return;
 		var instances = await _dataRepository.getPlanInstances(planId: _planId, fields: ['_id']);
-		return Future.wait([
+		await Future.wait([
 			_dataRepository.removePlans(ids: [_planId]),
 			_dataRepository.removePlanInstances(planId: _planId),
 			_dataRepository.removeTasks(planIds: [_planId]),
 			_dataRepository.removeTaskInstances(planInstancesIds: instances.map((plan) => plan.id).toList()),
 		]);
+		emit(state.withSubmitState(DataSubmissionState.submissionSuccess));
 	}
 }
 
-class PlanStateLoadSuccess extends DataLoadSuccess{
+class PlanCubitState extends LoadableState {
 	final UIPlan uiPlan;
 	final List<UITask> tasks;
 	final Map<ObjectId, String> children;
 
-  PlanStateLoadSuccess(this.uiPlan, this.tasks, this.children);
+  PlanCubitState({this.uiPlan, this.tasks, this.children, DataSubmissionState submissionState}) : super.loaded(submissionState);
+
+	@override
+  LoadableState withSubmitState(DataSubmissionState submissionState) => PlanCubitState(uiPlan: uiPlan, tasks: tasks, children: children, submissionState: submissionState);
 
   @override
-  List<Object> get props => [uiPlan, tasks];
+  List<Object> get props => super.props..addAll([uiPlan, tasks, children]);
 }

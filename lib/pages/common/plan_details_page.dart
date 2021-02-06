@@ -34,16 +34,27 @@ class _PlanDetailsPageState extends State<PlanDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
-		return Scaffold(
-			body: LoadableBlocBuilder<PlanCubit>(builder: (context, state) => _buildView(context, state), loadingBuilder: (_, __) => SizedBox.shrink()),
-			floatingActionButton: LoadableBlocBuilder<PlanCubit>(builder: (context, state) => _buildFloatingButton(state)),
-			floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat
-		);
+  	return LoadableBlocBuilder<PlanCubit, PlanCubitState>(
+		  builder: (context, state) {
+  		  return Scaffold(
+			    body: _buildView(context, state),
+			    floatingActionButton: _buildFloatingButton(state),
+			    floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat
+		    );
+	    },
+		  loadingBuilder: (_, __) => SizedBox.shrink(),
+		  listener: (context, state) {
+			  if (state.submitted) {
+				  showSuccessSnackbar(context, '$_pageKey.content.planRemovedText');
+			  }
+		  },
+		  onSubmitPopCount: 2,
+	  );
 	}
 
-	Widget _buildFloatingButton(PlanStateLoadSuccess state) {
+	Widget _buildFloatingButton(PlanCubitState state) {
 		// ignore: close_sinks
-		var authenticationBloc = BlocProvider.of<AuthenticationBloc>(context);
+		var authenticationBloc = context.watch<AuthenticationBloc>();
 		var currentUser = authenticationBloc.state.user;
 
 		return (state.uiPlan?.createdBy != currentUser.id && currentUser.role == UserRole.caregiver) ? FloatingActionButton.extended(
@@ -57,7 +68,7 @@ class _PlanDetailsPageState extends State<PlanDetailsPage> {
 		) : SizedBox.shrink();
 	}
 
-	Column _buildView(BuildContext context, PlanStateLoadSuccess state) {
+	Column _buildView(BuildContext context, PlanCubitState state) {
   	return Column(
 			crossAxisAlignment: CrossAxisAlignment.start,
 			verticalDirection: VerticalDirection.up,
@@ -68,7 +79,7 @@ class _PlanDetailsPageState extends State<PlanDetailsPage> {
 		);
 	}
 
-	List<Widget> _buildPanelSegments(PlanStateLoadSuccess state) {
+	List<Widget> _buildPanelSegments(PlanCubitState state) {
   	List<UITask> mandatoryTasks = state.tasks.where((task) => task.optional == false).toList();
 		List<UITask> optionalTasks = state.tasks.where((task) => task.optional == true).toList();
 
@@ -166,12 +177,7 @@ class _PlanDetailsPageState extends State<PlanDetailsPage> {
 									),
 								),
 								confirmText: 'actions.delete',
-								confirmAction: () async {
-									await BlocProvider.of<PlanCubit>(context).deletePlan();
-									Navigator.of(context).pop();
-									Navigator.of(context).pop();
-									showSuccessSnackbar(context, '$_pageKey.content.planRemovedText');
-								},
+								confirmAction: () => context.read<PlanCubit>().deletePlan(),
 								confirmColor: Colors.red
 							)
 						), null, Icons.delete

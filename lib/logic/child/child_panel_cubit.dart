@@ -12,14 +12,14 @@ class ChildPanelCubit extends ReloadableCubit {
 
   ChildPanelCubit(this._activeUser, ModalRoute pageRoute) : super(pageRoute);
 
-  void doLoadData() async => emit(ChildPlansLoadSuccess(await _dataAggregator.loadTodaysPlanInstances(childId: _activeUser().id)));
+  Future doLoadData() async => emit(ChildPlansState(await _dataAggregator.loadTodaysPlanInstances(childId: _activeUser().id)));
 }
 
-class ChildPlansLoadSuccess extends DataLoadSuccess {
+class ChildPlansState extends LoadableState {
 	final List<UIPlanInstance> plans;
 
-	ChildPlansLoadSuccess(this.plans);
+	ChildPlansState(this.plans) : super.loaded();
 
 	@override
-	List<Object> get props => [plans];
+	List<Object> get props => super.props..add(plans);
 }

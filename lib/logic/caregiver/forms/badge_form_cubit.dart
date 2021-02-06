@@ -17,21 +17,19 @@ class BadgeFormCubit extends ReloadableCubit {
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final AnalyticsService _analyticsService = GetIt.I<AnalyticsService>();
 	
-  BadgeFormCubit(this._activeUser, this._authBloc, ModalRoute pageRoute) :
-        super(pageRoute, initialState: SubmittableDataLoadSuccess());
+  BadgeFormCubit(this._activeUser, this._authBloc, ModalRoute pageRoute) : super(pageRoute);
   
   void submitBadgeForm(BadgeFormModel badgeForm) async {
-  	if ((state as SubmittableDataLoadSuccess).submissionInProgress)
+  	if (!beginSubmit())
   		return;
-		emit(SubmittableDataLoadSuccess(DataSubmissionState.submissionInProgress));
 		UICaregiver user = _activeUser();
 		var badge = Badge.fromBadgeForm(badgeForm);
 		await _dataRepository.createBadge(user.id, badge);
 		_analyticsService.logBadgeCreated(badge);
 		_authBloc.add(AuthenticationActiveUserUpdated(UICaregiver.from(user, badges: user.badges..add(UIBadge.fromDBModel(badge)))));
-    emit(SubmittableDataLoadSuccess(DataSubmissionState.submissionSuccess));
+    emit(state.submissionSuccess());
   }
 
   @override
-  void doLoadData() {}
+  Future doLoadData() async => emit(LoadableState.loaded());
 }

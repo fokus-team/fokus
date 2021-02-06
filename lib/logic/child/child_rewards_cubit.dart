@@ -24,9 +24,9 @@ class ChildRewardsCubit extends ReloadableCubit {
 
 	List<UIReward> _rewards;
 
-  ChildRewardsCubit(this._activeUser, ModalRoute pageRoute) : super(pageRoute);
+  ChildRewardsCubit(this._activeUser, ModalRoute pageRoute) : super(pageRoute, options: [ReloadableOption.repeatableSubmission]);
 
-  void doLoadData() async {
+  Future doLoadData() async {
 		ObjectId caregiverID = _activeUser().connections.first;
 		if(caregiverID != null && _rewards == null)
 			_rewards = (await _dataRepository.getRewards(caregiverId: caregiverID)).map((reward) => UIReward.fromDBModel(reward)).toList();
@@ -34,11 +34,8 @@ class ChildRewardsCubit extends ReloadableCubit {
   }
 
 	void claimReward(UIReward reward) async {
-		ChildRewardsLoadSuccess state = this.state;
-		if (state.submissionInProgress)
+		if (!beginSubmit())
 			return;
-		emit(state.copyWith(submissionState: DataSubmissionState.submissionInProgress));
-
     UIChild child = _activeUser();
 		List<UIPoints> points = child.points;
 		List<UIChildReward> rewards = child.rewards;
@@ -59,7 +56,7 @@ class ChildRewardsCubit extends ReloadableCubit {
 			);
 			_analyticsService.logRewardBought(reward);
 			await _notificationService.sendRewardBoughtNotification(model.id, model.name, child.connections.first, child);
-			emit(state.copyWith(submissionState: DataSubmissionState.submissionSuccess));
+			emit(state.submissionSuccess());
 		}
 	}
 
@@ -78,14 +75,15 @@ class ChildRewardsCubit extends ReloadableCubit {
 	List<NotificationType> dataTypeSubscription() => [NotificationType.taskApproved];
 }
 
-class ChildRewardsLoadSuccess extends SubmittableDataLoadSuccess {
+class ChildRewardsLoadSuccess extends LoadableState {
 	final List<UIReward> rewards;
 	final List<UIChildReward> claimedRewards;
 	final List<UIPoints> points;
 
-	ChildRewardsLoadSuccess({this.rewards, this.claimedRewards, this.points, DataSubmissionState submissionState}) : super(submissionState);
+	ChildRewardsLoadSuccess({this.rewards, this.claimedRewards, this.points, DataSubmissionState submissionState}) : super.loaded(submissionState);
 
-	ChildRewardsLoadSuccess copyWith({DataSubmissionState submissionState}) {
+	@override
+	ChildRewardsLoadSuccess withSubmitState(DataSubmissionState submissionState) {
 		return ChildRewardsLoadSuccess(
 			rewards: rewards,
 			claimedRewards: claimedRewards,
@@ -94,6 +92,6 @@ class ChildRewardsLoadSuccess extends SubmittableDataLoadSuccess {
 		);
 	}
 
-	@override
+  @override
 	List<Object> get props => super.props..addAll([rewards, claimedRewards, points]);
 }

@@ -4,25 +4,29 @@ enum DataSubmissionState {
 	notSubmitted, submissionInProgress, submissionSuccess, submissionFailure
 }
 
-abstract class LoadableState extends Equatable {
-	@override
-	List<Object> get props => [];
+enum DataLoadingState {
+	notLoaded, loadingInProgress, loadSuccess, loadFailure
 }
 
-class DataLoadInitial extends LoadableState {}
-class DataLoadInProgress extends LoadableState {}
-abstract class DataLoadSuccess extends LoadableState {}
-class DataLoadFailure extends LoadableState {}
+class LoadableState extends Equatable {
+	final DataLoadingState loadingState;
+	final DataSubmissionState submissionState;
 
-class SubmittableDataLoadSuccess extends DataLoadSuccess {
-  final DataSubmissionState submissionState;
+	bool get loadingInProgress => loadingState == DataLoadingState.loadingInProgress;
+	bool get loaded => loadingState == DataLoadingState.loadSuccess;
+	bool get isNotSubmitted => submissionState == DataSubmissionState.notSubmitted;
+	bool get submissionInProgress => submissionState == DataSubmissionState.submissionInProgress;
+	bool get submitted => submissionState == DataSubmissionState.submissionSuccess;
 
-  bool get submissionInProgress => submissionState == DataSubmissionState.submissionInProgress;
-  bool get submitted => submissionState == DataSubmissionState.submissionInProgress;
+	LoadableState({this.loadingState, this.submissionState});
+	LoadableState.notLoaded([DataLoadingState loadingState]) : this(loadingState: loadingState ?? DataLoadingState.notLoaded, submissionState: DataSubmissionState.notSubmitted);
+	LoadableState.loaded([DataSubmissionState submissionState]) : this(loadingState: DataLoadingState.loadSuccess, submissionState: submissionState ?? DataSubmissionState.notSubmitted);
 
-  SubmittableDataLoadSuccess([DataSubmissionState submissionState]) :
-        submissionState = submissionState ?? DataSubmissionState.notSubmitted;
+	LoadableState withSubmitState(DataSubmissionState submissionState) => LoadableState.loaded(submissionState);
+	LoadableState submit() => withSubmitState(DataSubmissionState.submissionInProgress);
+	LoadableState notSubmitted() => withSubmitState(DataSubmissionState.notSubmitted);
+	LoadableState submissionSuccess() => withSubmitState(DataSubmissionState.submissionSuccess);
 
-  @override
-  List<Object> get props => [submissionState];
+	@override
+	List<Object> get props => [loadingState, submissionState];
 }

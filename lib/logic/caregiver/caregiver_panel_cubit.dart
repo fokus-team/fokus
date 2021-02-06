@@ -19,31 +19,26 @@ class CaregiverPanelCubit extends ReloadableCubit {
 
   CaregiverPanelCubit(this._activeUser, ModalRoute pageRoute) : super(pageRoute);
 
-  void doLoadData() async {
+  Future doLoadData() async {
 	  var activeUser = _activeUser();
 	  var children = (await _dataRepository.getUsers(connected: activeUser.id, role: UserRole.child)).map((e) => e as Child).toList();
 	  var uiChildren = await _dataAggregator.loadChildren(children);
 	  Map<ObjectId, String> friends;
 	  if ((activeUser as UICaregiver).friends != null && (activeUser as UICaregiver).friends.isNotEmpty)
 		  friends = await _dataRepository.getUserNames((activeUser as UICaregiver).friends);
-	  emit(CaregiverPanelLoadSuccess(uiChildren, friends));
+	  emit(CaregiverPanelState(uiChildren, friends));
   }
 
 	@override
 	List<NotificationType> dataTypeSubscription() => [NotificationType.rewardBought];
 }
 
-class CaregiverPanelLoadSuccess extends DataLoadSuccess {
+class CaregiverPanelState extends LoadableState {
 	final List<UIChild> children;
 	final Map<ObjectId, String> friends;
 
-	CaregiverPanelLoadSuccess(this.children, this.friends);
+	CaregiverPanelState(this.children, this.friends) : super.loaded();
 
 	@override
-	List<Object> get props => [children, friends];
-
-	@override
-	String toString() {
-		return 'CaregiverPanelLoadSuccess{children: $children, friends: $friends}';
-	}
+	List<Object> get props => super.props..addAll([children, friends]);
 }

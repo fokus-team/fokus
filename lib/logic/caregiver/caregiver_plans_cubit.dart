@@ -22,15 +22,15 @@ class CaregiverPlansCubit extends ReloadableCubit {
     var getDescription = (Plan plan) => _repeatabilityService.buildPlanDescription(plan.repeatability);
     var caregiverId = _userID?.key ?? _activeUser().id;
     var plans = await _dataRepository.getPlans(caregiverId: caregiverId);
-		emit(CaregiverPlansLoadSuccess(plans.map((plan) => UIPlan.fromDBModel(plan, getDescription(plan))).toList()));
+		emit(CaregiverPlansState(plans.map((plan) => UIPlan.fromDBModel(plan, getDescription(plan))).toList()));
   }
 }
 
-class CaregiverPlansLoadSuccess extends DataLoadSuccess {
+class CaregiverPlansState extends LoadableState {
 	final List<UIPlan> plans;
 
-	CaregiverPlansLoadSuccess(this.plans);
+	CaregiverPlansState(this.plans) : super.loaded();
 
 	@override
-	List<Object> get props => [plans];
+	List<Object> get props => super.props..add(plans);
 }

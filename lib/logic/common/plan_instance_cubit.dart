@@ -32,7 +32,7 @@ class PlanInstanceCubit extends ReloadableCubit {
 	List<NotificationType> dataTypeSubscription() => [NotificationType.taskApproved, NotificationType.taskRejected, NotificationType.taskFinished, NotificationType.taskUnfinished];
 
 	@override
-	void doLoadData() async {
+	Future doLoadData() async {
 		_planInstance = await _dataRepository.getPlanInstance(id: uiPlanInstance.id);
 		if(_planInstance.taskInstances == null || _planInstance.taskInstances.isEmpty)
 			_taskInstancesService.createTaskInstances(_planInstance);
@@ -40,7 +40,7 @@ class PlanInstanceCubit extends ReloadableCubit {
 		var allTasksInstances = await _dataRepository.getTaskInstances(planInstanceId: uiPlanInstance.id);
 
 		List<UITaskInstance> uiInstances = await _taskInstancesService.mapToUIModels(allTasksInstances);
-		emit(PlanInstanceStateLoadSuccess(uiInstances, uiPlanInstance));
+		emit(PlanInstanceCubitState(tasks: uiInstances, planInstance: uiPlanInstance));
 	}
 
 
@@ -59,6 +59,8 @@ class PlanInstanceCubit extends ReloadableCubit {
 	}
 
 	void completePlan() async {
+		if (!beginSubmit())
+			return;
 		List<Future> updates = [];
 		_planInstance.state = PlanInstanceState.completed;
 		var allTasksInstances = await _dataRepository.getTaskInstances(planInstanceId: uiPlanInstance.id);
@@ -89,21 +91,19 @@ class PlanInstanceCubit extends ReloadableCubit {
 
 		Future.wait(updates);
 		uiPlanInstance = await _dataAggregator.loadPlanInstance(planInstanceId: _planInstance.id);
-		emit(PlanInstanceStateLoadSuccess(uiInstances, uiPlanInstance));
+		emit(PlanInstanceCubitState(tasks: uiInstances, planInstance: uiPlanInstance, submissionState: DataSubmissionState.submissionSuccess));
 	}
 }
 
-class PlanInstanceStateLoadSuccess extends DataLoadSuccess {
+class PlanInstanceCubitState extends LoadableState {
 	final List<UITaskInstance> tasks;
 	final UIPlanInstance planInstance;
 
-	PlanInstanceStateLoadSuccess(this.tasks, this.planInstance);
+	PlanInstanceCubitState({this.tasks, this.planInstance, DataSubmissionState submissionState}) : super.loaded(submissionState);
 
 	@override
-	List<Object> get props => [tasks, planInstance];
+  LoadableState withSubmitState(DataSubmissionState submissionState) => PlanInstanceCubitState(tasks: tasks, planInstance: planInstance, submissionState: submissionState);
 
-	@override
-	String toString() {
-		return 'ChildTasksLoadSuccess{tasks: $tasks, planInstance: $planInstance}';
-	}
+  @override
+	List<Object> get props => super.props..addAll([tasks, planInstance]);
 }

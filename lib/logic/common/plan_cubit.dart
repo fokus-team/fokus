@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fokus/logic/common/reloadable/reloadable_cubit.dart';
+import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
 import 'package:fokus/model/db/plan/plan.dart';
 import 'package:fokus/model/db/plan/task.dart';
 import 'package:fokus/model/ui/plan/ui_plan.dart';
@@ -9,7 +9,7 @@ import 'package:fokus/services/plan_repeatability_service.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
-class PlanCubit extends ReloadableCubit {
+class PlanCubit extends StatefulCubit {
 	final ObjectId _planId;
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final PlanRepeatabilityService _repeatabilityService = GetIt.I<PlanRepeatabilityService>();
@@ -43,7 +43,7 @@ class PlanCubit extends ReloadableCubit {
 	}
 }
 
-class PlanCubitState extends LoadableState {
+class PlanCubitState extends StatefulState {
 	final UIPlan uiPlan;
 	final List<UITask> tasks;
 	final Map<ObjectId, String> children;
@@ -51,7 +51,7 @@ class PlanCubitState extends LoadableState {
   PlanCubitState({this.uiPlan, this.tasks, this.children, DataSubmissionState submissionState}) : super.loaded(submissionState);
 
 	@override
-  LoadableState withSubmitState(DataSubmissionState submissionState) => PlanCubitState(uiPlan: uiPlan, tasks: tasks, children: children, submissionState: submissionState);
+  StatefulState withSubmitState(DataSubmissionState submissionState) => PlanCubitState(uiPlan: uiPlan, tasks: tasks, children: children, submissionState: submissionState);
 
   @override
   List<Object> get props => super.props..addAll([uiPlan, tasks, children]);

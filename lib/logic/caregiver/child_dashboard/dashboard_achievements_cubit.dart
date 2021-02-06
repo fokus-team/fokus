@@ -2,7 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart';
 
 import 'package:fokus/model/db/gamification/child_badge.dart';
-import 'package:fokus/logic/common/reloadable/reloadable_cubit.dart';
+import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
 import 'package:fokus/model/ui/gamification/ui_badge.dart';
 import 'package:fokus/model/ui/user/ui_caregiver.dart';
 import 'package:fokus/model/ui/user/ui_child.dart';
@@ -11,7 +11,7 @@ import 'package:fokus/services/analytics_service.dart';
 import 'package:fokus/services/data/data_repository.dart';
 import 'package:fokus/services/notifications/notification_service.dart';
 
-class DashboardAchievementsCubit extends ReloadableCubit {
+class DashboardAchievementsCubit extends StatefulCubit {
 	final ActiveUserFunction _activeUser;
 	UIChild child;
 
@@ -19,7 +19,7 @@ class DashboardAchievementsCubit extends ReloadableCubit {
 	final AnalyticsService _analyticsService = GetIt.I<AnalyticsService>();
 	final NotificationService _notificationService = GetIt.I<NotificationService>();
 
-	DashboardAchievementsCubit(this._activeUser, ModalRoute pageRoute): super(pageRoute, options: [ReloadableOption.noAutoLoading, ReloadableOption.repeatableSubmission]);
+	DashboardAchievementsCubit(this._activeUser, ModalRoute pageRoute): super(pageRoute, options: [StatefulOption.noAutoLoading, StatefulOption.repeatableSubmission]);
 
 	@override
 	Future doLoadData() async {
@@ -47,7 +47,7 @@ class DashboardAchievementsCubit extends ReloadableCubit {
 	List<UIBadge> _filterBadges(List<UIBadge> list, List<UIChildBadge> excluded) => list.where((badge) => !excluded.any((exclude) => badge.sameAs(exclude))).toList();
 }
 
-class DashboardAchievementsState extends LoadableState {
+class DashboardAchievementsState extends StatefulState {
 	final List<UIBadge> availableBadges;
 	final List<UIChildBadge> childBadges;
 
@@ -62,7 +62,7 @@ class DashboardAchievementsState extends LoadableState {
 	}
 
 	@override
-	LoadableState withSubmitState(DataSubmissionState submissionState) => copyWith(submissionState: submissionState);
+	StatefulState withSubmitState(DataSubmissionState submissionState) => copyWith(submissionState: submissionState);
 
 	@override
 	List<Object> get props => super.props..addAll([availableBadges, childBadges]);

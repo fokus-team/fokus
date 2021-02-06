@@ -2,14 +2,14 @@ import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart';
 
 import 'package:fokus/model/db/plan/plan.dart';
-import 'package:fokus/logic/common/reloadable/reloadable_cubit.dart';
+import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
 import 'package:fokus/model/ui/plan/ui_plan.dart';
 import 'package:fokus/model/ui/user/ui_user.dart';
 import 'package:fokus/services/data/data_repository.dart';
 import 'package:fokus/services/plan_repeatability_service.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
-class CaregiverPlansCubit extends ReloadableCubit {
+class CaregiverPlansCubit extends StatefulCubit {
 	final MapEntry<ObjectId, String> _userID;
 	final ActiveUserFunction _activeUser;
   final DataRepository _dataRepository = GetIt.I<DataRepository>();
@@ -26,7 +26,7 @@ class CaregiverPlansCubit extends ReloadableCubit {
   }
 }
 
-class CaregiverPlansState extends LoadableState {
+class CaregiverPlansState extends StatefulState {
 	final List<UIPlan> plans;
 
 	CaregiverPlansState(this.plans) : super.loaded();

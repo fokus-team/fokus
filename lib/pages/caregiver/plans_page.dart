@@ -10,7 +10,7 @@ import 'package:fokus/widgets/app_navigation_bar.dart';
 import 'package:fokus/widgets/cards/item_card.dart';
 import 'package:fokus/widgets/chips/attribute_chip.dart';
 import 'package:fokus/widgets/custom_app_bars.dart';
-import 'package:fokus/widgets/loadable_bloc_builder.dart';
+import 'package:fokus/widgets/stateful_bloc_builder.dart';
 import 'package:fokus/widgets/segment.dart';
 
 class CaregiverPlansPage extends StatelessWidget {
@@ -20,7 +20,7 @@ class CaregiverPlansPage extends StatelessWidget {
   Widget build(BuildContext context) {
 		return Scaffold(
 			appBar: CustomAppBar(type: CustomAppBarType.normal, title: '$_pageKey.header.title', subtitle: '$_pageKey.header.pageHint', icon: Icons.description),
-			body: LoadableBlocBuilder<CaregiverPlansCubit, CaregiverPlansState>(
+			body: StatefulBlocBuilder<CaregiverPlansCubit, CaregiverPlansState>(
 				builder: (context, state) => AppSegments(segments: _buildPanelSegments(state, context), fullBody: true),
 			),
 			floatingActionButton: FloatingActionButton.extended(

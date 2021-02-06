@@ -7,7 +7,7 @@ import 'package:fokus/utils/ui/theme_config.dart';
 import 'package:fokus/widgets/buttons/help_icon_button.dart';
 import 'package:fokus/widgets/cards/report_card.dart';
 import 'package:fokus/widgets/general/app_hero.dart';
-import 'package:fokus/widgets/loadable_bloc_builder.dart';
+import 'package:fokus/widgets/stateful_bloc_builder.dart';
 
 
 class CaregiverRatingPage extends StatefulWidget {
@@ -39,7 +39,7 @@ class _CaregiverRatingPageState extends State<CaregiverRatingPage> {
 					HelpIconButton(helpPage: 'rating')
 				]
 			),
-			body: LoadableBlocBuilder<TasksEvaluationCubit, TasksEvaluationState>(
+			body: StatefulBlocBuilder<TasksEvaluationCubit, TasksEvaluationState>(
 				builder: (context, state) {
 					return Column(
 						mainAxisSize: state.reports.isNotEmpty ? MainAxisSize.min : MainAxisSize.max,

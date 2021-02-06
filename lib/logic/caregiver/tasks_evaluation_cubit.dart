@@ -4,7 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
-import 'package:fokus/logic/common/reloadable/reloadable_cubit.dart';
+import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
 import 'package:fokus/model/db/gamification/points.dart';
 import 'package:fokus/model/db/plan/plan_instance.dart';
 import 'package:fokus/model/db/plan/plan_instance_state.dart';
@@ -22,7 +22,7 @@ import 'package:fokus/services/data/data_repository.dart';
 import 'package:fokus/services/notifications/notification_service.dart';
 import 'package:fokus/services/task_instance_service.dart';
 
-class TasksEvaluationCubit extends ReloadableCubit {
+class TasksEvaluationCubit extends StatefulCubit {
   final DataRepository _dataRepository = GetIt.I<DataRepository>();
   final AnalyticsService _analyticsService = GetIt.I<AnalyticsService>();
   final TaskInstanceService _taskInstanceService = GetIt.I<TaskInstanceService>();
@@ -34,7 +34,7 @@ class TasksEvaluationCubit extends ReloadableCubit {
 	Map<ObjectId, UIChild> _planInstanceToChild;
 	Map<ObjectId, String> _planInstanceToName;
 
-	TasksEvaluationCubit(ModalRoute pageRoute, this._activeUser) : super(pageRoute, options: [ReloadableOption.skipOnPopNextReload, ReloadableOption.repeatableSubmission]);
+	TasksEvaluationCubit(ModalRoute pageRoute, this._activeUser) : super(pageRoute, options: [StatefulOption.skipOnPopNextReload, StatefulOption.repeatableSubmission]);
 
   @override
   List<NotificationType> dataTypeSubscription() => [NotificationType.taskFinished];
@@ -101,13 +101,13 @@ class TasksEvaluationCubit extends ReloadableCubit {
 	static int getPointsAwarded(int quantity, int ratingMark) => max((quantity*ratingMark/5).round(), 1);
 }
 
-class TasksEvaluationState extends LoadableState {
+class TasksEvaluationState extends StatefulState {
 	final List<UITaskReport> reports;
 
 	TasksEvaluationState(this.reports, [DataSubmissionState submissionState]) : super.loaded(submissionState);
 
 	@override
-  LoadableState withSubmitState(DataSubmissionState submissionState) => TasksEvaluationState(reports, submissionState);
+  StatefulState withSubmitState(DataSubmissionState submissionState) => TasksEvaluationState(reports, submissionState);
 
   @override
 	List<Object> get props => super.props..addAll([reports]);

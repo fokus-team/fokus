@@ -2,18 +2,18 @@ import 'package:get_it/get_it.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
 import 'package:fokus/model/ui/user/ui_caregiver.dart';
-import 'package:fokus/logic/common/reloadable/reloadable_cubit.dart';
+import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
 import 'package:fokus/model/ui/user/ui_user.dart';
 import 'package:fokus/services/data/data_repository.dart';
 import 'package:fokus/model/db/gamification/badge.dart';
 import 'package:fokus/model/ui/gamification/ui_badge.dart';
 import 'package:fokus/model/ui/gamification/ui_reward.dart';
 
-class CaregiverAwardsCubit extends ReloadableCubit {
+class CaregiverAwardsCubit extends StatefulCubit {
 	final ActiveUserFunction _activeUser;
   final DataRepository _dataRepository = GetIt.I<DataRepository>();
 
-  CaregiverAwardsCubit(this._activeUser, pageRoute) : super(pageRoute, options: [ReloadableOption.repeatableSubmission]);
+  CaregiverAwardsCubit(this._activeUser, pageRoute) : super(pageRoute, options: [StatefulOption.repeatableSubmission]);
 
   @override
 	Future doLoadData() async {
@@ -50,14 +50,14 @@ class CaregiverAwardsCubit extends ReloadableCubit {
 	}
 }
 
-class CaregiverAwardsState extends LoadableState {
+class CaregiverAwardsState extends StatefulState {
 	final List<UIReward> rewards;
 	final List<UIBadge> badges;
 
 	CaregiverAwardsState({this.rewards, this.badges, DataSubmissionState submissionState}) : super.loaded(submissionState);
 
 	@override
-  LoadableState withSubmitState(DataSubmissionState submissionState) => CaregiverAwardsState(rewards: rewards, badges: badges, submissionState: submissionState);
+  StatefulState withSubmitState(DataSubmissionState submissionState) => CaregiverAwardsState(rewards: rewards, badges: badges, submissionState: submissionState);
 
   @override
 	List<Object> get props => super.props..addAll([rewards, badges]);

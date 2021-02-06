@@ -14,7 +14,7 @@ import 'package:fokus/widgets/app_navigation_bar.dart';
 import 'package:fokus/widgets/cards/item_card.dart';
 import 'package:fokus/widgets/cards/model_cards.dart';
 import 'package:fokus/widgets/dialogs/general_dialog.dart';
-import 'package:fokus/widgets/loadable_bloc_builder.dart';
+import 'package:fokus/widgets/stateful_bloc_builder.dart';
 import 'package:fokus/widgets/segment.dart';
 
 class CaregiverAwardsPage extends StatefulWidget {
@@ -29,7 +29,7 @@ class _CaregiverAwardsPageState extends State<CaregiverAwardsPage> {
 	Widget build(BuildContext context) {
 		return Scaffold(
 			appBar: CustomAppBar(type: CustomAppBarType.normal, title: '$_pageKey.header.title', subtitle: '$_pageKey.header.pageHint', icon: Icons.stars),
-			body: LoadableBlocBuilder<CaregiverAwardsCubit, CaregiverAwardsState>(
+			body: StatefulBlocBuilder<CaregiverAwardsCubit, CaregiverAwardsState>(
 				builder: (context, state) => AppSegments(segments: _buildPanelSegments(state, context), fullBody: true),
 				listener: (context, state) {
 					if (state.submitted) {

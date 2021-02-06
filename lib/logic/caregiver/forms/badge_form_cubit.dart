@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
-import 'package:fokus/logic/common/reloadable/reloadable_cubit.dart';
+import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
 import 'package:fokus/model/db/gamification/badge.dart';
 import 'package:fokus/model/ui/form/badge_form_model.dart';
 import 'package:fokus/model/ui/gamification/ui_badge.dart';
@@ -10,7 +10,7 @@ import 'package:get_it/get_it.dart';
 import 'package:fokus/services/data/data_repository.dart';
 import 'package:fokus/model/ui/user/ui_user.dart';
 
-class BadgeFormCubit extends ReloadableCubit {
+class BadgeFormCubit extends StatefulCubit {
 	final ActiveUserFunction _activeUser;
 	final AuthenticationBloc _authBloc;
 
@@ -31,5 +31,5 @@ class BadgeFormCubit extends ReloadableCubit {
   }
 
   @override
-  Future doLoadData() async => emit(LoadableState.loaded());
+  Future doLoadData() async => emit(StatefulState.loaded());
 }

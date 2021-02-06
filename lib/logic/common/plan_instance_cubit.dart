@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:fokus/logic/common/reloadable/reloadable_cubit.dart';
+import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
 import 'package:fokus/model/db/plan/plan_instance.dart';
 import 'package:fokus/model/db/plan/plan_instance_state.dart';
 import 'package:fokus/model/db/plan/task_instance.dart';
@@ -17,7 +17,7 @@ import 'package:fokus/model/db/plan/task_status.dart';
 import 'package:fokus/model/db/date/time_date.dart';
 
 
-class PlanInstanceCubit extends ReloadableCubit {
+class PlanInstanceCubit extends StatefulCubit {
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final TaskInstanceService _taskInstancesService = GetIt.I<TaskInstanceService>();
 	final UIDataAggregator _dataAggregator = GetIt.I<UIDataAggregator>();
@@ -95,14 +95,14 @@ class PlanInstanceCubit extends ReloadableCubit {
 	}
 }
 
-class PlanInstanceCubitState extends LoadableState {
+class PlanInstanceCubitState extends StatefulState {
 	final List<UITaskInstance> tasks;
 	final UIPlanInstance planInstance;
 
 	PlanInstanceCubitState({this.tasks, this.planInstance, DataSubmissionState submissionState}) : super.loaded(submissionState);
 
 	@override
-  LoadableState withSubmitState(DataSubmissionState submissionState) => PlanInstanceCubitState(tasks: tasks, planInstance: planInstance, submissionState: submissionState);
+  StatefulState withSubmitState(DataSubmissionState submissionState) => PlanInstanceCubitState(tasks: tasks, planInstance: planInstance, submissionState: submissionState);
 
   @override
 	List<Object> get props => super.props..addAll([tasks, planInstance]);

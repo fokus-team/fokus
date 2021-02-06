@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fokus/logic/child/child_rewards_cubit.dart';
 import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
-import 'package:fokus/logic/common/reloadable/reloadable_cubit.dart';
+import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
 import 'package:fokus/model/ui/gamification/ui_reward.dart';
 import 'package:fokus/model/ui/ui_button.dart';
 import 'package:fokus/services/app_locales.dart';
@@ -102,7 +102,7 @@ class _RewardDialogState extends State<RewardDialog> with SingleTickerProviderSt
 									children: <Widget>[
 										RoundedButton(button: UIButton('actions.close', () => Navigator.of(context).pop(), Colors.blueGrey, Icons.close)),
 										if(userRole == UserRole.child)
-											BlocBuilder<ChildRewardsCubit, LoadableState>(
+											BlocBuilder<ChildRewardsCubit, StatefulState>(
 												builder: (context, state) => RoundedButton(
 													button: UIButton(
 														'$_pageKey.claimButton',

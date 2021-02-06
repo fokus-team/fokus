@@ -6,7 +6,7 @@ import 'package:fokus/services/plan_keeper_service.dart';
 import 'package:fokus/services/ui_data_aggregator.dart';
 import 'package:get_it/get_it.dart';
 
-import 'package:fokus/logic/common/reloadable/reloadable_cubit.dart';
+import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
 import 'package:fokus/model/ui/plan/ui_plan.dart';
 import 'package:fokus/model/ui/plan/ui_plan_instance.dart';
 import 'package:fokus/model/ui/user/ui_child.dart';
@@ -14,7 +14,7 @@ import 'package:fokus/model/ui/user/ui_user.dart';
 import 'package:fokus/services/data/data_repository.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
-class DashboardPlansCubit extends ReloadableCubit {
+class DashboardPlansCubit extends StatefulCubit {
 	final ActiveUserFunction _activeUser;
 	UIChild child;
 	List<Plan> _availablePlans;
@@ -23,7 +23,7 @@ class DashboardPlansCubit extends ReloadableCubit {
 	final UIDataAggregator _dataAggregator = GetIt.I<UIDataAggregator>();
 	final PlanKeeperService _planKeeperService = GetIt.I<PlanKeeperService>();
 	
-  DashboardPlansCubit(this._activeUser, ModalRoute pageRoute) : super(pageRoute, options: [ReloadableOption.noAutoLoading, ReloadableOption.repeatableSubmission]);
+  DashboardPlansCubit(this._activeUser, ModalRoute pageRoute) : super(pageRoute, options: [StatefulOption.noAutoLoading, StatefulOption.repeatableSubmission]);
 
   @override
   Future doLoadData() async {
@@ -78,7 +78,7 @@ class DashboardPlansCubit extends ReloadableCubit {
 	}
 }
 
-class DashboardPlansState extends LoadableState {
+class DashboardPlansState extends StatefulState {
 	final List<UIPlanInstance> childPlans;
 	final List<UIPlan> availablePlans;
 	final bool noPlansAdded;
@@ -97,7 +97,7 @@ class DashboardPlansState extends LoadableState {
 	}
 
 	@override
-  LoadableState withSubmitState(DataSubmissionState submissionState) => copyWith(submissionState: submissionState);
+  StatefulState withSubmitState(DataSubmissionState submissionState) => copyWith(submissionState: submissionState);
 
   @override
 	List<Object> get props => super.props..addAll([childPlans, availablePlans, noPlansAdded, unratedTasks]);

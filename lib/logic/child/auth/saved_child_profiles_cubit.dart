@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
-import 'package:fokus/logic/common/reloadable/reloadable_cubit.dart';
+import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
 import 'package:fokus/services/app_config/app_config_repository.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mongo_dart/mongo_dart.dart';
@@ -9,7 +9,7 @@ import 'package:fokus/services/data/data_repository.dart';
 import 'package:fokus/model/ui/user/ui_child.dart';
 
 
-class SavedChildProfilesCubit extends ReloadableCubit {
+class SavedChildProfilesCubit extends StatefulCubit {
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final AppConfigRepository _appConfigRepository = GetIt.I<AppConfigRepository>();
 	final AuthenticationBloc authenticationBloc;
@@ -29,13 +29,13 @@ class SavedChildProfilesCubit extends ReloadableCubit {
 	}
 }
 
-class SavedChildProfilesState extends LoadableState {
+class SavedChildProfilesState extends StatefulState {
 	final List<UIChild> savedProfiles;
 
 	SavedChildProfilesState({this.savedProfiles, DataSubmissionState submissionState}) : super.loaded(submissionState);
 
 	@override
-  LoadableState withSubmitState(DataSubmissionState submissionState) => SavedChildProfilesState(savedProfiles: savedProfiles, submissionState: submissionState);
+  StatefulState withSubmitState(DataSubmissionState submissionState) => SavedChildProfilesState(savedProfiles: savedProfiles, submissionState: submissionState);
 
   @override
 	List<Object> get props => super.props..add(savedProfiles);

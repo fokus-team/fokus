@@ -17,7 +17,7 @@ import 'package:fokus/widgets/cards/item_card.dart';
 import 'package:fokus/widgets/chips/timer_chip.dart';
 import 'package:fokus/widgets/dialogs/general_dialog.dart';
 import 'package:fokus/widgets/general/app_loader.dart';
-import 'package:fokus/widgets/loadable_bloc_builder.dart';
+import 'package:fokus/widgets/stateful_bloc_builder.dart';
 import 'package:fokus/widgets/segment.dart';
 
 class PlanInstanceDetailsPage extends StatefulWidget {
@@ -50,7 +50,7 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 
 	@override
   Widget build(BuildContext context) {
-		return LoadableBlocBuilder<PlanInstanceCubit, PlanInstanceCubitState>(
+		return StatefulBlocBuilder<PlanInstanceCubit, PlanInstanceCubitState>(
 			builder: (context, state) {
 				var showEndButton = context.watch<PlanInstanceCubit>().uiPlanInstance.state.ended || !widget.showActions;
 				return Scaffold(

@@ -3,7 +3,7 @@ import 'package:fokus/services/analytics_service.dart';
 import 'package:get_it/get_it.dart';
 
 import 'package:fokus/model/ui/user/ui_user.dart';
-import 'package:fokus/logic/common/reloadable/reloadable_cubit.dart';
+import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
 import 'package:fokus/services/data/data_repository.dart';
 import 'package:fokus/model/db/date/time_date.dart';
 import 'package:fokus/model/db/gamification/child_reward.dart';
@@ -16,7 +16,7 @@ import 'package:fokus/model/ui/user/ui_child.dart';
 import 'package:fokus/services/notifications/notification_service.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
-class ChildRewardsCubit extends ReloadableCubit {
+class ChildRewardsCubit extends StatefulCubit {
 	final ActiveUserFunction _activeUser;
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final NotificationService _notificationService = GetIt.I<NotificationService>();
@@ -24,7 +24,7 @@ class ChildRewardsCubit extends ReloadableCubit {
 
 	List<UIReward> _rewards;
 
-  ChildRewardsCubit(this._activeUser, ModalRoute pageRoute) : super(pageRoute, options: [ReloadableOption.repeatableSubmission]);
+  ChildRewardsCubit(this._activeUser, ModalRoute pageRoute) : super(pageRoute, options: [StatefulOption.repeatableSubmission]);
 
   Future doLoadData() async {
 		ObjectId caregiverID = _activeUser().connections.first;
@@ -75,7 +75,7 @@ class ChildRewardsCubit extends ReloadableCubit {
 	List<NotificationType> dataTypeSubscription() => [NotificationType.taskApproved];
 }
 
-class ChildRewardsLoadSuccess extends LoadableState {
+class ChildRewardsLoadSuccess extends StatefulState {
 	final List<UIReward> rewards;
 	final List<UIChildReward> claimedRewards;
 	final List<UIPoints> points;

@@ -5,16 +5,16 @@ import 'package:fokus/logic/caregiver/child_dashboard/dashboard_rewards_cubit.da
 import 'package:get_it/get_it.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
-import 'package:fokus/logic/common/reloadable/reloadable_cubit.dart';
+import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
 import 'package:fokus/model/ui/user/ui_child.dart';
 import 'package:fokus/services/ui_data_aggregator.dart';
 
-class ChildDashboardCubit extends ReloadableCubit {
+class ChildDashboardCubit extends StatefulCubit {
 	final ObjectId childId;
 
 	int _initialTab;
 	
-	List<ReloadableCubit> _tabCubits;
+	List<StatefulCubit> _tabCubits;
 	DashboardPlansCubit _plansCubit;
 	DashboardRewardsCubit _rewardsCubit;
 	DashboardAchievementsCubit _achievementsCubit;
@@ -48,7 +48,7 @@ class ChildDashboardCubit extends ReloadableCubit {
 	}
 }
 
-class ChildDashboardState extends LoadableState {
+class ChildDashboardState extends StatefulState {
 	final UIChild child;
 
 	ChildDashboardState({this.child}) : super.loaded();

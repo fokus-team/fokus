@@ -4,7 +4,7 @@ import 'package:fokus/logic/caregiver/child_dashboard/child_dashboard_cubit.dart
 import 'package:fokus/logic/caregiver/child_dashboard/dashboard_achievements_cubit.dart';
 import 'package:fokus/logic/caregiver/child_dashboard/dashboard_plans_cubit.dart';
 import 'package:fokus/logic/caregiver/child_dashboard/dashboard_rewards_cubit.dart';
-import 'package:fokus/logic/common/reloadable/reloadable_cubit.dart';
+import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
 import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/ui/gamification/ui_badge.dart';
 import 'package:fokus/model/ui/plan/ui_plan.dart';
@@ -24,7 +24,7 @@ import 'package:fokus/widgets/custom_app_bars.dart';
 import 'package:fokus/widgets/dialogs/general_dialog.dart';
 import 'package:fokus/widgets/general/app_alert.dart';
 import 'package:fokus/widgets/general/app_loader.dart';
-import 'package:fokus/widgets/loadable_bloc_builder.dart';
+import 'package:fokus/widgets/stateful_bloc_builder.dart';
 import 'package:fokus/widgets/segment.dart';
 import 'package:fokus_auth/fokus_auth.dart';
 import 'package:intl/intl.dart';
@@ -70,7 +70,7 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
   @override
   Widget build(BuildContext context) {
 		return Scaffold(
-	    body: LoadableBlocBuilder<ChildDashboardCubit, ChildDashboardState>(
+	    body: StatefulBlocBuilder<ChildDashboardCubit, ChildDashboardState>(
 				builder: (context, state) => _getPage(
 					child: state.child,
 	        content: TabBarView(
@@ -93,8 +93,8 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 		);
 	}
 
-	Widget _buildTab<Cubit extends ReloadableCubit, State extends LoadableState>(List<Widget> Function(State) content) {
-		return LoadableBlocBuilder<Cubit, State>(
+	Widget _buildTab<Cubit extends StatefulCubit, State extends StatefulState>(List<Widget> Function(State) content) {
+		return StatefulBlocBuilder<Cubit, State>(
 			builder: (context, state) => ListView(
 				padding: EdgeInsets.zero,
 				physics: BouncingScrollPhysics(),
@@ -187,8 +187,8 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 		);
 	}
 
-	Widget _buildSelect<Type, Cubit extends ReloadableCubit, State>({Widget Function([List<Type>]) content, List<Type> Function(State) model}) {
-		return BlocBuilder<Cubit, LoadableState>(
+	Widget _buildSelect<Type, Cubit extends StatefulCubit, State>({Widget Function([List<Type>]) content, List<Type> Function(State) model}) {
+		return BlocBuilder<Cubit, StatefulState>(
 			builder: (context, state) {
 				if (!state.loaded)
 					return content();

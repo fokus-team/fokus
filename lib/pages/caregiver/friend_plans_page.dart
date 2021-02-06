@@ -13,7 +13,7 @@ import 'package:fokus/widgets/buttons/popup_menu_list.dart';
 import 'package:fokus/widgets/cards/item_card.dart';
 import 'package:fokus/widgets/chips/attribute_chip.dart';
 import 'package:fokus/widgets/dialogs/general_dialog.dart';
-import 'package:fokus/widgets/loadable_bloc_builder.dart';
+import 'package:fokus/widgets/stateful_bloc_builder.dart';
 import 'package:fokus/widgets/segment.dart';
 import 'package:mongo_dart/mongo_dart.dart' as Mongo;
 
@@ -64,7 +64,7 @@ class CaregiverFriendPlansPage extends StatelessWidget {
 	}
 
 	Widget _buildFriendPlans() {
-		return LoadableBlocBuilder<CaregiverPlansCubit, CaregiverPlansState>(
+		return StatefulBlocBuilder<CaregiverPlansCubit, CaregiverPlansState>(
 			builder: (context, state) => Segment(
 				title: '$_pageKey.content.plansTitle',
 				noElementsMessage: '$_pageKey.content.noPlansText',

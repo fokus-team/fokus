@@ -7,7 +7,7 @@ import 'package:fokus/model/pages/plan_form_params.dart';
 import 'package:fokus/model/ui/plan/ui_plan.dart';
 import 'package:fokus/model/ui/task/ui_task.dart';
 import 'package:fokus/utils/ui/snackbar_utils.dart';
-import 'package:fokus/widgets/loadable_bloc_builder.dart';
+import 'package:fokus/widgets/stateful_bloc_builder.dart';
 import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/ui/gamification/ui_currency.dart';
 import 'package:fokus/model/ui/form/task_form_model.dart';
@@ -34,7 +34,7 @@ class _PlanDetailsPageState extends State<PlanDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
-  	return LoadableBlocBuilder<PlanCubit, PlanCubitState>(
+  	return StatefulBlocBuilder<PlanCubit, PlanCubitState>(
 		  builder: (context, state) {
   		  return Scaffold(
 			    body: _buildView(context, state),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/logic/child/child_rewards_cubit.dart';
-import 'package:fokus/logic/common/reloadable/reloadable_cubit.dart';
+import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
 import 'package:fokus/utils/ui/dialog_utils.dart';
 import 'package:fokus/utils/ui/snackbar_utils.dart';
 import 'package:fokus/utils/ui/theme_config.dart';
@@ -9,7 +9,7 @@ import 'package:fokus/widgets/app_navigation_bar.dart';
 import 'package:fokus/widgets/cards/item_card.dart';
 import 'package:fokus/widgets/cards/model_cards.dart';
 import 'package:fokus/widgets/custom_app_bars.dart';
-import 'package:fokus/widgets/loadable_bloc_builder.dart';
+import 'package:fokus/widgets/stateful_bloc_builder.dart';
 import 'package:fokus/widgets/segment.dart';
 
 class ChildRewardsPage extends StatefulWidget {
@@ -27,7 +27,7 @@ class _ChildRewardsPageState extends State<ChildRewardsPage> {
 	      crossAxisAlignment: CrossAxisAlignment.start,
 				verticalDirection: VerticalDirection.up,
 	      children: [
-		      LoadableBlocBuilder<ChildRewardsCubit, ChildRewardsLoadSuccess>(
+		      StatefulBlocBuilder<ChildRewardsCubit, ChildRewardsLoadSuccess>(
 				    builder: (context, state) => AppSegments(
 							segments: [
 								Segment(
@@ -50,7 +50,7 @@ class _ChildRewardsPageState extends State<ChildRewardsPage> {
 						expandLoader: true,
 			      popOnSubmit: true,
 		      ),
-					BlocBuilder<ChildRewardsCubit, LoadableState>(
+					BlocBuilder<ChildRewardsCubit, StatefulState>(
 						builder: (context, state) => CustomChildAppBar(points: state is ChildRewardsLoadSuccess ? state.points : null)
 					)
 	      ]

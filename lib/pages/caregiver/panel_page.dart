@@ -12,7 +12,7 @@ import 'package:fokus/widgets/app_navigation_bar.dart';
 import 'package:fokus/widgets/cards/item_card.dart';
 import 'package:fokus/widgets/custom_app_bars.dart';
 import 'package:fokus/widgets/cards/model_cards.dart';
-import 'package:fokus/widgets/loadable_bloc_builder.dart';
+import 'package:fokus/widgets/stateful_bloc_builder.dart';
 import 'package:fokus/widgets/segment.dart';
 
 class CaregiverPanelPage extends StatelessWidget {
@@ -27,7 +27,7 @@ class CaregiverPanelPage extends StatelessWidget {
 				listener: (context, state) {
 				  BlocProvider.of<CaregiverPanelCubit>(context).reload();
 				},
-				child: LoadableBlocBuilder<CaregiverPanelCubit, CaregiverPanelState>(
+				child: StatefulBlocBuilder<CaregiverPanelCubit, CaregiverPanelState>(
 					builder: (context, state) => AppSegments(
 						segments: _buildPanelSegments(state, context),
 						fullBody: true

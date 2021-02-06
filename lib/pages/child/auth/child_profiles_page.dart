@@ -9,7 +9,7 @@ import 'package:fokus/utils/ui/theme_config.dart';
 import 'package:fokus/widgets/general/app_avatar.dart';
 import 'package:fokus/widgets/auth/auth_button.dart';
 import 'package:fokus/widgets/auth/auth_widgets.dart';
-import 'package:fokus/widgets/loadable_bloc_builder.dart';
+import 'package:fokus/widgets/stateful_bloc_builder.dart';
 
 class ChildProfilesPage extends StatelessWidget {
 	static const String _pageKey = 'page.loginSection.childProfiles';
@@ -35,7 +35,7 @@ class ChildProfilesPage extends StatelessWidget {
   }
 
 	Widget _buildSavedProfiles(BuildContext context) {
-		return LoadableBlocBuilder<SavedChildProfilesCubit, SavedChildProfilesState>(
+		return StatefulBlocBuilder<SavedChildProfilesCubit, SavedChildProfilesState>(
 			customLoadingHandling: true,
 			builder: (context, state) {
 				return AuthGroup(

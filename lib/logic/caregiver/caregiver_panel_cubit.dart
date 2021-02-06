@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:fokus/logic/common/reloadable/reloadable_cubit.dart';
+import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
 import 'package:fokus/model/db/user/child.dart';
 import 'package:fokus/model/notification/notification_type.dart';
 import 'package:fokus/services/ui_data_aggregator.dart';
@@ -12,7 +12,7 @@ import 'package:fokus/model/ui/user/ui_caregiver.dart';
 import 'package:fokus/model/ui/user/ui_user.dart';
 import 'package:fokus/model/db/user/user_role.dart';
 
-class CaregiverPanelCubit extends ReloadableCubit {
+class CaregiverPanelCubit extends StatefulCubit {
 	final ActiveUserFunction _activeUser;
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final UIDataAggregator _dataAggregator = GetIt.I<UIDataAggregator>();
@@ -33,7 +33,7 @@ class CaregiverPanelCubit extends ReloadableCubit {
 	List<NotificationType> dataTypeSubscription() => [NotificationType.rewardBought];
 }
 
-class CaregiverPanelState extends LoadableState {
+class CaregiverPanelState extends StatefulState {
 	final List<UIChild> children;
 	final Map<ObjectId, String> friends;
 

@@ -9,40 +9,40 @@ import 'package:fokus/services/app_route_observer.dart';
 import 'package:fokus/services/notifications/notification_service.dart';
 import 'package:fokus/services/observers/data_update_observer.dart';
 
-part 'loadable_state.dart';
+part 'stateful_state.dart';
 
-enum ReloadableOption {
+enum StatefulOption {
 	skipOnPopNextReload, repeatableSubmission, noAutoLoading, noDataLoading
 }
-// StatefulCubit
-abstract class ReloadableCubit extends Cubit<LoadableState> with DataUpdateObserver implements RouteAware {
+
+abstract class StatefulCubit extends Cubit<StatefulState> with DataUpdateObserver implements RouteAware {
 	final _routeObserver = GetIt.I<AppRouteObserver>();
 	final NotificationService _notificationService = GetIt.I<NotificationService>();
 	@protected
-	final List<ReloadableOption> options;
+	final List<StatefulOption> options;
 
-  ReloadableCubit(ModalRoute pageRoute, {this.options = const [], LoadableState initialState}) :
-        super(initialState ?? LoadableState.notLoaded()) {
+  StatefulCubit(ModalRoute pageRoute, {this.options = const [], StatefulState initialState}) :
+        super(initialState ?? StatefulState.notLoaded()) {
 	  _subscribeToUserChanges();
 	  _routeObserver.subscribe(this, pageRoute);
   }
 
   Future loadData() {
-	  emit(LoadableState.notLoaded(DataLoadingState.loadingInProgress));
+	  emit(StatefulState.notLoaded(DataLoadingState.loadingInProgress));
 	  return doLoadData();
   }
 
   @protected
   Future doLoadData();
 
-	void reload() => emit(LoadableState.notLoaded());
+	void reload() => emit(StatefulState.notLoaded());
 
 	void resetSubmissionState() => emit(state.withSubmitState(DataSubmissionState.notSubmitted));
 
 	@override
 	void onDataUpdated(NotificationType type) => reload();
 
-	bool hasOption(ReloadableOption option) => options.contains(option);
+	bool hasOption(StatefulOption option) => options.contains(option);
 
 	void _subscribeToUserChanges() {
 		if (dataTypeSubscription().isNotEmpty)
@@ -65,7 +65,7 @@ abstract class ReloadableCubit extends Cubit<LoadableState> with DataUpdateObser
 	@override
 	void didPopNext() {
 		_subscribeToUserChanges();
-		if (!options.contains(ReloadableOption.skipOnPopNextReload))
+		if (!options.contains(StatefulOption.skipOnPopNextReload))
 	    reload();
 	}
 

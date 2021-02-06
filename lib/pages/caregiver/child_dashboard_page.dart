@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/logic/caregiver/child_dashboard/child_dashboard_cubit.dart';
@@ -44,6 +46,7 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 	TabController _tabController;
 	final UIChild _childProfile;
 	int _currentIndex;
+  StreamController<int> _tabIndexStream = StreamController<int>.broadcast();
 
 	_CaregiverChildDashboardPageState(Map<String, dynamic> args) : _currentIndex = args['tab'] ?? 0, _childProfile = args['child'];
 
@@ -55,9 +58,11 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 		super.initState();
 		_tabController = TabController(initialIndex: _currentIndex, vsync: this, length: 3);
 		_tabController.animation..addListener(() {
-			setState(() {
-				_currentIndex = (_tabController.animation.value).round();
-			});
+		  var newValue = (_tabController.animation.value).round();
+		  if (_currentIndex != newValue) {
+        _currentIndex = newValue;
+        _tabIndexStream.add(_currentIndex);
+      }
 		});
 	}
 
@@ -71,7 +76,7 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
   Widget build(BuildContext context) {
 		return Scaffold(
 	    body: StatefulBlocBuilder<ChildDashboardCubit, ChildDashboardState>(
-				builder: (context, state) => _getPage(
+        builder: (context, state) => _getPage(
 					child: state.child,
 	        content: TabBarView(
             controller: _tabController,
@@ -87,9 +92,9 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 			    content: Center(child: AppLoader())
 		    ),
 	    ),
-	    bottomNavigationBar: _buildBottomBar(),
+	    bottomNavigationBar: _indexBuildable(_buildBottomBar),
 	    floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-	    floatingActionButton: _buildFloatingButtonAnimation()
+	    floatingActionButton: _indexBuildable(_buildFloatingButtonAnimation)
 		);
 	}
 
@@ -147,16 +152,24 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
     );
   }
 
-	Widget _buildBottomBar() {
-		return AnimatedContainer(
-			duration: bottomBarAnimationDuration,
-			height: _currentIndex == 1 ? 0 : customBottomBarHeight,
-			decoration: AppBoxProperties.elevatedContainer,
-			child: SizedBox.shrink()
-		);
-	}
+  Widget _buildBottomBar(int index) {
+    return AnimatedContainer(
+      duration: bottomBarAnimationDuration,
+      height: index == 1 ? 0 : customBottomBarHeight,
+      decoration: AppBoxProperties.elevatedContainer,
+      child: SizedBox.shrink()
+    );
+  }
 
-	Widget _buildFloatingButtonAnimation() {
+  Widget _indexBuildable(Widget Function(int) builder) {
+    return StreamBuilder<int>(
+      stream: _tabIndexStream.stream,
+      initialData: _currentIndex,
+      builder: (context, index) => builder(index.data),
+    );
+  }
+
+	Widget _buildFloatingButtonAnimation(int index) {
 		return AnimatedSwitcher(
 			duration: bottomBarAnimationDuration,
 			switchOutCurve: Curves.easeInOut,
@@ -169,14 +182,14 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 					)
 				);
 			},
-			child: _buildSelectPopup()
+			child: _buildSelectPopup(index)
 		);
 	}
 
-	Widget _buildSelectPopup() {
-		if (_currentIndex == 1)
+	Widget _buildSelectPopup(int index) {
+		if (index == 1)
 			return SizedBox.shrink();
-		if (_currentIndex == 0)
+		if (index == 0)
 			return _buildSelect<UIPlan, DashboardPlansCubit, DashboardPlansState>(
 					content: _buildPlanSelect,
 					model: (tabState) => tabState.availablePlans
@@ -362,5 +375,4 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 			)
 		];
 	}
-
 }

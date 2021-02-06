@@ -5,7 +5,8 @@ import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
 import 'package:fokus/widgets/general/app_loader.dart';
 
 class StatefulBlocBuilder<CubitType extends StatefulCubit, LoadedState extends StatefulState> extends StatelessWidget {
-	final BlocWidgetBuilder<LoadedState> builder;
+  final BlocWidgetBuilder<LoadedState> builder;
+  final BlocBuilderCondition<StatefulState> buildWhen;
 	final BlocWidgetListener<StatefulState> listener;
 	final BlocWidgetBuilder<StatefulState> loadingBuilder;
 
@@ -13,13 +14,14 @@ class StatefulBlocBuilder<CubitType extends StatefulCubit, LoadedState extends S
 	final bool customLoadingHandling;
 	final int onSubmitPopCount;
 
-  StatefulBlocBuilder({this.builder, this.listener, this.loadingBuilder, this.expandLoader = false,
+  StatefulBlocBuilder({this.builder, this.listener, this.loadingBuilder, this.buildWhen, this.expandLoader = false,
 	    bool popOnSubmit = false, int onSubmitPopCount, this.customLoadingHandling = false}) :
 			onSubmitPopCount = onSubmitPopCount ?? ((popOnSubmit ?? false) ? 1 : 0) ?? 0;
 
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<CubitType, StatefulState>(
+      buildWhen: buildWhen,
 	    builder: (context, state) {
 		    var cubit = context.watch<CubitType>();
 		    if (!cubit.hasOption(StatefulOption.noAutoLoading) && state.loadingState == DataLoadingState.notLoaded)

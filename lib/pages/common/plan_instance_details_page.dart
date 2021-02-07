@@ -50,34 +50,34 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 
 	@override
   Widget build(BuildContext context) {
-		return StatefulBlocBuilder<PlanInstanceCubit, PlanInstanceCubitState>(
-			builder: (context, state) {
-				var showEndButton = context.watch<PlanInstanceCubit>().uiPlanInstance.state.ended || !widget.showActions;
-				return Scaffold(
-					body: _getView(
-						planInstance: state.planInstance,
-						content: AppSegments(segments: _buildPanelSegments(state))
-					),
-					floatingActionButton: showEndButton ? FloatingActionButton.extended(
-						onPressed: _completePlan,
-						label: Text(AppLocales.of(context).translate('$_pageKey.content.fab.completePlan')),
-						icon: Icon(Icons.rule),
-						backgroundColor: AppColors.childActionColor,
-						elevation: 4.0
-					) : null,
-					floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-				);
-			},
-			loadingBuilder: (context, state) => _getView(
-				planInstance: BlocProvider.of<PlanInstanceCubit>(context).uiPlanInstance,
-				content: Expanded(child: Center(child: AppLoader()))
-			),
-			listener: (context, state) {
-				if (state.submitted)
-					showSuccessSnackbar(context, '$_pageKey.content.fab.completed');
-			},
-			popOnSubmit: true,
-		);
+    var showEndButton = !context.watch<PlanInstanceCubit>().uiPlanInstance.state.ended && widget.showActions;
+    return Scaffold(
+      body: StatefulBlocBuilder<PlanInstanceCubit, PlanInstanceCubitState>(
+        builder: (context, state) {
+          return _getView(
+            planInstance: state.planInstance,
+            content: AppSegments(segments: _buildPanelSegments(state))
+          );
+        },
+        loadingBuilder: (context, state) => _getView(
+          planInstance: BlocProvider.of<PlanInstanceCubit>(context).uiPlanInstance,
+          content: Expanded(child: Center(child: AppLoader()))
+        ),
+        listener: (context, state) {
+          if (state.submitted)
+            showSuccessSnackbar(context, '$_pageKey.content.fab.completed');
+        },
+        popOnSubmit: true,
+		  ),
+      floatingActionButton: showEndButton ? FloatingActionButton.extended(
+        onPressed: _completePlan,
+        label: Text(AppLocales.of(context).translate('$_pageKey.content.fab.completePlan')),
+        icon: Icon(Icons.rule),
+        backgroundColor: AppColors.childActionColor,
+        elevation: 4.0
+      ) : null,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+    );
   }
 
   Column _getView({UIPlanInstance planInstance, Widget content}) {

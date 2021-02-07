@@ -34,27 +34,27 @@ class _PlanDetailsPageState extends State<PlanDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
-  	return StatefulBlocBuilder<PlanCubit, PlanCubitState>(
-		  builder: (context, state) {
-  		  return Scaffold(
-			    body: _buildView(context, state),
-			    floatingActionButton: _buildFloatingButton(state),
-			    floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat
-		    );
-	    },
-		  loadingBuilder: (_, __) => SizedBox.shrink(),
-		  listener: (context, state) {
-			  if (state.submitted) {
-				  showSuccessSnackbar(context, '$_pageKey.content.planRemovedText');
-			  }
-		  },
-		  onSubmitPopCount: 2,
-	  );
+    return Scaffold(
+        body: StatefulBlocBuilder<PlanCubit, PlanCubitState>(
+          builder: (context, state) => _buildView(context, state),
+          loadingBuilder: (_, __) => SizedBox.shrink(),
+          listener: (context, state) {
+            if (state.submitted) {
+              showSuccessSnackbar(context, '$_pageKey.content.planRemovedText');
+            }
+          },
+          onSubmitPopCount: 2,
+        ),
+        floatingActionButton: StatefulBlocBuilder<PlanCubit, PlanCubitState>(
+            builder: (context, state) => _buildFloatingButton(state)
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat
+    );
 	}
 
 	Widget _buildFloatingButton(PlanCubitState state) {
 		// ignore: close_sinks
-		var authenticationBloc = context.watch<AuthenticationBloc>();
+		var authenticationBloc = context.read<AuthenticationBloc>();
 		var currentUser = authenticationBloc.state.user;
 
 		return (state.uiPlan?.createdBy != currentUser.id && currentUser.role == UserRole.caregiver) ? FloatingActionButton.extended(

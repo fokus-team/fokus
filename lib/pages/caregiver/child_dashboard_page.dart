@@ -262,7 +262,7 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 			pickerTitle: AppLocales.of(context).translate('$_pageKey.header.assignPlanTitle'),
 			pickedValues: availablePlans.where((element) => element.assignedTo.contains(_childProfile.id)).toList(),
 			options: availablePlans,
-			onChange: (selected) => context.watch<DashboardPlansCubit>().assignPlans(selected.map((plan) => plan.id).toList()),
+			onChange: (selected) => context.read<DashboardPlansCubit>().assignPlans(selected.map((plan) => plan.id).toList()),
 			getName: (plan) => plan.name,
 			builder: (item, checked, onChange) {
 				return Theme(
@@ -295,7 +295,7 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 			pickerTitle: AppLocales.of(context).translate('$_pageKey.header.assignBadgeTitle'),
 			pickedValues: [],
 			options: availableBadges,
-			onChange: (selected) => context.watch<DashboardAchievementsCubit>().assignBadges(selected),
+			onChange: (selected) => context.read<DashboardAchievementsCubit>().assignBadges(selected),
 			getName: (badge) => badge.name,
 			builder: (item, checked, onChange) {
 				return Theme(

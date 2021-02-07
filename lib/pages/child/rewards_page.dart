@@ -27,7 +27,7 @@ class _ChildRewardsPageState extends State<ChildRewardsPage> {
 	      crossAxisAlignment: CrossAxisAlignment.start,
 				verticalDirection: VerticalDirection.up,
 	      children: [
-		      StatefulBlocBuilder<ChildRewardsCubit, ChildRewardsLoadSuccess>(
+		      StatefulBlocBuilder<ChildRewardsCubit, ChildRewardsState>(
 				    builder: (context, state) => AppSegments(
 							segments: [
 								Segment(
@@ -51,7 +51,7 @@ class _ChildRewardsPageState extends State<ChildRewardsPage> {
 			      popOnSubmit: true,
 		      ),
 					BlocBuilder<ChildRewardsCubit, StatefulState>(
-						builder: (context, state) => CustomChildAppBar(points: state is ChildRewardsLoadSuccess ? state.points : null)
+						builder: (context, state) => CustomChildAppBar(points: state is ChildRewardsState ? state.points : null)
 					)
 	      ]
       ),
@@ -59,7 +59,7 @@ class _ChildRewardsPageState extends State<ChildRewardsPage> {
     );
   }
 
-	List<Widget> _buildRewardShop(ChildRewardsLoadSuccess state, BuildContext context) {
+	List<Widget> _buildRewardShop(ChildRewardsState state, BuildContext context) {
 		return state.rewards.map((reward) {
 			double percentage = (state.points.firstWhere((element) => element.type == reward.cost.type, orElse: () => null)?.quantity ?? 0) / reward.cost.quantity;
 			return RewardItemCard(
@@ -77,7 +77,7 @@ class _ChildRewardsPageState extends State<ChildRewardsPage> {
 		}).toList();
 	}
 
-	List<Widget> _buildRewardHistory(ChildRewardsLoadSuccess state) {
+	List<Widget> _buildRewardHistory(ChildRewardsState state) {
 		return (state.claimedRewards..sort((a, b) => -a.date.compareTo(b.date))).map((reward) {
 			return RewardItemCard(
 				reward: reward,

@@ -27,7 +27,9 @@ abstract class StatefulCubit extends Cubit<StatefulState> with DataUpdateObserve
 	  _routeObserver.subscribe(this, pageRoute);
   }
 
-  Future loadData() {
+  Future loadData() async {
+	  if (state.loadingInProgress)
+	  	return;
 	  emit(StatefulState.notLoaded(DataLoadingState.loadingInProgress));
 	  return doLoadData();
   }

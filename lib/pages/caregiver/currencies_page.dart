@@ -14,6 +14,7 @@ import 'package:fokus/widgets/general/app_loader.dart';
 
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/ui/theme_config.dart';
+import 'package:fokus/widgets/stateful_bloc_builder.dart';
 
 class CaregiverCurrenciesPage extends StatefulWidget {
 	@override
@@ -43,21 +44,17 @@ class _CaregiverCurrenciesPageState extends State<CaregiverCurrenciesPage> {
 
   @override
   Widget build(BuildContext context) {
-		return BlocConsumer<CaregiverCurrenciesCubit, CaregiverCurrenciesState>(
+		return StatefulBlocBuilder<CaregiverCurrenciesCubit, CaregiverCurrenciesState>(
 			listener: (context, state) {
-				if (state is CaregiverCurrenciesLoadSuccess) {
-					for(UICurrency currency in state.currencies)
+				if (state.loaded) {
+					for(UICurrency currency in (state as CaregiverCurrenciesState).currencies)
 						currencyList[currency.type] = currency.title;
 				}
-				if (state is CaregiverCurrenciesSubmissionSuccess) {
-					Navigator.of(context).pop();
+				if (state.submitted)
 					showSuccessSnackbar(context, '$_pageKey.content.currenciesUpdatedText');
-				}
 			},
+			popOnSubmit: true,
 	    builder: (context, state) {
-				if(state is CaregiverCurrenciesInitial) {
-					BlocProvider.of<CaregiverCurrenciesCubit>(context).doLoadData();
-				}
 				return WillPopScope(
 					onWillPop: () => showExitFormDialog(context, true, isDataChanged),
 					child: Scaffold(
@@ -72,12 +69,12 @@ class _CaregiverCurrenciesPageState extends State<CaregiverCurrenciesPage> {
 							children: [
 								Positioned.fill(
 									bottom: AppBoxProperties.standardBottomNavHeight,
-									child: state is CaregiverCurrenciesLoadSuccess || state is CaregiverCurrenciesSubmissionSuccess ? Form(
+									child: Form(
 										key: currenciesKey,
 										child: Material(
 											child: buildCurrenciesFields(context, state.currencies)
 										)
-									) : AppLoader()
+									)
 								),
 								Positioned.fill(
 									top: null,

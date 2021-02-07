@@ -64,7 +64,7 @@ class ChildRewardsCubit extends StatefulCubit {
 		UIChild child = _activeUser();
 		Map<ObjectId, int> claimedCount = Map<ObjectId, int>();
 		child.rewards.forEach((element) => claimedCount[element.id] = !claimedCount.containsKey(element.id) ? 1 : claimedCount[element.id] + 1);
-		emit(ChildRewardsLoadSuccess(
+		emit(ChildRewardsState(
 			rewards: _rewards.where((reward) => reward.limit != null ? reward.limit > (claimedCount[reward.id] ?? 0) : true).toList(),
 			claimedRewards: List.from(child.rewards),
 			points: List.from(child.points)
@@ -75,16 +75,16 @@ class ChildRewardsCubit extends StatefulCubit {
 	List<NotificationType> dataTypeSubscription() => [NotificationType.taskApproved];
 }
 
-class ChildRewardsLoadSuccess extends StatefulState {
+class ChildRewardsState extends StatefulState {
 	final List<UIReward> rewards;
 	final List<UIChildReward> claimedRewards;
 	final List<UIPoints> points;
 
-	ChildRewardsLoadSuccess({this.rewards, this.claimedRewards, this.points, DataSubmissionState submissionState}) : super.loaded(submissionState);
+	ChildRewardsState({this.rewards, this.claimedRewards, this.points, DataSubmissionState submissionState}) : super.loaded(submissionState);
 
 	@override
-	ChildRewardsLoadSuccess withSubmitState(DataSubmissionState submissionState) {
-		return ChildRewardsLoadSuccess(
+	ChildRewardsState withSubmitState(DataSubmissionState submissionState) {
+		return ChildRewardsState(
 			rewards: rewards,
 			claimedRewards: claimedRewards,
 			points: points,

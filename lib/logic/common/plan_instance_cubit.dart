@@ -43,7 +43,6 @@ class PlanInstanceCubit extends StatefulCubit {
 		emit(PlanInstanceCubitState(tasks: uiInstances, planInstance: uiPlanInstance));
 	}
 
-
 	Future<bool> isOtherPlanInProgressDbCheck({ObjectId tappedTaskInstance}) async {
 		PlanInstance activePlanInstance = await _dataRepository.getPlanInstance(childId: _planInstance.assignedTo, state: PlanInstanceState.active, fields: ["_id"]);
 		if(activePlanInstance != null) {

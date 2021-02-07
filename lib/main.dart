@@ -213,7 +213,7 @@ class _FokusAppState extends State<FokusApp> implements CurrentLocaleObserver {
 			AppPage.caregiverRewardForm.name: (context) => _createPage(CaregiverRewardFormPage(), context, RewardFormCubit(getParams(context), getActiveUser(context))),
 			AppPage.caregiverBadgeForm.name: (context) => _createPage(CaregiverBadgeFormPage(), context, BadgeFormCubit(getActiveUser(context), authBloc(context), getRoute(context))),
 			AppPage.caregiverRatingPage.name: (context) => _createPage(CaregiverRatingPage(), context, TasksEvaluationCubit(getRoute(context), getActiveUser(context))),
-			AppPage.caregiverCurrencies.name: (context) => _createPage(CaregiverCurrenciesPage(), context, CaregiverCurrenciesCubit(getActiveUser(context), getActiveUser(context), authBloc(context))),
+			AppPage.caregiverCurrencies.name: (context) => _createPage(CaregiverCurrenciesPage(), context, CaregiverCurrenciesCubit(getActiveUser(context), getRoute(context), getActiveUser(context), authBloc(context))),
 			AppPage.caregiverFriendPlans.name: (context) => _createPage(withCubit(CaregiverFriendPlansPage(), CaregiverFriendsCubit(getActiveUser(context), authBloc(context))), context, CaregiverPlansCubit(getActiveUser(context), getRoute(context), getParams(context))),
 			AppPage.planDetails.name: (context) => _createPage(PlanDetailsPage(), context, PlanCubit(getParams(context), getRoute(context))),
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:fokus/logic/child/auth/saved_child_profiles_cubit.dart';
+import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
 import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/ui/ui_button.dart';
 import 'package:fokus/services/app_locales.dart';
@@ -35,7 +36,7 @@ class ChildProfilesPage extends StatelessWidget {
   }
 
 	Widget _buildSavedProfiles(BuildContext context) {
-		return StatefulBlocBuilder<SavedChildProfilesCubit, SavedChildProfilesState>(
+		return StatefulBlocBuilder<SavedChildProfilesCubit, StatefulState>(
 			customLoadingHandling: true,
 			builder: (context, state) {
 				return AuthGroup(
@@ -45,7 +46,7 @@ class ChildProfilesPage extends StatelessWidget {
 					padding: EdgeInsets.zero,
 					content: Column(
 						children: <Widget>[
-							if (state.savedProfiles.isNotEmpty)
+							if (state is SavedChildProfilesState && state.savedProfiles.isNotEmpty)
 								Material(
 									type: MaterialType.transparency,
 									child: ListView(
@@ -54,7 +55,7 @@ class ChildProfilesPage extends StatelessWidget {
 										children: [
 											for (var child in state.savedProfiles)
 												ListTile(
-													onTap: () => context.watch<SavedChildProfilesCubit>().signIn(child.id),
+													onTap: () => context.read<SavedChildProfilesCubit>().signIn(child.id),
 													leading: FittedBox(child: AppAvatar(child.avatar)),
 													title: Text(child.name, style: Theme.of(context).textTheme.headline3),
 													trailing: Icon(Icons.arrow_forward),

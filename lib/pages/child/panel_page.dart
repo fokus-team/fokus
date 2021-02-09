@@ -28,7 +28,7 @@ class _ChildPanelPageState extends State<ChildPanelPage> {
 	      crossAxisAlignment: CrossAxisAlignment.start,
 				verticalDirection: VerticalDirection.up,
 	      children: [
-		      StatefulBlocBuilder<ChildPanelCubit, ChildPlansState>(
+		      SimpleStatefulBlocBuilder<ChildPanelCubit, ChildPlansState>(
 				    builder: (context, state) => AppSegments(segments: buildChildPlanSegments(state.plans, context)),
 						expandLoader: true,
 		      ),

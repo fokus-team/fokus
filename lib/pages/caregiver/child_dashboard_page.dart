@@ -75,7 +75,7 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
   @override
   Widget build(BuildContext context) {
 		return Scaffold(
-	    body: StatefulBlocBuilder<ChildDashboardCubit, ChildDashboardState>(
+	    body: SimpleStatefulBlocBuilder<ChildDashboardCubit, ChildDashboardState>(
         builder: (context, state) => _getPage(
 					child: state.child,
 	        content: TabBarView(
@@ -99,7 +99,7 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 	}
 
 	Widget _buildTab<Cubit extends StatefulCubit, State extends StatefulState>(List<Widget> Function(State) content) {
-		return StatefulBlocBuilder<Cubit, State>(
+		return SimpleStatefulBlocBuilder<Cubit, State>(
 			builder: (context, state) => ListView(
 				padding: EdgeInsets.zero,
 				physics: BouncingScrollPhysics(),

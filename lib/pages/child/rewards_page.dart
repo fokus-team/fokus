@@ -27,7 +27,7 @@ class _ChildRewardsPageState extends State<ChildRewardsPage> {
 	      crossAxisAlignment: CrossAxisAlignment.start,
 				verticalDirection: VerticalDirection.up,
 	      children: [
-		      StatefulBlocBuilder<ChildRewardsCubit, ChildRewardsState>(
+		      SimpleStatefulBlocBuilder<ChildRewardsCubit, ChildRewardsState>(
 				    builder: (context, state) => AppSegments(
 							segments: [
 								Segment(
@@ -48,7 +48,7 @@ class _ChildRewardsPageState extends State<ChildRewardsPage> {
 					      showSuccessSnackbar(context, '$_pageKey.rewardClaimedText');
 			      },
 						expandLoader: true,
-			      popOnSubmit: true,
+			      popConfig: SubmitPopConfig(),
 		      ),
 					BlocBuilder<ChildRewardsCubit, StatefulState>(
 						builder: (context, state) => CustomChildAppBar(points: state is ChildRewardsState ? state.points : null)

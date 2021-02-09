@@ -29,8 +29,8 @@ class PointPickerField extends StatefulWidget {
 
 	PointPickerField({
 		@required this.controller,
-		@required this.pickedCurrency,
-		@required this.currencies,
+		@required UICurrency pickedCurrency,
+		@required List<UICurrency> currencies,
 		this.loading = false,
 		this.canBeEmpty = true,
 		this.minPoints = 0,
@@ -40,7 +40,7 @@ class PointPickerField extends StatefulWidget {
 		@required this.labelValueText,
 		@required this.helperValueText,
 		@required this.labelCurrencyText
-	});
+	}) : pickedCurrency = pickedCurrency ?? UICurrency(type: CurrencyType.diamond), currencies = currencies ?? [];
 
 	@override
   State<StatefulWidget> createState() => new _PointPickerFieldState();

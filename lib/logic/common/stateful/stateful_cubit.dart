@@ -7,6 +7,7 @@ import 'package:get_it/get_it.dart';
 import 'package:fokus/model/notification/notification_type.dart';
 import 'package:fokus/services/app_route_observer.dart';
 import 'package:fokus/services/notifications/notification_service.dart';
+import 'package:fokus/model/pages/plan_form_params.dart';
 import 'package:fokus/services/observers/data_update_observer.dart';
 
 part 'stateful_state.dart';
@@ -15,7 +16,7 @@ enum StatefulOption {
 	skipOnPopNextReload, repeatableSubmission, noAutoLoading, noDataLoading
 }
 
-abstract class StatefulCubit extends Cubit<StatefulState> with DataUpdateObserver implements RouteAware {
+abstract class StatefulCubit<State extends StatefulState> extends Cubit<State> with DataUpdateObserver implements RouteAware {
 	final _routeObserver = GetIt.I<AppRouteObserver>();
 	final NotificationService _notificationService = GetIt.I<NotificationService>();
 	@protected
@@ -30,16 +31,16 @@ abstract class StatefulCubit extends Cubit<StatefulState> with DataUpdateObserve
   Future loadData() async {
 	  if (state.loadingInProgress)
 	  	return;
-	  emit(StatefulState.notLoaded(DataLoadingState.loadingInProgress));
+	  emit(state.loading());
 	  return doLoadData();
   }
 
   @protected
   Future doLoadData();
 
-	void reload() => emit(StatefulState.notLoaded());
+	void reload() => emit(state.notLoaded());
 
-	void resetSubmissionState() => emit(state.withSubmitState(DataSubmissionState.notSubmitted));
+	void resetSubmissionState() => emit(state.notSubmitted());
 
 	@override
 	void onDataUpdated(NotificationType type) => reload();
@@ -54,7 +55,7 @@ abstract class StatefulCubit extends Cubit<StatefulState> with DataUpdateObserve
 	bool beginSubmit() {
 		if (!state.isNotSubmitted)
 			return false;
-		emit(state.withSubmitState(DataSubmissionState.submissionInProgress));
+		emit(state.submit());
 		return true;
 	}
 

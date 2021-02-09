@@ -52,7 +52,7 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
   Widget build(BuildContext context) {
     var showEndButton = !context.watch<PlanInstanceCubit>().uiPlanInstance.state.ended && widget.showActions;
     return Scaffold(
-      body: StatefulBlocBuilder<PlanInstanceCubit, PlanInstanceCubitState>(
+      body: SimpleStatefulBlocBuilder<PlanInstanceCubit, PlanInstanceCubitState>(
         builder: (context, state) {
           return _getView(
             planInstance: state.planInstance,
@@ -67,7 +67,7 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
           if (state.submitted)
             showSuccessSnackbar(context, '$_pageKey.content.fab.completed');
         },
-        popOnSubmit: true,
+        popConfig: SubmitPopConfig(),
 		  ),
       floatingActionButton: showEndButton ? FloatingActionButton.extended(
         onPressed: _completePlan,

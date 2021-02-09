@@ -39,7 +39,7 @@ class PlanCubit extends StatefulCubit {
 			_dataRepository.removeTasks(planIds: [_planId]),
 			_dataRepository.removeTaskInstances(planInstancesIds: instances.map((plan) => plan.id).toList()),
 		]);
-		emit(state.withSubmitState(DataSubmissionState.submissionSuccess));
+		emit(state.submissionSuccess());
 	}
 }
 

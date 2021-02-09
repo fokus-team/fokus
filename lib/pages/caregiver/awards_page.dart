@@ -29,7 +29,7 @@ class _CaregiverAwardsPageState extends State<CaregiverAwardsPage> {
 	Widget build(BuildContext context) {
 		return Scaffold(
 			appBar: CustomAppBar(type: CustomAppBarType.normal, title: '$_pageKey.header.title', subtitle: '$_pageKey.header.pageHint', icon: Icons.stars),
-			body: StatefulBlocBuilder<CaregiverAwardsCubit, CaregiverAwardsState>(
+			body: SimpleStatefulBlocBuilder<CaregiverAwardsCubit, CaregiverAwardsState>(
 				builder: (context, state) => AppSegments(segments: _buildPanelSegments(state, context), fullBody: true),
 				listener: (context, state) {
 					if (state.submitted) {
@@ -37,7 +37,7 @@ class _CaregiverAwardsPageState extends State<CaregiverAwardsPage> {
 						showSuccessSnackbar(context, '$_pageKey.content.$snackbarText');
 					}
 				},
-				popOnSubmit: true,
+				popConfig: SubmitPopConfig(),
 			),
 			bottomNavigationBar: AppNavigationBar.caregiverPage(currentIndex: 2)
     );

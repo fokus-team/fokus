@@ -39,7 +39,7 @@ class _CaregiverRatingPageState extends State<CaregiverRatingPage> {
 					HelpIconButton(helpPage: 'rating')
 				]
 			),
-			body: StatefulBlocBuilder<TasksEvaluationCubit, TasksEvaluationState>(
+			body: SimpleStatefulBlocBuilder<TasksEvaluationCubit, TasksEvaluationState>(
 				builder: (context, state) {
 					return Column(
 						mainAxisSize: state.reports.isNotEmpty ? MainAxisSize.min : MainAxisSize.max,

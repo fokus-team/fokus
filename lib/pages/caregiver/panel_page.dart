@@ -27,7 +27,7 @@ class CaregiverPanelPage extends StatelessWidget {
 				listener: (context, state) {
 				  BlocProvider.of<CaregiverPanelCubit>(context).reload();
 				},
-				child: StatefulBlocBuilder<CaregiverPanelCubit, CaregiverPanelState>(
+				child: SimpleStatefulBlocBuilder<CaregiverPanelCubit, CaregiverPanelState>(
 					builder: (context, state) => AppSegments(
 						segments: _buildPanelSegments(state, context),
 						fullBody: true

@@ -35,7 +35,7 @@ class _PlanDetailsPageState extends State<PlanDetailsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: StatefulBlocBuilder<PlanCubit, PlanCubitState>(
+        body: SimpleStatefulBlocBuilder<PlanCubit, PlanCubitState>(
           builder: (context, state) => _buildView(context, state),
           loadingBuilder: (_, __) => SizedBox.shrink(),
           listener: (context, state) {
@@ -43,9 +43,9 @@ class _PlanDetailsPageState extends State<PlanDetailsPage> {
               showSuccessSnackbar(context, '$_pageKey.content.planRemovedText');
             }
           },
-          onSubmitPopCount: 2,
+          popConfig: SubmitPopConfig(count: 2),
         ),
-        floatingActionButton: StatefulBlocBuilder<PlanCubit, PlanCubitState>(
+        floatingActionButton: SimpleStatefulBlocBuilder<PlanCubit, PlanCubitState>(
             builder: (context, state) => _buildFloatingButton(state)
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat
@@ -162,7 +162,9 @@ class _PlanDetailsPageState extends State<PlanDetailsPage> {
 						),
 						null, Icons.edit
 					),
-					UIButton.ofType(ButtonType.delete, () => showBasicDialog(
+					UIButton.ofType(
+						ButtonType.delete,
+						() => showBasicDialog(
 							context,
 							GeneralDialog.confirm(
 								title: AppLocales.of(context).translate('alert.deletePlan'),
@@ -180,7 +182,9 @@ class _PlanDetailsPageState extends State<PlanDetailsPage> {
 								confirmAction: () => context.read<PlanCubit>().deletePlan(),
 								confirmColor: Colors.red
 							)
-						), null, Icons.delete
+						),
+						null,
+						Icons.delete
 					)
 				]
 			) : null

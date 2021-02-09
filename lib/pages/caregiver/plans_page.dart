@@ -20,7 +20,7 @@ class CaregiverPlansPage extends StatelessWidget {
   Widget build(BuildContext context) {
 		return Scaffold(
 			appBar: CustomAppBar(type: CustomAppBarType.normal, title: '$_pageKey.header.title', subtitle: '$_pageKey.header.pageHint', icon: Icons.description),
-			body: StatefulBlocBuilder<CaregiverPlansCubit, CaregiverPlansState>(
+			body: SimpleStatefulBlocBuilder<CaregiverPlansCubit, CaregiverPlansState>(
 				builder: (context, state) => AppSegments(segments: _buildPanelSegments(state, context), fullBody: true),
 			),
 			floatingActionButton: FloatingActionButton.extended(

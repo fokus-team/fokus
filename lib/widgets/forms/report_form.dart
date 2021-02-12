@@ -27,6 +27,7 @@ class _ReportFormState extends State<ReportForm> {
 	GlobalKey<FormState> reportFormKey;
 	bool isDataChanged = false;
 
+	FocusNode _focusNodeComment;
 	TextEditingController _commentController = TextEditingController();
 	UITaskReportMark mark = UITaskReportMark.rated3;
 	bool isRejected = false;
@@ -34,13 +35,15 @@ class _ReportFormState extends State<ReportForm> {
 	@override
   void initState() {
 		reportFormKey = GlobalKey<FormState>();
+		_focusNodeComment = FocusNode();
     super.initState();
   }
 	
 	@override
   void dispose() {
-		_commentController.dispose();
 		super.dispose();
+		_commentController.dispose();
+		_focusNodeComment.dispose();
 	}
 
   @override
@@ -52,54 +55,28 @@ class _ReportFormState extends State<ReportForm> {
 					title: Text(AppLocales.of(context).translate('page.caregiverSection.rating.content.rateTaskButton')),
 					backgroundColor: AppColors.formColor,
 				),
-				body: Form(
-					key: reportFormKey,
-					child: SingleChildScrollView(
-						clipBehavior: Clip.none,
-      			child: Column(
-							children: [
-								Container(
-									margin: EdgeInsets.all(AppBoxProperties.screenEdgePadding),
-									child: Hero(
-										tag: widget.report.task.id.toString() + widget.report.task.duration.last.to.toString(),
-										child: ReportCard(report: widget.report, hideBottomBar: true)
-									)
-								),
-								_buildForm()
-							]
+				body: Stack(
+					children: [
+						Positioned.fill(
+							bottom: AppBoxProperties.standardBottomNavHeight,
+							child: Form(
+								key: reportFormKey,
+								child: Material(
+									child: _buildForm()
+								)
+							)
+						),
+						Positioned.fill(
+							top: null,
+							child: buildBottomNavigation(context)
 						)
-					)
-				),
-				bottomNavigationBar: _buildBottomBar(),
-				floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-				floatingActionButton: MediaQuery.of(context).viewInsets.bottom != 0.0 ? SizedBox.shrink() : _buildFloatingButton()
+					]
+				)
 			)
 		);
 	}
 	
-	Widget _buildBottomBar() {
-		return Container(
-			height: customBottomBarHeight,
-			decoration: AppBoxProperties.elevatedContainer
-		);
-	}
-
-	Widget _buildFloatingButton() {
-		return FloatingActionButton.extended(
-			heroTag: null,
-			materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-			backgroundColor: AppColors.formColor,
-			elevation: 4.0,
-			icon: Icon(Icons.done),
-			label: Text(AppLocales.of(context).translate('actions.confirm')),
-			onPressed: () {
-				widget.saveCallback(isRejected ? UITaskReportMark.rejected : mark, _commentController.value.text);
-				Navigator.of(context).pop();
-			}
-		);
-	}
-
-	Widget buildBottomNavigation() {
+	Widget buildBottomNavigation(BuildContext context) {
 		return Container(
 			padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
 			decoration: AppBoxProperties.elevatedContainer,
@@ -108,22 +85,46 @@ class _ReportFormState extends State<ReportForm> {
 				mainAxisAlignment: MainAxisAlignment.spaceBetween,
 				crossAxisAlignment: CrossAxisAlignment.end,
 				children: <Widget>[
-					SizedBox.shrink()
+					SizedBox.shrink(),
+					FlatButton(
+						onPressed: () {
+							widget.saveCallback(isRejected ? UITaskReportMark.rejected : mark, _commentController.value.text);
+							Navigator.of(context).pop();
+						},
+						child: Text(
+							AppLocales.of(context).translate('actions.confirm'),
+							style: Theme.of(context).textTheme.button.copyWith(color: AppColors.mainBackgroundColor)
+						)
+					)
 				]
 			)
 		);
 	}
 
 	Widget _buildForm() {
-		return ListView(
-			shrinkWrap: true,
-			physics: NeverScrollableScrollPhysics(),
-			children: <Widget>[
-				_buildRateField(),
-				_buildRejectField(),
-				_buildCommentField(),
-				SizedBox(height: 30.0)
-			]
+		return SingleChildScrollView(
+			clipBehavior: Clip.none,
+			child: Column(
+				children: [
+					Container(
+						margin: EdgeInsets.all(AppBoxProperties.screenEdgePadding),
+						child: Hero(
+							tag: widget.report.task.id.toString() + widget.report.task.duration.last.to.toString(),
+							child: ReportCard(report: widget.report, hideBottomBar: true)
+						)
+					),
+					ListView(
+						shrinkWrap: true,
+						physics: NeverScrollableScrollPhysics(),
+						children: <Widget>[
+							_buildRateField(),
+							_buildRejectField(),
+							_buildCommentField(),
+							SizedBox(height: 30.0)
+						]
+					)
+				]
+			)
 		);
 	}
 
@@ -226,7 +227,12 @@ class _ReportFormState extends State<ReportForm> {
 				textCapitalization: TextCapitalization.sentences,
 				onChanged: (val) => setState(() {
 					isDataChanged = val.isNotEmpty;
-				})
+				}),
+				focusNode: _focusNodeComment,
+				textInputAction: TextInputAction.done,
+				onEditingComplete: () {
+					_focusNodeComment.unfocus();
+				}
 			)
 		);
 	}

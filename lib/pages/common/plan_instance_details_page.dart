@@ -126,6 +126,7 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 								if (task.timer != null && task.timer > 0) _getTimeChip(task),
 								if (task.points != null && task.points.quantity != 0) _getCurrencyChip(task)
 							],
+							onTapped: () => navigate(context, task, uiPlanInstance),
 							actionButton: ItemCardActionButton(
 								color: AppColors.childButtonColor,
 								icon: Icons.play_arrow,
@@ -141,6 +142,7 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 								if (task.timer != null && task.timer > 0) _getTimeChip(task),
 								if (task.points != null && task.points.quantity != 0) _getCurrencyChip(task)
 							],
+							onTapped: () => navigate(context, task, uiPlanInstance),
 							actionButton: ItemCardActionButton(
 								color: AppColors.childButtonColor,
 								icon: Icons.refresh,
@@ -173,6 +175,7 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 											),
 										]
 								],
+								onTapped: () => navigate(context, task, uiPlanInstance),
 								actionButton: ItemCardActionButton(
 									color: AppColors.childActionColor,
 									icon: Icons.launch,

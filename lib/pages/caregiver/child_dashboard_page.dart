@@ -321,6 +321,8 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 				AppAlert(
 					text: AppLocales.of(context).translate('$_pageKey.content.alerts.unratedTasksExist'),
 					onTap: () => Navigator.of(context).pushNamed(AppPage.caregiverRatingPage.name),
+					color: Colors.lightBlue,
+					icon: Icons.rate_review
 				),
 			if (state.noPlansAdded)
 				AppAlert(

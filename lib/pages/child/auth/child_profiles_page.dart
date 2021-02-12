@@ -42,6 +42,11 @@ class ChildProfilesPage extends StatelessWidget {
 			title: AppLocales.of(context).translate('$_pageKey.profileLogInTitle'),
 			hint: AppLocales.of(context).translate('$_pageKey.profileLogInHint'),
 			isLoading: state == null,
+		  action: IconButton(
+			  icon: Icon(Icons.person_add, size: 26.0, color: Colors.white),
+			  tooltip: AppLocales.of(context).translate('$_pageKey.addProfile'),
+			  onPressed: () => { Navigator.of(context).pushNamed(AppPage.childSignInPage.name) },
+		  ),
 			padding: EdgeInsets.zero,
 			content: Column(
 				children: <Widget>[
@@ -57,7 +62,15 @@ class ChildProfilesPage extends StatelessWidget {
 											onTap: () => context.read<SavedChildProfilesCubit>().signIn(child.id),
 											leading: FittedBox(child: AppAvatar(child.avatar)),
 											title: Text(child.name, style: Theme.of(context).textTheme.headline3),
-											trailing: Icon(Icons.arrow_forward),
+											trailing: FlatButton(
+												child: Icon(Icons.arrow_forward),
+												color: Colors.orange,
+												textColor: Colors.white,
+												padding: EdgeInsets.all(12),
+												materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+												minWidth: 20,
+												onPressed: () => {}
+											),
 											contentPadding: EdgeInsets.symmetric(vertical: 6.0, horizontal: 16.0),
 										)
 								]
@@ -67,22 +80,26 @@ class ChildProfilesPage extends StatelessWidget {
 						Center(
 							child: Padding(
 								padding: EdgeInsets.symmetric(vertical: AppBoxProperties.screenEdgePadding),
-								child: Text(
-									AppLocales.of(context).translate('$_pageKey.noSavedProfiles'),
-									style: Theme.of(context).textTheme.subtitle2
+								child: Column(
+									children: [
+										Text(
+											AppLocales.of(context).translate('$_pageKey.noSavedProfiles'),
+											style: Theme.of(context).textTheme.subtitle2
+										),
+										Padding(
+											padding: EdgeInsets.all(8.0),
+											child: AuthButton(
+												button: UIButton(
+													'$_pageKey.addProfile',
+															() => { Navigator.of(context).pushNamed(AppPage.childSignInPage.name) },
+													Colors.orange
+												)
+											)
+										)
+									]
 								)
 							)
-						),
-					Padding(
-						padding: EdgeInsets.all(8.0),
-						child: AuthButton(
-							button: UIButton(
-								'$_pageKey.addProfile',
-								() => { Navigator.of(context).pushNamed(AppPage.childSignInPage.name) },
-								Colors.orange
-							)
 						)
-					)
 				]
 			)
 		);

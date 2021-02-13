@@ -34,7 +34,7 @@ class TasksEvaluationCubit extends StatefulCubit {
 	Map<ObjectId, UIChild> _planInstanceToChild;
 	Map<ObjectId, String> _planInstanceToName;
 
-	TasksEvaluationCubit(ModalRoute pageRoute, this._activeUser) : super(pageRoute, options: [StatefulOption.skipOnPopNextReload, StatefulOption.repeatableSubmission]);
+	TasksEvaluationCubit(ModalRoute pageRoute, this._activeUser) : super(pageRoute, options: [StatefulOption.noOnPopNextReload, StatefulOption.repeatableSubmission]);
 
   @override
   List<NotificationType> dataTypeSubscription() => [NotificationType.taskFinished];

@@ -1,5 +1,8 @@
-import 'package:bloc/bloc.dart';
-import 'package:equatable/equatable.dart';
+import 'package:flutter/widgets.dart';
+import 'package:get_it/get_it.dart';
+import 'package:mongo_dart/mongo_dart.dart';
+
+import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
 import 'package:fokus/model/db/date/time_date.dart';
 import 'package:fokus/model/db/date_span.dart';
 import 'package:fokus/model/db/plan/plan.dart';
@@ -16,28 +19,28 @@ import 'package:fokus/services/data/data_repository.dart';
 import 'package:fokus/services/notifications/notification_service.dart';
 import 'package:fokus/services/ui_data_aggregator.dart';
 import 'package:fokus/utils/duration_utils.dart';
-import 'package:get_it/get_it.dart';
-import 'package:mongo_dart/mongo_dart.dart';
 
 part 'task_completion_state.dart';
 
-class TaskCompletionCubit extends Cubit<TaskCompletionState> {
+class TaskCompletionCubit extends StatefulCubit<TaskCompletionState> {
 	final ObjectId _taskInstanceId;
 	final ActiveUserFunction _activeUser;
-
-	final DataRepository _dataRepository = GetIt.I<DataRepository>();
-	final NotificationService _notificationService = GetIt.I<NotificationService>();
-	final UIDataAggregator _dataAggregator = GetIt.I<UIDataAggregator>();
-	final AnalyticsService _analyticsService = GetIt.I<AnalyticsService>();
-
-	TaskCompletionCubit(this._taskInstanceId, this._activeUser, UIPlanInstance _uiPlanInstance) : super(TaskCompletionStateInitial(_uiPlanInstance));
 
 	TaskInstance _taskInstance;
 	PlanInstance _planInstance;
 	Task _task;
 	Plan _plan;
 
-  void loadTaskInstance() async {
+	final DataRepository _dataRepository = GetIt.I<DataRepository>();
+	final NotificationService _notificationService = GetIt.I<NotificationService>();
+	final UIDataAggregator _dataAggregator = GetIt.I<UIDataAggregator>();
+	final AnalyticsService _analyticsService = GetIt.I<AnalyticsService>();
+
+	TaskCompletionCubit(this._taskInstanceId, this._activeUser, ModalRoute pageRoute, UIPlanInstance _uiPlanInstance) :
+				super(pageRoute, initialState: TaskCompletionState(planInstance: _uiPlanInstance), options: [StatefulOption.repeatableSubmission]);
+
+	@override
+	Future doLoadData()  async {
 		_taskInstance = await _dataRepository.getTaskInstance(taskInstanceId: _taskInstanceId);
 		_task = await _dataRepository.getTask(taskId: _taskInstance.taskID);
 		_planInstance = await _dataRepository.getPlanInstance(id: _taskInstance.planInstanceID);
@@ -79,16 +82,15 @@ class TaskCompletionCubit extends Cubit<TaskCompletionState> {
 		UITaskInstance uiTaskInstance = UITaskInstance.singleWithTask(taskInstance: _taskInstance, task: _task);
 		var planInstance = await _dataAggregator.loadPlanInstance(planInstance: _planInstance, plan: _plan);
 		if(isInProgress(uiTaskInstance.duration))
-		  emit(TaskCompletionStateLoaded.inProgress(taskInstance: uiTaskInstance,  planInstance: planInstance));
+		  emit(TaskCompletionState.inProgress(taskInstance: uiTaskInstance,  planInstance: planInstance));
 		else
-		  emit(TaskCompletionStateLoaded.inBreak(taskInstance: uiTaskInstance,  planInstance: planInstance));
+		  emit(TaskCompletionState.inBreak(taskInstance: uiTaskInstance,  planInstance: planInstance));
 	}
 
 	void switchToBreak() async {
-		TaskCompletionStateLoaded state = this.state;
-  	if (state.current != TaskCompletionStateType.inProgress)
-  		return;
-  	emit(state = state.copyWith(current: TaskCompletionStateType.inBreak, isLoading: true));
+		if (!beginSubmit(this.state.copyWith(current: TaskCompletionStateType.inBreak)))
+			return;
+		TaskCompletionState state = this.state;
 
 		_taskInstance.duration.last.to = TimeDate.now();
 		_taskInstance.breaks.add(DateSpan(from: TimeDate.now()));
@@ -96,14 +98,13 @@ class TaskCompletionCubit extends Cubit<TaskCompletionState> {
 		UITaskInstance uiTaskInstance = UITaskInstance.singleWithTask(taskInstance: _taskInstance, task: _task);
 		_analyticsService.logTaskPaused(_taskInstance);
 		var planInstance = await _dataAggregator.loadPlanInstance(planInstance: _planInstance, plan: _plan);
-		emit(state.copyWith(taskInstance: uiTaskInstance, planInstance: planInstance));
+		emit(state.copyWithSubmitted(taskInstance: uiTaskInstance, planInstance: planInstance));
 	}
 
 	void switchToProgress() async {
-		TaskCompletionStateLoaded state = this.state;
-		if (state.current != TaskCompletionStateType.inBreak)
+		if (!beginSubmit(this.state.copyWith(current: TaskCompletionStateType.inProgress)))
 			return;
-		emit(state = state.copyWith(current: TaskCompletionStateType.inProgress, isLoading: true));
+		TaskCompletionState state = this.state;
 
 		_taskInstance.breaks.last.to = TimeDate.now();
 		_taskInstance.duration.add(DateSpan(from: TimeDate.now()));
@@ -111,37 +112,35 @@ class TaskCompletionCubit extends Cubit<TaskCompletionState> {
 		UITaskInstance uiTaskInstance = UITaskInstance.singleWithTask(taskInstance: _taskInstance, task: _task);
 		_analyticsService.logTaskResumed(_taskInstance);
 		var planInstance = await _dataAggregator.loadPlanInstance(planInstance: _planInstance, plan: _plan);
-		emit(state.copyWith(taskInstance: uiTaskInstance, planInstance: planInstance));
+		emit(state.copyWithSubmitted(taskInstance: uiTaskInstance, planInstance: planInstance));
 	}
 
 	void markAsFinished() async {
-		TaskCompletionStateLoaded state = this.state;
-		if (state.current != TaskCompletionStateType.inProgress)
+		if (!beginSubmit(this.state.copyWith(current: TaskCompletionStateType.finished)))
 			return;
-		emit(state = state.copyWith(current: TaskCompletionStateType.finished, isLoading: true));
+		TaskCompletionState state = this.state;
 
   	_notificationService.sendTaskFinishedNotification(_taskInstanceId, _task.name, _plan.createdBy, _activeUser(), completed: true);
 	  _analyticsService.logTaskFinished(_taskInstance);
 		var planInstance = await _dataAggregator.loadPlanInstance(planInstance: _planInstance, plan: _plan);
-		emit(state.copyWith(taskInstance: await _onCompletion(TaskState.notEvaluated), planInstance: planInstance));
+		emit(state.copyWithSubmitted(taskInstance: await _onCompletion(TaskState.notEvaluated), planInstance: planInstance));
   }
 
 	void markAsDiscarded() async {
-		TaskCompletionStateLoaded state = this.state;
-		if (state.current != TaskCompletionStateType.inProgress)
+		if (!beginSubmit(this.state.copyWith(current: TaskCompletionStateType.discarded)))
 			return;
-		emit(state = state.copyWith(current: TaskCompletionStateType.discarded, isLoading: true));
+		TaskCompletionState state = this.state;
 
 		_notificationService.sendTaskFinishedNotification(_taskInstanceId, _task.name, _plan.createdBy, _activeUser(), completed: false);
 		_analyticsService.logTaskNotFinished(_taskInstance);
 		var planInstance = await _dataAggregator.loadPlanInstance(planInstance: _planInstance, plan: _plan);
-		emit(state.copyWith(taskInstance: await _onCompletion(TaskState.rejected), planInstance: planInstance));
+		emit(state.copyWithSubmitted(taskInstance: await _onCompletion(TaskState.rejected), planInstance: planInstance));
 	}
 
 	void updateChecks(int index, MapEntry<String, bool> subtask) async {
   	_taskInstance.subtasks[index] = subtask;
 		await _dataRepository.updateTaskInstanceFields(_taskInstance.id, subtasks: _taskInstance.subtasks);
-		emit((state as TaskCompletionStateLoaded).copyWith(taskInstance: UITaskInstance.singleWithTask(taskInstance: _taskInstance, task: _task)));
+		emit(state.copyWith(taskInstance: UITaskInstance.singleWithTask(taskInstance: _taskInstance, task: _task)));
 	}
 
 	Future<UITaskInstance> _onCompletion(TaskState state) async {

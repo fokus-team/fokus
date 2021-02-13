@@ -13,7 +13,7 @@ import 'package:fokus/services/observers/data_update_observer.dart';
 part 'stateful_state.dart';
 
 enum StatefulOption {
-	skipOnPopNextReload, repeatableSubmission, noAutoLoading, noDataLoading
+	noOnPopNextReload, repeatableSubmission, noAutoLoading, noDataLoading
 }
 
 abstract class StatefulCubit<State extends StatefulState> extends Cubit<State> with DataUpdateObserver implements RouteAware {
@@ -52,7 +52,8 @@ abstract class StatefulCubit<State extends StatefulState> extends Cubit<State> w
 			_notificationService.observeDataUpdates(this);
 	}
 
-	bool beginSubmit() {
+	bool beginSubmit([State state]) {
+		state ??= this.state;
 		if (!state.isNotSubmitted)
 			return false;
 		emit(state.submit());
@@ -68,7 +69,7 @@ abstract class StatefulCubit<State extends StatefulState> extends Cubit<State> w
 	@override
 	void didPopNext() {
 		_subscribeToUserChanges();
-		if (!options.contains(StatefulOption.skipOnPopNextReload))
+		if (!options.contains(StatefulOption.noOnPopNextReload))
 	    reload();
 	}
 

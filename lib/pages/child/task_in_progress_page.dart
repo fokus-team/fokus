@@ -14,6 +14,7 @@ import 'package:fokus/widgets/cards/sliding_card.dart';
 import 'package:fokus/widgets/chips/attribute_chip.dart';
 import 'package:fokus/widgets/general/app_loader.dart';
 import 'package:fokus/widgets/large_timer.dart';
+import 'package:fokus/widgets/stateful_bloc_builder.dart';
 import 'package:fokus/widgets/task_app_header.dart';
 import 'package:lottie/lottie.dart';
 
@@ -46,66 +47,60 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 	
 	@override
   Widget build(BuildContext context) {
-		return BlocConsumer<TaskCompletionCubit, TaskCompletionState>(
+		return StatefulBlocBuilder<TaskCompletionCubit, TaskCompletionState, TaskCompletionState>(
 			listener: _blocListener,
-			builder: (context, state) {
-				bool isInitial = false;
-				if(state is TaskCompletionStateInitial) {
-					BlocProvider.of<TaskCompletionCubit>(context).loadTaskInstance();
-					isInitial = true;
-				}
-				return  WillPopScope(
-				  onWillPop: () async {
-						Navigator.of(context).pop({"plan" : state is TaskCompletionStateLoaded ? state.planInstance : null});
-						return false;
-					},
-				  child: Scaffold(
-				  	appBar: isInitial ? _getHeader(TaskCompletionStateLoaded(taskInstance: null, planInstance: (state as TaskCompletionStateInitial).planInstance)) : _getHeader(state),
-				  	body: isInitial ? Center(child: AppLoader())
-				  		: Padding(
-				  		padding: EdgeInsets.only(bottom: 0.0),
-				  		child: Stack(
-				  			children: _getAllCards(state)
-				  		)
-				  	),
-				  	extendBody: true,
-				  	bottomNavigationBar: isInitial ? SizedBox.shrink() : _getBottomNavBar(),
-				  	floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-				  	floatingActionButton: isInitial ? SizedBox.shrink()
-				  		: Row(
-				  		mainAxisAlignment: MainAxisAlignment.spaceBetween,
-				  		children: <Widget>[
-				  			_getFab(FabType.discard),
-				  			SlideTransition(
-				  				position: _taskListFabAnimation,
-				  				child: FloatingActionButton.extended(
-				  					label:
-				  					Row(
-				  						children: [
-				  							Icon(Icons.format_list_bulleted,),
-				  							Padding(
-				  								padding: const EdgeInsets.only(left: 8.0),
-				  								child: Text(AppLocales.of(context).translate('actions.return')),
-				  							),
-				  						],
-				  					),
-				  					onPressed: () => Navigator.of(context).pop({"plan" : state is TaskCompletionStateLoaded ? state.planInstance : null}),
-				  					heroTag: "fabTasks",
-				  					backgroundColor: AppColors.childTaskColor,
-				  				),
-				  			),
-				  			_getFab(FabType.finish)
-				  		],
-				  	),
-				  ),
-				);
-
-			}
+			loadingBuilder: (context, state) => _buildPage(state),
+			builder: (context, state) => _buildPage(state)
 		);
   }
 
+  Widget _buildPage(TaskCompletionState state) {
+	  return WillPopScope(
+		  onWillPop: () async {
+			  Navigator.of(context).pop({"plan" : state is TaskCompletionState ? state.planInstance : null});
+			  return false;
+		  },
+		  child: Scaffold(
+			  appBar: !state.loaded ? _getHeader(TaskCompletionState(taskInstance: null, planInstance: state.planInstance)) : _getHeader(state),
+			  body: !state.loaded ? Center(child: AppLoader()) : Padding(
+				  padding: EdgeInsets.only(bottom: 0.0),
+				  child: Stack(
+					  children: _getAllCards(state)
+				  )
+			  ),
+			  extendBody: true,
+			  bottomNavigationBar: !state.loaded ? SizedBox.shrink() : _getBottomNavBar(),
+			  floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+			  floatingActionButton: !state.loaded ? SizedBox.shrink() : Row(
+				  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+				  children: <Widget>[
+					  _getFab(FabType.discard),
+					  SlideTransition(
+						  position: _taskListFabAnimation,
+						  child: FloatingActionButton.extended(
+							  label: Row(
+								  children: [
+									  Icon(Icons.format_list_bulleted,),
+									  Padding(
+										  padding: const EdgeInsets.only(left: 8.0),
+										  child: Text(AppLocales.of(context).translate('actions.return')),
+									  ),
+								  ],
+							  ),
+							  onPressed: () => Navigator.of(context).pop({"plan" : state is TaskCompletionState ? state.planInstance : null}),
+							  heroTag: "fabTasks",
+							  backgroundColor: AppColors.childTaskColor,
+						  ),
+					  ),
+					  _getFab(FabType.finish)
+				  ],
+			  ),
+		  ),
+	  );
+  }
+
   void _blocListener(BuildContext context, TaskCompletionState state) {
-	  if (state is TaskCompletionStateLoaded && state.isLoading)
+	  if (state is TaskCompletionState && state.submissionInProgress)
 		  setState(() {
 			  if (state.current == TaskCompletionStateType.finished) {
 				  _closeWidgetsOnFinish(state);
@@ -130,11 +125,11 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 		  });
   }
 
-  Widget _getHeader(TaskCompletionStateLoaded state) {
+  Widget _getHeader(TaskCompletionState state) {
 		return TaskAppHeader(
 			height: 330,
 			title: '$_pageKey.header.title',
-			popArgs: {"plan" : state is TaskCompletionStateLoaded ? state.planInstance : null},
+			popArgs: {"plan" : state is TaskCompletionState ? state.planInstance : null},
 			content: ItemCard(
 				title: state.planInstance.name,
 				subtitle: state.planInstance.description(context),
@@ -157,14 +152,14 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 		);
 	}
 
-  void _breakPerformingTransition(TaskCompletionStateLoaded state) {
+  void _breakPerformingTransition(TaskCompletionState state) {
 	  if(_isButtonDisabled)
 	  	return;
 	  _isButtonDisabled = true;
 	  var cubit = BlocProvider.of<TaskCompletionCubit>(context);
-	  if(state.current == TaskCompletionStateType.inProgress && !state.isLoading)
+	  if(state.current == TaskCompletionStateType.inProgress && !state.submissionInProgress)
 		  cubit.switchToBreak();
-	  else if (state.current == TaskCompletionStateType.inBreak && !state.isLoading)
+	  else if (state.current == TaskCompletionStateType.inBreak && !state.submissionInProgress)
 		  cubit.switchToProgress();
 	  Timer(Duration(seconds: 2), () {
 		  _isButtonDisabled = false;
@@ -212,7 +207,7 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 		);
 	}
 
-  List<Widget> _getAllCards(TaskCompletionStateLoaded state) {
+  List<Widget> _getAllCards(TaskCompletionState state) {
 		return [
 			SlidingCard(
 				key: _completingCard,
@@ -220,8 +215,10 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 				content: [
 					_getAnimation('assets/animation/jumping_little_man.json'),
 					_getTitle(state.taskInstance.name, translate: false),
-					if(state.taskInstance.description != null) _getSubtitle(state.taskInstance.description ,alignment: TextAlign.justify, translate: false, topPadding: 8),
-					if(state.taskInstance.subtasks != null && state.taskInstance.subtasks.isNotEmpty) _getSubtasks(state.taskInstance.subtasks)
+					if(state.taskInstance.description != null)
+						_getSubtitle(state.taskInstance.description ,alignment: TextAlign.justify, translate: false, topPadding: 8),
+					if(state.taskInstance.subtasks != null && state.taskInstance.subtasks.isNotEmpty)
+						_getSubtasks(state.taskInstance.subtasks)
 				],
 				showFirst: state.current == TaskCompletionStateType.inProgress,
 			),

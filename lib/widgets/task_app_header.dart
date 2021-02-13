@@ -19,8 +19,8 @@ class TaskAppHeader extends StatefulWidget with PreferredSizeWidget {
 	final String title;
 	final Widget content;
 	final String helpPage;
-	final Function(TaskCompletionStateLoaded) breakPerformingTransition;
-	final TaskCompletionStateLoaded state;
+	final Function(TaskCompletionState) breakPerformingTransition;
+	final TaskCompletionState state;
 	final dynamic popArgs;
 
 	TaskAppHeader({Key key, @required this.height, @required this.state, this.title, this.content, this.helpPage,this.breakPerformingTransition, this.popArgs}) : super(key: key);

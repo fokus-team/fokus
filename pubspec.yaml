@@ -6,7 +6,7 @@ authors:
     - Mateusz Janicki
 repository: https://github.com/fokus-team/fokus
 
-version: 0.7.2-dev
+version: 0.7.3-dev
 
 environment:
     sdk: ">=2.7.0 <3.0.0"

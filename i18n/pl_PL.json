@@ -477,7 +477,7 @@
 					"saveCurrenciesButton": "Zapisz konfigurację",
 					"currencyNotUsed": "Nieużywana",
 					"currencyNameLabel": "Nazwa waluty",
-					"clearCurrencyText": "Stracisz możliwość używania tej waluty. Punkty zdobyte przez dzieci do tej pory zostaną zachowane. Czy na pewno chcesz wyczyścić tą walutę?",
+					"clearCurrencyText": "Stracisz możliwość używania tej waluty. Punkty zdobyte do tej pory przez dzieci zostaną zachowane. Czy na pewno chcesz wyczyścić tę walutę?",
 					"currencies": {
 						"diamond": "Diament",
 						"emerald": "Szmaragd",

@@ -69,7 +69,7 @@ class ChildProfilesPage extends StatelessWidget {
 												padding: EdgeInsets.all(12),
 												materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
 												minWidth: 20,
-												onPressed: () => {}
+												onPressed: () => context.read<SavedChildProfilesCubit>().signIn(child.id)
 											),
 											contentPadding: EdgeInsets.symmetric(vertical: 6.0, horizontal: 16.0),
 										)

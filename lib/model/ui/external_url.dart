@@ -8,10 +8,10 @@ enum ExternalURL { webpage, github, termsOfUse, privacyPolicy }
 
 extension ExternalURLLink on ExternalURL {
   String get url => const {
-	  ExternalURL.webpage: 'https://fokus-team.github.io/',
+	  ExternalURL.webpage: 'https://fokus.link/',
 	  ExternalURL.github: 'https://github.com/fokus-team/fokus',
-	  ExternalURL.termsOfUse: 'https://fokus-team.github.io/terms_of_use.html',
-	  ExternalURL.privacyPolicy: 'https://fokus-team.github.io/privacy_policy.html',
+	  ExternalURL.termsOfUse: 'https://fokus.link/terms_of_use.html',
+	  ExternalURL.privacyPolicy: 'https://fokus.link/privacy_policy.html',
   }[this];
 	
 	void openBrowserPage(BuildContext context) async {

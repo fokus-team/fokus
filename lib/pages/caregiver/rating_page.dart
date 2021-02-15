@@ -85,7 +85,7 @@ class _CaregiverRatingPageState extends State<CaregiverRatingPage> {
 								constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width*.70),
 								child: Padding(
 									padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 0.0),
-									child: Wrap(
+									child: reports.length <= 8 ? Wrap(
 										alignment: WrapAlignment.center,
 										children: List.generate(reports.length, (index) => index).map((index) =>
 											Container(
@@ -98,6 +98,7 @@ class _CaregiverRatingPageState extends State<CaregiverRatingPage> {
 											)
 										).toList()
 									)
+									: Text('${_currentRaport+1} / ${reports.length}', style: TextStyle(color: Colors.white, fontSize: 17.0))
 								)
 							),
 							IconButton(

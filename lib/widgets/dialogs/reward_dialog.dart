@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fokus/logic/child/child_rewards_cubit.dart';
+import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
+import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
 import 'package:fokus/model/ui/gamification/ui_reward.dart';
 import 'package:fokus/model/ui/ui_button.dart';
 import 'package:fokus/services/app_locales.dart';
@@ -8,13 +12,13 @@ import 'package:fokus/utils/ui/icon_sets.dart';
 import 'package:fokus/utils/ui/theme_config.dart';
 import 'package:fokus/widgets/buttons/rounded_button.dart';
 import 'package:fokus/widgets/chips/attribute_chip.dart';
+import 'package:fokus/model/db/user/user_role.dart';
 
 class RewardDialog extends StatefulWidget {
 	final UIReward reward;
-	final bool showHeader;
 	final Function claimFeedback;
 
-	RewardDialog({@required this.reward, this.showHeader, this.claimFeedback});
+	RewardDialog({@required this.reward, this.claimFeedback});
 
 	@override
 	_RewardDialogState createState() => new _RewardDialogState();
@@ -23,7 +27,6 @@ class RewardDialog extends StatefulWidget {
 class _RewardDialogState extends State<RewardDialog> with SingleTickerProviderStateMixin {
   static const String _pageKey = 'page.childSection.rewards.content';
 	AnimationController _rotationController;
-	bool claimButtonClicked = false;
 
 	@override
 	void initState() {
@@ -40,6 +43,7 @@ class _RewardDialogState extends State<RewardDialog> with SingleTickerProviderSt
 
   @override
   Widget build(BuildContext context) {
+		var userRole = context.watch<AuthenticationBloc>().state.user.role;
 		return Dialog(
 			insetPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
 			child: SingleChildScrollView(
@@ -47,8 +51,8 @@ class _RewardDialogState extends State<RewardDialog> with SingleTickerProviderSt
 					padding: EdgeInsets.symmetric(horizontal: AppBoxProperties.screenEdgePadding),
 					child: Column(
 						mainAxisSize: MainAxisSize.min,
-						children: [		
-							if(widget.showHeader)		
+						children: [
+							if(userRole == UserRole.child)
 								Padding(
 									padding: EdgeInsets.all(20.0).copyWith(bottom: 0), 
 									child: Text(
@@ -97,13 +101,17 @@ class _RewardDialogState extends State<RewardDialog> with SingleTickerProviderSt
 									mainAxisAlignment: MainAxisAlignment.center,
 									children: <Widget>[
 										RoundedButton(button: UIButton('actions.close', () => Navigator.of(context).pop(), Colors.blueGrey, Icons.close)),
-										if(widget.showHeader)
-											RoundedButton(button: UIButton('$_pageKey.claimButton', () {
-												if(!claimButtonClicked) {
-													setState(() {claimButtonClicked = true;});
-													widget.claimFeedback();
-												}
-											}, claimButtonClicked ? Colors.grey: AppColors.childButtonColor, Icons.add_shopping_cart))
+										if(userRole == UserRole.child)
+											BlocBuilder<ChildRewardsCubit, StatefulState>(
+												builder: (context, state) => RoundedButton(
+													button: UIButton(
+														'$_pageKey.claimButton',
+														state.submissionInProgress ? null : widget.claimFeedback,
+														AppColors.childButtonColor,
+														Icons.add_shopping_cart
+													)
+												)
+											)
 									]
 								)
 							)

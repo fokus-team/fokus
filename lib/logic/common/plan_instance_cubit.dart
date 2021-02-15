@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:fokus/logic/common/reloadable/reloadable_cubit.dart';
+import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
 import 'package:fokus/model/db/plan/plan_instance.dart';
 import 'package:fokus/model/db/plan/plan_instance_state.dart';
 import 'package:fokus/model/db/plan/task_instance.dart';
@@ -17,7 +17,7 @@ import 'package:fokus/model/db/plan/task_status.dart';
 import 'package:fokus/model/db/date/time_date.dart';
 
 
-class PlanInstanceCubit extends ReloadableCubit {
+class PlanInstanceCubit extends StatefulCubit {
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final TaskInstanceService _taskInstancesService = GetIt.I<TaskInstanceService>();
 	final UIDataAggregator _dataAggregator = GetIt.I<UIDataAggregator>();
@@ -32,7 +32,7 @@ class PlanInstanceCubit extends ReloadableCubit {
 	List<NotificationType> dataTypeSubscription() => [NotificationType.taskApproved, NotificationType.taskRejected, NotificationType.taskFinished, NotificationType.taskUnfinished];
 
 	@override
-	void doLoadData() async {
+	Future doLoadData() async {
 		_planInstance = await _dataRepository.getPlanInstance(id: uiPlanInstance.id);
 		if(_planInstance.taskInstances == null || _planInstance.taskInstances.isEmpty)
 			_taskInstancesService.createTaskInstances(_planInstance);
@@ -40,9 +40,8 @@ class PlanInstanceCubit extends ReloadableCubit {
 		var allTasksInstances = await _dataRepository.getTaskInstances(planInstanceId: uiPlanInstance.id);
 
 		List<UITaskInstance> uiInstances = await _taskInstancesService.mapToUIModels(allTasksInstances);
-		emit(ChildTasksLoadSuccess(uiInstances, uiPlanInstance));
+		emit(PlanInstanceCubitState(tasks: uiInstances, planInstance: uiPlanInstance));
 	}
-
 
 	Future<bool> isOtherPlanInProgressDbCheck({ObjectId tappedTaskInstance}) async {
 		PlanInstance activePlanInstance = await _dataRepository.getPlanInstance(childId: _planInstance.assignedTo, state: PlanInstanceState.active, fields: ["_id"]);
@@ -59,6 +58,8 @@ class PlanInstanceCubit extends ReloadableCubit {
 	}
 
 	void completePlan() async {
+		if (!beginSubmit())
+			return;
 		List<Future> updates = [];
 		_planInstance.state = PlanInstanceState.completed;
 		var allTasksInstances = await _dataRepository.getTaskInstances(planInstanceId: uiPlanInstance.id);
@@ -89,21 +90,19 @@ class PlanInstanceCubit extends ReloadableCubit {
 
 		Future.wait(updates);
 		uiPlanInstance = await _dataAggregator.loadPlanInstance(planInstanceId: _planInstance.id);
-		emit(ChildTasksLoadSuccess(uiInstances, uiPlanInstance));
+		emit(PlanInstanceCubitState(tasks: uiInstances, planInstance: uiPlanInstance, submissionState: DataSubmissionState.submissionSuccess));
 	}
 }
 
-class ChildTasksLoadSuccess extends DataLoadSuccess {
+class PlanInstanceCubitState extends StatefulState {
 	final List<UITaskInstance> tasks;
 	final UIPlanInstance planInstance;
 
-	ChildTasksLoadSuccess(this.tasks, this.planInstance);
+	PlanInstanceCubitState({this.tasks, this.planInstance, DataSubmissionState submissionState}) : super.loaded(submissionState);
 
 	@override
-	List<Object> get props => [tasks, planInstance];
+  StatefulState withSubmitState(DataSubmissionState submissionState) => PlanInstanceCubitState(tasks: tasks, planInstance: planInstance, submissionState: submissionState);
 
-	@override
-	String toString() {
-		return 'ChildTasksLoadSuccess{tasks: $tasks, planInstance: $planInstance}';
-	}
+  @override
+	List<Object> get props => super.props..addAll([tasks, planInstance]);
 }

@@ -25,6 +25,8 @@ class NameChangeCubit extends Cubit<NameChangeState> {
       super(NameChangeState(name: Name.pure((args != null ? args['child'] : _activeUser())?.name)));
 
   Future nameChangeFormSubmitted() async {
+	  if (this.state.status != FormzStatus.pure)
+		  return;
 	  var state = this.state;
 	  state = state.copyWith(name: Name.dirty(state.name.value));
 	  state = state.copyWith(status: Formz.validate([state.name]));

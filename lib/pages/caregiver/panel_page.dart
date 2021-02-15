@@ -12,17 +12,12 @@ import 'package:fokus/widgets/app_navigation_bar.dart';
 import 'package:fokus/widgets/cards/item_card.dart';
 import 'package:fokus/widgets/custom_app_bars.dart';
 import 'package:fokus/widgets/cards/model_cards.dart';
-import 'package:fokus/widgets/loadable_bloc_builder.dart';
+import 'package:fokus/widgets/stateful_bloc_builder.dart';
 import 'package:fokus/widgets/segment.dart';
 
-class CaregiverPanelPage extends StatefulWidget {
-	@override
-	_CaregiverPanelPageState createState() => new _CaregiverPanelPageState();
-}
-
-class _CaregiverPanelPageState extends State<CaregiverPanelPage> {
+class CaregiverPanelPage extends StatelessWidget {
 	static const String _pageKey = 'page.caregiverSection.panel';
-	
+
 	@override
 	Widget build(BuildContext context) {
     return Scaffold(
@@ -32,8 +27,11 @@ class _CaregiverPanelPageState extends State<CaregiverPanelPage> {
 				listener: (context, state) {
 				  BlocProvider.of<CaregiverPanelCubit>(context).reload();
 				},
-				child: LoadableBlocBuilder<CaregiverPanelCubit>(
-					builder: (context, state) => AppSegments(segments: _buildPanelSegments(state), fullBody: true),
+				child: SimpleStatefulBlocBuilder<CaregiverPanelCubit, CaregiverPanelState>(
+					builder: (context, state) => AppSegments(
+						segments: _buildPanelSegments(state, context),
+						fullBody: true
+					),
 				),
 			),
 			floatingActionButton: FloatingActionButton.extended(
@@ -48,7 +46,7 @@ class _CaregiverPanelPageState extends State<CaregiverPanelPage> {
     );
 	}
 
-	List<Segment> _buildPanelSegments(CaregiverPanelLoadSuccess state) {
+	List<Segment> _buildPanelSegments(CaregiverPanelState state, BuildContext context) {
 		return [
 			Segment(
 				title: '$_pageKey.content.childProfilesTitle',

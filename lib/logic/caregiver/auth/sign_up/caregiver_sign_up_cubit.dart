@@ -15,6 +15,8 @@ class CaregiverSignUpCubit extends CaregiverAuthCubitBase<CaregiverSignUpState> 
   CaregiverSignUpCubit() : super(CaregiverSignUpState());
 
   Future<void> signUpFormSubmitted() async {
+	  if (this.state.status != FormzStatus.pure)
+		  return;
 	  var state = _validateFields();
 	  if (!state.status.isValidated) {
 		  emit(state);

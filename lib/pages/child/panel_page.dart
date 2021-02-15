@@ -9,7 +9,7 @@ import 'package:fokus/widgets/custom_app_bars.dart';
 import 'package:fokus/utils/ui/child_plans_util.dart';
 import 'package:fokus/utils/ui/theme_config.dart';
 import 'package:fokus/widgets/app_navigation_bar.dart';
-import 'package:fokus/widgets/loadable_bloc_builder.dart';
+import 'package:fokus/widgets/stateful_bloc_builder.dart';
 import 'package:fokus/widgets/segment.dart';
 
 class ChildPanelPage extends StatefulWidget {
@@ -28,9 +28,9 @@ class _ChildPanelPageState extends State<ChildPanelPage> {
 	      crossAxisAlignment: CrossAxisAlignment.start,
 				verticalDirection: VerticalDirection.up,
 	      children: [
-		      LoadableBlocBuilder<ChildPanelCubit>(
-				    builder: (context, state) => AppSegments(segments: buildChildPlanSegments((state as ChildPlansLoadSuccess).plans, context)),
-						wrapWithExpanded: true,
+		      SimpleStatefulBlocBuilder<ChildPanelCubit, ChildPlansState>(
+				    builder: (context, state) => AppSegments(segments: buildChildPlanSegments(state.plans, context)),
+						expandLoader: true,
 		      ),
 	        CustomChildAppBar()
 	      ]

@@ -18,6 +18,8 @@ class CaregiverFriendsCubit extends Cubit<CaregiverFriendsState> with UserCodeVe
   CaregiverFriendsCubit(this._activeUser, this._authBloc) : super(CaregiverFriendsState());
 
   Future addNewFriend() async {
+	  if (this.state.status != FormzStatus.pure)
+		  return;
 	  var state = await _validateFields();
 	  if (!state.status.isValidated) {
 		  emit(state);

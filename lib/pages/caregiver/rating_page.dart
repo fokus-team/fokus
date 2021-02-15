@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:fokus/logic/caregiver/tasks_evaluation/tasks_evaluation_cubit.dart';
+import 'package:fokus/logic/caregiver/tasks_evaluation_cubit.dart';
 import 'package:fokus/model/ui/task/ui_task_report.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/ui/theme_config.dart';
 import 'package:fokus/widgets/buttons/help_icon_button.dart';
 import 'package:fokus/widgets/cards/report_card.dart';
 import 'package:fokus/widgets/general/app_hero.dart';
-import 'package:fokus/widgets/loadable_bloc_builder.dart';
+import 'package:fokus/widgets/stateful_bloc_builder.dart';
 
 
 class CaregiverRatingPage extends StatefulWidget {
@@ -19,7 +19,6 @@ class _CaregiverRatingPageState extends State<CaregiverRatingPage> {
 	static const String _pageKey = 'page.caregiverSection.rating';
 	CarouselController _carouselController;
 	int _currentRaport = 0;
-	List<UITaskReport> reports = [];
 
 	@override
   void initState() {
@@ -40,15 +39,13 @@ class _CaregiverRatingPageState extends State<CaregiverRatingPage> {
 					HelpIconButton(helpPage: 'rating')
 				]
 			),
-			body: LoadableBlocBuilder<TasksEvaluationCubit>(
+			body: SimpleStatefulBlocBuilder<TasksEvaluationCubit, TasksEvaluationState>(
 				builder: (context, state) {
-					if (reports.isEmpty)
-						reports = (state as TasksEvaluationBaseState).reports;
 					return Column(
-						mainAxisSize: reports.isNotEmpty ? MainAxisSize.min : MainAxisSize.max,
+						mainAxisSize: state.reports.isNotEmpty ? MainAxisSize.min : MainAxisSize.max,
 						mainAxisAlignment: MainAxisAlignment.center,
 						crossAxisAlignment: CrossAxisAlignment.center,
-						children: [reports.isNotEmpty ? Expanded(child: _buildCarousel()) :
+						children: [state.reports.isNotEmpty ? Expanded(child: _buildCarousel(state.reports)) :
 							AppHero(
 							  title: AppLocales.of(context).translate('$_pageKey.content.noTasksToRate'),
 							  color: Colors.white,
@@ -62,7 +59,7 @@ class _CaregiverRatingPageState extends State<CaregiverRatingPage> {
 		);
 	}
 
-	Widget _buildCarousel() {
+	Widget _buildCarousel(List<UITaskReport> reports) {
 		int notRatedCount = reports.where((element) => element.ratingMark == UITaskReportMark.notRated).length;
 		return Column(
 			children: [

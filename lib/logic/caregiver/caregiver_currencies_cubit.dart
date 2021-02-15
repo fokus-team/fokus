@@ -1,56 +1,47 @@
-import 'package:equatable/equatable.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
-import 'package:fokus/model/currency_type.dart';
-import 'package:fokus/model/db/gamification/currency.dart';
-import 'package:fokus/model/ui/gamification/ui_currency.dart';
-import 'package:fokus/model/ui/user/ui_caregiver.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart';
 
 import 'package:fokus/model/ui/user/ui_user.dart';
 import 'package:fokus/services/data/data_repository.dart';
+import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
+import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
+import 'package:fokus/model/currency_type.dart';
+import 'package:fokus/model/db/gamification/currency.dart';
+import 'package:fokus/model/ui/gamification/ui_currency.dart';
+import 'package:fokus/model/ui/user/ui_caregiver.dart';
 
-class CaregiverCurrenciesCubit extends Cubit<CaregiverCurrenciesState> {
+class CaregiverCurrenciesCubit extends StatefulCubit {
 	final ActiveUserFunction _activeUser;
 	final AuthenticationBloc _authBloc;
   final DataRepository _dataRepository = GetIt.I<DataRepository>();
 
-  CaregiverCurrenciesCubit(Object argument, this._activeUser, this._authBloc) : super(CaregiverCurrenciesInitial());
+  CaregiverCurrenciesCubit(Object argument, ModalRoute pageRoute, this._activeUser, this._authBloc) : super(pageRoute);
 
-	void doLoadData() async {
-		emit(CaregiverCurrenciesInProgress());
+	Future doLoadData() async {
     var user = _activeUser();
 		var currencies = await _dataRepository.getCurrencies(user.id);
-		emit(CaregiverCurrenciesLoadSuccess(currencies.map((currency) => UICurrency.fromDBModel(currency)).toList()));
+		emit(CaregiverCurrenciesState(currencies: currencies.map((currency) => UICurrency.fromDBModel(currency)).toList()));
   }
 
 	void updateCurrencies(List<UICurrency> currencyList) async {
-		emit(CaregiverCurrenciesInProgress());
+		if (!beginSubmit())
+			return;
     var user = _activeUser();
 		_authBloc.add(AuthenticationActiveUserUpdated(UICaregiver.from(user, currencies: [UICurrency(type: CurrencyType.diamond), ...currencyList])));
 		List<Currency> currencies = currencyList.map((currency) => Currency(icon: currency.type, name: currency.title)).toList();
 		await _dataRepository.updateCurrencies(user.id, currencies);
-		emit(CaregiverCurrenciesSubmissionSuccess());
+		emit(CaregiverCurrenciesState(currencies: currencyList, submissionState: DataSubmissionState.submissionSuccess));
 	}
-
 }
 
-class CaregiverCurrenciesState extends Equatable {
+class CaregiverCurrenciesState extends StatefulState {
 	final List<UICurrency> currencies;
 
-	const CaregiverCurrenciesState({this.currencies});
+	CaregiverCurrenciesState({this.currencies, DataSubmissionState submissionState}) : super.loaded(submissionState);
 
 	@override
-	List<Object> get props => [currencies];
+  StatefulState withSubmitState(DataSubmissionState submissionState) => CaregiverCurrenciesState(currencies: currencies, submissionState: submissionState);
+
+  @override
+	List<Object> get props => super.props..add(currencies);
 }
-
-class CaregiverCurrenciesInitial extends CaregiverCurrenciesState {}
-
-class CaregiverCurrenciesInProgress extends CaregiverCurrenciesState {}
-
-class CaregiverCurrenciesSubmissionSuccess extends CaregiverCurrenciesState {}
-
-class CaregiverCurrenciesLoadSuccess extends CaregiverCurrenciesState {
-	CaregiverCurrenciesLoadSuccess(List<UICurrency> currencies) : super(currencies: currencies);
-}
-

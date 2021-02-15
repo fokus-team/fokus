@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fokus/logic/caregiver/plan_form/plan_form_cubit.dart';
+import 'package:fokus/logic/caregiver/forms/plan/plan_form_cubit.dart';
 import 'package:fokus/utils/bloc_utils.dart';
 import 'package:fokus/utils/ui/reorderable_list.dart';
 import 'package:fokus/widgets/cards/task_card.dart';

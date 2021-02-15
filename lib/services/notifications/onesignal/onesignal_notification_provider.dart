@@ -49,7 +49,7 @@ class OneSignalNotificationProvider extends NotificationProvider {
 		logger.fine("onOpenMessage: $result");
     var context = _navigatorKey.currentState.context;
 		var navigate = (AppPage page, [dynamic arguments]) {
-			if (ModalRoute.of(context).settings.name != page.name)
+			if (ModalRoute.of(context)?.settings?.name != page.name)
 		    return _navigatorKey.currentState.pushNamed(page.name, arguments: arguments);
 		};
 		var data = NotificationData.fromJson(result.notification.payload.additionalData);

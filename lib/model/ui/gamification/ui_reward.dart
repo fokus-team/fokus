@@ -22,7 +22,8 @@ class UIReward extends Equatable {
 			name: name ?? this.name,
 			limit: limit ?? this.limit,
 			cost: cost ?? this.cost,
-			icon: icon ?? this.icon
+			icon: icon ?? this.icon,
+			id: id
 		);
 	}
 

@@ -8,6 +8,7 @@ class UIPoints extends UICurrency {
 	final int quantity;
 
   UIPoints({CurrencyType type, String title, this.createdBy, this.quantity}) : super(type: type, title: title);
+	UIPoints.fromUICurrency(UICurrency currency) : this(type: currency.type, title: currency.title);
 	UIPoints.fromDBModel(Points points) :
 			createdBy = points.createdBy,
 			quantity = points.quantity,

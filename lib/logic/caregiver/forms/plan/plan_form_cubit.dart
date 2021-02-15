@@ -43,6 +43,8 @@ class PlanFormCubit extends Cubit<PlanFormState> {
   }
 
   void submitPlanForm(PlanFormModel planForm) async {
+  	if (state is! PlanFormDataLoadSuccess)
+  		return;
 		emit(PlanFormSubmissionInProgress(state));
 		var userId = _activeUser().id;
 

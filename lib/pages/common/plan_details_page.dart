@@ -7,7 +7,7 @@ import 'package:fokus/model/pages/plan_form_params.dart';
 import 'package:fokus/model/ui/plan/ui_plan.dart';
 import 'package:fokus/model/ui/task/ui_task.dart';
 import 'package:fokus/utils/ui/snackbar_utils.dart';
-import 'package:fokus/widgets/loadable_bloc_builder.dart';
+import 'package:fokus/widgets/stateful_bloc_builder.dart';
 import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/ui/gamification/ui_currency.dart';
 import 'package:fokus/model/ui/form/task_form_model.dart';
@@ -34,16 +34,27 @@ class _PlanDetailsPageState extends State<PlanDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
-		return Scaffold(
-			body: LoadableBlocBuilder<PlanCubit>(builder: (context, state) => _buildView(context, state), loadingBuilder: (_, __) => SizedBox.shrink()),
-			floatingActionButton: LoadableBlocBuilder<PlanCubit>(builder: (context, state) => _buildFloatingButton(state)),
-			floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat
-		);
+    return Scaffold(
+        body: SimpleStatefulBlocBuilder<PlanCubit, PlanCubitState>(
+          builder: (context, state) => _buildView(context, state),
+          loadingBuilder: (_, __) => SizedBox.shrink(),
+          listener: (context, state) {
+            if (state.submitted) {
+              showSuccessSnackbar(context, '$_pageKey.content.planRemovedText');
+            }
+          },
+          popConfig: SubmitPopConfig(count: 2),
+        ),
+        floatingActionButton: SimpleStatefulBlocBuilder<PlanCubit, PlanCubitState>(
+            builder: (context, state) => _buildFloatingButton(state)
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat
+    );
 	}
 
-	Widget _buildFloatingButton(CaregiverTasksLoadSuccess state) {
+	Widget _buildFloatingButton(PlanCubitState state) {
 		// ignore: close_sinks
-		var authenticationBloc = BlocProvider.of<AuthenticationBloc>(context);
+		var authenticationBloc = context.read<AuthenticationBloc>();
 		var currentUser = authenticationBloc.state.user;
 
 		return (state.uiPlan?.createdBy != currentUser.id && currentUser.role == UserRole.caregiver) ? FloatingActionButton.extended(
@@ -57,7 +68,7 @@ class _PlanDetailsPageState extends State<PlanDetailsPage> {
 		) : SizedBox.shrink();
 	}
 
-	Column _buildView(BuildContext context, CaregiverTasksLoadSuccess state) {
+	Column _buildView(BuildContext context, PlanCubitState state) {
   	return Column(
 			crossAxisAlignment: CrossAxisAlignment.start,
 			verticalDirection: VerticalDirection.up,
@@ -68,7 +79,7 @@ class _PlanDetailsPageState extends State<PlanDetailsPage> {
 		);
 	}
 
-	List<Widget> _buildPanelSegments(CaregiverTasksLoadSuccess state) {
+	List<Widget> _buildPanelSegments(PlanCubitState state) {
   	List<UITask> mandatoryTasks = state.tasks.where((task) => task.optional == false).toList();
 		List<UITask> optionalTasks = state.tasks.where((task) => task.optional == true).toList();
 
@@ -151,7 +162,9 @@ class _PlanDetailsPageState extends State<PlanDetailsPage> {
 						),
 						null, Icons.edit
 					),
-					UIButton.ofType(ButtonType.delete, () => showBasicDialog(
+					UIButton.ofType(
+						ButtonType.delete,
+						() => showBasicDialog(
 							context,
 							GeneralDialog.confirm(
 								title: AppLocales.of(context).translate('alert.deletePlan'),
@@ -166,15 +179,12 @@ class _PlanDetailsPageState extends State<PlanDetailsPage> {
 									),
 								),
 								confirmText: 'actions.delete',
-								confirmAction: () async {
-									await BlocProvider.of<PlanCubit>(context).deletePlan();
-									Navigator.of(context).pop();
-									Navigator.of(context).pop();
-									showSuccessSnackbar(context, '$_pageKey.content.planRemovedText');
-								},
+								confirmAction: () => context.read<PlanCubit>().deletePlan(),
 								confirmColor: Colors.red
 							)
-						), null, Icons.delete
+						),
+						null,
+						Icons.delete
 					)
 				]
 			) : null

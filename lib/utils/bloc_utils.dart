@@ -14,3 +14,13 @@ Widget forwardCubit<CubitType extends Cubit>(Widget widget, CubitType cubit) {
 		child: widget,
 	);
 }
+
+Widget tryForwardCubit<CubitType extends Cubit>(Widget widget, BuildContext context) {
+	CubitType cubit;
+	try {
+		cubit = BlocProvider.of<CubitType>(context);
+	} on Error {
+		return widget;
+	}
+	return forwardCubit<CubitType>(widget, cubit);
+}

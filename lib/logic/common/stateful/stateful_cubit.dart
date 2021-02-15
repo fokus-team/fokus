@@ -7,42 +7,57 @@ import 'package:get_it/get_it.dart';
 import 'package:fokus/model/notification/notification_type.dart';
 import 'package:fokus/services/app_route_observer.dart';
 import 'package:fokus/services/notifications/notification_service.dart';
+import 'package:fokus/model/pages/plan_form_params.dart';
 import 'package:fokus/services/observers/data_update_observer.dart';
 
-part 'loadable_state.dart';
+part 'stateful_state.dart';
 
-enum ReloadableOption {
-	doNotReloadOnPopNext
+enum StatefulOption {
+	noOnPopNextReload, repeatableSubmission, noAutoLoading, noDataLoading
 }
 
-abstract class ReloadableCubit extends Cubit<LoadableState> with DataUpdateObserver implements RouteAware {
+abstract class StatefulCubit<State extends StatefulState> extends Cubit<State> with DataUpdateObserver implements RouteAware {
 	final _routeObserver = GetIt.I<AppRouteObserver>();
 	final NotificationService _notificationService = GetIt.I<NotificationService>();
 	@protected
-	final List<ReloadableOption> options;
+	final List<StatefulOption> options;
 
-  ReloadableCubit(ModalRoute pageRoute, {this.options = const []}) : super(DataLoadInitial()) {
+  StatefulCubit(ModalRoute pageRoute, {this.options = const [], StatefulState initialState}) :
+        super(initialState ?? StatefulState.notLoaded()) {
 	  _subscribeToUserChanges();
 	  _routeObserver.subscribe(this, pageRoute);
   }
 
-  void loadData() {
-	  if (!(state is DataLoadInitial)) return;
-	  emit(DataLoadInProgress());
-	  doLoadData();
+  Future loadData() async {
+	  if (state.loadingInProgress)
+	  	return;
+	  emit(state.loading());
+	  return doLoadData();
   }
 
   @protected
-  void doLoadData();
+  Future doLoadData();
 
-  void reload() => emit(DataLoadInitial());
+	void reload() => emit(state.notLoaded());
+
+	void resetSubmissionState() => emit(state.notSubmitted());
 
 	@override
 	void onDataUpdated(NotificationType type) => reload();
 
+	bool hasOption(StatefulOption option) => options.contains(option);
+
 	void _subscribeToUserChanges() {
 		if (dataTypeSubscription().isNotEmpty)
 			_notificationService.observeDataUpdates(this);
+	}
+
+	bool beginSubmit([State state]) {
+		state ??= this.state;
+		if (!state.isNotSubmitted)
+			return false;
+		emit(state.submit());
+		return true;
 	}
 
 	@override
@@ -54,7 +69,7 @@ abstract class ReloadableCubit extends Cubit<LoadableState> with DataUpdateObser
 	@override
 	void didPopNext() {
 		_subscribeToUserChanges();
-		if (!options.contains(ReloadableOption.doNotReloadOnPopNext))
+		if (!options.contains(StatefulOption.noOnPopNextReload))
 	    reload();
 	}
 

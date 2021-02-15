@@ -1,7 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/logic/caregiver/child_dashboard/child_dashboard_cubit.dart';
-import 'package:fokus/logic/common/reloadable/reloadable_cubit.dart';
+import 'package:fokus/logic/caregiver/child_dashboard/dashboard_achievements_cubit.dart';
+import 'package:fokus/logic/caregiver/child_dashboard/dashboard_plans_cubit.dart';
+import 'package:fokus/logic/caregiver/child_dashboard/dashboard_rewards_cubit.dart';
+import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
 import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/ui/gamification/ui_badge.dart';
 import 'package:fokus/model/ui/plan/ui_plan.dart';
@@ -21,7 +26,7 @@ import 'package:fokus/widgets/custom_app_bars.dart';
 import 'package:fokus/widgets/dialogs/general_dialog.dart';
 import 'package:fokus/widgets/general/app_alert.dart';
 import 'package:fokus/widgets/general/app_loader.dart';
-import 'package:fokus/widgets/loadable_bloc_builder.dart';
+import 'package:fokus/widgets/stateful_bloc_builder.dart';
 import 'package:fokus/widgets/segment.dart';
 import 'package:fokus_auth/fokus_auth.dart';
 import 'package:intl/intl.dart';
@@ -41,6 +46,7 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 	TabController _tabController;
 	final UIChild _childProfile;
 	int _currentIndex;
+  StreamController<int> _tabIndexStream = StreamController<int>.broadcast();
 
 	_CaregiverChildDashboardPageState(Map<String, dynamic> args) : _currentIndex = args['tab'] ?? 0, _childProfile = args['child'];
 
@@ -52,9 +58,11 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 		super.initState();
 		_tabController = TabController(initialIndex: _currentIndex, vsync: this, length: 3);
 		_tabController.animation..addListener(() {
-			setState(() {
-				_currentIndex = (_tabController.animation.value).round();
-			});
+		  var newValue = (_tabController.animation.value).round();
+		  if (_currentIndex != newValue) {
+        _currentIndex = newValue;
+        _tabIndexStream.add(_currentIndex);
+      }
 		});
 	}
 
@@ -67,24 +75,15 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
   @override
   Widget build(BuildContext context) {
 		return Scaffold(
-	    body: LoadableBlocBuilder<ChildDashboardCubit>(
-				builder: (context, state) => _getPage(
-					child: (state as ChildDashboardState).child,
+	    body: SimpleStatefulBlocBuilder<ChildDashboardCubit, ChildDashboardState>(
+        builder: (context, state) => _getPage(
+					child: state.child,
 	        content: TabBarView(
             controller: _tabController,
             children: [
-	            _buildTab(
-		            tabState: (state) => state.plansTab,
-		            content: _buildPlansTab
-	            ),
-	            _buildTab(
-		            tabState: (state) => state.rewardsTab,
-		            content: _buildRewardsTab
-	            ),
-	            _buildTab(
-		            tabState: (state) => state.achievementsTab,
-		            content: _buildAchievementsTab
-	            ),
+	            _buildTab<DashboardPlansCubit, DashboardPlansState>(_buildPlansTab),
+	            _buildTab<DashboardRewardsCubit, DashboardRewardsState>(_buildRewardsTab),
+	            _buildTab<DashboardAchievementsCubit, DashboardAchievementsState>(_buildAchievementsTab),
             ]
 					)
 	      ),
@@ -93,9 +92,19 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 			    content: Center(child: AppLoader())
 		    ),
 	    ),
-	    bottomNavigationBar: _buildBottomBar(),
+	    bottomNavigationBar: _indexBuildable(_buildBottomBar),
 	    floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-	    floatingActionButton: _buildFloatingButtonAnimation()
+	    floatingActionButton: _indexBuildable(_buildFloatingButtonAnimation)
+		);
+	}
+
+	Widget _buildTab<Cubit extends StatefulCubit, State extends StatefulState>(List<Widget> Function(State) content) {
+		return SimpleStatefulBlocBuilder<Cubit, State>(
+			builder: (context, state) => ListView(
+				padding: EdgeInsets.zero,
+				physics: BouncingScrollPhysics(),
+				children: content(state)
+			),
 		);
 	}
 
@@ -143,16 +152,24 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
     );
   }
 
-	Widget _buildBottomBar() {
-		return AnimatedContainer(
-			duration: bottomBarAnimationDuration,
-			height: _currentIndex == 1 ? 0 : customBottomBarHeight,
-			decoration: AppBoxProperties.elevatedContainer,
-			child: SizedBox.shrink()
-		);
-	}
+  Widget _buildBottomBar(int index) {
+    return AnimatedContainer(
+      duration: bottomBarAnimationDuration,
+      height: index == 1 ? 0 : customBottomBarHeight,
+      decoration: AppBoxProperties.elevatedContainer,
+      child: SizedBox.shrink()
+    );
+  }
 
-	Widget _buildFloatingButtonAnimation() {
+  Widget _indexBuildable(Widget Function(int) builder) {
+    return StreamBuilder<int>(
+      stream: _tabIndexStream.stream,
+      initialData: _currentIndex,
+      builder: (context, index) => builder(index.data),
+    );
+  }
+
+	Widget _buildFloatingButtonAnimation(int index) {
 		return AnimatedSwitcher(
 			duration: bottomBarAnimationDuration,
 			switchOutCurve: Curves.easeInOut,
@@ -165,26 +182,34 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 					)
 				);
 			},
-			child: _buildSelectPopup()
+			child: _buildSelectPopup(index)
 		);
 	}
 
-	Widget _buildSelectPopup() {
-		if (_currentIndex == 1)
+	Widget _buildSelectPopup(int index) {
+		if (index == 1)
 			return SizedBox.shrink();
-		if (_currentIndex == 0)
-			return _buildSelect<UIPlan, ChildDashboardPlansTabState>(
+		if (index == 0)
+			return _buildSelect<UIPlan, DashboardPlansCubit, DashboardPlansState>(
 					content: _buildPlanSelect,
-					tabState: (state) => state.plansTab,
 					model: (tabState) => tabState.availablePlans
 			);
-		return _buildSelect<UIBadge, ChildDashboardAchievementsTabState>(
+		return _buildSelect<UIBadge, DashboardAchievementsCubit, DashboardAchievementsState>(
 				content: _buildBadgeSelect,
-				tabState: (state) => state.achievementsTab,
 				model: (tabState) => tabState.availableBadges
 		);
 	}
-	
+
+	Widget _buildSelect<Type, Cubit extends StatefulCubit, State>({Widget Function([List<Type>]) content, List<Type> Function(State) model}) {
+		return BlocBuilder<Cubit, StatefulState>(
+			builder: (context, state) {
+				if (!state.loaded)
+					return content();
+				return content(model(state as State));
+			}
+		);
+	}
+
 	Widget _buildFloatingButtonPicker<T>({
 		String buttonLabel, IconData buttonIcon, String disabledDialogTitle, String disabledDialogText,
 		String pickerTitle, List<T> pickedValues, List<T> options,
@@ -228,14 +253,6 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 		);
 	}
 
-	Widget _buildSelect<T, State>({Widget Function([List<T>]) content, State Function(ChildDashboardState) tabState, List<T> Function(State) model}) {
-		return _wrapWithBuilder<State>(
-			tabState: tabState,
-			content: (state) => content(model(state)),
-			loader: content()
-		);
-	}
-
 	Widget _buildPlanSelect([List<UIPlan> availablePlans = const []]) {
 		return _buildFloatingButtonPicker<UIPlan>(
 			buttonLabel: AppLocales.of(context).translate('$_pageKey.header.assignPlanButton'),
@@ -245,7 +262,7 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 			pickerTitle: AppLocales.of(context).translate('$_pageKey.header.assignPlanTitle'),
 			pickedValues: availablePlans.where((element) => element.assignedTo.contains(_childProfile.id)).toList(),
 			options: availablePlans,
-			onChange: (selected) => BlocProvider.of<ChildDashboardCubit>(context).assignPlans(selected.map((plan) => plan.id).toList()),
+			onChange: (selected) => context.read<DashboardPlansCubit>().assignPlans(selected.map((plan) => plan.id).toList()),
 			getName: (plan) => plan.name,
 			builder: (item, checked, onChange) {
 				return Theme(
@@ -278,7 +295,7 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 			pickerTitle: AppLocales.of(context).translate('$_pageKey.header.assignBadgeTitle'),
 			pickedValues: [],
 			options: availableBadges,
-			onChange: (selected) => BlocProvider.of<ChildDashboardCubit>(context).assignBadges(selected),
+			onChange: (selected) => context.read<DashboardAchievementsCubit>().assignBadges(selected),
 			getName: (badge) => badge.name,
 			builder: (item, checked, onChange) {
 				return Theme(
@@ -298,30 +315,7 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 		);
 	}
 
-	Widget _wrapWithBuilder<State>({State Function(ChildDashboardState) tabState, Widget Function(State) content, Widget loader}) {
-		return BlocBuilder<ChildDashboardCubit, LoadableState>(
-			buildWhen: (oldState, newState) => newState is ChildDashboardState &&
-					(oldState is DataLoadInProgress || tabState(oldState as ChildDashboardState) != tabState(newState)),
-			builder: (context, state) {
-				if (state is! ChildDashboardState || tabState(state as ChildDashboardState) == null)
-					return loader ?? Center(child: AppLoader());
-				return content(tabState(state));
-			}
-		);
-	}
-
-	Widget _buildTab<State>({State Function(ChildDashboardState) tabState, List<Widget> Function(State) content}) {
-		return _wrapWithBuilder(
-			tabState: tabState,
-			content: (state) => ListView(
-				padding: EdgeInsets.zero,
-				physics: BouncingScrollPhysics(),
-				children: content(state)
-			)
-		);
-	}
-
-	List<Widget> _buildPlansTab(ChildDashboardPlansTabState state) {
+	List<Widget> _buildPlansTab(DashboardPlansState state) {
 		return [
 			if (state.unratedTasks)
 				AppAlert(
@@ -340,7 +334,7 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 		];
 	}
 
-	List<Widget> _buildRewardsTab(ChildDashboardRewardsTabState state) {
+	List<Widget> _buildRewardsTab(DashboardRewardsState state) {
 		return [
 			if (state.noRewardsAdded)
 				AppAlert(
@@ -358,7 +352,7 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 		];
 	}
 
-	List<Widget> _buildAchievementsTab(ChildDashboardAchievementsTabState state) {
+	List<Widget> _buildAchievementsTab(DashboardAchievementsState state) {
 		return [
 			if (state.availableBadges.isEmpty && state.childBadges.isEmpty)
 				AppAlert(
@@ -383,5 +377,4 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 			)
 		];
 	}
-
 }

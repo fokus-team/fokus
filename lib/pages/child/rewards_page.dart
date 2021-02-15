@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/logic/child/child_rewards_cubit.dart';
-import 'package:fokus/logic/common/reloadable/reloadable_cubit.dart';
-import 'package:fokus/model/ui/gamification/ui_reward.dart';
+import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
 import 'package:fokus/utils/ui/dialog_utils.dart';
 import 'package:fokus/utils/ui/snackbar_utils.dart';
 import 'package:fokus/utils/ui/theme_config.dart';
@@ -10,7 +9,7 @@ import 'package:fokus/widgets/app_navigation_bar.dart';
 import 'package:fokus/widgets/cards/item_card.dart';
 import 'package:fokus/widgets/cards/model_cards.dart';
 import 'package:fokus/widgets/custom_app_bars.dart';
-import 'package:fokus/widgets/loadable_bloc_builder.dart';
+import 'package:fokus/widgets/stateful_bloc_builder.dart';
 import 'package:fokus/widgets/segment.dart';
 
 class ChildRewardsPage extends StatefulWidget {
@@ -28,27 +27,31 @@ class _ChildRewardsPageState extends State<ChildRewardsPage> {
 	      crossAxisAlignment: CrossAxisAlignment.start,
 				verticalDirection: VerticalDirection.up,
 	      children: [
-		      LoadableBlocBuilder<ChildRewardsCubit>(
-				    builder: (context, state) =>
-							AppSegments(
-								segments: [
+		      SimpleStatefulBlocBuilder<ChildRewardsCubit, ChildRewardsState>(
+				    builder: (context, state) => AppSegments(
+							segments: [
+								Segment(
+									title: '$_pageKey.rewardsTitle',
+									subtitle: '$_pageKey.rewardsHint',
+									noElementsMessage: '$_pageKey.noRewardsMessage',
+									elements: _buildRewardShop(state, context)
+								),
+								if(state.claimedRewards.isNotEmpty)
 									Segment(
-										title: '$_pageKey.rewardsTitle',
-										subtitle: '$_pageKey.rewardsHint',
-										noElementsMessage: '$_pageKey.noRewardsMessage',
-										elements: _buildRewardShop(state, context)
-									),
-									if((state as ChildRewardsLoadSuccess).claimedRewards.isNotEmpty)
-										Segment(
-											title: '$_pageKey.claimedRewardsTitle',
-											elements: _buildRewardHistory(state)
-										)
-								]
-							),
-						wrapWithExpanded: true,
+										title: '$_pageKey.claimedRewardsTitle',
+										elements: _buildRewardHistory(state)
+									)
+							]
+						),
+			      listener: (context, state) {
+				      if (state.submitted)
+					      showSuccessSnackbar(context, '$_pageKey.rewardClaimedText');
+			      },
+						expandLoader: true,
+			      popConfig: SubmitPopConfig(),
 		      ),
-					BlocBuilder<ChildRewardsCubit, LoadableState>(
-						builder: (context, state) => CustomChildAppBar(points: state is DataLoadSuccess ? (state as ChildRewardsLoadSuccess).points : null)
+					BlocBuilder<ChildRewardsCubit, StatefulState>(
+						builder: (context, state) => CustomChildAppBar(points: state is ChildRewardsState ? state.points : null)
 					)
 	      ]
       ),
@@ -56,13 +59,7 @@ class _ChildRewardsPageState extends State<ChildRewardsPage> {
     );
   }
 
-	void _claimReward(UIReward reward) {
-		BlocProvider.of<ChildRewardsCubit>(context).claimReward(reward);
-		Navigator.of(context).pop(); // closing confirm dialog before pushing snackbar
-		showSuccessSnackbar(context, '$_pageKey.rewardClaimedText');
-	}
-
-	List<Widget> _buildRewardShop(ChildRewardsLoadSuccess state, BuildContext context) {
+	List<Widget> _buildRewardShop(ChildRewardsState state, BuildContext context) {
 		return state.rewards.map((reward) {
 			double percentage = (state.points.firstWhere((element) => element.type == reward.cost.type, orElse: () => null)?.quantity ?? 0) / reward.cost.quantity;
 			return RewardItemCard(
@@ -74,13 +71,13 @@ class _ChildRewardsPageState extends State<ChildRewardsPage> {
 					color: AppColors.currencyColor[reward.cost.type],
 					icon: Icons.add,
 					disabled: percentage < 1.0,
-					onTapped: () => showRewardDialog(context, reward, claimFeedback: () => _claimReward(reward))
+					onTapped: () => showRewardDialog(context, reward, claimFeedback: () => BlocProvider.of<ChildRewardsCubit>(context).claimReward(reward))
 				)
 			);
 		}).toList();
 	}
 
-	List<Widget> _buildRewardHistory(ChildRewardsLoadSuccess state) {
+	List<Widget> _buildRewardHistory(ChildRewardsState state) {
 		return (state.claimedRewards..sort((a, b) => -a.date.compareTo(b.date))).map((reward) {
 			return RewardItemCard(
 				reward: reward,

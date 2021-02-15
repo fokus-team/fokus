@@ -17,7 +17,7 @@ import 'package:fokus/widgets/cards/item_card.dart';
 import 'package:fokus/widgets/chips/timer_chip.dart';
 import 'package:fokus/widgets/dialogs/general_dialog.dart';
 import 'package:fokus/widgets/general/app_loader.dart';
-import 'package:fokus/widgets/loadable_bloc_builder.dart';
+import 'package:fokus/widgets/stateful_bloc_builder.dart';
 import 'package:fokus/widgets/segment.dart';
 
 class PlanInstanceDetailsPage extends StatefulWidget {
@@ -30,8 +30,7 @@ class PlanInstanceDetailsPage extends StatefulWidget {
 }
 
 class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
-	final String _pageKey = 'page.childSection.planInProgress';
-	bool _wasPlanCompleted = false;
+	static const String _pageKey = 'page.childSection.planInProgress';
 
 	void navigate(context, UITaskInstance task, UIPlanInstance plan) async {
 		if(await BlocProvider.of<PlanInstanceCubit>(context).isOtherPlanInProgressDbCheck(tappedTaskInstance: task.id)) {
@@ -44,37 +43,41 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 		}
 		else {
 			final result = await Navigator.of(context).pushNamed(AppPage.childTaskInProgress.name, arguments: {"TaskId" : task.id, "UIPlanInstance" : plan});
-			if(result != null) setState(() {
-				_wasPlanCompleted = false;
+			if(result != null)
 				BlocProvider.of<PlanInstanceCubit>(context).uiPlanInstance = (result as Map<String, dynamic>)['plan'];
-			});
 		}
 	}
 
 	@override
   Widget build(BuildContext context) {
-		return Scaffold(
-			body: LoadableBlocBuilder<PlanInstanceCubit>(
-				builder: (context, state) => _getView(
-					planInstance: (state as ChildTasksLoadSuccess).planInstance,
-					content: AppSegments(segments: _buildPanelSegments(state))
-				),
-				loadingBuilder: (context, state) => _getView(
-					planInstance: BlocProvider.of<PlanInstanceCubit>(context).uiPlanInstance,
-					content: Expanded(child: Center(child: AppLoader()))
-				),
-			),
-			floatingActionButton: BlocProvider.of<PlanInstanceCubit>(context).uiPlanInstance.state.ended || _wasPlanCompleted || !widget.showActions ?
-				null :
-				FloatingActionButton.extended(
-				onPressed: _planCompletion,
-				label: Text(AppLocales.of(context).translate('$_pageKey.content.fab.completePlan')),
-				icon: Icon(Icons.rule),
-				backgroundColor: AppColors.childActionColor,
-				elevation: 4.0
-			),
-			floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-		);
+    var showEndButton = !context.watch<PlanInstanceCubit>().uiPlanInstance.state.ended && widget.showActions;
+    return Scaffold(
+      body: SimpleStatefulBlocBuilder<PlanInstanceCubit, PlanInstanceCubitState>(
+        builder: (context, state) {
+          return _getView(
+            planInstance: state.planInstance,
+            content: AppSegments(segments: _buildPanelSegments(state))
+          );
+        },
+        loadingBuilder: (context, state) => _getView(
+          planInstance: BlocProvider.of<PlanInstanceCubit>(context).uiPlanInstance,
+          content: Expanded(child: Center(child: AppLoader()))
+        ),
+        listener: (context, state) {
+          if (state.submitted)
+            showSuccessSnackbar(context, '$_pageKey.content.fab.completed');
+        },
+        popConfig: SubmitPopConfig(),
+		  ),
+      floatingActionButton: showEndButton ? FloatingActionButton.extended(
+        onPressed: _completePlan,
+        label: Text(AppLocales.of(context).translate('$_pageKey.content.fab.completePlan')),
+        icon: Icon(Icons.rule),
+        backgroundColor: AppColors.childActionColor,
+        elevation: 4.0
+      ) : null,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+    );
   }
 
   Column _getView({UIPlanInstance planInstance, Widget content}) {
@@ -88,7 +91,7 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 		);
 	}
 
-  List<Widget> _buildPanelSegments(ChildTasksLoadSuccess state) {
+  List<Widget> _buildPanelSegments(PlanInstanceCubitState state) {
   	var mandatoryTasks = state.tasks.where((task) => task.optional == false).toList();
   	var optionalTasks = state.tasks.where((task) => task.optional == true).toList();
     return [
@@ -114,14 +117,14 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 			elements: <Widget>[
 				for(var task in tasks)
 					if(task.taskUiType == TaskUIType.completed)
-						getCompletedTaskCard(task)
+						_getCompletedTaskCard(task)
 					else if(task.taskUiType == TaskUIType.available)
 						ItemCard(
 							title: task.name,
 							subtitle: task.description,
 							chips:<Widget>[
-								if (task.timer != null && task.timer > 0) getTimeChip(task),
-								if (task.points != null && task.points.quantity != 0) getCurrencyChip(task)
+								if (task.timer != null && task.timer > 0) _getTimeChip(task),
+								if (task.points != null && task.points.quantity != 0) _getCurrencyChip(task)
 							],
 							onTapped: () => navigate(context, task, uiPlanInstance),
 							actionButton: ItemCardActionButton(
@@ -136,8 +139,8 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 							title: task.name,
 							subtitle: task.description,
 							chips:<Widget>[
-								if (task.timer != null && task.timer > 0) getTimeChip(task),
-								if (task.points != null && task.points.quantity != 0) getCurrencyChip(task)
+								if (task.timer != null && task.timer > 0) _getTimeChip(task),
+								if (task.points != null && task.points.quantity != 0) _getCurrencyChip(task)
 							],
 							onTapped: () => navigate(context, task, uiPlanInstance),
 							actionButton: ItemCardActionButton(
@@ -161,11 +164,11 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 												icon: Icons.access_time,
 												color: Colors.lightGreen,
 											),
-											getBreaksChip(task)
+											_getBreaksChip(task)
 										]
 									else
 										...[
-											getDurationChip(task),
+											_getDurationChip(task),
 											TimerChip(
 												icon: Icons.free_breakfast,
 												color: Colors.indigo,
@@ -186,8 +189,8 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 							title: task.name,
 							subtitle: task.description,
 							chips: <Widget>[
-								if (task.timer != null && task.timer > 0) getTimeChip(task),
-								if (task.points != null && task.points.quantity != 0) getCurrencyChip(task)
+								if (task.timer != null && task.timer > 0) _getTimeChip(task),
+								if (task.points != null && task.points.quantity != 0) _getCurrencyChip(task)
 							],
 							isActive: false,
 							actionButton: ItemCardActionButton(
@@ -203,11 +206,11 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 	CustomContentAppBar _getHeader(UIPlanInstance planInstance) {
 		return CustomContentAppBar(
 			title: '$_pageKey.header.title',
-			content: getCardHeader(planInstance)
+			content: _getCardHeader(planInstance)
 		);
 	}
 
-  Widget getCardHeader(UIPlanInstance _planInstance) {
+  Widget _getCardHeader(UIPlanInstance _planInstance) {
 		var taskDescriptionKey = 'plans.' + (_planInstance.completedTaskCount > 0 ? 'taskProgress' : 'noTaskCompleted');
 		var card = ItemCard(
 			title: _planInstance.name,
@@ -254,7 +257,7 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
   	else return card;
 	}
 
-	Widget getCompletedTaskCard(UITaskInstance task) {
+	Widget _getCompletedTaskCard(UITaskInstance task) {
 		return ItemCard(
 			title: task.name,
 			subtitle: task.description,
@@ -269,7 +272,7 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 							icon: Icons.star,
 							color: AppColors.chipRatingColors[task.status.rating],
 						),
-						if (task.points != null && task.points.quantity != 0) getCurrencyChip(task, pointsAwarded: true),
+						if (task.points != null && task.points.quantity != 0) _getCurrencyChip(task, pointsAwarded: true),
 					]
 				else if(task.status.state == TaskState.rejected)
 					AttributeChip.withIcon(
@@ -296,7 +299,7 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 		);
 	}
 
-	AttributeChip getCurrencyChip(UITaskInstance task, {String tooltip, bool pointsAwarded = false}) {
+	AttributeChip _getCurrencyChip(UITaskInstance task, {String tooltip, bool pointsAwarded = false}) {
   	return AttributeChip.withCurrency(
 			content: pointsAwarded ? task.status.pointsAwarded.toString() : task.points.quantity.toString(),
 			currencyType: task.points.type,
@@ -304,7 +307,7 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 		);
 	}
 
-	AttributeChip getBreaksChip(UITaskInstance task) {
+	AttributeChip _getBreaksChip(UITaskInstance task) {
 		return AttributeChip.withIcon(
 			content: AppLocales.of(context).translate('$_pageKey.content.taskTimer.formatBreak', {
 				'TIME_NUM' : formatDuration(Duration(seconds: sumDurations(task.breaks).inSeconds))
@@ -315,7 +318,7 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 		);
 	}
 
-	AttributeChip getDurationChip(UITaskInstance task) {
+	AttributeChip _getDurationChip(UITaskInstance task) {
 		return AttributeChip.withIcon(
 			content: AppLocales.of(context).translate('$_pageKey.content.taskTimer.formatDuration', {
 				'TIME_NUM': formatDuration(Duration(seconds: sumDurations(task.duration).inSeconds))
@@ -326,7 +329,7 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 		);
 	}
 
-	AttributeChip getTimeChip(UITaskInstance task) {
+	AttributeChip _getTimeChip(UITaskInstance task) {
   	return AttributeChip.withIcon(
 			content: AppLocales.of(context).translate('$_pageKey.content.taskTimer.format', {
 				'HOURS_NUM': (task.timer ~/ 60).toString(),
@@ -338,21 +341,14 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 		);
 	}
 
-	void _planCompletion() {
+	void _completePlan() {
 		showDialog(context: context,
 			builder: (_) => GeneralDialog.confirm(
 				title: AppLocales.of(context).translate('$_pageKey.content.fab.dialogTitle'),
 				content: AppLocales.of(context).translate('$_pageKey.content.fab.dialogContent'),
 				confirmColor: Colors.red,
 				confirmText: 'actions.confirm',
-				confirmAction: () {
-					BlocProvider.of<PlanInstanceCubit>(context).completePlan();
-					Navigator.pop(context);
-					setState(() {
-						_wasPlanCompleted = true;
-					});
-					showSuccessSnackbar(context, '$_pageKey.content.fab.completed');
-				}
+				confirmAction: () => context.read<PlanInstanceCubit>().completePlan()
 			),
 		);
 	}

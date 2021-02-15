@@ -13,6 +13,8 @@ class CaregiverAuthCubitBase<State extends CaregiverAuthStateBase> extends Cubit
   CaregiverAuthCubitBase(State state) : super(state);
 
 	Future<void> logInWithGoogle() async {
+		if (this.state.status != FormzStatus.pure)
+			return;
 		emit(state.copyWith(status: FormzStatus.submissionInProgress, authMethod: AuthMethod.google));
 		try {
 			var result = await authenticationProvider.signInWithGoogle() == GoogleSignInOutcome.successful;

@@ -1,7 +1,10 @@
 import 'dart:math';
 
 import 'package:flutter/widgets.dart';
-import 'package:fokus/logic/common/reloadable/reloadable_cubit.dart';
+import 'package:get_it/get_it.dart';
+import 'package:mongo_dart/mongo_dart.dart';
+
+import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
 import 'package:fokus/model/db/gamification/points.dart';
 import 'package:fokus/model/db/plan/plan_instance.dart';
 import 'package:fokus/model/db/plan/plan_instance_state.dart';
@@ -18,12 +21,8 @@ import 'package:fokus/services/analytics_service.dart';
 import 'package:fokus/services/data/data_repository.dart';
 import 'package:fokus/services/notifications/notification_service.dart';
 import 'package:fokus/services/task_instance_service.dart';
-import 'package:get_it/get_it.dart';
-import 'package:mongo_dart/mongo_dart.dart';
 
-part 'tasks_evaluation_state.dart';
-
-class TasksEvaluationCubit extends ReloadableCubit {
+class TasksEvaluationCubit extends StatefulCubit {
   final DataRepository _dataRepository = GetIt.I<DataRepository>();
   final AnalyticsService _analyticsService = GetIt.I<AnalyticsService>();
   final TaskInstanceService _taskInstanceService = GetIt.I<TaskInstanceService>();
@@ -35,13 +34,13 @@ class TasksEvaluationCubit extends ReloadableCubit {
 	Map<ObjectId, UIChild> _planInstanceToChild;
 	Map<ObjectId, String> _planInstanceToName;
 
-	TasksEvaluationCubit(ModalRoute pageRoute, this._activeUser) : super(pageRoute, options: [ReloadableOption.doNotReloadOnPopNext]);
+	TasksEvaluationCubit(ModalRoute pageRoute, this._activeUser) : super(pageRoute, options: [StatefulOption.noOnPopNextReload, StatefulOption.repeatableSubmission]);
 
   @override
   List<NotificationType> dataTypeSubscription() => [NotificationType.taskFinished];
 
 	@override
-	void doLoadData() async {
+	Future doLoadData() async {
 		_reports = [];
 		var activeUser = _activeUser();
 		List<Child> children = (await _dataRepository.getUsers(ids: (activeUser as UICaregiver).connections, fields: ['_id', 'name', 'avatar'])).map((e) => e as Child).toList();
@@ -50,8 +49,7 @@ class TasksEvaluationCubit extends ReloadableCubit {
 		_planInstanceToChild = Map.fromEntries(planInstances.map((planInstance) => MapEntry(planInstance.id, UIChild(planInstance.assignedTo, _childMap[planInstance.assignedTo].name, avatar: _childMap[planInstance.assignedTo].avatar))));
 		List<TaskInstance> taskInstances = await _dataRepository.getTaskInstances(planInstancesId: _planInstanceToChild.keys.toList(), isCompleted: true, state: TaskState.notEvaluated, fields:['_id', 'taskID', 'planInstanceID', 'duration', 'breaks', 'timer', 'status']);
 		var nameMap = Map.fromEntries((await _dataRepository.getPlans(ids: planInstances.map((planInstance) => planInstance.planID).toSet().toList(), fields:['name', '_id'])).map((plan) => MapEntry(plan.id, plan.name)));
-		if(taskInstances.isNotEmpty) _uiTaskInstances = await _taskInstanceService.mapToUIModels(taskInstances, shouldGetTaskStatus: false);
-		else _uiTaskInstances = [];
+		_uiTaskInstances = taskInstances.isNotEmpty ? await _taskInstanceService.mapToUIModels(taskInstances, shouldGetTaskStatus: false) : [];
 		_planInstanceToName = Map.fromEntries(planInstances.map((planInstance) => MapEntry(planInstance.id, nameMap[planInstance.planID])));
 		for(var taskInstance in _uiTaskInstances) {
 			_reports.add(UITaskReport(
@@ -60,11 +58,12 @@ class TasksEvaluationCubit extends ReloadableCubit {
 				child: _planInstanceToChild[taskInstance.planInstanceId],
 			));
 		}
-		emit(TasksEvaluationLoadSuccess(_reports));
+		emit(TasksEvaluationState(_reports));
 	}
 
 	void rateTask(UITaskReport report) async {
-		emit(TasksEvaluationSubmissionInProgress(_reports));
+		if (!beginSubmit())
+			return;
 		List<Future> updates = [];
 		Future Function() sendNotification;
 		if(report.ratingMark == UITaskReportMark.rejected) {
@@ -95,8 +94,20 @@ class TasksEvaluationCubit extends ReloadableCubit {
 		}
 		await Future.wait(updates);
 		await sendNotification();
-		emit(TasksEvaluationLoadSuccess(_reports));
+		emit(state.submissionSuccess());
 	}
 
 	static int getPointsAwarded(int quantity, int ratingMark) => max((quantity*ratingMark/5).round(), 1);
+}
+
+class TasksEvaluationState extends StatefulState {
+	final List<UITaskReport> reports;
+
+	TasksEvaluationState(this.reports, [DataSubmissionState submissionState]) : super.loaded(submissionState);
+
+	@override
+  StatefulState withSubmitState(DataSubmissionState submissionState) => TasksEvaluationState(reports, submissionState);
+
+  @override
+	List<Object> get props => super.props..addAll([reports]);
 }

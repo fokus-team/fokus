@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fokus/logic/caregiver/badge_form/badge_form_cubit.dart';
+import 'package:fokus/logic/caregiver/forms/badge_form_cubit.dart';
+import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
 import 'package:fokus/model/ui/form/badge_form_model.dart';
 import 'package:fokus/utils/ui/dialog_utils.dart';
 import 'package:fokus/utils/ui/form_config.dart';
@@ -44,9 +45,9 @@ class _CaregiverBadgeFormPageState extends State<CaregiverBadgeFormPage> {
 
   @override
   Widget build(BuildContext context) {
-		return BlocConsumer<BadgeFormCubit, BadgeFormState>(
+		return BlocConsumer<BadgeFormCubit, StatefulState>(
 			listener: (context, state) {
-				if (state is BadgeFormSubmissionSuccess) {
+				if (state.submitted) {
 					Navigator.of(context).pop();
 					showSuccessSnackbar(context, 'page.caregiverSection.awards.content.badgeAddedText');
 				}

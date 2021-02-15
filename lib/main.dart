@@ -4,37 +4,40 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+
 import 'package:fokus/logic/caregiver/caregiver_friends_cubit.dart';
 import 'package:fokus/logic/caregiver/child_dashboard/child_dashboard_cubit.dart';
-
 import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
 import 'package:fokus/logic/caregiver/auth/sign_in/caregiver_sign_in_cubit.dart';
 import 'package:fokus/logic/caregiver/auth/sign_up/caregiver_sign_up_cubit.dart';
-import 'package:fokus/logic/child/auth/prev_profiles_cubit.dart';
+import 'package:fokus/logic/child/auth/saved_child_profiles_cubit.dart';
 import 'package:fokus/logic/child/auth/sign_in/child_sign_in_cubit.dart';
 import 'package:fokus/logic/child/auth/sign_up/child_sign_up_cubit.dart';
 import 'package:fokus/logic/caregiver/caregiver_awards_cubit.dart';
 import 'package:fokus/logic/caregiver/caregiver_currencies_cubit.dart';
 import 'package:fokus/logic/common/plan_cubit.dart';
+import 'package:fokus/logic/caregiver/child_dashboard/dashboard_achievements_cubit.dart';
+import 'package:fokus/logic/caregiver/child_dashboard/dashboard_plans_cubit.dart';
+import 'package:fokus/logic/caregiver/child_dashboard/dashboard_rewards_cubit.dart';
 import 'package:fokus/logic/common/plan_instance_cubit.dart';
 import 'package:fokus/logic/common/calendar_cubit.dart';
 import 'package:fokus/logic/caregiver/caregiver_panel_cubit.dart';
 import 'package:fokus/logic/caregiver/caregiver_plans_cubit.dart';
 import 'package:fokus/logic/child/child_panel_cubit.dart';
 import 'package:fokus/logic/child/child_rewards_cubit.dart';
-import 'package:fokus/logic/caregiver/plan_form/plan_form_cubit.dart';
+import 'package:fokus/logic/caregiver/forms/plan/plan_form_cubit.dart';
 import 'package:fokus/logic/common/settings/account_delete/account_delete_cubit.dart';
 import 'package:fokus/logic/common/settings/name_change/name_change_cubit.dart';
 import 'package:fokus/logic/common/settings/password_change/password_change_cubit.dart';
 import 'package:fokus/logic/common/settings/locale_cubit.dart';
-import 'package:fokus/logic/child/task_instance/task_instance_cubit.dart';
-import 'package:fokus/logic/caregiver/reward_form/reward_form_cubit.dart';
-import 'package:fokus/logic/caregiver/badge_form/badge_form_cubit.dart';
-import 'package:fokus/logic/caregiver/tasks_evaluation/tasks_evaluation_cubit.dart';
-import 'package:fokus/model/ui/auth/password_change_type.dart';
-import 'package:fokus/pages/child/calendar_page.dart';
+import 'package:fokus/logic/child/task_completion/task_completion_cubit.dart';
+import 'package:fokus/logic/caregiver/forms/reward/reward_form_cubit.dart';
+import 'package:fokus/logic/caregiver/forms/badge_form_cubit.dart';
+import 'package:fokus/logic/caregiver/tasks_evaluation_cubit.dart';
 
+import 'package:fokus/pages/child/calendar_page.dart';
 import 'package:fokus/pages/common/loading_page.dart';
 import 'package:fokus/pages/common/plan_details_page.dart';
 import 'package:fokus/pages/common/roles_page.dart';
@@ -63,18 +66,20 @@ import 'package:fokus/pages/child/achievements_page.dart';
 
 import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/db/user/user_role.dart';
+import 'package:fokus/model/ui/auth/password_change_type.dart';
+import 'package:fokus/model/ui/plan/ui_plan_instance.dart';
+
 import 'package:fokus/services/analytics_service.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/services/app_route_observer.dart';
 import 'package:fokus/services/instrumentator.dart';
 import 'package:fokus/services/locale_provider.dart';
 import 'package:fokus/services/observers/current_locale_observer.dart';
+
 import 'package:fokus/utils/ui/theme_config.dart';
 import 'package:fokus/utils/service_injection.dart';
 import 'package:fokus/utils/bloc_utils.dart';
 import 'package:fokus/widgets/page_theme.dart';
-import 'package:get_it/get_it.dart';
-import 'model/ui/plan/ui_plan_instance.dart';
 
 void main() async {
 	WidgetsFlutterBinding.ensureInitialized();
@@ -191,25 +196,30 @@ class _FokusAppState extends State<FokusApp> implements CurrentLocaleObserver {
 			),
 			AppPage.caregiverSignInPage.name: (context) => _createPage(CaregiverSignInPage(), context, CaregiverSignInCubit(getParams(context))),
 			AppPage.caregiverSignUpPage.name: (context) => _createPage(CaregiverSignUpPage(), context, CaregiverSignUpCubit()),
-			AppPage.childProfilesPage.name: (context) => _createPage(ChildProfilesPage(), context, PreviousProfilesCubit(authBloc(context), getRoute(context))),
+			AppPage.childProfilesPage.name: (context) => _createPage(ChildProfilesPage(), context, SavedChildProfilesCubit(authBloc(context), getRoute(context))),
 			AppPage.childSignInPage.name: (context) => _createPage(withCubit(ChildSignInPage(), ChildSignInCubit(authBloc(context))), context, ChildSignUpCubit(authBloc(context)), AppPageSection.login),
 
-			AppPage.caregiverChildDashboard.name: (context) => _createPage(
-				accountManaging(context, CaregiverChildDashboardPage(getParams(context))),
-				context, ChildDashboardCubit(getParams(context), getActiveUser(context), getRoute(context))
-			),
+			AppPage.caregiverChildDashboard.name: (context) {
+				var plans = DashboardPlansCubit(getActiveUser(context), getRoute(context));
+				var rewards = DashboardRewardsCubit(getActiveUser(context), getRoute(context));
+				var achievements = DashboardAchievementsCubit(getActiveUser(context), getRoute(context));
+			  return _createPage(
+					withCubit(withCubit(withCubit(accountManaging(context, CaregiverChildDashboardPage(getParams(context))), plans), achievements), rewards),
+					context, ChildDashboardCubit(getParams(context), getRoute(context), plans, rewards, achievements)
+				);
+			},
 			AppPage.caregiverCalendar.name: (context) => _createPage(CaregiverCalendarPage(), context, CalendarCubit(getParams(context), getActiveUser(context))),
 			AppPage.caregiverPlanForm.name: (context) => _createPage(CaregiverPlanFormPage(), context, PlanFormCubit(getParams(context), getActiveUser(context))),
-			AppPage.caregiverRewardForm.name: (context) => _createPage(CaregiverRewardFormPage(), context, RewardFormCubit(getParams(context), getActiveUser(context))),
-			AppPage.caregiverBadgeForm.name: (context) => _createPage(CaregiverBadgeFormPage(), context, BadgeFormCubit(getParams(context), getActiveUser(context), authBloc(context))),
+			AppPage.caregiverRewardForm.name: (context) => _createPage(CaregiverRewardFormPage(), context, RewardFormCubit(getParams(context), getActiveUser(context), getRoute(context))),
+			AppPage.caregiverBadgeForm.name: (context) => _createPage(CaregiverBadgeFormPage(), context, BadgeFormCubit(getActiveUser(context), authBloc(context), getRoute(context))),
 			AppPage.caregiverRatingPage.name: (context) => _createPage(CaregiverRatingPage(), context, TasksEvaluationCubit(getRoute(context), getActiveUser(context))),
-			AppPage.caregiverCurrencies.name: (context) => _createPage(CaregiverCurrenciesPage(), context, CaregiverCurrenciesCubit(getActiveUser(context), getActiveUser(context), authBloc(context))),
+			AppPage.caregiverCurrencies.name: (context) => _createPage(CaregiverCurrenciesPage(), context, CaregiverCurrenciesCubit(getActiveUser(context), getRoute(context), getActiveUser(context), authBloc(context))),
 			AppPage.caregiverFriendPlans.name: (context) => _createPage(withCubit(CaregiverFriendPlansPage(), CaregiverFriendsCubit(getActiveUser(context), authBloc(context))), context, CaregiverPlansCubit(getActiveUser(context), getRoute(context), getParams(context))),
 			AppPage.planDetails.name: (context) => _createPage(PlanDetailsPage(), context, PlanCubit(getParams(context), getRoute(context))),
 
 			AppPage.childCalendar.name: (context) => _createPage(ChildCalendarPage(), context, CalendarCubit(getParams(context), getActiveUser(context))),
 			AppPage.planInstanceDetails.name: (context) => _createPage(PlanInstanceDetailsPage(getParams(context)), context, PlanInstanceCubit(((getParams(context) as Map<String, dynamic>)['plan'] as UIPlanInstance), getRoute(context))),
-			AppPage.childTaskInProgress.name: (context) => _createPage(ChildTaskInProgressPage(), context, TaskInstanceCubit((getParams(context) as Map)["TaskId"], getActiveUser(context), (getParams(context) as Map)["UIPlanInstance"]))
+			AppPage.childTaskInProgress.name: (context) => _createPage(ChildTaskInProgressPage(), context, TaskCompletionCubit((getParams(context) as Map)["TaskId"], getActiveUser(context), getRoute(context), (getParams(context) as Map)["UIPlanInstance"]))
 		};
 	}
 

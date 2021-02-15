@@ -14,7 +14,7 @@ class _AppInfoDialogState extends State<AppInfoDialog> {
 	final String _settingsKey = 'page.settings.content.appSettings.appInfo';
 
 	PackageInfo _packageInfo = PackageInfo();
-	final String creators = 'Stanisław Góra, Mateusz Janicki,\nMikołaj Mirko, Jan Czubiak';
+	final String creators = 'Stanisław Góra, Mateusz Janicki,\nMikołaj Mirko';
 
 	@override
 	void initState() {

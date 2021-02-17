@@ -173,6 +173,9 @@ class _CaregiverRewardFormPageState extends State<CaregiverRewardFormPage> {
 						icon: Icon(Icons.clear)
 					)
 				),
+				validator: (value) {
+					return int.tryParse(value) == 0 ? AppLocales.of(context).translate('$_pageKey.fields.rewardLimit.zeroError') : null;
+				},
 				keyboardType: TextInputType.numberWithOptions(signed: true, decimal: false),
 				inputFormatters: <TextInputFormatter>[
 					FilteringTextInputFormatter.digitsOnly,

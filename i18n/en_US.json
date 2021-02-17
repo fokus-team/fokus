@@ -374,6 +374,7 @@
 					},
 					"rewardLimit": {
 						"label": "Reward limit",
+						"zeroError": "Reward limit must be empty or positive",
 						"hint": "Number of possible claims per child, leave empty for unlimited"
 					},
 					"rewardPoints": {

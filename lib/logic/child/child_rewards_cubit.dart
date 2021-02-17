@@ -56,18 +56,19 @@ class ChildRewardsCubit extends StatefulCubit {
 			);
 			_analyticsService.logRewardBought(reward);
 			await _notificationService.sendRewardBoughtNotification(model.id, model.name, child.connections.first, child);
-			emit(state.submissionSuccess());
+			_refreshRewardState(DataSubmissionState.submissionSuccess);
 		}
 	}
 
-	void _refreshRewardState() {
+	void _refreshRewardState([DataSubmissionState submissionState]) {
 		UIChild child = _activeUser();
 		Map<ObjectId, int> claimedCount = Map<ObjectId, int>();
 		child.rewards.forEach((element) => claimedCount[element.id] = !claimedCount.containsKey(element.id) ? 1 : claimedCount[element.id] + 1);
 		emit(ChildRewardsState(
 			rewards: _rewards.where((reward) => reward.limit != null ? reward.limit > (claimedCount[reward.id] ?? 0) : true).toList(),
 			claimedRewards: List.from(child.rewards),
-			points: List.from(child.points)
+			points: List.from(child.points),
+			submissionState: submissionState
 		));
 	}
 

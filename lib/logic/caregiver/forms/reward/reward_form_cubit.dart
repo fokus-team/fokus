@@ -32,7 +32,7 @@ class RewardFormCubit extends StatefulCubit<BaseFormState> {
 	  var currencies = (user as UICaregiver).currencies;
 	  UIReward reward;
 	  if (state.formType == AppFormType.create)
-	    reward = UIReward(cost: UIPoints.fromUICurrency(currencies.firstWhere((currency) => currency.type == CurrencyType.diamond)));
+	    reward = UIReward(cost: UIPoints.fromUICurrency(currencies.firstWhere((currency) => currency.type == CurrencyType.diamond)), limit: null);
 	  else
 	    reward = UIReward.fromDBModel(await _dataRepository.getReward(id: _rewardId));
 		emit(state.load(currencies: currencies, reward: reward));

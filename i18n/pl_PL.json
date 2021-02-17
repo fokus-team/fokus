@@ -374,6 +374,7 @@
 					},
 					"rewardLimit": {
 						"label": "Limit nagród",
+						"zeroError": "Wartość musi być pusta lub dodatnia",
 						"hint": "Liczba nagród możliwych do odbioru per dziecko. Pozostaw puste, aby nie limitować"
 					},
 					"rewardPoints": {

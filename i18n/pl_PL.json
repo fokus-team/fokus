@@ -17,6 +17,20 @@
 		"settings": "Ustawienia"
 	},
 	"page": {
+		"error": {
+			"noConnectionError": {
+				"title": "Brak połączenia",
+				"subtitle": "Aplikacja wymaga do działania połączenia z Internetem",
+				"hint": "Upewnij się że urządzenie ma dostęp do Internetu",
+				"action": "Spróbuj ponownie"
+			},
+			"unknownError": {
+				"title": "Wystąpił nieznany błąd",
+				"subtitle": "Aplikacja napotkała nieobsługiwany problem.\nJest nam bardzo przykro.",
+				"hint": "Restart aplikacji może pomóc rozwiązać problem",
+				"action": "Zamknij aplikację"
+			}
+		},
 		"loginSection": {
 			"roles": {
 				"introduction": "Jestem",

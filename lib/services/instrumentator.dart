@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:isolate';
 
 import 'package:bloc/bloc.dart';
@@ -30,9 +31,9 @@ class Instrumentator implements ActiveUserObserver {
 		runZonedGuarded<Future<void>>(() async {
 			runApp(app);
 		}, (dynamic error, StackTrace stackTrace) {
-			_logger.severe('', error, stackTrace);
 			if (_handleError(error, stackTrace))
 				return;
+			_logger.severe('', error, stackTrace);
 			FirebaseCrashlytics.instance.recordError(error, stackTrace);
 		});
 	}
@@ -70,16 +71,19 @@ class Instrumentator implements ActiveUserObserver {
 
 	bool _handleError(dynamic error, StackTrace stackTrace) {
 		if (_navigatorKey?.currentState?.overlay != null) {
-			if (error is NoDbConnection) { // TODO Handle differently, show info on page / only offline data
+			if (error is CubitUnhandledErrorException)
+				error = error.error;
+			var title = error is NoDbConnection ? 'noConnection' : 'errorOccurred';
+			var content = error is NoDbConnection ? 'connectionRetry' : 'errorDescription';
+			if (error is! SocketException) // ignore database disconnected socket exception
 				showBasicDialog(
 					_navigatorKey.currentState.overlay.context,
 					GeneralDialog.discard(
-						title: AppLocales.of(_navigatorKey.currentState.overlay.context).translate('alert.noConnection'),
-						content: AppLocales.of(_navigatorKey.currentState.overlay.context).translate('alert.connectionRetry')
+						title: AppLocales.instance.translate('alert.$title'),
+						content: AppLocales.instance.translate('alert.$content')
 					)
 				);
-				return true;
-			}
+			return error is NoDbConnection || error is SocketException ? true : false;
 		}
 		return false;
 	}

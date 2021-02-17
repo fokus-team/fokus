@@ -32,7 +32,7 @@ class OneSignalNotificationProvider extends NotificationProvider {
 	}
 
 	void _configureOneSignal() async {
-		OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
+		OneSignal.shared.setLogLevel(Foundation.kReleaseMode ? OSLogLevel.error : OSLogLevel.verbose, OSLogLevel.none);
 		OneSignal.shared.init(
 			appId,
 			iOSSettings: {

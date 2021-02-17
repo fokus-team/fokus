@@ -637,8 +637,9 @@
 	"alert": {
 		"errorOccurred": "Error occurred",
 		"noConnection": "No connection",
-		"connectionRetry": "Ensure the device has access to the internet",
+		"errorDescription": "We are sorry for inconvenience, please try again in a minute",
 		"noHint": "No hint",
+		"connectionRetry": "Ensure the device has access to the internet",
 		"genericEmptyValue": "This field can't be empty",
 		"genericRangeOverflowValue": "Value must be in the range {A}-{B}",
 		"unsavedProgressTitle": "Unsaved progress",

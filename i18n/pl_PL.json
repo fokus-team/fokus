@@ -651,6 +651,7 @@
 	"alert": {
 		"errorOccurred": "Wystąpił błąd",
 		"noConnection": "Brak połączenia",
+		"errorDescription": "Przepraszamy za niedogodności, spróbuj ponownie za jakiś czas",
 		"noHint": "Brak podpowiedzi",
 		"connectionRetry": "Upewnij się że urządzenie ma dostęp do internetu",
 		"genericEmptyValue": "Pole nie może być puste",

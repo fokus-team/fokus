@@ -58,7 +58,6 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 			_analyticsService.logChildSignIn();
 			yield await _signInUser(event.child);
 	  } else if (event is AuthenticationSignOutRequested) {
-	  	_onUserSignOut(state.user.toDBModel());
 		  if (state.user.role == UserRole.caregiver)
 		    _authenticationProvider.signOut();
 		  else {
@@ -73,8 +72,10 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
   	User user;
 	  var noSignedInUser = event.user == AuthenticatedUser.empty;
 	  var wasAppOpened = state.status == AuthenticationStatus.initial;
-	  if (noSignedInUser && !wasAppOpened)
+	  if (noSignedInUser && !wasAppOpened) {
+		  _onUserSignOut(state.user.toDBModel());
 		  return const AuthenticationState.unauthenticated();
+	  }
   	if (noSignedInUser && wasAppOpened)
   		return _attemptChildSignIn();
 	  user = await _dataRepository.getUser(authenticationId: event.user.id);

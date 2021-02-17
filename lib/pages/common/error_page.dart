@@ -20,10 +20,9 @@ class ErrorPage extends StatefulWidget {
 }
 
 class _ErrorPageState extends State<ErrorPage> {
-  static const String _pageKey = 'page.error';
   @override
   Widget build(BuildContext context) {
-		String _localesPath = "$_pageKey.${widget.errorType.toString().split('.')[1]}";
+		String _localesPath = "page.error.${widget.errorType.toString().split('.')[1]}";
     return WillPopScope(
 	    onWillPop: () => Future.value(false),
       child: Scaffold(
@@ -61,13 +60,13 @@ class _ErrorPageState extends State<ErrorPage> {
 													}
 												}, Colors.teal)
 											)
-									]
+										]
+									)
 								)
-							)
-						]
-					)
-        	)
-			)
+							]
+						)
+	        )
+				)
       ),
     );
   }

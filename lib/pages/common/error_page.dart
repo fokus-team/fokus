@@ -6,8 +6,6 @@ import 'package:fokus/model/app_error_type.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/ui/theme_config.dart';
 import 'package:fokus/widgets/auth/auth_button.dart';
-import 'package:fokus/widgets/general/app_loader.dart';
-import 'package:fokus/widgets/auth/auth_widgets.dart';
 
 class ErrorPage extends StatefulWidget {
 	final AppErrorType errorType;
@@ -19,10 +17,9 @@ class ErrorPage extends StatefulWidget {
 }
 
 class _ErrorPageState extends State<ErrorPage> {
-  static const String _pageKey = 'page.error';
   @override
   Widget build(BuildContext context) {
-		String _localesPath = "$_pageKey.${widget.errorType.toString().split('.')[1]}";
+		String _localesPath = "page.error.${widget.errorType.toString().split('.')[1]}";
     return Scaffold(
       body: Padding(
 				padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),

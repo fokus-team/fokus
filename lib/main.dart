@@ -187,7 +187,7 @@ class _FokusAppState extends State<FokusApp> implements CurrentLocaleObserver {
 		);
 		return {
 			AppPage.loadingPage.name: (context) => _createPage(LoadingPage(), context),
-			AppPage.errorPage.name: (context) => _createPage(ErrorPage(getParams(context)), context),
+			AppPage.errorPage.name: (context) => _createPage(ErrorPage(getParams(context)), context, null, AppPageSection.login),
 			AppPage.rolesPage.name: (context) => _createPage(RolesPage(), context),
       AppPage.notificationsPage.name: (context) => _createPage(NotificationsPage(), context),
 			AppPage.settingsPage.name:  (context) => _createPage(

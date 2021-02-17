@@ -3,10 +3,6 @@ import 'dart:io';
 import 'dart:isolate';
 
 import 'package:bloc/bloc.dart';
-import 'package:fokus/model/db/user/user.dart';
-import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/ui/dialog_utils.dart';
-import 'package:fokus/widgets/dialogs/general_dialog.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 import 'package:logging/logging.dart';
@@ -14,7 +10,12 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
+import 'package:fokus/model/app_error_type.dart';
+import 'package:fokus/model/db/user/user.dart';
+import 'package:fokus/model/ui/app_page.dart';
+
 import 'analytics_service.dart';
+import 'app_route_observer.dart';
 import 'exception/db_exceptions.dart';
 import 'observers/active_user_observer.dart';
 
@@ -22,16 +23,15 @@ class Instrumentator implements ActiveUserObserver {
 	final Logger _logger = Logger('Instrumentator');
 	final _navigatorKey = GetIt.I<GlobalKey<NavigatorState>>();
 	final AnalyticsService _analyticsService = GetIt.I<AnalyticsService>();
+	final _routeObserver = GetIt.I<AppRouteObserver>();
 
 	void runAppGuarded(Widget app) {
 		Bloc.observer = FokusBlocObserver();
 		_setupLogger();
 		_setupCrashlytics();
 
-		runZonedGuarded<Future<void>>(() async {
-			runApp(app);
-		}, (dynamic error, StackTrace stackTrace) {
-			if (_handleError(error, stackTrace))
+		runZonedGuarded<Future<void>>(() async => runApp(app), (dynamic error, StackTrace stackTrace) async {
+			if (await _handleError(error, stackTrace))
 				return;
 			_logger.severe('', error, stackTrace);
 			FirebaseCrashlytics.instance.recordError(error, stackTrace);
@@ -59,7 +59,11 @@ class Instrumentator implements ActiveUserObserver {
 
 	void _setupCrashlytics() {
 		FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
-		FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
+		FlutterError.onError = (FlutterErrorDetails error) async {
+			await _routeObserver.navigatorInitialized;
+			_navigateToErrorPage(AppErrorType.unknownError);
+			FirebaseCrashlytics.instance.recordFlutterError(error);
+		};
 		Isolate.current.addErrorListener(RawReceivePort((pair) async {
 			final List<dynamic> errorAndStacktrace = pair;
 			await FirebaseCrashlytics.instance.recordError(
@@ -69,24 +73,21 @@ class Instrumentator implements ActiveUserObserver {
 		}).sendPort);
 	}
 
-	bool _handleError(dynamic error, StackTrace stackTrace) {
-		if (_navigatorKey?.currentState?.overlay != null) {
+	Future<bool> _handleError(dynamic error, StackTrace stackTrace) async {
+		await _routeObserver.navigatorInitialized;
+		if (_navigatorKey.currentState?.context != null) {
 			if (error is CubitUnhandledErrorException)
 				error = error.error;
-			var title = error is NoDbConnection ? 'noConnection' : 'errorOccurred';
-			var content = error is NoDbConnection ? 'connectionRetry' : 'errorDescription';
-			if (error is! SocketException) // ignore database disconnected socket exception
-				showBasicDialog(
-					_navigatorKey.currentState.overlay.context,
-					GeneralDialog.discard(
-						title: AppLocales.instance.translate('alert.$title'),
-						content: AppLocales.instance.translate('alert.$content')
-					)
-				);
+			if (error is! SocketException) { // ignore database disconnected socket exception
+				var errorType = error is NoDbConnection ? AppErrorType.noConnectionError : AppErrorType.unknownError;
+				_navigateToErrorPage(errorType);
+			}
 			return error is NoDbConnection || error is SocketException ? true : false;
 		}
 		return false;
 	}
+
+	void _navigateToErrorPage(AppErrorType errorType) => Navigator.of(_navigatorKey.currentState.context).pushNamed(AppPage.errorPage.name, arguments: errorType);
 
   @override
   void onUserSignIn(User user) {

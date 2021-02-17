@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fokus/model/ui/ui_button.dart';
@@ -6,8 +9,6 @@ import 'package:fokus/model/app_error_type.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/ui/theme_config.dart';
 import 'package:fokus/widgets/auth/auth_button.dart';
-import 'package:fokus/widgets/general/app_loader.dart';
-import 'package:fokus/widgets/auth/auth_widgets.dart';
 
 class ErrorPage extends StatefulWidget {
 	final AppErrorType errorType;
@@ -23,8 +24,10 @@ class _ErrorPageState extends State<ErrorPage> {
   @override
   Widget build(BuildContext context) {
 		String _localesPath = "$_pageKey.${widget.errorType.toString().split('.')[1]}";
-    return Scaffold(
-      body: Padding(
+    return WillPopScope(
+	    onWillPop: () => Future.value(false),
+      child: Scaffold(
+        body: Padding(
 				padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
 				child: Center(
 					child: Column(
@@ -44,23 +47,28 @@ class _ErrorPageState extends State<ErrorPage> {
 											padding: EdgeInsets.symmetric(vertical: 8.0),
 											child: Text(AppLocales.of(context).translate("$_localesPath.hint"))
 										),
-										AuthButton(button: UIButton("$_localesPath.action", () {
-											switch(widget.errorType) {
-											  case AppErrorType.noConnectionError:
-											    // TODO: Handle this case.
-											    break;
-											  case AppErrorType.unknownError:
-											    SystemChannels.platform.invokeMethod('SystemNavigator.pop');
-											    break;
-											}
-										}, Colors.teal))
+										if (widget.errorType != AppErrorType.unknownError || Platform.isAndroid)
+											AuthButton(
+												button: UIButton("$_localesPath.action", () async {
+													switch(widget.errorType) {
+													  case AppErrorType.noConnectionError:
+														  if ((await Connectivity().checkConnectivity()) != ConnectivityResult.none)
+														  	Navigator.of(context).pop();
+													    break;
+													  case AppErrorType.unknownError:
+													    SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+													    break;
+													}
+												}, Colors.teal)
+											)
 									]
 								)
 							)
 						]
 					)
-      	)
+        	)
 			)
+      ),
     );
   }
 }

@@ -17,22 +17,8 @@ import 'package:fokus/widgets/dialogs/app_info_dialog.dart';
 import 'package:fokus/widgets/dialogs/reward_dialog.dart';
 import 'package:fokus/widgets/dialogs/badge_dialog.dart';
 import 'package:fokus/widgets/dialogs/general_dialog.dart';
-import 'package:fokus/model/ui/ui_button.dart';
-import 'package:fokus/widgets/dialogs/dialog.dart';
 import 'package:fokus/widgets/dialogs/help_dialog.dart';
 import 'package:fokus/widgets/dialogs/form_dialogs.dart';
-
-void showNoConnectionDialog(BuildContext context, void Function() action) {
-	showDialog(
-		context: context,
-		barrierDismissible: false,
-		builder: (context) => AppDialog(
-			titleKey: 'alert.noConnection',
-			textKey: 'alert.connectionRetry',
-			buttons: [UIButton.ofType(ButtonType.retry, action)],
-		),
-	);
-}
 
 void showBasicDialog(BuildContext context, GeneralDialog dialog) {
 	showDialog(

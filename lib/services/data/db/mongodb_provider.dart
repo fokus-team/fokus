@@ -10,7 +10,7 @@ class MongoDbProvider {
 	Db _client;
 
 	Future connect({bool dropExisting = false}) async {
-		if (_client != null && _client.state == State.OPEN) {
+		if (_client != null && _client.isConnected) {
 			if (dropExisting)
 				await _client.close();
 			else
@@ -74,12 +74,12 @@ class MongoDbProvider {
 		};
 		try {
 			return await doExecute();
+		} on ConnectionException { // Connection closed, try to reconnect
+			return await doExecute();
 		} on TimeoutException { // Keep alive disconnected
 			return await doExecute();
 		} on MongoQueryTimeout { // Query timeout, retry
 			return await doExecute(dropConnection: true);
-		} on ConnectionException { // Connection closed, try to reconnect
-			return await doExecute();
 		} catch(e) {
 			if (e is NoDbConnection)
 				throw e;

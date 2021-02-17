@@ -9,6 +9,7 @@ import 'package:logging/logging.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter/foundation.dart' as Foundation;
 
 import 'package:fokus/model/app_error_type.dart';
 import 'package:fokus/model/db/user/user.dart';
@@ -61,7 +62,8 @@ class Instrumentator implements ActiveUserObserver {
 		FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
 		FlutterError.onError = (FlutterErrorDetails error) async {
 			await _routeObserver.navigatorInitialized;
-			_navigateToErrorPage(AppErrorType.unknownError);
+			if (Foundation.kReleaseMode)
+				_navigateToErrorPage(AppErrorType.unknownError);
 			FirebaseCrashlytics.instance.recordFlutterError(error);
 		};
 		Isolate.current.addErrorListener(RawReceivePort((pair) async {

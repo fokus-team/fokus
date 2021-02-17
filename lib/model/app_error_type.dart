@@ -1,0 +1,1 @@
+enum AppErrorType { noConnectionError, unknownError }

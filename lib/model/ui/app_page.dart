@@ -1,6 +1,7 @@
 enum AppPage {
 	// Shared
 	loadingPage,
+	errorPage,
 	rolesPage,
 	notificationsPage,
 	settingsPage,
@@ -34,6 +35,7 @@ enum AppPage {
 extension AppPageName on AppPage {
 	String get name => const {
 		AppPage.loadingPage: '/loading-page',
+		AppPage.errorPage: '/error-page',
 		AppPage.rolesPage: '/roles-page',
     AppPage.notificationsPage: '/notifications-page',
     AppPage.settingsPage: '/settings-page',

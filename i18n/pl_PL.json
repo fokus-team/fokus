@@ -17,6 +17,20 @@
 		"settings": "Ustawienia"
 	},
 	"page": {
+		"error": {
+			"noConnectionError": {
+				"title": "Brak połączenia",
+				"subtitle": "Aplikacja wymaga połączenia z Internetem do działania",
+				"hint": "Upewnij się, że urządzenie ma dostęp do Internetu",
+				"action": "Spróbuj ponownie"
+			},
+			"unknownError": {
+				"title": "Aplikacja napotkała nieobsługiwany problem",
+				"subtitle": "Nasz zespół pracuje nad jego rozwiązaniem.\nPrzepraszamy za niedogodności.",
+				"hint": "Restart aplikacji może pomóc rozwiązać problem",
+				"action": "Zamknij aplikację"
+			}
+		},
 		"loginSection": {
 			"roles": {
 				"introduction": "Jestem",
@@ -637,9 +651,7 @@
 	"alert": {
 		"errorOccurred": "Wystąpił błąd",
 		"noConnection": "Brak połączenia",
-		"errorDescription": "Przepraszamy za niedogodności, spróbuj ponownie za jakiś czas",
 		"noHint": "Brak podpowiedzi",
-		"connectionRetry": "Upewnij się że urządzenie ma dostęp do internetu",
 		"genericEmptyValue": "Pole nie może być puste",
 		"genericRangeOverflowValue": "Wartość musi mieścić się w zakresie {A}-{B}",
 		"unsavedProgressTitle": "Niezapisane zmiany",

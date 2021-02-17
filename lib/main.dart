@@ -39,6 +39,7 @@ import 'package:fokus/logic/caregiver/tasks_evaluation_cubit.dart';
 
 import 'package:fokus/pages/child/calendar_page.dart';
 import 'package:fokus/pages/common/loading_page.dart';
+import 'package:fokus/pages/common/error_page.dart';
 import 'package:fokus/pages/common/plan_details_page.dart';
 import 'package:fokus/pages/common/roles_page.dart';
 import 'package:fokus/pages/common/notifications_page.dart';
@@ -186,6 +187,7 @@ class _FokusAppState extends State<FokusApp> implements CurrentLocaleObserver {
 		);
 		return {
 			AppPage.loadingPage.name: (context) => _createPage(LoadingPage(), context),
+			AppPage.errorPage.name: (context) => _createPage(ErrorPage(getParams(context)), context, null, AppPageSection.login),
 			AppPage.rolesPage.name: (context) => _createPage(RolesPage(), context),
       AppPage.notificationsPage.name: (context) => _createPage(NotificationsPage(), context),
 			AppPage.settingsPage.name:  (context) => _createPage(

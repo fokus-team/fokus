@@ -97,6 +97,7 @@ flutter:
         - i18n/en_US.json
         - assets/animation/
         - assets/image/sunflower_logo.svg
+        - assets/image/sunflower_jitter.gif
         - assets/image/sunflower_logo.png
         - assets/image/google_logo.png
         - assets/image/sunrays.svg

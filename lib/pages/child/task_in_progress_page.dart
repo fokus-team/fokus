@@ -377,9 +377,8 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 	}
 
 	void _closeWidgetsOnFinish(state) {
-		if(state.current == TaskCompletionStateType.inProgress)
-			_completingCard.currentState.closeCard();
-		else _breakCard.currentState.closeCard();
+	  _completingCard.currentState.closeCard();
+		_breakCard.currentState.closeCard();
 		_bottomBarController.forward();
 	}
 

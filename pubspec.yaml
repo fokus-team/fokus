@@ -70,6 +70,7 @@ dependencies:
     flutter_rating_bar: ^3.2.0+1
     vibration: ^1.5.0
     flushbar: ^1.10.4
+    flutter_email_sender: ^4.0.0
 
 dependency_overrides:
     bson:

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_email_sender/flutter_email_sender.dart';
+import 'package:fokus/utils/ui/form_config.dart';
 import 'package:fokus/widgets/buttons/bottom_sheet_confirm_button.dart';
 import 'package:fokus_auth/fokus_auth.dart';
 import 'package:smart_select/smart_select.dart';
@@ -49,7 +51,7 @@ class _SettingsPageState extends State<SettingsPage> {
 									),
 								..._buildSettingsList(
 										AppLocales.of(context).translate('$_pageKey.appSettings.header'),
-									_getSettingsFields()
+									_getSettingsFields(isCurrentUserCaregiver)
 								)
 							]
 						)
@@ -128,7 +130,7 @@ class _SettingsPageState extends State<SettingsPage> {
 			BlocProvider.of<LocaleCubit>(context).setLocale(locale: AppLocalesDelegate.supportedLocales.firstWhere((locale) => '$locale' == langKey));
 	}
 
-	List<Widget> _getSettingsFields() {
+	List<Widget> _getSettingsFields(bool isCurrentUserCaregiver) {
 		return [
 			BlocBuilder<LocaleCubit, LocaleState>(
 				builder: (context, state) {
@@ -155,6 +157,13 @@ class _SettingsPageState extends State<SettingsPage> {
 					);
 				}
 			),
+			isCurrentUserCaregiver ?
+			_buildBasicListTile(
+					title: AppLocales.of(context).translate('actions.contactUs'),
+					subtitle: AppLocales.of(context).translate('$_pageKey.appSettings.contactUsHint'),
+					icon: Icons.contact_mail,
+					onTap: () async => await FlutterEmailSender.send(emailBlueprint)
+			) : SizedBox.shrink(),
 			_buildBasicListTile(
 				title: AppLocales.of(context).translate('$_pageKey.appSettings.showAppInfoLabel'),
 				icon: Icons.info,

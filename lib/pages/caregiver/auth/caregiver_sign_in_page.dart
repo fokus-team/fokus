@@ -135,9 +135,7 @@ class CaregiverSignInPage extends StatelessWidget {
 			),
       UIButton(
         'actions.contactUs',
-            () async {
-							await FlutterEmailSender.send(emailBlueprint);
-        },
+        () => FlutterEmailSender.send(emailBlueprint),
         null,
         Icons.contact_mail
       ),

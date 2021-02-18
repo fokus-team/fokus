@@ -30,7 +30,7 @@ class AppFormProperties {
 
 }
 
-Email emailBlueprint = Email(
+final Email emailBlueprint = Email(
   subject: AppLocales.instance.translate('emailSubject'),
   recipients: ['contact@fokus.link'],
   isHTML: false,

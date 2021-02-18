@@ -34,7 +34,12 @@ class _ErrorPageState extends State<ErrorPage> {
 						crossAxisAlignment: CrossAxisAlignment.center,
 						children: <Widget>[
 							Image.asset('assets/image/sunflower_jitter.gif', height: MediaQuery.of(context).size.width*0.5),
-							Text(AppLocales.of(context).translate("$_localesPath.title"), style: Theme.of(context).textTheme.headline1.copyWith(color: Colors.white)),
+							Text(
+								AppLocales.of(context).translate("$_localesPath.title"),
+								style: Theme.of(context).textTheme.headline1.copyWith(color: Colors.white),
+								textAlign: TextAlign.center
+							),
+							SizedBox(height: 8),
 							Text(AppLocales.of(context).translate("$_localesPath.subtitle"), style: Theme.of(context).textTheme.bodyText1, textAlign: TextAlign.center),
 							Container(
 								decoration: AppBoxProperties.elevatedContainer.copyWith(borderRadius: BorderRadius.all(Radius.circular(4.0))),
@@ -44,7 +49,7 @@ class _ErrorPageState extends State<ErrorPage> {
 									children: [
 										Padding(
 											padding: EdgeInsets.symmetric(vertical: 8.0),
-											child: Text(AppLocales.of(context).translate("$_localesPath.hint"))
+											child: Text(AppLocales.of(context).translate("$_localesPath.hint"), textAlign: TextAlign.center)
 										),
 										if (widget.errorType != AppErrorType.unknownError || Platform.isAndroid)
 											AuthButton(

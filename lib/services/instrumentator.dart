@@ -26,6 +26,8 @@ class Instrumentator implements ActiveUserObserver {
 	final AnalyticsService _analyticsService = GetIt.I<AnalyticsService>();
 	final _routeObserver = GetIt.I<AppRouteObserver>();
 
+	bool _errorPageOpen = false;
+
 	void runAppGuarded(Widget app) {
 		Bloc.observer = FokusBlocObserver();
 		_setupLogger();
@@ -89,7 +91,13 @@ class Instrumentator implements ActiveUserObserver {
 		return false;
 	}
 
-	void _navigateToErrorPage(AppErrorType errorType) => Navigator.of(_navigatorKey.currentState.context).pushNamed(AppPage.errorPage.name, arguments: errorType);
+	void _navigateToErrorPage(AppErrorType errorType) async {
+		if (_errorPageOpen)
+			return;
+		_errorPageOpen = true;
+	  await Navigator.of(_navigatorKey.currentState.context).pushNamed(AppPage.errorPage.name, arguments: errorType);
+	  _errorPageOpen = false;
+	}
 
   @override
   void onUserSignIn(User user) {

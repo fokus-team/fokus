@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:connectivity/connectivity.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
@@ -17,7 +16,7 @@ import 'package:fokus/services/observers/data_update_observer.dart';
 part 'stateful_state.dart';
 
 enum StatefulOption {
-	noOnPopNextReload, repeatableSubmission, noAutoLoading, noDataLoading
+	repeatableSubmission, noAutoLoading, noDataLoading
 }
 
 abstract class StatefulCubit<State extends StatefulState> extends Cubit<State> with DataUpdateObserver implements RouteAware, PageForegroundObserver {
@@ -25,8 +24,6 @@ abstract class StatefulCubit<State extends StatefulState> extends Cubit<State> w
 	final NotificationService _notificationService = GetIt.I<NotificationService>();
 	@protected
 	final List<StatefulOption> options;
-
-	StreamSubscription<ConnectivityResult> _connectionListener;
 
   StatefulCubit(ModalRoute pageRoute, {this.options = const [], StatefulState initialState}) :
         super(initialState ?? StatefulState.notLoaded()) {
@@ -76,21 +73,12 @@ abstract class StatefulCubit<State extends StatefulState> extends Cubit<State> w
   void onGoToForeground({bool firstTime = false}) {
 		if (dataTypeSubscription().isNotEmpty)
 			_notificationService.observeDataUpdates(this);
-		if (_connectionListener == null)
-			_connectionListener = Connectivity().onConnectivityChanged.listen((event) {
-				if (event != ConnectivityResult.none)
-					reload();
-			});
-		if (!firstTime && !options.contains(StatefulOption.noOnPopNextReload))
+		if (!firstTime)
 			reload();
   }
 
 	@override
 	void onGoToBackground() {
-		if (_connectionListener != null) {
-			_connectionListener.cancel();
-			_connectionListener = null;
-		}
 		_notificationService.removeDataUpdateObserver(this);
 	}
 

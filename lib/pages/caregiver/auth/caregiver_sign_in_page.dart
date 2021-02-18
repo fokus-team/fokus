@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_email_sender/flutter_email_sender.dart';
+import 'package:fokus/utils/ui/form_config.dart';
 import 'package:fokus_auth/fokus_auth.dart';
 import 'package:formz/formz.dart';
 
@@ -133,6 +135,12 @@ class CaregiverSignInPage extends StatelessWidget {
 				null,
 				Icons.mark_email_read
 			),
+      UIButton(
+        'actions.contactUs',
+        () => FlutterEmailSender.send(emailBlueprint),
+        null,
+        Icons.contact_mail
+      ),
 		];
   }
 	

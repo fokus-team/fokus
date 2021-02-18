@@ -140,7 +140,8 @@
 						"projectPage": "Strona projektu",
 						"termsOfUse": "Warunki korzystania",
 						"privacyPolicy": "Polityka prywatności"
-					}
+					},
+					"contactUsHint": "Pomóż ulepszyć aplikację"
 				}
 			}
 		},
@@ -685,7 +686,8 @@
 		"signUp": "Załóż konto",
 		"signOut": "Wyloguj się",
 		"return": "Powrót",
-		"copyCode": "Skopiuj kod"
+		"copyCode": "Skopiuj kod",
+		"contactUs":  "Napisz do nas"
 	},
 	"authentication": {
 		"name": "Imię",
@@ -775,5 +777,6 @@
 	"or": "lub",
 	"hour": "godz.",
 	"minute": "min",
-	"deleteWarning": "Tej akcji nie można cofnąć!"
+	"deleteWarning": "Tej akcji nie można cofnąć!",
+	"emailSubject": "Aplikacja Fokus - kontakt"
 }

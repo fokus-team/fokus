@@ -61,7 +61,7 @@ class AuthGroup extends StatelessWidget {
 							children: [
 								Padding(
 									padding: padding != null ? padding : EdgeInsets.all(8.0),
-									child: content
+									child: AutofillGroup(child: content)
 								),
 								Positioned.fill(
 									child: AnimatedSwitcher(

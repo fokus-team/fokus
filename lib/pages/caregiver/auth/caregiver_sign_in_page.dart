@@ -75,7 +75,8 @@ class CaregiverSignInPage extends StatelessWidget {
 								labelKey: 'authentication.email',
 								icon: Icons.email,
 								getErrorKey: (state) => [state.email.error.key],
-								inputType: TextInputType.emailAddress
+								inputType: TextInputType.emailAddress,
+								autofillHints: [AutofillHints.email]
 							),
 							AuthenticationInputField<CaregiverSignInCubit, CaregiverSignInState>(
 								getField: (state) => state.password,
@@ -83,7 +84,8 @@ class CaregiverSignInPage extends StatelessWidget {
 								labelKey: 'authentication.password',
 								icon: Icons.lock,
 								getErrorKey: (state) => [state.password.error.key],
-								hideInput: true
+								hideInput: true,
+								autofillHints: [AutofillHints.password]
 							),
 							AuthButton(
 								button: UIButton.ofType(

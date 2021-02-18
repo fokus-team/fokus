@@ -18,6 +18,7 @@ class AuthenticationInputField<Bloc extends Cubit<State>, State extends FormzSta
 	final IconData icon;
 	final bool clearable;
 	final bool disabled;
+	final List<String> autofillHints;
 
   AuthenticationInputField({
 		this.getField,
@@ -28,7 +29,8 @@ class AuthenticationInputField<Bloc extends Cubit<State>, State extends FormzSta
 		this.hideInput = false,
 		this.icon = Icons.edit,
 	  this.clearable = false,
-	  this.disabled = false
+	  this.disabled = false,
+		this.autofillHints
 	});
 
   @override
@@ -65,7 +67,8 @@ class _AuthenticationInputFieldState<Bloc extends Cubit<CubitState>, CubitState 
 								icon: Icon(Icons.clear),
 								tooltip: AppLocales.instance.translate('actions.clear'),
 							) : null,
-						)
+						),
+						autofillHints: widget.autofillHints,
 			    ),
 			  );
 		  },

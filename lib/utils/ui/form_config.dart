@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_email_sender/flutter_email_sender.dart';
+import 'package:fokus/services/app_locales.dart';
 
 class AppFormProperties {
 	static int textFieldMaxLength = 120;
@@ -27,3 +29,12 @@ class AppFormProperties {
 	}
 
 }
+
+Email emailBlueprint = Email(
+  subject: AppLocales.instance.translate('emailSubject'),
+  recipients: ['contact@fokus.link'],
+  isHTML: false,
+);
+
+
+

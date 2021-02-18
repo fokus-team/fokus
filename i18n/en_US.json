@@ -140,7 +140,8 @@
 						"projectPage": "Project page",
 						"termsOfUse": "Terms of Use",
 						"privacyPolicy": "Privacy Policy"
-					}
+					},
+					"contactUsHint": "Help improve the app"
 				}
 			}
 		},
@@ -685,7 +686,8 @@
 		"signUp": "Sign up",
 		"signOut": "Sign out",
 		"return": "Return",
-		"copyCode": "Copy code"
+		"copyCode": "Copy code",
+		"contactUs":  "Contact us"
 	},
 	"authentication": {
 		"name": "First name",
@@ -775,5 +777,6 @@
 	"or": "or",
 	"hour": "hr",
 	"minute": "min",
-	"deleteWarning": "This action cannot be undone!"
+	"deleteWarning": "This action cannot be undone!",
+	"emailSubject": "Fokus app - contact"
 }

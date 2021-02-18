@@ -34,7 +34,7 @@ class TasksEvaluationCubit extends StatefulCubit {
 	Map<ObjectId, UIChild> _planInstanceToChild;
 	Map<ObjectId, String> _planInstanceToName;
 
-	TasksEvaluationCubit(ModalRoute pageRoute, this._activeUser) : super(pageRoute, options: [StatefulOption.noOnPopNextReload, StatefulOption.repeatableSubmission]);
+	TasksEvaluationCubit(ModalRoute pageRoute, this._activeUser) : super(pageRoute, options: [StatefulOption.repeatableSubmission]);
 
   @override
   List<NotificationType> dataTypeSubscription() => [NotificationType.taskFinished];
@@ -94,7 +94,7 @@ class TasksEvaluationCubit extends StatefulCubit {
 		}
 		await Future.wait(updates);
 		await sendNotification();
-		emit(state.submissionSuccess());
+		return emit(state.submissionSuccess());
 	}
 
 	static int getPointsAwarded(int quantity, int ratingMark) => max((quantity*ratingMark/5).round(), 1);

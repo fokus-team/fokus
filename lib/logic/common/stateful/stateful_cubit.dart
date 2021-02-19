@@ -24,6 +24,8 @@ abstract class StatefulCubit<State extends StatefulState> extends Cubit<State> w
 	final NotificationService _notificationService = GetIt.I<NotificationService>();
 	@protected
 	final List<StatefulOption> options;
+	@protected
+	bool loadingForFirstTime = true;
 
   StatefulCubit(ModalRoute pageRoute, {this.options = const [], StatefulState initialState}) :
         super(initialState ?? StatefulState.notLoaded()) {
@@ -37,6 +39,7 @@ abstract class StatefulCubit<State extends StatefulState> extends Cubit<State> w
 	  emit(state.loading());
 	  try {
 		  await doLoadData();
+		  loadingForFirstTime = false;
 	  } on Exception catch (e) {
 		  emit(state.withLoadState(DataLoadingState.loadFailure));
 		  throw e;

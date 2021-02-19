@@ -70,9 +70,6 @@ class _CustomAppBarState extends State<CustomAppBar>{
 				UIButton('navigation.settings', () => Navigator.of(context).pushNamed(AppPage.settingsPage.name),
 					null, Icons.settings),
 				if(auth.state.user?.role == UserRole.caregiver)
-					UIButton('navigation.caregiver.currencies', () => Navigator.of(context).pushNamed(AppPage.caregiverCurrencies.name),
-						null, Icons.account_balance_wallet),
-				if(auth.state.user?.role == UserRole.caregiver)
 					UIButton('navigation.caregiver.caregiverCode', () => showUserCodeDialog(context, 'navigation.caregiver.caregiverCode', getCodeFromId(auth.state.user?.id)),
 						null, Icons.phonelink_lock),
 				UIButton('actions.signOut', () => auth.add(AuthenticationSignOutRequested()),

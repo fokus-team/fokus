@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
+import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/utils/ui/form_config.dart';
 import 'package:fokus/widgets/buttons/bottom_sheet_confirm_button.dart';
 import 'package:fokus_auth/fokus_auth.dart';
@@ -52,6 +53,10 @@ class _SettingsPageState extends State<SettingsPage> {
 								..._buildSettingsList(
 										AppLocales.of(context).translate('$_pageKey.appSettings.header'),
 									_getSettingsFields(isCurrentUserCaregiver)
+								),
+								..._buildSettingsList(
+										AppLocales.of(context).translate('$_pageKey.appInfo.header'),
+									_getInfoFields(isCurrentUserCaregiver)
 								)
 							]
 						)
@@ -132,6 +137,12 @@ class _SettingsPageState extends State<SettingsPage> {
 
 	List<Widget> _getSettingsFields(bool isCurrentUserCaregiver) {
 		return [
+			isCurrentUserCaregiver ?
+			_buildBasicListTile(
+					title: AppLocales.of(context).translate('$_pageKey.appSettings.currenciesLabel'),
+					icon: Icons.account_balance_wallet,
+					onTap: () => Navigator.of(context).pushNamed(AppPage.caregiverCurrencies.name)
+			) : SizedBox.shrink(),
 			BlocBuilder<LocaleCubit, LocaleState>(
 				builder: (context, state) {
 					return SmartSelect.single(
@@ -156,18 +167,23 @@ class _SettingsPageState extends State<SettingsPage> {
 						onChange: (langKey) => _setLanguage(langKey),
 					);
 				}
-			),
+			)
+		];
+	}
+
+	List<Widget> _getInfoFields(bool isCurrentUserCaregiver) {
+		return [
 			isCurrentUserCaregiver ?
 			_buildBasicListTile(
 					title: AppLocales.of(context).translate('actions.contactUs'),
-					subtitle: AppLocales.of(context).translate('$_pageKey.appSettings.contactUsHint'),
+					subtitle: AppLocales.of(context).translate('$_pageKey.appInfo.contactUsHint'),
 					icon: Icons.contact_mail,
 					onTap: () async => await FlutterEmailSender.send(emailBlueprint)
 			) : SizedBox.shrink(),
 			_buildBasicListTile(
-				title: AppLocales.of(context).translate('$_pageKey.appSettings.showAppInfoLabel'),
+				title: AppLocales.of(context).translate('$_pageKey.appInfo.showAboutAppLabel'),
 				icon: Icons.info,
-				onTap: () => showAppInfoDialog(context)
+				onTap: () => showAboutAppDialog(context)
 			)
 		];
 	}

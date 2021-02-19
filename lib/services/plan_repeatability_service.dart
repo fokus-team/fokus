@@ -69,9 +69,9 @@ class PlanRepeatabilityService {
 	}
 
 	static PlanFormRepeatability getFormRepeatability(PlanRepeatability repeatability) {
-		if (repeatability.type == RepeatabilityType.once)
-			return PlanFormRepeatability.onlyOnce;
-		return repeatability.untilCompleted ? PlanFormRepeatability.untilCompleted : PlanFormRepeatability.recurring;
+		if (repeatability.untilCompleted)
+			return PlanFormRepeatability.untilCompleted;
+		return repeatability.type == RepeatabilityType.once ? PlanFormRepeatability.onlyOnce : PlanFormRepeatability.recurring;
 	}
 
   bool _planInstanceExistsByDate(Plan plan, Date date) {

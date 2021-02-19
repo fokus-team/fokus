@@ -13,7 +13,7 @@ class CaregiverAwardsCubit extends StatefulCubit {
 	final ActiveUserFunction _activeUser;
   final DataRepository _dataRepository = GetIt.I<DataRepository>();
 
-  CaregiverAwardsCubit(this._activeUser, pageRoute) : super(pageRoute, options: [StatefulOption.repeatableSubmission]);
+  CaregiverAwardsCubit(this._activeUser, pageRoute) : super(pageRoute, options: [StatefulOption.resetSubmissionState]);
 
   @override
 	Future doLoadData() async {

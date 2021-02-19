@@ -64,8 +64,7 @@ class Instrumentator implements ActiveUserObserver {
 		FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
 		FlutterError.onError = (FlutterErrorDetails error) async {
 			await _routeObserver.navigatorInitialized;
-			if (Foundation.kReleaseMode)
-				_navigateToErrorPage(AppErrorType.unknownError);
+			_navigateToErrorPage(AppErrorType.unknownError);
 			FirebaseCrashlytics.instance.recordFlutterError(error);
 		};
 		Isolate.current.addErrorListener(RawReceivePort((pair) async {
@@ -92,7 +91,7 @@ class Instrumentator implements ActiveUserObserver {
 	}
 
 	void _navigateToErrorPage(AppErrorType errorType) async {
-		if (_errorPageOpen)
+		if (_errorPageOpen || !Foundation.kReleaseMode)
 			return;
 		_errorPageOpen = true;
 	  await Navigator.of(_navigatorKey.currentState.context).pushNamed(AppPage.errorPage.name, arguments: errorType);

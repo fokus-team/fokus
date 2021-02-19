@@ -31,7 +31,6 @@ class UITaskReport {
 	final UITaskInstance task;
 	final UIChild child;
 
-
 	UITaskReportMark ratingMark;
 	String ratingComment;
 
@@ -42,5 +41,4 @@ class UITaskReport {
 		this.ratingMark = UITaskReportMark.notRated,
 		this.ratingComment
 	});
-
 }

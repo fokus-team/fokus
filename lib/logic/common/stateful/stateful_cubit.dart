@@ -16,7 +16,7 @@ import 'package:fokus/services/observers/data_update_observer.dart';
 part 'stateful_state.dart';
 
 enum StatefulOption {
-	repeatableSubmission, noAutoLoading, noDataLoading
+	resetSubmissionState, noAutoLoading, noDataLoading
 }
 
 abstract class StatefulCubit<State extends StatefulState> extends Cubit<State> with DataUpdateObserver implements RouteAware, PageForegroundObserver {

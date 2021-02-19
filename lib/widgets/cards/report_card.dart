@@ -148,12 +148,12 @@ class _ReportCardState extends State<ReportCard> {
 		);
 	}
 
-	void updateReports(UITaskReportMark mark, String comment) {
+	Future updateReports(UITaskReportMark mark, String comment) {
 		setState(() {
 			widget.report.ratingMark = mark;
 			widget.report.ratingComment = comment;
 		});
-		BlocProvider.of<TasksEvaluationCubit>(context).rateTask(widget.report);
+		return BlocProvider.of<TasksEvaluationCubit>(context).rateTask(widget.report);
 	}
 
 	Widget _buildBottomBar(BuildContext context) {

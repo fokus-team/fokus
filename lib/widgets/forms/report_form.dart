@@ -12,7 +12,7 @@ import 'package:fokus/widgets/chips/attribute_chip.dart';
 
 class ReportForm extends StatefulWidget {
 	final UITaskReport report;
-	final Function(UITaskReportMark, String) saveCallback;
+	final Future Function(UITaskReportMark, String) saveCallback;
 
 	ReportForm({@required this.report, @required this.saveCallback});
 
@@ -87,8 +87,8 @@ class _ReportFormState extends State<ReportForm> {
 				children: <Widget>[
 					SizedBox.shrink(),
 					FlatButton(
-						onPressed: () {
-							widget.saveCallback(isRejected ? UITaskReportMark.rejected : mark, _commentController.value.text);
+						onPressed: () async {
+							await widget.saveCallback(isRejected ? UITaskReportMark.rejected : mark, _commentController.value.text);
 							Navigator.of(context).pop();
 						},
 						child: Text(

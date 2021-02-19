@@ -30,18 +30,17 @@ class TasksEvaluationCubit extends StatefulCubit {
 
 	final ActiveUserFunction _activeUser;
 	List<UITaskInstance> _uiTaskInstances;
-	List<UITaskReport> _reports = [];
+  List<UITaskReport> _completedReports = [];
 	Map<ObjectId, UIChild> _planInstanceToChild;
 	Map<ObjectId, String> _planInstanceToName;
 
-	TasksEvaluationCubit(ModalRoute pageRoute, this._activeUser) : super(pageRoute, options: [StatefulOption.repeatableSubmission]);
+	TasksEvaluationCubit(ModalRoute pageRoute, this._activeUser) : super(pageRoute);
 
   @override
   List<NotificationType> dataTypeSubscription() => [NotificationType.taskFinished];
 
 	@override
 	Future doLoadData() async {
-		_reports = [];
 		var activeUser = _activeUser();
 		List<Child> children = (await _dataRepository.getUsers(ids: (activeUser as UICaregiver).connections, fields: ['_id', 'name', 'avatar'])).map((e) => e as Child).toList();
 		var _childMap = Map.fromEntries(children.map((child) => MapEntry(child.id, child)));
@@ -51,19 +50,18 @@ class TasksEvaluationCubit extends StatefulCubit {
 		var nameMap = Map.fromEntries((await _dataRepository.getPlans(ids: planInstances.map((planInstance) => planInstance.planID).toSet().toList(), fields:['name', '_id'])).map((plan) => MapEntry(plan.id, plan.name)));
 		_uiTaskInstances = taskInstances.isNotEmpty ? await _taskInstanceService.mapToUIModels(taskInstances, shouldGetTaskStatus: false) : [];
 		_planInstanceToName = Map.fromEntries(planInstances.map((planInstance) => MapEntry(planInstance.id, nameMap[planInstance.planID])));
-		for(var taskInstance in _uiTaskInstances) {
-			_reports.add(UITaskReport(
-				planName: _planInstanceToName[taskInstance.planInstanceId],
-				task: taskInstance,
-				child: _planInstanceToChild[taskInstance.planInstanceId],
-			));
-		}
-		emit(TasksEvaluationState(_reports));
+		List<UITaskReport> _reports = _uiTaskInstances.map((taskInstance) => UITaskReport(
+			planName: _planInstanceToName[taskInstance.planInstanceId],
+			task: taskInstance,
+			child: _planInstanceToChild[taskInstance.planInstanceId],
+		)).toList();
+		emit(TasksEvaluationState(reports: _reports..addAll(_completedReports)));
 	}
 
-	void rateTask(UITaskReport report) async {
+	Future rateTask(UITaskReport report) async {
 		if (!beginSubmit())
 			return;
+		_completedReports.add(report);
 		List<Future> updates = [];
 		Future Function() sendNotification;
 		if(report.ratingMark == UITaskReportMark.rejected) {
@@ -103,11 +101,11 @@ class TasksEvaluationCubit extends StatefulCubit {
 class TasksEvaluationState extends StatefulState {
 	final List<UITaskReport> reports;
 
-	TasksEvaluationState(this.reports, [DataSubmissionState submissionState]) : super.loaded(submissionState);
+	TasksEvaluationState({this.reports, DataSubmissionState submissionState}) : super.loaded(submissionState);
 
 	@override
-  StatefulState withSubmitState(DataSubmissionState submissionState) => TasksEvaluationState(reports, submissionState);
+	StatefulState withSubmitState(DataSubmissionState submissionState) => TasksEvaluationState(reports: reports, submissionState: submissionState);
 
   @override
-	List<Object> get props => super.props..addAll([reports]);
+	List<Object> get props => super.props..add(reports);
 }

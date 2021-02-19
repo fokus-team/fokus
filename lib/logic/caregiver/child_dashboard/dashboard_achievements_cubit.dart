@@ -19,7 +19,7 @@ class DashboardAchievementsCubit extends StatefulCubit {
 	final AnalyticsService _analyticsService = GetIt.I<AnalyticsService>();
 	final NotificationService _notificationService = GetIt.I<NotificationService>();
 
-	DashboardAchievementsCubit(this._activeUser, ModalRoute pageRoute): super(pageRoute, options: [StatefulOption.noAutoLoading, StatefulOption.repeatableSubmission]);
+	DashboardAchievementsCubit(this._activeUser, ModalRoute pageRoute): super(pageRoute, options: [StatefulOption.noAutoLoading, StatefulOption.resetSubmissionState]);
 
 	@override
 	Future doLoadData() async {

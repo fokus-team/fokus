@@ -23,7 +23,7 @@ class DashboardPlansCubit extends StatefulCubit {
 	final UIDataAggregator _dataAggregator = GetIt.I<UIDataAggregator>();
 	final PlanKeeperService _planKeeperService = GetIt.I<PlanKeeperService>();
 	
-  DashboardPlansCubit(this._activeUser, ModalRoute pageRoute) : super(pageRoute, options: [StatefulOption.noAutoLoading, StatefulOption.repeatableSubmission]);
+  DashboardPlansCubit(this._activeUser, ModalRoute pageRoute) : super(pageRoute, options: [StatefulOption.noAutoLoading, StatefulOption.resetSubmissionState]);
 
   @override
   Future doLoadData() async {

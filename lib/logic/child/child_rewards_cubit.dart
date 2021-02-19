@@ -24,7 +24,7 @@ class ChildRewardsCubit extends StatefulCubit {
 
 	List<UIReward> _rewards;
 
-  ChildRewardsCubit(this._activeUser, ModalRoute pageRoute) : super(pageRoute, options: [StatefulOption.repeatableSubmission]);
+  ChildRewardsCubit(this._activeUser, ModalRoute pageRoute) : super(pageRoute, options: [StatefulOption.resetSubmissionState]);
 
   Future doLoadData() async {
 		ObjectId caregiverID = _activeUser().connections.first;

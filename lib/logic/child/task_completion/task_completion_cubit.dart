@@ -37,7 +37,7 @@ class TaskCompletionCubit extends StatefulCubit<TaskCompletionState> {
 	final AnalyticsService _analyticsService = GetIt.I<AnalyticsService>();
 
 	TaskCompletionCubit(this._taskInstanceId, this._activeUser, ModalRoute pageRoute, UIPlanInstance _uiPlanInstance) :
-				super(pageRoute, initialState: TaskCompletionState(planInstance: _uiPlanInstance), options: [StatefulOption.repeatableSubmission]);
+				super(pageRoute, initialState: TaskCompletionState(planInstance: _uiPlanInstance), options: [StatefulOption.resetSubmissionState]);
 
 	@override
 	Future doLoadData()  async {

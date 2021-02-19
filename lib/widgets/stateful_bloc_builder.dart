@@ -43,7 +43,7 @@ class StatefulBlocBuilder<CubitType extends StatefulCubit<InitialState>, Initial
 		    }
 		    if (listener != null)
 		      listener(context, state);
-				if (cubit.hasOption(StatefulOption.repeatableSubmission) && state.submitted)
+				if (cubit.hasOption(StatefulOption.resetSubmissionState) && state.submitted)
 					cubit.resetSubmissionState();
 	    }
     );

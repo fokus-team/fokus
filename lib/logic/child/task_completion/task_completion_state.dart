@@ -15,6 +15,10 @@ class TaskCompletionState extends StatefulState {
 				this.current = TaskCompletionStateType.inProgress, super.loaded(submissionState);
 	TaskCompletionState.inBreak({this.taskInstance, this.planInstance, DataSubmissionState submissionState}) :
 				this.current = TaskCompletionStateType.inBreak, super.loaded(submissionState);
+	TaskCompletionState.finished({this.taskInstance, this.planInstance, DataSubmissionState submissionState}) :
+				this.current = TaskCompletionStateType.finished, super.loaded(submissionState);
+	TaskCompletionState.discarded({this.taskInstance, this.planInstance, DataSubmissionState submissionState}) :
+				this.current = TaskCompletionStateType.discarded, super.loaded(submissionState);
 
 	TaskCompletionState copyWith({UITaskInstance taskInstance, UIPlanInstance planInstance,
 			TaskCompletionStateType current, DataLoadingState loadingState, DataSubmissionState submissionState}) {

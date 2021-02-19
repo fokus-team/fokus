@@ -48,43 +48,51 @@ class TaskCompletionCubit extends StatefulCubit<TaskCompletionState> {
 
 		List<Future> updates = [];
 		bool wasPlanStateChanged = false, wasPlanDurationChanged = false;
-
-		if(_planInstance.state != PlanInstanceState.active) {
-			_planInstance.state = PlanInstanceState.active;
-			wasPlanStateChanged = true;
-
-			if (_planInstance.state == PlanInstanceState.notStarted)
-				_analyticsService.logPlanStarted(_planInstance);
-			else if (_planInstance.state == PlanInstanceState.notCompleted)
-				_analyticsService.logPlanResumed(_planInstance);
-			var childId = _activeUser().id;
-			updates.add(_dataRepository.updateActivePlanInstanceState(childId, PlanInstanceState.notCompleted));
-		}
-		if(!isInProgress(_taskInstance.duration) && !isInProgress(_taskInstance.breaks)) {
-			_analyticsService.logTaskStarted(_taskInstance);
-			if(_taskInstance.duration == null) _taskInstance.duration = [];
-			_taskInstance.duration.add(DateSpan(from: TimeDate.now()));
-			updates.add(_dataRepository.updateTaskInstanceFields(_taskInstance.id, duration: _taskInstance.duration, isCompleted: _taskInstance.status.completed ? false : null));
-			if(_taskInstance.status.completed) _taskInstance.status.completed = false;
-
-			if(_planInstance.duration == null) _planInstance.duration = [];
-			_planInstance.duration.add(DateSpan(from: TimeDate.now()));
-			wasPlanDurationChanged = true;
-		}
-		if(wasPlanStateChanged || wasPlanDurationChanged)
-			updates.add(_dataRepository.updatePlanInstanceFields(
-					_planInstance.id,
-					state: wasPlanStateChanged ? PlanInstanceState.active : null,
-					duration: wasPlanDurationChanged ? _planInstance.duration : null)
-			);
-		await Future.value(updates);
-
 		UITaskInstance uiTaskInstance = UITaskInstance.singleWithTask(taskInstance: _taskInstance, task: _task);
 		var planInstance = await _dataAggregator.loadPlanInstance(planInstance: _planInstance, plan: _plan);
+
+		if ((_taskInstance.status.completed && (_taskInstance.status.state == TaskState.evaluated || _taskInstance.status.state == TaskState.rejected))) {
+			if(_taskInstance.status.state == TaskState.evaluated)
+				emit(TaskCompletionState.finished(taskInstance: uiTaskInstance,  planInstance: planInstance));
+			else
+				emit(TaskCompletionState.discarded(taskInstance: uiTaskInstance,  planInstance: planInstance));
+		}
+		else {
+			if(_planInstance.state != PlanInstanceState.active) {
+				_planInstance.state = PlanInstanceState.active;
+				wasPlanStateChanged = true;
+
+				if (_planInstance.state == PlanInstanceState.notStarted)
+					_analyticsService.logPlanStarted(_planInstance);
+				else if (_planInstance.state == PlanInstanceState.notCompleted)
+					_analyticsService.logPlanResumed(_planInstance);
+				var childId = _activeUser().id;
+				updates.add(_dataRepository.updateActivePlanInstanceState(childId, PlanInstanceState.notCompleted));
+			}
+			if(!isInProgress(_taskInstance.duration) && !isInProgress(_taskInstance.breaks)) {
+				_analyticsService.logTaskStarted(_taskInstance);
+				if(_taskInstance.duration == null) _taskInstance.duration = [];
+				_taskInstance.duration.add(DateSpan(from: TimeDate.now()));
+				updates.add(_dataRepository.updateTaskInstanceFields(_taskInstance.id, duration: _taskInstance.duration, isCompleted: _taskInstance.status.completed ? false : null));
+				if(_taskInstance.status.completed) _taskInstance.status.completed = false;
+
+				if(_planInstance.duration == null) _planInstance.duration = [];
+				_planInstance.duration.add(DateSpan(from: TimeDate.now()));
+				wasPlanDurationChanged = true;
+			}
+			if(wasPlanStateChanged || wasPlanDurationChanged)
+				updates.add(_dataRepository.updatePlanInstanceFields(
+						_planInstance.id,
+						state: wasPlanStateChanged ? PlanInstanceState.active : null,
+						duration: wasPlanDurationChanged ? _planInstance.duration : null)
+				);
+			await Future.value(updates);
+
 		if(isInProgress(uiTaskInstance.duration))
 		  emit(TaskCompletionState.inProgress(taskInstance: uiTaskInstance,  planInstance: planInstance));
 		else
 		  emit(TaskCompletionState.inBreak(taskInstance: uiTaskInstance,  planInstance: planInstance));
+		}
 	}
 
 	void switchToBreak() async {

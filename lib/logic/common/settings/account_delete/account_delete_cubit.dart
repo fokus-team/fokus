@@ -83,4 +83,9 @@ class AccountDeleteCubit extends Cubit<AccountDeleteState> {
   }
 
   void passwordChanged(String value) => emit(state.copyWith(password: Password.pure(value, false), status: FormzStatus.pure));
+
+	Future clearForm() async {
+	  var state = this.state;
+		emit(state.copyWith(password: Password.pure('')));
+	}
 }

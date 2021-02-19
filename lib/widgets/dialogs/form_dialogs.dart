@@ -117,6 +117,7 @@ class AccountDeleteDialog extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
+		BlocProvider.of<AccountDeleteCubit>(context).clearForm();
 	  var user = BlocProvider.of<AuthenticationBloc>(context).state.user as UICaregiver;
   	var getText = (String key, {bool customize = true}) => AppLocales.of(context).translate('$_settingsPageKey.profile.delete${_role == UserRole.child && customize ? 'Child' : ''}Account$key');
 	  return BlocListener<AccountDeleteCubit, AccountDeleteState>(
@@ -169,6 +170,7 @@ class AccountDeleteDialog extends StatelessWidget {
 class PasswordChangeDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+		BlocProvider.of<PasswordChangeCubit>(context).clearForm();
     return BlocConsumer<PasswordChangeCubit, PasswordChangeState>(
 	    listener: (context, state) {
 	    	if (state.status.isSubmissionSuccess) {

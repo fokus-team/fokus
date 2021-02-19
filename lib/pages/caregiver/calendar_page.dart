@@ -176,7 +176,7 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 										childrenMarkers.add(_getChildColor(children, childID));
 							});
 						});
-						markers.add(buildMarker(colorSet: childrenMarkers));
+						markers.add(buildMarker(colorSet: childrenMarkers, inPast: date.isBefore(Date.now())));
 					}
 					return markers;
 				}

@@ -122,8 +122,9 @@ class TaskCompletionCubit extends StatefulCubit<TaskCompletionState> {
 
   	_notificationService.sendTaskFinishedNotification(_taskInstanceId, _task.name, _plan.createdBy, _activeUser(), completed: true);
 	  _analyticsService.logTaskFinished(_taskInstance);
+	  var updatedTask =  await _onCompletion(TaskState.notEvaluated);
 		var planInstance = await _dataAggregator.loadPlanInstance(planInstance: _planInstance, plan: _plan);
-		emit(state.copyWithSubmitted(taskInstance: await _onCompletion(TaskState.notEvaluated), planInstance: planInstance));
+		emit(state.copyWithSubmitted(taskInstance: updatedTask, planInstance: planInstance));
   }
 
 	void markAsDiscarded() async {
@@ -133,8 +134,9 @@ class TaskCompletionCubit extends StatefulCubit<TaskCompletionState> {
 
 		_notificationService.sendTaskFinishedNotification(_taskInstanceId, _task.name, _plan.createdBy, _activeUser(), completed: false);
 		_analyticsService.logTaskNotFinished(_taskInstance);
+		var updatedTask =  await _onCompletion(TaskState.rejected);
 		var planInstance = await _dataAggregator.loadPlanInstance(planInstance: _planInstance, plan: _plan);
-		emit(state.copyWithSubmitted(taskInstance: await _onCompletion(TaskState.rejected), planInstance: planInstance));
+		emit(state.copyWithSubmitted(taskInstance: updatedTask, planInstance: planInstance));
 	}
 
 	void updateChecks(int index, MapEntry<String, bool> subtask) async {

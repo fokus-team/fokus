@@ -112,7 +112,7 @@ class OneSignalNotificationService extends NotificationService {
 		  androidAccentColor: AppColors.notificationAccentColor,
 		  existingAndroidChannelId: type.channel.id,
 		  androidLargeIcon: icon?.getPath,
-		  buttons: osButtons,
+		  //buttons: osButtons,
 		  additionalData: data.toJson(),
 		  androidGroup: group?.key,
 		  androidGroupMessage: group?.title?.getTranslations()

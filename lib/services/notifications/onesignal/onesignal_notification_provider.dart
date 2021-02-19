@@ -93,7 +93,7 @@ class OneSignalNotificationProvider extends NotificationProvider {
 		  }
 		  onNotificationReceived(data.type);
 	  });
-	  OneSignal.shared.setNotificationOpenedHandler(_onNotificationOpened);
+	  //OneSignal.shared.setNotificationOpenedHandler(_onNotificationOpened);
 	  OneSignal.shared.setSubscriptionObserver((changes) {
 	  	if (activeUser == null)
 	  		return;

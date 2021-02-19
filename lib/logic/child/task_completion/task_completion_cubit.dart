@@ -51,7 +51,7 @@ class TaskCompletionCubit extends StatefulCubit<TaskCompletionState> {
 		UITaskInstance uiTaskInstance = UITaskInstance.singleWithTask(taskInstance: _taskInstance, task: _task);
 		var planInstance = await _dataAggregator.loadPlanInstance(planInstance: _planInstance, plan: _plan);
 
-		if ((!loadingForFirstTime && _taskInstance.status.completed && (_taskInstance.status.state == TaskState.evaluated || _taskInstance.status.state == TaskState.rejected))) {
+		if (!loadingForFirstTime && _taskInstance.status.completed && (_taskInstance.status.state == TaskState.evaluated || _taskInstance.status.state == TaskState.rejected)) {
 			if(_taskInstance.status.state == TaskState.evaluated)
 				emit(TaskCompletionState.finished(taskInstance: uiTaskInstance,  planInstance: planInstance));
 			else

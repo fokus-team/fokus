@@ -115,9 +115,7 @@ class CaregiverSignInPage extends StatelessWidget {
 			UIButton(
 				'$_pageKey.resetPassword',
 				() async {
-					if (!await context.read<CaregiverSignInCubit>().resetPassword())
-						showInfoSnackbar(context, '$_pageKey.enterEmail');
-					else
+					if (await context.read<CaregiverSignInCubit>().resetPassword())
 						showSuccessSnackbar(context, '$_pageKey.resetEmailSent');
 				},
 				null,

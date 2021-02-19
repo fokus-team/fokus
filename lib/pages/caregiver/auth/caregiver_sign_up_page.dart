@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/gestures.dart';
 import 'package:fokus/utils/ui/snackbar_utils.dart';
@@ -30,8 +31,10 @@ class CaregiverSignUpPage extends StatelessWidget {
 				  listener: (context, state) async {
 					  if (state.status.isSubmissionFailure && (state.signInError != null || state.signUpError != null))
 							showFailSnackbar(context, state.signUpError?.key ?? state.signInError.key);
-					  else if (state.status.isSubmissionSuccess && state.authMethod == AuthMethod.email && await context.read<CaregiverSignUpCubit>().verificationEnforced())
-					  	showSuccessSnackbar(context, 'authentication.emailVerificationSent');
+					  else if (state.status.isSubmissionSuccess && state.authMethod == AuthMethod.email && await context.read<CaregiverSignUpCubit>().verificationEnforced()) {
+							TextInput.finishAutofillContext(shouldSave: true);
+							showSuccessSnackbar(context, 'authentication.emailVerificationSent');
+						}
 				  },
 					child: ListView(
 						padding: EdgeInsets.symmetric(vertical: AppBoxProperties.screenEdgePadding),
@@ -66,7 +69,8 @@ class CaregiverSignUpPage extends StatelessWidget {
 								labelKey: 'authentication.name',
 								icon: Icons.person,
 								getErrorKey: (state) => [state.name.error.key],
-								inputType: TextInputType.name
+								inputType: TextInputType.name,
+								autofillHints: [AutofillHints.givenName],
 							),
 							AuthenticationInputField<CaregiverSignUpCubit, CaregiverSignUpState>(
 								getField: (state) => state.email,
@@ -74,7 +78,8 @@ class CaregiverSignUpPage extends StatelessWidget {
 								labelKey: 'authentication.email',
 								icon: Icons.email,
 								getErrorKey: (state) => [state.email.error.key],
-								inputType: TextInputType.emailAddress
+								inputType: TextInputType.emailAddress,
+								autofillHints: [AutofillHints.email],
 							),
 							AuthenticationInputField<CaregiverSignUpCubit, CaregiverSignUpState>(
 								getField: (state) => state.password,
@@ -82,7 +87,8 @@ class CaregiverSignUpPage extends StatelessWidget {
 								labelKey: 'authentication.password',
 								icon: Icons.lock,
 								getErrorKey: (state) => [state.password.error.key, {'LENGTH': Password.minPasswordLength}],
-								hideInput: true
+								hideInput: true,
+								autofillHints: [AutofillHints.newPassword],
 							),
 							AuthenticationInputField<CaregiverSignUpCubit, CaregiverSignUpState>(
 								getField: (state) => state.confirmedPassword,
@@ -90,7 +96,8 @@ class CaregiverSignUpPage extends StatelessWidget {
 								labelKey: 'authentication.confirmPassword',
 								icon: Icons.lock,
 								getErrorKey: (state) => [state.confirmedPassword.error.key],
-								hideInput: true
+								hideInput: true,
+								autofillHints: [AutofillHints.newPassword],
 							),
 							_buildAgreementCheckbox(context),
 							AuthButton(
@@ -98,7 +105,7 @@ class CaregiverSignUpPage extends StatelessWidget {
 									ButtonType.signUp,
 									() => BlocProvider.of<CaregiverSignUpCubit>(context).signUpFormSubmitted(),
 									Colors.teal
-								)
+								),
 							),
 							AuthDivider(),
 							AuthButton.google(

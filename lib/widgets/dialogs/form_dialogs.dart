@@ -179,10 +179,12 @@ class PasswordChangeDialog extends StatelessWidget {
 	    },
 	    builder: (context, state) {
 	    	var titleKey = state.formType == PasswordChangeType.change ? '$_settingsPageKey.profile.changePasswordLabel' : 'page.loginSection.caregiverSignIn.changeResetLabel';
-	    	return FormDialog(
+	    	return AutofillGroup(
+	    	  child: FormDialog(
 			    title: AppLocales.of(context).translate(titleKey),
 			    fields: [
 			    	if (state.formType == PasswordChangeType.change)
+			    		//TODO: add email in input to update password in google / apple
 					    Padding(
 						    padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
 						    child: AuthenticationInputField<PasswordChangeCubit, PasswordChangeState>(
@@ -194,31 +196,32 @@ class PasswordChangeDialog extends StatelessWidget {
 							    hideInput: true
 						    ),
 					    ),
-				    Padding(
-					    padding: EdgeInsets.symmetric(horizontal: 20.0),
-					    child: AuthenticationInputField<PasswordChangeCubit, PasswordChangeState>(
-						    getField: (state) => state.newPassword,
-						    changedAction: (cubit, value) => cubit.newPasswordChanged(value),
-						    labelKey: 'authentication.newPassword',
-						    icon: Icons.lock,
-						    getErrorKey: (state) => [state.newPassword.error.key, {'LENGTH': Password.minPasswordLength}],
-						    hideInput: true
-					    ),
-				    ),
-				    Padding(
-					    padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-					    child: AuthenticationInputField<PasswordChangeCubit, PasswordChangeState>(
-						    getField: (state) => state.confirmedPassword,
-						    changedAction: (cubit, value) => cubit.confirmedPasswordChanged(value),
-						    labelKey: 'authentication.confirmPassword',
-						    icon: Icons.lock,
-						    getErrorKey: (state) => [state.confirmedPassword.error.key],
-						    hideInput: true
-					    ),
-				    ),
+							Padding(
+								padding: EdgeInsets.symmetric(horizontal: 20.0),
+								child: AuthenticationInputField<PasswordChangeCubit, PasswordChangeState>(
+									getField: (state) => state.newPassword,
+									changedAction: (cubit, value) => cubit.newPasswordChanged(value),
+									labelKey: 'authentication.newPassword',
+									icon: Icons.lock,
+									getErrorKey: (state) => [state.newPassword.error.key, {'LENGTH': Password.minPasswordLength}],
+									hideInput: true,
+								),
+							),
+							Padding(
+								padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+								child: AuthenticationInputField<PasswordChangeCubit, PasswordChangeState>(
+									getField: (state) => state.confirmedPassword,
+									changedAction: (cubit, value) => cubit.confirmedPasswordChanged(value),
+									labelKey: 'authentication.confirmPassword',
+									icon: Icons.lock,
+									getErrorKey: (state) => [state.confirmedPassword.error.key],
+									hideInput: true,
+								),
+							),
 			    ],
 			    onConfirm: () => BlocProvider.of<PasswordChangeCubit>(context).changePasswordFormSubmitted(),
-		    );
+		    ),
+	    	);
 	    },
     );
   }

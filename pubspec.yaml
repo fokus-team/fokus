@@ -7,7 +7,7 @@ authors:
 repository: https://github.com/fokus-team/fokus
 homepage: https://fokus.link
 
-version: 0.7.5-dev
+version: 0.7.6-dev
 
 environment:
     sdk: ">=2.7.0 <3.0.0"

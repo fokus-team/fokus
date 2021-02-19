@@ -125,7 +125,7 @@ class _ChildCalendarPageState extends State<ChildCalendarPage> with TickerProvid
 					if (events.isNotEmpty) {
 						List<Color> planMarkers = [];
 						events.forEach((plan) { planMarkers.add(AppColors.childButtonColor); });
-						markers.add(buildMarker(colorList: planMarkers));
+						markers.add(buildMarker(colorList: planMarkers, inPast: date.isBefore(Date.now())));
 					}
 					return markers;
 				}

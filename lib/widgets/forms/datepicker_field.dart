@@ -65,7 +65,9 @@ class _DatePickerFieldState extends State<DatePickerField> {
     super.initState();
 		_showClearButton = widget.dateController.text.isNotEmpty;
     widget.dateController.addListener(() {
-      setState(() => { _showClearButton = widget.dateController.text.isNotEmpty });
+      if (this.mounted) {
+				setState(() => { _showClearButton = widget.dateController.text.isNotEmpty });
+			}
     });
   }
 

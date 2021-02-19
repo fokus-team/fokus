@@ -51,4 +51,13 @@ class PasswordChangeCubit extends Cubit<PasswordChangeState> {
   void currentPasswordChanged(String value) => emit(state.copyWith(currentPassword: Password.pure(value, false), status: FormzStatus.pure));
   void newPasswordChanged(String value) => emit(state.copyWith(newPassword: Password.pure(value), status: FormzStatus.pure));
   void confirmedPasswordChanged(String value) => emit(state.copyWith(confirmedPassword: state.confirmedPassword.copyPure(value: value), status: FormzStatus.pure));
+	
+	Future clearForm() async {
+	  var state = this.state;
+		emit(state.copyWith(
+			currentPassword: Password.pure(''),
+			newPassword: Password.pure(''),
+			confirmedPassword: ConfirmedPassword.pure(original: Password.pure(''), value: '')
+		));
+	}
 }

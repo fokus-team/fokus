@@ -33,7 +33,7 @@ class CalendarCubit extends Cubit<CalendarState> {
 	  var activeUser = _activeUser();
 	  var getRoleId = (UserRole paramRole) => paramRole == activeUser.role ? activeUser.id : null;
 	  _plans = Map.fromEntries(_planEntries(await _dataRepository.getPlans(caregiverId: getRoleId(UserRole.caregiver),
-			  childId: getRoleId(UserRole.child))));
+			  childId: getRoleId(UserRole.child), active: true)));
 
 	  Map<UIChild, bool> filter;
 	  if (activeUser.role == UserRole.caregiver) {

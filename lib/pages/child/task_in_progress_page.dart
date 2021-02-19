@@ -252,7 +252,8 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 					),
 					_getTitle('$_pageKey.cards.rejected.title'),
 					_getSubtitle('$_pageKey.cards.rejected.content1'),
-				]
+				],
+				showFirst: state.current == TaskCompletionStateType.discarded,
 			),
 			SlidingCard(
 				key: _doneCard,
@@ -269,7 +270,8 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 								textAlign: TextAlign.center,
 							)
 					)
-				]
+				],
+				showFirst: state.current == TaskCompletionStateType.finished,
 			)
 		];
 	}
@@ -367,7 +369,7 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 			parent: _bottomBarController,
 			curve: Curves.easeInOutQuint,
 		));
-		_taskListFabAnimation= Tween<Offset>(
+		_taskListFabAnimation = Tween<Offset>(
 			begin: Offset(0, 2),
 			end: Offset.zero,
 		).animate(CurvedAnimation(

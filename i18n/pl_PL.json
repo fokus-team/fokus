@@ -6,7 +6,6 @@
 			"panel": "Panel",
 			"plans": "Plany",
 			"awards": "Nagrody",
-			"currencies": "Waluty",
 			"caregiverCode": "Mój kod opiekuna"
 		},
 		"child": {
@@ -125,14 +124,18 @@
 				},
 				"appSettings": {
 					"header": "Ustawienia aplikacji",
+					"currenciesLabel": "Waluty punktowe",
 					"changeLanguageLabel": "Język aplikacji",
 					"languages": {
 						"default": "Systemowy (domyślny)",
 						"pl_PL": "Polski",
 						"en_US": "Angielski"
-					},
-					"showAppInfoLabel": "O aplikacji",
-					"appInfo": {
+					}
+				},
+				"appInfo": {
+					"header": "Informacje",
+					"showAboutAppLabel": "O aplikacji",
+					"about": {
 						"version": "Wersja",
 						"description": "Fokus to aplikacja mobilna pomagająca dzieciom w realizacji codziennych zadań pod kontrolą opiekunów. Powstała w ramach projektu grupowego realizowanego na Politechnice Gdańskiej.",
 						"creators": "Autorzy",

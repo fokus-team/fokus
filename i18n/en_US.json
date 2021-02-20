@@ -6,7 +6,6 @@
 			"panel": "Dashboard",
 			"plans": "Plans",
 			"awards": "Awards",
-			"currencies": "Currencies",
 			"caregiverCode": "My caregiver code"
 		},
 		"child": {
@@ -125,14 +124,18 @@
 				},
 				"appSettings": {
 					"header": "App settings",
+					"currenciesLabel": "Point currencies",
 					"changeLanguageLabel": "App language",
 					"languages": {
 						"default": "System (default)",
 						"pl_PL": "Polish",
 						"en_US": "English"
-					},
-					"showAppInfoLabel": "About the app",
-					"appInfo": {
+					}
+				},
+				"appInfo": {
+					"header": "App info",
+					"showAboutAppLabel": "About the app",
+					"about": {
 						"version": "Version",
 						"description": "Fokus is a mobile application that helps kids complete their daily tasks under parental control. It was created as part of a team project at Gdansk University of Technology.",
 						"creators": "Created by",

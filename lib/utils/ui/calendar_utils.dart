@@ -62,7 +62,7 @@ Widget buildTableCalendarCell(DateTime date, Color seletedColor, {bool isCellSel
 	);
 }
 
-Widget buildMarker({Set<Color> colorSet, List<Color> colorList}) {
+Widget buildMarker({Set<Color> colorSet, List<Color> colorList, bool inPast = false}) {
 	return Positioned(
 		left: 6.0,
 		right: 6.0,
@@ -71,6 +71,7 @@ Widget buildMarker({Set<Color> colorSet, List<Color> colorList}) {
 			alignment: WrapAlignment.center,
 			spacing: 2.0,
 			children: (colorSet != null ? colorSet : colorList).take(4).map((marker) => Badge(
+				shape: inPast ? BadgeShape.square : BadgeShape.circle,
 				badgeColor: marker,
 				elevation: 0,
 				padding: EdgeInsets.all(3.6),

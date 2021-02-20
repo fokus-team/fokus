@@ -13,7 +13,7 @@ import 'package:fokus/model/ui/user/ui_user.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/bloc_utils.dart';
 import 'package:fokus/utils/ui/snackbar_utils.dart';
-import 'package:fokus/widgets/dialogs/app_info_dialog.dart';
+import 'package:fokus/widgets/dialogs/about_app_dialog.dart';
 import 'package:fokus/widgets/dialogs/reward_dialog.dart';
 import 'package:fokus/widgets/dialogs/badge_dialog.dart';
 import 'package:fokus/widgets/dialogs/general_dialog.dart';
@@ -98,10 +98,10 @@ void showUserCodeDialog(BuildContext context, String title, String code) {
 	);
 }
 
-void showAppInfoDialog(BuildContext context) {
+void showAboutAppDialog(BuildContext context) {
 	showDialog(
 		context: context,
-		builder: (context) => AppInfoDialog()
+		builder: (context) => AboutAppDialog()
 	);
 }
 

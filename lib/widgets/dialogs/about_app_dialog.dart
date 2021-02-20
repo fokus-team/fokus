@@ -5,16 +5,16 @@ import 'package:lottie/lottie.dart';
 import 'package:package_info/package_info.dart';
 import 'package:fokus/model/ui/external_url.dart';
 
-class AppInfoDialog extends StatefulWidget {
+class AboutAppDialog extends StatefulWidget {
 	@override
-	_AppInfoDialogState createState() => new _AppInfoDialogState();
+	_AboutAppDialogState createState() => new _AboutAppDialogState();
 }
 
-class _AppInfoDialogState extends State<AppInfoDialog> {
-	final String _settingsKey = 'page.settings.content.appSettings.appInfo';
+class _AboutAppDialogState extends State<AboutAppDialog> {
+	final String _settingsKey = 'page.settings.content.appInfo.about';
 
 	PackageInfo _packageInfo = PackageInfo();
-	final String creators = 'Stanisław Góra, Mateusz Janicki,\nMikołaj Mirko';
+	final String creators = 'Stanisław Góra,\nMateusz Janicki,\nMikołaj Mirko';
 
 	@override
 	void initState() {

@@ -62,12 +62,13 @@ class PlanKeeperService implements ActiveUserObserver {
 		]);
 	}
 
-	Future createPlansForToday(List<Plan> plans, List<ObjectId> childrenIDs) async {
+	Future<List<PlanInstance>> createPlansForToday(List<Plan> plans, List<ObjectId> childrenIDs) async {
 		var todayPlans = _repeatabilityService.filterPlansByDate(plans, Date.now());
 		List<PlanInstance> instances = [];
 		for (var plan in todayPlans)
 			instances.addAll(childrenIDs.where(plan.assignedTo.contains).map((child) => PlanInstance.fromPlan(plan, assignedTo: child)));
-		return _dataRepository.createPlanInstances(instances);
+		await _dataRepository.createPlanInstances(instances);
+		return instances;
 	}
 
 	Future _updateOutdatedData(List<Plan> plans, List<ObjectId> childrenIDs) async {

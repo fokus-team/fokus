@@ -53,7 +53,7 @@ class DashboardPlansCubit extends StatefulCubit {
 		var assignedIds = filterAssigned((plan) => ids.contains(plan.id) && !plan.assignedTo.contains(child.id));
 		var unassignedIds = filterAssigned((plan) => !ids.contains(plan.id) && plan.assignedTo.contains(child.id));
 		var assignedPlans = _availablePlans.where((plan) => assignedIds.contains(plan.id)).toList()..forEach((plan) => plan.assignedTo.add(child.id));
-		await Future.wait([
+		var results = await Future.wait([
 			_dataRepository.updatePlanFields(assignedIds, assign: child.id),
 			_dataRepository.updatePlanFields(unassignedIds, unassign: child.id),
 			_planKeeperService.createPlansForToday(assignedPlans, [child.id])
@@ -67,13 +67,7 @@ class DashboardPlansCubit extends StatefulCubit {
 			return assignedTo;
 		};
 		var newPlans = tabState.availablePlans.map((plan) => plan.copyWith(assignedTo: updateAssigned(plan))).toList();
-		var existingChildPlanIds = tabState.childPlans.map((plan) => plan.planId).toSet();
-		var newChildPlans = assignedPlans.where((plan) => !existingChildPlanIds.contains(plan.id)).toList();
-		List<UIPlanInstance> childPlans;
-		if (newChildPlans.isNotEmpty) {
-			var newChildPlanInstances = newChildPlans.map((e) => PlanInstance.fromPlan(e, assignedTo: child.id)).toList();
-			childPlans = List.of(tabState.childPlans)..addAll(await _dataAggregator.getUIPlanInstances(plans: newChildPlans, instances: newChildPlanInstances));
-		}
+		List<UIPlanInstance> childPlans = List.of(tabState.childPlans)..addAll(await _dataAggregator.getUIPlanInstances(plans: assignedPlans, instances: results[2]));
 		emit(tabState.copyWith(availablePlans: newPlans, childPlans: childPlans, submissionState: DataSubmissionState.submissionSuccess));
 	}
 }

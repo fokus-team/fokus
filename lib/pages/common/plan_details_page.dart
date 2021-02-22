@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
 import 'package:fokus/logic/common/plan_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
 import 'package:fokus/model/db/user/user_role.dart';
 import 'package:fokus/model/pages/plan_form_params.dart';
 import 'package:fokus/model/ui/plan/ui_plan.dart';
@@ -39,11 +40,10 @@ class _PlanDetailsPageState extends State<PlanDetailsPage> {
           builder: (context, state) => _buildView(context, state),
           loadingBuilder: (_, __) => SizedBox.shrink(),
           listener: (context, state) {
-            if (state.submitted) {
+            if (state.submitted)
               showSuccessSnackbar(context, '$_pageKey.content.planRemovedText');
-            }
           },
-          popConfig: SubmitPopConfig(count: 2),
+          popConfig: SubmitPopConfig(count: 2, moment: DataSubmissionState.submissionSuccess),
         ),
         floatingActionButton: SimpleStatefulBlocBuilder<PlanCubit, PlanCubitState>(
             builder: (context, state) => _buildFloatingButton(state)

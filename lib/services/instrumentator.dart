@@ -42,7 +42,7 @@ class Instrumentator implements ActiveUserObserver {
 	}
 
 	void _setupLogger() {
-		Logger.root.level = Level.ALL;
+		Logger.root.level = Foundation.kReleaseMode ? Level.SEVERE : Level.ALL;
 		Logger.root.onRecord.listen((record) {
 			if (record.loggerName.startsWith('MongoDart'))
 				return;

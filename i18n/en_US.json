@@ -71,8 +71,8 @@
 				"createNewProfile": "Create a new child profile",
 				"addProfile": "Add profile",
 				"avatarGroups": {
-					"boy": "Chłopak",
-					"girl": "Dziewczyna"
+					"boy": "Boy",
+					"girl": "Girl"
 				}
 			},
 			"backToLoginPage": "Back to login page",

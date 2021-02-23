@@ -539,8 +539,8 @@
 						"break": "Łączny czas przerw"
 					},
 					"chips" : {
-						"rating" : "{RATING}/5",
 						"rejected" : "Odrzucone",
+						"rating" : "{RATING}/5",
 						"notEvaluated" : "Nieocenione",
 						"rejectedTooltip" : "Zadanie odrzucone przez opiekuna",
 						"notEvaluatedTooltip" : "Poproś opiekuna o ocenę",

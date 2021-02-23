@@ -165,7 +165,7 @@
 					"noCaregiverProfilesAdded": "No befriended caregivers found",
 					"caregiverCode": "Caregiver code",
 					"caregiverAddedText": "New friend added",
-					"caregiverAlreadyBefriended": "This caregiver is already your friend",
+					"caregiverAlreadyBefriendedError": "This caregiver is already your friend",
 					"enteredOwnCaregiverCodeError": "You can't befriend yourself",
 					"todayPlans": "{NUM_PLANS, plural, offset:0 zero {No plans} one {# plan} other {# plans}} for today",
 					"activePlan": "1 plan currently in progress"
@@ -532,16 +532,16 @@
 						"label": "Time to complete the task",
 						"notSet": "Unlimited",
 						"set": "Limited to",
-						"format": "{HOURS_NUM, plural, offset:0 zero {} other {# hr }}{MINUTES_NUM} min",
 						"duration": "Total time to complete the task",
 						"formatDuration": "Time: {TIME_NUM}",
 						"formatBreak": "Break: {TIME_NUM}",
+						"format": "{HOURS_NUM, plural, offset:0 zero {} other {# hr }}{MINUTES_NUM} min",
 						"break": "Total breaks time"
 					},
 					"chips" : {
 						"rejected" : "Rejected",
-						"notEvaluated" : "Not evaluated",
 						"rating" : "{RATING}/5",
+						"notEvaluated" : "Not evaluated",
 						"rejectedTooltip" : "Task has been rejected by caregiver",
 						"notEvaluatedTooltip" : "Ask caregiver to rate task",
 						"pointsPossible" : "Max points to earn",

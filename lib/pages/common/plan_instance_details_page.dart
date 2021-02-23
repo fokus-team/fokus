@@ -4,6 +4,8 @@ import 'package:fokus/logic/common/plan_instance_cubit.dart';
 import 'package:fokus/logic/common/timer/timer_cubit.dart';
 import 'package:fokus/model/db/plan/plan_instance_state.dart';
 import 'package:fokus/model/db/plan/task_status.dart';
+import 'package:fokus/model/navigation/plan_instance_params.dart';
+import 'package:fokus/model/navigation/task_in_progress_params.dart';
 import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/ui/plan/ui_plan_instance.dart';
 import 'package:fokus/utils/ui/snackbar_utils.dart';
@@ -23,7 +25,7 @@ import 'package:fokus/widgets/segment.dart';
 class PlanInstanceDetailsPage extends StatefulWidget {
 	final bool showActions;
 
-  PlanInstanceDetailsPage(Map<String, dynamic> args) : showActions = args['actions'] ?? true;
+  PlanInstanceDetailsPage(PlanInstanceParams args) : showActions = args.actions ?? true;
 
   @override
   _PlanInstanceDetailsPageState createState() => new _PlanInstanceDetailsPageState();
@@ -42,9 +44,9 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 			);
 		}
 		else {
-			final result = await Navigator.of(context).pushNamed(AppPage.childTaskInProgress.name, arguments: {"TaskId" : task.id, "UIPlanInstance" : plan});
+			final result = await Navigator.of(context).pushNamed(AppPage.childTaskInProgress.name, arguments: TaskInProgressParams(taskId: task.id, planInstance: plan));
 			if(result != null)
-				BlocProvider.of<PlanInstanceCubit>(context).uiPlanInstance = (result as Map<String, dynamic>)['plan'];
+				BlocProvider.of<PlanInstanceCubit>(context).uiPlanInstance = result;
 		}
 	}
 

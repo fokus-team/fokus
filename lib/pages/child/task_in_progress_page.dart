@@ -57,7 +57,7 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
   Widget _buildPage(TaskCompletionState state) {
 	  return WillPopScope(
 		  onWillPop: () async {
-			  Navigator.of(context).pop({"plan" : state is TaskCompletionState ? state.planInstance : null});
+			  Navigator.of(context).pop(state is TaskCompletionState ? state.planInstance : null);
 			  return false;
 		  },
 		  child: Scaffold(

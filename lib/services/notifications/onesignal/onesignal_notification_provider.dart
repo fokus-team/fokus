@@ -1,4 +1,6 @@
 import 'package:flutter/widgets.dart';
+import 'package:fokus/model/navigation/child_dashboard_params.dart';
+import 'package:fokus/model/navigation/plan_instance_params.dart';
 import 'package:get_it/get_it.dart';
 import 'package:flutter/foundation.dart' as Foundation;
 import 'package:onesignal_flutter/onesignal_flutter.dart';
@@ -63,14 +65,14 @@ class OneSignalNotificationProvider extends NotificationProvider {
 		dynamic arguments = data.subject;
 		if (data.type.redirectPage == AppPage.planInstanceDetails) {
 			arguments = await _dataAggregator.loadPlanInstance(planInstanceId: data.subject);
-			navigate(data.type.redirectPage, {'plan': arguments});
+			navigate(data.type.redirectPage, PlanInstanceParams(planInstance: arguments));
 			return;
 		} else if (data.type.redirectPage == AppPage.caregiverChildDashboard) {
-			arguments = Map<String, dynamic>();
-			arguments['tab'] = data.type == NotificationType.rewardBought ? 1 : 0;
-			arguments['child'] = await _dataAggregator.loadChild(data.sender);
-			if (data.subject != null)
-				arguments['id'] = data.subject;
+			arguments = ChildDashboardParams(
+				tab: data.type == NotificationType.rewardBought ? 1 : 0,
+				child: await _dataAggregator.loadChild(data.sender),
+				id: data.subject
+			);
 		}
 		navigate(data.type.redirectPage, arguments);
 	}

@@ -20,9 +20,9 @@ class NameChangeCubit extends Cubit<NameChangeState> {
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final AuthenticationProvider _authenticationProvider = GetIt.I<AuthenticationProvider>();
 
-  NameChangeCubit(this._activeUser, this._authBloc, Map<String, dynamic> args) :
-		  _changedUser = args != null ? args['child'] : _activeUser(),
-      super(NameChangeState(name: Name.pure((args != null ? args['child'] : _activeUser())?.name)));
+  NameChangeCubit(this._activeUser, this._authBloc, UIUser _changedUser) :
+		  _changedUser = _changedUser ?? _activeUser(),
+      super(NameChangeState(name: Name.pure((_changedUser ?? _activeUser())?.name)));
 
   Future nameChangeFormSubmitted() async {
 	  if (this.state.status != FormzStatus.pure)

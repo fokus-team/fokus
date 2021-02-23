@@ -3,6 +3,7 @@ import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
 import 'package:fokus/model/db/plan/plan_instance.dart';
 import 'package:fokus/model/db/plan/plan_instance_state.dart';
 import 'package:fokus/model/db/plan/task_instance.dart';
+import 'package:fokus/model/navigation/plan_instance_params.dart';
 import 'package:fokus/model/notification/notification_type.dart';
 import 'package:fokus/model/ui/plan/ui_plan_instance.dart';
 import 'package:fokus/model/ui/task/ui_task_instance.dart';
@@ -26,7 +27,7 @@ class PlanInstanceCubit extends StatefulCubit {
 	UIPlanInstance uiPlanInstance;
 	PlanInstance _planInstance;
 
-	PlanInstanceCubit(this.uiPlanInstance, ModalRoute modalRoute) : super(modalRoute);
+	PlanInstanceCubit(PlanInstanceParams params, ModalRoute modalRoute) : uiPlanInstance = params.planInstance, super(modalRoute);
 
 	@override
 	List<NotificationType> dataTypeSubscription() => [NotificationType.taskApproved, NotificationType.taskRejected, NotificationType.taskFinished, NotificationType.taskUnfinished];

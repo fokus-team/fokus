@@ -10,7 +10,7 @@ import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
 import 'package:fokus/model/ui/gamification/ui_points.dart';
 import 'package:fokus/model/ui/gamification/ui_reward.dart';
 import 'package:fokus/model/db/gamification/reward.dart';
-import 'package:fokus/model/pages/plan_form_params.dart';
+import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/ui/user/ui_caregiver.dart';
 import 'package:fokus/services/analytics_service.dart';
 

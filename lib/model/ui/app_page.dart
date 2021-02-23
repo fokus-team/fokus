@@ -71,3 +71,5 @@ extension AppPageName on AppPage {
 enum AppPageSection {
 	login, caregiver, child
 }
+
+enum AppFormType { create, edit, copy }

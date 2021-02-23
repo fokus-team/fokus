@@ -6,6 +6,7 @@ import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
 import 'package:fokus/logic/common/timer/timer_cubit.dart';
 import 'package:fokus/model/db/plan/plan_instance_state.dart';
 import 'package:fokus/model/db/user/user_role.dart';
+import 'package:fokus/model/navigation/plan_instance_params.dart';
 import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/ui/plan/ui_plan_instance.dart';
 import 'package:fokus/services/app_locales.dart';
@@ -69,7 +70,7 @@ Segment _getPlansSegment({BuildContext context, List<UIPlanInstance> plans, Stri
 					subtitle: plan.description(context),
 					progressPercentage: (plan.state.inProgress || plan.state.ended) ? plan.completedTaskCount / plan.taskCount : null,
 					chips: _getTaskChipForPlan(context, plan, displayTimer),
-					onTapped: () => Navigator.of(context).pushNamed(AppPage.planInstanceDetails.name, arguments: {'plan': plan, 'actions': userRole == UserRole.child})
+					onTapped: () => Navigator.of(context).pushNamed(AppPage.planInstanceDetails.name, arguments: PlanInstanceParams(planInstance: plan, actions: userRole == UserRole.child))
 				)
 		],
 	);

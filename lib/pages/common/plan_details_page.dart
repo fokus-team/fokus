@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mongo_dart/mongo_dart.dart' as Mongo;
+
 import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
 import 'package:fokus/logic/common/plan_cubit.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
 import 'package:fokus/model/db/user/user_role.dart';
-import 'package:fokus/model/pages/plan_form_params.dart';
+import 'package:fokus/model/navigation/plan_form_params.dart';
+import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/ui/plan/ui_plan.dart';
 import 'package:fokus/model/ui/task/ui_task.dart';
 import 'package:fokus/utils/ui/snackbar_utils.dart';
 import 'package:fokus/widgets/stateful_bloc_builder.dart';
-import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/ui/gamification/ui_currency.dart';
 import 'package:fokus/model/ui/form/task_form_model.dart';
 import 'package:fokus/model/ui/ui_button.dart';
@@ -23,7 +25,6 @@ import 'package:fokus/widgets/cards/item_card.dart';
 import 'package:fokus/widgets/buttons/popup_menu_list.dart';
 import 'package:fokus/widgets/segment.dart';
 import 'package:fokus/widgets/cards/task_card.dart';
-import 'package:mongo_dart/mongo_dart.dart' as Mongo;
 
 class PlanDetailsPage extends StatefulWidget {
   @override

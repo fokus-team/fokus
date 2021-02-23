@@ -7,6 +7,7 @@ import 'package:fokus/logic/caregiver/child_dashboard/dashboard_achievements_cub
 import 'package:fokus/logic/caregiver/child_dashboard/dashboard_plans_cubit.dart';
 import 'package:fokus/logic/caregiver/child_dashboard/dashboard_rewards_cubit.dart';
 import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
+import 'package:fokus/model/navigation/child_dashboard_params.dart';
 import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/ui/gamification/ui_badge.dart';
 import 'package:fokus/model/ui/plan/ui_plan.dart';
@@ -33,12 +34,12 @@ import 'package:intl/intl.dart';
 import 'package:smart_select/smart_select.dart';
 
 class CaregiverChildDashboardPage extends StatefulWidget {
-	final Map<String, dynamic> args;
+	final ChildDashboardParams _args;
 
-	CaregiverChildDashboardPage(this.args);
+	CaregiverChildDashboardPage(this._args);
 
 	@override
-	_CaregiverChildDashboardPageState createState() => _CaregiverChildDashboardPageState(args);
+	_CaregiverChildDashboardPageState createState() => _CaregiverChildDashboardPageState(_args);
 }
 
 class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPage> with TickerProviderStateMixin {
@@ -48,7 +49,7 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 	int _currentIndex;
   StreamController<int> _tabIndexStream = StreamController<int>.broadcast();
 
-	_CaregiverChildDashboardPageState(Map<String, dynamic> args) : _currentIndex = args['tab'] ?? 0, _childProfile = args['child'];
+	_CaregiverChildDashboardPageState(ChildDashboardParams args) : _currentIndex = args.tab ?? 0, _childProfile = args.child;
 
 	final double customBottomBarHeight = 40.0;
 	final Duration bottomBarAnimationDuration = Duration(milliseconds: 400);

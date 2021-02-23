@@ -10,7 +10,7 @@ import 'package:fokus/model/notification/notification_type.dart';
 import 'package:fokus/services/app_route_observer.dart';
 import 'package:fokus/services/notifications/notification_service.dart';
 import 'package:fokus/services/observers/page_foreground_observer.dart';
-import 'package:fokus/model/pages/plan_form_params.dart';
+import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/services/observers/data_update_observer.dart';
 
 part 'stateful_state.dart';

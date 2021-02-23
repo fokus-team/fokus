@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
+import 'package:fokus/model/navigation/child_dashboard_params.dart';
 
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/logic/caregiver/caregiver_panel_cubit.dart';
@@ -60,7 +61,7 @@ class CaregiverPanelPage extends StatelessWidget {
 				),
 				elements: <Widget>[
 					for (var child in state.children)
-						ChildItemCard(child: child, onTapped: () => Navigator.of(context).pushNamed(AppPage.caregiverChildDashboard.name, arguments: {'child': child})),
+						ChildItemCard(child: child, onTapped: () => Navigator.of(context).pushNamed(AppPage.caregiverChildDashboard.name, arguments: ChildDashboardParams(child: child))),
 				]
 			),
 			Segment(
@@ -80,5 +81,4 @@ class CaregiverPanelPage extends StatelessWidget {
 			)
 		];
 	}
-
 }

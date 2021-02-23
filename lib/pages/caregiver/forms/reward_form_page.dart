@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:fokus/logic/caregiver/forms/reward/reward_form_cubit.dart';
 import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
-import 'package:fokus/model/pages/plan_form_params.dart';
+import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/ui/gamification/ui_points.dart';
 import 'package:fokus/utils/ui/dialog_utils.dart';
 import 'package:fokus/utils/ui/form_config.dart';

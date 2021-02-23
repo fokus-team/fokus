@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:fokus/model/navigation/task_in_progress_params.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
@@ -36,8 +37,8 @@ class TaskCompletionCubit extends StatefulCubit<TaskCompletionState> {
 	final UIDataAggregator _dataAggregator = GetIt.I<UIDataAggregator>();
 	final AnalyticsService _analyticsService = GetIt.I<AnalyticsService>();
 
-	TaskCompletionCubit(this._taskInstanceId, this._activeUser, ModalRoute pageRoute, UIPlanInstance _uiPlanInstance) :
-				super(pageRoute, initialState: TaskCompletionState(planInstance: _uiPlanInstance), options: [StatefulOption.resetSubmissionState]);
+	TaskCompletionCubit(TaskInProgressParams params, this._activeUser, ModalRoute pageRoute) : _taskInstanceId = params.taskId,
+				super(pageRoute, initialState: TaskCompletionState(planInstance: params.planInstance), options: [StatefulOption.resetSubmissionState]);
 
 	@override
 	Future doLoadData()  async {

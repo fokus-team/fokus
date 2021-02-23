@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:fokus/logic/caregiver/child_dashboard/dashboard_achievements_cubit.dart';
 import 'package:fokus/logic/caregiver/child_dashboard/dashboard_plans_cubit.dart';
 import 'package:fokus/logic/caregiver/child_dashboard/dashboard_rewards_cubit.dart';
+import 'package:fokus/model/navigation/child_dashboard_params.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
@@ -21,8 +22,8 @@ class ChildDashboardCubit extends StatefulCubit {
 	
 	final UIDataAggregator _dataAggregator = GetIt.I<UIDataAggregator>();
 
-  ChildDashboardCubit(Map<String, dynamic> args, ModalRoute pageRoute, this._plansCubit, this._rewardsCubit, this._achievementsCubit) :
-			_initialTab = args['tab'] ?? 0, childId = (args['child'] as UIChild).id, super(pageRoute) {
+  ChildDashboardCubit(ChildDashboardParams args, ModalRoute pageRoute, this._plansCubit, this._rewardsCubit, this._achievementsCubit) :
+			_initialTab = args.tab ?? 0, childId = args.child.id, super(pageRoute) {
 	  _tabCubits = [_plansCubit, _rewardsCubit, _achievementsCubit];
   }
 

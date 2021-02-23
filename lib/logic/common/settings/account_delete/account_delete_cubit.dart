@@ -21,8 +21,8 @@ class AccountDeleteCubit extends Cubit<AccountDeleteState> {
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final AppConfigRepository _appConfigRepository = GetIt.I<AppConfigRepository>();
 
-  AccountDeleteCubit(this._activeUser, Map<String, dynamic> args) :
-		  _removedUser = args != null ? args['child'] : _activeUser(), super(AccountDeleteState());
+  AccountDeleteCubit(this._activeUser, UIUser _removedUser) :
+		  _removedUser = _removedUser ?? _activeUser(), super(AccountDeleteState());
 	
 	Future _deleteChild() async {
 		var users = [_removedUser.id];

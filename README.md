@@ -1,11 +1,14 @@
 # <div align="center"><a href="https://fokus.link/"><img src="assets/press/banner.png" width="40%" style="margin: auto; display: block"></a></div>
 
-<div align="center">Fokus is a mobile application that helps kids complete their daily tasks under parental control
+<div align="center">
 
 ![flutter](https://img.shields.io/badge/Flutter-Framework-green?logo=flutter)
 ![Dart](https://img.shields.io/badge/Dart-Language-blue?logo=dart)
+![Version](https://img.shields.io/github/v/tag/fokus-team/fokus)
 ![License](https://img.shields.io/github/license/fokus-team/fokus)
 ![Stars](https://img.shields.io/github/stars/fokus-team/fokus)
+
+Fokus is a mobile application that helps kids complete their daily tasks under parental control
 </div>
 
 ## Screens
@@ -21,9 +24,12 @@
 ## Contribute
 We are looking for people willing to help us translate our app to more languages. Current status:
 
+<div align="center">
+
 ![English](https://img.shields.io/badge/English-supported-green)
 ![Polish](https://img.shields.io/badge/Polish-supported-green)
 ![German](https://img.shields.io/badge/German-in_progress-orange)
+</div>
 
 If you would like to see our app supporting your language and are willing to contribute do not hesitate to contact us using the email below. We will provide you with a machine translated template to minimize the amount of labour required.
 

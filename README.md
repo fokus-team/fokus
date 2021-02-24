@@ -1,13 +1,38 @@
-<p align="center">
-<img src="https://user-images.githubusercontent.com/36575365/96503187-2eb2fe00-1253-11eb-864f-aac33a9cc73d.png" width="20%" style="margin: auto; display: block">
-</p>
+# <div align="center"><a href="https://fokus.link/"><img src="assets/press/banner.png" width="40%" style="margin: auto; display: block"></a></div>
 
-# Fokus
-Fokus is a mobile application that helps kids complete their daily tasks under parental control.  
-It was created as part of a team project at Gdansk University of Technology.
+<div align="center">Fokus is a mobile application that helps kids complete their daily tasks under parental control
 
-## Current Look
+![flutter](https://img.shields.io/badge/Flutter-Framework-green?logo=flutter)
+![Dart](https://img.shields.io/badge/Dart-Language-blue?logo=dart)
+![License](https://img.shields.io/github/license/fokus-team/fokus)
+![Stars](https://img.shields.io/github/stars/fokus-team/fokus)
+</div>
 
-<img src="https://user-images.githubusercontent.com/36575365/96503289-53a77100-1253-11eb-8898-c6de14877d17.png" width=90%> | <img src="https://user-images.githubusercontent.com/36575365/96503293-54400780-1253-11eb-8a2c-e090d346f2d8.png" width=90%> | <img src="https://user-images.githubusercontent.com/36575365/96503298-55713480-1253-11eb-80f4-2024db27c1d0.png" width=90%>
-:-:|:-:|:-:
-<img src="https://user-images.githubusercontent.com/36575365/96503301-5609cb00-1253-11eb-80c5-de61069351ba.png" width=90%> | <img src="https://user-images.githubusercontent.com/36575365/96503303-56a26180-1253-11eb-938c-931384b899c9.png" width=90%> | <img src="https://user-images.githubusercontent.com/36575365/96503304-56a26180-1253-11eb-9e17-e08d1defa1fb.png" width=90%>
+## Screens
+
+| ![](assets/press/screen1.png) | ![](assets/press/screen2.png) | ![](assets/press/screen3.png) | ![](assets/press/screen4.png) | ![](assets/press/screen5.png) |
+| :---------------------------: | :---------------------------: | :---------------------------: | :---------------------------: | :---------------------------: |
+|        Caregiver Panel        |          Task Rating          |            Reward             |     Child Profile Details     |        Plan Creation          |
+
+| ![](assets/press/screen7.png) | ![](assets/press/screen8.png) | ![](assets/press/screen6.png) | ![](assets/press/screen9.png) | ![](assets/press/screen10.png) |
+| :---------------------------: | :---------------------------: | :---------------------------: | :---------------------------: | :----------------------------: |
+|          Child Panel          |          Achievements         |         Plan Details          |         Task Completed        |          Plan Calendar         |
+
+## Contribute
+We are looking for people willing to help us translate our app to more languages. Current status:
+
+![English](https://img.shields.io/badge/English-supported-green)
+![Polish](https://img.shields.io/badge/Polish-supported-green)
+![German](https://img.shields.io/badge/German-in_progress-orange)
+
+If you would like to see our app supporting your language and are willing to contribute do not hesitate to contact us using the email below. We will provide you with a machine translated template to minimize the amount of labour required.
+
+## Contact Us
+You can reach us at contact@fokus.link
+
+## License
+This app is licenced under [`MIT License`](https://github.com/fokus-team/fokus/blob/master/LICENSE).
+Any usage of the source code must comply with the license terms and conditions.
+
+## Privacy Policy
+You can find our privacy policy [here](POLICY.md)

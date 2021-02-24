@@ -5,8 +5,8 @@
 ![flutter](https://img.shields.io/badge/Flutter-Framework-green?logo=flutter)
 ![Dart](https://img.shields.io/badge/Dart-Language-blue?logo=dart)
 ![Version](https://img.shields.io/github/v/tag/fokus-team/fokus)
-![License](https://img.shields.io/github/license/fokus-team/fokus)
 ![Stars](https://img.shields.io/github/stars/fokus-team/fokus)
+![License](https://img.shields.io/github/license/fokus-team/fokus)
 
 Fokus is a mobile application that helps kids complete their daily tasks under parental control
 </div>

@@ -1,4 +1,4 @@
-# <div align="center"><a href="https://fokus.link/"><img src="assets/press/banner.png" width="40%" style="margin: auto; display: block"></a></div>
+# <div align="center"><a href="https://fokus.link/"><img src="https://user-images.githubusercontent.com/8643919/109061512-0ba7c780-76e7-11eb-90aa-71f329fb6b05.gif" width="35%" style="margin: auto; display: block"></a></div>
 
 <div align="center">
 

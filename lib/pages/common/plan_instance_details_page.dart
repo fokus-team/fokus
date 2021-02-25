@@ -8,6 +8,7 @@ import 'package:fokus/model/navigation/plan_instance_params.dart';
 import 'package:fokus/model/navigation/task_in_progress_params.dart';
 import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/ui/plan/ui_plan_instance.dart';
+import 'package:fokus/utils/navigation_utils.dart';
 import 'package:fokus/utils/ui/snackbar_utils.dart';
 import 'package:fokus/model/ui/task/ui_task_instance.dart';
 import 'package:fokus/services/app_locales.dart';
@@ -44,7 +45,7 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 			);
 		}
 		else {
-			final result = await Navigator.of(context).pushNamed(AppPage.childTaskInProgress.name, arguments: TaskInProgressParams(taskId: task.id, planInstance: plan));
+			final result = await navigateChecked(context, AppPage.childTaskInProgress, arguments: TaskInProgressParams(taskId: task.id, planInstance: plan));
 			if(result != null)
 				BlocProvider.of<PlanInstanceCubit>(context).uiPlanInstance = result;
 		}
@@ -128,7 +129,7 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 								if (task.timer != null && task.timer > 0) _getTimeChip(task),
 								if (task.points != null && task.points.quantity != 0) _getCurrencyChip(task)
 							],
-							onTapped: () => navigate(context, task, uiPlanInstance),
+							onTapped: () => widget.showActions ? navigate(context, task, uiPlanInstance) : null,
 							actionButton: ItemCardActionButton(
 								color: AppColors.childButtonColor,
 								icon: Icons.play_arrow,
@@ -144,7 +145,7 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 								if (task.timer != null && task.timer > 0) _getTimeChip(task),
 								if (task.points != null && task.points.quantity != 0) _getCurrencyChip(task)
 							],
-							onTapped: () => navigate(context, task, uiPlanInstance),
+							onTapped: () => widget.showActions ? navigate(context, task, uiPlanInstance) : null,
 							actionButton: ItemCardActionButton(
 								color: AppColors.childButtonColor,
 								icon: Icons.refresh,
@@ -177,7 +178,7 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 											),
 										]
 								],
-								onTapped: () => navigate(context, task, uiPlanInstance),
+								onTapped: () => widget.showActions ? navigate(context, task, uiPlanInstance) : null,
 								actionButton: ItemCardActionButton(
 									color: AppColors.childActionColor,
 									icon: Icons.launch,

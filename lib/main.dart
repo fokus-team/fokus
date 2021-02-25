@@ -70,7 +70,6 @@ import 'package:fokus/pages/child/achievements_page.dart';
 import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/db/user/user_role.dart';
 import 'package:fokus/model/ui/auth/password_change_type.dart';
-import 'package:fokus/model/ui/plan/ui_plan_instance.dart';
 
 import 'package:fokus/services/analytics_service.dart';
 import 'package:fokus/services/app_locales.dart';

@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:fokus/model/navigation/child_dashboard_params.dart';
 import 'package:fokus/model/navigation/plan_instance_params.dart';
+import 'package:fokus/utils/navigation_utils.dart';
 import 'package:get_it/get_it.dart';
 import 'package:flutter/foundation.dart' as Foundation;
 import 'package:onesignal_flutter/onesignal_flutter.dart';
@@ -50,22 +51,19 @@ class OneSignalNotificationProvider extends NotificationProvider {
     await _routeObserver.navigatorInitialized;
 		logger.fine("onOpenMessage: $result");
     var context = _navigatorKey.currentState.context;
-		var navigate = (AppPage page, [dynamic arguments]) {
-			if (ModalRoute.of(context)?.settings?.name != page.name)
-		    return _navigatorKey.currentState.pushNamed(page.name, arguments: arguments);
-		};
+
 		var data = NotificationData.fromJson(result.notification.payload.additionalData);
 		var activeUser = BlocProvider.of<AuthenticationBloc>(context).state.user;
 		if (activeUser == null || activeUser.id != data.recipient) {
 			if (activeUser == null)
-				navigate(data.type.recipient.signInPage);
+				navigateChecked(context, data.type.recipient.signInPage);
 			showFailSnackbar(context, 'authentication.signInPrompt');
 			return;
 		}
 		dynamic arguments = data.subject;
 		if (data.type.redirectPage == AppPage.planInstanceDetails) {
 			arguments = await _dataAggregator.loadPlanInstance(planInstanceId: data.subject);
-			navigate(data.type.redirectPage, PlanInstanceParams(planInstance: arguments));
+			navigateChecked(context, data.type.redirectPage, arguments: PlanInstanceParams(planInstance: arguments));
 			return;
 		} else if (data.type.redirectPage == AppPage.caregiverChildDashboard) {
 			arguments = ChildDashboardParams(
@@ -74,7 +72,7 @@ class OneSignalNotificationProvider extends NotificationProvider {
 				id: data.subject
 			);
 		}
-		navigate(data.type.redirectPage, arguments);
+    navigateChecked(context, data.type.redirectPage, arguments: arguments);
 	}
 
   void _configureNotificationHandlers() {

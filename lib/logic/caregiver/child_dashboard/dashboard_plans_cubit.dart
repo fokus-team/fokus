@@ -1,9 +1,4 @@
 import 'package:flutter/widgets.dart';
-import 'package:fokus/model/db/plan/plan.dart';
-import 'package:fokus/model/db/plan/plan_instance.dart';
-import 'package:fokus/model/db/plan/task_status.dart';
-import 'package:fokus/services/plan_keeper_service.dart';
-import 'package:fokus/services/ui_data_aggregator.dart';
 import 'package:get_it/get_it.dart';
 
 import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
@@ -12,6 +7,10 @@ import 'package:fokus/model/ui/plan/ui_plan_instance.dart';
 import 'package:fokus/model/ui/user/ui_child.dart';
 import 'package:fokus/model/ui/user/ui_user.dart';
 import 'package:fokus/services/data/data_repository.dart';
+import 'package:fokus/model/db/plan/plan.dart';
+import 'package:fokus/model/db/plan/task_status.dart';
+import 'package:fokus/services/plan_keeper_service.dart';
+import 'package:fokus/services/ui_data_aggregator.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
 class DashboardPlansCubit extends StatefulCubit {

@@ -87,7 +87,7 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 									  ),
 								  ],
 							  ),
-							  onPressed: () => Navigator.of(context).pop({"plan" : state is TaskCompletionState ? state.planInstance : null}),
+							  onPressed: () => Navigator.of(context).pop(state is TaskCompletionState ? state.planInstance : null),
 							  heroTag: "fabTasks",
 							  backgroundColor: AppColors.childTaskColor,
 						  ),
@@ -129,7 +129,7 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 		return TaskAppHeader(
 			height: 330,
 			title: '$_pageKey.header.title',
-			popArgs: {"plan" : state is TaskCompletionState ? state.planInstance : null},
+			popArgs: state is TaskCompletionState ? state.planInstance : null,
 			content: ItemCard(
 				title: state.planInstance.name,
 				subtitle: state.planInstance.description(context),

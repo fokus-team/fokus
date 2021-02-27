@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/logic/caregiver/tasks_evaluation_cubit.dart';
 import 'package:fokus/model/navigation/child_dashboard_params.dart';
+import 'package:fokus/model/navigation/report_form_params.dart';
 import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/ui/task/ui_task_report.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/duration_utils.dart';
 import 'package:fokus/utils/ui/theme_config.dart';
-import 'package:fokus/widgets/forms/report_form.dart';
+import 'package:fokus/pages/caregiver/forms/report_form_page.dart';
 import 'package:fokus/widgets/general/app_avatar.dart';
 import 'package:intl/intl.dart';
 
@@ -178,14 +179,10 @@ class _ReportCardState extends State<ReportCard> {
 							materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
 							padding: EdgeInsets.symmetric(vertical: 8.0),
 							colorBrightness: Brightness.dark,
-							onPressed: () async {
-								Navigator.of(context).push(MaterialPageRoute(
-									builder: (context) => ReportForm(
-										report: widget.report,
-										saveCallback: updateReports
-									)
-								));
-							},
+							onPressed: () => Navigator.of(context).pushNamed(AppPage.caregiverReportForm.name, arguments: ReportFormParams(
+								report: widget.report,
+								saveCallback: updateReports
+							)),
 							icon: Icon(Icons.rate_review),
 							label: Text(AppLocales.of(context).translate('$_pageKey.rateTaskButton'))
 						)

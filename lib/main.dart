@@ -4,8 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fokus/model/navigation/child_dashboard_params.dart';
-import 'package:fokus/model/ui/user/ui_user.dart';
+import 'package:fokus/pages/caregiver/forms/task_form_page.dart';
 import 'package:get_it/get_it.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
@@ -66,10 +65,13 @@ import 'package:fokus/pages/child/panel_page.dart';
 import 'package:fokus/pages/common/plan_instance_details_page.dart';
 import 'package:fokus/pages/child/task_in_progress_page.dart';
 import 'package:fokus/pages/child/achievements_page.dart';
+import 'package:fokus/pages/caregiver/forms/report_form_page.dart';
 
 import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/db/user/user_role.dart';
 import 'package:fokus/model/ui/auth/password_change_type.dart';
+import 'package:fokus/model/navigation/child_dashboard_params.dart';
+import 'package:fokus/model/ui/user/ui_user.dart';
 
 import 'package:fokus/services/analytics_service.dart';
 import 'package:fokus/services/app_locales.dart';
@@ -142,7 +144,7 @@ class _FokusAppState extends State<FokusApp> implements CurrentLocaleObserver {
 		var getParams = (BuildContext context) => getRoute(context).settings.arguments;
 		var authBloc = (BuildContext context) => BlocProvider.of<AuthenticationBloc>(context);
 
-		Map<String, Function(BuildContext, Animation<double>, Animation<double>)> routesWithFadeTransition = {
+		Map<String, RoutePageBuilder> routesWithFadeTransition = {
 			// Caregiver pages
 			AppPage.caregiverPanel.name: (context, _, __) => _createPage(
 				withCubit(CaregiverPanelPage(), CaregiverFriendsCubit(getActiveUser(context), authBloc(context))),
@@ -160,6 +162,7 @@ class _FokusAppState extends State<FokusApp> implements CurrentLocaleObserver {
 		if(routesWithFadeTransition.containsKey(settings.name))
 			return PageRouteBuilder(
 				pageBuilder: routesWithFadeTransition[settings.name],
+				settings: settings,
 				transitionsBuilder: (context, animation, secondaryAnimation, child) {
 					return FadeTransition(
 						opacity: animation,
@@ -221,9 +224,11 @@ class _FokusAppState extends State<FokusApp> implements CurrentLocaleObserver {
 			},
 			AppPage.caregiverCalendar.name: (context) => _createPage(CaregiverCalendarPage(), context, CalendarCubit(getParams(context), getActiveUser(context))),
 			AppPage.caregiverPlanForm.name: (context) => _createPage(CaregiverPlanFormPage(), context, PlanFormCubit(getParams(context), getActiveUser(context))),
+			AppPage.caregiverTaskForm.name: (context) => _createPage(TaskFormPage(getParams(context)), context),
 			AppPage.caregiverRewardForm.name: (context) => _createPage(CaregiverRewardFormPage(), context, RewardFormCubit(getParams(context), getActiveUser(context), getRoute(context))),
 			AppPage.caregiverBadgeForm.name: (context) => _createPage(CaregiverBadgeFormPage(), context, BadgeFormCubit(getActiveUser(context), authBloc(context), getRoute(context))),
 			AppPage.caregiverRatingPage.name: (context) => _createPage(CaregiverRatingPage(), context, TasksEvaluationCubit(getRoute(context), getActiveUser(context))),
+			AppPage.caregiverReportForm.name: (context) => _createPage(ReportFormPage(getParams(context)), context),
 			AppPage.caregiverCurrencies.name: (context) => _createPage(CaregiverCurrenciesPage(), context, CaregiverCurrenciesCubit(getActiveUser(context), getRoute(context), getActiveUser(context), authBloc(context))),
 			AppPage.caregiverFriendPlans.name: (context) => _createPage(withCubit(CaregiverFriendPlansPage(), CaregiverFriendsCubit(getActiveUser(context), authBloc(context))), context, CaregiverPlansCubit(getActiveUser(context), getRoute(context), getParams(context))),
 			AppPage.planDetails.name: (context) => _createPage(PlanDetailsPage(), context, PlanCubit(getParams(context), getRoute(context))),

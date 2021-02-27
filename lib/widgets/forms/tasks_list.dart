@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorderable_list.dart';
+
 import 'package:fokus/logic/caregiver/forms/plan/plan_form_cubit.dart';
-import 'package:fokus/utils/bloc_utils.dart';
-import 'package:fokus/utils/ui/reorderable_list.dart';
+import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/widgets/cards/task_card.dart';
 import 'package:fokus/widgets/general/app_hero.dart';
-import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorderable_list.dart';
+import 'package:fokus/widgets/dialogs/general_dialog.dart';
 
 import 'package:fokus/model/ui/form/task_form_model.dart';
 import 'package:fokus/model/ui/form/plan_form_model.dart';
+import 'package:fokus/model/navigation/task_form_params.dart';
+import 'package:fokus/model/ui/app_page.dart';
 
 import 'package:fokus/utils/ui/dialog_utils.dart';
 import 'package:fokus/utils/ui/theme_config.dart';
-import 'package:fokus/services/app_locales.dart';
+import 'package:fokus/utils/ui/reorderable_list.dart';
 
-import 'package:fokus/widgets/dialogs/general_dialog.dart';
-import 'package:fokus/widgets/forms/task_form.dart';
 
 class TaskList extends StatefulWidget {
 	final PlanFormModel plan;
@@ -93,49 +94,40 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 	}
 
 	void addNewTask() {
-		Navigator.of(context).push(MaterialPageRoute(
-			builder: (_) => forwardCubit(
-				TaskForm(
-					task: null,
-					createTaskCallback: (newTask) {
-						Future.wait([
-							Future(() => setState(() {
-								widget.plan.tasks.add(newTask);
-								sortTasks();
-							}))
-						]);
-					}
-				),
-				BlocProvider.of<PlanFormCubit>(context)
-			)
+		Navigator.of(context).pushNamed(AppPage.caregiverTaskForm.name, arguments: TaskFormParams(
+				task: null,
+				currencies: (BlocProvider.of<PlanFormCubit>(context).state as PlanFormDataLoadSuccess).currencies,
+				createTaskCallback: (newTask) {
+					Future.wait([
+						Future(() => setState(() {
+							widget.plan.tasks.add(newTask);
+							sortTasks();
+						}))
+					]);
+				}
 		));
 	}
 
-
 	void editTask(TaskFormModel task) {
-		Navigator.of(context).push(MaterialPageRoute(
-			builder: (_) => forwardCubit(
-				TaskForm(
-					task: task,
-					saveTaskCallback: (TaskFormModel updatedTask) {
-						Future.wait([
-							Future(() => setState(() {
-								task.copy(updatedTask);
-								sortTasks();
-							}))
-						]);
-					},
-					removeTaskCallback: () {
-						Future.wait([
-							Future(() => setState(() {
-								widget.plan.tasks.remove(task);
-								sortTasks();
-							}))
-						]);
-					}
-				),
-				BlocProvider.of<PlanFormCubit>(context)
-			)
+		Navigator.of(context).pushNamed(AppPage.caregiverTaskForm.name, arguments: TaskFormParams(
+			task: task,
+			currencies: (BlocProvider.of<PlanFormCubit>(context).state as PlanFormDataLoadSuccess).currencies,
+			saveTaskCallback: (TaskFormModel updatedTask) {
+				Future.wait([
+					Future(() => setState(() {
+						task.copy(updatedTask);
+						sortTasks();
+					}))
+				]);
+			},
+			removeTaskCallback: () {
+				Future.wait([
+					Future(() => setState(() {
+						widget.plan.tasks.remove(task);
+						sortTasks();
+					}))
+				]);
+			}
 		));
 	}
 

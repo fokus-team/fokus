@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:fokus/logic/caregiver/tasks_evaluation_cubit.dart';
 
+import 'package:fokus/logic/caregiver/tasks_evaluation_cubit.dart';
+import 'package:fokus/model/navigation/report_form_params.dart';
 import 'package:fokus/model/ui/task/ui_task_report.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/ui/dialog_utils.dart';
@@ -10,17 +11,17 @@ import 'package:fokus/utils/ui/theme_config.dart';
 import 'package:fokus/widgets/cards/report_card.dart';
 import 'package:fokus/widgets/chips/attribute_chip.dart';
 
-class ReportForm extends StatefulWidget {
+class ReportFormPage extends StatefulWidget {
 	final UITaskReport report;
 	final Future Function(UITaskReportMark, String) saveCallback;
 
-	ReportForm({@required this.report, @required this.saveCallback});
+	ReportFormPage(ReportFormParams params) : report = params.report, saveCallback = params.saveCallback;
 
 	@override
-	_ReportFormState createState() => new _ReportFormState();
+	_ReportFormPageState createState() => new _ReportFormPageState();
 }
 
-class _ReportFormState extends State<ReportForm> {
+class _ReportFormPageState extends State<ReportFormPage> {
 	static const String _pageKey = 'page.caregiverSection.rating.content.form';
 	final double customBottomBarHeight = 40.0;
 

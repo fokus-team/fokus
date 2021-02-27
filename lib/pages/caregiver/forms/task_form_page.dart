@@ -6,6 +6,7 @@ import 'package:flutter_picker/flutter_picker.dart';
 
 import 'package:fokus/logic/caregiver/forms/plan/plan_form_cubit.dart';
 import 'package:fokus/model/currency_type.dart';
+import 'package:fokus/model/navigation/task_form_params.dart';
 import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/ui/form/task_form_model.dart';
 import 'package:fokus/model/ui/gamification/ui_currency.dart';
@@ -20,24 +21,16 @@ import 'package:fokus/widgets/dialogs/general_dialog.dart';
 import 'package:fokus/widgets/forms/pointpicker_field.dart';
 import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorderable_list.dart';
 
-class TaskForm extends StatefulWidget {
-	final TaskFormModel task;
-	final Function createTaskCallback;
-	final Function removeTaskCallback;
-	final Function saveTaskCallback;
+class TaskFormPage extends StatefulWidget {
+	final TaskFormParams params;
 
-	TaskForm({
-		@required this.task,
-		this.createTaskCallback,
-		this.removeTaskCallback,
-		this.saveTaskCallback
-	});
+	TaskFormPage(this.params);
 
 	@override
-	_TaskFormState createState() => new _TaskFormState();
+	_TaskFormPageState createState() => new _TaskFormPageState();
 }
 
-class _TaskFormState extends State<TaskForm> {
+class _TaskFormPageState extends State<TaskFormPage> {
 	static const String _pageKeyTaskForm = 'page.caregiverSection.taskForm';
 	static const String _pageKeyPlanForm = 'page.caregiverSection.planForm';
 
@@ -57,7 +50,7 @@ class _TaskFormState extends State<TaskForm> {
 	Duration dragDelayDuration = Duration(milliseconds: 600);
 	Duration defaultSwitchDuration = Duration(milliseconds: 400);
 
-	bool formModeIsCreate() => widget.task == null;
+	bool formModeIsCreate() => widget.params.task == null;
 
 	@override
   void initState() {
@@ -68,13 +61,13 @@ class _TaskFormState extends State<TaskForm> {
 		);
 
 		if(!formModeIsCreate())
-			task.copy(widget.task);
+			task.copy(widget.params.task);
 
-		if(widget.task != null) {
-			_titleController.text = widget.task.title;
-			_descriptionController.text = widget.task.description;
-			_pointsController.text = widget.task.pointsValue != null ? widget.task.pointsValue.toString() : null;
-			for(var subtask in widget.task.subtasks)
+		if(widget.params.task != null) {
+			_titleController.text = widget.params.task.title;
+			_descriptionController.text = widget.params.task.description;
+			_pointsController.text = widget.params.task.pointsValue != null ? widget.params.task.pointsValue.toString() : null;
+			for(var subtask in widget.params.task.subtasks)
 				subtasksKeys.add(MapEntry(ValueKey(DateTime.now().toString()), subtask));
 		}
     super.initState();
@@ -129,7 +122,7 @@ class _TaskFormState extends State<TaskForm> {
 				confirmText: '$_pageKeyTaskForm.removeTaskTitle',
 				confirmAction: () {
 					Future.wait([
-						Future(widget.removeTaskCallback())
+						Future(widget.params.removeTaskCallback())
 					]);
 					Navigator.of(context).pop();
 					Navigator.of(context).pop();
@@ -143,11 +136,11 @@ class _TaskFormState extends State<TaskForm> {
 			task.subtasks = subtasksKeys.map((e) => e.value).toList();
 			if(formModeIsCreate())
 				Future.wait([
-					Future(widget.createTaskCallback(task))
+					Future(widget.params.createTaskCallback(task))
 				]);
 			else
 				Future.wait([
-					Future(widget.saveTaskCallback(task))
+					Future(widget.params.saveTaskCallback(task))
 				]);
 			Navigator.of(context).pop();
 		}
@@ -190,7 +183,7 @@ class _TaskFormState extends State<TaskForm> {
 										},
 										child: hasTitle ?
 											Hero(
-												tag: formModeIsCreate() ? "none3463634634" : widget.task.key,
+												tag: formModeIsCreate() ? "none3463634634" : widget.params.task.key,
 												child: Text(
 													task.title,
 													style: Theme.of(context).textTheme.headline2.copyWith(color: Colors.white),
@@ -260,7 +253,7 @@ class _TaskFormState extends State<TaskForm> {
 				buildSubtasksFields(),
 				Divider(),
 				SizedBox(height: 16.0),
-				buildPointsFields(),
+				getPointsFields(currencies: widget.params.currencies),
 				buildTimerField(),
 				Divider(),
 				buildOptionalField(),
@@ -347,17 +340,6 @@ class _TaskFormState extends State<TaskForm> {
 				if (subtasksKeys.length < maxSubtasks)
 					_getSubtaskFormField()
 		  ],
-		);
-	}
-
-	Widget buildPointsFields() {
-		return BlocBuilder<PlanFormCubit, PlanFormState>(
-			cubit: BlocProvider.of<PlanFormCubit>(context),
-			builder: (context, state) {
-				if (state is PlanFormDataLoadSuccess)
-					return getPointsFields(currencies: state.currencies);
-				return getPointsFields(currencies: [UICurrency(type: CurrencyType.diamond)], loading: state.formType == AppFormType.create);
-			}
 		);
 	}
 	

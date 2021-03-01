@@ -62,6 +62,7 @@ class OneSignalNotificationProvider extends NotificationProvider {
 			return;
 		}
 		dynamic arguments = data.subject;
+		// TODO Check if navigateChecked will work with popup-route on top of page being pushed?
 		if (data.type.redirectPage == AppPage.planInstanceDetails) {
 			arguments = await _dataAggregator.loadPlanInstance(planInstanceId: data.subject);
 			navigateChecked(context, data.type.redirectPage, arguments: PlanInstanceParams(planInstance: arguments));
@@ -96,7 +97,7 @@ class OneSignalNotificationProvider extends NotificationProvider {
 			  Child user = await dataRepository.getUser(id: activeUser.id, fields: ['points']);
 			  BlocProvider.of<AuthenticationBloc>(context).add(AuthenticationActiveUserUpdated(UIChild.from(activeUser, points: user.points.map((points) => UIPoints.fromDBModel(points)).toList())));
 		  }
-		  onNotificationReceived(data.type);
+		  onNotificationReceived(data);
 	  });
 	  //OneSignal.shared.setNotificationOpenedHandler(_onNotificationOpened);
 	  OneSignal.shared.setSubscriptionObserver((changes) {

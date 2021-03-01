@@ -19,7 +19,7 @@ class FirebaseNotificationService extends NotificationService {
 	static final String _projectId = 'projects/fokus-application';
 
 	@override
-	Future sendTaskFinishedNotification(ObjectId taskId, String taskName, ObjectId caregiverId, UIUser child, {@required bool completed}) => throw UnimplementedError();
+	Future sendTaskFinishedNotification(ObjectId planInstanceId, String taskName, ObjectId caregiverId, UIUser child, {@required bool completed}) => throw UnimplementedError();
 	@override
 	Future sendRewardBoughtNotification(ObjectId rewardId, String rewardName, ObjectId caregiverId, UIUser child) => throw UnimplementedError();
 	@override

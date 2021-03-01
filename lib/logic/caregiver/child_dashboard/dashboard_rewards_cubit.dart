@@ -23,7 +23,7 @@ class DashboardRewardsCubit extends StatefulCubit {
 	}
 
 	@override
-	List<NotificationType> dataTypeSubscription() => [NotificationType.rewardBought];
+	List<NotificationType> notificationTypeSubscription() => [NotificationType.rewardBought];
 }
 
 class DashboardRewardsState extends StatefulState {

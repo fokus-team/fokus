@@ -5,13 +5,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart';
+import 'package:meta/meta.dart';
 
-import 'package:fokus/model/notification/notification_type.dart';
 import 'package:fokus/services/app_route_observer.dart';
 import 'package:fokus/services/notifications/notification_service.dart';
 import 'package:fokus/services/observers/page_foreground_observer.dart';
 import 'package:fokus/model/ui/app_page.dart';
-import 'package:fokus/services/observers/data_update_observer.dart';
+import 'package:fokus/model/notification/notification_refresh_info.dart';
+import 'package:fokus/services/observers/notification/notification_observer.dart';
 
 part 'stateful_state.dart';
 
@@ -19,7 +20,7 @@ enum StatefulOption {
 	resetSubmissionState, noAutoLoading, noDataLoading
 }
 
-abstract class StatefulCubit<State extends StatefulState> extends Cubit<State> with DataUpdateObserver implements RouteAware, PageForegroundObserver {
+abstract class StatefulCubit<State extends StatefulState> extends Cubit<State> with NotificationObserver implements RouteAware, PageForegroundObserver {
 	final _routeObserver = GetIt.I<AppRouteObserver>();
 	final NotificationService _notificationService = GetIt.I<NotificationService>();
 	@protected
@@ -54,7 +55,11 @@ abstract class StatefulCubit<State extends StatefulState> extends Cubit<State> w
 	void resetSubmissionState() => emit(state.notSubmitted());
 
 	@override
-	void onDataUpdated(NotificationType type) => reload();
+	@nonVirtual
+	void onNotificationReceived(NotificationRefreshInfo info) {
+		if (notificationTypeSubscription().contains(info.type) && shouldNotificationRefresh(info))
+	    reload();
+	}
 
 	bool hasOption(StatefulOption option) => options.contains(option);
 
@@ -74,15 +79,15 @@ abstract class StatefulCubit<State extends StatefulState> extends Cubit<State> w
 
 	@override
   void onGoToForeground({bool firstTime = false}) {
-		if (dataTypeSubscription().isNotEmpty)
-			_notificationService.observeDataUpdates(this);
+		if (notificationTypeSubscription().isNotEmpty)
+			_notificationService.observeNotifications(this);
 		if (!firstTime)
 			reload();
   }
 
 	@override
 	void onGoToBackground() {
-		_notificationService.removeDataUpdateObserver(this);
+		_notificationService.removeNotificationObserver(this);
 	}
 
   @override

@@ -73,7 +73,7 @@ class ChildRewardsCubit extends StatefulCubit {
 	}
 
 	@override
-	List<NotificationType> dataTypeSubscription() => [NotificationType.taskApproved];
+	List<NotificationType> notificationTypeSubscription() => [NotificationType.taskApproved];
 }
 
 class ChildRewardsState extends StatefulState {

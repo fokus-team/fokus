@@ -129,7 +129,7 @@ class TaskCompletionCubit extends StatefulCubit<TaskCompletionState> {
 			return;
 		TaskCompletionState state = this.state;
 
-  	_notificationService.sendTaskFinishedNotification(_taskInstanceId, _task.name, _plan.createdBy, _activeUser(), completed: true);
+  	_notificationService.sendTaskFinishedNotification(_planInstance.id, _task.name, _plan.createdBy, _activeUser(), completed: true);
 	  _analyticsService.logTaskFinished(_taskInstance);
 	  var updatedTask =  await _onCompletion(TaskState.notEvaluated);
 		var planInstance = await _dataAggregator.loadPlanInstance(planInstance: _planInstance, plan: _plan);
@@ -141,7 +141,7 @@ class TaskCompletionCubit extends StatefulCubit<TaskCompletionState> {
 			return;
 		TaskCompletionState state = this.state;
 
-		_notificationService.sendTaskFinishedNotification(_taskInstanceId, _task.name, _plan.createdBy, _activeUser(), completed: false);
+		_notificationService.sendTaskFinishedNotification(_planInstance.id, _task.name, _plan.createdBy, _activeUser(), completed: false);
 		_analyticsService.logTaskNotFinished(_taskInstance);
 		var updatedTask =  await _onCompletion(TaskState.rejected);
 		var planInstance = await _dataAggregator.loadPlanInstance(planInstance: _planInstance, plan: _plan);

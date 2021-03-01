@@ -37,7 +37,7 @@ class TasksEvaluationCubit extends StatefulCubit {
 	TasksEvaluationCubit(ModalRoute pageRoute, this._activeUser) : super(pageRoute);
 
   @override
-  List<NotificationType> dataTypeSubscription() => [NotificationType.taskFinished];
+  List<NotificationType> notificationTypeSubscription() => [NotificationType.taskFinished];
 
 	@override
 	Future doLoadData() async {

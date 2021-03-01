@@ -4,6 +4,7 @@ import 'package:fokus/model/db/plan/plan_instance.dart';
 import 'package:fokus/model/db/plan/plan_instance_state.dart';
 import 'package:fokus/model/db/plan/task_instance.dart';
 import 'package:fokus/model/navigation/plan_instance_params.dart';
+import 'package:fokus/model/notification/notification_refresh_info.dart';
 import 'package:fokus/model/notification/notification_type.dart';
 import 'package:fokus/model/ui/plan/ui_plan_instance.dart';
 import 'package:fokus/model/ui/task/ui_task_instance.dart';
@@ -30,9 +31,12 @@ class PlanInstanceCubit extends StatefulCubit {
 	PlanInstanceCubit(PlanInstanceParams params, ModalRoute modalRoute) : uiPlanInstance = params.planInstance, super(modalRoute);
 
 	@override
-	List<NotificationType> dataTypeSubscription() => [NotificationType.taskApproved, NotificationType.taskRejected, NotificationType.taskFinished, NotificationType.taskUnfinished];
+	List<NotificationType> notificationTypeSubscription() => [NotificationType.taskApproved, NotificationType.taskRejected, NotificationType.taskFinished, NotificationType.taskUnfinished];
 
 	@override
+  bool shouldNotificationRefresh(NotificationRefreshInfo info) => info.subject == uiPlanInstance.id;
+
+  @override
 	Future doLoadData() async {
 		_planInstance = await _dataRepository.getPlanInstance(id: uiPlanInstance.id);
 		if(_planInstance.taskInstances == null || _planInstance.taskInstances.isEmpty)

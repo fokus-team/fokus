@@ -26,14 +26,14 @@ class OneSignalNotificationService extends NotificationService {
 	final _navigatorKey = GetIt.I<GlobalKey<NavigatorState>>();
 
 	@override
-	Future sendTaskFinishedNotification(ObjectId taskId, String taskName, ObjectId caregiverId, UIUser child, {@required bool completed}) {
+	Future sendTaskFinishedNotification(ObjectId planInstanceId, String taskName, ObjectId caregiverId, UIUser child, {@required bool completed}) {
 		var type = completed ? NotificationType.taskFinished : NotificationType.taskUnfinished;
 		return sendNotification(type, caregiverId,
 			title: SimpleNotificationText.appBased(type.title, {'CHILD_NAME': child.name}),
 			body: SimpleNotificationText.userBased(taskName),
 			icon: NotificationIcon(type.graphicType, child.avatar),
 			buttons: completed ? [NotificationButton.rate] : null,
-			subject: taskId,
+			subject: planInstanceId,
 			group: NotificationGroup(type.key, SimpleNotificationText.appBased(type.group))
 		);
 	}

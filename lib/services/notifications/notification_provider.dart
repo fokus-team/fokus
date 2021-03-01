@@ -9,15 +9,15 @@ import 'package:meta/meta.dart';
 import 'package:fokus/model/db/user/user.dart';
 import 'package:fokus/services/data/data_repository.dart';
 import 'package:fokus/model/notification/notification_channel.dart';
-import 'package:fokus/model/notification/notification_type.dart';
+import 'package:fokus/model/notification/notification_refresh_info.dart';
 import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/services/observers/data_update_observer.dart';
+import 'package:fokus/services/observers/notification/notification_observer.dart';
 import 'package:fokus/services/observers/active_user_observer.dart';
 import 'package:fokus/services/observers/current_locale_observer.dart';
 
-import 'data_update_notifier.dart';
+import '../observers/notification/notification_notifier.dart';
 
-abstract class NotificationProvider implements ActiveUserObserver, CurrentLocaleObserver, DataUpdateNotifier {
+abstract class NotificationProvider implements ActiveUserObserver, CurrentLocaleObserver, NotificationNotifier {
 	@protected
 	Logger logger = Logger('NotificationProvider');
 	@protected
@@ -25,7 +25,7 @@ abstract class NotificationProvider implements ActiveUserObserver, CurrentLocale
 	@protected
 	User activeUser;
 
-	Map<NotificationType, Map<Type, DataUpdateObserver>> _dataUpdateObservers = {};
+	Map<Type, NotificationObserver> _notificationObservers = {};
 
 	static var localNotifications = FlutterLocalNotificationsPlugin();
 
@@ -38,11 +38,11 @@ abstract class NotificationProvider implements ActiveUserObserver, CurrentLocale
 	}
 
 	@protected
-	void onNotificationReceived(NotificationType type) => _dataUpdateObservers[type]?.values?.forEach((observer) => observer.onDataUpdated(type));
+	void onNotificationReceived(NotificationRefreshInfo info) => _notificationObservers.forEach((_, observer) => observer.onNotificationReceived(info));
 	@override
-	void observeDataUpdates(DataUpdateObserver observer) => observer.dataTypeSubscription().forEach((type) => (_dataUpdateObservers[type] ??= {})[observer.runtimeType] = observer);
+	void observeNotifications(NotificationObserver observer) => _notificationObservers[observer.runtimeType] = observer;
 	@override
-	void removeDataUpdateObserver(DataUpdateObserver observer) => observer.dataTypeSubscription().forEach((type) => _dataUpdateObservers[type].remove(observer.runtimeType));
+	void removeNotificationObserver(NotificationObserver observer) => _notificationObservers.remove(observer.runtimeType);
 
   @override
 	void onUserSignIn(User user) async {

@@ -1,9 +1,10 @@
 import 'package:fokus/model/notification/notification_button.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
+import 'notification_refresh_info.dart';
 import 'notification_type.dart';
 
-class NotificationData {
+class NotificationData implements NotificationRefreshInfo {
 	final NotificationType type;
 	final ObjectId subject;
 	final ObjectId sender;

@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:fokus/logic/caregiver/child_dashboard/child_dashboard_cubit.dart';
 import 'package:fokus/model/navigation/child_dashboard_params.dart';
 import 'package:fokus/model/navigation/plan_instance_params.dart';
 import 'package:fokus/utils/navigation_utils.dart';
@@ -66,13 +67,17 @@ class OneSignalNotificationProvider extends NotificationProvider {
 			navigateChecked(context, data.type.redirectPage, arguments: PlanInstanceParams(planInstance: arguments));
 			return;
 		} else if (data.type.redirectPage == AppPage.caregiverChildDashboard) {
-			arguments = ChildDashboardParams(
-				tab: data.type == NotificationType.rewardBought ? 1 : 0,
-				child: await _dataAggregator.loadChild(data.sender),
-				id: data.subject
-			);
-		}
-    navigateChecked(context, data.type.redirectPage, arguments: arguments);
+			var tab = data.type == NotificationType.rewardBought ? 1 : 0;
+			if (getCurrentPage(context) == data.type.redirectPage.name)
+				context.read<ChildDashboardCubit>().setTab(tab);
+			else
+				navigateChecked(context, data.type.redirectPage, arguments: ChildDashboardParams(
+					tab: tab,
+					child: await _dataAggregator.loadChild(data.sender),
+					id: data.subject
+				));
+		} else
+      navigateChecked(context, data.type.redirectPage, arguments: arguments);
 	}
 
   void _configureNotificationHandlers() {

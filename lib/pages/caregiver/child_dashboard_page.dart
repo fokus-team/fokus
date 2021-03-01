@@ -62,6 +62,7 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 		  var newValue = (_tabController.animation.value).round();
 		  if (_currentIndex != newValue) {
         _currentIndex = newValue;
+
         _tabIndexStream.add(_currentIndex);
       }
 		});
@@ -92,6 +93,12 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 			    child: _childProfile,
 			    content: Center(child: AppLoader())
 		    ),
+		    listener: (context, state) {
+        	if (state is ChildDashboardState && state.tabToSet != null) {
+		        _tabController.index = state.tabToSet;
+		        context.read<ChildDashboardCubit>().setTab(null);
+	        }
+		    },
 	    ),
 	    bottomNavigationBar: _indexBuildable(_buildBottomBar),
 	    floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,

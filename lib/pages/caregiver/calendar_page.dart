@@ -1,6 +1,7 @@
 import 'package:date_utils/date_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fokus/utils/navigation_utils.dart';
 import 'package:intl/intl.dart';
 import 'package:smart_select/smart_select.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -129,7 +130,7 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 							for(UIPlan plan in state.events[state.day])
 								ItemCard(
 									title: plan.name,
-									onTapped: () => Navigator.pushNamed(context, AppPage.planDetails.name, arguments: plan.id),
+									onTapped: () => navigateChecked(context, AppPage.planDetails, arguments: plan.id),
 									subtitle: AppLocales.of(context).translate(
 										'$_pageKey.content.${plan.assignedTo.isNotEmpty ? 'planAssignedToSubtitle' : 'planNotAssignedToSubtitle'}'
 									),

@@ -33,13 +33,15 @@ class ChildDashboardCubit extends StatefulCubit {
 	  _plansCubit.child = child;
 	  _rewardsCubit.child = child;
 	  _achievementsCubit.child = child;
+	  loadTab((_initialTab + 1) % 3);
+	  loadTab((_initialTab + 2) % 3);
 	  await loadTab(_initialTab);
-	  await loadTab((_initialTab + 1) % 3);
-	  await loadTab((_initialTab + 2) % 3);
 	  emit(ChildDashboardState(child: child));
   }
 
   Future loadTab(int tabIndex) => _tabCubits[tabIndex.clamp(0, 3)].loadData();
+
+  void setTab(int tab) => emit(ChildDashboardState(child: (state as ChildDashboardState).child, tabToSet: tab));
 
 	Future onNameDialogClosed(Future<String> result) async {
   	var value = await result;
@@ -51,9 +53,10 @@ class ChildDashboardCubit extends StatefulCubit {
 
 class ChildDashboardState extends StatefulState {
 	final UIChild child;
+	final int tabToSet;
 
-	ChildDashboardState({this.child}) : super.loaded();
+	ChildDashboardState({this.child, this.tabToSet}) : super.loaded();
 
 	@override
-	List<Object> get props => super.props..addAll([child]);
+	List<Object> get props => super.props..addAll([child, tabToSet]);
 }

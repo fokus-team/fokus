@@ -4,6 +4,7 @@ import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/ui/plan/ui_plan.dart';
 import 'package:fokus/model/ui/ui_button.dart';
 import 'package:fokus/services/app_locales.dart';
+import 'package:fokus/utils/navigation_utils.dart';
 import 'package:fokus/utils/ui/theme_config.dart';
 
 import 'package:fokus/widgets/app_navigation_bar.dart';
@@ -67,7 +68,7 @@ class CaregiverPlansPage extends StatelessWidget {
 				  ItemCard(
 					  title: plan.name,
 					  subtitle: plan.description(context),
-						onTapped: () => Navigator.of(context).pushNamed(AppPage.planDetails.name, arguments: plan.id),
+						onTapped: () => navigateChecked(context, AppPage.planDetails, arguments: plan.id),
 					  chips: <Widget>[
 						  AttributeChip.withIcon(
 							  content: AppLocales.of(context).translate('$_pageKey.content.tasks', {'NUM_TASKS': plan.taskCount}),

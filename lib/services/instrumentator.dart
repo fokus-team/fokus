@@ -18,7 +18,7 @@ import 'package:fokus/model/ui/app_page.dart';
 import 'analytics_service.dart';
 import 'app_route_observer.dart';
 import 'exception/db_exceptions.dart';
-import 'observers/active_user_observer.dart';
+import 'observers/user/active_user_observer.dart';
 
 class Instrumentator implements ActiveUserObserver {
 	final Logger _logger = Logger('Instrumentator');

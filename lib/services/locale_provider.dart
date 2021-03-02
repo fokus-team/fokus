@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/widgets.dart';
 import 'package:fokus/model/db/user/user.dart';
-import 'package:fokus/services/observers/active_user_observer.dart';
+import 'package:fokus/services/observers/user/active_user_observer.dart';
 
 import 'app_locales.dart';
 

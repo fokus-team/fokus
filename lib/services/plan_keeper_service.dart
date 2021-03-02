@@ -1,11 +1,11 @@
 import 'dart:async';
 
-import 'package:fokus/model/db/user/user.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
 import 'package:fokus/model/db/user/user_role.dart';
 import 'package:fokus/model/db/date/date.dart';
+import 'package:fokus/model/db/user/user.dart';
 import 'package:fokus/model/db/date/time_date.dart';
 import 'package:fokus/model/db/plan/plan_instance_state.dart';
 import 'package:fokus/model/db/plan/plan.dart';
@@ -13,7 +13,7 @@ import 'package:fokus/model/db/plan/plan_instance.dart';
 import 'package:fokus/services/plan_repeatability_service.dart';
 import 'package:fokus/model/db/date_span.dart';
 
-import 'observers/active_user_observer.dart';
+import 'observers/user/active_user_observer.dart';
 import 'data/data_repository.dart';
 
 class PlanKeeperService implements ActiveUserObserver {

@@ -3,45 +3,43 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
-import 'package:fokus/services/analytics_service.dart';
 import 'package:logging/logging.dart';
 import 'package:get_it/get_it.dart';
-
-import 'package:fokus/model/db/user/child.dart';
-import 'package:fokus/services/instrumentator.dart';
-import 'package:fokus/utils/ui/snackbar_utils.dart';
 import 'package:fokus_auth/fokus_auth.dart';
+
 import 'package:fokus/services/exception/auth_exceptions.dart';
+import 'package:fokus/services/instrumentator.dart';
+import 'package:fokus/services/locale_provider.dart';
+import 'package:fokus/services/notifications/notification_service.dart';
+import 'package:fokus/services/plan_keeper_service.dart';
+import 'package:fokus/services/analytics_service.dart';
+import 'package:fokus/services/observers/user/user_change_notifier.dart';
+import 'package:fokus/services/data/data_repository.dart';
+import 'package:fokus/services/app_config/app_config_repository.dart';
 import 'package:fokus/model/ui/user/ui_user.dart';
 import 'package:fokus/model/db/user/caregiver.dart';
 import 'package:fokus/model/db/user/user_role.dart';
 import 'package:fokus/model/db/user/user.dart';
-import 'package:fokus/services/data/data_repository.dart';
-import 'package:fokus/services/observers/active_user_observer.dart';
-import 'package:fokus/services/plan_keeper_service.dart';
-import 'package:fokus/services/notifications/notification_service.dart';
-import 'package:fokus/services/app_config/app_config_repository.dart';
+import 'package:fokus/model/db/user/child.dart';
 import 'package:fokus/model/ui/user/ui_caregiver.dart';
 import 'package:fokus/model/ui/user/ui_child.dart';
-import 'package:fokus/services/locale_provider.dart';
+import 'package:fokus/utils/ui/snackbar_utils.dart';
 
 part 'authentication_event.dart';
 part 'authentication_state.dart';
 
-class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
+class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> with UserChangeNotifier {
 	final Logger _logger = Logger('AuthenticationBloc');
 
-	final AuthenticationProvider _authenticationProvider = GetIt.I<AuthenticationProvider>();
-	final AppConfigRepository _appConfigRepository = GetIt.I<AppConfigRepository>();
-	final DataRepository _dataRepository = GetIt.I<DataRepository>();
-	final AnalyticsService _analyticsService = GetIt.I<AnalyticsService>();
+	final _authenticationProvider = GetIt.I<AuthenticationProvider>();
+	final _appConfigRepository = GetIt.I<AppConfigRepository>();
+	final _dataRepository = GetIt.I<DataRepository>();
+	final _analyticsService = GetIt.I<AnalyticsService>();
 	final _navigatorKey = GetIt.I<GlobalKey<NavigatorState>>();
 
 	StreamSubscription<AuthenticatedUser> _userSubscription;
-	List<ActiveUserObserver> _userObservers = [];
 
   AuthenticationBloc() : super(AuthenticationState.unknown()) {
-  	// TODO improve subscription method
 	  observeUserChanges(GetIt.I<PlanKeeperService>());
 	  observeUserChanges(GetIt.I<NotificationService>());
 	  observeUserChanges(GetIt.I<LocaleService>());
@@ -73,7 +71,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 	  var noSignedInUser = event.user == AuthenticatedUser.empty;
 	  var wasAppOpened = state.status == AuthenticationStatus.initial;
 	  if (noSignedInUser && !wasAppOpened) {
-		  _onUserSignOut(state.user.toDBModel());
+		  onUserSignOut(state.user.toDBModel());
 		  return const AuthenticationState.unauthenticated();
 	  }
   	if (noSignedInUser && wasAppOpened)
@@ -120,7 +118,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 	}
 
 	Future<AuthenticationState> _signInUser(User user, [AuthMethod authMethod, String photoURL]) async {
-	  _onUserSignIn(user);
+	  onUserSignIn(user);
 	  return AuthenticationState.authenticated(UIUser.typedFromDBModel(user, authMethod, photoURL));
   }
 
@@ -129,8 +127,4 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 		_userSubscription?.cancel();
 		return super.close();
 	}
-
-	void observeUserChanges(ActiveUserObserver observer) => _userObservers.add(observer);
-  void _onUserSignIn(User user) => _userObservers.forEach((observer) => observer.onUserSignIn(user));
-  void _onUserSignOut(User user) => _userObservers.forEach((observer) => observer.onUserSignOut(user));
 }

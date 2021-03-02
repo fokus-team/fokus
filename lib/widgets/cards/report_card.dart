@@ -8,7 +8,6 @@ import 'package:fokus/model/ui/task/ui_task_report.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/duration_utils.dart';
 import 'package:fokus/utils/ui/theme_config.dart';
-import 'package:fokus/pages/caregiver/forms/report_form_page.dart';
 import 'package:fokus/widgets/general/app_avatar.dart';
 import 'package:intl/intl.dart';
 

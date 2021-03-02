@@ -1,13 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_picker/flutter_picker.dart';
 
-import 'package:fokus/logic/caregiver/forms/plan/plan_form_cubit.dart';
 import 'package:fokus/model/currency_type.dart';
 import 'package:fokus/model/navigation/task_form_params.dart';
-import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/ui/form/task_form_model.dart';
 import 'package:fokus/model/ui/gamification/ui_currency.dart';
 import 'package:fokus/services/app_locales.dart';

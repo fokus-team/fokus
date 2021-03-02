@@ -12,7 +12,7 @@ import 'package:fokus/model/notification/notification_channel.dart';
 import 'package:fokus/model/notification/notification_refresh_info.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/services/observers/notification/notification_observer.dart';
-import 'package:fokus/services/observers/active_user_observer.dart';
+import 'package:fokus/services/observers/user/active_user_observer.dart';
 import 'package:fokus/services/observers/current_locale_observer.dart';
 
 import '../observers/notification/notification_notifier.dart';

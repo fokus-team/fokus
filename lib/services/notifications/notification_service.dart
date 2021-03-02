@@ -16,7 +16,7 @@ import 'package:fokus/model/notification/notification_button.dart';
 import 'package:fokus/model/notification/notification_icon.dart';
 import 'package:fokus/services/data/data_repository.dart';
 import 'package:fokus/services/notifications/notification_provider.dart';
-import 'package:fokus/services/observers/active_user_observer.dart';
+import 'package:fokus/services/observers/user/active_user_observer.dart';
 
 import '../observers/notification/notification_notifier.dart';
 

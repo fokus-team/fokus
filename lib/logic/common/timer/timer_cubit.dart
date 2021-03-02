@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
-import 'package:fokus/services/ticker.dart';
+import 'package:fokus/utils/ticker.dart';
 
 part 'timer_state.dart';
 

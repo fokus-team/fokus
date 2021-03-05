@@ -14,9 +14,9 @@ import java.util.*
 
 class OneSignalNotificationService : NotificationExtenderService() {
 	override fun onNotificationProcessing(notification: OSNotificationReceivedResult): Boolean {
-		val payload = notification.payload
-		if (payload.additionalData.has("buttons")) {
-			addLocalizedButtons(JSONArray(payload.additionalData.optString("buttons")))
+		val payload = notification.payload.additionalData
+		if (payload != null && payload.has("buttons")) {
+			addLocalizedButtons(JSONArray(payload.optString("buttons")))
 			return true
 		}
 		return false

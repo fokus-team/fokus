@@ -49,6 +49,8 @@ class OneSignalNotificationProvider extends NotificationProvider {
 	}
 
 	void _onNotificationOpened(OSNotificationOpenedResult result) async {
+		if (result.notification.payload.additionalData == null)
+			return;
     await _routeObserver.navigatorInitialized;
 		logger.fine("onOpenMessage: $result");
     var context = _navigatorKey.currentState.context;
@@ -65,24 +67,22 @@ class OneSignalNotificationProvider extends NotificationProvider {
 		// TODO Check if navigateChecked will work with popup-route on top of page being pushed?
 		if (data.type.redirectPage == AppPage.planInstanceDetails) {
 			arguments = await _dataAggregator.loadPlanInstance(planInstanceId: data.subject);
-			navigateChecked(context, data.type.redirectPage, arguments: PlanInstanceParams(planInstance: arguments));
+			_navigatorKey.currentState.pushNamed(data.type.redirectPage.name, arguments: PlanInstanceParams(planInstance: arguments));
 			return;
 		} else if (data.type.redirectPage == AppPage.caregiverChildDashboard) {
-			var tab = data.type == NotificationType.rewardBought ? 1 : 0;
-			if (getCurrentPage(context) == data.type.redirectPage.name)
-				context.read<ChildDashboardCubit>().setTab(tab);
-			else
-				navigateChecked(context, data.type.redirectPage, arguments: ChildDashboardParams(
-					tab: tab,
-					child: await _dataAggregator.loadChild(data.sender),
-					id: data.subject
-				));
+			navigateChecked(context, data.type.redirectPage, arguments: ChildDashboardParams(
+				tab: data.type == NotificationType.rewardBought ? 1 : 0,
+				child: await _dataAggregator.loadChild(data.sender),
+				id: data.subject
+			));
 		} else
       navigateChecked(context, data.type.redirectPage, arguments: arguments);
 	}
 
   void _configureNotificationHandlers() {
 	  OneSignal.shared.setNotificationReceivedHandler((OSNotification notification) async {
+	  	if (notification.payload.additionalData == null)
+	  		return;
       await _routeObserver.navigatorInitialized;
 		  logger.fine("onMessage: $notification");
 		  var context = _navigatorKey.currentState.context;
@@ -99,7 +99,7 @@ class OneSignalNotificationProvider extends NotificationProvider {
 		  }
 		  onNotificationReceived(data);
 	  });
-	  //OneSignal.shared.setNotificationOpenedHandler(_onNotificationOpened);
+	  OneSignal.shared.setNotificationOpenedHandler(_onNotificationOpened);
 	  OneSignal.shared.setSubscriptionObserver((changes) {
 	  	if (activeUser == null)
 	  		return;

@@ -6,12 +6,13 @@ authors:
     - Mateusz Janicki
 repository: https://github.com/fokus-team/fokus
 homepage: https://fokus.link
+publish_to: none
 
 version: 0.7.8-dev
 
 environment:
-    sdk: ">=2.7.0 <3.0.0"
-    flutter: ">=1.17.0 <2.0.0"
+    sdk: ">=2.12.0 <3.0.0"
+    flutter: ">=2.0.1 <3.0.0"
 
 dependencies:
     flutter:
@@ -19,18 +20,21 @@ dependencies:
     flutter_localizations:
         sdk: flutter
 
+    # Modules
     fokus_auth:
         path: fokus_auth
 
     mongo_dart:
         git: https://github.com/fokus-team/mongo_dart.git
 
-    firebase_core: ^0.5.2
-    firebase_analytics: ^6.2.0
-    firebase_crashlytics: ^0.2.3
-    firebase_dynamic_links: ^0.6.3
+    # Firebase
+    firebase_core: ^1.0.0
+    firebase_analytics: ^7.1.0
+    firebase_crashlytics: ^1.0.0
+    firebase_dynamic_links: ^0.8.0
+    firebase_messaging: ^9.0.0
 
-    firebase_messaging: ^7.0.3
+    # Notifications
     onesignal_flutter:
         git: https://github.com/fokus-team/OneSignal-Flutter-SDK.git
     flutter_local_notifications:
@@ -38,39 +42,53 @@ dependencies:
             url: https://github.com/fokus-team/flutter_local_notifications.git
             path: flutter_local_notifications
 
-    googleapis: ^0.56.1
+    # Logic
+    bloc: ^7.0.0-nullsafety.3
+    flutter_bloc: ^7.0.0-nullsafety.4
+    formz: ^0.4.0-nullsafety.0
+    get_it: ^6.0.0
 
-    get_it: ^5.0.1
-    bloc: ^6.1.0
-    flutter_bloc: ^6.1.1
-
-    package_info: '>=0.4.3 <2.0.0'
-    equatable: ^1.1.0
-    meta: ^1.2.4
-    date_utils: ^0.1.0+3
-    logging: ^0.11.4
-    connectivity: ^2.0.2
-    intl: ^0.16.1
-    formz: ^0.3.0
-    shared_preferences: ^0.5.8
-    url_launcher: ^5.5.2
+    # Services
+    shared_preferences: ^2.0.3
     uni_links: ^0.4.0
+    googleapis: ^2.0.0
 
-    cupertino_icons: ^1.0.0
-    lottie: ^0.4.0+1
-    flutter_svg: ^0.18.0
-    flutter_markdown: ^0.3.4
-    smart_select: ^3.0.3
-    badges: ^1.1.1
-    implicitly_animated_reorderable_list: ^0.2.3
-    flutter_picker: ^1.1.5
-    confetti: ^0.5.4+1
-    table_calendar: ^2.3.0
-    carousel_slider: ^2.2.1
-    flutter_rating_bar: ^3.2.0+1
-    vibration: ^1.5.0
-    flushbar: ^1.10.4
-    flutter_email_sender: ^4.0.0
+    # Infra
+    equatable: ^2.0.0
+    meta: ^1.3.0
+    logging: ^1.0.0
+    intl: ^0.17.0
+
+    # Utils
+    vibration: ^1.7.4-nullsafety.0
+    flutter_email_sender: ^5.0.0
+    url_launcher: ^6.0.2
+    connectivity: ^3.0.2
+    date_utils:
+        git:
+            url: https://github.com/WilliamViktorsson/date_utils.git
+            ref: patch-1
+    package_info: ^2.0.0
+
+    # Graphics
+    cupertino_icons: ^1.0.2
+    lottie: ^1.0.1
+    flutter_svg: ^0.21.0-nullsafety.0
+    confetti: ^0.6.0-nullsafety
+
+    # UI Widgets
+    flutter_markdown: ^0.6.0
+    smart_select:
+        git:
+            url: https://github.com/iktakahiro/flutter_smart_select.git
+            ref: null-safety
+    badges: ^2.0.0-nullsafety.1
+    implicitly_animated_reorderable_list: ^0.4.0-dev+4
+    flutter_picker: ^2.0.0
+    table_calendar: ^3.0.0-nullsafety.1
+    carousel_slider: ^4.0.0-nullsafety.0
+    flutter_rating_bar: ^4.0.0
+    another_flushbar: ^1.10.4
 
 dependency_overrides:
     bson:
@@ -82,7 +100,7 @@ dev_dependencies:
     flutter_test:
         sdk: flutter
 
-    flutter_launcher_icons: ^0.7.3
+    flutter_launcher_icons: ^0.9.0
 
 flutter_icons:
     android: true

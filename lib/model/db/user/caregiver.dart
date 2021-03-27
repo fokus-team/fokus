@@ -1,3 +1,4 @@
+// @dart = 2.10
 import 'package:fokus/model/db/gamification/badge.dart';
 import 'package:fokus/model/db/gamification/currency.dart';
 import 'package:fokus/model/db/user/user_role.dart';

@@ -1,3 +1,4 @@
+// @dart = 2.10
 import 'package:bson/bson.dart';
 
 import 'package:fokus/model/currency_type.dart';

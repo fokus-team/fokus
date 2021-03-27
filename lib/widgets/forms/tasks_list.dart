@@ -1,3 +1,4 @@
+// @dart = 2.10
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorderable_list.dart';
@@ -328,7 +329,7 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 						return Stack(
 							children: children,
 							alignment: Alignment.center,
-							overflow: Overflow.visible
+							clipBehavior: Clip.none,
 						);
 					},
 					child: widget.plan.tasks.isNotEmpty ?

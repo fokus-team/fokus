@@ -1,3 +1,4 @@
+// @dart = 2.10
 import 'package:formz/formz.dart';
 
 enum AgreementValidationError { invalid }

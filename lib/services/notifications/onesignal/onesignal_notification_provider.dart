@@ -1,14 +1,13 @@
 import 'package:flutter/widgets.dart';
-import 'package:fokus/logic/caregiver/child_dashboard/child_dashboard_cubit.dart';
-import 'package:fokus/model/navigation/child_dashboard_params.dart';
-import 'package:fokus/model/navigation/plan_instance_params.dart';
-import 'package:fokus/utils/navigation_utils.dart';
 import 'package:get_it/get_it.dart';
 import 'package:flutter/foundation.dart' as Foundation;
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
+import 'package:fokus/model/navigation/child_dashboard_params.dart';
+import 'package:fokus/model/navigation/plan_instance_params.dart';
+import 'package:fokus/utils/navigation_utils.dart';
 import 'package:fokus/model/notification/notification_data.dart';
 import 'package:fokus/services/app_route_observer.dart';
 import 'package:fokus/model/notification/notification_type.dart';

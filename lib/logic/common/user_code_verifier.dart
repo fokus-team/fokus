@@ -1,3 +1,4 @@
+// @dart = 2.10
 import 'package:bloc/bloc.dart';
 import 'package:fokus/model/db/user/user_role.dart';
 import 'package:fokus/services/data/data_repository.dart';

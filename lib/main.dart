@@ -1,3 +1,4 @@
+// @dart = 2.10
 import 'package:bloc/bloc.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_core/firebase_core.dart';

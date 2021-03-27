@@ -1,4 +1,5 @@
-import 'package:flushbar/flushbar.dart';
+// @dart = 2.10
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/ui/theme_config.dart';

@@ -1,3 +1,4 @@
+// @dart = 2.10
 class TaskStatus {
 	bool completed;
 	TaskState state;

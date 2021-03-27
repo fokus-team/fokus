@@ -1,3 +1,4 @@
+// @dart = 2.10
 part of 'authentication_bloc.dart';
 
 abstract class AuthenticationEvent extends Equatable {

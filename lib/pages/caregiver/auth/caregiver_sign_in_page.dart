@@ -1,3 +1,4 @@
+// @dart = 2.10
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
@@ -58,7 +59,7 @@ class CaregiverSignInPage extends StatelessWidget {
 
   Widget _buildSignInForm(BuildContext context) {
 		return BlocBuilder<CaregiverSignInCubit, CaregiverSignInState>(
-			cubit: BlocProvider.of<CaregiverSignInCubit>(context),
+			bloc: BlocProvider.of<CaregiverSignInCubit>(context),
 			builder: (context, state) { 
 				return AuthGroup(
 					title: AppLocales.of(context).translate('$_pageKey.logInTitle'),

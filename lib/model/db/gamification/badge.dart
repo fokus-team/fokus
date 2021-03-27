@@ -1,3 +1,4 @@
+// @dart = 2.10
 import 'package:fokus/model/ui/form/badge_form_model.dart';
 
 class Badge {

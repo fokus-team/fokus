@@ -1,3 +1,4 @@
+// @dart = 2.10
 part of 'reward_form_cubit.dart';
 
 extension RewardFormLoad on BaseFormState {

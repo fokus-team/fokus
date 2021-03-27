@@ -1,3 +1,4 @@
+// @dart = 2.10
 enum Collection { user, plan, task, planInstance, taskInstance, currency, reward, badge }
 
 extension CollectionName on Collection {

@@ -1,3 +1,4 @@
+// @dart = 2.10
 import 'package:bloc/bloc.dart';
 import 'package:date_utils/date_utils.dart';
 import 'package:equatable/equatable.dart';
@@ -61,7 +62,7 @@ class CalendarCubit extends Cubit<CalendarState> {
   void monthChanged(Date month) async => emit(state.copyWith(day: month, events: await _filterData(state.children, month)));
 
 	Future<Map<Date, List<UIPlan>>> _filterData(Map<UIChild, bool> filter, Date date) async {
-		Date month = Date.fromDate(Utils.firstDayOfMonth(date));
+		Date month = Date.fromDate(DateUtils.firstDayOfMonth(date));
 		if (filter == null)
 			return {};
 
@@ -86,7 +87,7 @@ class CalendarCubit extends Cubit<CalendarState> {
 	Future<Map<Date, List<UIPlan>>> _loadDataForMonth(Date month) async {
 	  if (_allEvents.containsKey(month))
 	  	return _allEvents[month];
-	  var currentMonth = Date.fromDate(Utils.firstDayOfMonth(Date.now()));
+	  var currentMonth = Date.fromDate(DateUtils.firstDayOfMonth(Date.now()));
 
 	  Map<Date, List<UIPlan>> events = {};
 	  if (month < currentMonth)
@@ -95,9 +96,9 @@ class CalendarCubit extends Cubit<CalendarState> {
 		  events.addAll(_loadFutureData(_getMonthSpan(month)));
 	  else {
 		  events.addAll(await _loadPastData(DateSpan(from: month, to: Date.now()))); // TODO handle today better
-		  events.addAll(_loadFutureData(DateSpan(from: Date.now(), to: Date.fromDate(Utils.nextMonth(month)))));
+		  events.addAll(_loadFutureData(DateSpan(from: Date.now(), to: Date.fromDate(DateUtils.nextMonth(month)))));
 	  }
-	  _allEvents.putIfAbsent(Date.fromDate(Utils.firstDayOfMonth(month)), () => events);
+	  _allEvents.putIfAbsent(Date.fromDate(DateUtils.firstDayOfMonth(month)), () => events);
 	  return events;
   }
 
@@ -134,7 +135,7 @@ class CalendarCubit extends Cubit<CalendarState> {
 		return events;
 	}
 
-	DateSpan<Date> _getMonthSpan(Date month) => DateSpan(from: month, to: Date.fromDate(Utils.nextMonth(month)));
+	DateSpan<Date> _getMonthSpan(Date month) => DateSpan(from: month, to: Date.fromDate(DateUtils.nextMonth(month)));
 
 }
 

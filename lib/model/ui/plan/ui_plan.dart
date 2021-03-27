@@ -1,3 +1,4 @@
+// @dart = 2.10
 import 'package:mongo_dart/mongo_dart.dart';
 
 import 'package:fokus/model/db/plan/plan.dart';

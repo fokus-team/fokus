@@ -1,3 +1,4 @@
+// @dart = 2.10
 import 'dart:convert';
 
 import 'package:fokus/services/app_locales.dart';

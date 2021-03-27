@@ -1,3 +1,4 @@
+// @dart = 2.10
 import 'dart:async';
 
 import 'package:confetti/confetti.dart';

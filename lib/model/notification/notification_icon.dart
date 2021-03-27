@@ -1,3 +1,4 @@
+// @dart = 2.10
 import 'package:fokus/utils/ui/icon_sets.dart';
 import 'package:fokus/utils/ui/app_paths.dart';
 

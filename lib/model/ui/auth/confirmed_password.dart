@@ -1,3 +1,4 @@
+// @dart = 2.10
 import 'package:fokus/model/ui/auth/password.dart';
 import 'package:formz/formz.dart';
 

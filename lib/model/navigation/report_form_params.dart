@@ -1,3 +1,4 @@
+// @dart = 2.10
 import 'package:fokus/model/ui/task/ui_task_report.dart';
 
 class ReportFormParams {

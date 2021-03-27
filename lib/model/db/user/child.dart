@@ -1,3 +1,4 @@
+// @dart = 2.10
 import 'package:fokus/model/db/gamification/child_badge.dart';
 import 'package:fokus/model/db/user/user.dart';
 import 'package:fokus/model/db/user/child_permission.dart';

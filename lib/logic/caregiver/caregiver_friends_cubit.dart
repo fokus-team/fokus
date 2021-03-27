@@ -1,3 +1,4 @@
+// @dart = 2.10
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
 import 'package:fokus/logic/common/formz_state.dart';

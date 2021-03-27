@@ -1,3 +1,4 @@
+// @dart = 2.10
 part of 'task_completion_cubit.dart';
 
 enum TaskCompletionStateType {

@@ -1,3 +1,4 @@
+// @dart = 2.10
 import 'package:fokus/model/ui/form/task_form_model.dart';
 import 'package:fokus/model/ui/gamification/ui_currency.dart';
 

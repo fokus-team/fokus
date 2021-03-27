@@ -1,3 +1,4 @@
+// @dart = 2.10
 part of 'caregiver_sign_in_cubit.dart';
 
 class CaregiverSignInState extends CaregiverAuthStateBase {

@@ -1,3 +1,4 @@
+// @dart = 2.10
 part of 'name_change_cubit.dart';
 
 class NameChangeState extends FormzState {

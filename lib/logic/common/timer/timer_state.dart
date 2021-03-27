@@ -1,3 +1,4 @@
+// @dart = 2.10
 part of 'timer_cubit.dart';
 
 abstract class TimerState extends Equatable {

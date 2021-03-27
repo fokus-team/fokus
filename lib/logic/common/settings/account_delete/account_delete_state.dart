@@ -1,3 +1,4 @@
+// @dart = 2.10
 part of 'account_delete_cubit.dart';
 
 class AccountDeleteState extends FormzState {

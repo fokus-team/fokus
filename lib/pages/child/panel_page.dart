@@ -1,3 +1,4 @@
+// @dart = 2.10
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/logic/child/child_panel_cubit.dart';

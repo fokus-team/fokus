@@ -1,3 +1,4 @@
+// @dart = 2.10
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';

@@ -1,3 +1,4 @@
+// @dart = 2.10
 import 'package:fokus/model/ui/plan/ui_plan_instance.dart';
 
 class PlanInstanceParams {

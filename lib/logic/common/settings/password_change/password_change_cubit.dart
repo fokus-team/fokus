@@ -1,3 +1,4 @@
+// @dart = 2.10
 import 'package:bloc/bloc.dart';
 import 'package:fokus/model/ui/auth/password_change_type.dart';
 import 'package:formz/formz.dart';

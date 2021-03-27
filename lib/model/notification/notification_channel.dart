@@ -1,3 +1,4 @@
+// @dart = 2.10
 enum NotificationChannel {
 	general, prizes, grades, plans
 }

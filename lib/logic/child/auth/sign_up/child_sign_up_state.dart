@@ -1,3 +1,4 @@
+// @dart = 2.10
 part of 'child_sign_up_cubit.dart';
 
 class ChildSignUpState extends FormzState {

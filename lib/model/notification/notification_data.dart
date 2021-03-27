@@ -1,3 +1,4 @@
+// @dart = 2.10
 import 'package:fokus/model/notification/notification_button.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 

@@ -1,3 +1,4 @@
+// @dart = 2.10
 import 'package:equatable/equatable.dart';
 import 'package:fokus/model/db/date/time_date.dart';
 import 'package:fokus/model/db/gamification/child_reward.dart';

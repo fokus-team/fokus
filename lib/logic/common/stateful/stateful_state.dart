@@ -1,3 +1,4 @@
+// @dart = 2.10
 part of 'stateful_cubit.dart';
 
 enum DataSubmissionState {

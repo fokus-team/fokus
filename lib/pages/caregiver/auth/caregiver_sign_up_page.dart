@@ -1,3 +1,4 @@
+// @dart = 2.10
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -55,7 +56,7 @@ class CaregiverSignUpPage extends StatelessWidget {
 
   Widget _buildSignUpForm(BuildContext context) {
 	  return BlocBuilder<CaregiverSignUpCubit, CaregiverSignUpState>(
-			cubit: BlocProvider.of<CaregiverSignUpCubit>(context),
+		  bloc: BlocProvider.of<CaregiverSignUpCubit>(context),
 			builder: (context, state) { 
 				return AuthGroup(
 					title: AppLocales.of(context).translate('$_pageKey.registerTitle'),
@@ -127,7 +128,7 @@ class CaregiverSignUpPage extends StatelessWidget {
 			decoration: TextDecoration.underline,
 		);
 		return BlocBuilder<CaregiverSignUpCubit, CaregiverSignUpState>(
-			cubit: BlocProvider.of<CaregiverSignUpCubit>(context),
+			bloc: BlocProvider.of<CaregiverSignUpCubit>(context),
 			builder: (context, state) {
 				return InkWell(
 					onTap: () {

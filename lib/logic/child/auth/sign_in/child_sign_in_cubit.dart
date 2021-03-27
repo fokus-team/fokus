@@ -1,3 +1,4 @@
+// @dart = 2.10
 import 'package:formz/formz.dart';
 
 import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';

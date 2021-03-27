@@ -1,3 +1,4 @@
+// @dart = 2.10
 part of 'plan_form_cubit.dart';
 
 abstract class PlanFormState extends Equatable {

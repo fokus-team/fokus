@@ -1,3 +1,4 @@
+// @dart = 2.10
 import 'package:fokus/model/db/date/time_date.dart';
 import 'package:fokus/model/ui/gamification/ui_reward.dart';
 import 'package:mongo_dart/mongo_dart.dart';

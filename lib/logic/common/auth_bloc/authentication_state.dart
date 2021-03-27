@@ -1,3 +1,4 @@
+// @dart = 2.10
 part of '../../common/auth_bloc/authentication_bloc.dart';
 
 enum AuthenticationStatus { authenticated, unauthenticated, initial }

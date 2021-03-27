@@ -1,3 +1,4 @@
+// @dart = 2.10
 import 'package:flutter/widgets.dart';
 import 'package:fokus/services/analytics_service.dart';
 import 'package:get_it/get_it.dart';

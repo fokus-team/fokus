@@ -1,3 +1,4 @@
+// @dart = 2.10
 import 'package:fokus/model/db/date/time_date.dart';
 import 'package:fokus/model/db/date_span.dart';
 import 'package:fokus/model/db/plan/task.dart';

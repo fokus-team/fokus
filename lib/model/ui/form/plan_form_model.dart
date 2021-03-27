@@ -1,3 +1,4 @@
+// @dart = 2.10
 import 'package:equatable/equatable.dart';
 import 'package:fokus/model/db/date/date.dart';
 import 'package:fokus/model/db/date_span.dart';
@@ -20,14 +21,14 @@ extension PlanFormRepeatabilityRageDbType on PlanFormRepeatabilityRage {
 // ignore: must_be_immutable
 class PlanFormModel extends Equatable {
 	String name;
-	List<Mongo.ObjectId> children = List<Mongo.ObjectId>();
+	List<Mongo.ObjectId> children = [];
 	PlanFormRepeatability repeatability = PlanFormRepeatability.recurring;
 	PlanFormRepeatabilityRage repeatabilityRage = PlanFormRepeatabilityRage.weekly;
-	List<int> days = List<int>();
+	List<int> days = [];
 	Date onlyOnceDate = Date.now();
 	DateSpan<Date> rangeDate = DateSpan();
 	bool isActive = true;
-	List<TaskFormModel> tasks = List<TaskFormModel>();
+	List<TaskFormModel> tasks = [];
 
 	PlanFormModel();
 

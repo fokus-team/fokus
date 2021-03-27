@@ -1,3 +1,4 @@
+// @dart = 2.10
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
@@ -23,31 +24,31 @@ class DoubleCircularNotchedButton extends NotchedShape {
 		final double p2yB = math.sqrt(r * r - p2xB * p2xB);
 
 		///Cut-out 1
-		final List<Offset> px = List<Offset>(6);
+		final List<Offset> px = [];
 
-		px[0] = Offset(a - s1, b);
-		px[1] = Offset(a, b);
+		px.add(Offset(a - s1, b));
+		px.add(Offset(a, b));
 		final double cmpx = b < 0 ? -1.0 : 1.0;
-		px[2] = cmpx * p2yA > cmpx * p2yB ? Offset(p2xA, p2yA) : Offset(p2xB, p2yB);
+		px.add(cmpx * p2yA > cmpx * p2yB ? Offset(p2xA, p2yA) : Offset(p2xB, p2yB));
 
-		px[3] = Offset(-1.0 * px[2].dx, px[2].dy);
-		px[4] = Offset(-1.0 * px[1].dx, px[1].dy);
-		px[5] = Offset(-1.0 * px[0].dx, px[0].dy);
+		px.add(Offset(-1.0 * px[2].dx, px[2].dy));
+		px.add(Offset(-1.0 * px[1].dx, px[1].dy));
+		px.add(Offset(-1.0 * px[0].dx, px[0].dy));
 
 		for (int i = 0; i < px.length; i += 1)
 			px[i] += Offset(0 + (notchRadius + 12), 0); //Cut-out 1 positions
 
 		///Cut-out 2
-		final List<Offset> py = List<Offset>(6);
+		final List<Offset> py = [];
 
-		py[0] = Offset(a - s1, b);
-		py[1] = Offset(a, b);
+		py.add(Offset(a - s1, b));
+		py.add(Offset(a, b));
 		final double cmpy = b < 0 ? -1.0 : 1.0;
-		py[2] = cmpy * p2yA > cmpy * p2yB ? Offset(p2xA, p2yA) : Offset(p2xB, p2yB);
+		py.add(cmpy * p2yA > cmpy * p2yB ? Offset(p2xA, p2yA) : Offset(p2xB, p2yB));
 
-		py[3] = Offset(-1.0 * py[2].dx, py[2].dy);
-		py[4] = Offset(-1.0 * py[1].dx, py[1].dy);
-		py[5] = Offset(-1.0 * py[0].dx, py[0].dy);
+		py.add(Offset(-1.0 * py[2].dx, py[2].dy));
+		py.add(Offset(-1.0 * py[1].dx, py[1].dy));
+		py.add(Offset(-1.0 * py[0].dx, py[0].dy));
 
 		for (int i = 0; i < py.length; i += 1)
 			py[i] += Offset(host.width - (notchRadius + 12), 0); //Cut-out 2 positions

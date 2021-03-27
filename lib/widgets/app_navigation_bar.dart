@@ -1,3 +1,4 @@
+// @dart = 2.10
 import 'package:flutter/material.dart';
 import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/ui/navigation_item.dart';

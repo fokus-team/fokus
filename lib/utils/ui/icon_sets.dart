@@ -1,3 +1,4 @@
+// @dart = 2.10
 import 'package:flutter/material.dart';
 
 enum AssetType { avatars, rewards, badges, currencies }

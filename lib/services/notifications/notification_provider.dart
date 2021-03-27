@@ -76,7 +76,7 @@ abstract class NotificationProvider implements ActiveUserObserver, CurrentLocale
 		var translate = (String key) => AppLocales.instance.translate(key);
 		for (var channelType in NotificationChannel.values) {
 			var androidChannel = AndroidNotificationChannel(channelType.id, translate(channelType.nameKey),
-					translate(channelType.descriptionKey), channelAction: AndroidNotificationChannelAction.Update);
+					translate(channelType.descriptionKey), channelAction: AndroidNotificationChannelAction.update);
 			androidPlugin.createNotificationChannel(androidChannel);
 		}
   }

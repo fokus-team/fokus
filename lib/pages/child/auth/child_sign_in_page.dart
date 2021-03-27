@@ -137,14 +137,14 @@ class ChildSignInPage extends StatelessWidget {
 						value: state.avatar,
 						options: List.generate(childAvatars.length, (index) {
 							final String name = AppLocales.of(context).translate('$_pageKey.avatarGroups.${childAvatars[index].label.toString().split('.').last}');
-							return SmartSelectOption(
+							return S2Choice(
 								title: name,
 								group: name,
 								value: index,
 								disabled: state.takenAvatars.contains(index)
 							);
 						}),
-						choiceConfig: SmartSelectChoiceConfig(
+						choiceConfig: S2ChoiceConfig(
 							glowingOverscrollIndicatorColor: Colors.teal,
 							runSpacing: 10.0,
 							spacing: 10.0,
@@ -157,8 +157,8 @@ class ChildSignInPage extends StatelessWidget {
 								);
 							}
 						),
-						modalType: SmartSelectModalType.bottomSheet,
-						modalConfig: SmartSelectModalConfig(
+						modalType: S2ModalType.bottomSheet,
+						modalConfig: S2ModalConfig(
 							useConfirmation: true,
 							confirmationBuilder: (context, callback) => ButtonSheetConfirmButton(callback: () => callback)
 						),

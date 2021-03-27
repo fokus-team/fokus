@@ -147,12 +147,12 @@ class _PointPickerFieldState extends State<PointPickerField> {
 			value: widget.pickedCurrency,
 			options: [
 				for(UICurrency element in widget.currencies)
-					SmartSelectOption(
+					S2Choice(
 						title: element.getName(context),
 						value: element
 					)
 			],
-			choiceConfig: SmartSelectChoiceConfig(
+			choiceConfig: S2ChoiceConfig(
 				builder: (item, checked, onChange) {
 					return RadioListTile<UICurrency>(
 						value: item.value,
@@ -175,8 +175,8 @@ class _PointPickerFieldState extends State<PointPickerField> {
 					);
 				}
 			),
-			modalType: SmartSelectModalType.bottomSheet,
-			modalConfig: SmartSelectModalConfig(
+			modalType: S2ModalType.bottomSheet,
+			modalConfig: S2ModalConfig(
 				useConfirmation: true,
 				confirmationBuilder: (context, callback) => ButtonSheetConfirmButton(callback: () => callback)
 			),

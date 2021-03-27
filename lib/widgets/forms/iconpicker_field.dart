@@ -60,7 +60,7 @@ class _IconPickerFieldState extends State<IconPickerField> {
 						final String name = AppLocales.of(context).translate(
 							widget.groupTextKey + '.${(isRewardType ? rewardIcons : badgeIcons)[index].label.toString().split('.').last}'
 						);
-						return SmartSelectOption(
+						return S2Choice(
 							title: name,
 							group: name,
 							value: index
@@ -68,7 +68,7 @@ class _IconPickerFieldState extends State<IconPickerField> {
 					}
 				),
 				isTwoLine: true,
-				choiceConfig: SmartSelectChoiceConfig(
+				choiceConfig: S2ChoiceConfig(
 					glowingOverscrollIndicatorColor: Colors.teal,
 					runSpacing: 10.0,
 					spacing: 10.0,
@@ -87,8 +87,8 @@ class _IconPickerFieldState extends State<IconPickerField> {
 						);
 					}
 				),
-				modalType: SmartSelectModalType.bottomSheet,
-				modalConfig: SmartSelectModalConfig(
+				modalType: S2ModalType.bottomSheet,
+				modalConfig: S2ModalConfig(
 					useConfirmation: true,
 					confirmationBuilder: (context, callback) => ButtonSheetConfirmButton(callback: () => callback)
 				),

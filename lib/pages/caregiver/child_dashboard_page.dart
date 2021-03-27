@@ -224,15 +224,15 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 			title: pickerTitle,
 			options: [
 				for(T element in options)
-					SmartSelectOption(
+					S2Choice(
 						title: getName(element),
 						value: element
 					)
 			],
 			onChange: (val) => onChange(val),
-			modalType: SmartSelectModalType.bottomSheet,
-			choiceConfig: SmartSelectChoiceConfig(builder: builder),
-			modalConfig: SmartSelectModalConfig(
+			modalType: S2ModalType.bottomSheet,
+			choiceConfig: S2ChoiceConfig(builder: builder),
+			modalConfig: S2ModalConfig(
 				useConfirmation: true,
 				confirmationBuilder: (context, callback) => ButtonSheetConfirmButton(callback: () => callback)
 			),

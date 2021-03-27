@@ -147,14 +147,14 @@ class _SettingsPageState extends State<SettingsPage> {
 					return SmartSelect.single(
 						value: BlocProvider.of<LocaleCubit>(context).state.languageKey,
 						title: AppLocales.of(context).translate('$_pageKey.appSettings.changeLanguageLabel'),
-						modalType: SmartSelectModalType.bottomSheet,
-						modalConfig: SmartSelectModalConfig(
+						modalType: S2ModalType.bottomSheet,
+						modalConfig: S2ModalConfig(
 							useConfirmation: true,
 							confirmationBuilder: (context, callback) => ButtonSheetConfirmButton(callback: () => callback)
 						),
 						options: [
 							for(String lang in languages)
-								SmartSelectOption(
+								S2Choice(
 									title: AppLocales.of(context).translate('$_pageKey.appSettings.languages.$lang'),
 									value: lang
 								)

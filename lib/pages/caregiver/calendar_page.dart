@@ -266,14 +266,14 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 	        )
 	      );
 	    },
-	    options: SmartSelectOption.listFrom(
+	    options: S2Choice.listFrom(
 	      source: children.keys.toList(),
 	      value: (index, item) => item,
 	      title: (index, item) => item.name,
 	      meta: (index, item) => item
 	    ),
-	    choiceType: SmartSelectChoiceType.chips,
-	    choiceConfig: SmartSelectChoiceConfig(
+	    choiceType: S2ChoiceType.chips,
+	    choiceConfig: S2ChoiceConfig(
 	      builder: (item, checked, onChange) => Theme(
 	        data: ThemeData(textTheme: Theme.of(context).textTheme),
 	        child: ItemCard(
@@ -293,8 +293,8 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 					title: AppLocales.of(context).translate('$_pageKey.header.emptyListText'),
 				)
 	    ),
-	    modalType: SmartSelectModalType.bottomSheet,
-			modalConfig: SmartSelectModalConfig(
+	    modalType: S2ModalType.bottomSheet,
+			modalConfig: S2ModalConfig(
 				useConfirmation: true,
 				confirmationBuilder: (context, callback) => ButtonSheetConfirmButton(callback: () => callback)
 			),

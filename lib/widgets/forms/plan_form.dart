@@ -125,7 +125,7 @@ class _PlanFormState extends State<PlanForm> {
 			title: AppLocales.of(context).translate('$_pageKey.assignedChildren.label'),
 			placeholder: AppLocales.of(context).translate('$_pageKey.assignedChildren.hint'),
 			value: widget.plan.children,
-			options: SmartSelectOption.listFrom<Mongo.ObjectId, UIChild>(
+			options: S2Choice.listFrom<Mongo.ObjectId, UIChild>(
 				source: children,
 				value: (index, item) => item.id,
 				title: (index, item) => item.name,
@@ -134,8 +134,8 @@ class _PlanFormState extends State<PlanForm> {
 			isTwoLine: true,
 			isLoading: loading,
 			loadingText: AppLocales.of(context).translate('loading'),
-			choiceType: SmartSelectChoiceType.chips,
-			choiceConfig: SmartSelectChoiceConfig(
+			choiceType: S2ChoiceType.chips,
+			choiceConfig: S2ChoiceConfig(
 				builder: (item, checked, onChange) => Theme(
 					data: ThemeData(textTheme: Theme.of(context).textTheme),
 					child: ItemCard(
@@ -155,8 +155,8 @@ class _PlanFormState extends State<PlanForm> {
 					title: AppLocales.of(context).translate('$_pageKey.assignedChildren.emptyListText')
 				)
 			),
-			modalType: SmartSelectModalType.bottomSheet,
-			modalConfig: SmartSelectModalConfig(
+			modalType: S2ModalType.bottomSheet,
+			modalConfig: S2ModalConfig(
 				searchBarHint: AppLocales.of(context).translate('actions.search'),
 				useConfirmation: true,
 				confirmationBuilder: (context, callback) => ButtonSheetConfirmButton(callback: () => callback)
@@ -188,16 +188,16 @@ class _PlanFormState extends State<PlanForm> {
 		return SmartSelect<PlanFormRepeatability>.single(
 			title: AppLocales.of(context).translate('$_pageKey.repeatability.label'),
 			value: widget.plan.repeatability,
-			options: [
+			choiceItems: [
 				for(PlanFormRepeatability element in PlanFormRepeatability.values)
-					SmartSelectOption(
+					S2Choice(
 						title: AppLocales.of(context).translate('$_pageKey.repeatability.options.${element.toString().split('.').last}'),
 						value: element
 					)
 			],
 			isTwoLine: true,
-			modalType: SmartSelectModalType.bottomSheet,
-			modalConfig: SmartSelectModalConfig(
+			modalType: S2ModalType.bottomSheet,
+			modalConfig: S2ModalConfig(
 				useConfirmation: true,
 				confirmationBuilder: (context, callback) => ButtonSheetConfirmButton(callback: () => callback)
 			),
@@ -230,14 +230,14 @@ class _PlanFormState extends State<PlanForm> {
 					value: widget.plan.repeatabilityRage,
 					options: [
 						for(PlanFormRepeatabilityRage element in PlanFormRepeatabilityRage.values)
-							SmartSelectOption(
+							S2Choice(
 								title: AppLocales.of(context).translate('$_pageKey.repeatabilityRange.options.${element.toString().split('.').last}'),
 								value: element
 							)
 					],
 					isTwoLine: true,
-					modalType: SmartSelectModalType.bottomSheet,
-					modalConfig: SmartSelectModalConfig(
+					modalType: S2ModalType.bottomSheet,
+					modalConfig: S2ModalConfig(
 						useConfirmation: true,
 						confirmationBuilder: (context, callback) => ButtonSheetConfirmButton(callback: () => callback)
 					),
@@ -251,14 +251,14 @@ class _PlanFormState extends State<PlanForm> {
 				SmartSelect<int>.multiple(
 					title: AppLocales.of(context).translate('$_pageKey.days.label${isWeekly ? 'Weekly' : 'Monthly'}'),
 					value: widget.plan.days,
-					options: SmartSelectOption.listFrom<int, int>(
+					options: S2Choice.listFrom<int, int>(
 						source: dayList,
 						value: (index, item) => item,
 						title: (index, item) => isWeekly ? AppLocales.of(context).translate('date.weekday', {'WEEKDAY': item.toString()}) : item.toString()
 					),
-					choiceType: SmartSelectChoiceType.chips,
-					modalType: SmartSelectModalType.bottomSheet,
-					modalConfig: SmartSelectModalConfig(
+					choiceType: S2ChoiceType.chips,
+					modalType: S2ModalType.bottomSheet,
+					modalConfig: S2ModalConfig(
 						useConfirmation: true,
 						confirmationBuilder: (context, callback) => ButtonSheetConfirmButton(callback: () => callback)
 					),

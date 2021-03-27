@@ -4,9 +4,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fokus/pages/caregiver/forms/task_form_page.dart';
 import 'package:get_it/get_it.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:round_spot/round_spot.dart' as round_spot;
 
 import 'package:fokus/logic/caregiver/caregiver_friends_cubit.dart';
 import 'package:fokus/logic/caregiver/child_dashboard/child_dashboard_cubit.dart';
@@ -66,6 +66,7 @@ import 'package:fokus/pages/common/plan_instance_details_page.dart';
 import 'package:fokus/pages/child/task_in_progress_page.dart';
 import 'package:fokus/pages/child/achievements_page.dart';
 import 'package:fokus/pages/caregiver/forms/report_form_page.dart';
+import 'package:fokus/pages/caregiver/forms/task_form_page.dart';
 
 import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/db/user/user_role.dart';
@@ -83,6 +84,7 @@ import 'package:fokus/services/observers/current_locale_observer.dart';
 import 'package:fokus/utils/ui/theme_config.dart';
 import 'package:fokus/utils/service_injection.dart';
 import 'package:fokus/utils/bloc_utils.dart';
+import 'package:fokus/utils/file_utils.dart';
 import 'package:fokus/widgets/page_theme.dart';
 
 void main() async {
@@ -96,7 +98,15 @@ void main() async {
 	GetIt.I<Instrumentator>().runAppGuarded(
 		BlocProvider<AuthenticationBloc>(
 			create: (context) => AuthenticationBloc(),
-			child: FokusApp(navigatorKey, routeObserver, analytics.pageObserver),
+			child: round_spot.initialize(
+				child: FokusApp(navigatorKey, routeObserver, analytics.pageObserver),
+				config: round_spot.Config(
+					outputTypes: {round_spot.OutputType.graphicalRender},
+					heatMapStyle: round_spot.HeatMapStyle.smooth
+				),
+				heatMapCallback: (data) => saveDebugImage(data),
+				numericCallback: (data) => saveDebugData(data)
+			),
 		)
 	);
 }
@@ -127,7 +137,11 @@ class _FokusAppState extends State<FokusApp> implements CurrentLocaleObserver {
 			localeListResolutionCallback: LocaleService.localeSelector,
 
 			navigatorKey: widget._navigatorKey,
-			navigatorObservers: [widget._routeObserver, widget._pageObserver],
+			navigatorObservers: [
+				widget._routeObserver,
+				widget._pageObserver,
+				round_spot.Observer()
+			],
 			initialRoute: AppPage.loadingPage.name,
 			routes: _createRoutes(),
 			onGenerateRoute: _onGenerateRoute,

@@ -47,7 +47,7 @@ class PlanRepeatabilityService {
 		} else if (repeatability.type == RepeatabilityType.weekly)
 			iterateDays(span.from.weekday, 7);
 		else if (repeatability.type == RepeatabilityType.monthly)
-			iterateDays(span.from.day, Utils.lastDayOfMonth(span.from).day);
+			iterateDays(span.from.day, DateUtils.lastDayOfMonth(span.from).day);
 		return dates;
 	}
 

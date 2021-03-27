@@ -1,5 +1,5 @@
 // @dart = 2.10
-import 'package:date_utils/date_utils.dart';
+import 'package:date_utils/date_utils.dart' as du;
 import 'package:flutter/material.dart';
 import 'package:fokus/model/ui/app_page.dart';
 import 'package:intl/intl.dart';
@@ -145,7 +145,7 @@ class _ChildCalendarPageState extends State<ChildCalendarPage> with TickerProvid
 
 	void onMonthChanged(DateTime first, DateTime last, CalendarFormat format) {
 		onCalendarCreated(first, last, format);
-		_calendarController.setSelectedDay(Date.fromDate(Utils.firstDayOfMonth(_calendarController.focusedDay)));
+		_calendarController.setSelectedDay(Date.fromDate(du.DateUtils.firstDayOfMonth(_calendarController.focusedDay)));
 	}
 
 }

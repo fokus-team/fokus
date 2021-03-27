@@ -1,5 +1,5 @@
 // @dart = 2.10
-import 'package:date_utils/date_utils.dart';
+import 'package:date_utils/date_utils.dart' as du;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/utils/navigation_utils.dart';
@@ -200,7 +200,7 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 
 	void onMonthChanged(DateTime first, DateTime last, CalendarFormat format) {
 		onCalendarCreated(first, last, format);
-		_calendarController.setSelectedDay(Date.fromDate(Utils.firstDayOfMonth(_calendarController.focusedDay)));
+		_calendarController.setSelectedDay(Date.fromDate(du.DateUtils.firstDayOfMonth(_calendarController.focusedDay)));
 	}
 
 	SmartSelect<UIChild> _buildChildPicker({Map<UIChild, bool> children = const {}, bool loading = false}) {

@@ -34,7 +34,7 @@ We are looking for people willing to help us translate our app to more languages
 If you would like to see our app supporting your language and are willing to contribute do not hesitate to contact us using the email below. We will provide you with a machine translated template to minimize the amount of labour required.
 
 ## Contact Us
-You can reach us at contact@fokus.link
+You can reach us at [contact@fokus.link](mailto:contact@fokus.link)
 
 ## License
 This app is licenced under [`MIT License`](https://github.com/fokus-team/fokus/blob/master/LICENSE).

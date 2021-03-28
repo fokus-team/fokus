@@ -104,7 +104,7 @@ void main() async {
 					outputTypes: {round_spot.OutputType.graphicalRender},
 					heatMapStyle: round_spot.HeatMapStyle.smooth
 				),
-				heatMapCallback: (data) => saveDebugImage(data),
+				heatMapCallback: (data, info) => saveDebugImage(data, info.name),
 				numericCallback: (data) => saveDebugData(data)
 			),
 		)

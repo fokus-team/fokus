@@ -3,9 +3,9 @@ import 'dart:typed_data';
 
 import 'package:path_provider/path_provider.dart';
 
-Future saveDebugImage(Uint8List image) async {
+Future saveDebugImage(Uint8List image, [String name]) async {
 	final path = await _getLocalPath;
-	var file = File('$path/${DateTime.now()}.png');
+	var file = File('$path/${name.replaceAll('/', '-')}-${DateTime.now()}.png');
 	return file.writeAsBytes(image);
 }
 

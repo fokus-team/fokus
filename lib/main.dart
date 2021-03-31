@@ -106,7 +106,7 @@ void main() async {
 					minSessionEventCount: 5,
 					uiElementSize: 15
 				),
-				heatMapCallback: (data, info) => saveDebugImage(data, info.name),
+				heatMapCallback: (data, info) => saveDebugImage(data, info),
 				numericCallback: (data) => saveDebugData(data)
 			),
 		)

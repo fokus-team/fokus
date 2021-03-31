@@ -124,7 +124,8 @@ class AppSegments extends StatelessWidget {
 			physics: BouncingScrollPhysics(),
 			children: <Widget>[
 				round_spot.ListDetector(
-					children: segments
+					children: segments,
+					areaID: 'AppSegments',
 				),
 				SizedBox(height: 80.0)
 			]

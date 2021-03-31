@@ -39,7 +39,12 @@ class ChildDashboardCubit extends StatefulCubit {
 	  emit(ChildDashboardState(child: child));
   }
 
-  Future loadTab(int tabIndex) => _tabCubits[tabIndex.clamp(0, 3)].loadData();
+  Future loadTab(int tabIndex) {
+  	var cubit = _tabCubits[tabIndex.clamp(0, 3)];
+  	if (cubit.state.isNotLoaded)
+      return cubit.loadData();
+  	return Future.value();
+  }
 
 	Future onNameDialogClosed(Future<String> result) async {
   	var value = await result;

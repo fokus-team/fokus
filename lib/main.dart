@@ -102,7 +102,9 @@ void main() async {
 				child: FokusApp(navigatorKey, routeObserver, analytics.pageObserver),
 				config: round_spot.Config(
 					outputTypes: {round_spot.OutputType.graphicalRender},
-					heatMapStyle: round_spot.HeatMapStyle.smooth
+					heatMapStyle: round_spot.HeatMapStyle.smooth,
+					minSessionEventCount: 5,
+					uiElementSize: 15
 				),
 				heatMapCallback: (data, info) => saveDebugImage(data, info.name),
 				numericCallback: (data) => saveDebugData(data)

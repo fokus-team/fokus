@@ -107,7 +107,8 @@ void main() async {
 					uiElementSize: 15
 				),
 				heatMapCallback: (data, info) => saveDebugImage(data, info),
-				numericCallback: (data) => saveDebugData(data)
+				rawDataCallback: (data) => saveDebugData(data),
+				loggingLevel: round_spot.LogLevel.warning
 			),
 		)
 	);

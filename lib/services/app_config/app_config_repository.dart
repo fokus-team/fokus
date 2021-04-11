@@ -1,3 +1,4 @@
+// @dart = 2.10
 import 'package:fokus/model/app_config_entry.dart';
 import 'package:fokus/services/app_config/app_config_provider.dart';
 import 'package:mongo_dart/mongo_dart.dart';

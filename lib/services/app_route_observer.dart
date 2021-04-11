@@ -7,7 +7,7 @@ class AppRouteObserver extends RouteObserver<PageRoute> {
   Future<void> get navigatorInitialized => _navigatorInitialized.future;
 
   @override
-  void didPush(Route<dynamic> route, Route<dynamic> previousRoute) {
+  void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
     super.didPush(route, previousRoute);
     if (!_navigatorInitialized.isCompleted)
       _navigatorInitialized.complete();

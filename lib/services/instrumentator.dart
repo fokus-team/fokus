@@ -79,7 +79,7 @@ class Instrumentator implements ActiveUserObserver {
 	Future<bool> _handleError(dynamic error, StackTrace stackTrace) async {
 		await _routeObserver.navigatorInitialized;
 		if (_navigatorKey.currentState?.context != null) {
-			if (error is CubitUnhandledErrorException)
+			if (error is BlocUnhandledErrorException)
 				error = error.error;
 			if (error is! SocketException) { // ignore database disconnected socket exception
 				var errorType = error is NoDbConnection ? AppErrorType.noConnectionError : AppErrorType.unknownError;
@@ -91,10 +91,10 @@ class Instrumentator implements ActiveUserObserver {
 	}
 
 	void _navigateToErrorPage(AppErrorType errorType) async {
-		if (_errorPageOpen || !Foundation.kReleaseMode)
+		if (_errorPageOpen || !Foundation.kReleaseMode || _navigatorKey.currentState == null)
 			return;
 		_errorPageOpen = true;
-	  await Navigator.of(_navigatorKey.currentState.context).pushNamed(AppPage.errorPage.name, arguments: errorType);
+	  await Navigator.pushNamed(_navigatorKey.currentState!.context, AppPage.errorPage.name, arguments: errorType);
 	  _errorPageOpen = false;
 	}
 
@@ -116,7 +116,7 @@ class FokusBlocObserver extends BlocObserver {
 	final Logger _logger = Logger('FokusBlocObserver');
 
 	@override
-  void onError(Cubit cubit, Object error, StackTrace stackTrace) {
+  void onError(BlocBase cubit, Object error, StackTrace stackTrace) {
 		_logger.severe('Cubit ${cubit.runtimeType} exception unhandled', error, stackTrace);
 		super.onError(cubit, error, stackTrace);
   }

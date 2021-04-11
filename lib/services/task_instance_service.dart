@@ -27,9 +27,9 @@ class TaskInstanceService {
 		return uiTaskInstances;
 	}
 
-	List<TaskUIType> getTasksInstanceStatus({@required List<TaskInstance> tasks}) {
+	List<TaskUIType> getTasksInstanceStatus({required List<TaskInstance> tasks}) {
 		List<TaskUIType> taskStatuses = [];
-		TaskUIType prevTaskStatus;
+		TaskUIType? prevTaskStatus;
 		bool isAnyInProgress = false;
 		for(var task in tasks) {
 			var taskStatus;
@@ -50,7 +50,7 @@ class TaskInstanceService {
 		return taskStatuses;
 	}
 
-	static TaskUIType getSingleTaskInstanceStatus({@required TaskInstance task}) {
+	static TaskUIType getSingleTaskInstanceStatus({required TaskInstance task}) {
 		if(task.status != null && task.status.completed) return TaskUIType.completed;
 		else return _getInProgressType(task);
 	}

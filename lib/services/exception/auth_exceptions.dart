@@ -4,7 +4,7 @@ extension EmailSignUpErrorTextKey on EmailSignUpError {
 	String get key => const {
 		EmailSignUpError.emailAlreadyUsed: 'authentication.error.emailAlreadyUsed',
 		EmailSignUpError.emailInvalid: 'authentication.error.emailInvalid',
-	}[this];
+	}[this]!;
 }
 
 extension EmailSignInErrorTextKey on EmailSignInError {
@@ -13,11 +13,11 @@ extension EmailSignInErrorTextKey on EmailSignInError {
 		EmailSignInError.userNotFound: 'authentication.error.incorrectEmail',
     EmailSignInError.userDisabled: 'authentication.error.userDisabled',
     EmailSignInError.accountNotVerified: 'authentication.error.accountNotVerified',
-	}[this];
+	}[this]!;
 }
 
 extension PasswordChangeErrorTextKey on PasswordConfirmError {
 	String get key => const {
 		PasswordConfirmError.wrongPassword: 'authentication.error.incorrectPassword',
-	}[this];
+	}[this]!;
 }

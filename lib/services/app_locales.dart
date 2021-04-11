@@ -1,3 +1,4 @@
+// @dart = 2.10
 import 'dart:convert';
 import 'dart:ui';
 import 'package:fokus/services/observers/current_locale_observer.dart';

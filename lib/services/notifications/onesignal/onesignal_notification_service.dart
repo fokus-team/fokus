@@ -1,3 +1,4 @@
+// @dart = 2.10
 import 'package:bson/bson.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';

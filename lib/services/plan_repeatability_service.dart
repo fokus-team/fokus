@@ -87,7 +87,7 @@ class PlanRepeatabilityService {
 	  return false;
   }
 
-	TranslateFunc buildPlanDescription(PlanRepeatability rules, {Date instanceDate, bool detailed = false}) {
+	TranslateFunc buildPlanDescription(PlanRepeatability rules, {Date? instanceDate, bool detailed = false}) {
   	return (context) {
 		  var formatDate = (date) => DateFormat.yMd(AppLocales.instance.locale.toString()).format(date);
   		String description = '';

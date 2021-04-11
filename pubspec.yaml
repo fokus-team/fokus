@@ -30,8 +30,8 @@ dependencies:
     # Firebase
     firebase_core: ^1.0.0
     firebase_analytics: ^7.1.0
-    firebase_crashlytics: ^1.0.0
-    firebase_dynamic_links: ^0.8.0
+    firebase_crashlytics: ^2.0.0
+    firebase_dynamic_links: ^2.0.0-dev.1
     firebase_messaging: ^9.0.0
 
     # Notifications
@@ -64,16 +64,13 @@ dependencies:
     flutter_email_sender: ^5.0.0
     url_launcher: ^6.0.2
     connectivity: ^3.0.2
-    date_utils:
-        git:
-            url: https://github.com/WilliamViktorsson/date_utils.git
-            ref: patch-1
+    date_utils: ^0.2.0
     package_info: ^2.0.0
 
     # Graphics
     cupertino_icons: ^1.0.2
     lottie: ^1.0.1
-    flutter_svg: ^0.21.0-nullsafety.0
+    flutter_svg: ^0.21.0+1
     confetti: ^0.6.0-nullsafety
 
     # UI Widgets
@@ -88,7 +85,7 @@ dependencies:
     table_calendar: ^3.0.0-nullsafety.1
     carousel_slider: ^4.0.0-nullsafety.0
     flutter_rating_bar: ^4.0.0
-    another_flushbar: ^1.10.4
+    another_flushbar: ^1.10.17
 
 dependency_overrides:
     bson:

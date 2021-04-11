@@ -1,3 +1,4 @@
+// @dart = 2.10
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:fokus/services/links/link_service.dart';
 

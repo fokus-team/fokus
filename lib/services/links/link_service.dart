@@ -1,3 +1,4 @@
+// @dart = 2.10
 import 'package:flutter/widgets.dart';
 import 'package:fokus/services/app_route_observer.dart';
 import 'package:get_it/get_it.dart';
@@ -60,14 +61,14 @@ abstract class LinkService {
 		var userState = authBloc.state;
 		// If the app was opened wait for the first auth state to figure out if we need to sign out anyone
 		if (userState.status == AuthenticationStatus.initial)
-			userState = (await authBloc.firstWhere((element) => element.status != AuthenticationStatus.initial));
+			userState = (await authBloc.stream.firstWhere((element) => element.status != AuthenticationStatus.initial));
 		// Bail out early if the code is not valid
 		if (payload.type == AppLinkType.passwordReset && !(await _runGuarded(_authenticationProvider.verifyPasswordResetCode, payload, navigator.context)))
 			return false;
 		// Sign out a user if necessary
 		if (userState.status == AuthenticationStatus.authenticated) {
 			authBloc.add(AuthenticationSignOutRequested());
-			var nextState = (await authBloc.first);
+			var nextState = (await authBloc.stream.first);
 			if (nextState.status != AuthenticationStatus.unauthenticated)
 				logger.warning("Current user was not signed out");
 		}

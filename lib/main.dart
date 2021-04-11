@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:bloc/bloc.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -7,6 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:round_spot/round_spot.dart' as round_spot;
+import 'package:flutter/foundation.dart' as Foundation;
 
 import 'package:fokus/logic/caregiver/caregiver_friends_cubit.dart';
 import 'package:fokus/logic/caregiver/child_dashboard/child_dashboard_cubit.dart';
@@ -87,6 +90,8 @@ import 'package:fokus/utils/bloc_utils.dart';
 import 'package:fokus/utils/file_utils.dart';
 import 'package:fokus/widgets/page_theme.dart';
 
+import 'services/remote_storage/remote_storage_provider.dart';
+
 void main() async {
 	WidgetsFlutterBinding.ensureInitialized();
 	await Firebase.initializeApp();
@@ -106,9 +111,9 @@ void main() async {
 					minSessionEventCount: 5,
 					uiElementSize: 15
 				),
-				heatMapCallback: (data, info) => saveDebugImage(data, info),
-				rawDataCallback: (data) => saveDebugData(data),
-				loggingLevel: round_spot.LogLevel.warning
+				heatMapCallback: GetIt.I<RemoteStorageProvider>().uploadRSHeatMap, // saveDebugImage
+				rawDataCallback: GetIt.I<RemoteStorageProvider>().uploadRSData, // saveDebugData
+				loggingLevel: Foundation.kReleaseMode ? round_spot.LogLevel.off : round_spot.LogLevel.warning
 			),
 		)
 	);

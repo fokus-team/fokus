@@ -1,4 +1,6 @@
 import 'package:flutter/widgets.dart';
+import 'package:fokus/services/remote_storage/firebase_storage_service.dart';
+import 'package:fokus/services/remote_storage/remote_storage_provider.dart';
 import 'package:get_it/get_it.dart';
 import 'package:fokus_auth/fokus_auth.dart';
 
@@ -36,6 +38,7 @@ Future registerServices(GlobalKey<NavigatorState> navigatorKey, AppRouteObserver
 	GetIt.I.registerSingleton<AnalyticsService>(AnalyticsService());
 	GetIt.I.registerSingleton<Instrumentator>(Instrumentator());
 	GetIt.I.registerSingleton<LinkService>(FirebaseDynamicLinkService());
+	GetIt.I.registerSingleton<RemoteStorageProvider>(FirebaseStorageService());
 
 	return GetIt.I.allReady();
 }

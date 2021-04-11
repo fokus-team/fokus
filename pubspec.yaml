@@ -30,6 +30,7 @@ dependencies:
     firebase_crashlytics: ^1.0.0
     firebase_dynamic_links: ^0.8.0
     firebase_messaging: ^9.0.0
+    firebase_storage: ^8.0.3
 
     onesignal_flutter:
         git: https://github.com/fokus-team/OneSignal-Flutter-SDK.git
@@ -59,8 +60,7 @@ dependencies:
     url_launcher: ^6.0.2
     uni_links: ^0.4.0
     path_provider: ^2.0.1
-    round_spot:
-        git: https://github.com/stasgora/round-spot.git
+    round_spot: ^0.2.0
 
     cupertino_icons: ^1.0.0
     lottie: ^1.0.1

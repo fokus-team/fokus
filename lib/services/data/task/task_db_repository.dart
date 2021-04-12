@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'package:fokus/model/db/date/time_date.dart';
 import 'package:fokus/model/db/date_span.dart';
 import 'package:fokus/model/db/plan/task_status.dart';
@@ -13,37 +12,37 @@ import 'package:fokus/model/db/plan/task_instance.dart';
 mixin TaskDbRepository implements DbRepository {
 	final Logger _logger = Logger('TaskDbRepository');
 
-	Future<List<Task>> getTasks({ObjectId planId, List<ObjectId> ids, bool requiredOnly = false, bool optionalOnly = false, List<String> fields}) {
+	Future<List<Task>> getTasks({ObjectId? planId, List<ObjectId>? ids, bool requiredOnly = false, bool optionalOnly = false, List<String>? fields}) {
 		var query = _buildTaskQuery(planId: planId, ids: ids, optionalOnly: optionalOnly, requiredOnly: requiredOnly);
 		if (fields != null)
 			query.fields(fields);
-		return dbClient.queryTyped(Collection.task, query, (json) => Task.fromJson(json));
+		return dbClient.queryTyped(Collection.task, query, (json) => Task.fromJson(json)!);
 	}
 
-	Future<Task> getTask({ObjectId taskId, bool requiredOnly = false, bool optionalOnly = false, List<String> fields}) {
+	Future<Task> getTask({ObjectId? taskId, bool requiredOnly = false, bool optionalOnly = false, List<String>? fields}) {
 		var query = _buildTaskQuery(id: taskId, optionalOnly: optionalOnly, requiredOnly: requiredOnly);
 		if (fields != null)
 			query.fields(fields);
-		return dbClient.queryOneTyped(Collection.task, query, (json) => Task.fromJson(json));
+		return dbClient.queryOneTyped(Collection.task, query, (json) => Task.fromJson(json)!);
 	}
 
-	Future<TaskInstance> getTaskInstance({ObjectId taskInstanceId, bool requiredOnly = false, bool optionalOnly = false, List<String> fields}) {
+	Future<TaskInstance> getTaskInstance({ObjectId? taskInstanceId, bool requiredOnly = false, bool optionalOnly = false, List<String>? fields}) {
 		var query = _buildTaskQuery(id: taskInstanceId, optionalOnly: optionalOnly, requiredOnly: requiredOnly);
 		if (fields != null)
 			query.fields(fields);
-		return dbClient.queryOneTyped(Collection.taskInstance, query, (json) => TaskInstance.fromJson(json));
+		return dbClient.queryOneTyped(Collection.taskInstance, query, (json) => TaskInstance.fromJson(json)!);
 	}
 
-	Future<List<TaskInstance>> getTaskInstances({ObjectId planInstanceId, List<ObjectId> taskInstancesIds, List<ObjectId> planInstancesId,
-		bool requiredOnly = false, bool optionalOnly = false, bool isCompleted, TaskState state, List<String> fields}) {
+	Future<List<TaskInstance>> getTaskInstances({ObjectId? planInstanceId, List<ObjectId>? taskInstancesIds, List<ObjectId>? planInstancesId,
+		bool requiredOnly = false, bool optionalOnly = false, bool? isCompleted, TaskState? state, List<String>? fields}) {
 		var query = _buildTaskQuery(planInstanceId: planInstanceId, ids: taskInstancesIds, requiredOnly: requiredOnly,
 				optionalOnly: optionalOnly, isCompleted: isCompleted, planInstancesIds: planInstancesId, state: state);
 		if (fields != null)
 			query.fields(fields);
-		return dbClient.queryTyped(Collection.taskInstance, query, (json) => TaskInstance.fromJson(json));
+		return dbClient.queryTyped(Collection.taskInstance, query, (json) => TaskInstance.fromJson(json)!);
 	}
 
-	Future<int> countTaskInstances({List<ObjectId> planInstancesId, bool isCompleted, TaskState state}) {
+	Future<int> countTaskInstances({List<ObjectId>? planInstancesId, bool? isCompleted, TaskState? state}) {
 		var query = _buildTaskQuery(isCompleted: isCompleted, planInstancesIds: planInstancesId, state: state);
 		return dbClient.count(Collection.taskInstance, query);
 	}
@@ -64,7 +63,7 @@ mixin TaskDbRepository implements DbRepository {
 
 	Future updateTaskInstance(TaskInstance taskInstance) => dbClient.update(Collection.taskInstance, _buildTaskQuery(id: taskInstance.id), taskInstance.toJson(), multiUpdate: false);
 
-	Future updateTaskInstanceFields(ObjectId taskInstanceId, {TaskState state, List<DateSpan<TimeDate>> duration, List<DateSpan<TimeDate>> breaks, bool isCompleted, int rating, int pointsAwarded, List<MapEntry<String, bool>> subtasks}) {
+	Future updateTaskInstanceFields(ObjectId taskInstanceId, {TaskState? state, List<DateSpan<TimeDate>>? duration, List<DateSpan<TimeDate>>? breaks, bool? isCompleted, int? rating, int? pointsAwarded, List<MapEntry<String, bool>>? subtasks}) {
 		var document = modify;
 		if (state != null)
 			document.set('status.state', state.index);
@@ -83,16 +82,16 @@ mixin TaskDbRepository implements DbRepository {
 		return dbClient.update(Collection.taskInstance, where.eq('_id', taskInstanceId), document);
 	}
 
-	Future removeTasks({List<ObjectId> planIds}) {
+	Future removeTasks({required List<ObjectId> planIds}) {
 		var query = _buildTaskQuery(planIds: planIds);
 		return dbClient.remove(Collection.task, query);
 	}
-	Future removeTaskInstances({List<ObjectId> tasksIds, List<ObjectId> planInstancesIds}) {
+	Future removeTaskInstances({List<ObjectId>? tasksIds, List<ObjectId>? planInstancesIds}) {
 		var query = _buildTaskQuery(tasksIds: tasksIds, planInstancesIds: planInstancesIds);
 		return dbClient.remove(Collection.taskInstance, query);
 	}
 
-	SelectorBuilder _buildTaskQuery({ObjectId id, List<ObjectId> ids, List<ObjectId> planIds, List<ObjectId> tasksIds, ObjectId planId, ObjectId planInstanceId, List<ObjectId> planInstancesIds, bool requiredOnly, bool optionalOnly, bool isCompleted, TaskState state}) {
+	SelectorBuilder _buildTaskQuery({ObjectId? id, List<ObjectId>? ids, List<ObjectId>? planIds, List<ObjectId>? tasksIds, ObjectId? planId, ObjectId? planInstanceId, List<ObjectId>? planInstancesIds, bool? requiredOnly, bool? optionalOnly, bool? isCompleted, TaskState? state}) {
 		SelectorBuilder query = where;
 		if (planId != null && planInstanceId != null)
 			_logger.warning("Both plan and plan instance IDs specified in task query");
@@ -121,8 +120,6 @@ mixin TaskDbRepository implements DbRepository {
 			query.eq('status.state', state.index);
 		if (isCompleted != null)
 			query.eq('status.completed', isCompleted);
-		if (query.map.isEmpty)
-			return null;
 		return query;
 	}
 }

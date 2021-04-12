@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'package:fokus/model/db/date/date_base.dart';
 import 'package:fokus/model/db/date_span.dart';
 import 'package:fokus/services/data/award/award_repository.dart';
@@ -14,7 +13,7 @@ abstract class DataRepository implements UserRepository, PlanRepository, TaskRep
 class DateSpanUpdate<D extends DateBase> {
 	D value;
 	SpanDateType type;
-	int index = -1;
+	int index;
 
-	DateSpanUpdate(this.value, this.type, [this.index]);
+	DateSpanUpdate(this.value, this.type, [this.index = -1]);
 }

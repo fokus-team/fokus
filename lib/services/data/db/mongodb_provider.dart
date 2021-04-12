@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'dart:async';
 import 'package:fokus_auth/fokus_auth.dart';
 import 'package:mongo_dart/mongo_dart.dart';
@@ -8,10 +7,10 @@ import 'package:fokus/services/exception/db_exceptions.dart';
 
 
 class MongoDbProvider {
-	Db _client;
+	late Db _client;
 
-	Future connect({bool dropExisting = false}) async {
-		if (_client != null && _client.isConnected) {
+	Future connect({bool dropExisting = false, bool firstTime = false}) async {
+		if (!firstTime && _client.isConnected) {
 			if (dropExisting)
 				await _client.close();
 			else
@@ -40,7 +39,7 @@ class MongoDbProvider {
 	});
 
 	Future remove(Collection collection, SelectorBuilder selector) => _execute(() {
-		return _execute(() => _client.collection(collection.name).remove(selector));
+		return _execute(() => _client.collection(collection.name).remove(validateSelector(selector)));
 	});
 
 	Future<List<ObjectId>> insertMany(Collection collection, List<Map<String, dynamic>> documents) => _execute(() {
@@ -48,8 +47,8 @@ class MongoDbProvider {
 		return _execute(() => _client.collection(collection.name).insertAll(documents)).then((_) => documents.map((document) => document['_id'] as ObjectId).toList());
 	});
 
-	Future<int> count(Collection collection, [SelectorBuilder selector]) => _execute(() => _client.collection(collection.name).count(selector));
-	Future<bool> exists(Collection collection, [SelectorBuilder selector]) async => await count(collection, selector) > 0;
+	Future<int> count(Collection collection, SelectorBuilder selector) => _execute(() => _client.collection(collection.name).count(validateSelector(selector)));
+	Future<bool> exists(Collection collection, SelectorBuilder selector) async => await count(collection, selector) > 0;
 
 	Future<T> queryOneTyped<T>(Collection collection, SelectorBuilder query, T Function(Map<String, dynamic>) constructElement) {
 		return this._queryOne(collection, query).then((response) => constructElement(response));
@@ -63,9 +62,9 @@ class MongoDbProvider {
 		return this._query(collection, query).then((response) async => Map.fromEntries(response.map((element) => constructEntry(element)).toList()));
 	}
 
-	Future<Map<String, dynamic>> _queryOne(Collection collection, [SelectorBuilder selector]) => _execute(() => _client.collection(collection.name).findOne(selector));
-	Future<List<Map<String, dynamic>>> _query(Collection collection, [SelectorBuilder selector]) {
-	  return _execute(() async => await _client.collection(collection.name).find(selector).toList());
+	Future<Map<String, dynamic>> _queryOne(Collection collection, SelectorBuilder selector) => _execute(() => _client.collection(collection.name).findOne(validateSelector(selector)));
+	Future<List<Map<String, dynamic>>> _query(Collection collection, SelectorBuilder selector) {
+	  return _execute(() async => await _client.collection(collection.name).find(validateSelector(selector)).toList());
 	}
 
 	Future<T> _execute<T>(Future<T> Function() query) async {
@@ -90,4 +89,6 @@ class MongoDbProvider {
 
 	// TODO call
 	void close() async => await _client.close();
+
+	SelectorBuilder? validateSelector(SelectorBuilder query) => query.map.isEmpty ? null : query;
 }

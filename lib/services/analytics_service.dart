@@ -24,9 +24,9 @@ class AnalyticsService {
 
 	// Plan
 	void logPlanCreated(Plan plan) => _analytics.logEvent(name: 'plan_created', parameters: {
-		'id': plan.id.toHexString(),
-		'task_count': plan.tasks.length,
-		'repeatability': plan.repeatability.type.name
+		'id': plan.id?.toHexString(),
+		'task_count': plan.tasks?.length,
+		'repeatability': plan.repeatability?.type?.name
 	});
 	void logPlanStarted(PlanInstance plan) => _analytics.logEvent(name: 'plan_started', parameters: plan.logRecord);
 	void logPlanCompleted(PlanInstance plan) => _analytics.logEvent(name: 'plan_completed', parameters: plan.logRecord);
@@ -55,17 +55,17 @@ class AnalyticsService {
 
 extension LogPlanInstance on PlanInstance {
 	Map<String, dynamic> get logRecord => {
-		'id': id.toHexString(),
-		'plan_id': planID.toHexString()
+		'id': id?.toHexString(),
+		'plan_id': planID?.toHexString()
 	};
 }
 
 extension LogTaskInstance on TaskInstance {
 	Map<String, dynamic> get logRecord => {
-		'id': id.toHexString(),
-		'task_id': taskID.toHexString(),
-		'plan_id': planInstanceID.toHexString(),
-		'subtask_count': '${subtasks.length}'
+		'id': id?.toHexString(),
+		'task_id': taskID?.toHexString(),
+		'plan_id': planInstanceID?.toHexString(),
+		'subtask_count': '${subtasks?.length}'
 	};
 }
 
@@ -79,9 +79,9 @@ extension LogUITaskReport on UITaskReport {
 
 extension LogReward on Reward {
 	Map<String, dynamic> get logRecord => {
-		'id': id.toHexString(),
-		'cost': '${cost.quantity}',
-		'currency': '${cost.icon.index}',
+		'id': id?.toHexString(),
+		'cost': '${cost?.quantity}',
+		'currency': '${cost?.icon?.index}',
 		'limit': '$limit'
 	};
 }

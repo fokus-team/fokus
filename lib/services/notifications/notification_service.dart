@@ -41,7 +41,7 @@ abstract class NotificationService implements ActiveUserObserver, NotificationNo
 	void removeNotificationObserver(NotificationObserver observer) => provider.removeNotificationObserver(observer);
 
 	@protected
-	Future<List<String>> getUserTokens(Mongo.ObjectId userId) async => (await dataRepository.getUser(id: userId, fields: ['notificationIDs'])).notificationIDs;
+	Future<List<String>?> getUserTokens(Mongo.ObjectId userId) async => (await dataRepository.getUser(id: userId, fields: ['notificationIDs'])).notificationIDs;
 	@protected
 	void logNoUserToken(Mongo.ObjectId userId) => logger.info('Could not send a notification, user ${userId.toHexString()} is not logged in on any device');
 

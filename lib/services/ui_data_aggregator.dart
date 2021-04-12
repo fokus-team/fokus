@@ -1,5 +1,3 @@
-// @dart = 2.10
-import 'package:flutter/cupertino.dart';
 import 'package:fokus/model/db/date/date.dart';
 import 'package:fokus/model/db/plan/plan.dart';
 import 'package:fokus/model/db/plan/plan_instance.dart';
@@ -25,20 +23,20 @@ class UIDataAggregator {
 		]);
 		List<UIChild> childList = [];
 		for (int i = 0; i < children.length; i++)
-			childList.add(UIChild.fromDBModel(children[i], todayPlanCount: data[i], hasActivePlan: data[children.length + i]));
+			childList.add(UIChild.fromDBModel(children[i], todayPlanCount: data[i] as int, hasActivePlan: data[children.length + i] as bool));
 		return childList;
 	}
 
-	Future<UIPlanInstance> loadPlanInstance({PlanInstance planInstance, ObjectId planInstanceId, Plan plan}) async {
+	Future<UIPlanInstance> loadPlanInstance({PlanInstance? planInstance, ObjectId? planInstanceId, Plan? plan}) async {
 		planInstance ??= await _dataRepository.getPlanInstance(id: planInstanceId);
 		var completedTasks = await _dataRepository.getCompletedTaskCount(planInstance.id);
 		plan ??= await _dataRepository.getPlan(id: planInstance.planID, fields: ['_id', 'repeatability', 'name']);
-		var getDescription = (Plan plan, [Date instanceDate]) => _repeatabilityService.buildPlanDescription(plan.repeatability, instanceDate: instanceDate);
-		var elapsedTime = () => sumDurations(planInstance.duration).inSeconds;
+		var getDescription = (Plan plan, [Date? instanceDate]) => _repeatabilityService.buildPlanDescription(plan.repeatability, instanceDate: instanceDate);
+		var elapsedTime = () => sumDurations(planInstance!.duration).inSeconds;
 		return UIPlanInstance.fromDBModel(planInstance, plan.name, completedTasks, elapsedTime, getDescription(plan, planInstance.date));
 	}
 
-	Future<List<UIPlanInstance>> loadTodaysPlanInstances({@required ObjectId childId}) async {
+	Future<List<UIPlanInstance>> loadTodaysPlanInstances({required ObjectId childId}) async {
 		var planFields = ['_id', 'name', 'repeatability'];
 
 		var instances = await _dataRepository.getPlanInstances(childIDs: [childId], date: Date.now());
@@ -49,15 +47,21 @@ class UIDataAggregator {
 		return getUIPlanInstances(plans: plans, instances: instances);
 	}
 
-	Future<List<UIPlanInstance>> getUIPlanInstances({List<Plan> plans, List<PlanInstance> instances}) async {
-		var getDescription = (Plan plan, [Date instanceDate]) => _repeatabilityService.buildPlanDescription(plan.repeatability, instanceDate: instanceDate);
+	Future<List<UIPlanInstance>> getUIPlanInstances({required List<Plan> plans, required List<PlanInstance> instances}) async {
+		var getDescription = (Plan plan, [Date? instanceDate]) => _repeatabilityService.buildPlanDescription(plan.repeatability, instanceDate: instanceDate);
 		var planMap = Map.fromEntries(instances.map((instance) => MapEntry(instance.id, plans.firstWhere((plan) => plan.id == instance.planID))));
 
 		List<UIPlanInstance> uiInstances = [];
 		for (var instance in instances) {
 			var elapsedTime = () => sumDurations(instance.duration).inSeconds;
 			var completedTasks = await _dataRepository.getCompletedTaskCount(instance.id);
-			uiInstances.add(UIPlanInstance.fromDBModel(instance, planMap[instance.id].name, completedTasks, elapsedTime, getDescription(planMap[instance.id], instance.date)));
+			uiInstances.add(UIPlanInstance.fromDBModel(
+				instance,
+				planMap[instance.id]!.name,
+				completedTasks,
+				elapsedTime,
+				getDescription(planMap[instance.id]!, instance.date)
+			));
 		}
 		return uiInstances;
 	}

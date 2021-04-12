@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+// @dart = 2.10
 import 'package:fokus/model/db/plan/plan_instance.dart';
 import 'package:fokus/model/db/plan/task.dart';
 import 'package:fokus/model/db/plan/task_instance.dart';
@@ -7,6 +7,7 @@ import 'package:fokus/model/ui/gamification/ui_points.dart';
 import 'package:fokus/model/ui/task/ui_task_instance.dart';
 import 'package:fokus/utils/duration_utils.dart';
 import 'package:get_it/get_it.dart';
+import 'package:meta/meta.dart';
 
 import 'data/data_repository.dart';
 
@@ -22,14 +23,16 @@ class TaskInstanceService {
 			if(taskUiTypes[i].inProgress)
 				elapsedTimePassed = () => taskUiTypes[i] == TaskUIType.currentlyPerformed ? sumDurations(taskInstances[i].duration).inSeconds : sumDurations(taskInstances[i].breaks).inSeconds;
 			else elapsedTimePassed = () => 0;
-			uiTaskInstances.add(UITaskInstance.listFromDBModel(taskInstance: taskInstances[i], name: task.name, description: task.description, points: task.points != null ? UIPoints(quantity: task.points.quantity, type: task.points.icon, title: task.points.name) : null, type: taskUiTypes[i], elapsedTimePassed: elapsedTimePassed));
+			var points = task.points != null ? UIPoints(quantity: task.points.quantity, type: task.points.icon, title: task.points.name) : null;
+			uiTaskInstances.add(UITaskInstance.listFromDBModel(taskInstance: taskInstances[i], name: task.name,
+					description: task.description, points: points, type: taskUiTypes[i], elapsedTimePassed: elapsedTimePassed));
 		}
 		return uiTaskInstances;
 	}
 
-	List<TaskUIType> getTasksInstanceStatus({required List<TaskInstance> tasks}) {
+	List<TaskUIType> getTasksInstanceStatus({@required List<TaskInstance> tasks}) {
 		List<TaskUIType> taskStatuses = [];
-		TaskUIType? prevTaskStatus;
+		TaskUIType prevTaskStatus;
 		bool isAnyInProgress = false;
 		for(var task in tasks) {
 			var taskStatus;
@@ -50,7 +53,7 @@ class TaskInstanceService {
 		return taskStatuses;
 	}
 
-	static TaskUIType getSingleTaskInstanceStatus({required TaskInstance task}) {
+	static TaskUIType getSingleTaskInstanceStatus({@required TaskInstance task}) {
 		if(task.status != null && task.status.completed) return TaskUIType.completed;
 		else return _getInProgressType(task);
 	}

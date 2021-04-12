@@ -100,7 +100,9 @@ class Instrumentator implements ActiveUserObserver {
 
   @override
   void onUserSignIn(User user) {
-		var id = user.id.toHexString();
+		if (user.id == null)
+			return;
+		var id = user.id!.toHexString();
 	  FirebaseCrashlytics.instance.setUserIdentifier(id);
 	  _analyticsService.setUserId(id);
   }

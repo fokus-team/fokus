@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'dart:convert';
 import 'dart:ui';
 import 'package:fokus/services/observers/current_locale_observer.dart';
@@ -35,11 +34,11 @@ class AppLocalesDelegate extends LocalizationsDelegate<AppLocales> {
 
 class AppLocales {
 	final Logger _logger = Logger('AppLocales');
-	Locale locale;
+	Locale? locale;
 	List<CurrentLocaleObserver> _localeObservers = [];
 
 	static AppLocales instance = AppLocales();
-	static AppLocales of(BuildContext context) => Localizations.of<AppLocales>(context, AppLocales);
+	static AppLocales of(BuildContext context) => Localizations.of<AppLocales>(context, AppLocales)!;
 
 	static const LocalizationsDelegate<AppLocales> delegate = AppLocalesDelegate();
 
@@ -62,15 +61,15 @@ class AppLocales {
 		}
 	}
 
-	String translate(String key, [Map<String, Object> args, Locale locale]) {
+	String translate(String key, [Map<String, Object>? args, Locale? locale]) {
 		locale ??= this.locale;
 		try {
-			var string = key.split('.').fold(_translations[locale], (object, key) => object[key]) as String;
+			var string = key.split('.').fold(_translations[locale], (object, key) => (object as Map)[key]) as String;
 			if (args == null)
 				return string;
 			return MessageFormat(string, locale: locale.toString()).format(args);
 		} on NoSuchMethodError {
-			_logger.warning('Key $key has no localized string in language ${locale.languageCode}');
+			_logger.warning('Key $key has no localized string in language ${locale!.languageCode}');
 			return '';
 		} on Error catch (e) {
 			_logger.severe('$e');
@@ -78,7 +77,7 @@ class AppLocales {
 		}
 	}
 
-	Map<String, dynamic> getTranslations(String key, [Map<String, Object> args]) {
+	Map<String, dynamic> getTranslations(String key, [Map<String, Object>? args]) {
 		Map<String, String> translations = {};
 		for (var locale in AppLocalesDelegate.supportedLocales)
 			translations[locale.languageCode] = translate(key, args, locale);

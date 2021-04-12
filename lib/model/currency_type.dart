@@ -1,4 +1,3 @@
-// @dart = 2.10
 enum CurrencyType { diamond, emerald, ruby, amethyst }
 
 extension CurrencyTypeName on CurrencyType {
@@ -7,5 +6,5 @@ extension CurrencyTypeName on CurrencyType {
 		CurrencyType.emerald: 'emerald',
 		CurrencyType.ruby: 'ruby',
 		CurrencyType.amethyst: 'amethyst',
-	}[this];
+	}[this]!;
 }

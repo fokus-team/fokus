@@ -1,4 +1,3 @@
-// @dart = 2.10
 enum AppConfigEntry {
 	savedChildProfiles, signedInChild, userLanguage
 }
@@ -8,5 +7,5 @@ extension AppConfigEntryKey on AppConfigEntry {
 		AppConfigEntry.savedChildProfiles: 'savedChildProfiles',
 		AppConfigEntry.signedInChild: 'signedInChild',
 		AppConfigEntry.userLanguage: 'userLanguage'
-	}[this];
+	}[this]!;
 }

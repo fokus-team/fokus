@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'dart:convert';
 
 import 'notification_text.dart';
@@ -13,11 +12,11 @@ extension NotificationButtonInfo on NotificationButton {
 	String get action => const {
 		NotificationButton.rate: 'rate',
 		NotificationButton.view: 'view',
-	}[this];
+	}[this]!;
 	SimpleNotificationText get name => const {
 		NotificationButton.rate: SimpleNotificationText.appBased('$_key.rate'),
 		NotificationButton.view: SimpleNotificationText.appBased('$_key.view'),
-	}[this];
+	}[this]!;
 
 	Map<String, dynamic> toJson() => {
 		'id': action,

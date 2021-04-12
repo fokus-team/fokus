@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'package:flutter/material.dart';
 import 'package:fokus/model/db/user/user_role.dart';
 import 'package:fokus/model/ui/app_page.dart';
@@ -29,7 +28,7 @@ extension NotificationTypeExtension on NotificationType {
 		NotificationType.taskApproved: "child.taskApproved",
 		NotificationType.badgeAwarded: "child.badgeAwarded",
 		NotificationType.taskRejected: "child.taskRejected"
-	}[this];
+	}[this]!;
 
 	Icon get icon => Icon(
 		const {
@@ -49,7 +48,7 @@ extension NotificationTypeExtension on NotificationType {
 		NotificationType.taskUnfinished: AssetType.avatars,
 		NotificationType.taskApproved: AssetType.currencies,
 		NotificationType.badgeAwarded: AssetType.badges,
-	}[this];
+	}[this]!;
 
 	AppPage get redirectPage => const {
 		NotificationType.rewardBought: AppPage.caregiverChildDashboard,
@@ -58,7 +57,7 @@ extension NotificationTypeExtension on NotificationType {
 		NotificationType.taskApproved: AppPage.planInstanceDetails,
 		NotificationType.badgeAwarded: AppPage.childAchievements,
 		NotificationType.taskRejected: AppPage.planInstanceDetails,
-	}[this];
+	}[this]!;
 
 	UserRole get recipient => const {
 		NotificationType.rewardBought: UserRole.caregiver,
@@ -67,7 +66,7 @@ extension NotificationTypeExtension on NotificationType {
 		NotificationType.taskApproved: UserRole.child,
 		NotificationType.badgeAwarded: UserRole.child,
 		NotificationType.taskRejected: UserRole.child,
-	}[this];
+	}[this]!;
 
 	NotificationChannel get channel => const {
 		NotificationType.rewardBought: NotificationChannel.prizes,
@@ -76,5 +75,5 @@ extension NotificationTypeExtension on NotificationType {
 		NotificationType.taskApproved: NotificationChannel.grades,
 		NotificationType.badgeAwarded: NotificationChannel.prizes,
 		NotificationType.taskRejected: NotificationChannel.grades,
-	}[this];
+	}[this]!;
 }

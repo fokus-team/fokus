@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'package:fokus/model/db/date/date.dart';
 import 'package:fokus/model/db/date/time_date.dart';
 import 'package:fokus/model/db/plan/plan_repeatability.dart';
@@ -6,30 +5,30 @@ import 'package:fokus/model/ui/form/plan_form_model.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
 class Plan {
-  ObjectId id;
-  String name;
-  bool active;
+  ObjectId? id;
+  String? name;
+  bool? active;
 
-  PlanRepeatability repeatability;
-  List<Date> changedInstances;
-  TimeDate createdAt;
-  ObjectId createdBy;
+  PlanRepeatability? repeatability;
+  List<Date>? changedInstances;
+  TimeDate? createdAt;
+  ObjectId? createdBy;
 
-  List<ObjectId> tasks;
-  List<ObjectId> instances;
-  List<ObjectId> assignedTo;
+  List<ObjectId>? tasks;
+  List<ObjectId>? instances;
+  List<ObjectId>? assignedTo;
 
-  Plan.fromPlanForm(PlanFormModel plan, ObjectId creator, PlanRepeatability repeatability, [ObjectId id]) : this._(name: plan.name, id: id ?? ObjectId(),
+  Plan.fromPlanForm(PlanFormModel plan, ObjectId creator, PlanRepeatability repeatability, [ObjectId? id]) : this._(name: plan.name, id: id ?? ObjectId(),
 		  active: plan.isActive, assignedTo: plan.children, createdAt: TimeDate.now(), createdBy: creator, repeatability: repeatability);
 
   Plan._({this.active, this.assignedTo, this.changedInstances, this.createdAt,
 	  this.createdBy, this.id, this.instances, this.name, this.repeatability, this.tasks});
 
-  factory Plan.fromJson(Map<String, dynamic> json) {
+  static Plan? fromJson(Map<String, dynamic>? json) {
     return json != null ? Plan._(
       active: json['active'],
       assignedTo: json['assignedTo'] != null ? new List<ObjectId>.from(json['assignedTo']) : [],
-      changedInstances: json['changedInstances'] != null ? (json['changedInstances'] as List).map((date) => Date.parseDBDate(date)) : [],
+      changedInstances: json['changedInstances'] != null ? (json['changedInstances'] as List).map((date) => Date.parseDBDate(date)!).toList() : [],
       createdAt: TimeDate.parseDBDate(json['createdAt']),
       createdBy: json['createdBy'],
       id: json['_id'],
@@ -45,7 +44,7 @@ class Plan {
     if (active != null)
       data['active'] = this.active;
     if (createdAt != null)
-      data['createdAt'] = this.createdAt.toDBDate();
+      data['createdAt'] = this.createdAt!.toDBDate();
     if (createdBy != null)
       data['createdBy'] = this.createdBy;
     if (id != null)
@@ -53,11 +52,11 @@ class Plan {
     if (name != null)
       data['name'] = this.name;
     if (repeatability != null)
-      data['repeatability'] = this.repeatability.toJson();
+      data['repeatability'] = this.repeatability!.toJson();
     if (this.assignedTo != null)
       data['assignedTo'] = this.assignedTo;
     if (this.changedInstances != null)
-      data['changedInstances'] = this.changedInstances.map((e) => e.toDBDate()).toList();
+      data['changedInstances'] = this.changedInstances!.map((e) => e.toDBDate()).toList();
     if (this.instances != null)
       data['instances'] = this.instances;
     if (this.tasks != null)

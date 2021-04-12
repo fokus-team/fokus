@@ -1,4 +1,3 @@
-// @dart = 2.10
 enum Collection { user, plan, task, planInstance, taskInstance, currency, reward, badge }
 
 extension CollectionName on Collection {
@@ -11,5 +10,5 @@ extension CollectionName on Collection {
     Collection.currency: 'Currency',
     Collection.reward: 'Reward',
     Collection.badge: 'Badge'
-  }[this];
+  }[this]!;
 }

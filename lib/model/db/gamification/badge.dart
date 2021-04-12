@@ -1,20 +1,23 @@
-// @dart = 2.10
 import 'package:fokus/model/ui/form/badge_form_model.dart';
+import 'package:meta/meta.dart';
 
 class Badge {
-  String name;
-  String description;
-  int icon;
+  String? name;
+  String? description;
+  int? icon;
 
   Badge({this.name, this.description, this.icon});
 	Badge.fromBadgeForm(BadgeFormModel badge) : this(name: badge.name, description: badge.description, icon: badge.icon);
 
-  factory Badge.fromJson(Map<String, dynamic> json) {
-    return json != null ? Badge(
-      icon: json['icon'],
-      name: json['name'],
-			description: json['description']
-    ) : null;
+  static Badge? fromJson(Map<String, dynamic>? json) {
+    return json != null ? (Badge()..assignFromJson(json)) : null;
+  }
+
+  @protected
+  void assignFromJson(Map<String, dynamic> json) {
+	  icon = json['icon'];
+	  name = json['name'];
+	  description = json['description'];
   }
 
   Map<String, dynamic> toJson() {

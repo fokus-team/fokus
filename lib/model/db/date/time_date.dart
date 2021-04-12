@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'date_base.dart';
 
 class TimeDate extends DateBase {
@@ -8,7 +7,7 @@ class TimeDate extends DateBase {
 
   TimeDate.now() : this.fromDate(DateTime.now());
 
-  factory TimeDate.parseDBDate(DateTime date) => date != null ? TimeDate.fromDate(date.toLocal()) : null;
+  static TimeDate? parseDBDate(DateTime? date) => date != null ? TimeDate.fromDate(date.toLocal()) : null;
 
   @override
   DateTime toDBDate() => this.toUtc();
@@ -18,6 +17,6 @@ class TimeDate extends DateBase {
   @override
   int get hashCode => combine(combine(combine(super.hashCode, hour.hashCode), minute.hashCode), second.hashCode);
 
-  bool operator >(DateBase other) => super>=(other) && (hour > other.hour || (hour == other.hour && (minute > other.minute || (minute == other.minute && second > other.second))));
-  bool operator <(DateBase other) => super>=(other) && (hour < other.hour || (hour == other.hour && (minute < other.minute || (minute == other.minute && second < other.second))));
+  bool operator >(DateBase? other) => super>=(other) && (hour > other!.hour || (hour == other.hour && (minute > other.minute || (minute == other.minute && second > other.second))));
+  bool operator <(DateBase? other) => super>=(other) && (hour < other!.hour || (hour == other.hour && (minute < other.minute || (minute == other.minute && second < other.second))));
 }

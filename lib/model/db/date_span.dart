@@ -1,24 +1,23 @@
-// @dart = 2.10
 import 'package:fokus/model/db/date/date.dart';
 import 'package:fokus/model/db/date/time_date.dart';
 
 import 'date/date_base.dart';
 
 class DateSpan<D extends DateBase> {
-  D from;
-  D to;
+  D? from;
+  D? to;
 
   DateSpan({this.from, this.to});
 
   DateSpan.from(DateSpan<D> span) : this(
-	  from: span.from != null ? copy(span.from) : null,
-		to: span.to != null ? copy(span.to) : null
+	  from: span.from != null ? copy(span.from!) : null,
+		to: span.to != null ? copy(span.to!) : null
   );
 
-  static D copy<D extends DateBase>(D date) => D == Date ? Date.fromDate(date) : TimeDate.fromDate(date);
+  static D copy<D extends DateBase>(D date) => (date is Date ? Date.fromDate(date) : TimeDate.fromDate(date)) as D;
 
-  static DateSpan<D> fromJson<D extends DateBase>(Map<String, dynamic> json) {
-  	var parseDate = (DateTime date) => D == Date ? Date.parseDBDate(date) : TimeDate.parseDBDate(date);
+  static DateSpan<D>? fromJson<D extends DateBase>(Map<String, dynamic>? json) {
+  	var parseDate = (DateTime date) => (D == Date ? Date.parseDBDate(date) : TimeDate.parseDBDate(date)) as D;
     return json != null ? DateSpan<D>(
       from: json['from'] != null ? parseDate(json['from']) : null,
       to: json['to'] != null ? parseDate(json['to']) : null,
@@ -28,9 +27,9 @@ class DateSpan<D extends DateBase> {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (from != null)
-      data['from'] = this.from.toDBDate();
+      data['from'] = from!.toDBDate();
     if (to != null)
-	    data['to'] = this.to.toDBDate();
+	    data['to'] = to!.toDBDate();
     return data;
   }
 
@@ -53,6 +52,6 @@ extension SpanDateTypeField on SpanDateType {
 	String get field => const {
 		SpanDateType.start: 'from',
 		SpanDateType.end: 'to'
-	}[this];
+	}[this]!;
 }
 

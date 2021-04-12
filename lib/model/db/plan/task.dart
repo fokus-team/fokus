@@ -1,26 +1,26 @@
-// @dart = 2.10
 import 'package:fokus/model/db/gamification/points.dart';
 import 'package:fokus/model/ui/form/task_form_model.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
 class Task {
-	String name;
-  String description;
-  ObjectId id;
-  ObjectId planID;
-	List<String> subtasks;
+	String? name;
+  String? description;
+  ObjectId? id;
+  ObjectId? planID;
+	List<String>? subtasks;
 
-  bool optional;
-  Points points;
-  int timer;
+  bool? optional;
+  Points? points;
+  int? timer;
 
-  Task.fromTaskForm(TaskFormModel taskForm, ObjectId planId, ObjectId creator, [ObjectId taskID]) : this._(name: taskForm.title, description: taskForm.description,
-		  planID: planId, subtasks: taskForm.subtasks, optional: taskForm.optional, timer: taskForm.timer > 0 ? taskForm.timer : null, id: taskID ?? ObjectId(),
+  Task.fromTaskForm(TaskFormModel taskForm, ObjectId planId, ObjectId creator, [ObjectId? taskID])
+		    : this._(name: taskForm.title, description: taskForm.description, planID: planId, subtasks: taskForm.subtasks,
+		  optional: taskForm.optional, timer: taskForm.timer > 0 ? taskForm.timer : null, id: taskID ?? ObjectId(),
 		  points: taskForm.pointsValue != null ? Points.fromUICurrency(taskForm.pointCurrency, taskForm.pointsValue, creator: creator) : null);
 
   Task._({this.description, this.id, this.name, this.optional, this.planID, this.points, this.subtasks, this.timer});
 
-  factory Task.fromJson(Map<String, dynamic> json) {
+  static Task? fromJson(Map<String, dynamic>? json) {
     return json != null ? Task._(
       description: json['description'],
 	    id: json['_id'],
@@ -48,7 +48,7 @@ class Task {
     if (this.timer != null)
       data['timer'] = this.timer;
     if (this.points != null)
-      data['points'] = this.points.toJson();
+      data['points'] = this.points!.toJson();
     if (this.subtasks != null)
       data['subtasks'] = this.subtasks;
     return data;

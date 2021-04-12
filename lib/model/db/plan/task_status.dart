@@ -1,13 +1,12 @@
-// @dart = 2.10
 class TaskStatus {
-	bool completed;
-	TaskState state;
-	int pointsAwarded;
-	int rating;
+	bool? completed;
+	TaskState? state;
+	int? pointsAwarded;
+	int? rating;
 
 	TaskStatus({this.completed, this.state, this.pointsAwarded, this.rating});
 
-	factory TaskStatus.fromJson(Map<String, dynamic> json) {
+	static TaskStatus? fromJson(Map<String, dynamic>? json) {
 		return json != null ? TaskStatus(
 			completed: json['completed'],
 			state: json['state'] != null ? TaskState.values[json['state']] : null,
@@ -21,7 +20,7 @@ class TaskStatus {
 		if (this.completed != null)
 			data['completed'] = this.completed;
 		if (this.state != null)
-			data['state'] = this.state.index;
+			data['state'] = this.state!.index;
 		if (this.pointsAwarded != null)
 			data['pointsAwarded'] = this.pointsAwarded;
 		if (this.rating != null)

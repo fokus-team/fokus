@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'package:fokus/model/db/gamification/badge.dart';
 import 'package:fokus/model/db/gamification/currency.dart';
 import 'package:fokus/model/db/user/user_role.dart';
@@ -8,25 +7,25 @@ import 'package:mongo_dart/mongo_dart.dart';
 import 'user.dart';
 
 class Caregiver extends User {
-  String authenticationId;
+  String? authenticationId;
 
-  List<Currency> currencies;
-  List<Badge> badges;
-  List<ObjectId> friends;
+  List<Currency>? currencies;
+  List<Badge>? badges;
+  List<ObjectId>? friends;
 
   Caregiver.fromAuthUser(AuthenticatedUser authUser) : this._(authenticationId: authUser.id, name: authUser.name, id: ObjectId());
 
-  Caregiver._({ObjectId id, String name, List<String> notificationIDs, this.badges, this.friends, this.authenticationId, this.currencies}) :
+  Caregiver._({ObjectId? id, String? name, List<String>? notificationIDs, this.badges, this.friends, this.authenticationId, this.currencies}) :
 			  super(id: id, name: name, role: UserRole.caregiver, notificationIDs: notificationIDs);
 
-  factory Caregiver.fromJson(Map<String, dynamic> json) {
+  static Caregiver? fromJson(Map<String, dynamic>? json) {
     return json != null ? (Caregiver._(
 	    id: json['_id'],
       friends: json['friends'] != null ? new List<ObjectId>.from(json['friends']) : [],
-	    badges: json['badges'] != null ? (json['badges'] as List).map((i) => Badge.fromJson(i)).toList() : [],
-	    currencies: json['currencies'] != null ? (json['currencies'] as List).map((i) => Currency.fromJson(i)).toList() : [],
+	    badges: json['badges'] != null ? (json['badges'] as List).map((i) => Badge.fromJson(i)!).toList() : [],
+	    currencies: json['currencies'] != null ? (json['currencies'] as List).map((i) => Currency.fromJson(i)!).toList() : [],
 	    authenticationId: json['authenticationID'],
-    )..fromJson(json)) : null;
+    )..assignFromJson(json)) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -34,9 +33,9 @@ class Caregiver extends User {
     if (this.authenticationId != null)
 	    data['authenticationID'] = this.authenticationId;
     if (this.badges != null)
-	    data['badges'] = this.badges.map((v) => v.toJson()).toList();
+	    data['badges'] = this.badges!.map((v) => v.toJson()).toList();
     if (this.currencies != null)
-	    data['currencies'] = this.currencies.map((v) => v.toJson()).toList();
+	    data['currencies'] = this.currencies!.map((v) => v.toJson()).toList();
     if (this.friends != null)
       data['friends'] = this.friends;
     return data;

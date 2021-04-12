@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'package:fokus/model/db/user/caregiver.dart';
 import 'package:fokus/model/db/user/child.dart';
 import 'package:fokus/model/db/user/user_role.dart';
@@ -6,20 +5,20 @@ import 'package:meta/meta.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
 class User {
-  ObjectId id;
-  final UserRole role;
-  String name;
-  String locale;
-  List<String> notificationIDs;
+  ObjectId? id;
+  final UserRole? role;
+  String? name;
+  String? locale;
+  List<String>? notificationIDs;
 
-  List<int> accessCode;
-  int avatar;
-  List<ObjectId> connections;
+  List<int>? accessCode;
+  int? avatar;
+  List<ObjectId>? connections;
 
   User({this.id, this.role, this.name, this.avatar, this.connections, this.notificationIDs, this.accessCode});
 
   @protected
-  void fromJson(Map<String, dynamic> json) {
+  void assignFromJson(Map<String, dynamic> json) {
     name = json['name'];
     notificationIDs = json['notificationIDs'] != null ? new List<String>.from(json['notificationIDs']) : [];
     accessCode = json['accessCode'] != null ? new List<int>.from(json['accessCode']) : [];
@@ -40,7 +39,7 @@ class User {
     if (this.locale != null)
 	    data['locale'] = this.locale;
     if (this.role != null)
-	    data['role'] = this.role.index;
+	    data['role'] = this.role!.index;
     if (this.accessCode != null)
       data['accessCode'] = this.accessCode;
     if (this.notificationIDs != null)
@@ -50,7 +49,7 @@ class User {
     return data;
   }
 
-  factory User.typedFromJson(Map<String, dynamic> json) {
+  static User? typedFromJson(Map<String, dynamic>? json) {
   	if (json == null || json['role'] == null)
   		return null;
   	return json['role'] == UserRole.caregiver.index ? Caregiver.fromJson(json) : Child.fromJson(json);

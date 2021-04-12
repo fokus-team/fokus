@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'package:fokus/model/db/gamification/child_badge.dart';
 import 'package:fokus/model/db/user/user.dart';
 import 'package:fokus/model/db/user/child_permission.dart';
@@ -9,36 +8,36 @@ import '../gamification/child_reward.dart';
 import 'user_role.dart';
 
 class Child extends User {
-  List<ChildPermission> permissions;
-  List<Points> points;
-  List<ChildReward> rewards;
-  List<ChildBadge> badges;
+  List<ChildPermission>? permissions;
+  List<Points>? points;
+  List<ChildReward>? rewards;
+  List<ChildBadge>? badges;
 
-  Child.create({String name, int avatar, List<ObjectId> connections}) : this._(name: name, avatar: avatar, connections: connections);
+  Child.create({String? name, int? avatar, List<ObjectId>? connections}) : this._(name: name, avatar: avatar, connections: connections);
 
-  Child._({ObjectId id, String name, int avatar, List<ObjectId> connections, this.badges, this.permissions, this.points, this.rewards}) :
+  Child._({ObjectId? id, String? name, int? avatar, List<ObjectId>? connections, this.badges, this.permissions, this.points, this.rewards}) :
 			  super(id: id, name: name, role: UserRole.child, avatar: avatar, connections: connections);
 
-  factory Child.fromJson(Map<String, dynamic> json) {
+  static Child? fromJson(Map<String, dynamic>? json) {
     return json != null ? (Child._(
 	    id: json['_id'],
-      badges: json['badges'] != null ? (json['badges'] as List).map((i) => ChildBadge.fromJson(i)).toList() : [],
+      badges: json['badges'] != null ? (json['badges'] as List).map((i) => ChildBadge.fromJson(i)!).toList() : [],
       permissions: json['permissions'] != null ? (json['badges'] as List).map((i) => ChildPermission.values[i]).toList() : [],
-      points: json['points'] != null ? (json['points'] as List).map((i) => Points.fromJson(i)).toList() : [],
-      rewards: json['rewards'] != null ? (json['rewards'] as List).map((i) => ChildReward.fromJson(i)).toList() : [],
-    )..fromJson(json)) : null;
+      points: json['points'] != null ? (json['points'] as List).map((i) => Points.fromJson(i)!).toList() : [],
+      rewards: json['rewards'] != null ? (json['rewards'] as List).map((i) => ChildReward.fromJson(i)!).toList() : [],
+    )..assignFromJson(json)) : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = super.toJson();
     if (this.badges != null)
-      data['badges'] = this.badges.map((v) => v.toJson()).toList();
+      data['badges'] = this.badges!.map((v) => v.toJson()).toList();
     if (this.permissions != null)
-      data['permissions'] = this.permissions.map((v) => v.index).toList();
+      data['permissions'] = this.permissions!.map((v) => v.index).toList();
     if (this.points != null)
-      data['points'] = this.points.map((v) => v.toJson()).toList();
+      data['points'] = this.points!.map((v) => v.toJson()).toList();
     if (this.rewards != null)
-      data['rewards'] = this.rewards.map((v) => v.toJson()).toList();
+      data['rewards'] = this.rewards!.map((v) => v.toJson()).toList();
     return data;
   }
 }

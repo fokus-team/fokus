@@ -1,4 +1,3 @@
-// @dart = 2.10
 enum RepeatabilityType { once, weekly, monthly }
 
 extension RepeatabilityTypeName on RepeatabilityType {
@@ -6,5 +5,5 @@ extension RepeatabilityTypeName on RepeatabilityType {
 		RepeatabilityType.once: 'once',
 		RepeatabilityType.weekly: 'weekly',
 		RepeatabilityType.monthly: 'monthly',
-	}[this];
+	}[this]!;
 }

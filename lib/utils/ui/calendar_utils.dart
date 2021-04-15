@@ -7,33 +7,35 @@ import 'package:fokus/model/db/date/date.dart';
 import 'package:fokus/model/ui/plan/ui_plan.dart';
 import 'package:fokus/services/app_locales.dart';
 
+final kNow = DateTime.now();
+final kFirstDay = DateTime(kNow.year, kNow.month - 3, kNow.day);
+final kLastDay = DateTime(kNow.year, kNow.month + 3, kNow.day);
+
 Widget buildCalendar({
-	CalendarController controller,
 	BuildContext context,
 	Map<Date, List<UIPlan>> events,
-	Function(DateTime, List<dynamic>, List<dynamic>) onDaySelected,
-	Function(DateTime, DateTime, CalendarFormat) onCalendarCreated,
-	Function(DateTime, DateTime, CalendarFormat) onVisibleDaysChanged,
+	Function(DateTime, DateTime) onDaySelected,
+	Function(PageController) onCalendarCreated,
+	Function(DateTime) onPageChanged,
 	CalendarBuilders builders
 }) {
 	return TableCalendar(
-		calendarController: controller,
 		locale: AppLocales.of(context).locale.toString(),
 		availableGestures: AvailableGestures.horizontalSwipe,
 		startingDayOfWeek: StartingDayOfWeek.monday,
-		initialCalendarFormat: CalendarFormat.month,
+		calendarFormat: CalendarFormat.month,
 		headerStyle: HeaderStyle(
-			centerHeaderTitle: true,
+			titleCentered: true,
 			formatButtonVisible: false
 		),
-		calendarStyle: CalendarStyle(
-			contentPadding: EdgeInsets.all(5.0)
-		),
-		events: events,
+		firstDay: kFirstDay,
+		lastDay: kLastDay,
+		focusedDay: kNow,
 		onDaySelected: onDaySelected,
 		onCalendarCreated: onCalendarCreated,
-		onVisibleDaysChanged: onVisibleDaysChanged,
-		builders: builders
+		onPageChanged: onPageChanged,
+		calendarBuilders: builders,
+		//events: events
 	);
 }
 

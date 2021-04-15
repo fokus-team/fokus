@@ -26,21 +26,18 @@ class ChildCalendarPage extends StatefulWidget {
 class _ChildCalendarPageState extends State<ChildCalendarPage> with TickerProviderStateMixin {
 	static const String _pageKey = 'page.childSection.calendar';
 	AnimationController _animationController;
-	CalendarController _calendarController;
 
 	final Duration _animationDuration = Duration(milliseconds: 250);
 
 	@override
 	void initState() {
 		super.initState();
-		_calendarController = CalendarController();
 		_animationController = AnimationController(vsync: this, duration: _animationDuration);
 		_animationController.forward();
 	}
 
 	@override
 	void dispose() {
-		_calendarController.dispose();
 		_animationController.dispose();
 		super.dispose();
 	}
@@ -62,7 +59,7 @@ class _ChildCalendarPageState extends State<ChildCalendarPage> with TickerProvid
 									builder: (context, state) {
 										if (state.children == null)
 											BlocProvider.of<CalendarCubit>(context).loadInitialData();
-										return _buildCalendar(state.events, state.children);
+										return SizedBox.shrink();// _buildCalendar(state.events, state.children);
 									},
 								)
 							),
@@ -106,46 +103,45 @@ class _ChildCalendarPageState extends State<ChildCalendarPage> with TickerProvid
 		);
 	}
 
-	TableCalendar _buildCalendar(Map<Date, List<UIPlan>> events, Map<UIChild, bool> children) {
-	  return buildCalendar(
-			controller: _calendarController, 
-			context: context,
-			events: events,
-			onDaySelected: onDayChanged,
-			onCalendarCreated: onCalendarCreated,
-			onVisibleDaysChanged: onMonthChanged,
-			builders: CalendarBuilders(
-				selectedDayBuilder: (context, date, _) =>
-          FadeTransition(
-            opacity: Tween(begin: 0.0, end: 1.0).animate(_animationController),
-            child: buildTableCalendarCell(date, AppColors.childBackgroundColor, isCellSelected: true)
-					),
-        todayDayBuilder: (context, date, _) => buildTableCalendarCell(date, Colors.transparent),
-				markersBuilder: (context, date, events, holidays) {
-					final markers = <Widget>[];
-					if (events.isNotEmpty) {
-						List<Color> planMarkers = [];
-						events.forEach((plan) { planMarkers.add(AppColors.childButtonColor); });
-						markers.add(buildMarker(colorList: planMarkers, inPast: date.isBefore(Date.now())));
-					}
-					return markers;
-				}
-			)
-		);
-	}
+	// TableCalendar _buildCalendar(Map<Date, List<UIPlan>> events, Map<UIChild, bool> children) {
+	//   return buildCalendar(
+	// 		context: context,
+	// 		events: events,
+	// 		onDaySelected: onDayChanged,
+	// 		onCalendarCreated: onCalendarCreated,
+	// 		onVisibleDaysChanged: onMonthChanged,
+	// 		builders: CalendarBuilders(
+	// 			selectedDayBuilder: (context, date, _) =>
+  //         FadeTransition(
+  //           opacity: Tween(begin: 0.0, end: 1.0).animate(_animationController),
+  //           child: buildTableCalendarCell(date, AppColors.childBackgroundColor, isCellSelected: true)
+	// 				),
+  //       todayDayBuilder: (context, date, _) => buildTableCalendarCell(date, Colors.transparent),
+	// 			markersBuilder: (context, date, events, holidays) {
+	// 				final markers = <Widget>[];
+	// 				if (events.isNotEmpty) {
+	// 					List<Color> planMarkers = [];
+	// 					events.forEach((plan) { planMarkers.add(AppColors.childButtonColor); });
+	// 					markers.add(buildMarker(colorList: planMarkers, inPast: date.isBefore(Date.now())));
+	// 				}
+	// 				return markers;
+	// 			}
+	// 		)
+	// 	);
+	// }
 
-	void onDayChanged(DateTime day, List<dynamic> events, List<dynamic> holidays) {
-		BlocProvider.of<CalendarCubit>(context).dayChanged(Date.fromDate(day));
-		_animationController.forward(from: 0.0);
-	}
+	// void onDayChanged(DateTime day, List<dynamic> events, List<dynamic> holidays) {
+	// 	BlocProvider.of<CalendarCubit>(context).dayChanged(Date.fromDate(day));
+	// 	_animationController.forward(from: 0.0);
+	// }
 
-	void onCalendarCreated(DateTime first, DateTime last, CalendarFormat format) {
-		BlocProvider.of<CalendarCubit>(context).monthChanged(Date.fromDate(_calendarController.focusedDay));
-	}
+	// void onCalendarCreated(DateTime first, DateTime last, CalendarFormat format) {
+	// 	BlocProvider.of<CalendarCubit>(context).monthChanged(Date.fromDate(_calendarController.focusedDay));
+	// }
 
-	void onMonthChanged(DateTime first, DateTime last, CalendarFormat format) {
-		onCalendarCreated(first, last, format);
-		_calendarController.setSelectedDay(Date.fromDate(du.DateUtils.firstDayOfMonth(_calendarController.focusedDay)));
-	}
+	// void onMonthChanged(DateTime first, DateTime last, CalendarFormat format) {
+	// 	onCalendarCreated(first, last, format);
+	// 	_calendarController.setSelectedDay(Date.fromDate(du.DateUtils.firstDayOfMonth(_calendarController.focusedDay)));
+	// }
 
 }

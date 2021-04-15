@@ -53,10 +53,9 @@ class _IconPickerFieldState extends State<IconPickerField> {
 		return Padding(
 			padding: EdgeInsets.symmetric(vertical: 10.0),
 			child: SmartSelect<int>.single(
-				leading: SvgPicture.asset(getPicturePath(isRewardType, widget.value), height: 74.0),
 				title: widget.title,
-				value: widget.value,
-				options: List.generate((isRewardType ? rewardIcons : badgeIcons).length, (index) {
+				selectedValue: widget.value,
+				choiceItems: List.generate((isRewardType ? rewardIcons : badgeIcons).length, (index) {
 						final String name = AppLocales.of(context).translate(
 							widget.groupTextKey + '.${(isRewardType ? rewardIcons : badgeIcons)[index].label.toString().split('.').last}'
 						);
@@ -67,32 +66,38 @@ class _IconPickerFieldState extends State<IconPickerField> {
 						);
 					}
 				),
-				isTwoLine: true,
+				tileBuilder: (context, selectState) {
+					return S2Tile.fromState(
+						selectState,
+						isTwoLine: true,
+						leading: SvgPicture.asset(getPicturePath(isRewardType, widget.value), height: 74.0),
+					);
+				},
+				groupEnabled: true,
 				choiceConfig: S2ChoiceConfig(
-					glowingOverscrollIndicatorColor: Colors.teal,
+					overscrollColor: Colors.teal,
 					runSpacing: 10.0,
 					spacing: 10.0,
-					useWrap: true,
-					isGrouped: true,
-					builder: (item, checked, onChange) {
-						return Badge(
-							badgeContent: Icon(Icons.check, color: Colors.white, size: 16.0),
-							badgeColor: Colors.green,
-							animationType: BadgeAnimationType.scale,
-							showBadge: checked != null ? checked : false,
-							child: GestureDetector(
-								onTap: () => { onChange(item.value, !checked) },
-								child: SvgPicture.asset(getPicturePath(isRewardType, item.value), height: 64.0)
-							)
-						);
-					}
+					layout: S2ChoiceLayout.wrap
 				),
+				choiceBuilder: (context, selectState, choice) {
+					return Badge(
+						badgeContent: Icon(Icons.check, color: Colors.white, size: 16.0),
+						badgeColor: Colors.green,
+						animationType: BadgeAnimationType.scale,
+						showBadge: choice.selected != null ? choice.selected : false,
+						child: GestureDetector(
+							onTap: () => choice.select(!choice.selected),
+							child: SvgPicture.asset(getPicturePath(isRewardType, choice.value), height: 64.0)
+						)
+					);
+				},
 				modalType: S2ModalType.bottomSheet,
 				modalConfig: S2ModalConfig(
-					useConfirmation: true,
-					confirmationBuilder: (context, callback) => ButtonSheetConfirmButton(callback: () => callback)
+					useConfirm: true
 				),
-				onChange: (val) => widget.callback(val)
+				modalConfirmBuilder: (context, callback) => ButtonSheetConfirmButton(callback: () => callback),
+				onChange: (selected) => widget.callback(selected.value)
 			)
 		);
   }

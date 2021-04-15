@@ -60,8 +60,7 @@ class _PointPickerFieldState extends State<PointPickerField> {
   @override
   Widget build(BuildContext context) {
 		return SmartSelect<UICurrency>.single(
-			isLoading: widget.loading,
-			builder: (context, state, function) {
+			tileBuilder: (context, selectState) {
 				return Padding(
 					padding: EdgeInsets.only(top: 0.0, bottom: 0.0, left: 20.0, right: 16.0),
 					child: Row(
@@ -103,7 +102,7 @@ class _PointPickerFieldState extends State<PointPickerField> {
 								onTap: () {
 									if(!widget.loading && widget.currencies.length > 1) {
 										FocusManager.instance.primaryFocus.unfocus();
-										function(context);
+										selectState.showModal();
 									}
 								},
 								child: Tooltip(
@@ -113,8 +112,8 @@ class _PointPickerFieldState extends State<PointPickerField> {
 											Padding(
 												padding: EdgeInsets.only(left: 10.0, top: 4.0),
 												child: CircleAvatar(
-													child: SvgPicture.asset(getIconPath(state.value != null ? state.value.type : CurrencyType.diamond), width: 28, fit: BoxFit.cover),
-													backgroundColor: AppColors.currencyColor[state.value != null ? state.value.type : CurrencyType.diamond].withAlpha(50)
+													child: SvgPicture.asset(getIconPath(selectState.selected.value != null ? selectState.selected.value.type : CurrencyType.diamond), width: 28, fit: BoxFit.cover),
+													backgroundColor: AppColors.currencyColor[selectState.selected.value != null ? selectState.selected.value.type : CurrencyType.diamond].withAlpha(50)
 												)
 											),
 											(widget.loading) ?
@@ -144,43 +143,41 @@ class _PointPickerFieldState extends State<PointPickerField> {
 				);
 			},
 			title: widget.labelCurrencyText,
-			value: widget.pickedCurrency,
-			options: [
+			selectedValue: widget.pickedCurrency,
+			choiceItems: [
 				for(UICurrency element in widget.currencies)
 					S2Choice(
 						title: element.getName(context),
 						value: element
 					)
 			],
-			choiceConfig: S2ChoiceConfig(
-				builder: (item, checked, onChange) {
-					return RadioListTile<UICurrency>(
-						value: item.value,
-						groupValue: pickedCurrency,
-						onChanged: (val) {
-							onChange(item.value, !checked);
-							setState(() {
-							  pickedCurrency = item.value;
-							});
-						},
-						title: Row(
-							children: [
-								Padding(
-									padding: EdgeInsets.only(right: 6.0),
-									child: SvgPicture.asset(getIconPath(item.value.type), width: 30, fit: BoxFit.cover)
-								),
-								Text(item.value.getName(context), style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.currencyColor[item.value.type]))
-							]
-						)
-					);
-				}
-			),
+			choiceBuilder: (context, selectState, choice) {
+				return RadioListTile<UICurrency>(
+					value: choice.value,
+					groupValue: pickedCurrency,
+					onChanged: (val) {
+						choice.select(!choice.selected);
+						setState(() {
+							pickedCurrency = choice.value;
+						});
+					},
+					title: Row(
+						children: [
+							Padding(
+								padding: EdgeInsets.only(right: 6.0),
+								child: SvgPicture.asset(getIconPath(choice.value.type), width: 30, fit: BoxFit.cover)
+							),
+							Text(choice.value.getName(context), style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.currencyColor[choice.value.type]))
+						]
+					)
+				);
+			},
 			modalType: S2ModalType.bottomSheet,
 			modalConfig: S2ModalConfig(
-				useConfirmation: true,
-				confirmationBuilder: (context, callback) => ButtonSheetConfirmButton(callback: () => callback)
+				useConfirm: true
 			),
-			onChange: (val) => widget.pointCurrencySetter(val)
+			modalConfirmBuilder: (context, callback) => ButtonSheetConfirmButton(callback: () => callback),
+			onChange: (selected) => widget.pointCurrencySetter(selected.value)
 		);
   }
 

@@ -220,23 +220,23 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 	}) {
 		bool buttonDisabled = options.isEmpty;
 		return SmartSelect<T>.multiple(
-			value: pickedValues,
+			selectedValue: pickedValues,
 			title: pickerTitle,
-			options: [
+			choiceItems: [
 				for(T element in options)
 					S2Choice(
 						title: getName(element),
 						value: element
 					)
 			],
-			onChange: (val) => onChange(val),
+			onChange: (selected) => onChange(selected.value),
 			modalType: S2ModalType.bottomSheet,
-			choiceConfig: S2ChoiceConfig(builder: builder),
+			choiceBuilder: builder,
+			modalConfirmBuilder: (context, callback) => ButtonSheetConfirmButton(callback: () => callback),
 			modalConfig: S2ModalConfig(
-				useConfirmation: true,
-				confirmationBuilder: (context, callback) => ButtonSheetConfirmButton(callback: () => callback)
+				useConfirm: true,
 			),
-			builder: (context, state, function) {
+			tileBuilder: (context, selectState) {
 				return FloatingActionButton.extended(
 					heroTag: null,
 					materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -250,7 +250,7 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 								title: disabledDialogTitle,
 								content: disabledDialogText
 							)
-						) : function(context)
+						) : selectState.showModal()
 				);
 			}
 		);

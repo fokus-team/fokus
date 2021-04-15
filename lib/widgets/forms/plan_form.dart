@@ -124,48 +124,50 @@ class _PlanFormState extends State<PlanForm> {
 		return SmartSelect<Mongo.ObjectId>.multiple(
 			title: AppLocales.of(context).translate('$_pageKey.assignedChildren.label'),
 			placeholder: AppLocales.of(context).translate('$_pageKey.assignedChildren.hint'),
-			value: widget.plan.children,
-			options: S2Choice.listFrom<Mongo.ObjectId, UIChild>(
+			selectedValue: widget.plan.children,
+			choiceItems: S2Choice.listFrom<Mongo.ObjectId, UIChild>(
 				source: children,
 				value: (index, item) => item.id,
 				title: (index, item) => item.name,
 				meta: (index, item) => item
 			),
-			isTwoLine: true,
-			isLoading: loading,
-			loadingText: AppLocales.of(context).translate('loading'),
 			choiceType: S2ChoiceType.chips,
-			choiceConfig: S2ChoiceConfig(
-				builder: (item, checked, onChange) => Theme(
-					data: ThemeData(textTheme: Theme.of(context).textTheme),
-					child: ItemCard(
-						title: item.title,
-						subtitle: AppLocales.of(context).translate(checked ? 'actions.selected' : 'actions.tapToSelect'),
-						graphicType: AssetType.avatars,
-						graphic: item.meta.avatar,
-						graphicShowCheckmark: checked,
-						graphicHeight: 44.0,
-						onTapped: onChange != null ? () => onChange(item.value, !checked) : null,
-						isActive: checked
-					)
-				),
-				emptyBuilder: (str) => AppHero(
-					icon: Icons.warning,
-					header: AppLocales.of(context).translate('$_pageKey.assignedChildren.emptyListHeader'),
-					title: AppLocales.of(context).translate('$_pageKey.assignedChildren.emptyListText')
+			choiceBuilder: (context, selectState, choice) => Theme(
+				data: ThemeData(textTheme: Theme.of(context).textTheme),
+				child: ItemCard(
+					title: choice.title,
+					subtitle: AppLocales.of(context).translate(choice.selected ? 'actions.selected' : 'actions.tapToSelect'),
+					graphicType: AssetType.avatars,
+					graphic: choice.meta.avatar,
+					graphicShowCheckmark: choice.selected,
+					graphicHeight: 44.0,
+					onTapped: () => choice.select(!choice.selected),
+					isActive: choice.selected
 				)
 			),
+			choiceEmptyBuilder: (context, selectState) => AppHero(
+				icon: Icons.warning,
+				header: AppLocales.of(context).translate('$_pageKey.assignedChildren.emptyListHeader'),
+				title: AppLocales.of(context).translate('$_pageKey.assignedChildren.emptyListText')
+			),
+			tileBuilder: (context, selectState) {
+				return S2Tile.fromState(
+					selectState,
+					isTwoLine: true,
+					isLoading: loading,
+					loadingText: AppLocales.of(context).translate('loading'),
+					leading: Padding(padding: EdgeInsets.all(8.0), child: Icon(Icons.people)),
+				);
+			},
 			modalType: S2ModalType.bottomSheet,
 			modalConfig: S2ModalConfig(
-				searchBarHint: AppLocales.of(context).translate('actions.search'),
-				useConfirmation: true,
-				confirmationBuilder: (context, callback) => ButtonSheetConfirmButton(callback: () => callback)
+				useConfirm: true
 			),
-			leading: Padding(padding: EdgeInsets.all(8.0), child: Icon(Icons.people)),
-			onChange: (val) => setState(() {
+			modalConfirmBuilder: (context, callback) => ButtonSheetConfirmButton(callback: () => callback),
+			onChange: (selected) => setState(() {
 				FocusManager.instance.primaryFocus.unfocus();
 				widget.plan.children.clear();
-				widget.plan.children = val;
+				widget.plan.children = selected.value;
 			})
 		);
 	}
@@ -187,7 +189,7 @@ class _PlanFormState extends State<PlanForm> {
 	Widget buildRepeatabilityTypeField() {
 		return SmartSelect<PlanFormRepeatability>.single(
 			title: AppLocales.of(context).translate('$_pageKey.repeatability.label'),
-			value: widget.plan.repeatability,
+			selectedValue: widget.plan.repeatability,
 			choiceItems: [
 				for(PlanFormRepeatability element in PlanFormRepeatability.values)
 					S2Choice(
@@ -195,16 +197,21 @@ class _PlanFormState extends State<PlanForm> {
 						value: element
 					)
 			],
-			isTwoLine: true,
 			modalType: S2ModalType.bottomSheet,
 			modalConfig: S2ModalConfig(
-				useConfirmation: true,
-				confirmationBuilder: (context, callback) => ButtonSheetConfirmButton(callback: () => callback)
+				useConfirm: true
 			),
-			leading: Padding(padding: EdgeInsets.all(8.0), child: Icon(Icons.refresh)),
-			onChange: (val) {
+			modalConfirmBuilder: (context, callback) => ButtonSheetConfirmButton(callback: () => callback),
+			tileBuilder: (context, selectState) {
+				return S2Tile.fromState(
+					selectState,
+					isTwoLine: true,
+					leading: Padding(padding: EdgeInsets.all(8.0), child: Icon(Icons.refresh))
+				);
+			},
+			onChange: (selected) {
 				FocusManager.instance.primaryFocus.unfocus();
-				setState(() => widget.plan.repeatability = val);
+				setState(() => widget.plan.repeatability = selected.value);
 			}
 		);
 	}
@@ -227,31 +234,36 @@ class _PlanFormState extends State<PlanForm> {
 			children: <Widget>[
 				SmartSelect<PlanFormRepeatabilityRage>.single(
 					title: AppLocales.of(context).translate('$_pageKey.repeatabilityRange.label'),
-					value: widget.plan.repeatabilityRage,
-					options: [
+					selectedValue: widget.plan.repeatabilityRage,
+					choiceItems: [
 						for(PlanFormRepeatabilityRage element in PlanFormRepeatabilityRage.values)
 							S2Choice(
 								title: AppLocales.of(context).translate('$_pageKey.repeatabilityRange.options.${element.toString().split('.').last}'),
 								value: element
 							)
 					],
-					isTwoLine: true,
 					modalType: S2ModalType.bottomSheet,
 					modalConfig: S2ModalConfig(
-						useConfirmation: true,
-						confirmationBuilder: (context, callback) => ButtonSheetConfirmButton(callback: () => callback)
+						useConfirm: true
 					),
-					leading: Padding(padding: EdgeInsets.all(8.0), child: Icon(Icons.event)),
-					onChange: (val) => setState(() {
+					modalConfirmBuilder: (context, callback) => ButtonSheetConfirmButton(callback: () => callback),
+					tileBuilder: (context, selectState) {
+						return S2Tile.fromState(
+							selectState,
+							isTwoLine: true,
+							leading: Padding(padding: EdgeInsets.all(8.0), child: Icon(Icons.event))
+						);
+					},
+					onChange: (selected) => setState(() {
 						FocusManager.instance.primaryFocus.unfocus();
-						widget.plan.repeatabilityRage = val;
+						widget.plan.repeatabilityRage = selected.value;
 						widget.plan.days.clear();
 					}),
 				),
 				SmartSelect<int>.multiple(
 					title: AppLocales.of(context).translate('$_pageKey.days.label${isWeekly ? 'Weekly' : 'Monthly'}'),
-					value: widget.plan.days,
-					options: S2Choice.listFrom<int, int>(
+					selectedValue: widget.plan.days,
+					choiceItems: S2Choice.listFrom<int, int>(
 						source: dayList,
 						value: (index, item) => item,
 						title: (index, item) => isWeekly ? AppLocales.of(context).translate('date.weekday', {'WEEKDAY': item.toString()}) : item.toString()
@@ -259,26 +271,26 @@ class _PlanFormState extends State<PlanForm> {
 					choiceType: S2ChoiceType.chips,
 					modalType: S2ModalType.bottomSheet,
 					modalConfig: S2ModalConfig(
-						useConfirmation: true,
-						confirmationBuilder: (context, callback) => ButtonSheetConfirmButton(callback: () => callback)
+						useConfirm: true
 					),
-					builder: (context, state, callback) {
+					modalConfirmBuilder: (context, callback) => ButtonSheetConfirmButton(callback: () => callback),
+					tileBuilder: (context, selectState) {
 						return ListTile(
 							leading: Padding(padding: EdgeInsets.all(8.0), child: Icon(Icons.date_range)),
 							title: Text(AppLocales.of(context).translate('$_pageKey.days.label${isWeekly ? 'Weekly' : 'Monthly'}')),
 							subtitle: Text(
-								daysDisplay(state.values),
+								daysDisplay(selectState.selected.value),
 								style: TextStyle(color: (fieldsValidated && widget.plan.days.isEmpty) ? Theme.of(context).errorColor : Colors.grey),
 								overflow: TextOverflow.ellipsis,
 								maxLines: 1
 							),
 							trailing: Icon(Icons.keyboard_arrow_right, color: Colors.grey),
-							onTap: () => callback(context)
+							onTap: () => selectState.showModal()
 						);
 					},
-					onChange: (val) {
+					onChange: (selected) {
 						FocusManager.instance.primaryFocus.unfocus();
-						setState(() => { widget.plan.days = val });
+						setState(() => { widget.plan.days = selected.value });
 					}
 				),
 				Divider(),

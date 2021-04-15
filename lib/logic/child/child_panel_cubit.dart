@@ -12,7 +12,7 @@ class ChildPanelCubit extends StatefulCubit {
 
   ChildPanelCubit(this._activeUser, ModalRoute pageRoute) : super(pageRoute);
 
-  Future doLoadData() async => emit(ChildPlansState(await _dataAggregator.loadTodaysPlanInstances(childId: _activeUser().id)));
+  Future doLoadData() async => emit(ChildPlansState(await _dataAggregator.loadTodaysPlanInstances(childId: _activeUser().id!)));
 }
 
 class ChildPlansState extends StatefulState {

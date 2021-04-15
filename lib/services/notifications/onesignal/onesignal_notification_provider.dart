@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart';
 import 'package:flutter/foundation.dart' as Foundation;
@@ -53,7 +52,7 @@ class OneSignalNotificationProvider extends NotificationProvider {
 			return;
     await _routeObserver.navigatorInitialized;
 		logger.fine("onOpenMessage: $result");
-    var context = _navigatorKey.currentState.context;
+    var context = _navigatorKey.currentState!.context;
 
 		var data = NotificationData.fromJson(result.notification.payload.additionalData);
 		var activeUser = BlocProvider.of<AuthenticationBloc>(context).state.user;
@@ -67,7 +66,7 @@ class OneSignalNotificationProvider extends NotificationProvider {
 		// TODO Check if navigateChecked will work with popup-route on top of page being pushed?
 		if (data.type.redirectPage == AppPage.planInstanceDetails) {
 			arguments = await _dataAggregator.loadPlanInstance(planInstanceId: data.subject);
-			_navigatorKey.currentState.pushNamed(data.type.redirectPage.name, arguments: PlanInstanceParams(planInstance: arguments));
+			_navigatorKey.currentState!.pushNamed(data.type.redirectPage.name, arguments: PlanInstanceParams(planInstance: arguments));
 			return;
 		} else if (data.type.redirectPage == AppPage.caregiverChildDashboard) {
 			navigateChecked(context, data.type.redirectPage, arguments: ChildDashboardParams(
@@ -85,17 +84,18 @@ class OneSignalNotificationProvider extends NotificationProvider {
 	  		return;
       await _routeObserver.navigatorInitialized;
 		  logger.fine("onMessage: $notification");
-		  var context = _navigatorKey.currentState.context;
+		  var context = _navigatorKey.currentState!.context;
 		  var data = NotificationData.fromJson(notification.payload.additionalData);
 		  var activeUser = BlocProvider.of<AuthenticationBloc>(context).state.user;
 		  if (activeUser == null || activeUser.id != data.recipient)
 		  	return;
+		  var authBloc = BlocProvider.of<AuthenticationBloc>(context);
 		  if (data.type == NotificationType.badgeAwarded) {
-			  Child user = await dataRepository.getUser(id: activeUser.id, fields: ['badges']);
-			  BlocProvider.of<AuthenticationBloc>(context).add(AuthenticationActiveUserUpdated(UIChild.from(activeUser, badges: user.badges.map((badge) => UIChildBadge.fromDBModel(badge)).toList())));
+			  Child user = await dataRepository.getUser(id: activeUser.id, fields: ['badges']) as Child;
+			  authBloc.add(AuthenticationActiveUserUpdated(UIChild.from(activeUser as UIChild, badges: user.badges!.map((badge) => UIChildBadge.fromDBModel(badge)).toList())));
 		  } else if (data.type == NotificationType.taskApproved) {
-			  Child user = await dataRepository.getUser(id: activeUser.id, fields: ['points']);
-			  BlocProvider.of<AuthenticationBloc>(context).add(AuthenticationActiveUserUpdated(UIChild.from(activeUser, points: user.points.map((points) => UIPoints.fromDBModel(points)).toList())));
+			  Child user = await dataRepository.getUser(id: activeUser.id, fields: ['points']) as Child;
+			  authBloc.add(AuthenticationActiveUserUpdated(UIChild.from(activeUser as UIChild, points: user.points!.map((points) => UIPoints.fromDBModel(points)).toList())));
 		  }
 		  onNotificationReceived(data);
 	  });

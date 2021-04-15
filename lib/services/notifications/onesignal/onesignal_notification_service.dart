@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'package:bson/bson.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
@@ -27,13 +26,13 @@ class OneSignalNotificationService extends NotificationService {
 	final _navigatorKey = GetIt.I<GlobalKey<NavigatorState>>();
 
 	@override
-	Future sendTaskFinishedNotification(ObjectId planInstanceId, String taskName, ObjectId caregiverId, UIUser child, {@required bool completed}) {
+	Future sendTaskFinishedNotification(ObjectId planInstanceId, String taskName, ObjectId caregiverId, UIUser child, {required bool completed}) {
 		var type = completed ? NotificationType.taskFinished : NotificationType.taskUnfinished;
 		return sendNotification(type, caregiverId,
-			title: SimpleNotificationText.appBased(type.title, {'CHILD_NAME': child.name}),
+			title: SimpleNotificationText.appBased(type.title, {'CHILD_NAME': child.name!}),
 			body: SimpleNotificationText.userBased(taskName),
 			icon: NotificationIcon(type.graphicType, child.avatar),
-			buttons: completed ? [NotificationButton.rate] : null,
+			buttons: completed ? [NotificationButton.rate] : [],
 			subject: planInstanceId,
 			group: NotificationGroup(type.key, SimpleNotificationText.appBased(type.group))
 		);
@@ -43,7 +42,7 @@ class OneSignalNotificationService extends NotificationService {
 	Future sendRewardBoughtNotification(ObjectId rewardId, String rewardName, ObjectId caregiverId, UIUser child) {
 		var type = NotificationType.rewardBought;
 		return sendNotification(type, caregiverId,
-			title: SimpleNotificationText.appBased(type.title, {'CHILD_NAME': child.name}),
+			title: SimpleNotificationText.appBased(type.title, {'CHILD_NAME': child.name!}),
 			body: SimpleNotificationText.userBased(rewardName),
 			icon: NotificationIcon(type.graphicType, child.avatar),
 			subject: rewardId,
@@ -64,7 +63,7 @@ class OneSignalNotificationService extends NotificationService {
 	}
 
 	@override
-	Future sendTaskApprovedNotification(ObjectId planId, String taskName, ObjectId childId, int stars, [CurrencyType currencyType, int pointCount]) {
+	Future sendTaskApprovedNotification(ObjectId planId, String taskName, ObjectId childId, int stars, [CurrencyType? currencyType, int? pointCount]) {
 		var type = NotificationType.taskApproved;
 		var hasPoints = pointCount != null && pointCount > 0;
 		return sendNotification(type, childId,
@@ -77,7 +76,7 @@ class OneSignalNotificationService extends NotificationService {
 				if (hasPoints)
 					SimpleNotificationText.appBased('${type.title}Count', {'COUNT': '$pointCount'}),
 			]),
-			icon: hasPoints ? NotificationIcon(type.graphicType, currencyType.index) : NotificationIcon.fromName('star'),
+			icon: hasPoints ? NotificationIcon(type.graphicType, currencyType?.index) : NotificationIcon.fromName('star'),
 			group: NotificationGroup(type.key, SimpleNotificationText.appBased(type.group)),
 			subject: planId
 		);
@@ -95,16 +94,16 @@ class OneSignalNotificationService extends NotificationService {
 	}
 
   @override
-  Future sendNotification(NotificationType type, ObjectId userId, {NotificationText title, NotificationText body,
-	    ObjectId subject, NotificationIcon icon, NotificationGroup group, List<NotificationButton> buttons = const []}) async {
+  Future sendNotification(NotificationType type, ObjectId userId, {required NotificationText title, required NotificationText body,
+	    ObjectId? subject, NotificationIcon? icon, required NotificationGroup group, List<NotificationButton> buttons = const []}) async {
 	  var tokens = await getUserTokens(userId);
 	  if (tokens == null || tokens.isEmpty) {
 		  logNoUserToken(userId);
 		  return;
 	  }
-	  var activeUser = BlocProvider.of<AuthenticationBloc>(_navigatorKey.currentState.context).state.user;
-	  var data = NotificationData(type: type, sender: activeUser.id, recipient: userId, buttons: buttons, subject: subject);
-	  var osButtons = buttons?.map((button) => OSActionButton(id: button.action, text: button.action))?.toList();
+	  var activeUser = BlocProvider.of<AuthenticationBloc>(_navigatorKey.currentState!.context).state.user;
+	  var data = NotificationData(type: type, sender: activeUser!.id!, recipient: userId, buttons: buttons, subject: subject);
+	  var osButtons = buttons.map((button) => OSActionButton(id: button.action, text: button.action)).toList();
 	  var notification = OSCreateNotification(
 		  playerIds: tokens,
 		  heading: title.getTranslations(),
@@ -115,8 +114,8 @@ class OneSignalNotificationService extends NotificationService {
 		  androidLargeIcon: icon?.getPath,
 		  buttons: osButtons,
 		  additionalData: data.toJson(),
-		  androidGroup: group?.key,
-		  androidGroupMessage: group?.title?.getTranslations()
+		  androidGroup: group.key,
+		  androidGroupMessage: group.title.getTranslations()
 	  );
 		return OneSignal.shared.postNotification(notification);
   }

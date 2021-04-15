@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
@@ -38,7 +37,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 	final _analyticsService = GetIt.I<AnalyticsService>();
 	final _navigatorKey = GetIt.I<GlobalKey<NavigatorState>>();
 
-	StreamSubscription<AuthenticatedUser> _userSubscription;
+	late StreamSubscription<AuthenticatedUser> _userSubscription;
 
   AuthenticationBloc() : super(AuthenticationState.unknown()) {
 	  observeUserChanges(GetIt.I<PlanKeeperService>());
@@ -53,11 +52,11 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 	  if (event is AuthenticationUserChanged)
 		  yield await _processUserChangedEvent(event);
 	  else if (event is AuthenticationChildSignInRequested) {
-			_appConfigRepository.signInChild(event.child.id);
+			_appConfigRepository.signInChild(event.child.id!);
 			_analyticsService.logChildSignIn();
 			yield await _signInUser(event.child);
 	  } else if (event is AuthenticationSignOutRequested) {
-		  if (state.user.role == UserRole.caregiver)
+		  if (state.user!.role == UserRole.caregiver)
 		    _authenticationProvider.signOut();
 		  else {
 			  _appConfigRepository.signOutChild();
@@ -72,7 +71,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 	  var noSignedInUser = event.user == AuthenticatedUser.empty;
 	  var wasAppOpened = state.status == AuthenticationStatus.initial;
 	  if (noSignedInUser && !wasAppOpened) {
-		  onUserSignOut(state.user.toDBModel());
+		  onUserSignOut(state.user!.toDBModel());
 		  return const AuthenticationState.unauthenticated();
 	  }
   	if (noSignedInUser && wasAppOpened)
@@ -84,19 +83,19 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 		return _signInCaregiver(event, user);
   }
 
-	Future<AuthenticationState> _signInCaregiver(AuthenticationUserChanged event, User user) async {
+	Future<AuthenticationState> _signInCaregiver(AuthenticationUserChanged event, User? user) async {
 		if (user == null) {
 			// New caregiver account
-			if (! (await _authenticationProvider.userExists(event.user.email))) {
+			if (! (await _authenticationProvider.userExists(event.user.email!))) {
 				await _authenticationProvider.signOut();
 				return const AuthenticationState.unauthenticated();
 			}
 			_logger.fine('Creating new user for ${event.user}');
 			user = Caregiver.fromAuthUser(event.user);
 			await _dataRepository.createUser(user);
-			_analyticsService.logSignUp(event.user.authMethod);
+			_analyticsService.logSignUp(event.user.authMethod!);
 		} else
-			_analyticsService.logSignIn(event.user.authMethod);
+			_analyticsService.logSignIn(event.user.authMethod!);
 		return _signInUser(user, event.user.authMethod, event.user.photoURL);
 	}
   
@@ -109,23 +108,23 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 	    return const AuthenticationState.unauthenticated();
   }
 
-	Future<bool> _userUnverified(AuthenticatedUser user) async => user.authMethod == AuthMethod.email && !user.emailVerified && await _authenticationProvider.verificationEnforced();
+	Future<bool> _userUnverified(AuthenticatedUser user) async => user.authMethod == AuthMethod.email && !user.emailVerified! && await _authenticationProvider.verificationEnforced();
 
-	Future<AuthenticationState> _handleUnverifiedUser(User user) async {
+	Future<AuthenticationState> _handleUnverifiedUser(User? user) async {
 		if (user != null)
-			showFailSnackbar(_navigatorKey.currentState.context, EmailSignInError.accountNotVerified.key);
+			showFailSnackbar(_navigatorKey.currentState!.context, EmailSignInError.accountNotVerified.key);
 		_authenticationProvider.signOut();
 		return const AuthenticationState.unauthenticated();
 	}
 
-	Future<AuthenticationState> _signInUser(User user, [AuthMethod authMethod, String photoURL]) async {
+	Future<AuthenticationState> _signInUser(User user, [AuthMethod? authMethod, String? photoURL]) async {
 	  onUserSignIn(user);
 	  return AuthenticationState.authenticated(UIUser.typedFromDBModel(user, authMethod, photoURL));
   }
 
 	@override
 	Future<void> close() {
-		_userSubscription?.cancel();
+		_userSubscription.cancel();
 		return super.close();
 	}
 }

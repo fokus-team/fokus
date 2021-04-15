@@ -1,5 +1,6 @@
-// @dart = 2.10
 import 'package:equatable/equatable.dart';
+import 'package:fokus/model/db/user/caregiver.dart';
+import 'package:fokus/model/db/user/child.dart';
 import 'package:fokus_auth/fokus_auth.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
@@ -12,21 +13,22 @@ import 'ui_child.dart';
 typedef ActiveUserFunction = UIUser Function();
 
 class UIUser extends Equatable {
-	final ObjectId id;
-	final String name;
-	final String locale;
-	final int avatar;
-	final UserRole role;
-	final List<ObjectId> connections;
+	final ObjectId? id;
+	final String? name;
+	final String? locale;
+	final int? avatar;
+	final UserRole? role;
+	final List<ObjectId>? connections;
 
 	UIUser(this.id, this.name, {this.locale, this.role, this.connections, this.avatar = -1});
 	UIUser.fromDBModel(User user) : this(user.id, user.name, role: user.role, connections: user.connections ?? [], avatar: user.avatar, locale: user.locale);
 
-	factory UIUser.typedFromDBModel(User user, [AuthMethod authMethod, String photoURL]) => user.role == UserRole.caregiver ? UICaregiver.fromDBModel(user, authMethod, photoURL) : UIChild.fromDBModel(user);
+	factory UIUser.typedFromDBModel(User user, [AuthMethod? authMethod, String? photoURL]) =>
+			user.role == UserRole.caregiver ? UICaregiver.fromDBModel(user as Caregiver, authMethod, photoURL) : UIChild.fromDBModel(user as Child);
 
 	User toDBModel() => User(id: id, name: name, role: role, avatar: avatar);
 
-	UIUser.from(UIUser original, {String locale, String name}) : this(
+	UIUser.from(UIUser original, {String? locale, String? name}) : this(
 		original.id,
 		name ?? original.name,
 		locale: locale ?? original.locale,
@@ -36,10 +38,5 @@ class UIUser extends Equatable {
 	);
 
 	@override
-  List<Object> get props => [id, name, avatar, role, locale, connections];
-
-	@override
-  String toString() {
-    return 'UIUser{name: $name, role: $role}';
-  }
+  List<Object?> get props => [id, name, avatar, role, locale, connections];
 }

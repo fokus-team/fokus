@@ -71,7 +71,7 @@ extension LogTaskInstance on TaskInstance {
 
 extension LogUITaskReport on UITaskReport {
 	Map<String, dynamic> get logRecord => {
-		'child_id': child.id.toHexString(),
+		'child_id': child.id?.toHexString(),
 		'id': task.id.toHexString(),
 		'rating': '${ratingMark.value}'
 	};

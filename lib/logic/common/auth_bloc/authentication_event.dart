@@ -1,11 +1,10 @@
-// @dart = 2.10
 part of 'authentication_bloc.dart';
 
 abstract class AuthenticationEvent extends Equatable {
   const AuthenticationEvent();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 class AuthenticationUserChanged extends AuthenticationEvent {
@@ -14,7 +13,7 @@ class AuthenticationUserChanged extends AuthenticationEvent {
 	const AuthenticationUserChanged(this.user);
 
 	@override
-	List<Object> get props => [user];
+	List<Object?> get props => [user];
 }
 
 class AuthenticationChildSignInRequested extends AuthenticationEvent {
@@ -23,7 +22,7 @@ class AuthenticationChildSignInRequested extends AuthenticationEvent {
 	const AuthenticationChildSignInRequested(this.child);
 
 	@override
-	List<Object> get props => [child.id];
+	List<Object?> get props => [child.id];
 }
 
 class AuthenticationSignOutRequested extends AuthenticationEvent {}
@@ -33,8 +32,8 @@ class AuthenticationActiveUserUpdated extends AuthenticationEvent {
 
 	AuthenticationActiveUserUpdated(this.user);
 	AuthenticationActiveUserUpdated.fromLocale(UIUser user, String locale) :
-			user = (user is UICaregiver) ? UICaregiver.from(user, locale: locale) : UIChild.from(user, locale: locale);
+			user = (user is UICaregiver) ? UICaregiver.from(user, locale: locale) : UIChild.from(user as UIChild, locale: locale);
 
 	@override
-	List<Object> get props => [user];
+	List<Object?> get props => [user];
 }

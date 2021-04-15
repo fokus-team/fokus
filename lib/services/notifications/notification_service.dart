@@ -27,13 +27,13 @@ abstract class NotificationService implements ActiveUserObserver, NotificationNo
 	@protected
 	final Logger logger = Logger('NotificationService');
 
-	Future sendNotification(NotificationType type, ObjectId user, {NotificationText title, NotificationText body,
-		NotificationIcon icon, NotificationGroup group, List<NotificationButton> buttons = const []});
+	Future sendNotification(NotificationType type, ObjectId user, {required NotificationText title, required NotificationText body,
+		ObjectId? subject, NotificationIcon? icon, required NotificationGroup group, List<NotificationButton> buttons = const []});
 
 	Future sendRewardBoughtNotification(ObjectId rewardId, String rewardName, ObjectId caregiverId, UIUser child);
-	Future sendTaskFinishedNotification(ObjectId planInstanceId, String taskName, ObjectId caregiverId, UIUser child, {@required bool completed});
+	Future sendTaskFinishedNotification(ObjectId planInstanceId, String taskName, ObjectId caregiverId, UIUser child, {required bool completed});
 
-	Future sendTaskApprovedNotification(ObjectId planId, String taskName, ObjectId childId, int stars, [CurrencyType currencyType, int pointCount]);
+	Future sendTaskApprovedNotification(ObjectId planId, String taskName, ObjectId childId, int stars, [CurrencyType? currencyType, int? pointCount]);
 	Future sendBadgeAwardedNotification(String badgeName, int badgeIcon, ObjectId childId);
 	Future sendTaskRejectedNotification(ObjectId planId, String taskName, ObjectId childId);
 

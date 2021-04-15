@@ -7,7 +7,7 @@ class NotificationIcon {
 	final String? name;
 
 	const NotificationIcon._({this.type, this.index, this.name});
-	const NotificationIcon(AssetType type, int index) : this._(type: type, index: index);
+	const NotificationIcon(AssetType? type, int? index) : this._(type: type, index: index);
 	const NotificationIcon.fromName(String name) : this._(name: name);
 
   String get getPath => name ?? type!.getPath(index, AssetPathType.drawable);

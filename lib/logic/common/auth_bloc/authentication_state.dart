@@ -1,11 +1,10 @@
-// @dart = 2.10
-part of '../../common/auth_bloc/authentication_bloc.dart';
+part of 'authentication_bloc.dart';
 
 enum AuthenticationStatus { authenticated, unauthenticated, initial }
 
 class AuthenticationState extends Equatable {
 	final AuthenticationStatus status;
-	final UIUser user;
+	final UIUser? user;
 
 	const AuthenticationState._({
 		this.status = AuthenticationStatus.initial,
@@ -19,5 +18,5 @@ class AuthenticationState extends Equatable {
 	const AuthenticationState.unauthenticated() : this._(status: AuthenticationStatus.unauthenticated);
 
 	@override
-	List<Object> get props => [status, user];
+	List<Object?> get props => [status, user];
 }

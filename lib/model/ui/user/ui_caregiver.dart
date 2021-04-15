@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'package:bson/bson.dart';
 
 import 'package:fokus/model/currency_type.dart';
@@ -10,13 +9,13 @@ import 'package:fokus/model/db/user/caregiver.dart';
 import 'package:fokus_auth/fokus_auth.dart';
 
 class UICaregiver extends UIUser {
-	final AuthMethod authMethod;
-	final String photoURL;
-	final List<ObjectId> friends;
-	final List<UICurrency> currencies;
-	final List<UIBadge> badges;
+	final AuthMethod? authMethod;
+	final String? photoURL;
+	final List<ObjectId>? friends;
+	final List<UICurrency>? currencies;
+	final List<UIBadge>? badges;
 
-  UICaregiver({ObjectId id, String name, this.currencies, this.badges, this.authMethod, this.photoURL, this.friends = const [], List<ObjectId> connections = const []}) :
+  UICaregiver({ObjectId? id, String? name, this.currencies, this.badges, this.authMethod, this.photoURL, this.friends = const [], List<ObjectId> connections = const []}) :
 			super(id, name, role: UserRole.caregiver, connections: connections);
   UICaregiver.fromDBModel(Caregiver caregiver, [this.authMethod, this.photoURL]) :
 		  friends = caregiver.friends,
@@ -24,7 +23,7 @@ class UICaregiver extends UIUser {
 		  currencies = [UICurrency(type: CurrencyType.diamond)]..addAll(caregiver.currencies?.map((currency) => UICurrency.fromDBModel(currency)) ?? []),
 		  super.fromDBModel(caregiver);
 
-	UICaregiver.from(UICaregiver original, {List<UICurrency> currencies, List<UIBadge> badges, String locale, String name, List<ObjectId> friends}) :
+	UICaregiver.from(UICaregiver original, {List<UICurrency>? currencies, List<UIBadge>? badges, String? locale, String? name, List<ObjectId>? friends}) :
 			currencies = currencies ?? original.currencies,
 			badges = badges ?? original.badges,
 			friends = friends ?? original.friends,
@@ -33,5 +32,5 @@ class UICaregiver extends UIUser {
 			super.from(original, locale: locale, name: name);
 
 	@override
-  List<Object> get props => super.props..addAll([friends, currencies, badges, authMethod, photoURL]);
+  List<Object?> get props => super.props..addAll([friends, currencies, badges, authMethod, photoURL]);
 }

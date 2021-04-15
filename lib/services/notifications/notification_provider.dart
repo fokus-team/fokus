@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -24,7 +23,7 @@ abstract class NotificationProvider implements ActiveUserObserver, CurrentLocale
 	@protected
 	Future<String> get userToken;
 	@protected
-	User activeUser;
+	User? activeUser;
 
 	Map<Type, NotificationObserver> _notificationObservers = {};
 
@@ -65,20 +64,22 @@ abstract class NotificationProvider implements ActiveUserObserver, CurrentLocale
 		if (activeUser == null)
 			return;
 		dataRepository.removeNotificationID(token);
-		dataRepository.insertNotificationID(activeUser.id, token);
+		dataRepository.insertNotificationID(activeUser!.id!, token);
 	}
 
 	@protected
-	void removeUserToken(String token) async => dataRepository.removeNotificationID(token, userId: activeUser.id);
+	void removeUserToken(String token) async => dataRepository.removeNotificationID(token, userId: activeUser!.id);
 
 	@override
   void onLocaleSet(Locale locale) {
+		if (!Platform.isAndroid)
+			return;
 		var androidPlugin = localNotifications.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
 		var translate = (String key) => AppLocales.instance.translate(key);
 		for (var channelType in NotificationChannel.values) {
 			var androidChannel = AndroidNotificationChannel(channelType.id, translate(channelType.nameKey),
 					translate(channelType.descriptionKey), channelAction: AndroidNotificationChannelAction.update);
-			androidPlugin.createNotificationChannel(androidChannel);
+			androidPlugin!.createNotificationChannel(androidChannel);
 		}
   }
 }

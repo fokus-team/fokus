@@ -106,13 +106,13 @@ class ChildSignInPage extends StatelessWidget {
 	Widget _buildAvatarPicker(BuildContext context) {
 		return BlocBuilder<ChildSignUpCubit, ChildSignUpState>(
 			buildWhen: (oldState, newState) => oldState.avatar != newState.avatar || oldState.takenAvatars != newState.takenAvatars,
-			cubit: BlocProvider.of<ChildSignUpCubit>(context),
+			bloc: BlocProvider.of<ChildSignUpCubit>(context),
 			builder: (context, state) {
 				return Padding(
 					padding: EdgeInsets.symmetric(vertical: 10.0),
 					child: SmartSelect<int>.single(
 						title: AppLocales.of(context).translate('authentication.avatar'),
-						builder: (context, selectState, callback) {
+						tileBuilder: (context, selectState) {
 							bool isInvalid = (state.status == FormzStatus.invalid && state.avatar == null);
 							return ListTile(
 								leading: SizedBox(
@@ -131,11 +131,11 @@ class ChildSignInPage extends StatelessWidget {
 									maxLines: 1
 								),
 								trailing: Icon(Icons.keyboard_arrow_right, color: Colors.grey),
-								onTap: () => callback(context)
+								onTap: () => selectState.showModal()
 							);
 						},
-						value: state.avatar,
-						options: List.generate(childAvatars.length, (index) {
+						selectedValue: state.avatar,
+						choiceItems: List.generate(childAvatars.length, (index) {
 							final String name = AppLocales.of(context).translate('$_pageKey.avatarGroups.${childAvatars[index].label.toString().split('.').last}');
 							return S2Choice(
 								title: name,
@@ -145,26 +145,26 @@ class ChildSignInPage extends StatelessWidget {
 							);
 						}),
 						choiceConfig: S2ChoiceConfig(
-							glowingOverscrollIndicatorColor: Colors.teal,
+							overscrollColor: Colors.teal,
 							runSpacing: 10.0,
 							spacing: 10.0,
-							useWrap: true,
-							isGrouped: true,
-							builder: (item, checked, onChange) {
-								return GestureDetector(
-									onTap: item.disabled ? null : () => { onChange(item.value, !checked) },
-									child: AppAvatar(item.value, checked: checked, disabled: item.disabled)
-								);
-							}
+							layout: S2ChoiceLayout.wrap
 						),
+						choiceBuilder: (context, selectState, choice) {
+							return GestureDetector(
+								onTap: choice.disabled ? null : () => choice.select(!choice.selected),
+								child: AppAvatar(choice.value, checked: choice.selected, disabled: choice.disabled)
+							);
+						},
+						choiceGrouped: true,
 						modalType: S2ModalType.bottomSheet,
 						modalConfig: S2ModalConfig(
-							useConfirmation: true,
-							confirmationBuilder: (context, callback) => ButtonSheetConfirmButton(callback: () => callback)
+							useConfirm: true
 						),
-						onChange: (val) {
+						modalConfirmBuilder: (context, callback) => ButtonSheetConfirmButton(callback: () => callback),
+						onChange: (selected) {
 							FocusManager.instance.primaryFocus.unfocus();
-							BlocProvider.of<ChildSignUpCubit>(context).avatarChanged(val);
+							BlocProvider.of<ChildSignUpCubit>(context).avatarChanged(selected.value);
 						}
 					)
 				);

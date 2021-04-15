@@ -15,7 +15,7 @@ Widget buildReorderableList<Type>({Widget header, Widget Function(Type) child, L
 		onReorderFinished: onReorderFinished,
 		insertDuration: AnimationsProperties.insertDuration,
 		removeDuration: AnimationsProperties.removeDuration,
-		dragDuration: AnimationsProperties.dragDuration,
+		reorderDuration: AnimationsProperties.dragDuration,
 		itemBuilder: (_context, itemAnimation, item, index) {
 			return Reorderable(
 				key: getKey(item),

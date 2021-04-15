@@ -145,25 +145,30 @@ class _SettingsPageState extends State<SettingsPage> {
 			BlocBuilder<LocaleCubit, LocaleState>(
 				builder: (context, state) {
 					return SmartSelect.single(
-						value: BlocProvider.of<LocaleCubit>(context).state.languageKey,
+						selectedValue: BlocProvider.of<LocaleCubit>(context).state.languageKey,
 						title: AppLocales.of(context).translate('$_pageKey.appSettings.changeLanguageLabel'),
 						modalType: S2ModalType.bottomSheet,
 						modalConfig: S2ModalConfig(
-							useConfirmation: true,
-							confirmationBuilder: (context, callback) => ButtonSheetConfirmButton(callback: () => callback)
+							useConfirm: true
 						),
-						options: [
+						modalConfirmBuilder: (context, callback) => ButtonSheetConfirmButton(callback: () => callback),
+						choiceItems: [
 							for(String lang in languages)
 								S2Choice(
 									title: AppLocales.of(context).translate('$_pageKey.appSettings.languages.$lang'),
 									value: lang
 								)
 						],
-						leading: Padding(
-							padding: EdgeInsets.only(left: 8.0),
-							child: Icon(Icons.language)
-						),
-						onChange: (langKey) => _setLanguage(langKey),
+						tileBuilder: (context, state) {
+            	return S2Tile.fromState(
+              	state,
+								leading: Padding(
+									padding: EdgeInsets.only(left: 8.0),
+									child: Icon(Icons.language)
+								)
+							);
+						},
+						onChange: (selected) => _setLanguage(selected.value),
 					);
 				}
 			)

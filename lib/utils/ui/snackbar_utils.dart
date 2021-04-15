@@ -18,7 +18,7 @@ void showBasicSnackbar(BuildContext context, {String content, Map<String, String
 		) : SizedBox.shrink(),
 		flushbarStyle: FlushbarStyle.FLOATING,
 		margin: EdgeInsets.all(8.0),
-		borderRadius: 4.0,
+		borderRadius: BorderRadius.all(Radius.circular(4.0)),
 		duration: Duration(seconds: 5)
 	)..show(context);
 }

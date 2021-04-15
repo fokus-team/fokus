@@ -6,7 +6,7 @@ import 'package:fokus/model/db/plan/plan.dart';
 import 'package:fokus/model/db/plan/repeatability_type.dart';
 import 'package:fokus/model/ui/form/task_form_model.dart';
 import 'package:fokus/services/plan_repeatability_service.dart';
-import 'package:mongo_dart/mongo_dart.dart' as Mongo;
+import 'package:mongo_dart/mongo_dart.dart' show ObjectId;
 
 enum PlanFormRepeatability { recurring, onlyOnce, untilCompleted }
 enum PlanFormRepeatabilityRage { weekly, monthly }
@@ -21,7 +21,7 @@ extension PlanFormRepeatabilityRageDbType on PlanFormRepeatabilityRage {
 // ignore: must_be_immutable
 class PlanFormModel extends Equatable {
 	String name;
-	List<Mongo.ObjectId> children = [];
+	List<ObjectId> children = [];
 	PlanFormRepeatability repeatability = PlanFormRepeatability.recurring;
 	PlanFormRepeatabilityRage repeatabilityRage = PlanFormRepeatabilityRage.weekly;
 	List<int> days = [];

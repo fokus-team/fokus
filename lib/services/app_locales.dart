@@ -77,7 +77,7 @@ class AppLocales {
 		}
 	}
 
-	Map<String, dynamic> getTranslations(String key, [Map<String, Object>? args]) {
+	Map<String, String> getTranslations(String key, [Map<String, Object>? args]) {
 		Map<String, String> translations = {};
 		for (var locale in AppLocalesDelegate.supportedLocales)
 			translations[locale.languageCode] = translate(key, args, locale);

@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'package:equatable/equatable.dart';
 import 'package:fokus/model/db/date/time_date.dart';
 import 'package:fokus/model/db/gamification/badge.dart';
@@ -9,11 +8,11 @@ class UIBadge extends Equatable {
 	final String description;
 	final int icon;
 
-	UIBadge({this.name, this.description, this.icon = 0});
+	UIBadge({required this.name, required this.description, this.icon = 0});
 	UIBadge.from(UIBadge badge) : this(name: badge.name, description: badge.description, icon: badge.icon);
-	UIBadge.fromDBModel(Badge badge) : this(name: badge.name, description: badge.description, icon: badge.icon);
+	UIBadge.fromDBModel(Badge badge) : this(name: badge.name!, description: badge.description!, icon: badge.icon!);
 
-	UIBadge copyWith({String name, String description, int icon}) {
+	UIBadge copyWith({String? name, String? description, int? icon}) {
 		return UIBadge(
 			name: name ?? this.name,
 			description: description ?? this.description,
@@ -30,11 +29,14 @@ class UIBadge extends Equatable {
 class UIChildBadge extends UIBadge {
 	final TimeDate date;
 
-	UIChildBadge({String name, String description, int icon, this.date}) : super(name: name, description: description, icon: icon);
-	UIChildBadge.fromDBModel(ChildBadge badge) : this(name: badge.name, description: badge.description, icon: badge.icon, date: badge.date);
-	UIChildBadge.fromBadge(UIBadge badge, {TimeDate date}) : this(name: badge.name, description: badge.description, icon: badge.icon, date: date ?? TimeDate.now());
+	UIChildBadge({required String name, required String description, required int icon, required this.date})
+			: super(name: name, description: description, icon: icon);
+	UIChildBadge.fromDBModel(ChildBadge badge)
+			: this(name: badge.name!, description: badge.description!, icon: badge.icon!, date: badge.date!);
+	UIChildBadge.fromBadge(UIBadge badge, {TimeDate? date})
+			: this(name: badge.name, description: badge.description, icon: badge.icon, date: date ?? TimeDate.now());
 	
-	UIChildBadge copyWith({String name, String description, int icon, DateTime date}) {
+	UIChildBadge copyWith({String? name, String? description, int? icon, TimeDate? date}) {
 		return UIChildBadge(
 			name: name ?? this.name,
 			description: description ?? this.description,

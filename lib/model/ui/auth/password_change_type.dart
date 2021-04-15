@@ -1,4 +1,3 @@
-// @dart = 2.10
 enum PasswordChangeType {
 	change, reset
 }
@@ -7,6 +6,6 @@ extension PasswordChangeTypeText on PasswordChangeType {
 	String get key => const {
 		PasswordChangeType.change: 'passwordChanged',
 		PasswordChangeType.reset: 'passwordReset'
-	}[this];
+	}[this]!;
 }
 

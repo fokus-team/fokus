@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'package:flutter/material.dart';
 
 enum AssetType { avatars, rewards, badges, currencies }
@@ -10,7 +9,7 @@ enum BadgeAssetLabel { praise, medal, trophy }
 class GraphicAsset<GraphicLabel> {
 	final String filename;
 	final GraphicLabel label;
-	final Color color;
+	final Color? color;
 	
 	GraphicAsset(this.filename, this.label, [this.color]);
 }

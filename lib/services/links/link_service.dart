@@ -82,7 +82,7 @@ abstract class LinkService {
     } on EmailCodeFailure catch (e) {
       showFailSnackbar(context, 'authentication.error.emailLink', {
         'TYPE': '${payload.type.index}',
-        'ERR': '${e.reason.index}'
+        'ERR': '${e.reason!.index}'
       });
       return false;
     }

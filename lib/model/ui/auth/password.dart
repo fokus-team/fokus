@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'package:formz/formz.dart';
 
 enum PasswordValidationError { empty, notLongEnough }
@@ -7,7 +6,7 @@ extension PasswordValidationErrorTextKey on PasswordValidationError {
 	String get key => const {
 		PasswordValidationError.empty: 'authentication.error.passwordEmpty',
 		PasswordValidationError.notLongEnough: 'authentication.error.passwordNotLongEnough',
-	}[this];
+	}[this]!;
 }
 
 class Password extends FormzInput<String, PasswordValidationError> {
@@ -20,7 +19,7 @@ class Password extends FormzInput<String, PasswordValidationError> {
 	static final _lengthRegExp = RegExp(r'^[A-Za-z\d]{' + '$minPasswordLength' + r',}$');
 
 	@override
-	PasswordValidationError validator(String value) {
+	PasswordValidationError? validator(String? value) {
 		if(value == null || value.isEmpty)
 			return PasswordValidationError.empty;
 		if(!fullValidation)

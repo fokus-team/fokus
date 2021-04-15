@@ -39,7 +39,7 @@ class UIChildReward extends UIReward {
 	UIChildReward.fromDBModel(ChildReward reward) : this(id: reward.id, name: reward.name, limit: 0, icon: reward.icon, date: reward.date,
 			cost: reward.cost != null ? UIPoints(type: reward.cost.icon, title: reward.cost.name, quantity: reward.cost.quantity, createdBy: reward.cost.createdBy) : null);
 	
-	UIChildReward copyWith({ObjectId id, String name, int limit, UIPoints cost, int icon, DateTime date}) {
+	UIChildReward copyWith({ObjectId id, String name, int limit, UIPoints cost, int icon, TimeDate date}) {
 		return UIChildReward(
 			name: name ?? this.name,
 			limit: limit ?? this.limit,

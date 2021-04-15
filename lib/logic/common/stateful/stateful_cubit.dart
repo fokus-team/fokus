@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
@@ -29,21 +28,22 @@ abstract class StatefulCubit<State extends StatefulState> extends Cubit<State> w
 	@protected
 	bool loadingForFirstTime = true;
 
-  StatefulCubit(ModalRoute pageRoute, {this.options = const [], StatefulState initialState}) :
-        super(initialState ?? StatefulState.notLoaded()) {
+  StatefulCubit(ModalRoute pageRoute, {this.options = const [], State? initialState}) :
+        super(initialState ?? StatefulState.notLoaded() as State) {
 	  onGoToForeground(firstTime: true);
-	  _routeObserver.subscribe(this, pageRoute);
+	  if (pageRoute is PageRoute)
+	    _routeObserver.subscribe(this, pageRoute);
   }
 
   Future loadData() async {
 	  if (state.loadingInProgress)
 	  	return;
-	  emit(state.loading());
+	  emit(state.loading() as State);
 	  try {
 		  await doLoadData();
 		  loadingForFirstTime = false;
 	  } on Exception catch (e) {
-		  emit(state.withLoadState(DataLoadingState.loadFailure));
+		  emit(state.withLoadState(DataLoadingState.loadFailure) as State);
 		  throw e;
 	  }
   }
@@ -51,9 +51,9 @@ abstract class StatefulCubit<State extends StatefulState> extends Cubit<State> w
   @protected
   Future doLoadData();
 
-	void reload() => emit(state.notLoaded());
+	void reload() => emit(state.notLoaded() as State);
 
-	void resetSubmissionState() => emit(state.notSubmitted());
+	void resetSubmissionState() => emit(state.notSubmitted() as State);
 
 	@override
 	@nonVirtual
@@ -64,11 +64,11 @@ abstract class StatefulCubit<State extends StatefulState> extends Cubit<State> w
 
 	bool hasOption(StatefulOption option) => options.contains(option);
 
-	bool beginSubmit([State state]) {
+	bool beginSubmit([State? state]) {
 		state ??= this.state;
 		if (!state.isNotSubmitted)
 			return false;
-		emit(state.submit());
+		emit(state.submit() as State);
 		return true;
 	}
 

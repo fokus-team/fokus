@@ -32,5 +32,5 @@ class CaregiverPlansState extends StatefulState {
 	CaregiverPlansState(this.plans) : super.loaded();
 
 	@override
-	List<Object> get props => super.props..add(plans);
+	List<Object?> get props => super.props..add(plans);
 }

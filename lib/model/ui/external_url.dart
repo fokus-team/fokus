@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'package:flutter/material.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/ui/dialog_utils.dart';
@@ -13,7 +12,7 @@ extension ExternalURLLink on ExternalURL {
 	  ExternalURL.github: 'https://github.com/fokus-team/fokus',
 	  ExternalURL.termsOfUse: 'https://fokus.link/terms_of_use.html',
 	  ExternalURL.privacyPolicy: 'https://fokus.link/privacy_policy.html',
-  }[this];
+  }[this]!;
 	
 	void openBrowserPage(BuildContext context) async {
 		if (await canLaunch(this.url)) {

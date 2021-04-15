@@ -21,5 +21,5 @@ class ChildPlansState extends StatefulState {
 	ChildPlansState(this.plans) : super.loaded();
 
 	@override
-	List<Object> get props => super.props..add(plans);
+	List<Object?> get props => super.props..add(plans);
 }

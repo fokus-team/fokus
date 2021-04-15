@@ -18,8 +18,8 @@ class UIDataAggregator {
 
 	Future<List<UIChild>> loadChildren(List<Child> children) async {
 		var data = await Future.wait([
-			...children.map((child) => _repeatabilityService.getPlanCountByDate(child.id, Date.now())),
-			...children.map((child) => _dataRepository.hasActiveChildPlanInstance(child.id))
+			...children.map((child) => _repeatabilityService.getPlanCountByDate(child.id!, Date.now())),
+			...children.map((child) => _dataRepository.hasActiveChildPlanInstance(child.id!))
 		]);
 		List<UIChild> childList = [];
 		for (int i = 0; i < children.length; i++)
@@ -29,8 +29,8 @@ class UIDataAggregator {
 
 	Future<UIPlanInstance> loadPlanInstance({PlanInstance? planInstance, ObjectId? planInstanceId, Plan? plan}) async {
 		planInstance ??= await _dataRepository.getPlanInstance(id: planInstanceId);
-		var completedTasks = await _dataRepository.getCompletedTaskCount(planInstance.id);
-		plan ??= await _dataRepository.getPlan(id: planInstance.planID, fields: ['_id', 'repeatability', 'name']);
+		var completedTasks = await _dataRepository.getCompletedTaskCount(planInstance.id!);
+		plan ??= await _dataRepository.getPlan(id: planInstance.planID!, fields: ['_id', 'repeatability', 'name']);
 		var getDescription = (Plan plan, [Date? instanceDate]) => _repeatabilityService.buildPlanDescription(plan.repeatability, instanceDate: instanceDate);
 		var elapsedTime = () => sumDurations(planInstance!.duration).inSeconds;
 		return UIPlanInstance.fromDBModel(planInstance, plan.name, completedTasks, elapsedTime, getDescription(plan, planInstance.date));
@@ -40,10 +40,10 @@ class UIDataAggregator {
 		var planFields = ['_id', 'name', 'repeatability'];
 
 		var instances = await _dataRepository.getPlanInstances(childIDs: [childId], date: Date.now());
-		var plans = await _dataRepository.getPlans(ids: instances.map((plan) => plan.planID).toList(), fields: planFields);
+		var plans = await _dataRepository.getPlans(ids: instances.map((plan) => plan.planID!).toList(), fields: planFields);
 		var untilCompletedPlans = await _dataRepository.getPlans(childId: childId, untilCompleted: true, active: true, fields: planFields);
 		plans.addAll(untilCompletedPlans);
-		instances.addAll(await _dataRepository.getPastNotCompletedPlanInstances([childId], untilCompletedPlans.map((plan) => plan.id).toList(), Date.now()));
+		instances.addAll(await _dataRepository.getPastNotCompletedPlanInstances([childId], untilCompletedPlans.map((plan) => plan.id!).toList(), Date.now()));
 		return getUIPlanInstances(plans: plans, instances: instances);
 	}
 
@@ -54,7 +54,7 @@ class UIDataAggregator {
 		List<UIPlanInstance> uiInstances = [];
 		for (var instance in instances) {
 			var elapsedTime = () => sumDurations(instance.duration).inSeconds;
-			var completedTasks = await _dataRepository.getCompletedTaskCount(instance.id);
+			var completedTasks = await _dataRepository.getCompletedTaskCount(instance.id!);
 			uiInstances.add(UIPlanInstance.fromDBModel(
 				instance,
 				planMap[instance.id]!.name,

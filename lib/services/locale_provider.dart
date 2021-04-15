@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'dart:ui';
 
 import 'package:flutter/widgets.dart';
@@ -15,12 +14,12 @@ class LocaleService implements ActiveUserObserver {
 
 	static Locale localeSelector(List<Locale> locales, Iterable<Locale> supportedLocales) => userAwareLocaleSelector();
 
-	static Locale userAwareLocaleSelector([String userLocale]) {
+	static Locale userAwareLocaleSelector([String? userLocale]) {
 		if (userLocale != null)
 			return parseLocale(userLocale);
 
 		List<String> baseLocales = AppLocalesDelegate.supportedLocales.map((locale) => locale.languageCode).toList();
-		for (var locale in WidgetsBinding.instance.window.locales) {
+		for (var locale in WidgetsBinding.instance!.window.locales) {
 			if (AppLocalesDelegate.supportedLocales.contains(locale))
 				return locale;
 			var languageMatch = baseLocales.indexWhere((baseLocale) => baseLocale == locale.languageCode);
@@ -40,7 +39,7 @@ class LocaleService implements ActiveUserObserver {
   @override
   void onUserSignIn(User user) {
     if (user.locale != null)
-    	setLocale(parseLocale(user.locale));
+    	setLocale(parseLocale(user.locale!));
   }
 
   @override

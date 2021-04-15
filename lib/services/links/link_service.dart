@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'package:flutter/widgets.dart';
 import 'package:fokus/services/app_route_observer.dart';
 import 'package:get_it/get_it.dart';
@@ -33,7 +32,7 @@ abstract class LinkService {
   @protected
 	void initialize();
 
-	void handleLink(Uri link, AppState appState) async {
+	void handleLink(Uri? link, AppState appState) async {
 		if (link == null)
 			return;
 		// Wait for the navigator
@@ -55,7 +54,7 @@ abstract class LinkService {
 		}
 	}
 	
-	Future<bool> _navigateToCaregiverSignInPage({NavigatorState navigator, LinkPayload payload}) async {
+	Future<bool> _navigateToCaregiverSignInPage({required NavigatorState navigator, required LinkPayload payload}) async {
 		// ignore: close_sinks
 		var authBloc = BlocProvider.of<AuthenticationBloc>(navigator.context);
 		var userState = authBloc.state;

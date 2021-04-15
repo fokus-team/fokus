@@ -53,7 +53,7 @@ mixin PlanDbRepository implements DbRepository {
 	}
 
 	Future<List<PlanInstance>> getPlanInstancesForPlans(ObjectId childId, List<ObjectId> planIDs, [Date? date]) {
-		var query = _buildPlanQuery(childId: childId, date: date)!.and(where.oneFrom('planID', planIDs));
+		var query = _buildPlanQuery(childId: childId, date: date).and(where.oneFrom('planID', planIDs));
 		return dbClient.queryTyped(Collection.planInstance, query, (json) => PlanInstance.fromJson(json)!);
 	}
 
@@ -91,7 +91,7 @@ mixin PlanDbRepository implements DbRepository {
 	Future updatePlanInstance(PlanInstance planInstance) => dbClient.update(Collection.planInstance, _buildPlanQuery(id: planInstance.id), planInstance.toJson(), multiUpdate: false);
 
 	Future updateMultiplePlanInstances(List<PlanInstance> planInstances) {
-		return dbClient.updateAll(Collection.planInstance, planInstances.map((planInstance) => _buildPlanQuery(id: planInstance.id)!).toList(),
+		return dbClient.updateAll(Collection.planInstance, planInstances.map((planInstance) => _buildPlanQuery(id: planInstance.id)).toList(),
 				planInstances.map((planInstance) => planInstance.toJson()).toList(), multiUpdate: false);
 	}
 

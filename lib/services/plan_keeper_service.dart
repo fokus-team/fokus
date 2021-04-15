@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'dart:async';
 
 import 'package:get_it/get_it.dart';
@@ -21,9 +20,9 @@ class PlanKeeperService implements ActiveUserObserver {
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final PlanRepeatabilityService _repeatabilityService = GetIt.I<PlanRepeatabilityService>();
 
-	Timer _dataCheckTimer;
-	ObjectId _userId;
-	UserRole _role;
+	Timer? _dataCheckTimer;
+	ObjectId? _userId;
+	UserRole? _role;
 
 	@override
 	Future onUserSignIn(User user) async {
@@ -42,7 +41,7 @@ class PlanKeeperService implements ActiveUserObserver {
 	@override
 	void onUserSignOut(User user) {
 		if (_dataCheckTimer != null)
-			_dataCheckTimer.cancel();
+			_dataCheckTimer!.cancel();
 	}
 
 	void _firstTimerCallback() {
@@ -55,7 +54,7 @@ class PlanKeeperService implements ActiveUserObserver {
 		var plans = await _dataRepository.getPlans(caregiverId: getRoleId(UserRole.caregiver),
 				childId: getRoleId(UserRole.child), fields: ['_id', 'repeatability', 'active', 'assignedTo', 'tasks']);
 		var children = await _dataRepository.getUsers(role: UserRole.child, connected: _userId, fields: ['_id']);
-		var childrenIDs = _role == UserRole.caregiver ? children.map((child) => child.id).toList() : [_userId];
+		var childrenIDs = _role == UserRole.caregiver ? children.map((child) => child.id!).toList() : [_userId!];
 
 		return Future.wait([
 			createPlansForToday(plans, childrenIDs),
@@ -67,22 +66,22 @@ class PlanKeeperService implements ActiveUserObserver {
 		var todayPlans = _repeatabilityService.filterPlansByDate(plans, Date.now());
 		List<PlanInstance> instances = [];
 		for (var plan in todayPlans)
-			instances.addAll(childrenIDs.where(plan.assignedTo.contains).map((child) => PlanInstance.fromPlan(plan, assignedTo: child)));
+			instances.addAll(childrenIDs.where(plan.assignedTo!.contains).map((child) => PlanInstance.fromPlan(plan, assignedTo: child)));
 		await _dataRepository.createPlanInstances(instances);
 		return instances;
 	}
 
 	Future _updateOutdatedData(List<Plan> plans, List<ObjectId> childrenIDs) async {
-		var planIDs = plans.where((plan) => !plan.repeatability.untilCompleted).map((plan) => plan.id).toList();
+		var planIDs = plans.where((plan) => !plan.repeatability!.untilCompleted!).map((plan) => plan.id!).toList();
 		var instances = await _dataRepository.getPastNotCompletedPlanInstances(childrenIDs, planIDs, Date.now(), fields: ['_id', 'date', 'duration', 'state']);
 		var getEndTime = (Date date) => TimeDate.fromDate(date.add(Duration(days: 1)));
 
 		List<Future> updates = [];
 		for (var instance in instances)
 			updates.add(_dataRepository.updatePlanInstanceFields(
-				instance.id,
+				instance.id!,
 				state: PlanInstanceState.lostForever,
-				durationChange: instance.duration.isNotEmpty ? DateSpanUpdate<TimeDate>(getEndTime(instance.date), SpanDateType.end, instance.duration.length - 1) : null
+				durationChange: instance.duration!.isNotEmpty ? DateSpanUpdate<TimeDate>(getEndTime(instance.date!), SpanDateType.end, instance.duration!.length - 1) : null
 			));
 		return Future.wait(updates);
 		// TODO there are also 'to' fields in task instance last 'duration' and 'breaks' objects that could be left missing here - handle here or inside statistics code

@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'package:fokus/model/app_config_entry.dart';
 import 'package:fokus/services/app_config/app_config_provider.dart';
 import 'package:mongo_dart/mongo_dart.dart';
@@ -13,11 +12,14 @@ class AppConfigRepository {
 		return this;
 	}
 
-	ObjectId getSignedInChild() => _settingsProvider.containsEntry(AppConfigEntry.signedInChild) ? ObjectId.parse(_settingsProvider.getString(AppConfigEntry.signedInChild)) : null;
+	ObjectId? getSignedInChild() => _settingsProvider.containsEntry(AppConfigEntry.signedInChild)
+			? ObjectId.parse(_settingsProvider.getString(AppConfigEntry.signedInChild)!)
+			: null;
 	void signInChild(ObjectId userId) => _settingsProvider.setString(AppConfigEntry.signedInChild, userId.toHexString());
 	void signOutChild() => _settingsProvider.remove(AppConfigEntry.signedInChild);
 
-	List<ObjectId> getSavedChildProfiles() => _settingsProvider.getStringList(AppConfigEntry.savedChildProfiles)?.map((id) => ObjectId.parse(id))?.toList() ?? [];
+	List<ObjectId> getSavedChildProfiles() =>
+			_settingsProvider.getStringList(AppConfigEntry.savedChildProfiles)?.map((id) => ObjectId.parse(id)).toList() ?? [];
 
 	void saveChildProfile(ObjectId userId) {
 		var savedList = _settingsProvider.getStringList(AppConfigEntry.savedChildProfiles) ?? [];

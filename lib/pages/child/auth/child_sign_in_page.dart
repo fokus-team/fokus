@@ -156,12 +156,13 @@ class ChildSignInPage extends StatelessWidget {
 								child: AppAvatar(choice.value, checked: choice.selected, disabled: choice.disabled)
 							);
 						},
-						choiceGrouped: true,
 						modalType: S2ModalType.bottomSheet,
 						modalConfig: S2ModalConfig(
 							useConfirm: true
 						),
-						modalConfirmBuilder: (context, callback) => ButtonSheetConfirmButton(callback: () => callback),
+						modalConfirmBuilder: (context, selectState) {
+							return ButtonSheetConfirmButton(callback: () => selectState.closeModal(confirmed: true));
+						},
 						onChange: (selected) {
 							FocusManager.instance.primaryFocus.unfocus();
 							BlocProvider.of<ChildSignUpCubit>(context).avatarChanged(selected.value);

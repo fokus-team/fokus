@@ -291,7 +291,9 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 			modalConfig: S2ModalConfig(
 				useConfirm: true
 			),
-			modalConfirmBuilder: (context, callback) => ButtonSheetConfirmButton(callback: () => callback),
+			modalConfirmBuilder: (context, selectState) {
+				return ButtonSheetConfirmButton(callback: () => selectState.closeModal(confirmed: true));
+			},
 	    onChange: (selected) {
 				setState(() { _selectedChildren = selected.value; });
 	      Map<UIChild, bool> filter = {};

@@ -232,7 +232,9 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 			onChange: (selected) => onChange(selected.value),
 			modalType: S2ModalType.bottomSheet,
 			choiceBuilder: builder,
-			modalConfirmBuilder: (context, callback) => ButtonSheetConfirmButton(callback: () => callback),
+			modalConfirmBuilder: (context, selectState) {
+				return ButtonSheetConfirmButton(callback: () => selectState.closeModal(confirmed: true));
+			},
 			modalConfig: S2ModalConfig(
 				useConfirm: true,
 			),
@@ -265,24 +267,24 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 			pickerTitle: AppLocales.of(context).translate('$_pageKey.header.assignPlanTitle'),
 			pickedValues: availablePlans.where((element) => element.assignedTo.contains(_childProfile.id)).toList(),
 			options: availablePlans,
-			onChange: (selected) => context.read<DashboardPlansCubit>().assignPlans(selected.map((plan) => plan.id).toList()),
+			onChange: (selected) => context.read<DashboardPlansCubit>().assignPlans(selected == null ? [] : selected.map((plan) => plan.id).toList()),
 			getName: (plan) => plan.name,
-			builder: (item, checked, onChange) {
+			builder: (context, selectState, choice) {
 				return Theme(
 					data: ThemeData(textTheme: Theme.of(context).textTheme),
 					child: ItemCard(
-						title: item.title,
-						subtitle: AppLocales.of(context).translate(checked ? 'actions.selected' : 'actions.tapToSelect'),
+						title: choice.title,
+						subtitle: AppLocales.of(context).translate(choice.selected ? 'actions.selected' : 'actions.tapToSelect'),
 						icon: Padding(
 							padding: EdgeInsets.all(6.0).copyWith(right: 0.0),
 							child: CircleAvatar(
-								backgroundColor: checked ? Colors.green : Colors.grey,
+								backgroundColor: choice.selected ? Colors.green : Colors.grey,
 								radius: 16.0,
-								child: checked ? Icon(Icons.check, color: Colors.white, size: 20.0) : SizedBox(height: 20)
+								child: choice.selected ? Icon(Icons.check, color: Colors.white, size: 20.0) : SizedBox(height: 20)
 							)
 						),
-						onTapped: onChange != null ? () => onChange(item.value, !checked) : null,
-						isActive: checked
+						onTapped: () => choice.select(!choice.selected),
+						isActive: choice.selected
 					)
 				);
 			}
@@ -298,20 +300,20 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 			pickerTitle: AppLocales.of(context).translate('$_pageKey.header.assignBadgeTitle'),
 			pickedValues: [],
 			options: availableBadges,
-			onChange: (selected) => context.read<DashboardAchievementsCubit>().assignBadges(selected),
+			onChange: (selected) => context.read<DashboardAchievementsCubit>().assignBadges(selected ?? []),
 			getName: (badge) => badge.name,
-			builder: (item, checked, onChange) {
+			builder: (context, selectState, choice) {
 				return Theme(
 					data: ThemeData(textTheme: Theme.of(context).textTheme),
 					child: ItemCard(
-						title: item.title,
-						subtitle: AppLocales.of(context).translate(checked ? 'actions.selected' : 'actions.tapToSelect'),
-						graphic: item.value.icon,
+						title: choice.title,
+						subtitle: AppLocales.of(context).translate(choice.selected ? 'actions.selected' : 'actions.tapToSelect'),
+						graphic: choice.value.icon,
 						graphicType: AssetType.badges,
-						graphicShowCheckmark: checked,
+						graphicShowCheckmark: choice.selected,
 						graphicHeight: 40.0,
-						onTapped: onChange != null ? () => onChange(item.value, !checked) : null,
-						isActive: checked
+						onTapped: () => choice.select(!choice.selected),
+						isActive: choice.selected
 					)
 				);
 			}

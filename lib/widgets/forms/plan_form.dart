@@ -163,27 +163,15 @@ class _PlanFormState extends State<PlanForm> {
 			modalConfig: S2ModalConfig(
 				useConfirm: true
 			),
-			modalConfirmBuilder: (context, callback) => ButtonSheetConfirmButton(callback: () => callback),
+			modalConfirmBuilder: (context, selectState) {
+				return ButtonSheetConfirmButton(callback: () => selectState.closeModal(confirmed: true));
+			},
 			onChange: (selected) => setState(() {
 				FocusManager.instance.primaryFocus.unfocus();
 				widget.plan.children.clear();
 				widget.plan.children = selected.value;
 			})
 		);
-	}
-
-	void onSelectAll(List<dynamic> sourceList, List<dynamic> valueList) {
-		// TODO Smart Select is really stuborn, fix state overwriting 
-		if(sourceList.length == valueList.length) {
-			setState(() {
-				valueList.clear();
-			});
-		} else {
-			setState(() {
-				valueList.clear();
-				valueList.addAll(sourceList);
-			});
-		}
 	}
 
 	Widget buildRepeatabilityTypeField() {
@@ -201,7 +189,9 @@ class _PlanFormState extends State<PlanForm> {
 			modalConfig: S2ModalConfig(
 				useConfirm: true
 			),
-			modalConfirmBuilder: (context, callback) => ButtonSheetConfirmButton(callback: () => callback),
+			modalConfirmBuilder: (context, selectState) {
+				return ButtonSheetConfirmButton(callback: () => selectState.closeModal(confirmed: true));
+			},
 			tileBuilder: (context, selectState) {
 				return S2Tile.fromState(
 					selectState,
@@ -221,7 +211,7 @@ class _PlanFormState extends State<PlanForm> {
 		List<int> dayList = List<int>.generate(isWeekly ? 7 : 31, (i) => i + 1);
 
 		String daysDisplay(List<int> values) {
-			if(values.isEmpty)
+			if(values == null || values.isEmpty)
 				return AppLocales.of(context).translate('$_pageKey.days.hint');
 			if(values.length == dayList.length)
 				return AppLocales.of(context).translate('date.everyday');
@@ -229,6 +219,12 @@ class _PlanFormState extends State<PlanForm> {
 				isWeekly ? AppLocales.of(context).translate('date.weekday', {'WEEKDAY': e.toString()}) : e.toString()
 			).join(', ');
 		}
+
+		List<S2Choice> dayChoiceList = S2Choice.listFrom<int, int>(
+			source: dayList,
+			value: (index, item) => item,
+			title: (index, item) => isWeekly ? AppLocales.of(context).translate('date.weekday', {'WEEKDAY': item.toString()}) : item.toString()
+		);
 
 		return Column(
 			children: <Widget>[
@@ -246,7 +242,9 @@ class _PlanFormState extends State<PlanForm> {
 					modalConfig: S2ModalConfig(
 						useConfirm: true
 					),
-					modalConfirmBuilder: (context, callback) => ButtonSheetConfirmButton(callback: () => callback),
+					modalConfirmBuilder: (context, selectState) {
+						return ButtonSheetConfirmButton(callback: () => selectState.closeModal(confirmed: true));
+					},
 					tileBuilder: (context, selectState) {
 						return S2Tile.fromState(
 							selectState,
@@ -263,17 +261,53 @@ class _PlanFormState extends State<PlanForm> {
 				SmartSelect<int>.multiple(
 					title: AppLocales.of(context).translate('$_pageKey.days.label${isWeekly ? 'Weekly' : 'Monthly'}'),
 					selectedValue: widget.plan.days,
-					choiceItems: S2Choice.listFrom<int, int>(
-						source: dayList,
-						value: (index, item) => item,
-						title: (index, item) => isWeekly ? AppLocales.of(context).translate('date.weekday', {'WEEKDAY': item.toString()}) : item.toString()
-					),
+					choiceItems: dayChoiceList,
 					choiceType: S2ChoiceType.chips,
 					modalType: S2ModalType.bottomSheet,
 					modalConfig: S2ModalConfig(
 						useConfirm: true
 					),
-					modalConfirmBuilder: (context, callback) => ButtonSheetConfirmButton(callback: () => callback),
+					modalFooterBuilder: (context, selectState) {
+						return Padding(
+							padding: const EdgeInsets.only(bottom: 8.0, left: 4.0, right: 4.0),
+							child: Column(
+								children: [
+									CheckboxListTile(
+										title: Text(AppLocales.of(context).translate('date.everyday')),
+										activeColor: selectState.choiceActiveStyle?.color ?? selectState.defaultActiveChoiceStyle.color,
+										value: selectState.selection.length == selectState.choices.length
+											? true : false,
+										onChanged: (value) {
+											if (value == true) {
+												selectState.selection.clear();
+												selectState.selection.merge(dayChoiceList.toList());
+											} else {
+												selectState.selection.clear();
+											}
+										},
+									),
+									if(isWeekly)
+										CheckboxListTile(
+											title: Text(AppLocales.of(context).translate('date.workdays')),
+											activeColor: selectState.choiceActiveStyle?.color ?? selectState.defaultActiveChoiceStyle.color,
+											value: selectState.selection.hasAll(dayChoiceList.take(5).toList()) && !selectState.selection.hasAny(dayChoiceList.skip(5).toList())
+												? true : false,
+											onChanged: (value) {
+												if (value == true) {
+													selectState.selection.clear();
+													selectState.selection.merge(dayChoiceList.take(5).toList());
+												} else {
+													selectState.selection.clear();
+												}
+											},
+										)
+								]
+							)
+						);
+					},
+					modalConfirmBuilder: (context, selectState) {
+						return ButtonSheetConfirmButton(callback: () => selectState.closeModal(confirmed: true));
+					},
 					tileBuilder: (context, selectState) {
 						return ListTile(
 							leading: Padding(padding: EdgeInsets.all(8.0), child: Icon(Icons.date_range)),

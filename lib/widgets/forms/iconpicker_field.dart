@@ -96,7 +96,9 @@ class _IconPickerFieldState extends State<IconPickerField> {
 				modalConfig: S2ModalConfig(
 					useConfirm: true
 				),
-				modalConfirmBuilder: (context, callback) => ButtonSheetConfirmButton(callback: () => callback),
+				modalConfirmBuilder: (context, selectState) {
+					return ButtonSheetConfirmButton(callback: () => selectState.closeModal(confirmed: true));
+				},
 				onChange: (selected) => widget.callback(selected.value)
 			)
 		);

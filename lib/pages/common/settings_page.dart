@@ -151,7 +151,9 @@ class _SettingsPageState extends State<SettingsPage> {
 						modalConfig: S2ModalConfig(
 							useConfirm: true
 						),
-						modalConfirmBuilder: (context, callback) => ButtonSheetConfirmButton(callback: () => callback),
+						modalConfirmBuilder: (context, selectState) {
+							return ButtonSheetConfirmButton(callback: () => selectState.closeModal(confirmed: true));
+						},
 						choiceItems: [
 							for(String lang in languages)
 								S2Choice(

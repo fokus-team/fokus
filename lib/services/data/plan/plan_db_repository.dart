@@ -95,7 +95,7 @@ mixin PlanDbRepository implements DbRepository {
 				planInstances.map((planInstance) => planInstance.toJson()).toList(), multiUpdate: false);
 	}
 
-	Future updateActivePlanInstanceState(ObjectId childId, PlanInstanceState state) {
+	Future updateActivePlanInstanceState(ObjectId childId, PlanInstanceState? state) {
 		var document = modify;
 		if (state != null)
 			document.set('state', state.index);

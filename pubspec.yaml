@@ -25,7 +25,9 @@ dependencies:
         path: fokus_auth
 
     mongo_dart:
-        git: https://github.com/fokus-team/mongo_dart.git
+        git:
+            url: https://github.com/fokus-team/mongo_dart.git
+            ref: main
 
     # Firebase
     firebase_core: ^1.0.0

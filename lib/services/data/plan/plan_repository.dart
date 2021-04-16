@@ -27,7 +27,7 @@ abstract class PlanRepository {
 
 	Future updateMultiplePlanInstances(List<PlanInstance> planInstances);
 
-	Future updateActivePlanInstanceState(ObjectId childId, PlanInstanceState state);
+	Future updateActivePlanInstanceState(ObjectId childId, PlanInstanceState? state);
 
 	Future createPlanInstances(List<PlanInstance> plans);
 	Future updatePlan(Plan plan);

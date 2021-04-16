@@ -26,11 +26,11 @@ class MongoDbProvider {
 	}
 
 	Future update(Collection collection, SelectorBuilder selector, dynamic document, {bool multiUpdate = true, bool upsert = true}) {
-		return _execute(() => _client.collection(collection.name).update(validateSelector(selector), document, multiUpdate: multiUpdate, upsert: upsert));
+		return _execute(() => _client.collection(collection.name).modernUpdate(validateSelector(selector), document, multi: multiUpdate, upsert: upsert));
 	}
 
 	Future updateAll(Collection collection, List<SelectorBuilder> selectors, List<dynamic> documents, {bool multiUpdate = true, bool upsert = true}) {
-		return _execute(() => _client.collection(collection.name).updateAll(selectors, documents, multiUpdate: multiUpdate, upsert: upsert));
+		return _execute(() => _client.collection(collection.name).modernUpdateAll(selectors, documents, multi: multiUpdate, upsert: upsert));
 	}
 
 	Future<ObjectId> insert(Collection collection, Map<String, dynamic> document) => _execute(() {

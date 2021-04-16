@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'package:fokus_auth/fokus_auth.dart';
 import 'package:formz/formz.dart';
 

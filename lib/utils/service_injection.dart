@@ -13,7 +13,7 @@ import 'package:fokus/services/plan_keeper_service.dart';
 import 'package:fokus/services/task_instance_service.dart';
 import 'package:fokus/services/notifications/onesignal/onesignal_notification_service.dart';
 import 'package:fokus/services/notifications/notification_service.dart';
-import 'package:fokus/services/locale_provider.dart';
+import 'package:fokus/services/locale_service.dart';
 import 'package:fokus/services/links/firebase_link_service.dart';
 import 'package:fokus/services/links/link_service.dart';
 import 'package:fokus/services/analytics_service.dart';

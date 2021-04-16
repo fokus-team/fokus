@@ -9,7 +9,7 @@ import 'package:fokus_auth/fokus_auth.dart';
 
 import 'package:fokus/services/exception/auth_exceptions.dart';
 import 'package:fokus/services/instrumentator.dart';
-import 'package:fokus/services/locale_provider.dart';
+import 'package:fokus/services/locale_service.dart';
 import 'package:fokus/services/notifications/notification_service.dart';
 import 'package:fokus/services/plan_keeper_service.dart';
 import 'package:fokus/services/analytics_service.dart';

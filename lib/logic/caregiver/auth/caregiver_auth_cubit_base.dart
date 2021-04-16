@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'package:bloc/bloc.dart';
 import 'package:fokus_auth/fokus_auth.dart';
 import 'package:formz/formz.dart';
@@ -16,14 +15,14 @@ class CaregiverAuthCubitBase<State extends CaregiverAuthStateBase> extends Cubit
 	Future<void> logInWithGoogle() async {
 		if (this.state.status != FormzStatus.pure)
 			return;
-		emit(state.copyWith(status: FormzStatus.submissionInProgress, authMethod: AuthMethod.google));
+		emit(state.copyWith(status: FormzStatus.submissionInProgress, authMethod: AuthMethod.google) as State);
 		try {
 			var result = await authenticationProvider.signInWithGoogle() == GoogleSignInOutcome.successful;
-			emit(result ? state.copyWith(status: FormzStatus.submissionSuccess) : state.copyWith(status: FormzStatus.pure, authMethod: null));
+			emit((result ? state.copyWith(status: FormzStatus.submissionSuccess) : state.copyWith(status: FormzStatus.pure, authMethod: null)) as State);
 		} on SignInFailure catch (e) {
-			emit(state.copyWith(status: FormzStatus.submissionFailure, signInError: e.reason));
+			emit(state.copyWith(status: FormzStatus.submissionFailure, signInError: e.reason) as State);
 		} on Exception {
-			emit(state.copyWith(status: FormzStatus.submissionFailure));
+			emit(state.copyWith(status: FormzStatus.submissionFailure) as State);
 		}
 	}
 }

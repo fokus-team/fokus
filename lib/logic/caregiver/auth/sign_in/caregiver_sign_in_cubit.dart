@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'package:fokus_auth/fokus_auth.dart';
 import 'package:formz/formz.dart';
 
@@ -11,7 +10,7 @@ part 'caregiver_sign_in_state.dart';
 
 
 class CaregiverSignInCubit extends CaregiverAuthCubitBase<CaregiverSignInState> {
-  CaregiverSignInCubit(String email) : super(CaregiverSignInState(email: Email.pure(email ?? '')));
+  CaregiverSignInCubit(String? email) : super(CaregiverSignInState(email: Email.pure(email ?? '')));
 
 	Future<void> logInWithCredentials() async {
 		if (this.state.status != FormzStatus.pure || !_validateFields())
@@ -48,7 +47,7 @@ class CaregiverSignInCubit extends CaregiverAuthCubitBase<CaregiverSignInState> 
 	  return true;
   }
 
-  Future<VerificationAttemptOutcome> resendVerificationEmail() async {
+  Future<VerificationAttemptOutcome?> resendVerificationEmail() async {
     if (!_validateFields())
       return null;
     try {

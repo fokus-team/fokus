@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
@@ -13,9 +12,9 @@ class TimerCubit extends Cubit<TimerState> {
 	int Function() _currentValue;
 	CountDirection _direction;
 	final bool countUpOnComplete;
-	void Function() _onFinish;
+	void Function()? _onFinish;
 
-	StreamSubscription<int> _tickerSubscription;
+	StreamSubscription<int>? _tickerSubscription;
 
 	TimerCubit.up(this._currentValue, [this._onFinish]) : _ticker = Ticker(), _direction = CountDirection.up, countUpOnComplete = false, super(TimerInitial(_currentValue()));
 	TimerCubit.down(this._currentValue, [this.countUpOnComplete = false, this._onFinish]) : _ticker = Ticker(), this._direction = CountDirection.down, super(TimerInitial(_currentValue()));
@@ -31,15 +30,15 @@ class TimerCubit extends Cubit<TimerState> {
 
 	void pauseTimer() {
 		if (state is TimerInProgress)
-			_tickerSubscription.pause();
+			_tickerSubscription!.pause();
 	}
 
 	void resumeTimer() {
 		if (state is TimerInProgress)
-			_tickerSubscription.resume();
+			_tickerSubscription!.resume();
 	}
 
-	void resetTimer({int Function() currentValue, CountDirection direction = CountDirection.up}) {
+	void resetTimer({required int Function() currentValue, CountDirection direction = CountDirection.up}) {
 		this._currentValue = currentValue;
 		this._direction = direction;
 		_tickerSubscription?.cancel();
@@ -51,14 +50,14 @@ class TimerCubit extends Cubit<TimerState> {
 		if (value != endValue)
 	    emit(TimerInProgress(value));
 		else {
-			if(_onFinish != null) _onFinish();
+			if(_onFinish != null) _onFinish!();
 			if(countUpOnComplete) {
 				resetTimer(currentValue: () => 0, direction: CountDirection.up);
 				startTimer();
 			}
 			else {
 				emit(TimerComplete(endValue));
-				_tickerSubscription.cancel();
+				_tickerSubscription?.cancel();
 			}
 		}
 	}

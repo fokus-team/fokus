@@ -11,13 +11,13 @@ import 'package:fokus/services/data/db/db_repository.dart';
 mixin UserDbRepository implements DbRepository {
 	final Logger _logger = Logger('UserDbRepository');
 
-	Future<User> getUser({ObjectId? id, ObjectId? connected, String? authenticationId, String? notificationId, UserRole? role, List<String>? fields}) {
+	Future<User?> getUser({ObjectId? id, ObjectId? connected, String? authenticationId, String? notificationId, UserRole? role, List<String>? fields}) {
 		var query = _buildUserQuery(id: id, connected: connected, authenticationId: authenticationId, notificationId: notificationId, role: role);
 		if (fields != null && !fields.contains('role'))
 			fields.add('role');
 		if (fields != null)
 			query.fields(fields);
-		return dbClient.queryOneTyped(Collection.user, query, (json) => User.typedFromJson(json)!);
+		return dbClient.queryOneTyped(Collection.user, query, (json) => User.typedFromJson(json));
 	}
 
 	Future<List<User>> getUsers({List<ObjectId>? ids, ObjectId? connected, UserRole? role, List<String>? fields}) {

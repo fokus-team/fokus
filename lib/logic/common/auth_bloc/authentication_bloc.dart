@@ -67,7 +67,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
   }
 
 	Future<AuthenticationState> _processUserChangedEvent(AuthenticationUserChanged event) async {
-  	User user;
+  	User? user;
 	  var noSignedInUser = event.user == AuthenticatedUser.empty;
 	  var wasAppOpened = state.status == AuthenticationStatus.initial;
 	  if (noSignedInUser && !wasAppOpened) {
@@ -102,10 +102,13 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
   Future<AuthenticationState> _attemptChildSignIn() async {
 	  var signedInChild = _appConfigRepository.getSignedInChild();
 	  if (signedInChild != null) {
-		  _analyticsService.logChildSignIn();
-	    return _signInUser(await _dataRepository.getUser(id: signedInChild));
-	  } else
-	    return const AuthenticationState.unauthenticated();
+	  	var user = await _dataRepository.getUser(id: signedInChild);
+	  	if (user != null) {
+			  _analyticsService.logChildSignIn();
+			  return _signInUser(user);
+		  }
+	  }
+	  return const AuthenticationState.unauthenticated();
   }
 
 	Future<bool> _userUnverified(AuthenticatedUser user) async => user.authMethod == AuthMethod.email && !user.emailVerified! && await _authenticationProvider.verificationEnforced();

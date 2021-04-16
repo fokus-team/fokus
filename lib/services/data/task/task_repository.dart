@@ -12,8 +12,8 @@ abstract class TaskRepository {
 	Future<List<TaskInstance>> getTaskInstances({ObjectId? planInstanceId, List<ObjectId>? taskInstancesIds, List<ObjectId>? planInstancesId,
 		bool requiredOnly = false, bool optionalOnly = false, bool? isCompleted, TaskState? state, List<String>? fields});
 	Future<int> countTaskInstances({List<ObjectId>? planInstancesId, bool? isCompleted, TaskState? state});
-	Future<Task> getTask({ObjectId? taskId, bool requiredOnly = false, bool optionalOnly = false, List<String>? fields});
-	Future<TaskInstance> getTaskInstance({ObjectId? taskInstanceId, bool requiredOnly = false, bool optionalOnly = false, List<String>? fields});
+	Future<Task?> getTask({ObjectId? taskId, bool requiredOnly = false, bool optionalOnly = false, List<String>? fields});
+	Future<TaskInstance?> getTaskInstance({ObjectId? taskInstanceId, bool requiredOnly = false, bool optionalOnly = false, List<String>? fields});
 
 	Future createTasks(List<Task> tasks);
 	Future updateTasks(List<Task> tasks);

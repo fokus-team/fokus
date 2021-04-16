@@ -50,7 +50,7 @@ class MongoDbProvider {
 	Future<int> count(Collection collection, SelectorBuilder selector) => _execute(() => _client.collection(collection.name).count(validateSelector(selector)));
 	Future<bool> exists(Collection collection, SelectorBuilder selector) async => await count(collection, selector) > 0;
 
-	Future<T> queryOneTyped<T>(Collection collection, SelectorBuilder query, T Function(Map<String, dynamic>) constructElement) {
+	Future<T?> queryOneTyped<T>(Collection collection, SelectorBuilder query, T? Function(Map<String, dynamic>?) constructElement) {
 		return this._queryOne(collection, query).then((response) => constructElement(response));
 	}
 
@@ -62,7 +62,7 @@ class MongoDbProvider {
 		return this._query(collection, query).then((response) async => Map.fromEntries(response.map((element) => constructEntry(element)).toList()));
 	}
 
-	Future<Map<String, dynamic>> _queryOne(Collection collection, SelectorBuilder selector) => _execute(() => _client.collection(collection.name).findOne(validateSelector(selector)));
+	Future<Map<String, dynamic>?> _queryOne(Collection collection, SelectorBuilder selector) => _execute(() => _client.collection(collection.name).findOne(validateSelector(selector)));
 	Future<List<Map<String, dynamic>>> _query(Collection collection, SelectorBuilder selector) {
 	  return _execute(() async => await _client.collection(collection.name).find(validateSelector(selector)).toList());
 	}

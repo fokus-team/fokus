@@ -19,18 +19,18 @@ mixin TaskDbRepository implements DbRepository {
 		return dbClient.queryTyped(Collection.task, query, (json) => Task.fromJson(json)!);
 	}
 
-	Future<Task> getTask({ObjectId? taskId, bool requiredOnly = false, bool optionalOnly = false, List<String>? fields}) {
+	Future<Task?> getTask({ObjectId? taskId, bool requiredOnly = false, bool optionalOnly = false, List<String>? fields}) {
 		var query = _buildTaskQuery(id: taskId, optionalOnly: optionalOnly, requiredOnly: requiredOnly);
 		if (fields != null)
 			query.fields(fields);
-		return dbClient.queryOneTyped(Collection.task, query, (json) => Task.fromJson(json)!);
+		return dbClient.queryOneTyped(Collection.task, query, (json) => Task.fromJson(json));
 	}
 
-	Future<TaskInstance> getTaskInstance({ObjectId? taskInstanceId, bool requiredOnly = false, bool optionalOnly = false, List<String>? fields}) {
+	Future<TaskInstance?> getTaskInstance({ObjectId? taskInstanceId, bool requiredOnly = false, bool optionalOnly = false, List<String>? fields}) {
 		var query = _buildTaskQuery(id: taskInstanceId, optionalOnly: optionalOnly, requiredOnly: requiredOnly);
 		if (fields != null)
 			query.fields(fields);
-		return dbClient.queryOneTyped(Collection.taskInstance, query, (json) => TaskInstance.fromJson(json)!);
+		return dbClient.queryOneTyped(Collection.taskInstance, query, (json) => TaskInstance.fromJson(json));
 	}
 
 	Future<List<TaskInstance>> getTaskInstances({ObjectId? planInstanceId, List<ObjectId>? taskInstancesIds, List<ObjectId>? planInstancesId,

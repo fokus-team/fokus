@@ -11,11 +11,11 @@ import 'package:fokus/services/data/data_repository.dart';
 import 'package:fokus/model/db/date_span.dart';
 
 mixin PlanDbRepository implements DbRepository {
-	Future<Plan> getPlan({required ObjectId id, List<String>? fields}) {
+	Future<Plan?> getPlan({required ObjectId id, List<String>? fields}) {
 		var query = _buildPlanQuery(id: id);
 		if (fields != null)
 			query.fields(fields);
-		return dbClient.queryOneTyped(Collection.plan, query, (json) => Plan.fromJson(json)!);
+		return dbClient.queryOneTyped(Collection.plan, query, (json) => Plan.fromJson(json));
 	}
 
 	Future<List<Plan>> getPlans({List<ObjectId>? ids, ObjectId? caregiverId, ObjectId? childId, bool? active, bool? untilCompleted, List<String>? fields}) {
@@ -34,11 +34,11 @@ mixin PlanDbRepository implements DbRepository {
 		return dbClient.count(Collection.plan, query);
 	}
 
-	Future<PlanInstance> getPlanInstance({ObjectId? id, ObjectId? childId, PlanInstanceState? state, List<String>? fields}) {
+	Future<PlanInstance?> getPlanInstance({ObjectId? id, ObjectId? childId, PlanInstanceState? state, List<String>? fields}) {
 		var query = _buildPlanQuery(id: id, childId: childId, state: state);
 		if (fields != null)
 			query.fields(fields);
-		return dbClient.queryOneTyped(Collection.planInstance, query, (json) => PlanInstance.fromJson(json)!);
+		return dbClient.queryOneTyped(Collection.planInstance, query, (json) => PlanInstance.fromJson(json));
 	}
 
 	Future<List<PlanInstance>> getPlanInstances({List<ObjectId>? childIDs, PlanInstanceState? state, ObjectId? planId, Date? date, DateSpan<Date>? between, List<String>? fields}) {

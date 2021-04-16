@@ -1,4 +1,6 @@
 // @dart = 2.10
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/logic/caregiver/forms/plan/plan_form_cubit.dart';
@@ -151,12 +153,22 @@ class _PlanFormState extends State<PlanForm> {
 				title: AppLocales.of(context).translate('$_pageKey.assignedChildren.emptyListText')
 			),
 			tileBuilder: (context, selectState) {
-				return S2Tile.fromState(
-					selectState,
-					isTwoLine: true,
-					isLoading: loading,
-					loadingText: AppLocales.of(context).translate('loading'),
+				return ListTile(
 					leading: Padding(padding: EdgeInsets.all(8.0), child: Icon(Icons.people)),
+					title: Text(AppLocales.of(context).translate('$_pageKey.assignedChildren.label')),
+					subtitle: Text(
+						loading ?
+							AppLocales.of(context).translate('loading')
+							: selectState.selected == null || selectState.selected.length == 0 ?
+								AppLocales.of(context).translate('$_pageKey.assignedChildren.hint')
+								: selectState.selected.title.join(', '),
+						style: TextStyle(color: Colors.grey),
+						overflow: TextOverflow.ellipsis,
+						maxLines: 1
+					),
+					enabled: !loading,
+					trailing: Icon(Icons.keyboard_arrow_right, color: Colors.grey),
+					onTap: () => selectState.showModal()
 				);
 			},
 			modalType: S2ModalType.bottomSheet,
@@ -193,10 +205,17 @@ class _PlanFormState extends State<PlanForm> {
 				return ButtonSheetConfirmButton(callback: () => selectState.closeModal(confirmed: true));
 			},
 			tileBuilder: (context, selectState) {
-				return S2Tile.fromState(
-					selectState,
-					isTwoLine: true,
-					leading: Padding(padding: EdgeInsets.all(8.0), child: Icon(Icons.refresh))
+				return ListTile(
+					leading: Padding(padding: EdgeInsets.all(8.0), child: Icon(Icons.refresh)),
+					title: Text(AppLocales.of(context).translate('$_pageKey.repeatability.label')),
+					subtitle: Text(
+						AppLocales.of(context).translate('$_pageKey.repeatability.options.${selectState.selected.value.toString().split('.').last}'),
+						style: TextStyle(color: Colors.grey),
+						overflow: TextOverflow.ellipsis,
+						maxLines: 1
+					),
+					trailing: Icon(Icons.keyboard_arrow_right, color: Colors.grey),
+					onTap: () => selectState.showModal()
 				);
 			},
 			onChange: (selected) {
@@ -246,16 +265,22 @@ class _PlanFormState extends State<PlanForm> {
 						return ButtonSheetConfirmButton(callback: () => selectState.closeModal(confirmed: true));
 					},
 					tileBuilder: (context, selectState) {
-						return S2Tile.fromState(
-							selectState,
-							isTwoLine: true,
-							leading: Padding(padding: EdgeInsets.all(8.0), child: Icon(Icons.event))
+						return ListTile(
+							leading: Padding(padding: EdgeInsets.all(8.0), child: Icon(Icons.event)),
+							title: Text(AppLocales.of(context).translate('$_pageKey.repeatabilityRange.label')),
+							subtitle: Text(
+								AppLocales.of(context).translate('$_pageKey.repeatabilityRange.options.${selectState.selected.value.toString().split('.').last}'),
+								style: TextStyle(color: Colors.grey),
+								overflow: TextOverflow.ellipsis,
+								maxLines: 1
+							),
+							trailing: Icon(Icons.keyboard_arrow_right, color: Colors.grey),
+							onTap: () => selectState.showModal()
 						);
 					},
 					onChange: (selected) => setState(() {
 						FocusManager.instance.primaryFocus.unfocus();
 						widget.plan.repeatabilityRage = selected.value;
-						widget.plan.days.clear();
 					}),
 				),
 				SmartSelect<int>.multiple(
@@ -263,6 +288,10 @@ class _PlanFormState extends State<PlanForm> {
 					selectedValue: widget.plan.days,
 					choiceItems: dayChoiceList,
 					choiceType: S2ChoiceType.chips,
+					validation: (chosen) {
+            if (chosen.isEmpty) return AppLocales.of(context).translate('$_pageKey.days.hint');
+            return null;
+          },
 					modalType: S2ModalType.bottomSheet,
 					modalConfig: S2ModalConfig(
 						useConfirm: true

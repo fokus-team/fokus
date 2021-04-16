@@ -34,7 +34,7 @@ class AppLocalesDelegate extends LocalizationsDelegate<AppLocales> {
 
 class AppLocales {
 	final Logger _logger = Logger('AppLocales');
-	late Locale locale;
+	Locale? locale;
 	List<CurrentLocaleObserver> _localeObservers = [];
 
 	static AppLocales instance = AppLocales();
@@ -69,7 +69,7 @@ class AppLocales {
 				return string;
 			return MessageFormat(string, locale: locale.toString()).format(args);
 		} on NoSuchMethodError {
-			_logger.warning('Key $key has no localized string in language ${locale.languageCode}');
+			_logger.warning('Key $key has no localized string in language ${locale!.languageCode}');
 			return '';
 		} on Error catch (e) {
 			_logger.severe('$e');

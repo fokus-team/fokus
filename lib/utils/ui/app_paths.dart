@@ -29,5 +29,5 @@ extension GraphicAssetPaths on AssetType {
 }
 
 String helpPagePath(BuildContext context, String helpPage) {
-	return 'assets/help/${AppLocales.of(context).locale.languageCode}/$helpPage.md';
+	return 'assets/help/${AppLocales.of(context).locale!.languageCode}/$helpPage.md';
 }

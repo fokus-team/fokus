@@ -10,7 +10,7 @@ class MongoDbProvider {
 	late Db _client;
 
 	Future connect({bool dropExisting = false, bool firstTime = false}) async {
-		if (!firstTime && _client.isConnected) {
+		if (firstTime && _client.isConnected) {
 			if (dropExisting)
 				await _client.close();
 			else
@@ -25,8 +25,8 @@ class MongoDbProvider {
 		).catchError((e) => throw NoDbConnection(e));
 	}
 
-	Future update(Collection collection, dynamic selector, dynamic document, {bool multiUpdate = true, bool upsert = true}) {
-		return _execute(() => _client.collection(collection.name).update(selector, document, multiUpdate: multiUpdate, upsert: upsert));
+	Future update(Collection collection, SelectorBuilder selector, dynamic document, {bool multiUpdate = true, bool upsert = true}) {
+		return _execute(() => _client.collection(collection.name).update(validateSelector(selector), document, multiUpdate: multiUpdate, upsert: upsert));
 	}
 
 	Future updateAll(Collection collection, List<SelectorBuilder> selectors, List<dynamic> documents, {bool multiUpdate = true, bool upsert = true}) {

@@ -1,3 +1,4 @@
+// @dart = 2.10
 import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart';
 
@@ -32,5 +33,5 @@ class CaregiverPlansState extends StatefulState {
 	CaregiverPlansState(this.plans) : super.loaded();
 
 	@override
-	List<Object?> get props => super.props..add(plans);
+	List<Object> get props => super.props..add(plans);
 }

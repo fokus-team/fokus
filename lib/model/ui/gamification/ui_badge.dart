@@ -10,7 +10,7 @@ class UIBadge extends Equatable {
 
 	UIBadge({this.name, this.description, this.icon = 0});
 	UIBadge.from(UIBadge badge) : this(name: badge.name, description: badge.description, icon: badge.icon);
-	UIBadge.fromDBModel(Badge badge) : this(name: badge.name!, description: badge.description!, icon: badge.icon!);
+	UIBadge.fromDBModel(Badge badge) : this(name: badge.name, description: badge.description, icon: badge.icon);
 
 	UIBadge copyWith({String? name, String? description, int? icon}) {
 		return UIBadge(
@@ -32,7 +32,7 @@ class UIChildBadge extends UIBadge {
 	UIChildBadge({String? name, String? description, int? icon, required this.date})
 			: super(name: name, description: description, icon: icon);
 	UIChildBadge.fromDBModel(ChildBadge badge)
-			: this(name: badge.name!, description: badge.description!, icon: badge.icon!, date: badge.date!);
+			: this(name: badge.name, description: badge.description, icon: badge.icon, date: badge.date);
 	UIChildBadge.fromBadge(UIBadge badge, {TimeDate? date})
 			: this(name: badge.name, description: badge.description, icon: badge.icon, date: date ?? TimeDate.now());
 	

@@ -50,7 +50,7 @@ class AnalyticsService {
 	void logBadgeAwarded(Badge badge) => _analytics.logEvent(name: 'badge_awarded');
 
 	void logAppOpen() => _analytics.logAppOpen();
-	void setUserId(String id) => _analytics.setUserId(id);
+	void setUserId(String? id) => _analytics.setUserId(id);
 }
 
 extension LogPlanInstance on PlanInstance {

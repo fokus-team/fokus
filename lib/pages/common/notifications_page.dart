@@ -70,7 +70,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
 				crossAxisAlignment: CrossAxisAlignment.start,
 				children: <Widget>[
 					AppSegments(
-						segments: currentUser.role == UserRole.caregiver ? _caregiverNotificationsMock : _childNotificationsMock
+						segments: currentUser!.role == UserRole.caregiver ? _caregiverNotificationsMock : _childNotificationsMock
 					)
 				]
 			)

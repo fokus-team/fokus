@@ -8,7 +8,7 @@ class UIButton {
 	final String textKey;
 	final Color? color;
 	final IconData? icon;
-	final void Function() action;
+	final void Function()? action;
 
 	UIButton(this.textKey, this.action, [this.color, this.icon]);
 	UIButton.ofType(ButtonType type, this.action, [this.color, this.icon]) : textKey = type.key;

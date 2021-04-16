@@ -15,7 +15,7 @@ String displayJoin(List<String> parts, String andWord) {
 
 String getChildCardSubtitle(BuildContext context, UIChild child) {
 	String key = 'page.caregiverSection.panel.content';
-	if (child.hasActivePlan)
+	if (child.hasActivePlan!)
 		return AppLocales.of(context).translate('$key.activePlan');
 	return AppLocales.of(context).translate('$key.todayPlans', {'NUM_PLANS': '${child.todayPlanCount}'});
 }

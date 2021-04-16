@@ -110,7 +110,7 @@ class Instrumentator implements ActiveUserObserver {
   @override
   void onUserSignOut(User user) {
 	  FirebaseCrashlytics.instance.setUserIdentifier('');
-	  _analyticsService.setUserId('');
+	  _analyticsService.setUserId(null);
   }
 }
 

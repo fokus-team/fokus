@@ -31,7 +31,7 @@ class AuthenticationActiveUserUpdated extends AuthenticationEvent {
 	final UIUser user;
 
 	AuthenticationActiveUserUpdated(this.user);
-	AuthenticationActiveUserUpdated.fromLocale(UIUser user, String locale) :
+	AuthenticationActiveUserUpdated.fromLocale(UIUser user, String? locale) :
 			user = (user is UICaregiver) ? UICaregiver.from(user, locale: locale) : UIChild.from(user as UIChild, locale: locale);
 
 	@override

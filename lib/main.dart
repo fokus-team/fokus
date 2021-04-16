@@ -78,7 +78,7 @@ import 'package:fokus/services/analytics_service.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/services/app_route_observer.dart';
 import 'package:fokus/services/instrumentator.dart';
-import 'package:fokus/services/locale_provider.dart';
+import 'package:fokus/services/locale_service.dart';
 import 'package:fokus/services/observers/current_locale_observer.dart';
 
 import 'package:fokus/utils/ui/theme_config.dart';

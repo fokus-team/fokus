@@ -1,11 +1,10 @@
-// @dart = 2.10
 part of 'child_sign_up_cubit.dart';
 
 class ChildSignUpState extends FormzState {
 	final Set<int> takenAvatars;
 
 	final UserCode caregiverCode;
-	final int avatar;
+	final int? avatar;
 	final Name name;
 
 	ChildSignUpState({
@@ -17,9 +16,9 @@ class ChildSignUpState extends FormzState {
 	}) : super(status);
 
 	@override
-	List<Object> get props => [caregiverCode, name, avatar, status, takenAvatars];
+	List<Object?> get props => [caregiverCode, name, avatar, status, takenAvatars];
 
-	ChildSignUpState copyWith({UserCode caregiverCode, Name name, int avatar, Set<int> takenAvatars, FormzStatus status, bool clearableAvatar = false}) {
+	ChildSignUpState copyWith({UserCode? caregiverCode, Name? name, int? avatar, Set<int>? takenAvatars, FormzStatus? status, bool clearableAvatar = false}) {
 		return ChildSignUpState(
 			caregiverCode: caregiverCode ?? this.caregiverCode,
 			avatar: clearableAvatar ? avatar : (avatar ?? this.avatar),

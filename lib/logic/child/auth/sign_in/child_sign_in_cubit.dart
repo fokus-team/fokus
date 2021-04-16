@@ -1,4 +1,4 @@
-// @dart = 2.10
+import 'package:fokus/model/db/user/child.dart';
 import 'package:formz/formz.dart';
 
 import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
@@ -24,7 +24,7 @@ class ChildSignInCubit extends ChildAuthCubitBase<ChildSignInState> {
 	  emit(state.copyWith(status: FormzStatus.submissionInProgress));
   	var childId = getIdFromCode(state.childCode.value);
 	  appConfigRepository.saveChildProfile(childId);
-	  authenticationBloc.add(AuthenticationChildSignInRequested(await dataRepository.getUser(id: childId)));
+	  authenticationBloc.add(AuthenticationChildSignInRequested((await dataRepository.getUser(id: childId)) as Child));
 	  emit(state.copyWith(status: FormzStatus.submissionSuccess));
   }
 

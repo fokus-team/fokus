@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'package:fokus/services/analytics_service.dart';
 import 'package:formz/formz.dart';
 
@@ -19,7 +18,7 @@ class ChildSignUpCubit extends ChildAuthCubitBase<ChildSignUpState> {
 	final AnalyticsService _analyticsService = GetIt.I<AnalyticsService>();
 
   ChildSignUpCubit(this._authBloc) : super(_authBloc, ChildSignUpState(
-	  caregiverCode: UserCode.pure(_authBloc.state.user != null ? getCodeFromId(_authBloc.state.user.id) : ''),
+	  caregiverCode: UserCode.pure(_authBloc.state.user != null ? getCodeFromId(_authBloc.state.user!.id!) : ''),
   )) {
   	if (codeFixed())
   	  _getTakenAvatars(state.caregiverCode.value).then((avatars) => emit(state.copyWith(takenAvatars: avatars)));
@@ -38,8 +37,8 @@ class ChildSignUpCubit extends ChildAuthCubitBase<ChildSignUpState> {
 	  var caregiverId = getIdFromCode(state.caregiverCode.value);
 	  var child = Child.create(name: state.name.value, avatar: state.avatar, connections: [caregiverId]);
 	  child.id = await dataRepository.createUser(child);
-	  await dataRepository.updateUser(caregiverId, newConnections: [child.id]);
-	  appConfigRepository.saveChildProfile(child.id);
+	  await dataRepository.updateUser(caregiverId, newConnections: [child.id!]);
+	  appConfigRepository.saveChildProfile(child.id!);
 	  if (!codeFixed())
 		  authenticationBloc.add(AuthenticationChildSignInRequested(child));
 	  _analyticsService.logChildSignUp();
@@ -62,7 +61,7 @@ class ChildSignUpCubit extends ChildAuthCubitBase<ChildSignUpState> {
   }
 
   Future<Set<int>> _getTakenAvatars(String caregiverCode) async {
-    return (await dataRepository.getUsers(connected: getIdFromCode(caregiverCode), role: UserRole.child, fields: ['avatar']))?.map((child) => child.avatar)?.toSet() ?? {};
+    return (await dataRepository.getUsers(connected: getIdFromCode(caregiverCode), role: UserRole.child, fields: ['avatar'])).map((child) => child.avatar!).toSet();
   }
 
   bool codeFixed() => _authBloc.state.user != null;

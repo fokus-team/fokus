@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
 

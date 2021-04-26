@@ -4,12 +4,12 @@ import 'package:mongo_dart/mongo_dart.dart';
 import 'package:fokus/services/app_locales.dart';
 
 class UIPlanBase extends Equatable {
-	final ObjectId id;
+	final ObjectId? id;
 	final String name;
-	final TranslateFunc description;
+	final TranslateFunc? description;
 
   UIPlanBase(this.id, this.name, this.description);
 
 	@override
-	List<Object> get props => [id, name, description];
+	List<Object?> get props => [id, name, description];
 }

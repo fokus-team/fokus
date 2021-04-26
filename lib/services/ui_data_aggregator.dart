@@ -33,7 +33,7 @@ class UIDataAggregator {
 		plan ??= await _dataRepository.getPlan(id: planInstance.planID!, fields: ['_id', 'repeatability', 'name']);
 		var getDescription = (Plan plan, [Date? instanceDate]) => _repeatabilityService.buildPlanDescription(plan.repeatability, instanceDate: instanceDate);
 		var elapsedTime = () => sumDurations(planInstance!.duration).inSeconds;
-		return UIPlanInstance.fromDBModel(planInstance, plan!.name, completedTasks, elapsedTime, getDescription(plan, planInstance.date));
+		return UIPlanInstance.fromDBModel(planInstance, plan!.name!, completedTasks, elapsedTime, getDescription(plan, planInstance.date));
 	}
 
 	Future<List<UIPlanInstance>> loadTodaysPlanInstances({required ObjectId childId}) async {
@@ -57,7 +57,7 @@ class UIDataAggregator {
 			var completedTasks = await _dataRepository.getCompletedTaskCount(instance.id!);
 			uiInstances.add(UIPlanInstance.fromDBModel(
 				instance,
-				planMap[instance.id]!.name,
+				planMap[instance.id]!.name!,
 				completedTasks,
 				elapsedTime,
 				getDescription(planMap[instance.id]!, instance.date)

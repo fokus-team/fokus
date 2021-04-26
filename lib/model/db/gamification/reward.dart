@@ -15,7 +15,7 @@ class Reward {
 
   Reward({this.createdBy, this.id, this.icon, this.limit, this.name, this.cost, this.createdAt});
   Reward.fromUIModel(UIReward reward, ObjectId creator, [ObjectId? id]) : this(name: reward.name, id: id ?? ObjectId(), createdBy: creator,
-		  limit: reward.limit, icon: reward.icon, cost: reward.cost != null ? Points.fromUIPoints(reward.cost) : null);
+		  limit: reward.limit, icon: reward.icon, cost: reward.cost != null ? Points.fromUIPoints(reward.cost!) : null);
 
   static Reward? fromJson(Map<String, dynamic>? json) {
     return json != null ? Reward(

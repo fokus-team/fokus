@@ -19,7 +19,7 @@ class UICaregiver extends UIUser {
 			super(id, name, role: UserRole.caregiver, connections: connections);
   UICaregiver.fromDBModel(Caregiver caregiver, [this.authMethod, this.photoURL]) :
 		  friends = caregiver.friends,
-			badges = caregiver.badges?.map((badge) => UIBadge.fromDBModel(badge))?.toList() ?? [],
+			badges = caregiver.badges?.map((badge) => UIBadge.fromDBModel(badge)).toList() ?? [],
 		  currencies = [UICurrency(type: CurrencyType.diamond)]..addAll(caregiver.currencies?.map((currency) => UICurrency.fromDBModel(currency)) ?? []),
 		  super.fromDBModel(caregiver);
 

@@ -1,11 +1,10 @@
-// @dart = 2.10
 import 'package:fokus/model/ui/task/ui_task_instance.dart';
 import 'package:fokus/model/ui/user/ui_child.dart';
 
 enum UITaskReportMark { notRated, rated5, rated4, rated3, rated2, rated1, rejected }
 
 extension UITaskReportMarkExtension on UITaskReportMark {
-  int get value {
+  int? get value {
     switch (this) {
       case UITaskReportMark.notRated:
         return null;
@@ -33,12 +32,12 @@ class UITaskReport {
 	final UIChild child;
 
 	UITaskReportMark ratingMark;
-	String ratingComment;
+	String? ratingComment;
 
   UITaskReport({
-		this.planName,
-		this.task,
-		this.child,
+    required this.planName,
+    required this.task,
+    required this.child,
 		this.ratingMark = UITaskReportMark.notRated,
 		this.ratingComment
 	});

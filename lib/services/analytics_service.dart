@@ -88,8 +88,8 @@ extension LogReward on Reward {
 
 extension LogUIReward on UIReward {
 	Map<String, dynamic> get logRecord => {
-		'id': id.toHexString(),
-		'cost': '${cost.quantity}',
+		'id': id!.toHexString(),
+		'cost': '${cost?.quantity}',
 		'currency': '$icon',
 		'limit': '$limit'
 	};

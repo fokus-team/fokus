@@ -14,8 +14,8 @@ class UIReward extends Equatable {
 	final int icon;
 
 	UIReward({this.id, this.name, this.limit = 0, required this.cost, this.icon = 0});
-	UIReward.fromDBModel(Reward reward) : this(id: reward.id!, name: reward.name!, limit: reward.limit!, icon: reward.icon!,
-			cost: reward.cost != null ? UIPoints(type: reward.cost!.icon!, title: reward.cost!.name!, quantity: reward.cost!.quantity, createdBy: reward.cost!.createdBy) : null);
+	UIReward.fromDBModel(Reward reward) : this(id: reward.id, name: reward.name, limit: reward.limit!, icon: reward.icon!,
+			cost: reward.cost != null ? UIPoints(type: reward.cost!.icon!, title: reward.cost!.name!, quantity: reward.cost?.quantity, createdBy: reward.cost?.createdBy) : null);
 
 	UIReward copyWith({String? name, int? limit, UIPoints? cost, int? icon}) {
 		return UIReward(
@@ -36,7 +36,7 @@ class UIChildReward extends UIReward {
 
 	UIChildReward({required ObjectId id, required String name, int limit = 0, UIPoints? cost, int icon = 0, this.date}) : super(id: id, name: name, limit: limit, cost: cost, icon: icon);
 	UIChildReward.fromDBModel(ChildReward reward) : this(id: reward.id!, name: reward.name!, limit: 0, icon: reward.icon!, date: reward.date,
-			cost: reward.cost != null ? UIPoints(type: reward.cost!.icon!, title: reward.cost!.name!, quantity: reward.cost!.quantity, createdBy: reward.cost!.createdBy) : null);
+			cost: reward.cost != null ? UIPoints(type: reward.cost!.icon!, title: reward.cost!.name!, quantity: reward.cost?.quantity, createdBy: reward.cost?.createdBy) : null);
 	
 	UIChildReward copyWith({ObjectId? id, String? name, int? limit, UIPoints? cost, int? icon, TimeDate? date}) {
 		return UIChildReward(

@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'package:equatable/equatable.dart';
 import 'package:fokus/model/db/date/date.dart';
 import 'package:fokus/model/db/date_span.dart';
@@ -15,36 +14,36 @@ extension PlanFormRepeatabilityRageDbType on PlanFormRepeatabilityRage {
 	RepeatabilityType get dbType => const {
 		PlanFormRepeatabilityRage.weekly: RepeatabilityType.weekly,
 		PlanFormRepeatabilityRage.monthly: RepeatabilityType.monthly,
-	}[this];
+	}[this]!;
 }
 
 // ignore: must_be_immutable
 class PlanFormModel extends Equatable {
-	String name;
+	String? name;
 	List<ObjectId> children = [];
 	PlanFormRepeatability repeatability = PlanFormRepeatability.recurring;
 	PlanFormRepeatabilityRage repeatabilityRage = PlanFormRepeatabilityRage.weekly;
 	List<int> days = [];
-	Date onlyOnceDate = Date.now();
+	Date? onlyOnceDate = Date.now();
 	DateSpan<Date> rangeDate = DateSpan();
 	bool isActive = true;
 	List<TaskFormModel> tasks = [];
 
 	PlanFormModel();
 
-	PlanFormModel.fromDBModel(Plan plan) : name = plan.name, children = plan.assignedTo, days = plan.repeatability.days ?? [],
+	PlanFormModel.fromDBModel(Plan plan) : name = plan.name, children = plan.assignedTo!, days = plan.repeatability!.days ?? [],
 			repeatability = PlanRepeatabilityService.getFormRepeatability(plan.repeatability),
-			repeatabilityRage = plan.repeatability.type == RepeatabilityType.monthly ? PlanFormRepeatabilityRage.monthly : PlanFormRepeatabilityRage.weekly,
-			onlyOnceDate = plan.repeatability.range.from ?? Date.now(), rangeDate = plan.repeatability.range, isActive = plan.active;
+			repeatabilityRage = plan.repeatability!.type == RepeatabilityType.monthly ? PlanFormRepeatabilityRage.monthly : PlanFormRepeatabilityRage.weekly,
+			onlyOnceDate = plan.repeatability!.range!.from ?? Date.now(), rangeDate = plan.repeatability!.range!, isActive = plan.active!;
 
 	PlanFormModel.from(PlanFormModel model) : name = model.name, children = List.from(model.children), days = List.from(model.days),
-			repeatability = model.repeatability, repeatabilityRage = model.repeatabilityRage, onlyOnceDate = Date.fromDate(model.onlyOnceDate),
+			repeatability = model.repeatability, repeatabilityRage = model.repeatabilityRage, onlyOnceDate = Date.fromDate(model.onlyOnceDate!),
 			rangeDate = DateSpan.from(model.rangeDate), isActive = model.isActive, tasks = List.from(model.tasks.map((task) => TaskFormModel.from(task)));
 
-	void setOnlyOnceDate(DateTime date) { onlyOnceDate = date != null ? Date.fromDate(date) : null; }
-	void setRangeFromDate(DateTime date) { rangeDate.from = date != null ? Date.fromDate(date) : null; }
-	void setRangeToDate(DateTime date) { rangeDate.to = date != null ? Date.fromDate(date) : null; }
+	void setOnlyOnceDate(DateTime? date) { onlyOnceDate = date != null ? Date.fromDate(date) : null; }
+	void setRangeFromDate(DateTime? date) { rangeDate.from = date != null ? Date.fromDate(date) : null; }
+	void setRangeToDate(DateTime? date) { rangeDate.to = date != null ? Date.fromDate(date) : null; }
 
 	@override
-	List<Object> get props => [name, children, repeatability, repeatabilityRage, days, onlyOnceDate, rangeDate, isActive, tasks];
+	List<Object?> get props => [name, children, repeatability, repeatabilityRage, days, onlyOnceDate, rangeDate, isActive, tasks];
 }

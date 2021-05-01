@@ -18,7 +18,7 @@ class UIPlanInstance extends UIPlanBase {
 	final List<DateSpan<TimeDate>>? duration;
 
 	UIPlanInstance.fromDBModel(PlanInstance plan, String planName, this.completedTaskCount, this.elapsedActiveTime, TranslateFunc description) :
-				taskCount = plan.tasks!.length, state = plan.state!, duration = plan.duration!, planId = plan.planID!, super(plan.id!, planName, description);
+				taskCount = plan.tasks!.length, state = plan.state!, duration = plan.duration, planId = plan.planID!, super(plan.id!, planName, description);
 	UIPlanInstance.fromDBPlanModel(Plan plan, TranslateFunc description) : completedTaskCount = 0, elapsedActiveTime = _defElapsedTime,
 			taskCount = plan.tasks!.length, state = PlanInstanceState.notStarted, duration = null, planId = plan.id!, super(null, plan.name!, description);
 

@@ -8,7 +8,15 @@ import 'package:fokus/model/ui/gamification/ui_points.dart';
 import 'package:fokus/model/ui/task/ui_task_base.dart';
 import 'package:fokus/services/task_instance_service.dart';
 
-enum TaskUIType { completed, available, inBreak, currentlyPerformed, rejected, queued, notCompletedUndefined }
+enum TaskUIType {
+  completed,
+  available,
+  inBreak,
+  currentlyPerformed,
+  rejected,
+  queued,
+  notCompletedUndefined
+}
 
 extension TaskUITypeGroups on TaskUIType {
   bool get inProgress => this == TaskUIType.inBreak || this == TaskUIType.currentlyPerformed;
@@ -29,74 +37,75 @@ class UITaskInstance extends UITaskBase {
   final List<MapEntry<String, bool>>? subtasks;
 
   UITaskInstance({
-      required ObjectId id,
-      required String name,
-      bool? optional,
-      required String description,
-      this.timer,
-      this.duration,
-      this.breaks,
-      required this.planInstanceId,
-      this.points,
-      required this.taskId,
-      required this.taskUiType,
-      required this.status,
-      this.elapsedTimePassed,
-      this.subtasks})
-      : super(id, name, optional, description);
+    required ObjectId id,
+    required String name,
+    bool? optional,
+    required String description,
+    this.timer,
+    this.duration,
+    this.breaks,
+    required this.planInstanceId,
+    this.points,
+    required this.taskId,
+    required this.taskUiType,
+    required this.status,
+    this.elapsedTimePassed,
+    this.subtasks,
+  }) : super(id, name, optional, description);
 
-  UITaskInstance.singleFromDBModel({required TaskInstance taskInstance, required String name, required String description, UIPoints? points, int Function()? elapsedTimePassed}) : this(
-      id: taskInstance.id!,
-      name: name,
-      optional: taskInstance.optional!,
-      description: description,
-      timer: taskInstance.timer,
-      duration: taskInstance.duration,
-      breaks: taskInstance.breaks,
-      planInstanceId: taskInstance.planInstanceID!,
-      points: points,
-      taskId: taskInstance.taskID!,
-      taskUiType: TaskInstanceService.getSingleTaskInstanceStatus(task: taskInstance),
-      status: taskInstance.status!,
-      elapsedTimePassed: elapsedTimePassed = _defElapsedTime,
-      subtasks: taskInstance.subtasks);
+  UITaskInstance.singleWithTask({
+    required TaskInstance taskInstance,
+    required Task task,
+    int Function()? elapsedTimePassed,
+  }) : this(
+          id: taskInstance.id!,
+          name: task.name!,
+          optional: taskInstance.optional!,
+          description: task.description!,
+          timer: taskInstance.timer,
+          duration: taskInstance.duration,
+          breaks: taskInstance.breaks,
+          planInstanceId: taskInstance.planInstanceID!,
+          points: task.points != null
+              ? UIPoints(
+                  quantity: task.points!.quantity,
+                  title: task.points!.name!,
+                  createdBy: task.points!.createdBy,
+                  type: task.points!.icon!,
+                )
+              : null,
+          taskId: taskInstance.taskID!,
+          taskUiType: TaskInstanceService.getSingleTaskInstanceStatus(
+            task: taskInstance,
+          ),
+          status: taskInstance.status!,
+          elapsedTimePassed: elapsedTimePassed = _defElapsedTime,
+          subtasks: taskInstance.subtasks,
+        );
 
-  UITaskInstance.singleWithTask({required TaskInstance taskInstance, required Task task, int Function()? elapsedTimePassed}) : this(
-      id: taskInstance.id!,
-      name: task.name!,
-      optional: taskInstance.optional!,
-      description: task.description!,
-      timer: taskInstance.timer,
-      duration: taskInstance.duration,
-      breaks: taskInstance.breaks,
-      planInstanceId: taskInstance.planInstanceID!,
-      points: task.points != null ? UIPoints(
-        quantity: task.points!.quantity,
-        title: task.points!.name!,
-        createdBy: task.points!.createdBy,
-        type: task.points!.icon!
-      ) : null,
-      taskId: taskInstance.taskID!,
-      taskUiType: TaskInstanceService.getSingleTaskInstanceStatus(task: taskInstance),
-      status: taskInstance.status!,
-      elapsedTimePassed: elapsedTimePassed = _defElapsedTime,
-      subtasks: taskInstance.subtasks);
-
-  UITaskInstance.listFromDBModel({required TaskInstance taskInstance, required String name, required String description, UIPoints? points, required TaskUIType type, int Function()? elapsedTimePassed}) : this(
-      id: taskInstance.id!,
-      name: name,
-      optional: taskInstance.optional,
-      description: description,
-      timer: taskInstance.timer,
-      duration: taskInstance.duration,
-      breaks: taskInstance.breaks,
-      planInstanceId: taskInstance.planInstanceID!,
-      points: points,
-      taskId: taskInstance.taskID!,
-      taskUiType: type,
-      status: taskInstance.status!,
-      elapsedTimePassed: elapsedTimePassed = _defElapsedTime,
-      subtasks: taskInstance.subtasks);
+  UITaskInstance.listFromDBModel({
+    required TaskInstance taskInstance,
+    required String name,
+    required String description,
+    UIPoints? points,
+    required TaskUIType type,
+    int Function()? elapsedTimePassed,
+  }) : this(
+          id: taskInstance.id!,
+          name: name,
+          optional: taskInstance.optional,
+          description: description,
+          timer: taskInstance.timer,
+          duration: taskInstance.duration,
+          breaks: taskInstance.breaks,
+          planInstanceId: taskInstance.planInstanceID!,
+          points: points,
+          taskId: taskInstance.taskID!,
+          taskUiType: type,
+          status: taskInstance.status!,
+          elapsedTimePassed: elapsedTimePassed = _defElapsedTime,
+          subtasks: taskInstance.subtasks,
+        );
 
   @override
   List<Object?> get props => super.props..addAll([timer, duration, breaks, planInstanceId, taskId, points, subtasks]);

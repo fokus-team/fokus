@@ -10,8 +10,8 @@ class UIPoints extends UICurrency {
   UIPoints({required CurrencyType type, required String title, this.createdBy, this.quantity}) : super(type: type, title: title);
 	UIPoints.fromUICurrency(UICurrency currency) : this(type: currency.type, title: currency.title);
 	UIPoints.fromDBModel(Points points) :
-			createdBy = points.createdBy!,
-			quantity = points.quantity!,
+			createdBy = points.createdBy,
+			quantity = points.quantity,
 			super(type: points.icon!, title: points.name);
 
 	UIPoints copyWith({CurrencyType? type, String? title, ObjectId? createdBy, int? quantity}) {

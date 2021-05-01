@@ -32,24 +32,34 @@ class CaregiverCalendarPage extends StatefulWidget {
 
 class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with TickerProviderStateMixin {
 	static const String _pageKey = 'page.caregiverSection.calendar';
-	AnimationController _animationController;
+
+	final DateTime kNow = DateTime.now();
+	DateTime kFirstDay = DateTime(2000);
+	DateTime kLastDay = DateTime(2200);
+  DateTime _focusedDay = Date.now();
+  DateTime _selectedDay;
+
+  CalendarFormat _calendarFormat = CalendarFormat.month;
+  RangeSelectionMode _rangeSelectionMode = RangeSelectionMode.toggledOff;
+	ValueNotifier<List<UIPlan>> _selectedEvents;
+	final Color notAssignedPlanMarkerColor = Colors.grey[400];
+	
 	bool canAddPlan = true;
 	List<UIChild> _selectedChildren = [];
-
-	final Duration _animationDuration = Duration(milliseconds: 250);
-	final Color notAssignedPlanMarkerColor = Colors.grey[400];
-
 
 	@override
 	void initState() {
 		super.initState();
-		_animationController = AnimationController(vsync: this, duration: _animationDuration);
-		_animationController.forward();
+		kFirstDay = DateTime(kNow.year, kNow.month - 6, kNow.day);
+		kLastDay = DateTime(kNow.year, kNow.month + 6, kNow.day);
+
+    _selectedDay = _focusedDay;
+		_selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay));
 	}
 
 	@override
 	void dispose() {
-		_animationController.dispose();
+		_selectedEvents.dispose();
 		super.dispose();
 	}
 
@@ -71,7 +81,7 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 								padding: EdgeInsets.symmetric(horizontal: AppBoxProperties.screenEdgePadding),
 								child: BlocBuilder<CalendarCubit, CalendarState>(
 									builder: (context, state) {
-										return SizedBox.shrink();// _buildCalendar(state.events, state.children);
+										return _buildCalendar(state.children);
 									},
 								)
 							),
@@ -105,7 +115,7 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 				]
 			),
 			floatingActionButton: canAddPlan ? FloatingActionButton.extended(
-				onPressed: () => Navigator.of(context).pushNamed(AppPage.caregiverPlanForm.name, arguments: PlanFormParams(type: AppFormType.create, date: Date.now())),
+				onPressed: () => Navigator.of(context).pushNamed(AppPage.caregiverPlanForm.name, arguments: PlanFormParams(type: AppFormType.create, date: BlocProvider.of<CalendarCubit>(context).state.day)),
 				label: Text(AppLocales.of(context).translate('$_pageKey.content.addPlan')),
 				icon: Icon(Icons.insert_invitation),
 				backgroundColor: Colors.lightBlue,
@@ -147,57 +157,74 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 		);
 	}
 
-	// TableCalendar _buildCalendar(Map<Date, List<UIPlan>> events, Map<UIChild, bool> children) {
-	//   return buildCalendar( 
-	// 		context: context,
-	// 		events: events,
-	// 		onDaySelected: onDayChanged,
-	// 		onCalendarCreated: onCalendarCreated,
-	// 		onVisibleDaysChanged: onMonthChanged,
-	// 		builders: CalendarBuilders(
-	// 			selectedDayBuilder: (context, date, _) =>
-  //         FadeTransition(
-  //           opacity: Tween(begin: 0.0, end: 1.0).animate(_animationController),
-  //           child: buildTableCalendarCell(date, AppColors.caregiverBackgroundColor, isCellSelected: true)
-	// 				),
-  //       todayDayBuilder: (context, date, _) => buildTableCalendarCell(date, Colors.transparent),
-	// 			markersBuilder: (context, date, events, holidays) {
-	// 				final markers = <Widget>[];
-	// 				if (events.isNotEmpty) {
-	// 					Set<Color> childrenMarkers = {};
-	// 					events.forEach((plan) {
-	// 						if(plan.assignedTo.isEmpty)
-	// 							childrenMarkers.add(notAssignedPlanMarkerColor);
-	// 						else
-	// 							plan.assignedTo.forEach((childID) {
-	// 								if(_selectedChildren.isEmpty || _selectedChildren.firstWhere((element) => element.id == childID, orElse: () => null) != null)
-	// 									childrenMarkers.add(_getChildColor(children, childID));
-	// 						});
-	// 					});
-	// 					markers.add(buildMarker(colorSet: childrenMarkers, inPast: date.isBefore(Date.now())));
-	// 				}
-	// 				return markers;
-	// 			}
-	// 		)
-	// 	);
-	// }
+  List<UIPlan> _getEventsForDay(DateTime day) {
+		Map<Date, List<UIPlan>> events = BlocProvider.of<CalendarCubit>(context).state.events;
+    return events != null ? events[Date.fromDate(day)] : [];
+  }
 
-	// void onDayChanged(DateTime day, List<dynamic> events, List<dynamic> holidays) {
-	// 	setState(() {
-	// 		canAddPlan = Date.fromDate(day) >= Date.now();
-	// 	});
-	// 	BlocProvider.of<CalendarCubit>(context).dayChanged(Date.fromDate(day));
-	// 	_animationController.forward(from: 0.0);
-	// }
+  void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
+    if (!isSameDay(_selectedDay, selectedDay)) {
+      setState(() {
+        _selectedDay = selectedDay;
+        _focusedDay = focusedDay;
+				_selectedEvents.value = _getEventsForDay(selectedDay);
+      });
+			BlocProvider.of<CalendarCubit>(context).dayChanged(Date.fromDate(selectedDay));
+    }
+  }
 
-	// void onCalendarCreated(DateTime first, DateTime last, CalendarFormat format) {
-	// 	BlocProvider.of<CalendarCubit>(context).monthChanged(Date.fromDate(_calendarController.focusedDay));
-	// }
-
-	// void onMonthChanged(DateTime first, DateTime last, CalendarFormat format) {
-	// 	onCalendarCreated(first, last, format);
-	// 	_calendarController.setSelectedDay(Date.fromDate(du.DateUtils.firstDayOfMonth(_calendarController.focusedDay)));
-	// }
+	void _onPageChanged(DateTime focusedDay) {
+		setState(() {
+      _selectedDay = focusedDay;
+			_focusedDay = focusedDay;
+			_selectedEvents.value = _getEventsForDay(focusedDay);
+		});
+		BlocProvider.of<CalendarCubit>(context).dayChanged(Date.fromDate(focusedDay));
+		BlocProvider.of<CalendarCubit>(context).monthChanged(Date.fromDate(focusedDay));
+	}
+	
+	TableCalendar _buildCalendar(Map<UIChild, bool> children) {
+		return TableCalendar<UIPlan>(
+			firstDay: kFirstDay,
+			lastDay: kLastDay,
+			focusedDay: _focusedDay,
+			calendarFormat: _calendarFormat,
+			rangeSelectionMode: _rangeSelectionMode,
+			eventLoader: _getEventsForDay,
+			startingDayOfWeek: StartingDayOfWeek.monday,
+			calendarStyle: CalendarStyle(
+				outsideDaysVisible: false
+			),
+			headerStyle: HeaderStyle(
+				titleCentered: true,
+				formatButtonVisible: false
+			),
+			selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+			onDaySelected: _onDaySelected,
+			onPageChanged: _onPageChanged,
+			calendarBuilders: CalendarBuilders(
+				selectedBuilder: (context, date, _) => buildTableCalendarCell(date, AppColors.caregiverBackgroundColor, isCellSelected: true),
+				todayBuilder: (context, date, _) => buildTableCalendarCell(date, Colors.transparent),
+				markerBuilder: (context, date, events) {
+					final List<Widget> markers = <Widget>[];
+					if (events.isNotEmpty) {
+						Set<Color> childrenMarkers = {};
+						events.forEach((plan) {
+							if(plan.assignedTo.isEmpty)
+								childrenMarkers.add(notAssignedPlanMarkerColor);
+							else
+								plan.assignedTo.forEach((childID) {
+									if(_selectedChildren.isEmpty || _selectedChildren.firstWhere((element) => element.id == childID, orElse: () => null) != null)
+										childrenMarkers.add(_getChildColor(children, childID));
+								});
+						});
+						markers.add(buildMarker(colorSet: childrenMarkers, inPast: date.isBefore(DateTime.now())));
+					}
+					return Wrap(children: markers);
+				}
+			)
+		);
+	}
 
 	SmartSelect<UIChild> _buildChildPicker({Map<UIChild, bool> children = const {}, bool loading = false}) {
 	  return SmartSelect<UIChild>.multiple(
@@ -233,7 +260,7 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 									: Icon(Icons.keyboard_arrow_right, color: Colors.grey)
 	            ),
 							AnimatedSwitcher(
-								duration: _animationDuration,
+								duration: Duration(milliseconds: 250),
 								switchInCurve: Curves.easeIn,
 								switchOutCurve: Curves.easeOut,
 								transitionBuilder: (child, animation) {

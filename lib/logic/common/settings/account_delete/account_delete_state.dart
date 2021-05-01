@@ -1,9 +1,8 @@
-// @dart = 2.10
 part of 'account_delete_cubit.dart';
 
 class AccountDeleteState extends FormzState {
 	final Password password;
-	final PasswordConfirmError error;
+	final PasswordConfirmError? error;
 
   const AccountDeleteState({
 	  this.password = const Password.pure(),
@@ -11,7 +10,7 @@ class AccountDeleteState extends FormzState {
 	  this.error
   }) : super(status);
 
-	AccountDeleteState copyWith({Password password, PasswordConfirmError error, FormzStatus status}) {
+	AccountDeleteState copyWith({Password? password, PasswordConfirmError? error, FormzStatus? status}) {
 		return AccountDeleteState(
 				password: password ?? this.password,
 				status: status ?? this.status,
@@ -20,5 +19,5 @@ class AccountDeleteState extends FormzState {
 	}
 
 	@override
-	List<Object> get props => [password, status, error];
+	List<Object?> get props => [password, status, error];
 }

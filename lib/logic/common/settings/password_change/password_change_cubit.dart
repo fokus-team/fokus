@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'package:bloc/bloc.dart';
 import 'package:fokus/model/ui/auth/password_change_type.dart';
 import 'package:formz/formz.dart';
@@ -14,7 +13,7 @@ part 'password_change_state.dart';
 class PasswordChangeCubit extends Cubit<PasswordChangeState> {
 	final AuthenticationProvider _authenticationProvider = GetIt.I<AuthenticationProvider>();
 
-  PasswordChangeCubit(PasswordChangeType type, {String passwordResetCode}) : super(PasswordChangeState(formType: type, passwordResetCode: passwordResetCode));
+  PasswordChangeCubit(PasswordChangeType type, {String? passwordResetCode}) : super(PasswordChangeState(formType: type, passwordResetCode: passwordResetCode));
 
   Future changePasswordFormSubmitted() async {
 	  if (this.state.status != FormzStatus.pure)
@@ -29,7 +28,7 @@ class PasswordChangeCubit extends Cubit<PasswordChangeState> {
 	  	if (state.formType == PasswordChangeType.change)
 		    await _authenticationProvider.changePassword(state.currentPassword.value, state.newPassword.value);
 		  else if (state.formType == PasswordChangeType.reset)
-		  	await _authenticationProvider.completePasswordReset(password: state.newPassword.value, resetCode: state.passwordResetCode);
+		  	await _authenticationProvider.completePasswordReset(password: state.newPassword.value, resetCode: state.passwordResetCode!);
 		  emit(state.copyWith(status: FormzStatus.submissionSuccess));
 	  } on PasswordConfirmFailure catch (e) {
 		  emit(state.copyWith(status: FormzStatus.submissionFailure, error: e.reason));

@@ -69,7 +69,7 @@ class PlanFormCubit extends Cubit<PlanFormState> {
 		    _planKeeperService.createPlansForToday([plan], plan.assignedTo),
 	    ];
 		}
-		await Future.value(updates);
+		await Future.wait(updates);
 		emit(PlanFormSubmissionSuccess(state));
   }
 

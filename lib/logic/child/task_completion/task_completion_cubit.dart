@@ -88,7 +88,7 @@ class TaskCompletionCubit extends StatefulCubit<TaskCompletionState> {
 						state: wasPlanStateChanged ? PlanInstanceState.active : null,
 						duration: wasPlanDurationChanged ? _planInstance.duration : null)
 				);
-			await Future.value(updates);
+			await Future.wait(updates);
 
 		if(isInProgress(uiTaskInstance.duration))
 		  emit(TaskCompletionState.inProgress(taskInstance: uiTaskInstance,  planInstance: planInstance));

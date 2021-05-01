@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:fokus/model/currency_type.dart';
@@ -9,12 +8,12 @@ class UICurrency extends Equatable {
 	final CurrencyType type;
 	final String title;
 
-  UICurrency({this.type, String title}) : title = type == CurrencyType.diamond ? 'points' : title;
-	UICurrency.fromDBModel(Currency currency) : this(type: currency.icon, title: currency.name);
+  UICurrency({required this.type, String? title}) : title = type == CurrencyType.diamond ? 'points' : title!;
+	UICurrency.fromDBModel(Currency currency) : this(type: currency.icon!, title: currency.name);
 	UICurrency.from(UICurrency currency) : this(type: currency.type, title: currency.title);
 	
 	@override
-	List<Object> get props => [type, title];
+	List<Object?> get props => [type, title];
 
 	String getName(BuildContext context) => type == CurrencyType.diamond ? AppLocales.of(context).translate(title) : title;
 }

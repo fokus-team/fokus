@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'package:bloc/bloc.dart';
 import 'package:fokus_auth/fokus_auth.dart';
 import 'package:get_it/get_it.dart';
@@ -21,9 +20,9 @@ class NameChangeCubit extends Cubit<NameChangeState> {
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final AuthenticationProvider _authenticationProvider = GetIt.I<AuthenticationProvider>();
 
-  NameChangeCubit(this._activeUser, this._authBloc, UIUser _changedUser) :
+  NameChangeCubit(this._activeUser, this._authBloc, UIUser? _changedUser) :
 		  _changedUser = _changedUser ?? _activeUser(),
-      super(NameChangeState(name: Name.pure((_changedUser ?? _activeUser())?.name)));
+      super(NameChangeState(name: Name.pure((_changedUser ?? _activeUser()).name!)));
 
   Future nameChangeFormSubmitted() async {
 	  if (this.state.status != FormzStatus.pure)
@@ -37,13 +36,13 @@ class NameChangeCubit extends Cubit<NameChangeState> {
 	  }
 	  emit(state.copyWith(status: FormzStatus.submissionInProgress));
 	  var changingCaregiver = _changedUser.id == _activeUser().id;
-		await Future.value([
-			_dataRepository.updateUser(_changedUser.id, name: state.name.value),
+		await Future.wait([
+			_dataRepository.updateUser(_changedUser.id!, name: state.name.value),
 			if (changingCaregiver)
 				_authenticationProvider.changeName(state.name.value),
 		]);
 		if (changingCaregiver)
-	    _authBloc.add(AuthenticationActiveUserUpdated(UICaregiver.from(_activeUser(), name: state.name.value)));
+	    _authBloc.add(AuthenticationActiveUserUpdated(UICaregiver.from(_activeUser() as UICaregiver, name: state.name.value)));
 	  emit(state.copyWith(status: FormzStatus.submissionSuccess));
   }
 

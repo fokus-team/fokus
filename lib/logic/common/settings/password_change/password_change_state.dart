@@ -1,13 +1,12 @@
-// @dart = 2.10
 part of 'password_change_cubit.dart';
 
 class PasswordChangeState extends FormzState {
 	final Password currentPassword;
 	final Password newPassword;
 	final ConfirmedPassword confirmedPassword;
-	final PasswordConfirmError error;
+	final PasswordConfirmError? error;
 	final PasswordChangeType formType;
-	final String passwordResetCode;
+	final String? passwordResetCode;
 
 	PasswordChangeState({
 		this.currentPassword = const Password.pure(),
@@ -16,10 +15,11 @@ class PasswordChangeState extends FormzState {
 		FormzStatus status = FormzStatus.pure,
 		this.passwordResetCode,
 		this.error,
-		this.formType
+		required this.formType
 	}) : super(status);
 
-	PasswordChangeState copyWith({Password currentPassword, Password newPassword, ConfirmedPassword confirmedPassword, PasswordConfirmError error, String passwordResetCode, FormzStatus status}) {
+	PasswordChangeState copyWith({Password? currentPassword, Password? newPassword, ConfirmedPassword? confirmedPassword,
+			PasswordConfirmError? error, String? passwordResetCode, FormzStatus? status}) {
 		return PasswordChangeState(
 			currentPassword: currentPassword ?? this.currentPassword,
 			newPassword: newPassword ?? this.newPassword,
@@ -32,5 +32,5 @@ class PasswordChangeState extends FormzState {
 	}
 
   @override
-  List<Object> get props => [currentPassword, newPassword, confirmedPassword, status, error];
+  List<Object?> get props => [currentPassword, newPassword, confirmedPassword, status, error];
 }

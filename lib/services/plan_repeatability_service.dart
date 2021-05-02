@@ -79,6 +79,8 @@ class PlanRepeatabilityService {
   	var rules = plan.repeatability;
 	  if (rules.range?.from != null && rules.range.from > date)
 		  return false;
+	  if (rules.range?.to != null && rules.range.to < date)
+		  return false;
   	if (rules.type == RepeatabilityType.once && rules.range.from == date)
   		return true;
 	  if (rules.type == RepeatabilityType.weekly && rules.days.contains(date.weekday))

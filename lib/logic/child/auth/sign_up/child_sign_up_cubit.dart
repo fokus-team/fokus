@@ -1,3 +1,4 @@
+import 'package:fokus/model/ui/user/ui_caregiver.dart';
 import 'package:fokus/services/analytics_service.dart';
 import 'package:formz/formz.dart';
 
@@ -20,7 +21,7 @@ class ChildSignUpCubit extends ChildAuthCubitBase<ChildSignUpState> {
   ChildSignUpCubit(this._authBloc) : super(_authBloc, ChildSignUpState(
 	  caregiverCode: UserCode.pure(_authBloc.state.user != null ? getCodeFromId(_authBloc.state.user!.id!) : ''),
   )) {
-  	if (codeFixed())
+  	if (_caregiverSignedIn())
   	  _getTakenAvatars(state.caregiverCode.value).then((avatars) => emit(state.copyWith(takenAvatars: avatars)));
   }
 
@@ -39,8 +40,12 @@ class ChildSignUpCubit extends ChildAuthCubitBase<ChildSignUpState> {
 	  child.id = await dataRepository.createUser(child);
 	  await dataRepository.updateUser(caregiverId, newConnections: [child.id!]);
 	  appConfigRepository.saveChildProfile(child.id!);
-	  if (!codeFixed())
+	  if (!_caregiverSignedIn())
 		  authenticationBloc.add(AuthenticationChildSignInRequested(child));
+	  else {
+		  var user = _authBloc.state.user as UICaregiver;
+	  	authenticationBloc.add(AuthenticationActiveUserUpdated(UICaregiver.from(user, connections: List.from(user.connections!)..add(child.id!))));
+	  }
 	  _analyticsService.logChildSignUp();
 	  emit(state.copyWith(status: FormzStatus.submissionSuccess));
   }
@@ -64,12 +69,12 @@ class ChildSignUpCubit extends ChildAuthCubitBase<ChildSignUpState> {
     return (await dataRepository.getUsers(connected: getIdFromCode(caregiverCode), role: UserRole.child, fields: ['avatar'])).map((child) => child.avatar!).toSet();
   }
 
-  bool codeFixed() => _authBloc.state.user != null;
+  bool _caregiverSignedIn() => _authBloc.state.user != null;
 
   Future<ChildSignUpState> _validateFields() async {
 	  var state = this.state;
 	  var caregiverField = UserCode.dirty(state.caregiverCode.value.trim());
-	  if (!codeFixed() && caregiverField.valid && !(await verifyUserCode(state.caregiverCode.value.trim(), UserRole.caregiver)))
+	  if (!_caregiverSignedIn() && caregiverField.valid && !(await verifyUserCode(state.caregiverCode.value.trim(), UserRole.caregiver)))
 		  caregiverField = UserCode.dirty(state.caregiverCode.value.trim(), false);
 	  state = state.copyWith(caregiverCode: caregiverField);
 	  state = state.copyWith(name: Name.dirty(state.name.value.trim()));

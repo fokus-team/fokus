@@ -23,13 +23,13 @@ class UICaregiver extends UIUser {
 		  currencies = [UICurrency(type: CurrencyType.diamond)]..addAll(caregiver.currencies?.map((currency) => UICurrency.fromDBModel(currency)) ?? []),
 		  super.fromDBModel(caregiver);
 
-	UICaregiver.from(UICaregiver original, {List<UICurrency>? currencies, List<UIBadge>? badges, String? locale, String? name, List<ObjectId>? friends}) :
+	UICaregiver.from(UICaregiver original, {List<UICurrency>? currencies, List<UIBadge>? badges, String? locale, String? name, List<ObjectId>? friends, List<ObjectId>? connections}) :
 			currencies = currencies ?? original.currencies,
 			badges = badges ?? original.badges,
 			friends = friends ?? original.friends,
 			authMethod = original.authMethod,
 			photoURL = original.photoURL,
-			super.from(original, locale: locale, name: name);
+			super.from(original, locale: locale, name: name, connections: connections);
 
 	@override
   List<Object?> get props => super.props..addAll([friends, currencies, badges, authMethod, photoURL]);

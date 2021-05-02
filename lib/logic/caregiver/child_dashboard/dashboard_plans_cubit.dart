@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:fokus/model/db/date/date.dart';
 import 'package:get_it/get_it.dart';
 
 import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
@@ -34,7 +35,10 @@ class DashboardPlansCubit extends StatefulCubit {
 		  _dataRepository.countPlans(caregiverId: activeUser.id),
 		  _dataRepository.getPlans(caregiverId: activeUser.id),
 	  ]);
-	  _availablePlans = data[3] as List<Plan>;
+	  _availablePlans = (data[3] as List<Plan>).where((plan) {
+	    var toDate = plan.repeatability!.range?.to;
+	    return toDate == null || toDate >= Date.now();
+	  }).toList();
 	  var availablePlans = _availablePlans.map((plan) => UIPlan.fromDBModel(plan)).toList();
 	  emit(DashboardPlansState(
 		  childPlans: data[0] as List<UIPlanInstance>,

@@ -28,13 +28,13 @@ class UIUser extends Equatable {
 
 	User toDBModel() => User(id: id, name: name, role: role, avatar: avatar);
 
-	UIUser.from(UIUser original, {String? locale, String? name}) : this(
+	UIUser.from(UIUser original, {String? locale, String? name, List<ObjectId>? connections}) : this(
 		original.id,
 		name ?? original.name,
 		locale: locale ?? original.locale,
 		avatar: original.avatar,
 		role: original.role,
-		connections: original.connections
+		connections: connections ?? original.connections
 	);
 
 	@override

@@ -9,13 +9,13 @@ import 'ui_points.dart';
 class UIReward extends Equatable {
 	final ObjectId? id;
 	final String? name;
-	final int limit;
+	final int? limit;
 	final UIPoints? cost;
-	final int icon;
+	final int? icon;
 
-	UIReward({this.id, this.name, this.limit = 0, required this.cost, this.icon = 0});
-	UIReward.fromDBModel(Reward reward) : this(id: reward.id, name: reward.name, limit: reward.limit!, icon: reward.icon!,
-			cost: reward.cost != null ? UIPoints(type: reward.cost!.icon!, title: reward.cost!.name!, quantity: reward.cost?.quantity, createdBy: reward.cost?.createdBy) : null);
+	UIReward({this.id, this.name, this.limit = 0, this.cost, this.icon = 0});
+	UIReward.fromDBModel(Reward reward) : this(id: reward.id, name: reward.name, limit: reward.limit, icon: reward.icon,
+			cost: reward.cost != null ? UIPoints.fromDBModel(reward.cost!) : null);
 
 	UIReward copyWith({String? name, int? limit, UIPoints? cost, int? icon}) {
 		return UIReward(
@@ -34,14 +34,14 @@ class UIReward extends Equatable {
 class UIChildReward extends UIReward {
 	final TimeDate? date;
 
-	UIChildReward({required ObjectId id, required String name, int limit = 0, UIPoints? cost, int icon = 0, this.date}) : super(id: id, name: name, limit: limit, cost: cost, icon: icon);
-	UIChildReward.fromDBModel(ChildReward reward) : this(id: reward.id!, name: reward.name!, limit: 0, icon: reward.icon!, date: reward.date,
-			cost: reward.cost != null ? UIPoints(type: reward.cost!.icon!, title: reward.cost!.name!, quantity: reward.cost?.quantity, createdBy: reward.cost?.createdBy) : null);
+	UIChildReward({ObjectId? id, String? name, int? limit = 0, UIPoints? cost, int? icon = 0, this.date}) : super(id: id, name: name, limit: limit, cost: cost, icon: icon);
+	UIChildReward.fromDBModel(ChildReward reward) : this(id: reward.id, name: reward.name, limit: 0, icon: reward.icon, date: reward.date,
+			cost: reward.cost != null ? UIPoints.fromDBModel(reward.cost!) : null);
 	
 	UIChildReward copyWith({ObjectId? id, String? name, int? limit, UIPoints? cost, int? icon, TimeDate? date}) {
 		return UIChildReward(
-			id: id ?? this.id!,
-			name: name ?? this.name!,
+			id: id ?? this.id,
+			name: name ?? this.name,
 			limit: limit ?? this.limit,
 			cost: cost ?? this.cost,
 			icon: icon ?? this.icon,

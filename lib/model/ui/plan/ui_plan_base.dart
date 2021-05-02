@@ -5,7 +5,7 @@ import 'package:fokus/services/app_locales.dart';
 
 class UIPlanBase extends Equatable {
 	final ObjectId? id;
-	final String name;
+	final String? name;
 	final TranslateFunc? description;
 
   UIPlanBase(this.id, this.name, this.description);

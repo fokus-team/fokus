@@ -6,14 +6,14 @@ import 'package:fokus/services/app_locales.dart';
 import 'ui_plan_base.dart';
 
 class UIPlan extends UIPlanBase {
-  final int taskCount;
-  final bool isActive;
+  final int? taskCount;
+  final bool? isActive;
   final List<ObjectId>? assignedTo;
-  final ObjectId createdBy;
+  final ObjectId? createdBy;
 
   UIPlan(
-    ObjectId id,
-    String name,
+    ObjectId? id,
+    String? name,
     this.isActive,
     this.taskCount,
     this.assignedTo,
@@ -23,14 +23,15 @@ class UIPlan extends UIPlanBase {
 
   UIPlan.fromDBModel(Plan plan, [TranslateFunc? description])
       : this(
-          plan.id!,
-          plan.name!,
-          plan.active!,
-          plan.tasks!.length,
+          plan.id,
+          plan.name,
+          plan.active,
+          plan.tasks?.length,
           plan.assignedTo,
           description,
-          plan.createdBy!,
+          plan.createdBy,
         );
+
   UIPlan copyWith({
     ObjectId? id,
     String? name,
@@ -41,12 +42,12 @@ class UIPlan extends UIPlanBase {
     ObjectId? createdBy,
   }) {
     return UIPlan(
-      id ?? this.id!,
+      id ?? this.id,
       name ?? this.name,
       isActive ?? this.isActive,
       taskCount ?? this.taskCount,
-      assignedTo ?? List.from(this.assignedTo!),
-      description ?? this.description!,
+      assignedTo ?? (this.assignedTo != null ? List.from(this.assignedTo!) : null),
+      description ?? this.description,
       createdBy ?? this.createdBy,
     );
   }

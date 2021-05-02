@@ -6,33 +6,27 @@ import 'package:fokus/model/ui/task/ui_task_base.dart';
 class UITask extends UITaskBase {
   final UIPoints? points;
   final int? timer;
-  final ObjectId planId;
+  final ObjectId? planId;
 
   UITask({
-    required ObjectId id,
-    required String name,
-    required bool optional,
+    ObjectId? id,
+    String? name,
+    bool? optional,
     String? description,
     this.points,
     this.timer,
-    required this.planId,
+    this.planId,
   }) : super(id, name, optional, description);
 
   UITask.fromDBModel({required Task task})
       : this(
-          id: task.id!,
-          name: task.name!,
-          optional: task.optional!,
+          id: task.id,
+          name: task.name,
+          optional: task.optional,
           description: task.description,
-          points: task.points != null
-              ? UIPoints(
-                  quantity: task.points!.quantity,
-                  type: task.points!.icon!,
-                  title: task.points!.name!,
-                )
-              : null,
+          points: task.points != null ? UIPoints.fromDBModel(task.points!) : null,
           timer: task.timer ?? 0,
-          planId: task.planID!,
+          planId: task.planID,
         );
 
   @override

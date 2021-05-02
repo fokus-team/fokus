@@ -28,27 +28,27 @@ class UITaskInstance extends UITaskBase {
   final int? timer;
   final List<DateSpan<TimeDate>>? duration;
   final List<DateSpan<TimeDate>>? breaks;
-  final ObjectId planInstanceId;
-  final ObjectId taskId;
+  final ObjectId? planInstanceId;
+  final ObjectId? taskId;
   final UIPoints? points;
-  final TaskUIType taskUiType;
-  final TaskStatus status;
+  final TaskUIType? taskUiType;
+  final TaskStatus? status;
   final int Function()? elapsedTimePassed;
   final List<MapEntry<String, bool>>? subtasks;
 
   UITaskInstance({
-    required ObjectId id,
-    required String name,
+    ObjectId? id,
+    String? name,
     bool? optional,
-    required String description,
+    String? description,
     this.timer,
     this.duration,
     this.breaks,
-    required this.planInstanceId,
+    this.planInstanceId,
     this.points,
-    required this.taskId,
-    required this.taskUiType,
-    required this.status,
+    this.taskId,
+    this.taskUiType,
+    this.status,
     this.elapsedTimePassed,
     this.subtasks,
   }) : super(id, name, optional, description);
@@ -60,20 +60,13 @@ class UITaskInstance extends UITaskBase {
   }) : this(
           id: taskInstance.id!,
           name: task.name!,
-          optional: taskInstance.optional!,
-          description: task.description!,
+          optional: taskInstance.optional,
+          description: task.description,
           timer: taskInstance.timer,
           duration: taskInstance.duration,
           breaks: taskInstance.breaks,
           planInstanceId: taskInstance.planInstanceID!,
-          points: task.points != null
-              ? UIPoints(
-                  quantity: task.points!.quantity,
-                  title: task.points!.name!,
-                  createdBy: task.points!.createdBy,
-                  type: task.points!.icon!,
-                )
-              : null,
+          points: task.points != null ? UIPoints.fromDBModel(task.points!) : null,
           taskId: taskInstance.taskID!,
           taskUiType: TaskInstanceService.getSingleTaskInstanceStatus(
             task: taskInstance,
@@ -86,7 +79,7 @@ class UITaskInstance extends UITaskBase {
   UITaskInstance.listFromDBModel({
     required TaskInstance taskInstance,
     required String name,
-    required String description,
+	  String? description,
     UIPoints? points,
     required TaskUIType type,
     int Function()? elapsedTimePassed,

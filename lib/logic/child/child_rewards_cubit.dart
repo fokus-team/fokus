@@ -1,7 +1,7 @@
-// @dart = 2.10
 import 'package:flutter/widgets.dart';
 import 'package:fokus/services/analytics_service.dart';
 import 'package:get_it/get_it.dart';
+import 'package:collection/collection.dart';
 
 import 'package:fokus/model/ui/user/ui_user.dart';
 import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
@@ -23,12 +23,12 @@ class ChildRewardsCubit extends StatefulCubit {
 	final NotificationService _notificationService = GetIt.I<NotificationService>();
 	final AnalyticsService _analyticsService = GetIt.I<AnalyticsService>();
 
-	List<UIReward> _rewards;
+	List<UIReward>? _rewards;
 
   ChildRewardsCubit(this._activeUser, ModalRoute pageRoute) : super(pageRoute, options: [StatefulOption.resetSubmissionState]);
 
   Future doLoadData() async {
-		ObjectId caregiverID = _activeUser().connections.first;
+		ObjectId? caregiverID = _activeUser().connections?.first;
 		if(caregiverID != null && _rewards == null)
 			_rewards = (await _dataRepository.getRewards(caregiverId: caregiverID)).map((reward) => UIReward.fromDBModel(reward)).toList();
 	  _refreshRewardState();
@@ -37,38 +37,38 @@ class ChildRewardsCubit extends StatefulCubit {
 	void claimReward(UIReward reward) async {
 		if (!beginSubmit())
 			return;
-    UIChild child = _activeUser();
-		List<UIPoints> points = child.points;
-		List<UIChildReward> rewards = child.rewards;
+    var child = _activeUser() as UIChild;
+		List<UIPoints> points = child.points!;
+		List<UIChildReward> rewards = child.rewards!;
 		ChildReward model = ChildReward(
 			id: reward.id,
 			name: reward.name, 
-			cost: Points.fromUIPoints(reward.cost),
+			cost: Points.fromUIPoints(reward.cost!),
 			icon: reward.icon,
 			date: TimeDate.now()
 		);
-		UIPoints pointCurrency = points.firstWhere((element) => element.type == reward.cost.type, orElse: () => null);
+		UIPoints? pointCurrency = points.firstWhereOrNull((element) => element.type == reward.cost!.type);
 		
-		if(pointCurrency != null && pointCurrency.quantity >= reward.cost.quantity) {
-			points[points.indexOf(pointCurrency)] = pointCurrency.copyWith(quantity: pointCurrency.quantity - reward.cost.quantity);
+		if(pointCurrency != null && pointCurrency.quantity! >= reward.cost!.quantity!) {
+			points[points.indexOf(pointCurrency)] = pointCurrency.copyWith(quantity: pointCurrency.quantity! - reward.cost!.quantity!);
 			rewards..add(UIChildReward.fromDBModel(model));
-			await _dataRepository.claimChildReward(child.id, reward: model, points: points.map((e) =>
-				Points.fromUICurrency(UICurrency(type: e.type, title: e.title), e.quantity, creator: e.createdBy)).toList()
+			await _dataRepository.claimChildReward(child.id!, reward: model, points: points.map((e) =>
+				Points.fromUICurrency(UICurrency(type: e.type, title: e.title), e.quantity!, creator: e.createdBy)).toList()
 			);
 			_analyticsService.logRewardBought(reward);
-			await _notificationService.sendRewardBoughtNotification(model.id, model.name, child.connections.first, child);
+			await _notificationService.sendRewardBoughtNotification(model.id!, model.name!, child.connections!.first, child);
 			_refreshRewardState(DataSubmissionState.submissionSuccess);
 		}
 	}
 
-	void _refreshRewardState([DataSubmissionState submissionState]) {
-		UIChild child = _activeUser();
+	void _refreshRewardState([DataSubmissionState? submissionState]) {
+		var child = _activeUser() as UIChild;
 		Map<ObjectId, int> claimedCount = Map<ObjectId, int>();
-		child.rewards.forEach((element) => claimedCount[element.id] = !claimedCount.containsKey(element.id) ? 1 : claimedCount[element.id] + 1);
+		child.rewards!.forEach((element) => claimedCount[element.id!] = !claimedCount.containsKey(element.id) ? 1 : claimedCount[element.id]! + 1);
 		emit(ChildRewardsState(
-			rewards: _rewards.where((reward) => reward.limit != null ? reward.limit > (claimedCount[reward.id] ?? 0) : true).toList(),
-			claimedRewards: List.from(child.rewards),
-			points: List.from(child.points),
+			rewards: _rewards!.where((reward) => reward.limit != null ? reward.limit! > (claimedCount[reward.id] ?? 0) : true).toList(),
+			claimedRewards: List.from(child.rewards!),
+			points: List.from(child.points!),
 			submissionState: submissionState
 		));
 	}
@@ -82,10 +82,15 @@ class ChildRewardsState extends StatefulState {
 	final List<UIChildReward> claimedRewards;
 	final List<UIPoints> points;
 
-	ChildRewardsState({this.rewards, this.claimedRewards, this.points, DataSubmissionState submissionState}) : super.loaded(submissionState);
+	ChildRewardsState({
+		required this.rewards,
+		required this.claimedRewards,
+		required this.points,
+		DataSubmissionState? submissionState,
+	}) : super.loaded(submissionState);
 
 	@override
-	ChildRewardsState withSubmitState(DataSubmissionState submissionState) {
+	ChildRewardsState withSubmitState(DataSubmissionState? submissionState) {
 		return ChildRewardsState(
 			rewards: rewards,
 			claimedRewards: claimedRewards,
@@ -95,5 +100,5 @@ class ChildRewardsState extends StatefulState {
 	}
 
   @override
-	List<Object> get props => super.props..addAll([rewards, claimedRewards, points]);
+	List<Object?> get props => super.props..addAll([rewards, claimedRewards, points]);
 }

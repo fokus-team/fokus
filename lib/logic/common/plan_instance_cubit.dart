@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'package:flutter/cupertino.dart';
 import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
 import 'package:fokus/model/db/plan/plan_instance.dart';
@@ -27,7 +26,7 @@ class PlanInstanceCubit extends StatefulCubit {
 	final AnalyticsService _analyticsService = GetIt.I<AnalyticsService>();
 
 	UIPlanInstance uiPlanInstance;
-	PlanInstance _planInstance;
+	late PlanInstance _planInstance;
 
 	PlanInstanceCubit(PlanInstanceParams params, ModalRoute modalRoute) : uiPlanInstance = params.planInstance, super(modalRoute);
 
@@ -39,8 +38,8 @@ class PlanInstanceCubit extends StatefulCubit {
 
   @override
 	Future doLoadData() async {
-		_planInstance = await _dataRepository.getPlanInstance(id: uiPlanInstance.id);
-		if(_planInstance.taskInstances == null || _planInstance.taskInstances.isEmpty)
+		_planInstance = (await _dataRepository.getPlanInstance(id: uiPlanInstance.id))!;
+		if(_planInstance.taskInstances == null || _planInstance.taskInstances!.isEmpty)
 			_taskInstancesService.createTaskInstances(_planInstance);
 		uiPlanInstance = await _dataAggregator.loadPlanInstance(planInstance: _planInstance);
 		var allTasksInstances = await _dataRepository.getTaskInstances(planInstanceId: uiPlanInstance.id);
@@ -49,8 +48,8 @@ class PlanInstanceCubit extends StatefulCubit {
 		emit(PlanInstanceCubitState(tasks: uiInstances, planInstance: uiPlanInstance));
 	}
 
-	Future<bool> isOtherPlanInProgressDbCheck({ObjectId tappedTaskInstance}) async {
-		PlanInstance activePlanInstance = await _dataRepository.getPlanInstance(childId: _planInstance.assignedTo, state: PlanInstanceState.active, fields: ["_id"]);
+	Future<bool> isOtherPlanInProgressDbCheck({required ObjectId? tappedTaskInstance}) async {
+		PlanInstance? activePlanInstance = await _dataRepository.getPlanInstance(childId: _planInstance.assignedTo, state: PlanInstanceState.active, fields: ["_id"]);
 		if(activePlanInstance != null) {
 			List<TaskInstance> taskInstances = await _dataRepository.getTaskInstances(planInstanceId: activePlanInstance.id);
 			for(var instance in taskInstances) {
@@ -71,26 +70,26 @@ class PlanInstanceCubit extends StatefulCubit {
 		var allTasksInstances = await _dataRepository.getTaskInstances(planInstanceId: uiPlanInstance.id);
 		List<TaskInstance> updatedTaskInstances = [];
 		for(var taskInstance in allTasksInstances) {
-			if(!taskInstance.status.completed) {
-				taskInstance.status.state = TaskState.rejected;
-				taskInstance.status.completed = true;
+			if(!taskInstance.status!.completed!) {
+				taskInstance.status!.state = TaskState.rejected;
+				taskInstance.status!.completed = true;
 				if(isInProgress(taskInstance.duration)) {
-					taskInstance.duration.last.to = TimeDate.now();
-					updates.add(_dataRepository.updateTaskInstanceFields(taskInstance.id, state: taskInstance.status.state, isCompleted: taskInstance.status.completed, duration: taskInstance.duration));
+					taskInstance.duration!.last.to = TimeDate.now();
+					updates.add(_dataRepository.updateTaskInstanceFields(taskInstance.id!, state: taskInstance.status?.state, isCompleted: taskInstance.status?.completed, duration: taskInstance.duration));
 				}
 				else if(isInProgress(taskInstance.breaks)) {
-					taskInstance.breaks.last.to = TimeDate.now();
-					updates.add(_dataRepository.updateTaskInstanceFields(taskInstance.id, state: taskInstance.status.state, isCompleted: taskInstance.status.completed, breaks: taskInstance.breaks));
+					taskInstance.breaks!.last.to = TimeDate.now();
+					updates.add(_dataRepository.updateTaskInstanceFields(taskInstance.id!, state: taskInstance.status?.state, isCompleted: taskInstance.status?.completed, breaks: taskInstance.breaks));
 				}
-				else updates.add(_dataRepository.updateTaskInstanceFields(taskInstance.id, state: taskInstance.status.state, isCompleted: taskInstance.status.completed));
+				else updates.add(_dataRepository.updateTaskInstanceFields(taskInstance.id!, state: taskInstance.status?.state, isCompleted: taskInstance.status?.completed));
 			}
 			updatedTaskInstances.add(taskInstance);
 		}
 		if(isInProgress(_planInstance.duration)) {
-			_planInstance.duration.last.to =  TimeDate.now();
-			updates.add(_dataRepository.updatePlanInstanceFields(_planInstance.id, state: PlanInstanceState.completed, duration: _planInstance.duration));
+			_planInstance.duration!.last.to =  TimeDate.now();
+			updates.add(_dataRepository.updatePlanInstanceFields(_planInstance.id!, state: PlanInstanceState.completed, duration: _planInstance.duration));
 		}
-		else updates.add(_dataRepository.updatePlanInstanceFields(_planInstance.id, state: PlanInstanceState.completed));
+		else updates.add(_dataRepository.updatePlanInstanceFields(_planInstance.id!, state: PlanInstanceState.completed));
 		List<UITaskInstance> uiInstances = await _taskInstancesService.mapToUIModels(updatedTaskInstances);
 		_analyticsService.logPlanCompleted(_planInstance);
 
@@ -104,11 +103,11 @@ class PlanInstanceCubitState extends StatefulState {
 	final List<UITaskInstance> tasks;
 	final UIPlanInstance planInstance;
 
-	PlanInstanceCubitState({this.tasks, this.planInstance, DataSubmissionState submissionState}) : super.loaded(submissionState);
+	PlanInstanceCubitState({required this.tasks, required this.planInstance, DataSubmissionState? submissionState}) : super.loaded(submissionState);
 
 	@override
   StatefulState withSubmitState(DataSubmissionState submissionState) => PlanInstanceCubitState(tasks: tasks, planInstance: planInstance, submissionState: submissionState);
 
   @override
-	List<Object> get props => super.props..addAll([tasks, planInstance]);
+	List<Object?> get props => super.props..addAll([tasks, planInstance]);
 }

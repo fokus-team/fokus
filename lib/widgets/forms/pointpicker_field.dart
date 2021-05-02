@@ -147,7 +147,7 @@ class _PointPickerFieldState extends State<PointPickerField> {
 			choiceItems: [
 				for(UICurrency element in widget.currencies)
 					S2Choice(
-						title: element.getName(context),
+						title: element.getName(),
 						value: element
 					)
 			],
@@ -167,7 +167,7 @@ class _PointPickerFieldState extends State<PointPickerField> {
 								padding: EdgeInsets.only(right: 6.0),
 								child: SvgPicture.asset(getIconPath(choice.value.type), width: 30, fit: BoxFit.cover)
 							),
-							Text(choice.value.getName(context), style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.currencyColor[choice.value.type]))
+							Text(choice.value.getName(), style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.currencyColor[choice.value.type]))
 						]
 					)
 				);

@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart';
 
@@ -14,7 +13,7 @@ import 'package:fokus/services/notifications/notification_service.dart';
 
 class DashboardAchievementsCubit extends StatefulCubit {
 	final ActiveUserFunction _activeUser;
-	UIChild child;
+	late UIChild child;
 
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final AnalyticsService _analyticsService = GetIt.I<AnalyticsService>();
@@ -24,20 +23,20 @@ class DashboardAchievementsCubit extends StatefulCubit {
 
 	@override
 	Future doLoadData() async {
-		UICaregiver activeUser = _activeUser();
-		var availableBadges = _filterBadges(activeUser.badges, child.badges);
-		emit(DashboardAchievementsState(availableBadges: availableBadges, childBadges: child.badges));
+		var activeUser = _activeUser() as UICaregiver;
+		var availableBadges = _filterBadges(activeUser.badges!, child.badges!);
+		emit(DashboardAchievementsState(availableBadges: availableBadges, childBadges: child.badges!));
 	}
 
 	Future assignBadges(List<UIBadge> badges) async {
 		if (!beginSubmit())
 			return;
-		DashboardAchievementsState tabState = state;
+		var tabState = state as DashboardAchievementsState;
 		var assignedBadges = badges.map((badge) => UIChildBadge.fromBadge(badge)).toList();
 		var childBadges = assignedBadges.map((badge) => ChildBadge.fromUIModel(badge)).toList();
-		_dataRepository.updateUser(child.id, badges: childBadges);
+		_dataRepository.updateUser(child.id!, badges: childBadges);
 		for (var badge in badges)
-			_notificationService.sendBadgeAwardedNotification(badge.name, badge.icon, child.id);
+			_notificationService.sendBadgeAwardedNotification(badge.name!, badge.icon!, child.id!);
 		childBadges.forEach((badge) => _analyticsService.logBadgeAwarded(badge));
 
 		var newAssignedBadges = List.of(tabState.childBadges)..addAll(assignedBadges);
@@ -52,9 +51,9 @@ class DashboardAchievementsState extends StatefulState {
 	final List<UIBadge> availableBadges;
 	final List<UIChildBadge> childBadges;
 
-	DashboardAchievementsState({this.availableBadges, this.childBadges, DataSubmissionState submissionState}) : super.loaded(submissionState);
+	DashboardAchievementsState({required this.availableBadges, required this.childBadges, DataSubmissionState? submissionState}) : super.loaded(submissionState);
 
-	DashboardAchievementsState copyWith({List<UIBadge> availableBadges, List<UIChildBadge> childBadges, DataSubmissionState submissionState}) {
+	DashboardAchievementsState copyWith({List<UIBadge>? availableBadges, List<UIChildBadge>? childBadges, DataSubmissionState? submissionState}) {
 		return DashboardAchievementsState(
 			availableBadges: availableBadges ?? this.availableBadges,
 			childBadges: childBadges ?? this.childBadges,
@@ -66,5 +65,5 @@ class DashboardAchievementsState extends StatefulState {
 	StatefulState withSubmitState(DataSubmissionState submissionState) => copyWith(submissionState: submissionState);
 
 	@override
-	List<Object> get props => super.props..addAll([availableBadges, childBadges]);
+	List<Object?> get props => super.props..addAll([availableBadges, childBadges]);
 }

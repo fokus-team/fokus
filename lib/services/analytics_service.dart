@@ -72,7 +72,7 @@ extension LogTaskInstance on TaskInstance {
 extension LogUITaskReport on UITaskReport {
 	Map<String, dynamic> get logRecord => {
 		'child_id': child.id?.toHexString(),
-		'id': task.id.toHexString(),
+		'id': task.id?.toHexString(),
 		'rating': '${ratingMark.value}'
 	};
 }
@@ -88,7 +88,7 @@ extension LogReward on Reward {
 
 extension LogUIReward on UIReward {
 	Map<String, dynamic> get logRecord => {
-		'id': id!.toHexString(),
+		'id': id?.toHexString(),
 		'cost': '${cost?.quantity}',
 		'currency': '$icon',
 		'limit': '$limit'

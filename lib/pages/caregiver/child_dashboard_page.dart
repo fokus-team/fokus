@@ -103,16 +103,15 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 	}
 
 	Widget _buildTab<Cubit extends StatefulCubit, State extends StatefulState>(List<Widget> Function(State) content, int index) {
-		context.watch<ChildDashboardCubit>().loadTab(index);
 		return SimpleStatefulBlocBuilder<Cubit, State>(
-			builder: (context, state) => SingleChildScrollView(
-				padding: EdgeInsets.zero,
-				physics: BouncingScrollPhysics(),
-				child: round_spot.ListDetector(
+			builder: (context, state) => round_spot.Detector(
+				areaID: '$index',
+				child: ListView(
+					padding: EdgeInsets.zero,
+					physics: BouncingScrollPhysics(),
 					children: content(state),
-					areaID: '$index',
-				)
-			),
+				),
+			)
 		);
 	}
 

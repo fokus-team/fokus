@@ -119,16 +119,16 @@ class AppSegments extends StatelessWidget {
 	}
 
 	Widget _buildList() {
-		return ListView(
-			padding: EdgeInsets.zero,
-			physics: BouncingScrollPhysics(),
-			children: <Widget>[
-				round_spot.ListDetector(
-					children: segments,
-					areaID: 'AppSegments',
-				),
-				SizedBox(height: 80.0)
-			]
+		return round_spot.Detector(
+			areaID: 'AppSegments',
+			child: ListView(
+				padding: EdgeInsets.zero,
+				physics: BouncingScrollPhysics(),
+				children: <Widget>[
+					...segments,
+					SizedBox(height: 80.0)
+				]
+			)
 		);
 	}
 

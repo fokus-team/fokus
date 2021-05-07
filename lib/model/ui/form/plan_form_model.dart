@@ -32,7 +32,7 @@ class PlanFormModel extends Equatable {
 	PlanFormModel();
 
 	PlanFormModel.fromDBModel(Plan plan) : name = plan.name, children = plan.assignedTo!, days = plan.repeatability!.days ?? [],
-			repeatability = PlanRepeatabilityService.getFormRepeatability(plan.repeatability),
+			repeatability = PlanRepeatabilityService.getFormRepeatability(plan.repeatability!),
 			repeatabilityRage = plan.repeatability!.type == RepeatabilityType.monthly ? PlanFormRepeatabilityRage.monthly : PlanFormRepeatabilityRage.weekly,
 			onlyOnceDate = plan.repeatability!.range!.from ?? Date.now(), rangeDate = plan.repeatability!.range!, isActive = plan.active!;
 

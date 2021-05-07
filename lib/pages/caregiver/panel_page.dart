@@ -71,7 +71,7 @@ class CaregiverPanelPage extends StatelessWidget {
 				headerAction: UIButton('$_pageKey.header.addCaregiver', () => showAddFriendDialog(context), AppColors.caregiverButtonColor, Icons.add),
 				elements: <Widget>[
 					if (state.friends != null)
-						for (var friend in state.friends.entries)
+						for (var friend in state.friends!.entries)
 							ItemCard(
 								title: friend.value,
 								rightIcon: Icon(Icons.chevron_right, color: Colors.grey),

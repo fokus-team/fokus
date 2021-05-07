@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'package:flutter/widgets.dart';
 import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
 import 'package:fokus/model/db/user/child.dart';
@@ -24,9 +23,9 @@ class CaregiverPanelCubit extends StatefulCubit {
 	  var activeUser = _activeUser();
 	  var children = (await _dataRepository.getUsers(connected: activeUser.id, role: UserRole.child)).map((e) => e as Child).toList();
 	  var uiChildren = await _dataAggregator.loadChildren(children);
-	  Map<ObjectId, String> friends;
-	  if ((activeUser as UICaregiver).friends != null && (activeUser as UICaregiver).friends.isNotEmpty)
-		  friends = await _dataRepository.getUserNames((activeUser as UICaregiver).friends);
+	  Map<ObjectId, String>? friends;
+	  if ((activeUser as UICaregiver).friends != null && activeUser.friends!.isNotEmpty)
+		  friends = await _dataRepository.getUserNames(activeUser.friends!);
 	  emit(CaregiverPanelState(uiChildren, friends));
   }
 
@@ -36,10 +35,10 @@ class CaregiverPanelCubit extends StatefulCubit {
 
 class CaregiverPanelState extends StatefulState {
 	final List<UIChild> children;
-	final Map<ObjectId, String> friends;
+	final Map<ObjectId, String>? friends;
 
 	CaregiverPanelState(this.children, this.friends) : super.loaded();
 
 	@override
-	List<Object> get props => super.props..addAll([children, friends]);
+	List<Object?> get props => super.props..addAll([children, friends]);
 }

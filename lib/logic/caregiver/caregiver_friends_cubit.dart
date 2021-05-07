@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
 import 'package:fokus/logic/common/formz_state.dart';
@@ -27,9 +26,9 @@ class CaregiverFriendsCubit extends Cubit<CaregiverFriendsState> with UserCodeVe
 		  return;
 	  }
 	  emit(state.copyWith(status: FormzStatus.submissionInProgress));
-    UICaregiver user = _activeUser();
+	  var user = _activeUser() as UICaregiver;
   	var caregiverId = getIdFromCode(state.caregiverCode.value);
-		var caregiverFriends = List.of(user.friends) ?? [];
+		var caregiverFriends = user.friends != null ? List.of(user.friends!) : <ObjectId>[];
 		
 		if(caregiverFriends.contains(caregiverId)) {
 			emit(state.copyWith(status: FormzStatus.submissionFailure, error: 'caregiverAlreadyBefriendedError'));
@@ -37,7 +36,7 @@ class CaregiverFriendsCubit extends Cubit<CaregiverFriendsState> with UserCodeVe
 			emit(state.copyWith(status: FormzStatus.submissionFailure, error: 'enteredOwnCaregiverCodeError'));
 		} else {
 			var friends = caregiverFriends..add(caregiverId);
-			await dataRepository.updateUser(user.id, friends: friends);
+			await dataRepository.updateUser(user.id!, friends: friends);
 			_authBloc.add(AuthenticationActiveUserUpdated(UICaregiver.from(user, friends: friends)));
 			emit(state.copyWith(status: FormzStatus.submissionSuccess));
 		}
@@ -60,15 +59,15 @@ class CaregiverFriendsCubit extends Cubit<CaregiverFriendsState> with UserCodeVe
 	void caregiverCodeChanged(String value) => emit(state.copyWith(caregiverCode: UserCode.pure(value), status: FormzStatus.pure));
 	
 	void removeFriend(ObjectId friendID) async {
-    UICaregiver user = _activeUser();
+    var user = _activeUser() as UICaregiver;
 		var caregiverFriends = user.friends ?? [];
-		await dataRepository.updateUser(user.id, friends: caregiverFriends..remove(friendID));
+		await dataRepository.updateUser(user.id!, friends: caregiverFriends..remove(friendID));
 	}
 }
 
 class CaregiverFriendsState extends FormzState {
 	final UserCode caregiverCode;
-	final String error;
+	final String? error;
 
   CaregiverFriendsState({
 	  this.caregiverCode = const UserCode.pure(),
@@ -76,14 +75,14 @@ class CaregiverFriendsState extends FormzState {
     FormzStatus status = FormzStatus.pure
   }) : super(status);
 
-  @override
-  List<Object> get props => [caregiverCode, error, status];
-
-  CaregiverFriendsState copyWith({UserCode caregiverCode, String error, FormzStatus status}) {
+  CaregiverFriendsState copyWith({UserCode? caregiverCode, String? error, FormzStatus? status}) {
 	  return CaregiverFriendsState(
 		  caregiverCode: caregiverCode ?? this.caregiverCode,
 			error: error ?? this.error,
 		  status: status ?? this.status,
 	  );
   }
+
+	@override
+	List<Object?> get props => [caregiverCode, error, status];
 }

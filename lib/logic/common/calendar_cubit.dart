@@ -112,7 +112,7 @@ class CalendarCubit extends Cubit<CalendarState> {
 		var planWithAssigned = (MapEntry<ObjectId, List<PlanInstance>> planEntry) {
 			var plan = pastPlans[planEntry.key]!;
 		  return UIPlan(plan.id, plan.name, plan.active, plan.tasks?.length, planEntry.value.map(
-					(instance) => instance.assignedTo!).toList(), _repeatabilityService.buildPlanDescription(plan.repeatability), plan.createdBy);
+					(instance) => instance.assignedTo!).toList(), _repeatabilityService.buildPlanDescription(plan.repeatability!), plan.createdBy);
 		};
 	  Map<Date, List<UIPlan>> events = {};
 		for (var entry in dateMap.entries) {
@@ -127,8 +127,8 @@ class CalendarCubit extends Cubit<CalendarState> {
 	Map<Date, List<UIPlan>> _loadFutureData(DateSpan<Date> span) {
 		Map<Date, List<UIPlan>> events = {};
 		for (var plan in _plans.entries) {
-			var getDescription = (Plan plan) => _repeatabilityService.buildPlanDescription(plan.repeatability);
-			var dates = _repeatabilityService.getRepeatabilityDatesInSpan(plan.value.repeatability, span);
+			var getDescription = (Plan plan) => _repeatabilityService.buildPlanDescription(plan.repeatability!);
+			var dates = _repeatabilityService.getRepeatabilityDatesInSpan(plan.value.repeatability!, span);
 			for (var date in dates)
 				(events[date] ??= []).add(UIPlan.fromDBModel(plan.value, getDescription(plan.value)));
 		}

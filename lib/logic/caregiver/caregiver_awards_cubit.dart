@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'package:get_it/get_it.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
@@ -18,19 +17,19 @@ class CaregiverAwardsCubit extends StatefulCubit {
 
   @override
 	Future doLoadData() async {
-    UICaregiver user = _activeUser();
-    var rewards = await _dataRepository.getRewards(caregiverId: user.id);
+    var user = _activeUser() as UICaregiver;
+    var rewards = await _dataRepository.getRewards(caregiverId: user.id!);
 		
 		emit(CaregiverAwardsState(
 			rewards: rewards.map((reward) => UIReward.fromDBModel(reward)).toList(),
-			badges: List.from(user.badges)
+			badges: List.from(user.badges!)
 		));
   }
 
 	void removeReward(ObjectId id) async {
 		if (!beginSubmit())
 			return;
-		CaregiverAwardsState state = this.state;
+		var state = this.state as CaregiverAwardsState;
 		await _dataRepository.removeRewards(id: id);
 		emit(RewardRemovedState(
 			rewards: state.rewards.where((element) => element.id != id).toList(),
@@ -41,11 +40,11 @@ class CaregiverAwardsCubit extends StatefulCubit {
 	void removeBadge(UIBadge badge) async {
 		if (!beginSubmit())
 			return;
-    UICaregiver user = _activeUser();
+		var user = _activeUser() as UICaregiver;
 		Badge model = Badge(name: badge.name, description: badge.description, icon: badge.icon);
-		await _dataRepository.removeBadge(user.id, model);
+		await _dataRepository.removeBadge(user.id!, model);
 		emit(BadgeRemovedState(
-			badges: List.from(user.badges..remove(UIBadge.fromDBModel(model))),
+			badges: List.from(user.badges!..remove(UIBadge.fromDBModel(model))),
 			rewards: (state as CaregiverAwardsState).rewards
 		));
 	}
@@ -55,19 +54,21 @@ class CaregiverAwardsState extends StatefulState {
 	final List<UIReward> rewards;
 	final List<UIBadge> badges;
 
-	CaregiverAwardsState({this.rewards, this.badges, DataSubmissionState submissionState}) : super.loaded(submissionState);
+	CaregiverAwardsState({required this.rewards, required this.badges, DataSubmissionState? submissionState}) : super.loaded(submissionState);
 
 	@override
   StatefulState withSubmitState(DataSubmissionState submissionState) => CaregiverAwardsState(rewards: rewards, badges: badges, submissionState: submissionState);
 
   @override
-	List<Object> get props => super.props..addAll([rewards, badges]);
+	List<Object?> get props => super.props..addAll([rewards, badges]);
 }
 
 class RewardRemovedState extends CaregiverAwardsState {
-	RewardRemovedState({List<UIReward> rewards, List<UIBadge> badges}) : super(rewards: rewards, badges: badges, submissionState: DataSubmissionState.submissionSuccess);
+	RewardRemovedState({required List<UIReward> rewards, required List<UIBadge> badges})
+			: super(rewards: rewards, badges: badges, submissionState: DataSubmissionState.submissionSuccess);
 }
 class BadgeRemovedState extends CaregiverAwardsState {
-	BadgeRemovedState({List<UIReward> rewards, List<UIBadge> badges}) : super(rewards: rewards, badges: badges, submissionState: DataSubmissionState.submissionSuccess);
+	BadgeRemovedState({required List<UIReward> rewards, required List<UIBadge> badges})
+			: super(rewards: rewards, badges: badges, submissionState: DataSubmissionState.submissionSuccess);
 }
 

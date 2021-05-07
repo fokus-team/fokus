@@ -64,7 +64,7 @@ class _CaregiverAwardsPageState extends State<CaregiverAwardsPage> {
 											content: AppLocales.of(context).translate('$_pageKey.content.removeRewardText'),
 											confirmColor: Colors.red,
 											confirmText: 'actions.delete',
-											confirmAction: () => context.read<CaregiverAwardsCubit>().removeReward(reward.id)
+											confirmAction: () => context.read<CaregiverAwardsCubit>().removeReward(reward.id!)
 										)
 									);
 								}, null, Icons.delete)

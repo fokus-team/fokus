@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'dart:math';
 
 import 'package:date_utils/date_utils.dart';
@@ -22,33 +21,34 @@ class PlanRepeatabilityService {
 
 	/// [span] - must fit within a month (from 1'st to the end)
 	List<Date> getRepeatabilityDatesInSpan(PlanRepeatability repeatability, DateSpan<Date> span) {
-		if ((repeatability.range?.from != null && repeatability.range.from >= span.to) || (repeatability.range?.to != null && repeatability.range.to < span.from))
+		if ((repeatability.range?.from != null && repeatability.range!.from! >= span.to)
+				|| (repeatability.range?.to != null && repeatability.range!.to! < span.from))
 			return [];
-		var day = (int index) => repeatability.days[max(index, 0)];
+		var day = (int index) => repeatability.days![max(index, 0)];
 		List<Date> dates = [];
 		var iterateDays = (int startDay, int baseLength) {
-			var dayIndex = repeatability.days.indexWhere((day) => day >= startDay);
+			var dayIndex = repeatability.days!.indexWhere((day) => day >= startDay);
 			int daysJump = day(dayIndex) - startDay;
 			if (dayIndex == -1) {
 				dayIndex = 0;
 				daysJump += baseLength;
 			}
-			var date = Date(span.from.year, span.from.month, span.from.day + daysJump);
-			while (date < span.to && (repeatability.range?.to == null || date <= repeatability.range.to)) {
+			var date = Date(span.from!.year, span.from!.month, span.from!.day + daysJump);
+			while (date < span.to && (repeatability.range?.to == null || date <= repeatability.range!.to)) {
 				if ((repeatability.range?.from == null || date >= repeatability.range?.from))
 					dates.add(Date.fromDate(date));
-				var gap = day((dayIndex + 1) % repeatability.days.length) - day(dayIndex);
+				var gap = day((dayIndex + 1) % repeatability.days!.length) - day(dayIndex);
 				date = Date(date.year, date.month, date.day + (gap > 0 ? gap : gap + baseLength));
-				dayIndex = (dayIndex + 1) % repeatability.days.length;
+				dayIndex = (dayIndex + 1) % repeatability.days!.length;
 			}
 		};
 		if (repeatability.type == RepeatabilityType.once) {
-			if (span.contains(repeatability.range.from, includeTo: false))
-				dates.add(repeatability.range.from);
+			if (span.contains(repeatability.range!.from!, includeTo: false))
+				dates.add(repeatability.range!.from!);
 		} else if (repeatability.type == RepeatabilityType.weekly)
-			iterateDays(span.from.weekday, 7);
+			iterateDays(span.from!.weekday, 7);
 		else if (repeatability.type == RepeatabilityType.monthly)
-			iterateDays(span.from.day, DateUtils.lastDayOfMonth(span.from).day);
+			iterateDays(span.from!.day, DateUtils.lastDayOfMonth(span.from!).day);
 		return dates;
 	}
 
@@ -57,7 +57,7 @@ class PlanRepeatabilityService {
 	}
 
 	List<Plan> filterPlansByDate(List<Plan> plans, Date date, {bool activeOnly = true}) {
-		return plans.where((plan) => (!activeOnly || plan.active) && _planInstanceExistsByDate(plan, date)).toList();
+		return plans.where((plan) => (!activeOnly || plan.active!) && _planInstanceExistsByDate(plan, date)).toList();
 	}
 
 	PlanRepeatability mapRepeatabilityModel(PlanFormModel planForm) {
@@ -70,55 +70,55 @@ class PlanRepeatabilityService {
 	}
 
 	static PlanFormRepeatability getFormRepeatability(PlanRepeatability repeatability) {
-		if (repeatability.untilCompleted)
+		if (repeatability.untilCompleted!)
 			return PlanFormRepeatability.untilCompleted;
 		return repeatability.type == RepeatabilityType.once ? PlanFormRepeatability.onlyOnce : PlanFormRepeatability.recurring;
 	}
 
   bool _planInstanceExistsByDate(Plan plan, Date date) {
-  	var rules = plan.repeatability;
-	  if (rules.range?.from != null && rules.range.from > date)
+  	var rules = plan.repeatability!;
+	  if (rules.range?.from != null && rules.range!.from! > date)
 		  return false;
-	  if (rules.range?.to != null && rules.range.to < date)
+	  if (rules.range?.to != null && rules.range!.to! < date)
 		  return false;
-  	if (rules.type == RepeatabilityType.once && rules.range.from == date)
+  	if (rules.type == RepeatabilityType.once && rules.range!.from == date)
   		return true;
-	  if (rules.type == RepeatabilityType.weekly && rules.days.contains(date.weekday))
+	  if (rules.type == RepeatabilityType.weekly && rules.days!.contains(date.weekday))
 		  return true;
-	  if (rules.type == RepeatabilityType.monthly && rules.days.contains(date.day))
+	  if (rules.type == RepeatabilityType.monthly && rules.days!.contains(date.day))
 		  return true;
 	  return false;
   }
 
-	TranslateFunc buildPlanDescription(PlanRepeatability rules, {Date instanceDate, bool detailed = false}) {
+	TranslateFunc buildPlanDescription(PlanRepeatability rules, {Date? instanceDate, bool detailed = false}) {
   	return (context) {
 		  var formatDate = (date) => DateFormat.yMd(AppLocales.instance.locale.toString()).format(date);
   		String description = '';
-		  if (rules.untilCompleted && instanceDate != null)
+		  if (rules.untilCompleted! && instanceDate != null)
 			  description += AppLocales.of(context).translate('repeatability.startedOn', {'DAY': formatDate(instanceDate)});
 		  else if (rules.type == RepeatabilityType.once)
-		  	description += AppLocales.of(context).translate('repeatability.once', {'DAY': formatDate(rules.range.from)});
+		  	description += AppLocales.of(context).translate('repeatability.once', {'DAY': formatDate(rules.range!.from)});
 			else {
 				String andWord = AppLocales.of(context).translate('and');
 			  if (rules.type == RepeatabilityType.weekly) {
-					if(rules.days.length == 7) {
+					if(rules.days!.length == 7) {
 						description += AppLocales.of(context).translate('date.everyday');
 					} else {
-						List<String> weekdays = rules.days.map((day) => AppLocales.of(context).translate('repeatability.weekday', {'WEEKDAY': '$day'})).toList();
+						List<String> weekdays = rules.days!.map((day) => AppLocales.of(context).translate('repeatability.weekday', {'WEEKDAY': '$day'})).toList();
 						String weekdayString = displayJoin(weekdays, andWord);
-						description += '${AppLocales.of(context).translate('repeatability.weekly', {'WEEKDAY': '${rules.days[0]}'})} $weekdayString';
+						description += '${AppLocales.of(context).translate('repeatability.weekly', {'WEEKDAY': '${rules.days![0]}'})} $weekdayString';
 					}
 			  }
 			  else if (rules.type == RepeatabilityType.monthly) {
-				  String dayString = displayJoin(rules.days.map((day) => '$day').toList(), andWord);
+				  String dayString = displayJoin(rules.days!.map((day) => '$day').toList(), andWord);
 				  description += AppLocales.of(context).translate('repeatability.monthly', {'DAYS': dayString});
 			  }
 		  }
 			if (!detailed)
 				return description;
-			if (rules.range.to != null)
-		    description += ', ${AppLocales.of(context).translate('repeatability.range', {'FROM': formatDate(rules.range.from), 'TO': formatDate(rules.range.to)})}';
-			if (rules.untilCompleted)
+			if (rules.range!.to != null)
+		    description += ', ${AppLocales.of(context).translate('repeatability.range', {'FROM': formatDate(rules.range!.from), 'TO': formatDate(rules.range!.to)})}';
+			if (rules.untilCompleted!)
 		  description += ', ${AppLocales.of(context).translate('repeatability.untilCompleted')}';
 		  return description;
 	  };

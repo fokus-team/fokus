@@ -31,7 +31,7 @@ class UIDataAggregator {
 		planInstance ??= await _dataRepository.getPlanInstance(id: planInstanceId);
 		var completedTasks = await _dataRepository.getCompletedTaskCount(planInstance!.id!);
 		plan ??= await _dataRepository.getPlan(id: planInstance.planID!, fields: ['_id', 'repeatability', 'name']);
-		var getDescription = (Plan plan, [Date? instanceDate]) => _repeatabilityService.buildPlanDescription(plan.repeatability, instanceDate: instanceDate);
+		var getDescription = (Plan plan, [Date? instanceDate]) => _repeatabilityService.buildPlanDescription(plan.repeatability!, instanceDate: instanceDate);
 		var elapsedTime = () => sumDurations(planInstance!.duration).inSeconds;
 		return UIPlanInstance.fromDBModel(planInstance, plan!.name!, completedTasks, elapsedTime, getDescription(plan, planInstance.date));
 	}
@@ -48,7 +48,7 @@ class UIDataAggregator {
 	}
 
 	Future<List<UIPlanInstance>> getUIPlanInstances({required List<Plan> plans, required List<PlanInstance> instances}) async {
-		var getDescription = (Plan plan, [Date? instanceDate]) => _repeatabilityService.buildPlanDescription(plan.repeatability, instanceDate: instanceDate);
+		var getDescription = (Plan plan, [Date? instanceDate]) => _repeatabilityService.buildPlanDescription(plan.repeatability!, instanceDate: instanceDate);
 		var planMap = Map.fromEntries(instances.map((instance) => MapEntry(instance.id, plans.firstWhere((plan) => plan.id == instance.planID))));
 
 		List<UIPlanInstance> uiInstances = [];

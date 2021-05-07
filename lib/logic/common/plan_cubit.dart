@@ -20,7 +20,7 @@ class PlanCubit extends StatefulCubit {
   @override
   doLoadData() async {
     var getDescription = (Plan plan) =>
-        _repeatabilityService.buildPlanDescription(plan.repeatability);
+        _repeatabilityService.buildPlanDescription(plan.repeatability!);
     Plan plan = (await _dataRepository.getPlan(id: _planId))!;
     var children = await _dataRepository.getUserNames(plan.assignedTo!);
     List<Task> tasks = await _dataRepository.getTasks(planId: _planId);

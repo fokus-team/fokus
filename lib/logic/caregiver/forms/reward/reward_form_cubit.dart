@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mongo_dart/mongo_dart.dart';
@@ -19,7 +18,7 @@ part 'reward_form_state.dart';
 
 class RewardFormCubit extends StatefulCubit<BaseFormState> {
 	final ActiveUserFunction _activeUser;
-	final ObjectId _rewardId;
+	final ObjectId? _rewardId;
 
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final AnalyticsService _analyticsService = GetIt.I<AnalyticsService>();
@@ -30,19 +29,19 @@ class RewardFormCubit extends StatefulCubit<BaseFormState> {
   @override
 	Future doLoadData() async {
 	  var user = _activeUser();
-	  var currencies = (user as UICaregiver).currencies;
+	  var currencies = (user as UICaregiver).currencies!;
 	  UIReward reward;
 	  if (state.formType == AppFormType.create)
 	    reward = UIReward(cost: UIPoints.fromUICurrency(currencies.firstWhere((currency) => currency.type == CurrencyType.diamond)), limit: null);
 	  else
-	    reward = UIReward.fromDBModel(await _dataRepository.getReward(id: _rewardId));
+	    reward = UIReward.fromDBModel((await _dataRepository.getReward(id: _rewardId!))!);
 		emit(state.load(currencies: currencies, reward: reward));
   }
 
   void onRewardChanged(UIReward Function(UIReward) update) {
   	if (!this.state.loaded)
   		return;
-	  RewardFormDataLoadSuccess state = this.state;
+	  var state = this.state as RewardFormDataLoadSuccess;
     emit(state.copyWith(reward: update(state.reward)));
   }
 	
@@ -50,8 +49,8 @@ class RewardFormCubit extends StatefulCubit<BaseFormState> {
 		if (!beginSubmit())
 			return;
 
-		var userId = _activeUser().id;
-		RewardFormDataLoadSuccess state = this.state;
+		var userId = _activeUser().id!;
+		var state = this.state as RewardFormDataLoadSuccess;
 		var reward = Reward.fromUIModel(state.reward, userId, state.reward.id);
 
 		if (state.formType == AppFormType.create) {
@@ -60,6 +59,6 @@ class RewardFormCubit extends StatefulCubit<BaseFormState> {
 		} else {
 	    await _dataRepository.updateReward(reward);
 		}
-		emit(state.submissionSuccess());
+		emit(state.submissionSuccess() as BaseFormState);
   }
 }

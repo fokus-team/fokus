@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'package:flutter/widgets.dart';
 import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
 import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
@@ -23,11 +22,11 @@ class BadgeFormCubit extends StatefulCubit {
   void submitBadgeForm(BadgeFormModel badgeForm) async {
   	if (!beginSubmit())
   		return;
-		UICaregiver user = _activeUser();
+		var user = _activeUser() as UICaregiver;
 		var badge = Badge.fromBadgeForm(badgeForm);
-		await _dataRepository.createBadge(user.id, badge);
+		await _dataRepository.createBadge(user.id!, badge);
 		_analyticsService.logBadgeCreated(badge);
-		_authBloc.add(AuthenticationActiveUserUpdated(UICaregiver.from(user, badges: user.badges..add(UIBadge.fromDBModel(badge)))));
+		_authBloc.add(AuthenticationActiveUserUpdated(UICaregiver.from(user, badges: user.badges!..add(UIBadge.fromDBModel(badge)))));
     emit(state.submissionSuccess());
   }
 

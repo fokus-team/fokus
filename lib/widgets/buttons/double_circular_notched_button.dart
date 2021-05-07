@@ -1,11 +1,10 @@
-// @dart = 2.10
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 class DoubleCircularNotchedButton extends NotchedShape {
 	const DoubleCircularNotchedButton();
 	@override
-	Path getOuterPath(Rect host, Rect guest) {
+	Path getOuterPath(Rect host, Rect? guest) {
 		if (guest == null || !host.overlaps(guest)) return Path()..addRect(host);
 
 		final double notchRadius = guest.height / 2.0;

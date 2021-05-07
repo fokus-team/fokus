@@ -1,5 +1,3 @@
-// @dart = 2.10
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fokus/services/app_locales.dart';
@@ -10,7 +8,7 @@ class HelpIconButton extends StatelessWidget {
 	final String helpPage;
 	final Brightness theme;
 
-	HelpIconButton({@required this.helpPage, this.theme = Brightness.light});
+	HelpIconButton({required this.helpPage, this.theme = Brightness.light});
 
 	@override
 	Widget build(BuildContext context) {

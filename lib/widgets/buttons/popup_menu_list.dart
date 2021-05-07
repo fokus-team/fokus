@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'package:flutter/material.dart';
 import 'package:fokus/model/ui/ui_button.dart';
 import 'package:fokus/services/app_locales.dart';
@@ -8,9 +7,9 @@ class PopupMenuList extends StatelessWidget {
 	final bool lightTheme;
 	final bool includeDivider;
 	final IconData customIcon;
-	final String tooltip;
+	final String? tooltip;
 
-	PopupMenuList({this.items, this.lightTheme = false, this.includeDivider = false, this.customIcon = Icons.more_vert, this.tooltip});
+	PopupMenuList({required this.items, this.lightTheme = false, this.includeDivider = false, this.customIcon = Icons.more_vert, this.tooltip});
 
   @override
   Widget build(BuildContext context) {

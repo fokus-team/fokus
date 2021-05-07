@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,19 +18,19 @@ class AuthenticationInputField<Bloc extends Cubit<State>, State extends FormzSta
 	final IconData icon;
 	final bool clearable;
 	final bool disabled;
-	final List<String> autofillHints;
+	final List<String>? autofillHints;
 
   AuthenticationInputField({
-		this.getField,
-		this.changedAction,
-		this.labelKey,
-		this.getErrorKey,
+		required this.getField,
+		required this.changedAction,
+		required this.labelKey,
+		required this.getErrorKey,
 		this.inputType = TextInputType.text,
 		this.hideInput = false,
 		this.icon = Icons.edit,
 	  this.clearable = false,
 	  this.disabled = false,
-		this.autofillHints
+	  this.autofillHints
 	});
 
   @override
@@ -39,7 +38,7 @@ class AuthenticationInputField<Bloc extends Cubit<State>, State extends FormzSta
 }
 
 class _AuthenticationInputFieldState<Bloc extends Cubit<CubitState>, CubitState extends FormzState> extends State<AuthenticationInputField<Bloc, CubitState>> {
-	TextEditingController _controller;
+	TextEditingController? _controller;
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +46,7 @@ class _AuthenticationInputFieldState<Bloc extends Cubit<CubitState>, CubitState 
 		  buildWhen: (previous, current) => widget.getField(previous).status != widget.getField(current).status,
 		  builder: (context, state) {
 			  _controller ??= TextEditingController(text: widget.getField(state).value)..addListener(() {
-			    return widget.changedAction(BlocProvider.of<Bloc>(context), _controller.value.text);
+			    return widget.changedAction(BlocProvider.of<Bloc>(context), _controller!.value.text);
 			  });
 			  return Padding(
 			    padding: const EdgeInsets.all(8.0),
@@ -64,7 +63,7 @@ class _AuthenticationInputFieldState<Bloc extends Cubit<CubitState>, CubitState 
 							labelText: AppLocales.of(context).translate(widget.labelKey),
 						  errorText: widget.getField(state).invalid ? Function.apply(AppLocales.of(context).translate, widget.getErrorKey(state)) : null,
 							suffixIcon: widget.clearable ? IconButton(
-								onPressed: () => _controller.clear(),
+								onPressed: () => _controller?.clear(),
 								icon: Icon(Icons.clear),
 								tooltip: AppLocales.instance.translate('actions.clear'),
 							) : null,

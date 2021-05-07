@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fokus/services/app_locales.dart';
@@ -7,7 +6,7 @@ import 'package:fokus/utils/ui/theme_config.dart';
 class ButtonSheetConfirmButton extends StatelessWidget {
 	final Function callback;
 
-	ButtonSheetConfirmButton({@required this.callback});
+	ButtonSheetConfirmButton({required this.callback});
 
 	@override
 	Widget build(BuildContext context) {

@@ -1,6 +1,4 @@
 import 'package:flutter/widgets.dart';
-import 'package:fokus/services/remote_storage/firebase_storage_service.dart';
-import 'package:fokus/services/remote_storage/remote_storage_provider.dart';
 import 'package:get_it/get_it.dart';
 import 'package:fokus_auth/fokus_auth.dart';
 
@@ -20,6 +18,9 @@ import 'package:fokus/services/links/firebase_link_service.dart';
 import 'package:fokus/services/links/link_service.dart';
 import 'package:fokus/services/analytics_service.dart';
 import 'package:fokus/services/instrumentator.dart';
+import 'package:fokus/services/remote_config_provider.dart';
+import 'package:fokus/services/remote_storage/firebase_storage_service.dart';
+import 'package:fokus/services/remote_storage/remote_storage_provider.dart';
 
 Future registerServices(GlobalKey<NavigatorState> navigatorKey, AppRouteObserver routeObserver) {
 	// Semi-services needed for context and navigation state sharing
@@ -39,6 +40,7 @@ Future registerServices(GlobalKey<NavigatorState> navigatorKey, AppRouteObserver
 	GetIt.I.registerSingleton<Instrumentator>(Instrumentator());
 	GetIt.I.registerSingleton<LinkService>(FirebaseDynamicLinkService());
 	GetIt.I.registerSingleton<RemoteStorageProvider>(FirebaseStorageService());
+	GetIt.I.registerSingletonAsync<RemoteConfigProvider>(() => RemoteConfigProvider().initialize());
 
 	return GetIt.I.allReady();
 }

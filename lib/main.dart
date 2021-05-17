@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:ui';
 
 import 'package:bloc/bloc.dart';
@@ -6,6 +7,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fokus/services/remote_config_provider.dart';
 import 'package:get_it/get_it.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:round_spot/round_spot.dart' as round_spot;
@@ -83,6 +85,7 @@ import 'package:fokus/services/app_route_observer.dart';
 import 'package:fokus/services/instrumentator.dart';
 import 'package:fokus/services/locale_provider.dart';
 import 'package:fokus/services/observers/current_locale_observer.dart';
+import 'package:fokus/services/remote_storage/remote_storage_provider.dart';
 
 import 'package:fokus/utils/ui/theme_config.dart';
 import 'package:fokus/utils/service_injection.dart';
@@ -90,7 +93,6 @@ import 'package:fokus/utils/bloc_utils.dart';
 import 'package:fokus/utils/file_utils.dart';
 import 'package:fokus/widgets/page_theme.dart';
 
-import 'services/remote_storage/remote_storage_provider.dart';
 
 void main() async {
 	WidgetsFlutterBinding.ensureInitialized();
@@ -100,19 +102,15 @@ void main() async {
 	await registerServices(navigatorKey, routeObserver);
 
 	var analytics = GetIt.I<AnalyticsService>()..logAppOpen();
+	var configMap = (await GetIt.I.getAsync<RemoteConfigProvider>()).roundSpotConfig;
 	GetIt.I<Instrumentator>().runAppGuarded(
 		BlocProvider<AuthenticationBloc>(
 			create: (context) => AuthenticationBloc(),
 			child: round_spot.initialize(
 				child: FokusApp(navigatorKey, routeObserver, analytics.pageObserver),
-				config: round_spot.Config(
-					outputTypes: {round_spot.OutputType.graphicalRender},
-					heatMapStyle: round_spot.HeatMapStyle.smooth,
-					minSessionEventCount: 5,
-					uiElementSize: 15
-				),
-				heatMapCallback: GetIt.I<RemoteStorageProvider>().uploadRSHeatMap, // saveDebugImage
-				rawDataCallback: GetIt.I<RemoteStorageProvider>().uploadRSData, // saveDebugData
+				config: configMap.isNotEmpty ? round_spot.Config.fromJson(json.decode(configMap)) : round_spot.Config(),
+				heatMapCallback: saveDebugImage, // GetIt.I<RemoteStorageProvider>().uploadRSHeatMap, // saveDebugImage
+				rawDataCallback: saveDebugData, //GetIt.I<RemoteStorageProvider>().uploadRSData, // saveDebugData
 				loggingLevel: Foundation.kReleaseMode ? round_spot.LogLevel.off : round_spot.LogLevel.warning
 			),
 		)

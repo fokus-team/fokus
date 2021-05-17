@@ -31,6 +31,7 @@ dependencies:
     firebase_dynamic_links: ^0.8.0
     firebase_messaging: ^9.0.0
     firebase_storage: ^8.0.3
+    firebase_remote_config: ^0.9.0-dev.1
 
     onesignal_flutter:
         git: https://github.com/fokus-team/OneSignal-Flutter-SDK.git
@@ -60,7 +61,8 @@ dependencies:
     url_launcher: ^6.0.2
     uni_links: ^0.4.0
     path_provider: ^2.0.1
-    round_spot: ^0.3.0
+    round_spot:
+        path: ../../PRACA/ROUND_SPOT/round_spot
 
     cupertino_icons: ^1.0.0
     lottie: ^1.0.1

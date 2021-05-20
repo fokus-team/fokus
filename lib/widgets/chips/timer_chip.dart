@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -10,7 +9,7 @@ class TimerChip extends StatelessWidget {
 	final Color color;
 	final IconData icon;
 
-	TimerChip({this.color, this.icon = Icons.timer});
+	TimerChip({required this.color, this.icon = Icons.timer});
 
 	@override
 	Widget build(BuildContext context) {

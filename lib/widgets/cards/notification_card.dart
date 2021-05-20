@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'package:flutter/material.dart';
 
 import 'package:fokus/model/currency_type.dart';
@@ -15,17 +14,17 @@ import 'package:intl/intl.dart';
 class NotificationCard extends ItemCard {
 	static const String _pageKey = "page.notifications.content";
 
-  final DateTime dateTime;
+  final DateTime? dateTime;
 
   NotificationCard({
-	  @required NotificationType notificationType,
+	  required NotificationType notificationType,
 	  String childName = "",
     this.dateTime,
 	  int currencyValue = 0,
-    String title,
-    String subtitle,
-    AssetType graphicType,
-    int graphic
+    String? title,
+    String? subtitle,
+    AssetType? graphicType,
+    int? graphic
   }) : super(
     title: AppLocales.instance.translate("${notificationType.title}", {'CHILD_NAME' : childName}),
     subtitle: subtitle,
@@ -43,7 +42,7 @@ class NotificationCard extends ItemCard {
 	    else if (notificationType == NotificationType.taskApproved)
 		    AttributeChip.withIcon(
 			    content: currencyValue.toString(),
-			    color: AppColors.currencyColor[CurrencyType.values[graphic]],
+			    color: AppColors.currencyColor[CurrencyType.values[graphic!]],
 			    icon: Icons.add
 		    )
     ]
@@ -63,7 +62,7 @@ class NotificationCard extends ItemCard {
 				Padding(
 					padding: EdgeInsets.only(top: 2.0, bottom: 4.0),
 					child: Text(
-						subtitle,
+						subtitle!,
 						style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
 						overflow: TextOverflow.ellipsis,
 						maxLines: titleMaxLines,
@@ -72,7 +71,7 @@ class NotificationCard extends ItemCard {
 				),
 			if(dateTime != null)
 				Text(
-					"${DateFormat.yMd(AppLocales.instance.locale.toString()).add_Hm().format(dateTime)}",
+					"${DateFormat.yMd(AppLocales.instance.locale.toString()).add_Hm().format(dateTime!)}",
 					style: Theme.of(context).textTheme.subtitle2,
 					overflow: TextOverflow.ellipsis,
 					maxLines: 1,

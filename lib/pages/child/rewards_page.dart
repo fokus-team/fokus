@@ -66,7 +66,7 @@ class _ChildRewardsPageState extends State<ChildRewardsPage> {
 				reward: reward,
 				graphicHeight: 56.0,
 				progressPercentage: percentage >= 1.0 ? 1.0 : percentage,
-				activeProgressBarColor: AppColors.currencyColor[reward.cost!.type],
+				activeProgressBarColor: AppColors.currencyColor[reward.cost!.type]!,
 				actionButton: ItemCardActionButton(
 					color: AppColors.currencyColor[reward.cost!.type]!,
 					icon: Icons.add,

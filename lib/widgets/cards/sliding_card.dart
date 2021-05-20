@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'package:flutter/material.dart';
 import 'package:fokus/utils/ui/theme_config.dart';
 
@@ -7,15 +6,15 @@ class SlidingCard extends StatefulWidget {
 	final Color cardColor;
 	final showFirst;
 
-  SlidingCard({Key key, this.content, this.cardColor, this.showFirst = false}) : super(key: key);
+  SlidingCard({required Key key, required this.content, required this.cardColor, this.showFirst = false}) : super(key: key);
   @override
   SlidingCardState createState() => SlidingCardState();
 }
 
 class SlidingCardState extends State<SlidingCard> with SingleTickerProviderStateMixin {
-	Animation<Offset> _offsetAnimation;
-	AnimationController _slideController;
-	ScrollController _scrollController;
+	late Animation<Offset> _offsetAnimation;
+	late AnimationController _slideController;
+	late ScrollController _scrollController;
 
 	@override
   Widget build(BuildContext context) {
@@ -68,7 +67,7 @@ class SlidingCardState extends State<SlidingCard> with SingleTickerProviderState
 			curve: Curves.easeInOutQuint,
 		));
 		_scrollController = ScrollController();
-		WidgetsBinding.instance.addPostFrameCallback((_) {
+		WidgetsBinding.instance!.addPostFrameCallback((_) {
 			jumpToEnd();
 			if(this.widget.showFirst) openCard();
 		});

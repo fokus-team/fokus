@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fokus/model/currency_type.dart';
@@ -9,21 +8,21 @@ import 'package:fokus/utils/ui/icon_sets.dart';
 import 'package:fokus/utils/ui/theme_config.dart';
 
 class AttributeChip extends StatelessWidget {
-	final String content;
-	final Color color;
-	final Widget icon;
-	final String tooltip;
+	final String? content;
+	final Color? color;
+	final Widget? icon;
+	final String? tooltip;
 	final bool isDefaultPoints;
 
-	final Color defaultColor = Colors.grey[200];
+	final Color defaultColor = Colors.grey[200]!;
 
 	AttributeChip({this.content, this.color, this.icon, this.tooltip, this.isDefaultPoints = false});
 
 	AttributeChip.withIcon({
-		String content,
-		Color color,
-		IconData icon,
-		String tooltip
+		String? content,
+		Color? color,
+		IconData? icon,
+		String? tooltip
 	}) : this(
 		content: content,
 		color: color,
@@ -32,9 +31,9 @@ class AttributeChip extends StatelessWidget {
 	);
 
 	AttributeChip.withCurrency({
-		String content,
-		CurrencyType currencyType,
-		String tooltip
+		String? content,
+		required CurrencyType currencyType,
+		String? tooltip
 	}) : this(
 		content: content,
 		color: AppColors.currencyColor[currencyType],
@@ -48,9 +47,9 @@ class AttributeChip extends StatelessWidget {
 		if(isDefaultPoints) {
 			message = AppLocales.of(context).translate('points');
 		} else if (tooltip != null) {
-			message = tooltip;
+			message = tooltip!;
 		} else if (content != null) {
-			message = content;
+			message = content!;
 		} else {
 			message = AppLocales.of(context).translate('alert.noHint');
 		}
@@ -64,10 +63,10 @@ class AttributeChip extends StatelessWidget {
 			child: Chip(
 				avatar: icon,
 				materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-				backgroundColor: (color != null) ? color.withAlpha(30) : defaultColor, 
+				backgroundColor: (color != null) ? color!.withAlpha(30) : defaultColor,
 				labelPadding: (content != null) ? EdgeInsets.only(left: (icon != null) ? 3.0 : 6.0, right: 6.0) : EdgeInsets.zero,
 				label: (content != null) ? Text(
-					content, 
+					content!,
 					style: TextStyle(color: color, fontWeight: FontWeight.bold),
 					overflow: TextOverflow.fade,
 				) : SizedBox(width: 0),

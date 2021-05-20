@@ -41,7 +41,7 @@ class ItemCard extends StatelessWidget {
 	final Function? onTapped;
 	final bool isActive;
 	final int textMaxLines;
-	final Color activeProgressBarColor;
+	final Color? activeProgressBarColor;
 
 	// Element's visual params
 	final int titleMaxLines = 3;
@@ -213,7 +213,7 @@ class ItemCard extends StatelessWidget {
 			child: LinearProgressIndicator(
 				value: progressPercentage,
 				backgroundColor: inactiveProgressBar,
-				valueColor: AlwaysStoppedAnimation<Color>(activeProgressBarColor)
+				valueColor: AlwaysStoppedAnimation<Color>(activeProgressBarColor!)
 			)
 		);
 	}

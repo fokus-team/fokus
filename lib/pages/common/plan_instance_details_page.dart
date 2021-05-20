@@ -305,7 +305,7 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 	AttributeChip _getCurrencyChip(UITaskInstance task, {String? tooltip, bool pointsAwarded = false}) {
   	return AttributeChip.withCurrency(
 			content: pointsAwarded ? task.status!.pointsAwarded.toString() : task.points!.quantity.toString(),
-			currencyType: task.points!.type,
+			currencyType: task.points!.type!,
 			tooltip: tooltip ?? task.points!.title
 		);
 	}

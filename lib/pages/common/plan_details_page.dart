@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mongo_dart/mongo_dart.dart' as Mongo;
@@ -59,7 +58,7 @@ class _PlanDetailsPageState extends State<PlanDetailsPage> {
 		var authenticationBloc = context.read<AuthenticationBloc>();
 		var currentUser = authenticationBloc.state.user;
 
-		return (state.uiPlan?.createdBy != currentUser.id && currentUser.role == UserRole.caregiver) ? FloatingActionButton.extended(
+		return (state.uiPlan.createdBy != currentUser!.id && currentUser.role == UserRole.caregiver) ? FloatingActionButton.extended(
 			heroTag: null,
 			materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
 			backgroundColor: AppColors.formColor,
@@ -98,7 +97,7 @@ class _PlanDetailsPageState extends State<PlanDetailsPage> {
 		];
 	}
 
-	Segment _getTasksSegment({String title, List<UITask> tasks, bool isOptional = false}) {
+	Segment _getTasksSegment({required String title, required List<UITask> tasks, bool isOptional = false}) {
 		return Segment(
 			title: title,
 			noElementsMessage: '$_pageKey.content.noTasks',
@@ -113,8 +112,8 @@ class _PlanDetailsPageState extends State<PlanDetailsPage> {
 								key: ValueKey(DateTime.now()),
 								title: task.name,
 								timer: task.timer,
-								pointsValue: task.points != null ? task.points.quantity : null,
-								pointCurrency:  task.points != null ? UICurrency(type: task.points.type, title: task.points.title) : null
+								pointsValue: task.points != null ? task.points!.quantity : null,
+								pointCurrency:  task.points != null ? UICurrency(type: task.points!.type, title: task.points!.title) : null
 							)
 						)
 					)
@@ -131,13 +130,13 @@ class _PlanDetailsPageState extends State<PlanDetailsPage> {
 		return CustomContentAppBar(
 			title: '$_pageKey.header.title',
 			content: ItemCard(
-				title: plan.name,
-				subtitle: plan.description(context),
+				title: plan.name!,
+				subtitle: plan.description!(context),
 				//TODO: Open child page with click on chip
 				chips: <Widget>[
-					if (currentUser.role == UserRole.child || currentUser.id != plan.createdBy)
+					if (currentUser!.role == UserRole.child || currentUser.id != plan.createdBy)
 						AttributeChip.withIcon(
-							content: AppLocales.of(context).translate('page.caregiverSection.plans.content.tasks', {'NUM_TASKS': plan.taskCount}),
+							content: AppLocales.of(context).translate('page.caregiverSection.plans.content.tasks', {'NUM_TASKS': plan.taskCount!}),
 							color: Colors.indigo,
 							icon: Icons.layers
 						)

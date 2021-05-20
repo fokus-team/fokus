@@ -1,16 +1,15 @@
-// @dart = 2.10
 import 'package:flutter/material.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/ui/theme_config.dart';
 import 'package:fokus/widgets/general/app_loader.dart';
 
 class AuthGroup extends StatelessWidget {
-	final String title;
-	final String hint;
+	final String? title;
+	final String? hint;
 	final Widget content;
-	final EdgeInsets padding;
+	final EdgeInsets? padding;
 	final bool isLoading;
-	final Widget action;
+	final Widget? action;
 
 	AuthGroup({
 		this.title,
@@ -18,7 +17,7 @@ class AuthGroup extends StatelessWidget {
 		this.isLoading = false,
 		this.padding,
 		this.action,
-		@required this.content
+		required this.content
 	});
 
   @override
@@ -38,18 +37,18 @@ class AuthGroup extends StatelessWidget {
 										if(title != null)
 											Padding(
 												padding: EdgeInsets.symmetric(horizontal: 10.0),
-												child: Text(title, style: Theme.of(context).textTheme.headline1.copyWith(color: Colors.white))
+												child: Text(title!, style: Theme.of(context).textTheme.headline1!.copyWith(color: Colors.white))
 											),
 										if(hint != null)
 											Padding(
 												padding: EdgeInsets.symmetric(horizontal: 10.0),
-												child: Text(hint, style: Theme.of(context).textTheme.bodyText1)
+												child: Text(hint!, style: Theme.of(context).textTheme.bodyText1)
 											)
 									]
 								)
 							),
 							if(action != null)
-								action
+								action as Widget
 						]
 					),
 					Container(
@@ -61,7 +60,7 @@ class AuthGroup extends StatelessWidget {
 						child: Stack(
 							children: [
 								Padding(
-									padding: padding != null ? padding : EdgeInsets.all(8.0),
+									padding: padding != null ? padding! : EdgeInsets.all(8.0),
 									child: AutofillGroup(child: content)
 								),
 								Positioned.fill(
@@ -84,18 +83,18 @@ class AuthGroup extends StatelessWidget {
 class AuthFloatingButton extends StatelessWidget {
 	final String text;
 	final IconData icon;
-	final Function action;
+	final Function? action;
 
 	AuthFloatingButton({
-		this.text,
-		this.icon,
+		required this.text,
+		required this.icon,
 		this.action
 	});
 
   @override
   Widget build(BuildContext context) {
 		return FlatButton.icon(
-			onPressed: action,
+			onPressed: () => action,
 			icon: Icon(icon, color: Colors.white),
 			label: Text(text, style: Theme.of(context).textTheme.button)
 		);
@@ -124,7 +123,7 @@ class AuthDivider extends StatelessWidget {
 						)
 					)
 				),
-				Text(AppLocales.of(context).translate(textKey ?? 'or').toUpperCase()),
+				Text(AppLocales.of(context).translate(textKey).toUpperCase()),
 				Expanded(
 					child: Container(
 						margin: const EdgeInsets.only(left: 20.0, right: 10.0),

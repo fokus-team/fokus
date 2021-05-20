@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -12,13 +11,13 @@ import 'package:fokus/widgets/general/app_avatar.dart';
 class ItemCardActionButton {
 	final IconData icon;
 	final Color color;
-	final Function onTapped;
+	final Function? onTapped;
 	final bool disabled;
 	final double size;
 
 	ItemCardActionButton({
-		this.icon,
-		this.color,
+		required this.icon,
+		required this.color,
 		this.onTapped,
 		this.size = 40.0,
 		this.disabled = false
@@ -28,18 +27,18 @@ class ItemCardActionButton {
 class ItemCard extends StatelessWidget {
 	// Element's content
 	final String title;
-	final String subtitle;
-	final Widget icon;
-	final Icon rightIcon;
-	final AssetType graphicType;
-	final int graphic;
+	final String? subtitle;
+	final Widget? icon;
+	final Icon? rightIcon;
+	final AssetType? graphicType;
+	final int? graphic;
 	final double graphicHeight;
-	final bool graphicShowCheckmark;
-	final double progressPercentage;
-	final List<Widget> chips;
-	final List<UIButton> menuItems;
-	final ItemCardActionButton actionButton;
-	final Function onTapped;
+	final bool? graphicShowCheckmark;
+	final double? progressPercentage;
+	final List<Widget>? chips;
+	final List<UIButton>? menuItems;
+	final ItemCardActionButton? actionButton;
+	final Function? onTapped;
 	final bool isActive;
 	final int textMaxLines;
 	final Color activeProgressBarColor;
@@ -48,16 +47,16 @@ class ItemCard extends StatelessWidget {
 	final int titleMaxLines = 3;
 	static const double defaultImageHeight = 76.0;
 	final double progressIndicatorHeight = 10.0;
-	final Color disabledButtonColor = Colors.grey[100];
-  final Color inactiveProgressBar = Colors.grey[300];
+	final Color disabledButtonColor = Colors.grey[100]!;
+  final Color inactiveProgressBar = Colors.grey[300]!;
 
 	ItemCard({
-		@required this.title, 
+		required this.title,
 		this.subtitle,
 		this.icon,
 		this.graphicType,
 		this.graphic,
-		double graphicHeight,
+		double? graphicHeight,
 		this.graphicShowCheckmark,
 		this.progressPercentage,
 		this.chips,
@@ -72,16 +71,16 @@ class ItemCard extends StatelessWidget {
 	
 	Widget headerImage() {
 		if (graphicType == AssetType.avatars)
-			return AppAvatar(graphic, size: graphicHeight, color: childAvatars[graphic].color, checked: graphicShowCheckmark);
+			return AppAvatar(graphic, size: graphicHeight, color: childAvatars[graphic]!.color, checked: graphicShowCheckmark);
 		else if (graphicType == AssetType.badges)
 			return Badge(
 				showBadge: graphicShowCheckmark ?? false,
 				badgeColor: Colors.green,
 				badgeContent: Icon(Icons.check, color: Colors.white, size: 16.0),
-				child: SvgPicture.asset(graphicType.getPath(graphic), height: graphicHeight)
+				child: SvgPicture.asset(graphicType!.getPath(graphic), height: graphicHeight)
 			);
 		else if (graphicType == AssetType.rewards || graphicType == AssetType.currencies)
-			return SvgPicture.asset(graphicType.getPath(graphic), height: graphicHeight);
+			return SvgPicture.asset(graphicType!.getPath(graphic), height: graphicHeight);
 		return Image.asset('assets/image/sunflower_logo.png', height: graphicHeight);
 	}
 
@@ -97,7 +96,7 @@ class ItemCard extends StatelessWidget {
         horizontal: AppBoxProperties.screenEdgePadding
       ),
       child: (onTapped != null) ? InkWell(
-        onTap: onTapped, 
+        onTap: () => onTapped!,
         child: buildStructure(context),
         borderRadius: BorderRadius.circular(AppBoxProperties.roundedCornersRadius)
       ) : buildStructure(context)
@@ -111,7 +110,7 @@ class ItemCard extends StatelessWidget {
 			crossAxisAlignment: CrossAxisAlignment.start,
 			children: <Widget>[
 				buildMainSection(context),
-				if((menuItems != null && menuItems.isNotEmpty) || actionButton != null)
+				if((menuItems != null && menuItems!.isNotEmpty) || actionButton != null)
 					buildActionSection()
 			]
 		);
@@ -162,13 +161,13 @@ class ItemCard extends StatelessWidget {
 							mainAxisSize: MainAxisSize.max,
 							children: <Widget>[
 								...buildTextSection(context),
-								if(chips != null && chips.isNotEmpty)
+								if(chips != null && chips!.isNotEmpty)
 									Padding(
 										padding: EdgeInsets.only(top: 8.0),
 										child: Wrap(
 											spacing: 2,
 											runSpacing: 4,
-											children: chips
+											children: chips!
 										)
 									)
 							],
@@ -194,7 +193,7 @@ class ItemCard extends StatelessWidget {
 			),
 			if(subtitle != null)
 				Text(
-					subtitle,
+					subtitle!,
 					style: Theme.of(context).textTheme.subtitle2,
 					overflow: TextOverflow.ellipsis,
 					maxLines: textMaxLines,
@@ -221,15 +220,15 @@ class ItemCard extends StatelessWidget {
 
 	// Menu options or big action button
 	Widget buildActionSection() {
-		if(menuItems != null && menuItems.isNotEmpty) {
-			return PopupMenuList(items: menuItems);
+		if(menuItems != null && menuItems!.isNotEmpty) {
+			return PopupMenuList(items: menuItems!);
 		}
 		if(actionButton != null) {
       return Container(
         margin: EdgeInsets.all(8.0),
         child: Ink(
           decoration: ShapeDecoration(
-            color: actionButton.disabled ? inactiveProgressBar : actionButton.color,					
+            color: actionButton!.disabled ? inactiveProgressBar : actionButton!.color,
             shape: ContinuousRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(AppBoxProperties.roundedCornersRadius))),
             shadows: [
               BoxShadow(
@@ -242,8 +241,8 @@ class ItemCard extends StatelessWidget {
           child: MaterialButton(
             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             padding: EdgeInsets.all(8.0),
-            onPressed: actionButton.disabled ? null : actionButton.onTapped,
-            child: Icon(actionButton.icon, color: Colors.white, size: actionButton.size),
+            onPressed: actionButton!.disabled ? null : () => actionButton!.onTapped,
+            child: Icon(actionButton!.icon, color: Colors.white, size: actionButton!.size),
             minWidth: 0
           )
         )

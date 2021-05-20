@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -55,7 +54,7 @@ class _ChildAchievementsPageState extends State<ChildAchievementsPage> {
 	Widget _buildBadgeShelves() {
 		return BlocBuilder<AuthenticationBloc, AuthenticationState>(
 			builder: (context, state) {
-				List<UIBadge> badges = (state.user as UIChild)?.badges ?? [];
+				List<UIBadge> badges = (state.user as UIChild).badges ?? [];
 				if(badges.isNotEmpty) {
 					return Padding(
 						padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: AppBoxProperties.screenEdgePadding),

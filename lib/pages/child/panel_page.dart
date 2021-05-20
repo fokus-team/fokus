@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/logic/child/child_panel_cubit.dart';
@@ -23,7 +22,7 @@ class _ChildPanelPageState extends State<ChildPanelPage> {
 
   @override
   Widget build(BuildContext context) {
-		UIChild currentUser = BlocProvider.of<AuthenticationBloc>(context).state.user;
+		UIChild currentUser = BlocProvider.of<AuthenticationBloc>(context).state.user! as UIChild;
     return Scaffold(
       body: Column(
 	      crossAxisAlignment: CrossAxisAlignment.start,

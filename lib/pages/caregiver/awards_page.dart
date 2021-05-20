@@ -81,8 +81,8 @@ class _CaregiverAwardsPageState extends State<CaregiverAwardsPage> {
 				elements: <Widget>[
 					for (var badge in state.badges)
 						ItemCard(
-							title: badge.name, 
-							subtitle: badge.description != null ? badge.description : AppLocales.of(context).translate('$_pageKey.content.noDescriptionSubtitle'),
+							title: badge.name!,
+							subtitle: badge.description != null ? badge.description! : AppLocales.of(context).translate('$_pageKey.content.noDescriptionSubtitle'),
 							menuItems: [
 								UIButton.ofType(ButtonType.delete, () {
 									showBasicDialog(context,
@@ -98,7 +98,7 @@ class _CaregiverAwardsPageState extends State<CaregiverAwardsPage> {
 							],
 							onTapped: () => showBadgeDialog(context, badge, showHeader: false),
 							graphicType: AssetType.badges,
-							graphic: badge.icon,
+							graphic: badge.icon!,
 							graphicHeight: 44.0
 						)
 				]

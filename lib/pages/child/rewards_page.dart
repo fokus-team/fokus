@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/logic/child/child_rewards_cubit.dart';
@@ -62,14 +61,14 @@ class _ChildRewardsPageState extends State<ChildRewardsPage> {
 
 	List<Widget> _buildRewardShop(ChildRewardsState state, BuildContext context) {
 		return state.rewards.map((reward) {
-			double percentage = (state.points.firstWhere((element) => element.type == reward.cost.type, orElse: () => null)?.quantity ?? 0) / reward.cost.quantity;
+			double percentage = (state.points.firstWhere((element) => element.type == reward.cost!.type, orElse: () => Never).quantity ?? 0) / reward.cost!.quantity!;
 			return RewardItemCard(
 				reward: reward,
 				graphicHeight: 56.0,
 				progressPercentage: percentage >= 1.0 ? 1.0 : percentage,
-				activeProgressBarColor: AppColors.currencyColor[reward.cost.type],
+				activeProgressBarColor: AppColors.currencyColor[reward.cost!.type],
 				actionButton: ItemCardActionButton(
-					color: AppColors.currencyColor[reward.cost.type],
+					color: AppColors.currencyColor[reward.cost!.type]!,
 					icon: Icons.add,
 					disabled: percentage < 1.0,
 					onTapped: () => showRewardDialog(context, reward, claimFeedback: () => BlocProvider.of<ChildRewardsCubit>(context).claimReward(reward))
@@ -79,7 +78,7 @@ class _ChildRewardsPageState extends State<ChildRewardsPage> {
 	}
 
 	List<Widget> _buildRewardHistory(ChildRewardsState state) {
-		return (state.claimedRewards..sort((a, b) => -a.date.compareTo(b.date))).map((reward) {
+		return (state.claimedRewards..sort((a, b) => -a.date!.compareTo(b.date!))).map((reward) {
 			return RewardItemCard(
 				reward: reward,
 				graphicHeight: 40.0,

@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'dart:io';
 
 import 'package:connectivity/connectivity.dart';
@@ -37,7 +36,7 @@ class _ErrorPageState extends State<ErrorPage> {
 							Image.asset('assets/image/sunflower_jitter.gif', height: MediaQuery.of(context).size.width*0.5),
 							Text(
 								AppLocales.of(context).translate("$_localesPath.title"),
-								style: Theme.of(context).textTheme.headline1.copyWith(color: Colors.white),
+								style: Theme.of(context).textTheme.headline1!.copyWith(color: Colors.white),
 								textAlign: TextAlign.center
 							),
 							SizedBox(height: 8),

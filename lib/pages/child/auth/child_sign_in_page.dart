@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
@@ -50,7 +49,7 @@ class ChildSignInPage extends StatelessWidget {
 	  );
   }
 
-  Widget _buildForms(BuildContext context, UIUser activeUser) {
+  Widget _buildForms(BuildContext context, UIUser? activeUser) {
 	  return AuthGroup(
 			title: AppLocales.of(context).translate('$_pageKey.profileAddTitle'),
 			hint: AppLocales.of(context).translate('$_pageKey.profileAddHint${activeUser != null ? 'SignedIn' : ''}'),
@@ -64,7 +63,7 @@ class ChildSignInPage extends StatelessWidget {
 								changedAction: (cubit, value) => cubit.childCodeChanged(value), // temp
 								labelKey: '$_pageKey.childCode',
 								icon: Icons.screen_lock_portrait,
-								getErrorKey: (state) => [state.childCode.error.key], // temp
+								getErrorKey: (state) => [state.childCode.error!.key], // temp
 							),
 							AuthButton(
 								button: UIButton(
@@ -79,7 +78,7 @@ class ChildSignInPage extends StatelessWidget {
 								changedAction: (cubit, value) => cubit.caregiverCodeChanged(value),
 								labelKey: '$_pageKey.caregiverCode',
 								icon: Icons.phonelink_lock,
-								getErrorKey: (state) => [state.caregiverCode.error.key],
+								getErrorKey: (state) => [state.caregiverCode.error!.key],
 								disabled: activeUser != null,
 							),
 						],
@@ -88,7 +87,7 @@ class ChildSignInPage extends StatelessWidget {
 						changedAction: (cubit, value) => cubit.nameChanged(value),
 						labelKey: 'authentication.name',
 						icon: Icons.edit,
-						getErrorKey: (state) => [state.name.error.key],
+						getErrorKey: (state) => [state.name.error!.key],
 					),
 					_buildAvatarPicker(context),
 					AuthButton(
@@ -136,7 +135,7 @@ class ChildSignInPage extends StatelessWidget {
 						},
 						selectedValue: state.avatar,
 						choiceItems: List.generate(childAvatars.length, (index) {
-							final String name = AppLocales.of(context).translate('$_pageKey.avatarGroups.${childAvatars[index].label.toString().split('.').last}');
+							final String name = AppLocales.of(context).translate('$_pageKey.avatarGroups.${childAvatars[index]!.label.toString().split('.').last}');
 							return S2Choice(
 								title: name,
 								group: name,
@@ -152,7 +151,7 @@ class ChildSignInPage extends StatelessWidget {
 						),
 						choiceBuilder: (context, selectState, choice) {
 							return GestureDetector(
-								onTap: choice.disabled ? null : () => choice.select(!choice.selected),
+								onTap: choice.disabled ? null : () => choice.select!(!choice.selected),
 								child: AppAvatar(choice.value, checked: choice.selected, disabled: choice.disabled)
 							);
 						},
@@ -164,8 +163,8 @@ class ChildSignInPage extends StatelessWidget {
 							return ButtonSheetConfirmButton(callback: () => selectState.closeModal(confirmed: true));
 						},
 						onChange: (selected) {
-							FocusManager.instance.primaryFocus.unfocus();
-							BlocProvider.of<ChildSignUpCubit>(context).avatarChanged(selected.value);
+							FocusManager.instance.primaryFocus!.unfocus();
+							BlocProvider.of<ChildSignUpCubit>(context).avatarChanged(selected.value!);
 						}
 					)
 				);

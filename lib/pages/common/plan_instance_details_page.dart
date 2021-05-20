@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/logic/common/plan_instance_cubit.dart';
@@ -46,7 +45,7 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 			);
 		}
 		else {
-			final result = await navigateChecked(context, AppPage.childTaskInProgress, arguments: TaskInProgressParams(taskId: task.id, planInstance: plan));
+			final result = await navigateChecked(context, AppPage.childTaskInProgress, arguments: TaskInProgressParams(taskId: task.id!, planInstance: plan));
 			if(result != null)
 				BlocProvider.of<PlanInstanceCubit>(context).uiPlanInstance = result;
 		}
@@ -54,7 +53,7 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 
 	@override
   Widget build(BuildContext context) {
-    var showEndButton = !context.watch<PlanInstanceCubit>().uiPlanInstance.state.ended && widget.showActions;
+    var showEndButton = !context.watch<PlanInstanceCubit>().uiPlanInstance.state!.ended && widget.showActions;
     return Scaffold(
       body: SimpleStatefulBlocBuilder<PlanInstanceCubit, PlanInstanceCubitState>(
         builder: (context, state) {
@@ -84,7 +83,7 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
     );
   }
 
-  Column _getView({UIPlanInstance planInstance, Widget content}) {
+  Column _getView({required UIPlanInstance planInstance, required Widget content}) {
 		return Column(
 			crossAxisAlignment: CrossAxisAlignment.start,
 			verticalDirection: VerticalDirection.up,
@@ -114,7 +113,7 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
     ];
   }
 
-  Segment _getTasksSegment({List<UITaskInstance> tasks,String title, UIPlanInstance uiPlanInstance}) {
+  Segment _getTasksSegment({required List<UITaskInstance> tasks, required String title, required UIPlanInstance uiPlanInstance}) {
     return Segment(
 			title: title,
 			noElementsMessage: '$_pageKey.content.noTasks',
@@ -124,11 +123,11 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 						_getCompletedTaskCard(task)
 					else if(task.taskUiType == TaskUIType.available)
 						ItemCard(
-							title: task.name,
+							title: task.name!,
 							subtitle: task.description,
 							chips:<Widget>[
-								if (task.timer != null && task.timer > 0) _getTimeChip(task),
-								if (task.points != null && task.points.quantity != 0) _getCurrencyChip(task)
+								if (task.timer != null && task.timer! > 0) _getTimeChip(task),
+								if (task.points != null && task.points!.quantity != 0) _getCurrencyChip(task)
 							],
 							onTapped: () => widget.showActions ? navigate(context, task, uiPlanInstance) : null,
 							actionButton: ItemCardActionButton(
@@ -140,11 +139,11 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 						)
 					else if(task.taskUiType == TaskUIType.rejected)
 						ItemCard(
-							title: task.name,
+							title: task.name!,
 							subtitle: task.description,
 							chips:<Widget>[
-								if (task.timer != null && task.timer > 0) _getTimeChip(task),
-								if (task.points != null && task.points.quantity != 0) _getCurrencyChip(task)
+								if (task.timer != null && task.timer! > 0) _getTimeChip(task),
+								if (task.points != null && task.points!.quantity != 0) _getCurrencyChip(task)
 							],
 							onTapped: () => widget.showActions ? navigate(context, task, uiPlanInstance) : null,
 							actionButton: ItemCardActionButton(
@@ -154,11 +153,11 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 								disabled: !widget.showActions
 							),
 						)
-					else if(task.taskUiType.inProgress)
+					else if(task.taskUiType!.inProgress)
 						BlocProvider<TimerCubit>(
 							create: (_) => TimerCubit.up(() => task.taskUiType == TaskUIType.currentlyPerformed ? sumDurations(task.duration).inSeconds : sumDurations(task.breaks).inSeconds)..startTimer(),
 							child:	ItemCard(
-								title: task.name,
+								title: task.name!,
 								subtitle: task.description,
 								chips:
 								<Widget>[
@@ -190,15 +189,15 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 						)
 					else if(task.taskUiType == TaskUIType.queued)
 						ItemCard(
-							title: task.name,
+							title: task.name!,
 							subtitle: task.description,
 							chips: <Widget>[
-								if (task.timer != null && task.timer > 0) _getTimeChip(task),
-								if (task.points != null && task.points.quantity != 0) _getCurrencyChip(task)
+								if (task.timer != null && task.timer! > 0) _getTimeChip(task),
+								if (task.points != null && task.points!.quantity != 0) _getCurrencyChip(task)
 							],
 							isActive: false,
 							actionButton: ItemCardActionButton(
-								color: Colors.grey[400],
+								color: Colors.grey[400]!,
 								icon: Icons.keyboard_arrow_up,
 								disabled: !widget.showActions
 							),
@@ -215,15 +214,15 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 	}
 
   Widget _getCardHeader(UIPlanInstance _planInstance) {
-		var taskDescriptionKey = 'plans.' + (_planInstance.completedTaskCount > 0 ? 'taskProgress' : 'noTaskCompleted');
+		var taskDescriptionKey = 'plans.' + (_planInstance.completedTaskCount! > 0 ? 'taskProgress' : 'noTaskCompleted');
 		var card = ItemCard(
-			title: _planInstance.name,
-			subtitle: _planInstance.description(context),
+			title: _planInstance.name!,
+			subtitle: _planInstance.description!(context),
 			isActive: _planInstance.state != PlanInstanceState.completed,
 			activeProgressBarColor: AppColors.childActionColor,
-			progressPercentage: (_planInstance.state.inProgress ||  _planInstance.state.ended) ? _planInstance.completedTaskCount.ceilToDouble() / _planInstance.taskCount.ceilToDouble() : null,
+			progressPercentage: (_planInstance.state!.inProgress ||  _planInstance.state!.ended) ? _planInstance.completedTaskCount!.ceilToDouble() / _planInstance.taskCount!.ceilToDouble() : null,
 			chips: [
-				if(_planInstance.state.inProgress)
+				if(_planInstance.state!.inProgress)
 				...[
 					isInProgress(_planInstance.duration) ? TimerChip(color: AppColors.childButtonColor) :
 					AttributeChip.withIcon(
@@ -235,7 +234,7 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 					AttributeChip.withIcon(
 						icon: Icons.description,
 						color: Colors.lightGreen,
-						content: AppLocales.of(context).translate(taskDescriptionKey, {'NUM_TASKS': _planInstance.completedTaskCount, 'NUM_ALL_TASKS': _planInstance.taskCount})
+						content: AppLocales.of(context).translate(taskDescriptionKey, {'NUM_TASKS': _planInstance.completedTaskCount!, 'NUM_ALL_TASKS': _planInstance.taskCount!})
 					)
 				]
 				else
@@ -249,13 +248,13 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 					AttributeChip.withIcon(
 						icon: Icons.description,
 						color: AppColors.mainBackgroundColor,
-						content: AppLocales.of(context).translate('$_pageKey.content.tasks', {'NUM_TASKS': _planInstance.taskCount})
+						content: AppLocales.of(context).translate('$_pageKey.content.tasks', {'NUM_TASKS': _planInstance.taskCount!})
 					)
 				]
 			]);
   	if(isInProgress(_planInstance.duration))
   		return BlocProvider<TimerCubit>(
-				create: (_) => TimerCubit.up(_planInstance.elapsedActiveTime)..startTimer(),
+				create: (_) => TimerCubit.up(_planInstance.elapsedActiveTime!)..startTimer(),
 				child: card
 			);
   	else return card;
@@ -263,29 +262,29 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 
 	Widget _getCompletedTaskCard(UITaskInstance task) {
 		return ItemCard(
-			title: task.name,
+			title: task.name!,
 			subtitle: task.description,
 			chips:
 			<Widget>[
-				if(task.status.state == TaskState.evaluated)
+				if(task.status!.state == TaskState.evaluated)
 					...[
 						AttributeChip.withIcon(
 							content: AppLocales.of(context).translate('$_pageKey.content.chips.rating', {
-								'RATING' : task.status.rating
+								'RATING' : task.status!.rating!
 							}),
 							icon: Icons.star,
-							color: AppColors.chipRatingColors[task.status.rating],
+							color: AppColors.chipRatingColors[task.status!.rating!],
 						),
-						if (task.points != null && task.points.quantity != 0) _getCurrencyChip(task, pointsAwarded: true),
+						if (task.points != null && task.points!.quantity != 0) _getCurrencyChip(task, pointsAwarded: true),
 					]
-				else if(task.status.state == TaskState.rejected)
+				else if(task.status!.state == TaskState.rejected)
 					AttributeChip.withIcon(
 						content: AppLocales.of(context).translate('$_pageKey.content.chips.rejected'),
 						icon: Icons.close,
 						color: Colors.red,
 						tooltip: AppLocales.of(context).translate('$_pageKey.content.chips.rejectedTooltip'),
 					)
-				else if(task.status.state == TaskState.notEvaluated)
+				else if(task.status!.state == TaskState.notEvaluated)
 						...[
 							AttributeChip.withIcon(
 								content: AppLocales.of(context).translate('$_pageKey.content.chips.notEvaluated'),
@@ -303,11 +302,11 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 		);
 	}
 
-	AttributeChip _getCurrencyChip(UITaskInstance task, {String tooltip, bool pointsAwarded = false}) {
+	AttributeChip _getCurrencyChip(UITaskInstance task, {String? tooltip, bool pointsAwarded = false}) {
   	return AttributeChip.withCurrency(
-			content: pointsAwarded ? task.status.pointsAwarded.toString() : task.points.quantity.toString(),
-			currencyType: task.points.type,
-			tooltip: tooltip ?? task.points.title
+			content: pointsAwarded ? task.status!.pointsAwarded.toString() : task.points!.quantity.toString(),
+			currencyType: task.points!.type,
+			tooltip: tooltip ?? task.points!.title
 		);
 	}
 
@@ -328,7 +327,7 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 				'TIME_NUM': formatDuration(Duration(seconds: sumDurations(task.duration).inSeconds))
 			}),
 			icon: Icons.access_time,
-			color: task.timer == null || task.timer > sumDurations(task.duration).inMinutes ? Colors.lightGreen : Colors.deepOrange,
+			color: task.timer == null || task.timer! > sumDurations(task.duration).inMinutes ? Colors.lightGreen : Colors.deepOrange,
 			tooltip: AppLocales.of(context).translate('$_pageKey.content.taskTimer.duration'),
 		);
 	}
@@ -336,8 +335,8 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 	AttributeChip _getTimeChip(UITaskInstance task) {
   	return AttributeChip.withIcon(
 			content: AppLocales.of(context).translate('$_pageKey.content.taskTimer.format', {
-				'HOURS_NUM': (task.timer ~/ 60).toString(),
-				'MINUTES_NUM': (task.timer % 60).toString()
+				'HOURS_NUM': (task.timer! ~/ 60).toString(),
+				'MINUTES_NUM': (task.timer! % 60).toString()
 			}),
 			icon: Icons.timer,
 			color: Colors.orange,

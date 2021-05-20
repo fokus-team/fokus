@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
@@ -25,7 +24,7 @@ class _SettingsPageState extends State<SettingsPage> {
 	static const String _pageKey = 'page.settings.content';
 
 	List<String> languages = [LocaleCubit.defaultLanguageKey, ...AppLocalesDelegate.supportedLocales.map((locale) => '$locale')];
-	String _pickedLanguage;
+	String? _pickedLanguage;
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +33,7 @@ class _SettingsPageState extends State<SettingsPage> {
     var isCurrentUserCaregiver = authenticationBloc.state.user?.role == UserRole.caregiver;
 
 		// Loading current locale (don't work with "default" option)
-    _pickedLanguage = _pickedLanguage ?? AppLocales.of(context).locale.languageCode;
+    _pickedLanguage = _pickedLanguage ?? AppLocales.of(context).locale!.languageCode;
 
     return Scaffold(
       appBar: AppBar(
@@ -87,7 +86,7 @@ class _SettingsPageState extends State<SettingsPage> {
 		];
 	}
 
-	Widget _buildBasicListTile({String title, String subtitle, IconData icon, Color color, Function onTap}) {
+	Widget _buildBasicListTile({required String title, String? subtitle, required IconData icon, Color? color, required Function onTap}) {
 		return ListTile(
 			title: Text(title, style: TextStyle(color: color ?? Colors.black)),
 			subtitle: subtitle != null ? Text(subtitle) : null,
@@ -99,7 +98,7 @@ class _SettingsPageState extends State<SettingsPage> {
 				padding: EdgeInsets.only(left: 8.0),
 				child: Icon(icon, color: color ?? Colors.grey[600])
 			),
-			onTap: onTap
+			onTap: () => onTap
 		);
 	}
 
@@ -170,7 +169,7 @@ class _SettingsPageState extends State<SettingsPage> {
 								)
 							);
 						},
-						onChange: (selected) => _setLanguage(selected.value),
+						onChange: (selected) => _setLanguage(selected.value as String),
 					);
 				}
 			)

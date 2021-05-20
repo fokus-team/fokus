@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -38,7 +37,7 @@ class ChildProfilesPage extends StatelessWidget {
     );
   }
 
-	AuthGroup _buildSavedProfiles(BuildContext context, {SavedChildProfilesState state}) {
+	AuthGroup _buildSavedProfiles(BuildContext context, {SavedChildProfilesState? state}) {
 	  return AuthGroup(
 			title: AppLocales.of(context).translate('$_pageKey.profileLogInTitle'),
 			hint: AppLocales.of(context).translate('$_pageKey.profileLogInHint'),
@@ -60,9 +59,9 @@ class ChildProfilesPage extends StatelessWidget {
 								children: [
 									for (var child in state.savedProfiles)
 										ListTile(
-											onTap: () => context.read<SavedChildProfilesCubit>().signIn(child.id),
+											onTap: () => context.read<SavedChildProfilesCubit>().signIn(child.id!),
 											leading: FittedBox(child: AppAvatar(child.avatar)),
-											title: Text(child.name, style: Theme.of(context).textTheme.headline3),
+											title: Text(child.name!, style: Theme.of(context).textTheme.headline3),
 											trailing: FlatButton(
 												child: Icon(Icons.arrow_forward),
 												color: Colors.orange,
@@ -70,7 +69,7 @@ class ChildProfilesPage extends StatelessWidget {
 												padding: EdgeInsets.all(12),
 												materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
 												minWidth: 20,
-												onPressed: () => context.read<SavedChildProfilesCubit>().signIn(child.id)
+												onPressed: () => context.read<SavedChildProfilesCubit>().signIn(child.id!)
 											),
 											contentPadding: EdgeInsets.symmetric(vertical: 6.0, horizontal: 16.0),
 										)

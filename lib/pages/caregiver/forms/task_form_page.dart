@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_picker/flutter_picker.dart';
+import 'package:round_spot/round_spot.dart' as round_spot;
 
 import 'package:fokus/model/currency_type.dart';
 import 'package:fokus/model/navigation/task_form_params.dart';
@@ -241,22 +242,25 @@ class _TaskFormPageState extends State<TaskFormPage> {
 	}
 
 	Widget buildFormFields() {
-		return ListView(
-			physics: inReorder ? NeverScrollableScrollPhysics() : BouncingScrollPhysics(),
-			shrinkWrap: true,
-			children: <Widget>[
-				buildNameField(),
-				buildDescriptionField(),
-				buildSubtasksFields(),
-				Divider(),
-				SizedBox(height: 16.0),
-				getPointsFields(currencies: widget.params.currencies),
-				buildTimerField(),
-				Divider(),
-				buildOptionalField(),
-				if(!formModeIsCreate())
-					SizedBox(height: 32.0) 
-			]
+		return round_spot.Detector(
+			areaID: 'task-form',
+		  child: ListView(
+		  	physics: inReorder ? NeverScrollableScrollPhysics() : BouncingScrollPhysics(),
+		  	shrinkWrap: true,
+		  	children: <Widget>[
+		  		buildNameField(),
+		  		buildDescriptionField(),
+		  		buildSubtasksFields(),
+		  		Divider(),
+		  		SizedBox(height: 16.0),
+		  		getPointsFields(currencies: widget.params.currencies),
+		  		buildTimerField(),
+		  		Divider(),
+		  		buildOptionalField(),
+		  		if(!formModeIsCreate())
+		  			SizedBox(height: 32.0)
+		  	]
+		  ),
 		);
 	}
 

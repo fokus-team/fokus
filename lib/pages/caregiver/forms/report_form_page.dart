@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:round_spot/round_spot.dart' as round_spot;
 
 import 'package:fokus/logic/caregiver/tasks_evaluation_cubit.dart';
 import 'package:fokus/model/navigation/report_form_params.dart';
@@ -103,29 +104,32 @@ class _ReportFormPageState extends State<ReportFormPage> {
 	}
 
 	Widget _buildForm() {
-		return SingleChildScrollView(
-			clipBehavior: Clip.none,
-			child: Column(
-				children: [
-					Container(
-						margin: EdgeInsets.all(AppBoxProperties.screenEdgePadding),
-						child: Hero(
-							tag: widget.report.task.id.toString() + widget.report.task.duration.last.to.toString(),
-							child: ReportCard(report: widget.report, hideBottomBar: true)
-						)
-					),
-					ListView(
-						shrinkWrap: true,
-						physics: NeverScrollableScrollPhysics(),
-						children: <Widget>[
-							_buildRateField(),
-							_buildRejectField(),
-							_buildCommentField(),
-							SizedBox(height: 30.0)
-						]
-					)
-				]
-			)
+		return round_spot.Detector(
+			areaID: 'rating-form',
+		  child: SingleChildScrollView(
+		  	clipBehavior: Clip.none,
+		  	child: Column(
+		  		children: [
+		  			Container(
+		  				margin: EdgeInsets.all(AppBoxProperties.screenEdgePadding),
+		  				child: Hero(
+		  					tag: widget.report.task.id.toString() + widget.report.task.duration.last.to.toString(),
+		  					child: ReportCard(report: widget.report, hideBottomBar: true)
+		  				)
+		  			),
+		  			ListView(
+		  				shrinkWrap: true,
+		  				physics: NeverScrollableScrollPhysics(),
+		  				children: <Widget>[
+		  					_buildRateField(),
+		  					_buildRejectField(),
+		  					_buildCommentField(),
+		  					SizedBox(height: 30.0)
+		  				]
+		  			)
+		  		]
+		  	)
+		  ),
 		);
 	}
 

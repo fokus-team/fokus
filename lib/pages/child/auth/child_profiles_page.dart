@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:round_spot/round_spot.dart' as round_spot;
 
 import 'package:fokus/logic/child/auth/saved_child_profiles_cubit.dart';
 import 'package:fokus/model/ui/app_page.dart';
@@ -53,27 +54,30 @@ class ChildProfilesPage extends StatelessWidget {
 					if (state != null && state.savedProfiles.isNotEmpty)
 						Material(
 							type: MaterialType.transparency,
-							child: ListView(
-								padding: EdgeInsets.symmetric(vertical: 10.0),
-								shrinkWrap: true,
-								children: [
-									for (var child in state.savedProfiles)
-										ListTile(
-											onTap: () => context.read<SavedChildProfilesCubit>().signIn(child.id),
-											leading: FittedBox(child: AppAvatar(child.avatar)),
-											title: Text(child.name, style: Theme.of(context).textTheme.headline3),
-											trailing: FlatButton(
-												child: Icon(Icons.arrow_forward),
-												color: Colors.orange,
-												textColor: Colors.white,
-												padding: EdgeInsets.all(12),
-												materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-												minWidth: 20,
-												onPressed: () => context.read<SavedChildProfilesCubit>().signIn(child.id)
-											),
-											contentPadding: EdgeInsets.symmetric(vertical: 6.0, horizontal: 16.0),
-										)
-								]
+							child: round_spot.Detector(
+								areaID: 'child-profiles',
+							  child: ListView(
+							  	padding: EdgeInsets.symmetric(vertical: 10.0),
+							  	shrinkWrap: true,
+							  	children: [
+							  		for (var child in state.savedProfiles)
+							  			ListTile(
+							  				onTap: () => context.read<SavedChildProfilesCubit>().signIn(child.id),
+							  				leading: FittedBox(child: AppAvatar(child.avatar)),
+							  				title: Text(child.name, style: Theme.of(context).textTheme.headline3),
+							  				trailing: FlatButton(
+							  					child: Icon(Icons.arrow_forward),
+							  					color: Colors.orange,
+							  					textColor: Colors.white,
+							  					padding: EdgeInsets.all(12),
+							  					materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+							  					minWidth: 20,
+							  					onPressed: () => context.read<SavedChildProfilesCubit>().signIn(child.id)
+							  				),
+							  				contentPadding: EdgeInsets.symmetric(vertical: 6.0, horizontal: 16.0),
+							  			)
+							  	]
+							  ),
 							)
 						)
 					else

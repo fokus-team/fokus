@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/logic/caregiver/caregiver_awards_cubit.dart';
 import 'package:fokus/model/ui/app_page.dart';
+import 'package:fokus/model/ui/app_popup.dart';
 import 'package:fokus/model/ui/ui_button.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/ui/dialog_utils.dart';
@@ -69,7 +70,7 @@ class _CaregiverAwardsPageState extends State<CaregiverAwardsPage> {
 									);
 								}, null, Icons.delete)
 							],
-							onTapped: () => showRewardDialog(context, reward),
+							onTapped: () => showRewardDialog(context, reward, popupType: AppPopup.rewardDialog),
 						)
 				]
 			),

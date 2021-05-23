@@ -67,7 +67,7 @@ class _AppNavigationBarState extends State<AppNavigationBar> {
 	Widget build(BuildContext context) {
 		return round_spot.Detector(
 			areaID: 'bottom-nav-bar',
-			hasGlobalScope: true,
+			cumulative: true,
 			child: BottomNavigationBar(
 				backgroundColor: Colors.white,
 				currentIndex: widget.currentIndex,

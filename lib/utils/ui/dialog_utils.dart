@@ -6,6 +6,7 @@ import 'package:fokus/logic/child/child_rewards_cubit.dart';
 import 'package:fokus/logic/common/settings/account_delete/account_delete_cubit.dart';
 import 'package:fokus/logic/common/settings/name_change/name_change_cubit.dart';
 import 'package:fokus/logic/common/settings/password_change/password_change_cubit.dart';
+import 'package:fokus/model/ui/app_popup.dart';
 import 'package:fokus/model/ui/gamification/ui_badge.dart';
 import 'package:fokus/model/ui/gamification/ui_reward.dart';
 import 'package:fokus/model/ui/user/ui_user.dart';
@@ -142,10 +143,11 @@ void showCurrencyEditDialog(BuildContext context, Function(String) callback, {St
 	);
 }
 
-void showRewardDialog(BuildContext context, UIReward reward, {Function claimFeedback}) {
+void showRewardDialog(BuildContext context, UIReward reward, {Function claimFeedback, AppPopup popupType}) {
 	showDialog(
 		context: context,
-		builder: (_) => tryForwardCubit<ChildRewardsCubit>(RewardDialog(reward: reward, claimFeedback: claimFeedback), context)
+		builder: (_) => tryForwardCubit<ChildRewardsCubit>(RewardDialog(reward: reward, claimFeedback: claimFeedback), context),
+		routeSettings: RouteSettings(name: popupType.name),
 	);
 }
 

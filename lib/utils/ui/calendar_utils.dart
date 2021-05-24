@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 
@@ -8,7 +7,7 @@ Widget buildTableCalendarCell(DateTime date, Color seletedColor, {bool isCellSel
 		decoration: BoxDecoration(
 			shape: BoxShape.circle,
 			color: seletedColor,
-			border: isCellSelected ? Border.all(color: Colors.transparent, width: 0) : Border.all(color: Colors.grey[400], width: 1.0),
+			border: isCellSelected ? Border.all(color: Colors.transparent, width: 0) : Border.all(color: Colors.grey[400]!, width: 1.0),
 			boxShadow: [
 				if(isCellSelected)
 					BoxShadow(color: Colors.black26, blurRadius: 8.0)
@@ -28,11 +27,11 @@ Widget buildTableCalendarCell(DateTime date, Color seletedColor, {bool isCellSel
 	);
 }
 
-Widget buildMarker({Set<Color> colorSet, List<Color> colorList, bool inPast = false}) {
+Widget buildMarker({Set<Color>? colorSet, List<Color>? colorList, bool inPast = false}) {
 	return Wrap(
 		alignment: WrapAlignment.center,
 		spacing: 2.0,
-		children: (colorSet != null ? colorSet : colorList).take(4).map((marker) => Badge(
+		children: (colorSet != null ? colorSet : colorList!).take(4).map((marker) => Badge(
 			shape: inPast ? BadgeShape.square : BadgeShape.circle,
 			badgeColor: marker,
 			elevation: 0,

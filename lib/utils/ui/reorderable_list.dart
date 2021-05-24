@@ -1,11 +1,10 @@
-// @dart = 2.10
 import 'package:flutter/material.dart';
 import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorderable_list.dart';
 import 'theme_config.dart';
 
 
-Widget buildReorderableList<Type>({Widget header, Widget Function(Type) child, List<Type> items, Key Function(Type) getKey,
-		void Function(Type, int) onReorderStarted, void Function(Type, int, int, List<Type>) onReorderFinished}) {
+Widget buildReorderableList<Type extends Object>({required Widget header, required Widget Function(Type) child, required List<Type> items, required Key Function(Type) getKey,
+		required void Function(Type, int?) onReorderStarted, required void Function(Type, int?, int, List<Type>) onReorderFinished}) {
 	return ImplicitlyAnimatedReorderableList<Type>(
 		shrinkWrap: true,
 		physics: NeverScrollableScrollPhysics(),

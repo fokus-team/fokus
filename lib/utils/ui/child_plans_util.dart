@@ -1,4 +1,3 @@
-// @dart = 2.10
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,16 +19,16 @@ import 'package:fokus/widgets/segment.dart';
 
 final String _plansKey = 'plans';
 
-List<Widget> buildChildPlanSegments(List<UIPlanInstance> plans, BuildContext context) {
-	var activePlan = plans.firstWhere((plan) => plan.state == PlanInstanceState.active, orElse: () => null);
-	var otherPlans = plans.where((plan) => (activePlan == null || plan.id != activePlan.id) && plan.state != PlanInstanceState.completed).toList();
-	var completedPlans = plans.where((plan) => plan.state == PlanInstanceState.completed).toList();
+List<Widget> buildChildPlanSegments(List<UIPlanInstance?> plans, BuildContext context) {
+	UIPlanInstance? activePlan = plans.firstWhere((plan) => plan != null && plan.state == PlanInstanceState.active, orElse: () => null);
+	List<UIPlanInstance?> otherPlans = plans.where((plan) => (activePlan == null || (plan!= null && plan.id != activePlan.id && plan.state != PlanInstanceState.completed))).toList();
+	var completedPlans = plans.where((plan) => plan!= null && plan.state == PlanInstanceState.completed).toList();
 
 	return [
 		if(activePlan != null)
 			isInProgress(activePlan.duration) ?
 			BlocProvider<TimerCubit>(
-				create: (_) => TimerCubit.up(activePlan.elapsedActiveTime)..startTimer(),
+				create: (_) => TimerCubit.up(activePlan.elapsedActiveTime!)..startTimer(),
 				child: _getPlansSegment(
 					context: context,
 					plans: [activePlan],
@@ -58,7 +57,7 @@ List<Widget> buildChildPlanSegments(List<UIPlanInstance> plans, BuildContext con
 	];
 }
 
-Segment _getPlansSegment({BuildContext context, List<UIPlanInstance> plans, String title, String noElementsMessage, bool displayTimer = false}) {
+Segment _getPlansSegment({required BuildContext context, required List<UIPlanInstance?> plans, required String title, String? noElementsMessage, bool displayTimer = false}) {
 	var userRole = BlocProvider.of<AuthenticationBloc>(context).state.user?.role;
 	return Segment(
 		title: title,
@@ -66,10 +65,10 @@ Segment _getPlansSegment({BuildContext context, List<UIPlanInstance> plans, Stri
 		elements: <Widget>[
 			for (var plan in plans)
 				ItemCard(
-					isActive: plan.state != PlanInstanceState.completed,
-					title: plan.name,
-					subtitle: plan.description(context),
-					progressPercentage: (plan.state.inProgress || plan.state.ended) ? plan.completedTaskCount / plan.taskCount : null,
+					isActive: plan!.state != PlanInstanceState.completed,
+					title: plan.name!,
+					subtitle: plan.description!(context),
+					progressPercentage: (plan.state!.inProgress || plan.state!.ended) ? plan.completedTaskCount! / plan.taskCount! : null,
 					chips: _getTaskChipForPlan(context, plan, displayTimer),
 					onTapped: () => Navigator.of(context).pushNamed(AppPage.planInstanceDetails.name, arguments: PlanInstanceParams(planInstance: plan, actions: userRole == UserRole.child))
 				)
@@ -79,24 +78,24 @@ Segment _getPlansSegment({BuildContext context, List<UIPlanInstance> plans, Stri
 
 List<Widget> _getTaskChipForPlan(BuildContext context, UIPlanInstance plan, bool displayTimer) {
 	List<Widget> chips = [];
-	var taskDescriptionKey = '$_plansKey.' + (plan.completedTaskCount > 0 ? 'taskProgress' : 'noTaskCompleted');
+	var taskDescriptionKey = '$_plansKey.' + (plan.completedTaskCount! > 0 ? 'taskProgress' : 'noTaskCompleted');
 	if (displayTimer) chips.add(TimerChip(color: AppColors.childButtonColor));
-	else if(plan.duration != null && plan.duration.isNotEmpty && !isInProgress(plan.duration))
+	else if(plan.duration != null && plan.duration!.isNotEmpty && !isInProgress(plan.duration))
 		chips.add(AttributeChip.withIcon(
 			icon: Icons.timer,
 			color: Colors.orange,
 			content: formatDuration(sumDurations(plan.duration))
 		));
-	if (!plan.state.inProgress)
+	if (!plan.state!.inProgress)
 		chips.add(AttributeChip.withIcon(
 			icon: Icons.description,
 			color: AppColors.mainBackgroundColor,
-			content: AppLocales.of(context).translate('$_plansKey.tasks', {'NUM_TASKS': plan.taskCount})
+			content: AppLocales.of(context).translate('$_plansKey.tasks', {'NUM_TASKS': plan.taskCount!})
 		));
 	else chips.add(AttributeChip.withIcon(
 		icon: Icons.description,
 		color: Colors.lightGreen,
-		content: AppLocales.of(context).translate(taskDescriptionKey, {'NUM_TASKS': plan.completedTaskCount, 'NUM_ALL_TASKS': plan.taskCount})
+		content: AppLocales.of(context).translate(taskDescriptionKey, {'NUM_TASKS': plan.completedTaskCount!, 'NUM_ALL_TASKS': plan.taskCount!})
 	));
 	return chips;
 }

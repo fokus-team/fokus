@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
@@ -31,11 +30,11 @@ class CaregiverSignInPage extends StatelessWidget {
 				  listener: (context, state) {
 					  if (state.status.isSubmissionFailure) {
 					  	if (state.signInError != null)
-							  showFailSnackbar(context, state.signInError?.key);
+							  showFailSnackbar(context, state.signInError!.key);
 					  	else if (state.passwordResetError != null)
 								showFailSnackbar(context, 'authentication.error.emailLink', {
 	                'TYPE': '${AppLinkType.passwordReset.index}',
-	                'ERR': '${state.passwordResetError.index}'
+	                'ERR': '${state.passwordResetError!.index}'
 	              });
 				    }
 				  },
@@ -77,7 +76,7 @@ class CaregiverSignInPage extends StatelessWidget {
 								changedAction: (cubit, value) => cubit.emailChanged(value),
 								labelKey: 'authentication.email',
 								icon: Icons.email,
-								getErrorKey: (state) => [state.email.error.key],
+								getErrorKey: (state) => [state.email.error!.key],
 								inputType: TextInputType.emailAddress,
 								autofillHints: [AutofillHints.email]
 							),
@@ -86,7 +85,7 @@ class CaregiverSignInPage extends StatelessWidget {
 								changedAction: (cubit, value) => cubit.passwordChanged(value),
 								labelKey: 'authentication.password',
 								icon: Icons.lock,
-								getErrorKey: (state) => [state.password.error.key],
+								getErrorKey: (state) => [state.password.error!.key],
 								hideInput: true,
 								autofillHints: [AutofillHints.password]
 							),

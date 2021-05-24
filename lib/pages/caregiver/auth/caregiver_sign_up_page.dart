@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -31,7 +30,7 @@ class CaregiverSignUpPage extends StatelessWidget {
 			  child: BlocListener<CaregiverSignUpCubit, CaregiverSignUpState>(
 				  listener: (context, state) async {
 					  if (state.status.isSubmissionFailure && (state.signInError != null || state.signUpError != null))
-							showFailSnackbar(context, state.signUpError?.key ?? state.signInError.key);
+							showFailSnackbar(context, state.signUpError?.key ?? state.signInError!.key);
 					  else if (state.status.isSubmissionSuccess && state.authMethod == AuthMethod.email && await context.read<CaregiverSignUpCubit>().verificationEnforced()) {
 							TextInput.finishAutofillContext(shouldSave: true);
 							showSuccessSnackbar(context, 'authentication.emailVerificationSent');
@@ -69,7 +68,7 @@ class CaregiverSignUpPage extends StatelessWidget {
 								changedAction: (cubit, value) => cubit.nameChanged(value),
 								labelKey: 'authentication.name',
 								icon: Icons.person,
-								getErrorKey: (state) => [state.name.error.key],
+								getErrorKey: (state) => [state.name.error!.key],
 								inputType: TextInputType.name,
 								autofillHints: [AutofillHints.givenName],
 							),
@@ -78,7 +77,7 @@ class CaregiverSignUpPage extends StatelessWidget {
 								changedAction: (cubit, value) => cubit.emailChanged(value),
 								labelKey: 'authentication.email',
 								icon: Icons.email,
-								getErrorKey: (state) => [state.email.error.key],
+								getErrorKey: (state) => [state.email.error!.key],
 								inputType: TextInputType.emailAddress,
 								autofillHints: [AutofillHints.email],
 							),
@@ -87,7 +86,7 @@ class CaregiverSignUpPage extends StatelessWidget {
 								changedAction: (cubit, value) => cubit.passwordChanged(value),
 								labelKey: 'authentication.password',
 								icon: Icons.lock,
-								getErrorKey: (state) => [state.password.error.key, {'LENGTH': Password.minPasswordLength}],
+								getErrorKey: (state) => [state.password.error!.key, {'LENGTH': Password.minPasswordLength}],
 								hideInput: true,
 								autofillHints: [AutofillHints.newPassword],
 							),
@@ -96,7 +95,7 @@ class CaregiverSignUpPage extends StatelessWidget {
 								changedAction: (cubit, value) => cubit.confirmedPasswordChanged(value),
 								labelKey: 'authentication.confirmPassword',
 								icon: Icons.lock,
-								getErrorKey: (state) => [state.confirmedPassword.error.key],
+								getErrorKey: (state) => [state.confirmedPassword.error!.key],
 								hideInput: true,
 								autofillHints: [AutofillHints.newPassword],
 							),
@@ -145,8 +144,8 @@ class CaregiverSignUpPage extends StatelessWidget {
 											padding: EdgeInsets.only(right: 8.0),
 											child: Checkbox(
 												value: state.agreement.value,
-												onChanged: (bool newValue) {
-													BlocProvider.of<CaregiverSignUpCubit>(context).agreementChanged(newValue);
+												onChanged: (bool? newValue) {
+													if(newValue != null) BlocProvider.of<CaregiverSignUpCubit>(context).agreementChanged(newValue);
 												}
 											)
 										),

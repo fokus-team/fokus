@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -17,9 +16,9 @@ import 'package:fokus/model/db/user/user_role.dart';
 
 class RewardDialog extends StatefulWidget {
 	final UIReward reward;
-	final Function claimFeedback;
+	final void Function()? claimFeedback;
 
-	RewardDialog({@required this.reward, this.claimFeedback});
+	RewardDialog({required this.reward, this.claimFeedback});
 
 	@override
 	_RewardDialogState createState() => new _RewardDialogState();
@@ -27,7 +26,7 @@ class RewardDialog extends StatefulWidget {
 
 class _RewardDialogState extends State<RewardDialog> with SingleTickerProviderStateMixin {
   static const String _pageKey = 'page.childSection.rewards.content';
-	AnimationController _rotationController;
+	late AnimationController _rotationController;
 
 	@override
 	void initState() {
@@ -44,7 +43,7 @@ class _RewardDialogState extends State<RewardDialog> with SingleTickerProviderSt
 
   @override
   Widget build(BuildContext context) {
-		var userRole = context.watch<AuthenticationBloc>().state.user.role;
+		var userRole = context.watch<AuthenticationBloc>().state.user?.role;
 		return Dialog(
 			insetPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
 			child: SingleChildScrollView(
@@ -75,7 +74,7 @@ class _RewardDialogState extends State<RewardDialog> with SingleTickerProviderSt
 								]
 							),
 							Text(
-								widget.reward.name,
+								widget.reward.name!,
 								style: Theme.of(context).textTheme.headline1,
 								textAlign: TextAlign.center
 							),
@@ -90,9 +89,9 @@ class _RewardDialogState extends State<RewardDialog> with SingleTickerProviderSt
 										style: TextStyle(color: AppColors.mediumTextColor)
 									),
 									AttributeChip.withCurrency(
-										currencyType: widget.reward.cost.type,
-										content: widget.reward.cost.quantity.toString(),
-										tooltip: widget.reward.cost.title
+										currencyType: widget.reward.cost!.type!,
+										content: widget.reward.cost!.quantity.toString(),
+										tooltip: widget.reward.cost!.title
 									)
 								]
 							),

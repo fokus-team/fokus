@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fokus/model/ui/gamification/ui_badge.dart';
@@ -11,9 +10,9 @@ import 'package:intl/intl.dart';
 
 class BadgeDialog extends StatefulWidget {
 	final UIBadge badge;
-	final bool showHeader;
+	final bool? showHeader;
 
-	BadgeDialog({@required this.badge, this.showHeader});
+	BadgeDialog({required this.badge, this.showHeader});
 
 	@override
 	_BadgeDialogState createState() => new _BadgeDialogState();
@@ -21,7 +20,7 @@ class BadgeDialog extends StatefulWidget {
 
 class _BadgeDialogState extends State<BadgeDialog> with SingleTickerProviderStateMixin {
   static const String _pageKey = 'page.childSection.achievements.content';
-	AnimationController _rotationController;
+	late AnimationController _rotationController;
 
 	@override
 	void initState() {
@@ -46,7 +45,7 @@ class _BadgeDialogState extends State<BadgeDialog> with SingleTickerProviderStat
 					child: Column(
 						mainAxisSize: MainAxisSize.min,
 						children: [
-							if(widget.showHeader)	
+							if(widget.showHeader != null && widget.showHeader!)
 								Padding(
 									padding: EdgeInsets.all(20.0).copyWith(bottom: 0), 
 									child: Text(
@@ -68,7 +67,7 @@ class _BadgeDialogState extends State<BadgeDialog> with SingleTickerProviderStat
 								]
 							),
 							Text(
-								widget.badge.name,
+								widget.badge.name!,
 								style: Theme.of(context).textTheme.headline1,
 								textAlign: TextAlign.center
 							),
@@ -76,7 +75,7 @@ class _BadgeDialogState extends State<BadgeDialog> with SingleTickerProviderStat
 							if(widget.badge is UIChildBadge && (widget.badge as UIChildBadge).date != null)
 								Text(
 									AppLocales.of(context).translate('$_pageKey.earnedBadgeDate') + ': '
-										+ DateFormat.yMd(AppLocales.instance.locale.toString()).format((widget.badge as UIChildBadge).date),
+										+ DateFormat.yMd(AppLocales.instance.locale.toString()).format((widget.badge as UIChildBadge).date!),
 									style: Theme.of(context).textTheme.caption,
 									textAlign: TextAlign.center
 								),
@@ -84,7 +83,7 @@ class _BadgeDialogState extends State<BadgeDialog> with SingleTickerProviderStat
 								Padding(
 									padding: EdgeInsets.symmetric(vertical: 10.0),
 									child: Text(
-										widget.badge.description,
+										widget.badge.description!,
 										style: Theme.of(context).textTheme.bodyText2,
 										textAlign: TextAlign.center
 									)

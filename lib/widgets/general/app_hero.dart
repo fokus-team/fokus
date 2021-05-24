@@ -1,18 +1,17 @@
-// @dart = 2.10
 import 'package:flutter/material.dart';
 import 'package:fokus/utils/ui/theme_config.dart';
 
 class AppHero extends StatelessWidget {
-	final String header;
+	final String? header;
 	final String title;
-	final IconData icon;
-	final Color color;
-	final Widget actionWidget;
+	final IconData? icon;
+	final Color? color;
+	final Widget? actionWidget;
 	final bool dense;
 
 	AppHero({
 		this.header,
-		@required this.title,
+		required this.title,
 		this.icon,
 		this.color,
 		this.actionWidget,
@@ -21,7 +20,7 @@ class AppHero extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-		Color heroColor = color ?? Colors.grey[500];
+		Color heroColor = color ?? Colors.grey[500]!;
 
 		return Center(
 			child: Padding(
@@ -39,7 +38,7 @@ class AppHero extends StatelessWidget {
 							),
 						if(header != null)
 							Text(
-								header,
+								header!,
 								style: TextStyle(
 									fontSize: 20.0,
 									color: Colors.grey[700],

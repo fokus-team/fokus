@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorderable_list.dart';
@@ -26,11 +25,11 @@ class TaskList extends StatefulWidget {
 	final bool isCreateMode;
 
 	TaskList({
-		@required this.plan,
-		@required this.goBackCallback,
-		@required this.submitCallback,
-		@required this.isCreateMode,
-		Key key
+		required this.plan,
+		required this.goBackCallback,
+		required this.submitCallback,
+		required this.isCreateMode,
+		required Key key
 	}) : super(key: key);
 
 	@override
@@ -75,9 +74,9 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 	void sortTasks() {
 		setState(() {
 			widget.plan.tasks.sort((a, b) {
-				if (a.optional && !b.optional) 
+				if (a.optional! && !b.optional!)
 					return 1;
-				if (!a.optional && b.optional) 
+				if (!a.optional! && b.optional!)
 					return -1;
 				return 0;
 			});
@@ -322,7 +321,7 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 							)
 						);
 					},
-					layoutBuilder: (Widget currentChild, List<Widget> previousChildren) {
+					layoutBuilder: (Widget? currentChild, List<Widget> previousChildren) {
 						List<Widget> children = previousChildren;
 						if (currentChild != null)
 							children = children.toList()..add(currentChild);

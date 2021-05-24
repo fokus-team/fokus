@@ -1,6 +1,3 @@
-// @dart = 2.10
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/logic/caregiver/forms/plan/plan_form_cubit.dart';
@@ -28,8 +25,8 @@ class PlanForm extends StatefulWidget {
 	final Function goNextCallback;
 
 	PlanForm({
-		@required this.plan,
-		@required this.goNextCallback
+		required this.plan,
+		required this.goNextCallback
 	});
 
 	@override
@@ -46,7 +43,7 @@ class _PlanFormState extends State<PlanForm> {
 	TextEditingController _dateRageFromController = TextEditingController();
 	TextEditingController _dateRageToController = TextEditingController();
 
-	String getOnlyDatePart(DateTime date) => date != null ? date.toLocal().toString().split(' ')[0] : '';
+	String getOnlyDatePart(DateTime? date) => date != null ? date.toLocal().toString().split(' ')[0] : '';
 
 	void setDateCallback(DateTime pickedDate, Function dateSetter, TextEditingController dateContoller) {
 		setState(() {
@@ -105,7 +102,7 @@ class _PlanFormState extends State<PlanForm> {
 				maxLength: AppFormProperties.textFieldMaxLength,
 				textCapitalization: TextCapitalization.sentences,
 				validator: (value) {
-					return value.trim().isEmpty ? AppLocales.of(context).translate('$_pageKey.planName.emptyError') : null;
+					return value!.trim().isEmpty ? AppLocales.of(context).translate('$_pageKey.planName.emptyError') : null;
 				},
 				onChanged: (val) => setState(() => widget.plan.name = val)
 			)
@@ -129,21 +126,21 @@ class _PlanFormState extends State<PlanForm> {
 			selectedValue: widget.plan.children,
 			choiceItems: S2Choice.listFrom<Mongo.ObjectId, UIChild>(
 				source: children,
-				value: (index, item) => item.id,
-				title: (index, item) => item.name,
+				value: (index, item) => item.id!,
+				title: (index, item) => item.name!,
 				meta: (index, item) => item
 			),
 			choiceType: S2ChoiceType.chips,
 			choiceBuilder: (context, selectState, choice) => Theme(
 				data: ThemeData(textTheme: Theme.of(context).textTheme),
 				child: ItemCard(
-					title: choice.title,
+					title: choice.title!,
 					subtitle: AppLocales.of(context).translate(choice.selected ? 'actions.selected' : 'actions.tapToSelect'),
 					graphicType: AssetType.avatars,
 					graphic: choice.meta.avatar,
 					graphicShowCheckmark: choice.selected,
 					graphicHeight: 44.0,
-					onTapped: () => choice.select(!choice.selected),
+					onTapped: () => choice.select!(!choice.selected),
 					isActive: choice.selected
 				)
 			),
@@ -159,9 +156,9 @@ class _PlanFormState extends State<PlanForm> {
 					subtitle: Text(
 						loading ?
 							AppLocales.of(context).translate('loading')
-							: selectState.selected == null || selectState.selected.length == 0 ?
+							: selectState.selected == null || selectState.selected?.length == 0 ?
 								AppLocales.of(context).translate('$_pageKey.assignedChildren.hint')
-								: selectState.selected.title.join(', '),
+								: selectState.selected!.title!.join(', '),
 						style: TextStyle(color: Colors.grey),
 						overflow: TextOverflow.ellipsis,
 						maxLines: 1
@@ -179,9 +176,9 @@ class _PlanFormState extends State<PlanForm> {
 				return ButtonSheetConfirmButton(callback: () => selectState.closeModal(confirmed: true));
 			},
 			onChange: (selected) => setState(() {
-				FocusManager.instance.primaryFocus.unfocus();
+				FocusManager.instance.primaryFocus?.unfocus();
 				widget.plan.children.clear();
-				widget.plan.children = selected.value;
+				widget.plan.children = selected!.value!;
 			})
 		);
 	}
@@ -209,7 +206,7 @@ class _PlanFormState extends State<PlanForm> {
 					leading: Padding(padding: EdgeInsets.all(8.0), child: Icon(Icons.refresh)),
 					title: Text(AppLocales.of(context).translate('$_pageKey.repeatability.label')),
 					subtitle: Text(
-						AppLocales.of(context).translate('$_pageKey.repeatability.options.${selectState.selected.value.toString().split('.').last}'),
+						AppLocales.of(context).translate('$_pageKey.repeatability.options.${selectState.selected?.value.toString().split('.').last}'),
 						style: TextStyle(color: Colors.grey),
 						overflow: TextOverflow.ellipsis,
 						maxLines: 1
@@ -219,8 +216,8 @@ class _PlanFormState extends State<PlanForm> {
 				);
 			},
 			onChange: (selected) {
-				FocusManager.instance.primaryFocus.unfocus();
-				setState(() => widget.plan.repeatability = selected.value);
+				FocusManager.instance.primaryFocus?.unfocus();
+				setState(() => widget.plan.repeatability = selected.value!);
 			}
 		);
 	}
@@ -229,7 +226,7 @@ class _PlanFormState extends State<PlanForm> {
 		bool isWeekly = widget.plan.repeatabilityRage == PlanFormRepeatabilityRage.weekly;
 		List<int> dayList = List<int>.generate(isWeekly ? 7 : 31, (i) => i + 1);
 
-		String daysDisplay(List<int> values) {
+		String daysDisplay(List<int>? values) {
 			if(values == null || values.isEmpty)
 				return AppLocales.of(context).translate('$_pageKey.days.hint');
 			if(values.length == dayList.length)
@@ -239,7 +236,7 @@ class _PlanFormState extends State<PlanForm> {
 			).join(', ');
 		}
 
-		List<S2Choice> dayChoiceList = S2Choice.listFrom<int, int>(
+		List<S2Choice<int>> dayChoiceList = S2Choice.listFrom<int, int>(
 			source: dayList,
 			value: (index, item) => item,
 			title: (index, item) => isWeekly ? AppLocales.of(context).translate('date.weekday', {'WEEKDAY': item.toString()}) : item.toString()
@@ -269,7 +266,7 @@ class _PlanFormState extends State<PlanForm> {
 							leading: Padding(padding: EdgeInsets.all(8.0), child: Icon(Icons.event)),
 							title: Text(AppLocales.of(context).translate('$_pageKey.repeatabilityRange.label')),
 							subtitle: Text(
-								AppLocales.of(context).translate('$_pageKey.repeatabilityRange.options.${selectState.selected.value.toString().split('.').last}'),
+								AppLocales.of(context).translate('$_pageKey.repeatabilityRange.options.${selectState.selected?.value.toString().split('.').last}'),
 								style: TextStyle(color: Colors.grey),
 								overflow: TextOverflow.ellipsis,
 								maxLines: 1
@@ -279,8 +276,8 @@ class _PlanFormState extends State<PlanForm> {
 						);
 					},
 					onChange: (selected) => setState(() {
-						FocusManager.instance.primaryFocus.unfocus();
-						widget.plan.repeatabilityRage = selected.value;
+						FocusManager.instance.primaryFocus?.unfocus();
+						widget.plan.repeatabilityRage = selected.value!;
 					}),
 				),
 				SmartSelect<int>.multiple(
@@ -290,7 +287,7 @@ class _PlanFormState extends State<PlanForm> {
 					choiceType: S2ChoiceType.chips,
 					validation: (chosen) {
             if (chosen.isEmpty) return AppLocales.of(context).translate('$_pageKey.days.hint');
-            return null;
+            return '';
           },
 					modalType: S2ModalType.bottomSheet,
 					modalConfig: S2ModalConfig(
@@ -304,14 +301,14 @@ class _PlanFormState extends State<PlanForm> {
 									CheckboxListTile(
 										title: Text(AppLocales.of(context).translate('date.everyday')),
 										activeColor: selectState.choiceActiveStyle?.color ?? selectState.defaultActiveChoiceStyle.color,
-										value: selectState.selection.length == selectState.choices.length
+										value: selectState.selection?.length == selectState.choices?.length
 											? true : false,
 										onChanged: (value) {
 											if (value == true) {
-												selectState.selection.clear();
-												selectState.selection.merge(dayChoiceList.toList());
+												selectState.selection?.clear();
+												selectState.selection?.merge(dayChoiceList.toList());
 											} else {
-												selectState.selection.clear();
+												selectState.selection?.clear();
 											}
 										},
 									),
@@ -319,14 +316,14 @@ class _PlanFormState extends State<PlanForm> {
 										CheckboxListTile(
 											title: Text(AppLocales.of(context).translate('date.workdays')),
 											activeColor: selectState.choiceActiveStyle?.color ?? selectState.defaultActiveChoiceStyle.color,
-											value: selectState.selection.hasAll(dayChoiceList.take(5).toList()) && !selectState.selection.hasAny(dayChoiceList.skip(5).toList())
+											value: selectState.selection!.hasAll(dayChoiceList.take(5).toList()) && !selectState.selection!.hasAny(dayChoiceList.skip(5).toList())
 												? true : false,
 											onChanged: (value) {
 												if (value == true) {
-													selectState.selection.clear();
-													selectState.selection.merge(dayChoiceList.take(5).toList());
+													selectState.selection?.clear();
+													selectState.selection?.merge(dayChoiceList.take(5).toList());
 												} else {
-													selectState.selection.clear();
+													selectState.selection?.clear();
 												}
 											},
 										)
@@ -342,7 +339,7 @@ class _PlanFormState extends State<PlanForm> {
 							leading: Padding(padding: EdgeInsets.all(8.0), child: Icon(Icons.date_range)),
 							title: Text(AppLocales.of(context).translate('$_pageKey.days.label${isWeekly ? 'Weekly' : 'Monthly'}')),
 							subtitle: Text(
-								daysDisplay(selectState.selected.value),
+								daysDisplay(selectState.selected!.value),
 								style: TextStyle(color: (fieldsValidated && widget.plan.days.isEmpty) ? Theme.of(context).errorColor : Colors.grey),
 								overflow: TextOverflow.ellipsis,
 								maxLines: 1
@@ -352,8 +349,8 @@ class _PlanFormState extends State<PlanForm> {
 						);
 					},
 					onChange: (selected) {
-						FocusManager.instance.primaryFocus.unfocus();
-						setState(() => { widget.plan.days = selected.value });
+						FocusManager.instance.primaryFocus?.unfocus();
+						setState(() => { widget.plan.days = selected!.value! });
 					}
 				),
 				Divider(),

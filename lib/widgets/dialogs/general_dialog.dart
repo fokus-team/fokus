@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'package:flutter/material.dart';
 import 'package:fokus/model/ui/ui_button.dart';
 import 'package:fokus/utils/ui/theme_config.dart';
@@ -7,15 +6,15 @@ enum GeneralDialogType { confirm, discard }
 
 class GeneralDialog extends StatelessWidget {
 	final String title;
-	final String content;
-	final RichText richContent;
-	final UIButton cancelButton;
-	final UIButton confirmButton;
-	final UIButton discardButton;
-	final GeneralDialogType type;
+	final String? content;
+	final RichText? richContent;
+	final UIButton? cancelButton;
+	final UIButton? confirmButton;
+	final UIButton? discardButton;
+	final GeneralDialogType? type;
 
 	GeneralDialog({
-		@required this.title,
+		required this.title,
 		this.content,
 		this.richContent,
 		this.cancelButton,
@@ -25,15 +24,15 @@ class GeneralDialog extends StatelessWidget {
 	});
 
 	GeneralDialog.confirm({
-		String title,
-		String content,
-		String confirmText,
-		Color confirmColor,
-		RichText richContent,
-		Function confirmAction,
-		String cancelText,
-		Color cancelColor,
-		Function cancelAction
+		required String title,
+		String? content,
+		String? confirmText,
+		Color? confirmColor,
+		RichText? richContent,
+		void Function()? confirmAction,
+		String? cancelText,
+		Color? cancelColor,
+		void Function()? cancelAction
 	}) : this(
 		title: title,
 		content: content,
@@ -52,11 +51,11 @@ class GeneralDialog extends StatelessWidget {
 	);
 
 	GeneralDialog.discard({
-		String title,
-		String content,
-		String discardText,
-		Color discardColor,
-		Function discardAction,
+		required String title,
+		String? content,
+		String? discardText,
+		Color? discardColor,
+		void Function()? discardAction,
 	}) : this(
 		title: title,
 		content: content,
@@ -72,14 +71,14 @@ class GeneralDialog extends StatelessWidget {
   Widget build(BuildContext context) {
 		return AlertDialog(
 			title: Text(title),
-			content: richContent ?? Text(content),
+			content: richContent ?? Text(content!),
 			actions: [
 				if(type == GeneralDialogType.discard)
-					discardButton.getWidget(context),
+					discardButton!.getWidget(context),
 				if(type == GeneralDialogType.confirm)
-					cancelButton.getWidget(context),
+					cancelButton!.getWidget(context),
 				if(type == GeneralDialogType.confirm)
-					confirmButton.getWidget(context)
+					confirmButton!.getWidget(context)
 			]
 		);
 	}

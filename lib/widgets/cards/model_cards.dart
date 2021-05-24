@@ -23,7 +23,7 @@ class RewardItemCard extends StatelessWidget {
 	final Color? activeProgressBarColor;
 	final ItemCardActionButton? actionButton;
 	final List<UIButton>? menuItems;
-	final Function? onTapped;
+	final void Function()? onTapped;
 
 	final String _rewardsKey = 'rewards';
 
@@ -68,7 +68,7 @@ class RewardItemCard extends StatelessWidget {
 
 class ChildItemCard extends StatelessWidget {
 	final UIChild child;
-	final Function? onTapped;
+	final void Function()? onTapped;
 
 	const ChildItemCard({required this.child, this.onTapped});
 

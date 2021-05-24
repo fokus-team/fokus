@@ -86,7 +86,7 @@ class _SettingsPageState extends State<SettingsPage> {
 		];
 	}
 
-	Widget _buildBasicListTile({required String title, String? subtitle, required IconData icon, Color? color, required Function onTap}) {
+	Widget _buildBasicListTile({required String title, String? subtitle, required IconData icon, Color? color, required void Function() onTap}) {
 		return ListTile(
 			title: Text(title, style: TextStyle(color: color ?? Colors.black)),
 			subtitle: subtitle != null ? Text(subtitle) : null,
@@ -98,7 +98,7 @@ class _SettingsPageState extends State<SettingsPage> {
 				padding: EdgeInsets.only(left: 8.0),
 				child: Icon(icon, color: color ?? Colors.grey[600])
 			),
-			onTap: () => onTap
+			onTap: onTap
 		);
 	}
 

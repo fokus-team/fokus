@@ -61,7 +61,10 @@ class CaregiverPanelPage extends StatelessWidget {
 				),
 				elements: <Widget>[
 					for (var child in state.children)
-						ChildItemCard(child: child, onTapped: () => Navigator.of(context).pushNamed(AppPage.caregiverChildDashboard.name, arguments: ChildDashboardParams(child: child))),
+						ChildItemCard(
+							child: child,
+							onTapped: () => Navigator.of(context).pushNamed(AppPage.caregiverChildDashboard.name, arguments: ChildDashboardParams(child: child))
+						),
 				]
 			),
 			Segment(

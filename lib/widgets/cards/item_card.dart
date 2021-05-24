@@ -11,7 +11,7 @@ import 'package:fokus/widgets/general/app_avatar.dart';
 class ItemCardActionButton {
 	final IconData icon;
 	final Color color;
-	final Function? onTapped;
+	final void Function()? onTapped;
 	final bool disabled;
 	final double size;
 
@@ -38,7 +38,7 @@ class ItemCard extends StatelessWidget {
 	final List<Widget>? chips;
 	final List<UIButton>? menuItems;
 	final ItemCardActionButton? actionButton;
-	final Function? onTapped;
+	final void Function()? onTapped;
 	final bool isActive;
 	final int textMaxLines;
 	final Color? activeProgressBarColor;
@@ -96,7 +96,7 @@ class ItemCard extends StatelessWidget {
         horizontal: AppBoxProperties.screenEdgePadding
       ),
       child: (onTapped != null) ? InkWell(
-        onTap: () => onTapped!,
+        onTap: onTapped,
         child: buildStructure(context),
         borderRadius: BorderRadius.circular(AppBoxProperties.roundedCornersRadius)
       ) : buildStructure(context)
@@ -241,7 +241,7 @@ class ItemCard extends StatelessWidget {
           child: MaterialButton(
             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             padding: EdgeInsets.all(8.0),
-            onPressed: actionButton!.disabled ? null : () => actionButton!.onTapped,
+            onPressed: actionButton!.disabled ? null : actionButton!.onTapped,
             child: Icon(actionButton!.icon, color: Colors.white, size: actionButton!.size),
             minWidth: 0
           )

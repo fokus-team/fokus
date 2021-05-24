@@ -83,7 +83,7 @@ class AuthGroup extends StatelessWidget {
 class AuthFloatingButton extends StatelessWidget {
 	final String text;
 	final IconData icon;
-	final Function? action;
+	final void Function()? action;
 
 	AuthFloatingButton({
 		required this.text,
@@ -94,14 +94,13 @@ class AuthFloatingButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 		return FlatButton.icon(
-			onPressed: () => action,
+			onPressed: action,
 			icon: Icon(icon, color: Colors.white),
 			label: Text(text, style: Theme.of(context).textTheme.button)
 		);
   }
 
 }
-
 
 class AuthDivider extends StatelessWidget {
 	final String textKey;

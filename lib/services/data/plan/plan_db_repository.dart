@@ -88,13 +88,6 @@ mixin PlanDbRepository implements DbRepository {
 		return dbClient.updateAll(Collection.plan, planIDs.map((id) => query(id)).toList(), List.filled(planIDs.length, planModify));
 	}
 
-	Future updatePlanInstance(PlanInstance planInstance) => dbClient.update(Collection.planInstance, _buildPlanQuery(id: planInstance.id), planInstance.toJson(), multiUpdate: false);
-
-	Future updateMultiplePlanInstances(List<PlanInstance> planInstances) {
-		return dbClient.updateAll(Collection.planInstance, planInstances.map((planInstance) => _buildPlanQuery(id: planInstance.id)).toList(),
-				planInstances.map((planInstance) => planInstance.toJson()).toList(), multiUpdate: false);
-	}
-
 	Future updateActivePlanInstanceState(ObjectId childId, PlanInstanceState? state) {
 		var document = modify;
 		if (state != null)

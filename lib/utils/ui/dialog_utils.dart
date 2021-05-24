@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -48,12 +47,12 @@ void showHelpDialog(BuildContext context, String helpPage) {
 	);
 }
 
-Future<bool> showExitFormDialog(BuildContext context, bool isSystemPop, bool isDataChanged) {
+Future<bool?> showExitFormDialog(BuildContext context, bool isSystemPop, bool isDataChanged) {
 	if (!isDataChanged) {
 		Navigator.pop(context, true);
 		return Future.value(false);
 	}
-	FocusManager.instance.primaryFocus.unfocus();
+	FocusManager.instance.primaryFocus?.unfocus();
 	return showDialog<bool>(
 		context: context,
 		builder: (c) => AlertDialog(
@@ -106,14 +105,14 @@ void showAboutAppDialog(BuildContext context) {
 	);
 }
 
-Future<String> showNameEditDialog(BuildContext context, UIUser user) {
+Future<String?> showNameEditDialog(BuildContext context, UIUser user) {
 	return showDialog(
 		context: context,
-		builder: (_) => forwardCubit(NameEditDialog(user.role), BlocProvider.of<NameChangeCubit>(context))
+		builder: (_) => forwardCubit(NameEditDialog(user.role!), BlocProvider.of<NameChangeCubit>(context))
 	);
 }
 
-void showPasswordChangeDialog(BuildContext context, {PasswordChangeCubit cubit, bool dismissible = true}) {
+void showPasswordChangeDialog(BuildContext context, {PasswordChangeCubit? cubit, bool dismissible = true}) {
 	showDialog(
 		context: context,
 		barrierDismissible: dismissible,
@@ -125,7 +124,7 @@ void showPasswordChangeDialog(BuildContext context, {PasswordChangeCubit cubit, 
 Future showAccountDeleteDialog(BuildContext context, UIUser user) {
 	return showDialog(
 		context: context,
-		builder: (_) => forwardCubit(AccountDeleteDialog(user.role), BlocProvider.of<AccountDeleteCubit>(context))
+		builder: (_) => forwardCubit(AccountDeleteDialog(user.role!), BlocProvider.of<AccountDeleteCubit>(context))
 	);
 }
 
@@ -136,14 +135,14 @@ Future showAddFriendDialog(BuildContext context) {
 	);
 }
 
-void showCurrencyEditDialog(BuildContext context, Function(String) callback, {String initialValue}) {
+void showCurrencyEditDialog(BuildContext context, Function(String?) callback, {String? initialValue}) {
 	showDialog(
 		context: context,
 		builder: (context) => CurrencyEditDialog(callback: callback, initialValue: initialValue)
 	);
 }
 
-void showRewardDialog(BuildContext context, UIReward reward, {Function claimFeedback}) {
+void showRewardDialog(BuildContext context, UIReward reward, {void Function()? claimFeedback}) {
 	showDialog(
 		context: context,
 		builder: (_) => tryForwardCubit<ChildRewardsCubit>(RewardDialog(reward: reward, claimFeedback: claimFeedback), context)

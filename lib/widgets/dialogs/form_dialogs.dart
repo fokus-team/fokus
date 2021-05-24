@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/logic/caregiver/caregiver_friends_cubit.dart';
@@ -27,7 +26,7 @@ class FormDialog extends StatelessWidget {
 	final List<Widget> fields;
 	final Function onConfirm;
 
-	FormDialog({this.title, this.fields, this.onConfirm});
+	FormDialog({required this.title, required this.fields, required this.onConfirm});
 
   @override
   Widget build(BuildContext context) {
@@ -100,7 +99,7 @@ class NameEditDialog extends StatelessWidget {
 							changedAction: (cubit, value) => cubit.nameChanged(value),
 							labelKey: 'authentication.name',
 							icon: Icons.edit,
-							getErrorKey: (state) => [state.name.error.key],
+							getErrorKey: (state) => [state.name.error?.key],
 							clearable: true,
 						),
 					),
@@ -124,7 +123,7 @@ class AccountDeleteDialog extends StatelessWidget {
 	  return BlocListener<AccountDeleteCubit, AccountDeleteState>(
 		  listener: (context, state) {
 			  if (state.status.isSubmissionFailure && state.error != null)
-				  showFailSnackbar(context, state.error.key);
+				  showFailSnackbar(context, state.error!.key);
 			  else if (state.status.isSubmissionSuccess && _role == UserRole.child)
 				  Navigator.of(context).pop(true);
 		  },
@@ -154,7 +153,7 @@ class AccountDeleteDialog extends StatelessWidget {
 										  changedAction: (cubit, value) => cubit.passwordChanged(value),
 										  labelKey: 'authentication.password',
 										  icon: Icons.lock_open,
-										  getErrorKey: (state) => [state.password.error.key],
+										  getErrorKey: (state) => [state.password.error?.key],
 										  hideInput: true
 							      ),
 						      ]
@@ -178,7 +177,7 @@ class PasswordChangeDialog extends StatelessWidget {
 			    Navigator.of(context).pop();
 			    showSuccessSnackbar(context, 'authentication.${state.formType.key}');
 		    } else if (state.status.isSubmissionFailure && state.error != null)
-			    showFailSnackbar(context, state.error.key);
+			    showFailSnackbar(context, state.error!.key);
 	    },
 	    builder: (context, state) {
 	    	var titleKey = state.formType == PasswordChangeType.change ? '$_settingsPageKey.profile.changePasswordLabel' : 'page.loginSection.caregiverSignIn.changeResetLabel';
@@ -195,7 +194,7 @@ class PasswordChangeDialog extends StatelessWidget {
 							    changedAction: (cubit, value) => cubit.currentPasswordChanged(value),
 							    labelKey: 'authentication.currentPassword',
 							    icon: Icons.lock_open,
-							    getErrorKey: (state) => [state.currentPassword.error.key],
+							    getErrorKey: (state) => [state.currentPassword.error?.key],
 							    hideInput: true
 						    ),
 					    ),
@@ -206,7 +205,7 @@ class PasswordChangeDialog extends StatelessWidget {
 									changedAction: (cubit, value) => cubit.newPasswordChanged(value),
 									labelKey: 'authentication.newPassword',
 									icon: Icons.lock,
-									getErrorKey: (state) => [state.newPassword.error.key, {'LENGTH': Password.minPasswordLength}],
+									getErrorKey: (state) => [state.newPassword.error?.key, {'LENGTH': Password.minPasswordLength}],
 									hideInput: true,
 								),
 							),
@@ -217,7 +216,7 @@ class PasswordChangeDialog extends StatelessWidget {
 									changedAction: (cubit, value) => cubit.confirmedPasswordChanged(value),
 									labelKey: 'authentication.confirmPassword',
 									icon: Icons.lock,
-									getErrorKey: (state) => [state.confirmedPassword.error.key],
+									getErrorKey: (state) => [state.confirmedPassword.error?.key],
 									hideInput: true,
 								),
 							),
@@ -231,10 +230,10 @@ class PasswordChangeDialog extends StatelessWidget {
 }
 
 class CurrencyEditDialog extends StatefulWidget {
-	final Function(String) callback;
-	final String initialValue;
+	final Function(String?) callback;
+	final String? initialValue;
 
-	CurrencyEditDialog({this.callback, this.initialValue});
+	CurrencyEditDialog({required this.callback, required this.initialValue});
 	
 	@override
 	_CurrencyEditDialogState createState() => new _CurrencyEditDialogState();
@@ -306,7 +305,7 @@ class AddFriendDialog extends StatelessWidget {
 							changedAction: (cubit, value) => cubit.caregiverCodeChanged(value),
 							labelKey: '$_panelPageKey.content.caregiverCode',
 							icon: Icons.phonelink_lock,
-							getErrorKey: (state) => [state.caregiverCode.error.key],
+							getErrorKey: (state) => [state.caregiverCode.error?.key],
 							clearable: true
 						)
 					)

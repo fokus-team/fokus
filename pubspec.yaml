@@ -34,7 +34,6 @@ dependencies:
     firebase_analytics: ^8.0.0
     firebase_crashlytics: ^2.0.0
     firebase_dynamic_links: ^2.0.0-dev.1
-    firebase_messaging: ^9.0.0
 
     # Notifications
     onesignal_flutter:

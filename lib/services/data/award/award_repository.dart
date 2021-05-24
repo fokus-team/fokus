@@ -1,5 +1,4 @@
 import 'package:fokus/model/db/gamification/badge.dart';
-import 'package:fokus/model/db/gamification/child_badge.dart';
 import 'package:fokus/model/db/gamification/child_reward.dart';
 import 'package:fokus/model/db/gamification/points.dart';
 import 'package:mongo_dart/mongo_dart.dart';

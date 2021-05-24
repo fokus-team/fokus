@@ -6,7 +6,6 @@ import 'package:fokus/model/ui/gamification/ui_points.dart';
 import 'package:fokus/model/ui/task/ui_task_instance.dart';
 import 'package:fokus/utils/duration_utils.dart';
 import 'package:get_it/get_it.dart';
-import 'package:meta/meta.dart';
 
 import 'data/data_repository.dart';
 

@@ -84,7 +84,7 @@ class _IconPickerFieldState extends State<IconPickerField> {
 						badgeContent: Icon(Icons.check, color: Colors.white, size: 16.0),
 						badgeColor: Colors.green,
 						animationType: BadgeAnimationType.scale,
-						showBadge: choice.selected != null ? choice.selected : false,
+						showBadge: choice.selected,
 						child: GestureDetector(
 							onTap: () => choice.select!(!choice.selected),
 							child: SvgPicture.asset(getPicturePath(isRewardType, choice.value), height: 64.0)

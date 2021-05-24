@@ -48,7 +48,7 @@ class RewardItemCard extends StatelessWidget {
 			graphic: reward.icon,
 			graphicType: AssetType.rewards,
 			graphicHeight: graphicHeight,
-			onTapped: onTapped,
+			onTapped: () => onTapped != null ? onTapped!() : null,
 			progressPercentage: progressPercentage,
 			menuItems: menuItems,
 			actionButton: actionButton,
@@ -77,7 +77,7 @@ class ChildItemCard extends StatelessWidget {
 		return ItemCard(
 				title: child.name!,
 				subtitle: getChildCardSubtitle(context, child),
-				onTapped: onTapped,
+				onTapped: () => onTapped != null ? onTapped!() : null,
 				graphicType: AssetType.avatars,
 				graphic: child.avatar,
 				chips: <Widget>[

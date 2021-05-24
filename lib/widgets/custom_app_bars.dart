@@ -53,7 +53,7 @@ class _CustomAppBarState extends State<CustomAppBar>{
 	Widget _headerImage(UIUser user) {
 		if(user.role == UserRole.caregiver) {
 			if((user as UICaregiver).authMethod == AuthMethod.google)
-				return AppAvatar(0, caregiverPhotoURL: (user as UICaregiver).photoURL);
+				return AppAvatar(0, caregiverPhotoURL: user.photoURL);
 			return Image.asset('assets/image/sunflower_logo.png', height: 64);
 		} else {
 			return AppAvatar(user.avatar, color: childAvatars[user.avatar]?.color);

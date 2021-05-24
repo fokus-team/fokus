@@ -21,7 +21,7 @@ final String _plansKey = 'plans';
 
 List<Widget> buildChildPlanSegments(List<UIPlanInstance?> plans, BuildContext context) {
 	UIPlanInstance? activePlan = plans.firstWhere((plan) => plan != null && plan.state == PlanInstanceState.active, orElse: () => null);
-	List<UIPlanInstance?> otherPlans = plans.where((plan) => (activePlan == null || (plan!= null && plan.id != activePlan.id && plan.state != PlanInstanceState.completed))).toList();
+	List<UIPlanInstance?> otherPlans = plans.where((plan) => (activePlan == null || (plan!= null && plan.id != activePlan.id)) && (plan != null && plan.state != PlanInstanceState.completed)).toList();
 	var completedPlans = plans.where((plan) => plan!= null && plan.state == PlanInstanceState.completed).toList();
 
 	return [

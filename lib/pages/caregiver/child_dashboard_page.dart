@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -45,7 +44,7 @@ class CaregiverChildDashboardPage extends StatefulWidget {
 
 class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPage> with TickerProviderStateMixin {
 	static const String _pageKey = 'page.caregiverSection.childDashboard';
-	TabController _tabController;
+	late TabController _tabController;
 	final UIChild _childProfile;
 	int _currentIndex;
   StreamController<int> _tabIndexStream = StreamController<int>.broadcast();
@@ -59,8 +58,8 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 	void initState() {
 		super.initState();
 		_tabController = TabController(initialIndex: _currentIndex, vsync: this, length: 3);
-		_tabController.animation..addListener(() {
-		  var newValue = (_tabController.animation.value).round();
+		_tabController.animation!..addListener(() {
+		  var newValue = (_tabController.animation!.value).round();
 		  if (_currentIndex != newValue) {
         _currentIndex = newValue;
 
@@ -111,7 +110,7 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 		);
 	}
 
-	Column _getPage({UIChild child, Widget content}) {
+	Column _getPage({required UIChild child, required Widget content}) {
 		return Column(
 			crossAxisAlignment: CrossAxisAlignment.start,
 				verticalDirection: VerticalDirection.up,
@@ -130,7 +129,7 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
       popupMenuWidget: PopupMenuList(
         lightTheme: true,
         items: [
-          UIButton('$_pageKey.header.childCode',() => showUserCodeDialog(context, '$_pageKey.header.childCode', getCodeFromId(child.id)),
+          UIButton('$_pageKey.header.childCode',() => showUserCodeDialog(context, '$_pageKey.header.childCode', getCodeFromId(child.id!)),
 						null, Icons.screen_lock_portrait ),
           UIButton.ofType(ButtonType.edit, () => cubit.onNameDialogClosed(showNameEditDialog(context, _childProfile)),
 						null, Icons.edit),
@@ -168,7 +167,7 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
     return StreamBuilder<int>(
       stream: _tabIndexStream.stream,
       initialData: _currentIndex,
-      builder: (context, index) => builder(index.data),
+      builder: (context, index) => builder(index.data!),
     );
   }
 
@@ -203,7 +202,7 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 		);
 	}
 
-	Widget _buildSelect<Type, Cubit extends StatefulCubit, State>({Widget Function([List<Type>]) content, List<Type> Function(State) model}) {
+	Widget _buildSelect<Type, Cubit extends StatefulCubit, State>({required Widget Function([List<Type>]) content, required List<Type> Function(State) model}) {
 		return BlocBuilder<Cubit, StatefulState>(
 			builder: (context, state) {
 				if (!state.loaded)
@@ -214,9 +213,9 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 	}
 
 	Widget _buildFloatingButtonPicker<T>({
-		String buttonLabel, IconData buttonIcon, String disabledDialogTitle, String disabledDialogText,
-		String pickerTitle, List<T> pickedValues, List<T> options,
-		Function builder, Function(List<T>) onChange, Function(T) getName
+		required String buttonLabel, IconData? buttonIcon, String? disabledDialogTitle, String? disabledDialogText,
+		String? pickerTitle, List<T>? pickedValues, required List<T> options,
+		required Widget Function(BuildContext, S2MultiState<T>, S2Choice<T>) builder, required Function(List<T>) onChange, required Function(T) getName
 	}) {
 		bool buttonDisabled = options.isEmpty;
 		return SmartSelect<T>.multiple(
@@ -229,7 +228,7 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 						value: element
 					)
 			],
-			onChange: (selected) => onChange(selected.value),
+			onChange: (selected) => onChange(selected!.value!),
 			modalType: S2ModalType.bottomSheet,
 			choiceBuilder: builder,
 			modalConfirmBuilder: (context, selectState) {
@@ -249,7 +248,7 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 					onPressed: () => buttonDisabled ?
 						showBasicDialog(context,
 							GeneralDialog.discard(
-								title: disabledDialogTitle,
+								title: disabledDialogTitle!,
 								content: disabledDialogText
 							)
 						) : selectState.showModal()
@@ -265,15 +264,15 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 			disabledDialogTitle: AppLocales.of(context).translate('$_pageKey.header.assignPlanButton'),
 			disabledDialogText: AppLocales.of(context).translate('$_pageKey.content.alerts.noPlansAdded'),
 			pickerTitle: AppLocales.of(context).translate('$_pageKey.header.assignPlanTitle'),
-			pickedValues: availablePlans.where((element) => element.assignedTo.contains(_childProfile.id)).toList(),
+			pickedValues: availablePlans.where((element) => element.assignedTo!.contains(_childProfile.id)).toList(),
 			options: availablePlans,
-			onChange: (selected) => context.read<DashboardPlansCubit>().assignPlans(selected == null ? [] : selected.map((plan) => plan.id).toList()),
+			onChange: (List<UIPlan>? selected) => context.read<DashboardPlansCubit>().assignPlans(selected == null ? [] : selected.map((plan) => plan.id).toList()),
 			getName: (plan) => plan.name,
 			builder: (context, selectState, choice) {
 				return Theme(
 					data: ThemeData(textTheme: Theme.of(context).textTheme),
 					child: ItemCard(
-						title: choice.title,
+						title: choice.title!,
 						subtitle: AppLocales.of(context).translate(choice.selected ? 'actions.selected' : 'actions.tapToSelect'),
 						icon: Padding(
 							padding: EdgeInsets.all(6.0).copyWith(right: 0.0),
@@ -283,7 +282,7 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 								child: choice.selected ? Icon(Icons.check, color: Colors.white, size: 20.0) : SizedBox(height: 20)
 							)
 						),
-						onTapped: () => choice.select(!choice.selected),
+						onTapped: () => choice.select!(!choice.selected),
 						isActive: choice.selected
 					)
 				);
@@ -300,19 +299,19 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 			pickerTitle: AppLocales.of(context).translate('$_pageKey.header.assignBadgeTitle'),
 			pickedValues: [],
 			options: availableBadges,
-			onChange: (selected) => context.read<DashboardAchievementsCubit>().assignBadges(selected ?? []),
+			onChange: (List<UIBadge>? selected) => context.read<DashboardAchievementsCubit>().assignBadges(selected ?? []),
 			getName: (badge) => badge.name,
 			builder: (context, selectState, choice) {
 				return Theme(
 					data: ThemeData(textTheme: Theme.of(context).textTheme),
 					child: ItemCard(
-						title: choice.title,
+						title: choice.title!,
 						subtitle: AppLocales.of(context).translate(choice.selected ? 'actions.selected' : 'actions.tapToSelect'),
 						graphic: choice.value.icon,
 						graphicType: AssetType.badges,
 						graphicShowCheckmark: choice.selected,
 						graphicHeight: 40.0,
-						onTapped: () => choice.select(!choice.selected),
+						onTapped: () => choice.select!(!choice.selected),
 						isActive: choice.selected
 					)
 				);
@@ -371,9 +370,9 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 				elements: [
 					for (var badge in state.childBadges)
 						ItemCard(
-							title: badge.name,
+							title: badge.name!,
 							subtitle: AppLocales.of(context).translate('page.childSection.achievements.content.earnedBadgeDate') + ': '
-									+ DateFormat.yMd(AppLocales.instance.locale.toString()).format(badge.date),
+									+ DateFormat.yMd(AppLocales.instance.locale.toString()).format(badge.date!),
 							graphicType: AssetType.badges,
 							graphic: badge.icon,
 							graphicHeight: 44.0,

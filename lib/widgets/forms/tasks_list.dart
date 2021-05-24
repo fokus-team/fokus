@@ -29,7 +29,7 @@ class TaskList extends StatefulWidget {
 		required this.goBackCallback,
 		required this.submitCallback,
 		required this.isCreateMode,
-		required Key key
+		Key? key
 	}) : super(key: key);
 
 	@override

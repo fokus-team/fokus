@@ -98,7 +98,7 @@ class _SettingsPageState extends State<SettingsPage> {
 				padding: EdgeInsets.only(left: 8.0),
 				child: Icon(icon, color: color ?? Colors.grey[600])
 			),
-			onTap: () => onTap
+			onTap: () => onTap()
 		);
 	}
 

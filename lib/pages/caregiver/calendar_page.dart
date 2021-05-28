@@ -157,7 +157,7 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 
   List<UIPlan> _getEventsForDay(DateTime day) {
 		Map<Date, List<UIPlan>>? events = BlocProvider.of<CalendarCubit>(context).state.events;
-    return events != null ? events[Date.fromDate(day)]! : [];
+    return events != null && events[Date.fromDate(day)] != null ? events[Date.fromDate(day)]! : [];
   }
 
   void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {

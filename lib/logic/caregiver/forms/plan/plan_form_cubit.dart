@@ -31,7 +31,7 @@ class PlanFormCubit extends Cubit<PlanFormState> {
 	final PlanRepeatabilityService _repeatabilityService = GetIt.I<PlanRepeatabilityService>();
 	final AnalyticsService _analyticsService = GetIt.I<AnalyticsService>();
 
-  PlanFormCubit(this.argument, this._activeUser) : super(PlanFormInitial(argument?.type ?? AppFormType.create, argument?.id!));
+  PlanFormCubit(this.argument, this._activeUser) : super(PlanFormInitial(argument?.type ?? AppFormType.create, argument?.id));
 
   void loadFormData() async {
 	  var user = _activeUser();

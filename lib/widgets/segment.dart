@@ -120,7 +120,7 @@ class AppSegments extends StatelessWidget {
 
 	Widget _buildList() {
 		return round_spot.Detector(
-			areaID: 'AppSegments',
+			areaID: 'main-scroll-area',
 			child: ListView(
 				padding: EdgeInsets.zero,
 				physics: BouncingScrollPhysics(),

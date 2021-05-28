@@ -75,7 +75,6 @@ class _ChildRewardsPageState extends State<ChildRewardsPage> {
 					onTapped: () => showRewardDialog(
 						context,
 						reward,
-						popupType: AppPopup.rewardDialog,
 						claimFeedback: () => BlocProvider.of<ChildRewardsCubit>(context).claimReward(reward),
 					)
 				)

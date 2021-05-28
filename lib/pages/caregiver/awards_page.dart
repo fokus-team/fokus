@@ -70,7 +70,7 @@ class _CaregiverAwardsPageState extends State<CaregiverAwardsPage> {
 									);
 								}, null, Icons.delete)
 							],
-							onTapped: () => showRewardDialog(context, reward, popupType: AppPopup.rewardDialog),
+							onTapped: () => showRewardDialog(context, reward),
 						)
 				]
 			),

@@ -13,7 +13,7 @@ abstract class RemoteStorageProvider {
 
 	String _getFileName(round_spot.OutputInfo info) {
 		var pageName = info.page != null ? info.page.substring(1).replaceAll('/', '-') : '';
-		var area = info.area.isNotEmpty ? '[${info.area}]' : '';
+		var area = info.area.isNotEmpty && !info.isPopup ? '[${info.area}]' : '';
 		if (pageName.isNotEmpty)
 			area += ' ';
 		return '$area$pageName';

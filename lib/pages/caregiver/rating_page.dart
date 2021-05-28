@@ -113,7 +113,7 @@ class _CaregiverRatingPageState extends State<CaregiverRatingPage> {
 				SizedBox(height: 8.0),
 				Expanded(
 					child: round_spot.Detector.custom(
-						areaID: 'RatingCards',
+						areaID: 'rating-cards',
 						scrollAxis: Axis.horizontal,
 						child: CarouselSlider(
 							options: CarouselOptions(

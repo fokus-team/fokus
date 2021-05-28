@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'package:flutter/material.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/ui/theme_config.dart';
@@ -14,7 +13,7 @@ class AboutAppDialog extends StatefulWidget {
 class _AboutAppDialogState extends State<AboutAppDialog> {
 	final String _settingsKey = 'page.settings.content.appInfo.about';
 
-	PackageInfo _packageInfo = PackageInfo(appName: '', buildNumber: '', packageName: '', version: '');
+	PackageInfo? _packageInfo = PackageInfo(appName: '', buildNumber: '', packageName: '', version: '');
 	final String creators = 'Stanisław Góra,\nMateusz Janicki,\nMikołaj Mirko';
 
 	@override
@@ -24,7 +23,7 @@ class _AboutAppDialogState extends State<AboutAppDialog> {
 	}
 
   Future<void> _initPackageInfo() async {
-    final PackageInfo info = await PackageInfo.fromPlatform();
+    final PackageInfo? info = await PackageInfo.fromPlatform();
     setState(() {
       _packageInfo = info;
     });
@@ -46,12 +45,12 @@ class _AboutAppDialogState extends State<AboutAppDialog> {
 										child: Center(child: Lottie.asset('assets/animation/sunflower.json', width: 140.0))
 									),
 									Text(
-										_packageInfo.appName ?? AppLocales.of(context).translate('fokus'),
+										_packageInfo?.appName ?? AppLocales.of(context).translate('fokus'),
 										style: Theme.of(context).textTheme.headline1,
 										textAlign: TextAlign.center,
 									),
 									Text(
-										'${AppLocales.of(context).translate('$_settingsKey.version')} ${_packageInfo.version ?? ''}',
+										'${AppLocales.of(context).translate('$_settingsKey.version')} ${_packageInfo?.version ?? ''}',
 										style: Theme.of(context).textTheme.caption,
 										textAlign: TextAlign.center,
 									),

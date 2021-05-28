@@ -115,7 +115,7 @@
 					"deleteChildAccountLabel": "Usuń konto dziecka",
 					"deleteAccountHint": "Trwale usuń konto i profile dzieci",
 					"deleteAccountDescription": "Czy na pewno chcesz usunąć swoje konto? Spowoduje to trwałe wymazanie wszystkich wprowadzonych w aplikacji danych włączając w to:",
-					"deleteChildAccountDescription": "Czy na pewno chcesz usunąć konto tego dziecka? Spowoduje to trwałe wymazanie wszystkich jego danych włączając w to:",
+					"deleteChildAccountDescription": "Czy na pewno chcesz usunąć konto tego dziecka? Spowoduje to trwałe wymazanie wszystkich jego/jej danych włączając w to:",
 					"deleteAccountDataList": "Plany|Zadania|Nagrody|Profile dzieci|Historię wykonanych zadań",
 					"deleteChildAccountDataList": "Profil|Nagrody|Punkty|Historię wykonanych zadań",
 					"deleteAccountConfirm": "Wprowadź swoje hasło aby potwierdzić:",

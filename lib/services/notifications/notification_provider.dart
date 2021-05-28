@@ -45,7 +45,7 @@ abstract class NotificationProvider implements ActiveUserObserver, CurrentLocale
 	void removeNotificationObserver(NotificationObserver observer) => _notificationObservers.remove(observer.runtimeType);
 
   @override
-	void onUserSignIn(User user) async {
+	void onUserSignIn(User? user) async {
   	if (user == null)
   		return;
 		activeUser = user;

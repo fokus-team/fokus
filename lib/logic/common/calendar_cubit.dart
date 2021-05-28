@@ -36,7 +36,7 @@ class CalendarCubit extends Cubit<CalendarState> {
 	  _plans = Map.fromEntries(_planEntries(await _dataRepository.getPlans(caregiverId: getRoleId(UserRole.caregiver),
 			  childId: getRoleId(UserRole.child), active: true)));
 
-	  Map<UIChild, bool> filter;
+	  Map<UIChild?, bool> filter;
 	  if (activeUser.role == UserRole.caregiver) {
 		  var children = await _dataRepository.getUsers(ids: (activeUser as UICaregiver).connections);
 		  _childNames = Map.fromEntries(children.map((child) => MapEntry(child.id!, child.name!)));
@@ -49,27 +49,27 @@ class CalendarCubit extends Cubit<CalendarState> {
 			}
 	  } else {
 		  _childNames = {activeUser.id!: activeUser.name!};
-		  filter = {activeUser as UIChild: true};
+		  filter = {activeUser as UIChild?: true};
 	  }
 	  var events = await _filterData(filter, state.day);
 	  emit(state.copyWith(children: filter, events: events));
   }
   
-  void childFilterChanged(Map<UIChild, bool> filter) async => emit(state.copyWith(children: filter, events: await _filterData(filter, state.day)));
+  void childFilterChanged(Map<UIChild?, bool> filter) async => emit(state.copyWith(children: filter, events: await _filterData(filter, state.day)));
 
   void dayChanged(Date day) async => emit(state.copyWith(day: day));
 
   void monthChanged(Date month) async => emit(state.copyWith(day: month, events: await _filterData(state.children, month)));
 
-	Future<Map<Date, List<UIPlan>>> _filterData(Map<UIChild, bool>? filter, Date date) async {
+	Future<Map<Date, List<UIPlan>>> _filterData(Map<UIChild?, bool>? filter, Date date) async {
 		Date month = Date.fromDate(DateUtils.firstDayOfMonth(date));
 		if (filter == null)
 			return {};
 
 		bool filterNotApplied = filter.values.every((element) => element == false);
 		var ids = filterNotApplied ?
-			filter.keys.map((child) => child.id).toSet()
-			: filter.keys.where((child) => filter[child]!).map((child) => child.id).toSet();
+			filter.keys.map((child) => child!.id).toSet()
+			: filter.keys.where((child) => filter[child]!).map((child) => child!.id).toSet();
 
 		Map<Date, List<UIPlan>> events = {};
 		var monthEvents = _allEvents[month] ?? await _loadDataForMonth(month);
@@ -140,13 +140,13 @@ class CalendarCubit extends Cubit<CalendarState> {
 }
 
 class CalendarState extends Equatable {
-	final Map<UIChild, bool>? children;
+	final Map<UIChild?, bool>? children;
 	final Date day;
 	final Map<Date, List<UIPlan>>? events;
 
 	const CalendarState({required this.day, this.children, this.events});
 
-	CalendarState copyWith({Map<UIChild, bool>? children, Map<Date, List<UIPlan>>? events, Date? day}) {
+	CalendarState copyWith({Map<UIChild?, bool>? children, Map<Date, List<UIPlan>>? events, Date? day}) {
 	  return CalendarState(
 		  children: children ?? this.children,
 		  events: events ?? this.events,

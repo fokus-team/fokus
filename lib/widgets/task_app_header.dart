@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'dart:async';
 
 import 'package:confetti/confetti.dart';
@@ -17,14 +16,14 @@ import 'large_timer.dart';
 
 class TaskAppHeader extends StatefulWidget with PreferredSizeWidget {
 	final double height;
-	final String title;
-	final Widget content;
-	final String helpPage;
-	final Function(TaskCompletionState) breakPerformingTransition;
+	final String? title;
+	final Widget? content;
+	final String? helpPage;
+	final Function(TaskCompletionState)? breakPerformingTransition;
 	final TaskCompletionState state;
-	final dynamic popArgs;
+	final dynamic? popArgs;
 
-	TaskAppHeader({Key key, @required this.height, @required this.state, this.title, this.content, this.helpPage,this.breakPerformingTransition, this.popArgs}) : super(key: key);
+	TaskAppHeader({Key? key, required this.height, required this.state, this.title, this.content, this.helpPage,this.breakPerformingTransition, this.popArgs}) : super(key: key);
 
 	@override
 	Size get preferredSize => Size.fromHeight(height);
@@ -34,17 +33,17 @@ class TaskAppHeader extends StatefulWidget with PreferredSizeWidget {
 }
 
 class TaskAppHeaderState extends State<TaskAppHeader> with TickerProviderStateMixin {
-	AnimationController _buttonController;
-	ConfettiController _confetti;
-	bool isBreakNow;
+	late AnimationController _buttonController;
+	late ConfettiController _confetti;
+	bool? isBreakNow;
 	CrossAxisAlignment alignment = CrossAxisAlignment.start;
-	Animation<Offset> _offsetAnimation;
-	AnimationController _slideController;
+	late Animation<Offset> _offsetAnimation;
+	late AnimationController _slideController;
 	final String _pageKey = 'page.childSection.taskInProgress';
 	bool _shouldUpdate = false;
-	TimerCubit _timerCompletionCubit;
+	TimerCubit? _timerCompletionCubit;
 	List<int> vibrationPattern = [0, 500, 100, 250, 50, 1000];
-	Timer _updateTimer;
+	Timer? _updateTimer;
 	final Logger _logger = Logger('TaskAppHeader');
 
 	@override
@@ -100,14 +99,14 @@ class TaskAppHeaderState extends State<TaskAppHeader> with TickerProviderStateMi
 					decoration: AppBoxProperties.elevatedContainer.copyWith(borderRadius: BorderRadius.vertical(top: Radius.circular(4.0))),
 					child: Padding(
 						padding: EdgeInsets.symmetric(vertical: 6.0, horizontal: 12.0),
-						child: this.widget.state.taskInstance.points != null ? Row(
+						child: this.widget.state.taskInstance?.points != null ? Row(
 							mainAxisAlignment: MainAxisAlignment.spaceBetween,
 							children: [
 								Text(AppLocales.of(context).translate('$_pageKey.content.pointsToGet')),
 								AttributeChip.withCurrency(
-									content: "+" + this.widget.state.taskInstance.points.quantity.toString(),
-									currencyType: this.widget.state.taskInstance.points.type,
-									tooltip: this.widget.state.taskInstance.points.title
+									content: "+" + this.widget.state.taskInstance!.points!.quantity.toString(),
+									currencyType: this.widget.state.taskInstance!.points!.type!,
+									tooltip: this.widget.state.taskInstance!.points!.title
 								)
 							]
 						) :
@@ -154,10 +153,10 @@ class TaskAppHeaderState extends State<TaskAppHeader> with TickerProviderStateMi
 		if(isBreakNow == null) setState(() {
 			isBreakNow = this.widget.state.current == TaskCompletionStateType.inBreak;
 			_buttonController = AnimationController(duration: Duration(milliseconds: 450), vsync: this);
-			if(isBreakNow) _buttonController.forward();
+			if(isBreakNow!) _buttonController.forward();
 		});
 		return RaisedButton(
-			color: !isBreakNow ? AppColors.childBreakColor : AppColors.childTaskColor,
+			color: !isBreakNow! ? AppColors.childBreakColor : AppColors.childTaskColor,
 			padding: EdgeInsets.zero,
 			child: AnimatedContainer(
 				duration: Duration(milliseconds: 1500),
@@ -176,8 +175,8 @@ class TaskAppHeaderState extends State<TaskAppHeader> with TickerProviderStateMi
 								padding: const EdgeInsets.only(left: 8),
 								//TODO animate text change
 								child: Text(
-									!isBreakNow ? AppLocales.of(context).translate('$_pageKey.content.breakButton') : AppLocales.of(context).translate('$_pageKey.content.resumeButton'),
-									style: Theme.of(context).textTheme.headline2.copyWith(color: AppColors.lightTextColor),
+									!isBreakNow! ? AppLocales.of(context).translate('$_pageKey.content.breakButton') : AppLocales.of(context).translate('$_pageKey.content.resumeButton'),
+									style: Theme.of(context).textTheme.headline2?.copyWith(color: AppColors.lightTextColor),
 									maxLines: 1,
 									softWrap: false
 								)
@@ -187,8 +186,8 @@ class TaskAppHeaderState extends State<TaskAppHeader> with TickerProviderStateMi
 				)
 			),
 			onPressed: () => {
-				this.widget.breakPerformingTransition(this.widget.state),
-				this.widget.state.current == TaskCompletionStateType.inProgress ? _timerCompletionCubit.pauseTimer() : _timerCompletionCubit.resumeTimer()
+				this.widget.breakPerformingTransition!(this.widget.state),
+				this.widget.state.current == TaskCompletionStateType.inProgress ? _timerCompletionCubit!.pauseTimer() : _timerCompletionCubit!.resumeTimer()
 			},
 			elevation: 4.0
 		);
@@ -218,7 +217,7 @@ class TaskAppHeaderState extends State<TaskAppHeader> with TickerProviderStateMi
 
 	TimerCubit Function(BuildContext) _getTimerFun() {
   	if(_timerCompletionCubit == null) {
-			if(this.widget.state.taskInstance.timer != null) {
+			if(this.widget.state.taskInstance?.timer != null) {
 				if(_getTimerInSeconds() - _getDuration() > 0) {
 					int time = _getTimerInSeconds() - _getDuration();
 					_timeUpdate(Duration(seconds: time));
@@ -229,22 +228,22 @@ class TaskAppHeaderState extends State<TaskAppHeader> with TickerProviderStateMi
 			else _timerCompletionCubit = TimerCubit.up(() => _getDuration());
 		}
   	if(this.widget.state.current == TaskCompletionStateType.inProgress)
-			return (_) => _timerCompletionCubit..startTimer();
-  	else return (_) => _timerCompletionCubit..startTimer(paused: true);
+			return (_) => _timerCompletionCubit!..startTimer();
+  	else return (_) => _timerCompletionCubit!..startTimer(paused: true);
 	}
 
 	int _getDuration() {
-  	return sumDurations(this.widget.state.taskInstance.duration).inSeconds;
+  	return sumDurations(this.widget.state.taskInstance!.duration).inSeconds;
 	}
 
 	int _getTimerInSeconds() {
-  	return this.widget.state.taskInstance.timer*60;
+  	return this.widget.state.taskInstance!.timer!*60;
 	}
 
 
 	String _getTimerTitle() {
-		if(this.widget.state.taskInstance.timer != null) {
-			if(this.widget.state.taskInstance.timer*60 - sumDurations(this.widget.state.taskInstance.duration).inSeconds > 0)
+		if(this.widget.state.taskInstance?.timer != null) {
+			if(this.widget.state.taskInstance!.timer!*60 - sumDurations(this.widget.state.taskInstance!.duration).inSeconds > 0)
 				return '$_pageKey.content.timeLeft';
 			else return '$_pageKey.content.latency';
 		}
@@ -270,11 +269,11 @@ class TaskAppHeaderState extends State<TaskAppHeader> with TickerProviderStateMi
     super.initState();
   }
   void animateButton() {
-  	if(!isBreakNow)
+  	if(!isBreakNow!)
 			_buttonController.forward();
   	else 	_buttonController.reverse();
 		setState(() {
-			isBreakNow = !isBreakNow;
+			isBreakNow = !isBreakNow!;
 		});
 	}
 
@@ -283,14 +282,14 @@ class TaskAppHeaderState extends State<TaskAppHeader> with TickerProviderStateMi
 	}
 
 	void onFinish() {
-  	_timerCompletionCubit.pauseTimer();
+  	_timerCompletionCubit!.pauseTimer();
 		_slideController.forward();
 	}
 
 	@override
   void dispose() {
 		if(_updateTimer != null)
-			_updateTimer.cancel();
+			_updateTimer!.cancel();
 		_confetti.dispose();
   	_buttonController.dispose();
   	_slideController.dispose();
@@ -299,8 +298,10 @@ class TaskAppHeaderState extends State<TaskAppHeader> with TickerProviderStateMi
 
   void _onTimerFinish() async {
 		try {
-		  if (await Vibration.hasVibrator()) {
-		  	if (await Vibration.hasAmplitudeControl()) {
+			bool? hasVibration = await Vibration.hasVibrator();
+		  if (hasVibration != null && hasVibration) {
+				bool? hasAmplitudeControl = await Vibration.hasAmplitudeControl();
+		  	if (hasAmplitudeControl != null && hasAmplitudeControl) {
 		  		Vibration.vibrate(amplitude: 1024, pattern: vibrationPattern);
 		  	}
 		  	else Vibration.vibrate(pattern: vibrationPattern);

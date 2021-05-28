@@ -26,9 +26,9 @@ We are looking for people willing to help us translate our app to more languages
 
 <div align="center">
 
-![English](https://img.shields.io/badge/English-supported-green)
-![Polish](https://img.shields.io/badge/Polish-supported-green)
-![German](https://img.shields.io/badge/German-in_progress-orange)
+![🇺🇸 English](https://img.shields.io/badge/English-supported-green)
+![🇵🇱 Polish](https://img.shields.io/badge/Polish-supported-green)
+![🇩🇪 German](https://img.shields.io/badge/German-in_progress-orange)
 </div>
 
 If you would like to see our app supporting your language and are willing to contribute do not hesitate to contact us using the email below. We will provide you with a machine translated template to minimize the amount of labour required.

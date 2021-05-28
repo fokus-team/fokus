@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'package:flutter/material.dart';
 import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/ui/navigation_item.dart';
@@ -6,8 +5,8 @@ import 'package:fokus/model/db/user/user.dart';
 import 'package:fokus/services/app_locales.dart';
 
 class AppNavigationBar extends StatefulWidget {
-	final int currentIndex;
-	final List<AppBottomNavigationItem> items;
+	final int? currentIndex;
+	final List<AppBottomNavigationItem>? items;
 
 	static final List<AppBottomNavigationItem> caregiverNavigationItems = [
 		AppBottomNavigationItem(
@@ -46,12 +45,12 @@ class AppNavigationBar extends StatefulWidget {
 	];
 	
 	AppNavigationBar({this.currentIndex, this.items});
-	AppNavigationBar.caregiverPage({int currentIndex, User user}) : this(
+	AppNavigationBar.caregiverPage({int? currentIndex, User? user}) : this(
 		currentIndex: currentIndex,
 		items: caregiverNavigationItems
 	);
 	
-	AppNavigationBar.childPage({int currentIndex, User user}) : this(
+	AppNavigationBar.childPage({int? currentIndex, User? user}) : this(
 		currentIndex: currentIndex,
 		items: childNavigationItems
 	);
@@ -66,16 +65,16 @@ class _AppNavigationBarState extends State<AppNavigationBar> {
 	Widget build(BuildContext context) {
 		return BottomNavigationBar(
 			backgroundColor: Colors.white,
-			currentIndex: widget.currentIndex,
+			currentIndex: widget.currentIndex!,
 			type: BottomNavigationBarType.fixed,
 			showUnselectedLabels: true,
 			unselectedFontSize: 14,
 			selectedFontSize: 14,
 			unselectedItemColor: Colors.grey[600],
 			selectedItemColor: Theme.of(context).appBarTheme.color,
-			onTap: (int index) => index != widget.currentIndex ? Navigator.of(context).pushNamed(widget.items[index].navigationRoute.name) : {},
+			onTap: (int index) => index != widget.currentIndex ? Navigator.of(context).pushNamed(widget.items![index].navigationRoute.name) : {},
 			items: [
-				for (final navigationItem in widget.items)
+				for (final navigationItem in widget.items!)
 					BottomNavigationBarItem(
 						icon: Padding(
 							padding: EdgeInsets.only(top: 4.0, bottom: 2.0),

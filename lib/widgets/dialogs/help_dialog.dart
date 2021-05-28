@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter/services.dart' show rootBundle;
@@ -13,7 +12,7 @@ class HelpDialog extends StatelessWidget {
   final String helpPage;
 
   HelpDialog({
-    @required this.helpPage
+    required this.helpPage
   });
 
   @override
@@ -53,7 +52,7 @@ class HelpDialog extends StatelessWidget {
                     h1: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
                     p: Theme.of(context).textTheme.bodyText2
                   ),
-                  data: snapshot.data
+                  data: snapshot.data!
                 );
               }
               return Center(child: Padding(padding: EdgeInsets.all(10.0), child: AppLoader()));

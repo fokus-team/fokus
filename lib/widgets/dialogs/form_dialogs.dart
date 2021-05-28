@@ -23,7 +23,7 @@ import 'package:fokus/services/exception/auth_exceptions.dart';
 
 class FormDialog extends StatelessWidget {
 	final String title;
-	final List<Widget> fields;
+	final List<Widget>? fields;
 	final Function onConfirm;
 
 	FormDialog({required this.title, required this.fields, required this.onConfirm});
@@ -46,7 +46,7 @@ class FormDialog extends StatelessWidget {
 									style: Theme.of(context).textTheme.headline6
 								)
 							),
-							...fields,
+							...fields!,
 							Padding(
 								padding: EdgeInsets.symmetric(vertical: 6.0, horizontal: 8.0),
 								child: Row(

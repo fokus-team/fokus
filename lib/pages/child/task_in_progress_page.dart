@@ -23,6 +23,9 @@ enum FabType {
 }
 
 class ChildTaskInProgressPage extends StatefulWidget {
+
+  const ChildTaskInProgressPage({Key? key}) : super(key: key);
+
   @override
   _ChildTaskInProgressPageState createState() => _ChildTaskInProgressPageState();
 }

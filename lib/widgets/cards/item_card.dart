@@ -96,7 +96,7 @@ class ItemCard extends StatelessWidget {
         horizontal: AppBoxProperties.screenEdgePadding
       ),
       child: (onTapped != null) ? InkWell(
-        onTap: onTapped,
+        onTap: () => onTapped!(),
         child: buildStructure(context),
         borderRadius: BorderRadius.circular(AppBoxProperties.roundedCornersRadius)
       ) : buildStructure(context)

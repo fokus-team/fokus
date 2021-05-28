@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -18,25 +17,25 @@ class IconPickerField extends StatefulWidget {
 	final IconPickerType type;
 
 	IconPickerField({
-		@required this.title,
-		@required this.groupTextKey,
-		@required this.callback,
-		@required this.value,
+		required this.title,
+		required this.groupTextKey,
+		required this.callback,
+		required this.value,
 		this.type = IconPickerType.reward
 	});
 
 	IconPickerField.reward({
-		String title,
-		String groupTextKey,
-		Function(int) callback,
-		int value
+		required String title,
+		required String groupTextKey,
+		required Function(int) callback,
+		required int value
 	}) : this(title: title, groupTextKey: groupTextKey, callback: callback, value: value, type: IconPickerType.reward);
 
 	IconPickerField.badge({
-		String title,
-		String groupTextKey,
-		Function(int) callback,
-		int value
+		required String title,
+		required String groupTextKey,
+		required Function(int) callback,
+		required int value
 	}) : this(title: title, groupTextKey: groupTextKey, callback: callback, value: value, type: IconPickerType.badge);
 
 	@override
@@ -57,7 +56,7 @@ class _IconPickerFieldState extends State<IconPickerField> {
 				selectedValue: widget.value,
 				choiceItems: List.generate((isRewardType ? rewardIcons : badgeIcons).length, (index) {
 						final String name = AppLocales.of(context).translate(
-							widget.groupTextKey + '.${(isRewardType ? rewardIcons : badgeIcons)[index].label.toString().split('.').last}'
+							widget.groupTextKey + '.${(isRewardType ? rewardIcons : badgeIcons)[index]?.label.toString().split('.').last}'
 						);
 						return S2Choice(
 							title: name,
@@ -85,9 +84,9 @@ class _IconPickerFieldState extends State<IconPickerField> {
 						badgeContent: Icon(Icons.check, color: Colors.white, size: 16.0),
 						badgeColor: Colors.green,
 						animationType: BadgeAnimationType.scale,
-						showBadge: choice.selected != null ? choice.selected : false,
+						showBadge: choice.selected,
 						child: GestureDetector(
-							onTap: () => choice.select(!choice.selected),
+							onTap: () => choice.select!(!choice.selected),
 							child: SvgPicture.asset(getPicturePath(isRewardType, choice.value), height: 64.0)
 						)
 					);
@@ -99,7 +98,7 @@ class _IconPickerFieldState extends State<IconPickerField> {
 				modalConfirmBuilder: (context, selectState) {
 					return ButtonSheetConfirmButton(callback: () => selectState.closeModal(confirmed: true));
 				},
-				onChange: (selected) => widget.callback(selected.value)
+				onChange: (selected) => widget.callback(selected.value!)
 			)
 		);
   }

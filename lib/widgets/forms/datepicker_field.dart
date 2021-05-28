@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'package:flutter/material.dart';
 import 'package:fokus/model/db/date/date.dart';
 import 'package:fokus/model/db/date_span.dart';
@@ -7,21 +6,21 @@ import 'package:fokus/utils/ui/form_config.dart';
 
 class DatePickerField extends StatefulWidget {
 	final String labelText;
-	final String errorText;
-	final String helperText;
+	final String? errorText;
+	final String? helperText;
 	final IconData icon;
 	final Function dateSetter;
 	final TextEditingController dateController;
 	final bool canBeEmpty;
-	final DateSpan<Date> rangeDate;
-	final Date initialDate;
+	final DateSpan<Date>? rangeDate;
+	final Date? initialDate;
 	final Function callback;
 
 	DatePickerField({
-		@required this.labelText,
-		@required this.dateController,
-		@required this.dateSetter,
-		@required this.callback,
+		required this.labelText,
+		required this.dateController,
+		required this.dateSetter,
+		required this.callback,
 		this.errorText,
 		this.helperText,
 		this.icon = Icons.event,
@@ -38,15 +37,15 @@ class DatePickerField extends StatefulWidget {
 class _DatePickerFieldState extends State<DatePickerField> {
 	bool _showClearButton = false;
 
-	Future<DateTime> _selectDate(BuildContext context) async {
+	Future<DateTime?> _selectDate(BuildContext context) async {
 		DateTime initial = DateTime.now();
 		if(widget.dateController.text != '') {
-			initial = DateTime.tryParse(widget.dateController.text);
+			initial = DateTime.tryParse(widget.dateController.text)!;
 		} else if(widget.rangeDate != null) {
-			if(widget.rangeDate.from != null) {
-				initial = widget.rangeDate.from;
-			} else if(widget.rangeDate.to != null) {
-				initial = widget.rangeDate.to;
+			if(widget.rangeDate!.from != null) {
+				initial = widget.rangeDate!.from!;
+			} else if(widget.rangeDate!.to != null) {
+				initial = widget.rangeDate!.to!;
 			}
 		}
 
@@ -55,8 +54,8 @@ class _DatePickerFieldState extends State<DatePickerField> {
 			context: context,
 			helpText: widget.labelText,
 			fieldLabelText: widget.labelText,
-			firstDate: (widget.rangeDate != null && widget.rangeDate.from != null) ? widget.rangeDate.from : DateTime(2020),
-			lastDate: (widget.rangeDate != null && widget.rangeDate.to != null) ? widget.rangeDate.to : DateTime(2100),
+			firstDate: (widget.rangeDate != null && widget.rangeDate!.from != null) ? widget.rangeDate!.from! : DateTime(2020),
+			lastDate: (widget.rangeDate != null && widget.rangeDate!.to != null) ? widget.rangeDate!.to! : DateTime(2100),
 			initialDate: initial
 		);
   }
@@ -75,7 +74,7 @@ class _DatePickerFieldState extends State<DatePickerField> {
   @override
   Widget build(BuildContext context) {
 		String errorMessage = (widget.errorText != null) ?
-			widget.errorText :
+			widget.errorText! :
 			AppLocales.of(context).translate('alert.genericEmptyValue');
 		
 		return Padding(
@@ -93,7 +92,7 @@ class _DatePickerFieldState extends State<DatePickerField> {
 							helperText: widget.helperText
 						),
 						validator: (value) {
-							return widget.canBeEmpty ? null : (value.isEmpty ? errorMessage : null);
+							return widget.canBeEmpty ? null : (value!.isEmpty ? errorMessage : null);
 						}
 					),
 					if(_showClearButton)

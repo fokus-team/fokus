@@ -48,7 +48,7 @@ class DashboardPlansCubit extends StatefulCubit {
 	  ));
   }
 
-	Future assignPlans(List<ObjectId> ids) async {
+	Future assignPlans(List<ObjectId?> ids) async {
 		if (!beginSubmit())
 			return;
 		var tabState = state as DashboardPlansState;

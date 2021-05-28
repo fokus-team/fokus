@@ -1,5 +1,3 @@
-// @dart = 2.10
-import 'package:date_utils/date_utils.dart' as du;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/utils/navigation_utils.dart';
@@ -37,15 +35,15 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 	DateTime kFirstDay = DateTime(2000);
 	DateTime kLastDay = DateTime(2200);
   DateTime _focusedDay = Date.now();
-  DateTime _selectedDay;
+  DateTime? _selectedDay;
 
   CalendarFormat _calendarFormat = CalendarFormat.month;
   RangeSelectionMode _rangeSelectionMode = RangeSelectionMode.toggledOff;
-	ValueNotifier<List<UIPlan>> _selectedEvents;
-	final Color notAssignedPlanMarkerColor = Colors.grey[400];
+	ValueNotifier<List<UIPlan>>? _selectedEvents;
+	final Color notAssignedPlanMarkerColor = Colors.grey[400]!;
 	
 	bool canAddPlan = true;
-	List<UIChild> _selectedChildren = [];
+	List<UIChild>? _selectedChildren = [];
 
 	@override
 	void initState() {
@@ -54,17 +52,17 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 		kLastDay = DateTime(kNow.year, kNow.month + 6, kNow.day);
 
     _selectedDay = _focusedDay;
-		_selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay));
+		_selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay!));
 	}
 
 	@override
 	void dispose() {
-		_selectedEvents.dispose();
+		_selectedEvents?.dispose();
 		super.dispose();
 	}
 
-	Color _getChildColor(Map<UIChild, bool> children, Mongo.ObjectId childID) {
-		int childIndex = children.keys.toList().indexWhere((element) => element.id == childID);
+	Color _getChildColor(Map<UIChild?, bool>? children, Mongo.ObjectId childID) {
+		int childIndex = children!.keys.toList().indexWhere((element) => element != null && element.id == childID);
 		return (childIndex != -1) ? AppColors.markerColors[childIndex % AppColors.markerColors.length] : Colors.cyan;
 	}
 
@@ -134,20 +132,20 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 					noElementsMessage: '$_pageKey.content.noPlansOnDateTitle',
 					noElementsIcon: Icons.description,
 					elements: [
-						if(state.events != null && state.events[state.day] != null)
-							for(UIPlan plan in state.events[state.day])
+						if(state.events != null && state.events![state.day] != null)
+							for(UIPlan plan in state.events![state.day]!)
 								ItemCard(
-									title: plan.name,
+									title: plan.name!,
 									onTapped: () => navigateChecked(context, AppPage.planDetails, arguments: plan.id),
 									subtitle: AppLocales.of(context).translate(
-										'$_pageKey.content.${plan.assignedTo.isNotEmpty ? 'planAssignedToSubtitle' : 'planNotAssignedToSubtitle'}'
+										'$_pageKey.content.${plan.assignedTo!.isNotEmpty ? 'planAssignedToSubtitle' : 'planNotAssignedToSubtitle'}'
 									),
-									isActive: plan.assignedTo.isNotEmpty,
-									chips: plan.assignedTo.isNotEmpty ? plan.assignedTo.map((childID) {
-										var child = state.children.keys.firstWhere((element) => element.id == childID, orElse: () => null);
+									isActive: plan.assignedTo!.isNotEmpty,
+									chips: plan.assignedTo!.isNotEmpty ? plan.assignedTo?.map((childID) {
+										UIChild? child = state.children?.keys.firstWhere((UIChild? element) => element != null && element.id == childID, orElse: () => null);
 										return child != null ? AttributeChip(
 											content: child.name,
-											color: _getChildColor(state.children, childID)
+											color: _getChildColor(state.children!, childID)
 										) : SizedBox.shrink();
 									}).toList() : []
 								)
@@ -158,8 +156,8 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 	}
 
   List<UIPlan> _getEventsForDay(DateTime day) {
-		Map<Date, List<UIPlan>> events = BlocProvider.of<CalendarCubit>(context).state.events;
-    return events != null ? events[Date.fromDate(day)] : [];
+		Map<Date, List<UIPlan>>? events = BlocProvider.of<CalendarCubit>(context).state.events;
+    return events != null ? events[Date.fromDate(day)]! : [];
   }
 
   void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
@@ -167,7 +165,7 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
       setState(() {
         _selectedDay = selectedDay;
         _focusedDay = focusedDay;
-				_selectedEvents.value = _getEventsForDay(selectedDay);
+				_selectedEvents!.value = _getEventsForDay(selectedDay);
       });
 			BlocProvider.of<CalendarCubit>(context).dayChanged(Date.fromDate(selectedDay));
     }
@@ -177,13 +175,13 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 		setState(() {
       _selectedDay = focusedDay;
 			_focusedDay = focusedDay;
-			_selectedEvents.value = _getEventsForDay(focusedDay);
+			_selectedEvents!.value = _getEventsForDay(focusedDay);
 		});
 		BlocProvider.of<CalendarCubit>(context).dayChanged(Date.fromDate(focusedDay));
 		BlocProvider.of<CalendarCubit>(context).monthChanged(Date.fromDate(focusedDay));
 	}
 	
-	TableCalendar _buildCalendar(Map<UIChild, bool> children) {
+	TableCalendar _buildCalendar(Map<UIChild?, bool>? children) {
 		return TableCalendar<UIPlan>(
 			firstDay: kFirstDay,
 			lastDay: kLastDay,
@@ -210,11 +208,11 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 					if (events.isNotEmpty) {
 						Set<Color> childrenMarkers = {};
 						events.forEach((plan) {
-							if(plan.assignedTo.isEmpty)
+							if(plan.assignedTo!.isEmpty)
 								childrenMarkers.add(notAssignedPlanMarkerColor);
 							else
-								plan.assignedTo.forEach((childID) {
-									if(_selectedChildren.isEmpty || _selectedChildren.firstWhere((element) => element.id == childID, orElse: () => null) != null)
+								plan.assignedTo!.forEach((childID) {
+									if(_selectedChildren!.isEmpty || _selectedChildren!.firstWhere((element) => element.id == childID, orElse: () => UIChild(null, '')).id != null)
 										childrenMarkers.add(_getChildColor(children, childID));
 								});
 						});
@@ -226,14 +224,14 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 		);
 	}
 
-	SmartSelect<UIChild> _buildChildPicker({Map<UIChild, bool> children = const {}, bool loading = false}) {
+	SmartSelect<UIChild> _buildChildPicker({Map<UIChild?, bool>? children = const {}, bool loading = false}) {
 	  return SmartSelect<UIChild>.multiple(
 	    title: AppLocales.of(context).translate('$_pageKey.header.filterPlansTitle'),
 	    selectedValue: _selectedChildren,
 	    tileBuilder: (context, selectState) {
 	      return InkWell(
 	        onTap: () {
-	          FocusManager.instance.primaryFocus.unfocus();
+	          FocusManager.instance.primaryFocus?.unfocus();
 	          if(!loading)
 							selectState.showModal();
 	        },
@@ -241,7 +239,7 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 	          crossAxisAlignment: CrossAxisAlignment.start,
 	          children: [
 	            ListTile(
-	              title: Text(AppLocales.of(context).translate(selectState.selected.isNotEmpty ?
+	              title: Text(AppLocales.of(context).translate(selectState.selected!.isNotEmpty ?
 									'$_pageKey.header.showPlansForTitle'
 									: '$_pageKey.header.filterPlansTitle'
 								)),
@@ -270,16 +268,16 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 										child: child
 									);
 								},
-								child: selectState.selected.isNotEmpty ?
+								child: selectState.selected!.isNotEmpty ?
 									Padding(
 										padding: EdgeInsets.symmetric(horizontal: 12.0).copyWith(bottom: 10.0),
 										child: Wrap(
 											spacing: 4.0,
 											runSpacing: 4.0,
-											children: selectState.selected.value.map((child) {
+											children: selectState.selected!.value!.map((child) {
 												return AttributeChip(
 													content: child.name,
-													color: _getChildColor(children, child.id)
+													color: _getChildColor(children, child.id!)
 												);
 											}).toList(),
 										)
@@ -290,22 +288,22 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 	      );
 	    },
 	    choiceItems: S2Choice.listFrom(
-	      source: children.keys.toList(),
-	      value: (index, item) => item,
-	      title: (index, item) => item.name,
+	      source: children!.keys.toList(),
+	      value: (index, item) => item as UIChild,
+	      title: (index, item) => (item as UIChild).name!,
 	      meta: (index, item) => item
 	    ),
 	    choiceType: S2ChoiceType.chips,
 			choiceBuilder: (context, selectState, choice) => Theme(
 				data: ThemeData(textTheme: Theme.of(context).textTheme),
 				child: ItemCard(
-					title: choice.title,
+					title: choice.title!,
 					subtitle: AppLocales.of(context).translate(choice.selected ? 'actions.selected' : 'actions.tapToSelect'),
 					graphicType: AssetType.avatars,
 					graphic: choice.meta.avatar,
 					graphicShowCheckmark: choice.selected,
 					graphicHeight: 44.0,
-					onTapped: () => choice.select(!choice.selected),
+					onTapped: () => choice.select!(!choice.selected),
 					isActive: choice.selected
 				)
 	    ),
@@ -322,10 +320,10 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 				return ButtonSheetConfirmButton(callback: () => selectState.closeModal(confirmed: true));
 			},
 	    onChange: (selected) {
-				setState(() { _selectedChildren = selected.value; });
+				setState(() { _selectedChildren = selected!.value; });
 	      Map<UIChild, bool> filter = {};
 				for(var child in children.keys)
-					filter[child] = selected.value.contains(child);
+					filter[child!] = selected!.value!.contains(child);
 	      BlocProvider.of<CalendarCubit>(context).childFilterChanged(filter);
 	    }
 	  );

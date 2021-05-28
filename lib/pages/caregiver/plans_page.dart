@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'package:flutter/material.dart';
 import 'package:fokus/logic/caregiver/caregiver_plans_cubit.dart';
 import 'package:fokus/model/ui/app_page.dart';
@@ -38,8 +37,8 @@ class CaregiverPlansPage extends StatelessWidget {
 	}
 
   List<Segment> _buildPanelSegments(CaregiverPlansState state, context) {
-	  var activePlans = state.plans.where((blueprint) => (blueprint.isActive)).toList();
-	  var deactivatedPlans = state.plans.where((blueprint) => (!blueprint.isActive)).toList();
+	  var activePlans = state.plans.where((blueprint) => (blueprint.isActive!)).toList();
+	  var deactivatedPlans = state.plans.where((blueprint) => (!blueprint.isActive!)).toList();
 	  return [
 		  _getPlansSegment(
 			  plans: activePlans,
@@ -58,7 +57,7 @@ class CaregiverPlansPage extends StatelessWidget {
 	  ];
   }
 
-  Segment _getPlansSegment({List<UIPlan> plans, String title, UIButton headerAction, String subtitle, context}) {
+  Segment _getPlansSegment({required List<UIPlan> plans, required String title, UIButton? headerAction, required String subtitle, context}) {
 	  return Segment(
 		  title: title,
 			subtitle: subtitle,
@@ -67,12 +66,12 @@ class CaregiverPlansPage extends StatelessWidget {
 		  elements: <Widget>[
 			  for (var plan in plans)
 				  ItemCard(
-					  title: plan.name,
-					  subtitle: plan.description(context),
+					  title: plan.name!,
+					  subtitle: plan.description!(context),
 						onTapped: () => navigateChecked(context, AppPage.planDetails, arguments: plan.id),
 					  chips: <Widget>[
 						  AttributeChip.withIcon(
-							  content: AppLocales.of(context).translate('$_pageKey.content.tasks', {'NUM_TASKS': plan.taskCount}),
+							  content: AppLocales.of(context).translate('$_pageKey.content.tasks', {'NUM_TASKS': plan.taskCount!}),
 							  color: Colors.indigo,
 							  icon: Icons.layers
 						  )

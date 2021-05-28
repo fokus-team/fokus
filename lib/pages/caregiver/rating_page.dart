@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:fokus/logic/caregiver/tasks_evaluation_cubit.dart';
@@ -18,7 +17,7 @@ class CaregiverRatingPage extends StatefulWidget {
 
 class _CaregiverRatingPageState extends State<CaregiverRatingPage> {
 	static const String _pageKey = 'page.caregiverSection.rating';
-	CarouselController _carouselController;
+	late CarouselController _carouselController;
 	int _currentRaport = 0;
 
 	@override
@@ -123,7 +122,7 @@ class _CaregiverRatingPageState extends State<CaregiverRatingPage> {
 						carouselController: _carouselController,
 						items: reports.map((report) => 
 							Hero(
-								tag: report.task.id.toString() + report.task.duration.last.to.toString(),
+								tag: report.task.id.toString() + report.task.duration!.last.to.toString(),
 								child: ReportCard(report: report)
 							)
 						).toList()

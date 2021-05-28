@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/logic/caregiver/caregiver_friends_cubit.dart';
@@ -23,7 +22,7 @@ class CaregiverFriendPlansPage extends StatelessWidget {
 
 	@override
 	Widget build(BuildContext context) {
-		final MapEntry<Mongo.ObjectId, String> friend = ModalRoute.of(context).settings.arguments;
+		final MapEntry<Mongo.ObjectId, String> friend = ModalRoute.of(context)!.settings.arguments as MapEntry<Mongo.ObjectId, String>;
     return Scaffold(
 			appBar: AppBar(
 				title: Text(friend.value),
@@ -72,12 +71,12 @@ class CaregiverFriendPlansPage extends StatelessWidget {
 				elements: <Widget>[
 					for (var plan in state.plans)
 						ItemCard(
-							title: plan.name,
-							subtitle: plan.description(context),
+							title: plan.name!,
+							subtitle: plan.description!(context),
 							onTapped: () => Navigator.of(context).pushNamed(AppPage.planDetails.name, arguments: plan.id),
 							chips: <Widget>[
 								AttributeChip.withIcon(
-									content: AppLocales.of(context).translate('page.caregiverSection.plans.content.tasks', {'NUM_TASKS': plan.taskCount}),
+									content: AppLocales.of(context).translate('page.caregiverSection.plans.content.tasks', {'NUM_TASKS': plan.taskCount!}),
 									color: Colors.indigo,
 									icon: Icons.layers
 								)

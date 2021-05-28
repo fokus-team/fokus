@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
@@ -26,10 +25,10 @@ class _ReportFormPageState extends State<ReportFormPage> {
 	static const String _pageKey = 'page.caregiverSection.rating.content.form';
 	final double customBottomBarHeight = 40.0;
 
-	GlobalKey<FormState> reportFormKey;
+	late GlobalKey<FormState> reportFormKey;
 	bool isDataChanged = false;
 
-	FocusNode _focusNodeComment;
+	late FocusNode _focusNodeComment;
 	TextEditingController _commentController = TextEditingController();
 	UITaskReportMark mark = UITaskReportMark.rated3;
 	bool isRejected = false;
@@ -51,7 +50,11 @@ class _ReportFormPageState extends State<ReportFormPage> {
   @override
   Widget build(BuildContext context) {
 		return WillPopScope(
-			onWillPop: () => showExitFormDialog(context, true, isDataChanged),
+			onWillPop: () async {
+				bool? ret = await showExitFormDialog(context, true, isDataChanged);
+				if(ret == null || !ret) return false;
+				else return true;
+			},
 			child: Scaffold(
 				appBar: AppBar(
 					title: Text(AppLocales.of(context).translate('page.caregiverSection.rating.content.rateTaskButton')),
@@ -95,7 +98,7 @@ class _ReportFormPageState extends State<ReportFormPage> {
 						},
 						child: Text(
 							AppLocales.of(context).translate('actions.confirm'),
-							style: Theme.of(context).textTheme.button.copyWith(color: AppColors.mainBackgroundColor)
+							style: Theme.of(context).textTheme.button?.copyWith(color: AppColors.mainBackgroundColor)
 						)
 					)
 				]
@@ -111,7 +114,7 @@ class _ReportFormPageState extends State<ReportFormPage> {
 					Container(
 						margin: EdgeInsets.all(AppBoxProperties.screenEdgePadding),
 						child: Hero(
-							tag: widget.report.task.id.toString() + widget.report.task.duration.last.to.toString(),
+							tag: widget.report.task.id.toString() + widget.report.task.duration!.last.to.toString(),
 							child: ReportCard(report: widget.report, hideBottomBar: true)
 						)
 					),
@@ -131,12 +134,12 @@ class _ReportFormPageState extends State<ReportFormPage> {
 	}
 
 	Widget _getPointsAssigned() {
-		int totalPoints = widget.report.task.points.quantity;
-		int points = TasksEvaluationCubit.getPointsAwarded(totalPoints, mark.value);
+		int totalPoints = widget.report.task.points!.quantity!;
+		int points = TasksEvaluationCubit.getPointsAwarded(totalPoints, mark.value!);
 		return AttributeChip.withCurrency(
-			currencyType: widget.report.task.points.type,
+			currencyType: widget.report.task.points!.type!,
 			content: '$points / $totalPoints',
-			tooltip: widget.report.task.points.title
+			tooltip: widget.report.task.points!.title
 		);
 	}
 
@@ -164,7 +167,7 @@ class _ReportFormPageState extends State<ReportFormPage> {
 							RatingBar.builder(
 								minRating: 0.0,
 								maxRating: 5.0,
-								initialRating: mark.value.toDouble() ?? 3,
+								initialRating: mark.value?.toDouble() ?? 3,
 								itemCount: 5,
 								itemSize: 50.0,
 								unratedColor: Colors.grey[300],
@@ -172,7 +175,7 @@ class _ReportFormPageState extends State<ReportFormPage> {
 								glow: false,
 								itemBuilder: (context, index) => Icon(Icons.star, color: Colors.amber),
 								onRatingUpdate: (val) {
-									FocusManager.instance.primaryFocus.unfocus();
+									FocusManager.instance.primaryFocus?.unfocus();
 									setState((){ mark = UITaskReportMark.values.firstWhere((element) => element.value == val.toInt()); });
 								},
 							),
@@ -210,7 +213,7 @@ class _ReportFormPageState extends State<ReportFormPage> {
 			secondary: Padding(padding: EdgeInsets.only(left: 8.0), child: Icon(Icons.block, color: Colors.red)),
 			value: isRejected,
 			onChanged: (val) => setState(() {
-				isRejected = val;
+				isRejected = val!;
 			})
 		);
 	}

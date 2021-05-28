@@ -12,7 +12,7 @@ class LocaleService implements ActiveUserObserver {
 		return Locale(parts[0], parts.length > 1 ? parts[1] : null);
 	}
 
-	static Locale localeSelector(List<Locale> locales, Iterable<Locale> supportedLocales) => userAwareLocaleSelector();
+	static Locale? localeSelector(List<Locale>? locales, Iterable<Locale> supportedLocales) => userAwareLocaleSelector();
 
 	static Locale userAwareLocaleSelector([String? userLocale]) {
 		if (userLocale != null)

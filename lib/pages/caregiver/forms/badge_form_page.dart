@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -21,7 +20,7 @@ class CaregiverBadgeFormPage extends StatefulWidget {
 
 class _CaregiverBadgeFormPageState extends State<CaregiverBadgeFormPage> {
 	static const String _pageKey = 'page.caregiverSection.badgeForm';
-	GlobalKey<FormState> badgeFormKey;
+	late GlobalKey<FormState> badgeFormKey;
 	bool isDataChanged = false;
 
 	BadgeFormModel badge = BadgeFormModel();
@@ -55,7 +54,11 @@ class _CaregiverBadgeFormPageState extends State<CaregiverBadgeFormPage> {
 			},
 	    builder: (context, state) {
 				return WillPopScope(
-					onWillPop: () => showExitFormDialog(context, true, isDataChanged),
+					onWillPop: () async {
+						bool? ret = await showExitFormDialog(context, true, isDataChanged);
+						if(ret == null) return false;
+						else return ret;
+					},
 					child: Scaffold(
 						appBar: AppBar(
 							backgroundColor: AppColors.formColor,
@@ -88,7 +91,7 @@ class _CaregiverBadgeFormPageState extends State<CaregiverBadgeFormPage> {
 	}
 
 	void saveBadge(BuildContext context) {
-		if(badgeFormKey.currentState.validate()) {
+		if(badgeFormKey.currentState!.validate()) {
 			BlocProvider.of<BadgeFormCubit>(context).submitBadgeForm(badge);
 		}
 	}
@@ -107,7 +110,7 @@ class _CaregiverBadgeFormPageState extends State<CaregiverBadgeFormPage> {
 						onPressed: () => saveBadge(context),
 						child: Text(
 							AppLocales.of(context).translate('$_pageKey.addBadgeButton'),
-							style: Theme.of(context).textTheme.button.copyWith(color: AppColors.mainBackgroundColor)
+							style: Theme.of(context).textTheme.button?.copyWith(color: AppColors.mainBackgroundColor)
 						)
 					)
 				]
@@ -137,7 +140,7 @@ class _CaregiverBadgeFormPageState extends State<CaregiverBadgeFormPage> {
 				maxLength: AppFormProperties.textFieldMaxLength,
 				textCapitalization: TextCapitalization.sentences,
 				validator: (value) {
-					return value.trim().isEmpty ? AppLocales.of(context).translate('$_pageKey.fields.badgeName.emptyError') : null;
+					return value!.trim().isEmpty ? AppLocales.of(context).translate('$_pageKey.fields.badgeName.emptyError') : null;
 				},
 				onChanged: (val) => setState(() {
 					badge.name = val;
@@ -171,9 +174,9 @@ class _CaregiverBadgeFormPageState extends State<CaregiverBadgeFormPage> {
 		return IconPickerField.badge(
 			title: AppLocales.of(context).translate('$_pageKey.fields.badgeIcon.label'),
 			groupTextKey: '$_pageKey.fields.badgeIcon.groups',
-			value: badge.icon,
+			value: badge.icon!,
 			callback: (val) => setState(() {
-				FocusManager.instance.primaryFocus.unfocus();
+				FocusManager.instance.primaryFocus?.unfocus();
 				badge.icon = val;
 				isDataChanged = true;
 			})

@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -23,8 +22,8 @@ class CaregiverCurrenciesPage extends StatefulWidget {
 
 class _CaregiverCurrenciesPageState extends State<CaregiverCurrenciesPage> {
 	static const String _pageKey = 'page.caregiverSection.currencies';
-	GlobalKey<FormState> currenciesKey;
-	Map<CurrencyType, String> currencyList;
+	late GlobalKey<FormState>? currenciesKey;
+	late Map<CurrencyType, String?> currencyList;
 	bool isDataChanged = false;
 
 	@override
@@ -48,7 +47,7 @@ class _CaregiverCurrenciesPageState extends State<CaregiverCurrenciesPage> {
 			listener: (context, state) {
 				if (state.loaded) {
 					for(UICurrency currency in (state as CaregiverCurrenciesState).currencies)
-						currencyList[currency.type] = currency.title;
+						currencyList[currency.type!] = currency.title;
 				}
 				if (state.submitted)
 					showSuccessSnackbar(context, '$_pageKey.content.currenciesUpdatedText');
@@ -56,7 +55,11 @@ class _CaregiverCurrenciesPageState extends State<CaregiverCurrenciesPage> {
 			popConfig: SubmitPopConfig.onSubmitted(),
 	    builder: (context, state) {
 				return WillPopScope(
-					onWillPop: () => showExitFormDialog(context, true, isDataChanged),
+					onWillPop: () async {
+						bool? ret = await showExitFormDialog(context, true, isDataChanged);
+						if(ret == null || !ret) return false;
+						else return true;
+					},
 					child: Scaffold(
 						appBar: AppBar(
 							backgroundColor: AppColors.formColor,
@@ -89,7 +92,7 @@ class _CaregiverCurrenciesPageState extends State<CaregiverCurrenciesPage> {
 	}
 
 	void saveCurrencies(BuildContext context) {
-		if(currenciesKey.currentState.validate()) {
+		if(currenciesKey!.currentState!.validate()) {
 			BlocProvider.of<CaregiverCurrenciesCubit>(context).updateCurrencies(
 				currencyList.entries
 					.where((element) => element.value != null)
@@ -113,7 +116,7 @@ class _CaregiverCurrenciesPageState extends State<CaregiverCurrenciesPage> {
 						onPressed: () => saveCurrencies(context),
 						child: Text(
 							AppLocales.of(context).translate('$_pageKey.content.saveCurrenciesButton'),
-							style: Theme.of(context).textTheme.button.copyWith(color: AppColors.mainBackgroundColor)
+							style: Theme.of(context).textTheme.button?.copyWith(color: AppColors.mainBackgroundColor)
 						)
 					)
 				]
@@ -121,7 +124,7 @@ class _CaregiverCurrenciesPageState extends State<CaregiverCurrenciesPage> {
 		);
 	}
 
-	Widget buildCurrencyTile(CurrencyType type, String title) {
+	Widget buildCurrencyTile(CurrencyType type, String? title) {
 		return ListTile(
 			title: Text(title == null ? AppLocales.of(context).translate('$_pageKey.content.currencyNotUsed') : title),
 			subtitle: Text(AppLocales.of(context).translate('$_pageKey.content.currencies.${type.toString().split('.')[1]}')),
@@ -129,7 +132,7 @@ class _CaregiverCurrenciesPageState extends State<CaregiverCurrenciesPage> {
 				padding: EdgeInsets.only(left: 10.0, top: 4.0),
 				child: CircleAvatar(
 					child: SvgPicture.asset(AssetType.currencies.getPath(type.index), width: 28, fit: BoxFit.cover),
-					backgroundColor: AppColors.currencyColor[type].withAlpha(50)
+					backgroundColor: AppColors.currencyColor[type]?.withAlpha(50)
 				)
 			),
 			enabled: title != null,

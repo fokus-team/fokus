@@ -1,4 +1,3 @@
-// @dart = 2.10
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -27,12 +26,12 @@ class CaregiverPlanFormPage extends StatefulWidget {
 class _CaregiverPlanFormPageState extends State<CaregiverPlanFormPage> {
 	static const String _pageKey = 'page.caregiverSection.planForm';
 	final int screenTransitionDuration = 500;
-	AppFormType formType;
+	late AppFormType formType;
 	PlanFormModel plan = PlanFormModel();
 
 	PlanFormStep currentStep = PlanFormStep.planParameters;
 
-	GlobalKey<FormState> formKey;
+	late GlobalKey<FormState> formKey;
 
 	bool isCurrentStepOne() => (currentStep == PlanFormStep.planParameters);
 
@@ -66,7 +65,7 @@ class _CaregiverPlanFormPageState extends State<CaregiverPlanFormPage> {
 					}
 					showSuccessSnackbar(context, formType == AppFormType.edit ? '$_pageKey.planEditedText' : '$_pageKey.planCreatedText');
 				} else if (state is PlanFormDataLoadSuccess)
-					setState(() => plan = PlanFormModel.from(state.planForm));
+					setState(() => plan = PlanFormModel.from(state.planForm!));
 			},
 	    builder: (context, state) {
 				List<Widget> children = [buildStepper()];
@@ -84,7 +83,11 @@ class _CaregiverPlanFormPageState extends State<CaregiverPlanFormPage> {
 						child: Center(child: AppLoader(hasOverlay: true))
 					));
 		    return WillPopScope(
-					onWillPop: () => showExitFormDialog(context, true, state is PlanFormDataLoadSuccess && plan != state.planForm),
+					onWillPop: () async {
+						bool? ret = await showExitFormDialog(context, true, state is PlanFormDataLoadSuccess && plan != state.planForm);
+						if(ret == null || !ret) return false;
+						else return true;
+					},
 					child: Scaffold(
 						appBar: AppBar(
 							title: Text(AppLocales.of(context).translate(
@@ -107,7 +110,7 @@ class _CaregiverPlanFormPageState extends State<CaregiverPlanFormPage> {
 	Widget buildStepOneContent() => PlanForm(
 		plan: plan,
 		goNextCallback: () {
-			if(formKey.currentState.validate())
+			if(formKey.currentState!.validate())
 				if(plan.repeatability == PlanFormRepeatability.onlyOnce ||
 					plan.repeatability == PlanFormRepeatability.untilCompleted ||
 					(plan.repeatability == PlanFormRepeatability.recurring && plan.days.length > 0))
@@ -140,7 +143,7 @@ class _CaregiverPlanFormPageState extends State<CaregiverPlanFormPage> {
 									child: child
 								);
 							},
-							layoutBuilder: (Widget currentChild, List<Widget> previousChildren) {
+							layoutBuilder: (Widget? currentChild, List<Widget> previousChildren) {
 								List<Widget> children = previousChildren;
 								if (currentChild != null)
 									children = children.toList()..add(currentChild);
@@ -190,7 +193,7 @@ class _CaregiverPlanFormPageState extends State<CaregiverPlanFormPage> {
 								);
 							}
 						},
-						layoutBuilder: (Widget currentChild, List<Widget> previousChildren) {
+						layoutBuilder: (Widget? currentChild, List<Widget> previousChildren) {
 							List<Widget> children = previousChildren;
 							if (currentChild != null)
 								children = children.toList()..add(currentChild);

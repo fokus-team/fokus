@@ -1,10 +1,13 @@
-// @dart = 2.10
 import 'package:bloc/bloc.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fokus/model/navigation/plan_form_params.dart';
+import 'package:fokus/model/navigation/report_form_params.dart';
+import 'package:fokus/model/navigation/task_form_params.dart';
+import 'package:fokus/model/navigation/task_in_progress_params.dart';
 import 'package:fokus/pages/caregiver/forms/task_form_page.dart';
 import 'package:get_it/get_it.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -85,6 +88,10 @@ import 'package:fokus/utils/ui/theme_config.dart';
 import 'package:fokus/utils/service_injection.dart';
 import 'package:fokus/utils/bloc_utils.dart';
 import 'package:fokus/widgets/page_theme.dart';
+import 'package:mongo_dart/mongo_dart.dart' as mongo;
+
+import 'model/app_error_type.dart';
+import 'model/navigation/plan_instance_params.dart';
 
 void main() async {
 	WidgetsFlutterBinding.ensureInitialized();
@@ -139,10 +146,10 @@ class _FokusAppState extends State<FokusApp> implements CurrentLocaleObserver {
 		);
 	}
 
-  Route<dynamic> _onGenerateRoute(RouteSettings settings) {
-		var getActiveUser = (BuildContext context) => () => BlocProvider.of<AuthenticationBloc>(context).state.user;
+  Route<dynamic>? _onGenerateRoute(RouteSettings settings) {
+		var getActiveUser = (BuildContext context) => () => BlocProvider.of<AuthenticationBloc>(context).state.user!;
 		var getRoute = (BuildContext context) => ModalRoute.of(context);
-		var getParams = (BuildContext context) => getRoute(context).settings.arguments;
+		var getParams = (BuildContext context) => getRoute(context)?.settings.arguments as MapEntry<mongo.ObjectId, String>?;
 		var authBloc = (BuildContext context) => BlocProvider.of<AuthenticationBloc>(context);
 
 		Map<String, RoutePageBuilder> routesWithFadeTransition = {
@@ -150,19 +157,19 @@ class _FokusAppState extends State<FokusApp> implements CurrentLocaleObserver {
 			AppPage.caregiverPanel.name: (context, _, __) => _createPage(
 				withCubit(CaregiverPanelPage(), CaregiverFriendsCubit(getActiveUser(context), authBloc(context))),
 				context,
-				CaregiverPanelCubit(getActiveUser(context), getRoute(context))
+				CaregiverPanelCubit(getActiveUser(context), getRoute(context)!)
 			),
-			AppPage.caregiverPlans.name: (context, _, __) => _createPage(CaregiverPlansPage(), context, CaregiverPlansCubit(getActiveUser(context), getRoute(context), getParams(context))),
+			AppPage.caregiverPlans.name: (context, _, __) => _createPage(CaregiverPlansPage(), context, CaregiverPlansCubit(getActiveUser(context), getRoute(context)!, getParams(context))),
 			AppPage.caregiverAwards.name: (context, _, __) => _createPage(CaregiverAwardsPage(), context, CaregiverAwardsCubit(getActiveUser(context), getRoute(context))),
 			// Child pages
-			AppPage.childPanel.name: (context, _, __) =>  _createPage(ChildPanelPage(), context, ChildPanelCubit(getActiveUser(context), getRoute(context))),
-			AppPage.childRewards.name: (context, _, __) =>  _createPage(ChildRewardsPage(), context, ChildRewardsCubit(getActiveUser(context), getRoute(context))),
+			AppPage.childPanel.name: (context, _, __) =>  _createPage(ChildPanelPage(), context, ChildPanelCubit(getActiveUser(context), getRoute(context)!)),
+			AppPage.childRewards.name: (context, _, __) =>  _createPage(ChildRewardsPage(), context, ChildRewardsCubit(getActiveUser(context), getRoute(context)!)),
 			AppPage.childAchievements.name: (context, _, __) =>  _createPage(ChildAchievementsPage(), context)
 		};
 
 		if(routesWithFadeTransition.containsKey(settings.name))
 			return PageRouteBuilder(
-				pageBuilder: routesWithFadeTransition[settings.name],
+				pageBuilder: routesWithFadeTransition[settings.name]!,
 				settings: settings,
 				transitionsBuilder: (context, animation, secondaryAnimation, child) {
 					return FadeTransition(
@@ -174,29 +181,30 @@ class _FokusAppState extends State<FokusApp> implements CurrentLocaleObserver {
 		return null;
   }
 
-	Widget _authenticationGateBuilder(BuildContext context, Widget child) {
+	Widget _authenticationGateBuilder(BuildContext context, Widget? child) {
 		return BlocListener<AuthenticationBloc, AuthenticationState>(
 			listenWhen: (oldState, newState) => oldState.status != newState.status,
 			listener: (context, state) {
-				var redirectPage = state.status == AuthenticationStatus.authenticated ? state.user.role.panelPage : AppPage.rolesPage;
-				widget._navigatorKey.currentState.pushNamedAndRemoveUntil(redirectPage.name, (route) => false);
+				var redirectPage = state.status == AuthenticationStatus.authenticated ? state.user!.role!.panelPage : AppPage.rolesPage;
+				widget._navigatorKey.currentState?.pushNamedAndRemoveUntil(redirectPage.name, (route) => false);
 			},
 			child: child
 		);
 	}
 
 	Map<String, WidgetBuilder> _createRoutes() {
-		var getActiveUser = (BuildContext context) => () => BlocProvider.of<AuthenticationBloc>(context).state.user;
+		var getActiveUser = (BuildContext context) => () => BlocProvider.of<AuthenticationBloc>(context).state.user!;
 		var getRoute = (BuildContext context) => ModalRoute.of(context);
-		var getParams = (BuildContext context) => getRoute(context).settings.arguments;
+		var getParams = (BuildContext context) => getRoute(context)?.settings.arguments;
 		var authBloc = (BuildContext context) => BlocProvider.of<AuthenticationBloc>(context);
-		var accountManaging = (BuildContext context, Widget page, [UIUser user]) => withCubit(
+		var accountManaging = (BuildContext context, Widget page, [UIUser? user]) => withCubit(
 			withCubit(page, NameChangeCubit(getActiveUser(context), authBloc(context), user)),
 			AccountDeleteCubit(getActiveUser(context), user)
 		);
+
 		return {
 			AppPage.loadingPage.name: (context) => _createPage(LoadingPage(), context),
-			AppPage.errorPage.name: (context) => _createPage(ErrorPage(getParams(context)), context, null, AppPageSection.login),
+			AppPage.errorPage.name: (context) => _createPage(ErrorPage(getParams(context) as AppErrorType), context, null, AppPageSection.login),
 			AppPage.rolesPage.name: (context) => _createPage(RolesPage(), context),
       AppPage.notificationsPage.name: (context) => _createPage(NotificationsPage(), context),
 			AppPage.settingsPage.name:  (context) => _createPage(
@@ -205,42 +213,42 @@ class _FokusAppState extends State<FokusApp> implements CurrentLocaleObserver {
 					LocaleCubit(getActiveUser(context), authBloc(context))
 				), context, PasswordChangeCubit(PasswordChangeType.change)
 			),
-			AppPage.caregiverSignInPage.name: (context) => _createPage(CaregiverSignInPage(), context, CaregiverSignInCubit(getParams(context))),
+			AppPage.caregiverSignInPage.name: (context) => _createPage(CaregiverSignInPage(), context, CaregiverSignInCubit(getParams(context) as String?)),
 			AppPage.caregiverSignUpPage.name: (context) => _createPage(CaregiverSignUpPage(), context, CaregiverSignUpCubit()),
-			AppPage.childProfilesPage.name: (context) => _createPage(ChildProfilesPage(), context, SavedChildProfilesCubit(authBloc(context), getRoute(context))),
+			AppPage.childProfilesPage.name: (context) => _createPage(ChildProfilesPage(), context, SavedChildProfilesCubit(authBloc(context), getRoute(context) as ModalRoute<dynamic>)),
 			AppPage.childSignInPage.name: (context) => _createPage(
 				withCubit(ChildSignInPage(), ChildSignInCubit(authBloc(context))),
 				context, ChildSignUpCubit(authBloc(context)),
 				AppPageSection.login
 			),
 			AppPage.caregiverChildDashboard.name: (context) {
-				var plans = DashboardPlansCubit(getActiveUser(context), getRoute(context));
-				var rewards = DashboardRewardsCubit(getActiveUser(context), getRoute(context));
-				var achievements = DashboardAchievementsCubit(getActiveUser(context), getRoute(context));
+				var plans = DashboardPlansCubit(getActiveUser(context), getRoute(context)!);
+				var rewards = DashboardRewardsCubit(getActiveUser(context), getRoute(context)!);
+				var achievements = DashboardAchievementsCubit(getActiveUser(context), getRoute(context)!);
 			  return _createPage(
-					withCubit(withCubit(withCubit(accountManaging(context, CaregiverChildDashboardPage(getParams(context)),
+					withCubit(withCubit(withCubit(accountManaging(context, CaregiverChildDashboardPage(getParams(context) as ChildDashboardParams),
 							(getParams(context) as ChildDashboardParams).child), plans), achievements), rewards),
-					context, ChildDashboardCubit(getParams(context), getRoute(context), plans, rewards, achievements)
+					context, ChildDashboardCubit(getParams(context) as ChildDashboardParams, getRoute(context)!, plans, rewards, achievements)
 				);
 			},
-			AppPage.caregiverCalendar.name: (context) => _createPage(CaregiverCalendarPage(), context, CalendarCubit(getParams(context), getActiveUser(context))),
-			AppPage.caregiverPlanForm.name: (context) => _createPage(CaregiverPlanFormPage(), context, PlanFormCubit(getParams(context), getActiveUser(context))),
-			AppPage.caregiverTaskForm.name: (context) => _createPage(TaskFormPage(getParams(context)), context),
-			AppPage.caregiverRewardForm.name: (context) => _createPage(CaregiverRewardFormPage(), context, RewardFormCubit(getParams(context), getActiveUser(context), getRoute(context))),
-			AppPage.caregiverBadgeForm.name: (context) => _createPage(CaregiverBadgeFormPage(), context, BadgeFormCubit(getActiveUser(context), authBloc(context), getRoute(context))),
-			AppPage.caregiverRatingPage.name: (context) => _createPage(CaregiverRatingPage(), context, TasksEvaluationCubit(getRoute(context), getActiveUser(context))),
-			AppPage.caregiverReportForm.name: (context) => _createPage(ReportFormPage(getParams(context)), context),
-			AppPage.caregiverCurrencies.name: (context) => _createPage(CaregiverCurrenciesPage(), context, CaregiverCurrenciesCubit(getActiveUser(context), getRoute(context), getActiveUser(context), authBloc(context))),
-			AppPage.caregiverFriendPlans.name: (context) => _createPage(withCubit(CaregiverFriendPlansPage(), CaregiverFriendsCubit(getActiveUser(context), authBloc(context))), context, CaregiverPlansCubit(getActiveUser(context), getRoute(context), getParams(context))),
-			AppPage.planDetails.name: (context) => _createPage(PlanDetailsPage(), context, PlanCubit(getParams(context), getRoute(context))),
+			AppPage.caregiverCalendar.name: (context) => _createPage(CaregiverCalendarPage(), context, CalendarCubit(getParams(context) as mongo.ObjectId?, getActiveUser(context))),
+			AppPage.caregiverPlanForm.name: (context) => _createPage(CaregiverPlanFormPage(), context, PlanFormCubit(getParams(context)  as PlanFormParams?, getActiveUser(context))),
+			AppPage.caregiverTaskForm.name: (context) => _createPage(TaskFormPage(getParams(context) as TaskFormParams), context),
+			AppPage.caregiverRewardForm.name: (context) => _createPage(CaregiverRewardFormPage(), context, RewardFormCubit(getParams(context) as mongo.ObjectId?, getActiveUser(context), getRoute(context)!)),
+			AppPage.caregiverBadgeForm.name: (context) => _createPage(CaregiverBadgeFormPage(), context, BadgeFormCubit(getActiveUser(context), authBloc(context), getRoute(context)!)),
+			AppPage.caregiverRatingPage.name: (context) => _createPage(CaregiverRatingPage(), context, TasksEvaluationCubit(getRoute(context)!, getActiveUser(context))),
+			AppPage.caregiverReportForm.name: (context) => _createPage(ReportFormPage(getParams(context) as ReportFormParams), context),
+			AppPage.caregiverCurrencies.name: (context) => _createPage(CaregiverCurrenciesPage(), context, CaregiverCurrenciesCubit(getActiveUser(context), getRoute(context)!, getActiveUser(context), authBloc(context))),
+			AppPage.caregiverFriendPlans.name: (context) => _createPage(withCubit(CaregiverFriendPlansPage(), CaregiverFriendsCubit(getActiveUser(context), authBloc(context))), context, CaregiverPlansCubit(getActiveUser(context), getRoute(context)!, getParams(context) as MapEntry<mongo.ObjectId, String>?)),
+			AppPage.planDetails.name: (context) => _createPage(PlanDetailsPage(), context, PlanCubit(getParams(context) as mongo.ObjectId, getRoute(context)!)),
 
-			AppPage.childCalendar.name: (context) => _createPage(ChildCalendarPage(), context, CalendarCubit(getParams(context), getActiveUser(context))),
-			AppPage.planInstanceDetails.name: (context) => _createPage(PlanInstanceDetailsPage(getParams(context)), context, PlanInstanceCubit(getParams(context), getRoute(context))),
-			AppPage.childTaskInProgress.name: (context) => _createPage(ChildTaskInProgressPage(), context, TaskCompletionCubit(getParams(context), getActiveUser(context), getRoute(context)))
+			AppPage.childCalendar.name: (context) => _createPage(ChildCalendarPage(), context, CalendarCubit(getParams(context) as mongo.ObjectId, getActiveUser(context))),
+			AppPage.planInstanceDetails.name: (context) => _createPage(PlanInstanceDetailsPage(getParams(context) as PlanInstanceParams), context, PlanInstanceCubit(getParams(context) as PlanInstanceParams, getRoute(context)!)),
+			AppPage.childTaskInProgress.name: (context) => _createPage(ChildTaskInProgressPage(), context, TaskCompletionCubit(getParams(context) as TaskInProgressParams, getActiveUser(context), getRoute(context)!))
 		};
 	}
 
-	Widget _createPage<CubitType extends Cubit>(Widget page, BuildContext context, [CubitType pageCubit, AppPageSection section]) {
+	Widget _createPage<CubitType extends Cubit?>(Widget page, BuildContext context, [CubitType? pageCubit, AppPageSection? section]) {
 		if (pageCubit != null)
 			page = withCubit(page, pageCubit);
 		return PageTheme.parametrizedSection(

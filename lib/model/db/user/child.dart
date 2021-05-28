@@ -1,6 +1,7 @@
 import 'package:fokus/model/db/gamification/child_badge.dart';
 import 'package:fokus/model/db/user/user.dart';
 import 'package:fokus/model/db/user/child_permission.dart';
+import 'package:fokus/utils/definitions.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
 import '../gamification/points.dart';
@@ -18,7 +19,7 @@ class Child extends User {
   Child._({ObjectId? id, String? name, int? avatar, List<ObjectId>? connections, this.badges, this.permissions, this.points, this.rewards}) :
 			  super(id: id, name: name, role: UserRole.child, avatar: avatar, connections: connections);
 
-  static Child? fromJson(Map<String, dynamic>? json) {
+  static Child? fromJson(Json? json) {
     return json != null ? (Child._(
 	    id: json['_id'],
       badges: json['badges'] != null ? (json['badges'] as List).map((i) => ChildBadge.fromJson(i)!).toList() : [],
@@ -28,8 +29,8 @@ class Child extends User {
     )..assignFromJson(json)) : null;
   }
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = super.toJson();
+  Json toJson() {
+    final Json data = super.toJson();
     if (this.badges != null)
       data['badges'] = this.badges!.map((v) => v.toJson()).toList();
     if (this.permissions != null)

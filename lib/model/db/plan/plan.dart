@@ -2,6 +2,7 @@ import 'package:fokus/model/db/date/date.dart';
 import 'package:fokus/model/db/date/time_date.dart';
 import 'package:fokus/model/db/plan/plan_repeatability.dart';
 import 'package:fokus/model/ui/form/plan_form_model.dart';
+import 'package:fokus/utils/definitions.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
 class Plan {
@@ -24,7 +25,7 @@ class Plan {
   Plan._({this.active, this.assignedTo, this.changedInstances, this.createdAt,
 	  this.createdBy, this.id, this.instances, this.name, this.repeatability, this.tasks});
 
-  static Plan? fromJson(Map<String, dynamic>? json) {
+  static Plan? fromJson(Json? json) {
     return json != null ? Plan._(
       active: json['active'],
       assignedTo: json['assignedTo'] != null ? new List<ObjectId>.from(json['assignedTo']) : [],
@@ -39,8 +40,8 @@ class Plan {
     ) : null;
   }
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+  Json toJson() {
+    final Json data = new Json();
     if (active != null)
       data['active'] = this.active;
     if (createdAt != null)

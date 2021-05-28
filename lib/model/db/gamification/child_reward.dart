@@ -1,5 +1,6 @@
 import 'package:fokus/model/db/date/time_date.dart';
 import 'package:fokus/model/db/gamification/points.dart';
+import 'package:fokus/utils/definitions.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
 class ChildReward {
@@ -11,7 +12,7 @@ class ChildReward {
 
   ChildReward({this.id, this.name, this.cost, this.date, this.icon});
 
-  static ChildReward? fromJson(Map<String, dynamic>? json) {
+  static ChildReward? fromJson(Json? json) {
     return json != null ? ChildReward(
       id: json['_id'],
       name: json['name'],
@@ -21,8 +22,8 @@ class ChildReward {
     ) : null;
   }
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+  Json toJson() {
+    final Json data = new Json();
     if (this.id != null)
       data['_id'] = this.id;
     if (this.name != null)

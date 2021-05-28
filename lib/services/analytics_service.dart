@@ -10,6 +10,7 @@ import 'package:fokus/model/db/plan/task_instance.dart';
 import 'package:fokus/model/ui/gamification/ui_reward.dart';
 import 'package:fokus/model/ui/task/ui_task_report.dart';
 import 'package:fokus_auth/fokus_auth.dart';
+import 'package:fokus/utils/definitions.dart';
 
 class AnalyticsService {
 	final FirebaseAnalytics _analytics = FirebaseAnalytics();
@@ -54,14 +55,14 @@ class AnalyticsService {
 }
 
 extension LogPlanInstance on PlanInstance {
-	Map<String, dynamic> get logRecord => {
+	Json get logRecord => {
 		'id': id?.toHexString(),
 		'plan_id': planID?.toHexString()
 	};
 }
 
 extension LogTaskInstance on TaskInstance {
-	Map<String, dynamic> get logRecord => {
+	Json get logRecord => {
 		'id': id?.toHexString(),
 		'task_id': taskID?.toHexString(),
 		'plan_id': planInstanceID?.toHexString(),
@@ -70,7 +71,7 @@ extension LogTaskInstance on TaskInstance {
 }
 
 extension LogUITaskReport on UITaskReport {
-	Map<String, dynamic> get logRecord => {
+	Json get logRecord => {
 		'child_id': child.id?.toHexString(),
 		'id': task.id?.toHexString(),
 		'rating': '${ratingMark.value}'
@@ -78,7 +79,7 @@ extension LogUITaskReport on UITaskReport {
 }
 
 extension LogReward on Reward {
-	Map<String, dynamic> get logRecord => {
+	Json get logRecord => {
 		'id': id?.toHexString(),
 		'cost': '${cost?.quantity}',
 		'currency': '${cost?.icon?.index}',
@@ -87,7 +88,7 @@ extension LogReward on Reward {
 }
 
 extension LogUIReward on UIReward {
-	Map<String, dynamic> get logRecord => {
+	Json get logRecord => {
 		'id': id?.toHexString(),
 		'cost': '${cost?.quantity}',
 		'currency': '$icon',

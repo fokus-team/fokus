@@ -1,3 +1,5 @@
+import 'package:fokus/utils/definitions.dart';
+
 class TaskStatus {
 	bool? completed;
 	TaskState? state;
@@ -6,7 +8,7 @@ class TaskStatus {
 
 	TaskStatus({this.completed, this.state, this.pointsAwarded, this.rating});
 
-	static TaskStatus? fromJson(Map<String, dynamic>? json) {
+	static TaskStatus? fromJson(Json? json) {
 		return json != null ? TaskStatus(
 			completed: json['completed'],
 			state: json['state'] != null ? TaskState.values[json['state']] : null,
@@ -15,8 +17,8 @@ class TaskStatus {
 		) : null;
 	}
 
-	Map<String, dynamic> toJson() {
-		final Map<String, dynamic> data = new Map<String, dynamic>();
+	Json toJson() {
+		final Json data = new Json();
 		if (this.completed != null)
 			data['completed'] = this.completed;
 		if (this.state != null)

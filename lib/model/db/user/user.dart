@@ -1,6 +1,7 @@
 import 'package:fokus/model/db/user/caregiver.dart';
 import 'package:fokus/model/db/user/child.dart';
 import 'package:fokus/model/db/user/user_role.dart';
+import 'package:fokus/utils/definitions.dart';
 import 'package:meta/meta.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
@@ -18,7 +19,7 @@ class User {
   User({this.id, this.role, this.name, this.avatar, this.connections, this.notificationIDs, this.accessCode});
 
   @protected
-  void assignFromJson(Map<String, dynamic> json) {
+  void assignFromJson(Json json) {
     name = json['name'];
     notificationIDs = json['notificationIDs'] != null ? new List<String>.from(json['notificationIDs']) : [];
     accessCode = json['accessCode'] != null ? new List<int>.from(json['accessCode']) : [];
@@ -28,8 +29,8 @@ class User {
     connections = json['connections'] != null ? new List<ObjectId>.from(json['connections']) : null;
   }
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+  Json toJson() {
+    final data = Json();
     if (this.avatar != null)
       data['avatar'] = this.avatar;
     if (this.id != null)
@@ -49,7 +50,7 @@ class User {
     return data;
   }
 
-  static User? typedFromJson(Map<String, dynamic>? json) {
+  static User? typedFromJson(Json? json) {
   	if (json == null || json['role'] == null)
   		return null;
   	return json['role'] == UserRole.caregiver.index ? Caregiver.fromJson(json) : Child.fromJson(json);

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:fokus/utils/definitions.dart';
 import 'notification_text.dart';
 
 enum NotificationButton {
@@ -18,7 +19,7 @@ extension NotificationButtonInfo on NotificationButton {
 		NotificationButton.view: SimpleNotificationText.appBased('$_key.view'),
 	}[this]!;
 
-	Map<String, dynamic> toJson() => {
+	Json toJson() => {
 		'id': action,
 		'text': json.encode(name.getTranslations())
 	};

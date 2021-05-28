@@ -1,4 +1,5 @@
 import 'package:fokus/model/currency_type.dart';
+import 'package:fokus/utils/definitions.dart';
 import 'package:meta/meta.dart';
 
 class Currency {
@@ -7,17 +8,17 @@ class Currency {
 
 	Currency({this.icon, this.name});
 
-	static Currency? fromJson(Map<String, dynamic>? json) =>
+	static Currency? fromJson(Json? json) =>
 			json != null ? (Currency()..assignFromJson(json)) : null;
 
 	@protected
-	void assignFromJson(Map<String, dynamic> json) {
+	void assignFromJson(Json json) {
 		icon = CurrencyType.values[json['icon']];
 		name = json['name'];
 	}
 
-	Map<String, dynamic> toJson() {
-		final Map<String, dynamic> data = new Map<String, dynamic>();
+	Json toJson() {
+		final Json data = new Json();
 		if (this.icon != null)
       data['icon'] = this.icon!.index;
 		if (this.name != null)

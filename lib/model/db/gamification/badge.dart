@@ -1,4 +1,5 @@
 import 'package:fokus/model/ui/form/badge_form_model.dart';
+import 'package:fokus/utils/definitions.dart';
 import 'package:meta/meta.dart';
 
 class Badge {
@@ -9,19 +10,19 @@ class Badge {
   Badge({this.name, this.description, this.icon});
 	Badge.fromBadgeForm(BadgeFormModel badge) : this(name: badge.name, description: badge.description, icon: badge.icon);
 
-  static Badge? fromJson(Map<String, dynamic>? json) {
+  static Badge? fromJson(Json? json) {
     return json != null ? (Badge()..assignFromJson(json)) : null;
   }
 
   @protected
-  void assignFromJson(Map<String, dynamic> json) {
+  void assignFromJson(Json json) {
 	  icon = json['icon'];
 	  name = json['name'];
 	  description = json['description'];
   }
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+  Json toJson() {
+    final Json data = new Json();
     if (this.icon != null)
       data['icon'] = this.icon;
     if (this.name != null)

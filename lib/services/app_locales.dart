@@ -1,11 +1,13 @@
 import 'dart:convert';
 import 'dart:ui';
-import 'package:fokus/services/observers/current_locale_observer.dart';
 import 'package:intl/message_format.dart';
 import 'package:logging/logging.dart';
 
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+
+import 'package:fokus/utils/definitions.dart';
+import 'package:fokus/services/observers/current_locale_observer.dart';
 
 typedef TranslateFunc = String Function(BuildContext);
 
@@ -42,7 +44,7 @@ class AppLocales {
 
 	static const LocalizationsDelegate<AppLocales> delegate = AppLocalesDelegate();
 
-	Map<Locale, Map<String, dynamic>> _translations = {};
+	Map<Locale, Json> _translations = {};
 
 	Future setLocale(Locale locale) async {
 		if (_translations.isEmpty)

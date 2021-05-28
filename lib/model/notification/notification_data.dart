@@ -1,4 +1,5 @@
 import 'package:fokus/model/notification/notification_button.dart';
+import 'package:fokus/utils/definitions.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
 import 'notification_refresh_info.dart';
@@ -13,7 +14,7 @@ class NotificationData implements NotificationRefreshInfo {
 
   NotificationData({required this.type, required this.sender, required this.recipient, this.buttons, this.subject});
 
-	factory NotificationData.fromJson(Map<String, dynamic> json) {
+	factory NotificationData.fromJson(Json json) {
 		return NotificationData(
 			type: NotificationType.values[json['type']],
 			sender: ObjectId.parse(json['sender']),
@@ -22,7 +23,7 @@ class NotificationData implements NotificationRefreshInfo {
 		);
 	}
 
-	Map<String, dynamic> toJson() => {
+	Json toJson() => {
 		'type': type.index,
 		'sender': sender.toJson(),
 		'recipient': recipient.toJson(),

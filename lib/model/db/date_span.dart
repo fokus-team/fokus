@@ -1,4 +1,5 @@
 import 'package:fokus/model/db/date/date.dart';
+import 'package:fokus/utils/definitions.dart';
 import 'package:fokus/model/db/date/time_date.dart';
 
 import 'date/date_base.dart';
@@ -16,7 +17,7 @@ class DateSpan<D extends DateBase> {
 
   static D copy<D extends DateBase>(D date) => (date is Date ? Date.fromDate(date) : TimeDate.fromDate(date)) as D;
 
-  static DateSpan<D>? fromJson<D extends DateBase>(Map<String, dynamic>? json) {
+  static DateSpan<D>? fromJson<D extends DateBase>(Json? json) {
   	var parseDate = (DateTime date) => (D == Date ? Date.parseDBDate(date) : TimeDate.parseDBDate(date)) as D;
     return json != null ? DateSpan<D>(
       from: json['from'] != null ? parseDate(json['from']) : null,
@@ -24,8 +25,8 @@ class DateSpan<D extends DateBase> {
     ) : null;
   }
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+  Json toJson() {
+    final Json data = new Json();
     if (from != null)
       data['from'] = from!.toDBDate();
     if (to != null)

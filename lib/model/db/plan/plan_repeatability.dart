@@ -1,5 +1,6 @@
 import 'package:fokus/model/db/date/date.dart';
 import 'package:fokus/model/db/date_span.dart';
+import 'package:fokus/utils/definitions.dart';
 
 import 'repeatability_type.dart';
 
@@ -11,7 +12,7 @@ class PlanRepeatability {
 
   PlanRepeatability({this.days, this.range, this.type, this.untilCompleted});
 
-  static PlanRepeatability? fromJson(Map<String, dynamic>? json) {
+  static PlanRepeatability? fromJson(Json? json) {
     return json != null ? PlanRepeatability(
       days: json['days'] != null ? new List<int>.from(json['days']) : null,
       range: json['range'] != null ? DateSpan.fromJson<Date>(json['range']) : null,
@@ -20,8 +21,8 @@ class PlanRepeatability {
     ) : null;
   }
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+  Json toJson() {
+    final Json data = new Json();
     if (this.type != null)
 	    data['type'] = this.type!.index;
     if (this.untilCompleted != null)

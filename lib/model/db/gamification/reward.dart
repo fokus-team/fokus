@@ -1,6 +1,7 @@
 import 'package:fokus/model/db/date/time_date.dart';
 import 'package:fokus/model/ui/gamification/ui_reward.dart';
 import 'package:mongo_dart/mongo_dart.dart';
+import 'package:fokus/utils/definitions.dart';
 
 import 'points.dart';
 
@@ -17,7 +18,7 @@ class Reward {
   Reward.fromUIModel(UIReward reward, ObjectId creator, [ObjectId? id]) : this(name: reward.name, id: id ?? ObjectId(), createdBy: creator,
 		  limit: reward.limit, icon: reward.icon, cost: reward.cost != null ? Points.fromUIPoints(reward.cost!) : null);
 
-  static Reward? fromJson(Map<String, dynamic>? json) {
+  static Reward? fromJson(Json? json) {
     return json != null ? Reward(
       createdBy: json['createdBy'],
       id: json['_id'],
@@ -28,8 +29,8 @@ class Reward {
     ) : null;
   }
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+  Json toJson() {
+    final Json data = new Json();
     if (this.createdBy != null)
 	    data['createdBy'] = this.createdBy;
     if (this.id != null)

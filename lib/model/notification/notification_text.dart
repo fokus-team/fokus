@@ -1,11 +1,12 @@
 import 'dart:convert';
 
 import 'package:fokus/services/app_locales.dart';
+import 'package:fokus/utils/definitions.dart';
 
 abstract class NotificationText {
 	String translate();
 	Map<String, String> getTranslations();
-	Map<String, dynamic> toJson(String name);
+	Json toJson(String name);
 }
 
 class ComplexNotificationText implements NotificationText {
@@ -31,7 +32,7 @@ class ComplexNotificationText implements NotificationText {
 	  return parts.fold('', (translation, part) => translation += part.translate());
   }
 
-	Map<String, dynamic> toJson(String name) => {};
+	Json toJson(String name) => {};
 }
 
 class SimpleNotificationText implements NotificationText {
@@ -60,7 +61,7 @@ class SimpleNotificationText implements NotificationText {
 				this.appBased(map['${name}Key'], map['${name}Args'] != null ? json.decode(map['${name}Args']) : null);
 
 	@override
-	Map<String, dynamic> toJson(String name) => {
+	Json toJson(String name) => {
 		'${name}Key': key,
 		if (arguments != null)
 			'${name}Args': json.encode(arguments)

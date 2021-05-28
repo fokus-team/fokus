@@ -1,6 +1,8 @@
 import 'package:fokus/model/db/gamification/points.dart';
 import 'package:fokus/model/ui/form/task_form_model.dart';
 import 'package:mongo_dart/mongo_dart.dart';
+import 'package:fokus/utils/definitions.dart';
+
 
 class Task {
 	String? name;
@@ -20,7 +22,7 @@ class Task {
 
   Task._({this.description, this.id, this.name, this.optional, this.planID, this.points, this.subtasks, this.timer});
 
-  static Task? fromJson(Map<String, dynamic>? json) {
+  static Task? fromJson(Json? json) {
     return json != null ? Task._(
       description: json['description'],
 	    id: json['_id'],
@@ -33,8 +35,8 @@ class Task {
     ) : null;
   }
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+  Json toJson() {
+    final Json data = new Json();
     if (this.description != null)
       data['description'] = this.description;
     if (this.id != null)

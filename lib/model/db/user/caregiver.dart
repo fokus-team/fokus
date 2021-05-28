@@ -3,6 +3,7 @@ import 'package:fokus/model/db/gamification/currency.dart';
 import 'package:fokus/model/db/user/user_role.dart';
 import 'package:fokus_auth/fokus_auth.dart';
 import 'package:mongo_dart/mongo_dart.dart';
+import 'package:fokus/utils/definitions.dart';
 
 import 'user.dart';
 
@@ -18,7 +19,7 @@ class Caregiver extends User {
   Caregiver._({ObjectId? id, String? name, List<String>? notificationIDs, this.badges, this.friends, this.authenticationId, this.currencies}) :
 			  super(id: id, name: name, role: UserRole.caregiver, notificationIDs: notificationIDs);
 
-  static Caregiver? fromJson(Map<String, dynamic>? json) {
+  static Caregiver? fromJson(Json? json) {
     return json != null ? (Caregiver._(
 	    id: json['_id'],
       friends: json['friends'] != null ? new List<ObjectId>.from(json['friends']) : [],
@@ -28,8 +29,8 @@ class Caregiver extends User {
     )..assignFromJson(json)) : null;
   }
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = super.toJson();
+  Json toJson() {
+    final Json data = super.toJson();
     if (this.authenticationId != null)
 	    data['authenticationID'] = this.authenticationId;
     if (this.badges != null)

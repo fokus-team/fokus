@@ -2,6 +2,7 @@ import 'package:fokus/model/currency_type.dart';
 import 'package:fokus/model/db/gamification/currency.dart';
 import 'package:fokus/model/ui/gamification/ui_currency.dart';
 import 'package:fokus/model/ui/gamification/ui_points.dart';
+import 'package:fokus/utils/definitions.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
 class Points extends Currency {
@@ -14,15 +15,15 @@ class Points extends Currency {
 				this._(name: points.title, icon: points.type, quantity: points.quantity, createdBy: points.createdBy);
   Points._({String? name, CurrencyType? icon, this.createdBy, this.quantity}) : super(name : name, icon: icon);
 
-  static Points? fromJson(Map<String, dynamic>? json) {
+  static Points? fromJson(Json? json) {
     return json != null ? (Points._(
 	    createdBy: json['createdBy'],
       quantity: json['quantity'],
     )..assignFromJson(json)) : null;
   }
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = super.toJson();
+  Json toJson() {
+    final Json data = super.toJson();
     if (this.quantity != null)
 	    data['quantity'] = this.quantity;
     if (createdBy != null)

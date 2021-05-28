@@ -6,6 +6,8 @@ class AuthenticationState extends Equatable {
 	final AuthenticationStatus status;
 	final UIUser? user;
 
+	bool get signedIn => status == AuthenticationStatus.authenticated;
+
 	const AuthenticationState._({
 		this.status = AuthenticationStatus.initial,
 		this.user,

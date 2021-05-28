@@ -53,6 +53,7 @@ class _ChildAchievementsPageState extends State<ChildAchievementsPage> {
 
 	Widget _buildBadgeShelves() {
 		return BlocBuilder<AuthenticationBloc, AuthenticationState>(
+			buildWhen: (oldState, newState) => newState.signedIn,
 			builder: (context, state) {
 				List<UIBadge> badges = (state.user as UIChild).badges ?? [];
 				if(badges.isNotEmpty) {

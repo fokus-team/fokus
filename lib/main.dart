@@ -189,7 +189,7 @@ class _FokusAppState extends State<FokusApp> implements CurrentLocaleObserver {
 		return BlocListener<AuthenticationBloc, AuthenticationState>(
 			listenWhen: (oldState, newState) => oldState.status != newState.status,
 			listener: (context, state) {
-				var redirectPage = state.status == AuthenticationStatus.authenticated ? state.user!.role!.panelPage : AppPage.rolesPage;
+				var redirectPage = state.signedIn ? state.user!.role!.panelPage : AppPage.rolesPage;
 				widget._navigatorKey.currentState?.pushNamedAndRemoveUntil(redirectPage.name, (route) => false);
 			},
 			child: child

@@ -65,7 +65,7 @@ abstract class LinkService {
 		if (payload.type == AppLinkType.passwordReset && !(await _runGuarded(_authenticationProvider.verifyPasswordResetCode, payload, navigator.context)))
 			return false;
 		// Sign out a user if necessary
-		if (userState.status == AuthenticationStatus.authenticated) {
+		if (userState.signedIn) {
 			authBloc.add(AuthenticationSignOutRequested());
 			var nextState = (await authBloc.stream.first);
 			if (nextState.status != AuthenticationStatus.unauthenticated)

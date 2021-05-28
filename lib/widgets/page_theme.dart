@@ -35,7 +35,7 @@ class PageTheme extends StatelessWidget {
 
 	factory PageTheme.parametrizedSection({required AuthenticationState authState, AppPageSection? section, required Widget child}) {
 		if (section == null) {
-			if (authState.status == AuthenticationStatus.authenticated)
+			if (authState.signedIn)
 				section = authState.user!.role == UserRole.caregiver ? AppPageSection.caregiver : AppPageSection.child;
 			else
 				section = AppPageSection.login;

@@ -63,7 +63,7 @@ class _ChildRewardsPageState extends State<ChildRewardsPage> {
 
 	List<Widget> _buildRewardShop(ChildRewardsState state, BuildContext context) {
 		return state.rewards.map((reward) {
-			double percentage = (state.points.firstWhereOrNull((element) => element.type == reward.cost!.type)!.quantity ?? 0) / reward.cost!.quantity!;
+			double percentage = (state.points.firstWhereOrNull((element) => element.type == reward.cost!.type)?.quantity ?? 0) / reward.cost!.quantity!;
 			return RewardItemCard(
 				reward: reward,
 				graphicHeight: 56.0,

@@ -80,7 +80,7 @@ class _CustomAppBarState extends State<CustomAppBar>{
 
 	Widget _buildBarContent() {
 		return BlocBuilder<AuthenticationBloc, AuthenticationState>(
-			buildWhen: (oldState, newState) => newState.status != AuthenticationStatus.unauthenticated,
+			buildWhen: (oldState, newState) => newState.signedIn,
 			builder: (context, state) {
 				return SafeArea(
 					child: Padding(
@@ -212,7 +212,7 @@ class _CustomChildAppBarState extends State<CustomChildAppBar> {
 			verticalDirection: VerticalDirection.up,
 			children: [
 				BlocBuilder<AuthenticationBloc, AuthenticationState>(
-					buildWhen: (oldState, newState) => getPoints(oldState) != getPoints(newState),
+					buildWhen: (oldState, newState) => newState.signedIn && getPoints(oldState) != getPoints(newState),
 					builder: (context, state) {
 						List<UIPoints> points = getPoints(state) ?? [];
 						if(points.isNotEmpty)

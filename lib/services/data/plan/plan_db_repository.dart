@@ -18,7 +18,7 @@ mixin PlanDbRepository implements DbRepository {
 		return dbClient.queryOneTyped(Collection.plan, query, (json) => Plan.fromJson(json));
 	}
 
-	Future<List<Plan>> getPlans({List<ObjectId?>? ids, ObjectId? caregiverId, ObjectId? childId, bool? active, bool? untilCompleted, List<String>? fields}) {
+	Future<List<Plan>> getPlans({List<ObjectId>? ids, ObjectId? caregiverId, ObjectId? childId, bool? active, bool? untilCompleted, List<String>? fields}) {
 		var query = _buildPlanQuery(caregiverId: caregiverId, childId: childId, active: active, ids: ids);
 		if (untilCompleted != null)
 			query.and(where.eq('repeatability.untilCompleted', untilCompleted));
@@ -124,7 +124,7 @@ mixin PlanDbRepository implements DbRepository {
 		return dbClient.remove(Collection.planInstance, query);
 	}
 
-	SelectorBuilder _buildPlanQuery({ObjectId? id, List<ObjectId?>? ids, ObjectId? caregiverId, ObjectId? childId, ObjectId? planId,
+	SelectorBuilder _buildPlanQuery({ObjectId? id, List<ObjectId>? ids, ObjectId? caregiverId, ObjectId? childId, ObjectId? planId,
 			PlanInstanceState? state, Date? date, DateSpan<Date>? between, bool? active, List<ObjectId>? childIDs}) {
 		SelectorBuilder query = where;
 		if (id != null)

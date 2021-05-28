@@ -50,7 +50,7 @@ class TasksEvaluationCubit extends StatefulCubit {
 				_childMap[planInstance.assignedTo]?.name, avatar: _childMap[planInstance.assignedTo]?.avatar))));
 		List<TaskInstance> taskInstances = await _dataRepository.getTaskInstances(planInstancesId: _planInstanceToChild.keys.toList(),
 				isCompleted: true, state: TaskState.notEvaluated, fields:['_id', 'taskID', 'planInstanceID', 'duration', 'breaks', 'timer', 'status']);
-		var nameMap = Map.fromEntries((await _dataRepository.getPlans(ids: planInstances.map((planInstance) => planInstance.planID != null ? planInstance.planID : null).toSet().toList(),
+		var nameMap = Map.fromEntries((await _dataRepository.getPlans(ids: planInstances.map((planInstance) => planInstance.planID!).toSet().toList(),
 				fields:['name', '_id'])).map((plan) => MapEntry(plan.id, plan.name)));
 		_uiTaskInstances = taskInstances.isNotEmpty ? await _taskInstanceService.mapToUIModels(taskInstances, shouldGetTaskStatus: false) : [];
 		_planInstanceToName = Map.fromEntries(planInstances.map((planInstance) => MapEntry(planInstance.id!, nameMap[planInstance.planID]!)));

@@ -11,7 +11,7 @@ import 'package:fokus/model/db/plan/plan.dart';
 
 abstract class PlanRepository {
 	Future<Plan?> getPlan({required ObjectId id, List<String>? fields});
-	Future<List<Plan>> getPlans({List<ObjectId?>? ids, ObjectId? caregiverId, ObjectId? childId, bool? active, bool? untilCompleted, List<String>? fields});
+	Future<List<Plan>> getPlans({List<ObjectId>? ids, ObjectId? caregiverId, ObjectId? childId, bool? active, bool? untilCompleted, List<String>? fields});
 	Future<int> countPlans({List<ObjectId>? ids, ObjectId? caregiverId, ObjectId? childId, bool? active, bool? untilCompleted});
 
 	Future<PlanInstance?> getPlanInstance({ObjectId? id, ObjectId? childId, PlanInstanceState? state, List<String>? fields});

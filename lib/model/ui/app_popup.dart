@@ -27,5 +27,5 @@ extension AppPopupName on AppPopup {
 		AppPopup.currencyEdit: '$_prefix/currency-edit',
 		AppPopup.general: '$_prefix/general',
 		AppPopup.formExit: '$_prefix/form-exit',
-	}[this];
+	}[this]!;
 }

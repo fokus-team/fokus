@@ -33,9 +33,9 @@ dependencies:
     firebase_core: ^1.0.0
     firebase_analytics: ^8.0.0
     firebase_crashlytics: ^2.0.0
-    firebase_dynamic_links: ^2.0.0-dev.1
+    firebase_dynamic_links: ^2.0.4
     firebase_storage: ^8.0.3
-    firebase_remote_config: ^0.9.0-dev.1
+    firebase_remote_config: ^0.10.0
 
     # Notifications
     onesignal_flutter:
@@ -48,8 +48,8 @@ dependencies:
     # Logic
     bloc: ^7.0.0-nullsafety.3
     flutter_bloc: ^7.0.0-nullsafety.4
-    formz: ^0.4.0-nullsafety.0
-    get_it: ^6.1.1
+    formz: ^0.4.0
+    get_it: ^7.1.0
 
     # Services
     shared_preferences: ^2.0.3

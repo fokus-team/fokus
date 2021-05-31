@@ -20,7 +20,7 @@ Future saveDebugData(Uint8List data, round_spot.OutputInfo info) async {
 }
 
 String _getFileName(round_spot.OutputInfo info) {
-	var pageName = info.page != null ? info.page.substring(1).replaceAll('/', '-') : '';
+	var pageName = info.page != null ? info.page!.substring(1).replaceAll('/', '-') : '';
 	var area = info.area.isNotEmpty && !info.isPopup ? '[${info.area}]' : '';
 	if (pageName.isNotEmpty)
 		area += ' ';

@@ -4,7 +4,6 @@ import 'package:collection/collection.dart';
 
 import 'package:fokus/logic/child/child_rewards_cubit.dart';
 import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
-import 'package:fokus/model/ui/app_popup.dart';
 import 'package:fokus/utils/ui/dialog_utils.dart';
 import 'package:fokus/utils/ui/snackbar_utils.dart';
 import 'package:fokus/utils/ui/theme_config.dart';

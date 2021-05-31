@@ -16,6 +16,6 @@ abstract class RemoteStorageProvider {
 		var area = info.area.isNotEmpty && !info.isPopup ? '[${info.area}]' : '';
 		if (pageName.isNotEmpty)
 			area += ' ';
-		return '$area$pageName';
+		return '$area$pageName (${info.startTime})';
 	}
 }

@@ -20,3 +20,14 @@ class FirebaseStorageService extends RemoteStorageProvider {
 		}
   }
 }
+
+extension RefExists on Reference {
+	Future<bool> get exists async {
+		try {
+			await getDownloadURL();
+		} on FirebaseException catch(e) {
+			return false;
+		}
+		return true;
+	}
+}

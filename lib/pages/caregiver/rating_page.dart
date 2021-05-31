@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:round_spot/round_spot.dart' as round_spot;
+
 import 'package:fokus/logic/caregiver/tasks_evaluation_cubit.dart';
 import 'package:fokus/model/ui/task/ui_task_report.dart';
 import 'package:fokus/services/app_locales.dart';
@@ -110,22 +112,26 @@ class _CaregiverRatingPageState extends State<CaregiverRatingPage> {
 					),
 				SizedBox(height: 8.0),
 				Expanded(
-					child: CarouselSlider(
-						options: CarouselOptions(
-							enlargeCenterPage: true,
-							disableCenter: true,
-							enableInfiniteScroll: false,
-							onPageChanged: (index, reason) {
-								setState(() {_currentRaport = index; });
-							}
+					child: round_spot.Detector.custom(
+						areaID: 'rating-cards',
+						scrollAxis: Axis.horizontal,
+						child: CarouselSlider(
+							options: CarouselOptions(
+								enlargeCenterPage: true,
+								disableCenter: true,
+								enableInfiniteScroll: false,
+								onPageChanged: (index, reason) {
+									setState(() {_currentRaport = index; });
+								}
+							),
+							carouselController: _carouselController,
+							items: reports.map((report) =>
+								Hero(
+									tag: report.task.id.toString() + report.task.duration!.last.to.toString(),
+									child: ReportCard(report: report)
+								)
+							).toList()
 						),
-						carouselController: _carouselController,
-						items: reports.map((report) => 
-							Hero(
-								tag: report.task.id.toString() + report.task.duration!.last.to.toString(),
-								child: ReportCard(report: report)
-							)
-						).toList()
 					)
 				)
 			]

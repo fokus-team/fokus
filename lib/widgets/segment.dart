@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:fokus/model/ui/ui_button.dart';
+import 'package:round_spot/round_spot.dart' as round_spot;
 
+import 'package:fokus/model/ui/ui_button.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/ui/theme_config.dart';
 import 'package:fokus/widgets/general/app_hero.dart';
@@ -118,13 +119,16 @@ class AppSegments extends StatelessWidget {
 	}
 
 	Widget _buildList() {
-		return ListView(
-			padding: EdgeInsets.zero,
-			physics: BouncingScrollPhysics(),
-			children: <Widget>[
-				...segments,
-				SizedBox(height: 80.0)
-			]
+		return round_spot.Detector(
+			areaID: 'main-scroll-area',
+			child: ListView(
+				padding: EdgeInsets.zero,
+				physics: BouncingScrollPhysics(),
+				children: <Widget>[
+					...segments,
+					SizedBox(height: 80.0)
+				]
+			)
 		);
 	}
 

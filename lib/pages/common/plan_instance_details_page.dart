@@ -9,6 +9,7 @@ import 'package:fokus/model/navigation/task_in_progress_params.dart';
 import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/ui/plan/ui_plan_instance.dart';
 import 'package:fokus/utils/navigation_utils.dart';
+import 'package:fokus/utils/ui/dialog_utils.dart';
 import 'package:fokus/utils/ui/snackbar_utils.dart';
 import 'package:fokus/model/ui/task/ui_task_instance.dart';
 import 'package:fokus/services/app_locales.dart';
@@ -37,8 +38,9 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 
 	void navigate(context, UITaskInstance task, UIPlanInstance plan) async {
 		if(await BlocProvider.of<PlanInstanceCubit>(context).isOtherPlanInProgressDbCheck(tappedTaskInstance: task.id)) {
-			showDialog(context: context,
-				builder: (_) => GeneralDialog.discard(
+			showBasicDialog(
+				context,
+				GeneralDialog.discard(
 					title: AppLocales.of(context).translate('$_pageKey.content.taskInProgressDialog.title'),
 					content: AppLocales.of(context).translate('$_pageKey.content.taskInProgressDialog.content'),
 				)
@@ -345,8 +347,9 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 	}
 
 	void _completePlan() {
-		showDialog(context: context,
-			builder: (_) => GeneralDialog.confirm(
+		showBasicDialog(
+			context,
+			GeneralDialog.confirm(
 				title: AppLocales.of(context).translate('$_pageKey.content.fab.dialogTitle'),
 				content: AppLocales.of(context).translate('$_pageKey.content.fab.dialogContent'),
 				confirmColor: Colors.red,

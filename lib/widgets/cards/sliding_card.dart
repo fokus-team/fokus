@@ -1,12 +1,17 @@
+import 'package:enum_to_string/enum_to_string.dart';
 import 'package:flutter/material.dart';
+import 'package:round_spot/round_spot.dart' as round_spot;
+
 import 'package:fokus/utils/ui/theme_config.dart';
+import 'package:fokus/logic/child/task_completion/task_completion_cubit.dart';
 
 class SlidingCard extends StatefulWidget {
 	final List<Widget> content;
 	final Color cardColor;
 	final showFirst;
+	final TaskCompletionStateType cardType;
 
-  SlidingCard({required Key key, required this.content, required this.cardColor, this.showFirst = false}) : super(key: key);
+  SlidingCard({required Key key, required this.content, required this.cardColor, this.showFirst = false, required this.cardType}) : super(key: key);
   @override
   SlidingCardState createState() => SlidingCardState();
 }
@@ -27,25 +32,28 @@ class SlidingCardState extends State<SlidingCard> with SingleTickerProviderState
     		},
     		child: Padding(
     			padding: const EdgeInsets.only(left: 20.0, right: 20.0, bottom: 0, top: 0),
-    			child: ListView(
-    				shrinkWrap: false,
-    				controller: _scrollController,
-    				physics: ClampingScrollPhysics(),
-    				padding: EdgeInsets.all(0),
-    				children: [
-    					Container(
-    						decoration: AppBoxProperties.elevatedContainer.copyWith(color: this.widget.cardColor, borderRadius: BorderRadius.vertical(bottom: Radius.circular(4))),
-    						child: Padding(
-    							padding: const EdgeInsets.all(12.0),
-    							child: Column(
-    								children: this.widget.content
-    							),
-    						),
-    					),
-    					SizedBox(
-    						height: 100,
-    					)
-    				]
+    			child: round_spot.Detector(
+				    areaID: 'task-card-${EnumToString.convertToString(widget.cardType)}',
+    			  child: ListView(
+    			  	shrinkWrap: false,
+    			  	controller: _scrollController,
+    			  	physics: ClampingScrollPhysics(),
+    			  	padding: EdgeInsets.all(0),
+    			  	children: [
+    			  		Container(
+    			  			decoration: AppBoxProperties.elevatedContainer.copyWith(color: this.widget.cardColor, borderRadius: BorderRadius.vertical(bottom: Radius.circular(4))),
+    			  			child: Padding(
+    			  				padding: const EdgeInsets.all(12.0),
+    			  				child: Column(
+    			  					children: this.widget.content
+    			  				),
+    			  			),
+    			  		),
+    			  		SizedBox(
+    			  			height: 100,
+    			  		)
+    			  	]
+    			  ),
     			),
     		),
     	),

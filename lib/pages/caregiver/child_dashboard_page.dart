@@ -2,6 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:round_spot/round_spot.dart' as round_spot;
+import 'package:intl/intl.dart';
+import 'package:fokus_auth/fokus_auth.dart';
+import 'package:smart_select/smart_select.dart';
+
 import 'package:fokus/logic/caregiver/child_dashboard/child_dashboard_cubit.dart';
 import 'package:fokus/logic/caregiver/child_dashboard/dashboard_achievements_cubit.dart';
 import 'package:fokus/logic/caregiver/child_dashboard/dashboard_plans_cubit.dart';
@@ -29,9 +34,6 @@ import 'package:fokus/widgets/general/app_alert.dart';
 import 'package:fokus/widgets/general/app_loader.dart';
 import 'package:fokus/widgets/stateful_bloc_builder.dart';
 import 'package:fokus/widgets/segment.dart';
-import 'package:fokus_auth/fokus_auth.dart';
-import 'package:intl/intl.dart';
-import 'package:smart_select/smart_select.dart';
 
 class CaregiverChildDashboardPage extends StatefulWidget {
 	final ChildDashboardParams _args;
@@ -83,9 +85,9 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 	        content: TabBarView(
             controller: _tabController,
             children: [
-	            _buildTab<DashboardPlansCubit, DashboardPlansState>(_buildPlansTab),
-	            _buildTab<DashboardRewardsCubit, DashboardRewardsState>(_buildRewardsTab),
-	            _buildTab<DashboardAchievementsCubit, DashboardAchievementsState>(_buildAchievementsTab),
+	            _buildTab<DashboardPlansCubit, DashboardPlansState>(_buildPlansTab, 0),
+	            _buildTab<DashboardRewardsCubit, DashboardRewardsState>(_buildRewardsTab, 1),
+	            _buildTab<DashboardAchievementsCubit, DashboardAchievementsState>(_buildAchievementsTab, 2),
             ]
 					)
 	      ),
@@ -100,13 +102,16 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 		);
 	}
 
-	Widget _buildTab<Cubit extends StatefulCubit, State extends StatefulState>(List<Widget> Function(State) content) {
+	Widget _buildTab<Cubit extends StatefulCubit, State extends StatefulState>(List<Widget> Function(State) content, int index) {
 		return SimpleStatefulBlocBuilder<Cubit, State>(
-			builder: (context, state) => ListView(
-				padding: EdgeInsets.zero,
-				physics: BouncingScrollPhysics(),
-				children: content(state)
-			),
+			builder: (context, state) => round_spot.Detector(
+				areaID: '$index',
+				child: ListView(
+					padding: EdgeInsets.zero,
+					physics: BouncingScrollPhysics(),
+					children: content(state),
+				),
+			)
 		);
 	}
 

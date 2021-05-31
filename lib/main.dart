@@ -90,7 +90,6 @@ import 'package:fokus/services/remote_storage/remote_storage_provider.dart';
 import 'package:fokus/utils/ui/theme_config.dart';
 import 'package:fokus/utils/service_injection.dart';
 import 'package:fokus/utils/bloc_utils.dart';
-import 'package:fokus/utils/file_utils.dart';
 import 'package:fokus/widgets/page_theme.dart';
 
 
@@ -109,8 +108,8 @@ void main() async {
 			child: round_spot.initialize(
 				child: FokusApp(navigatorKey, routeObserver, analytics.pageObserver),
 				config: configMap.isNotEmpty ? round_spot.Config.fromJson(json.decode(configMap)) : round_spot.Config(),
-				heatMapCallback: saveDebugImage, // GetIt.I<RemoteStorageProvider>().uploadRSHeatMap, // saveDebugImage
-				rawDataCallback: saveDebugData, // GetIt.I<RemoteStorageProvider>().uploadRSData, // saveDebugData
+				heatMapCallback: GetIt.I<RemoteStorageProvider>().uploadRSHeatMap, // saveDebugImage
+				rawDataCallback: GetIt.I<RemoteStorageProvider>().uploadRSData, // saveDebugData
 				loggingLevel: Foundation.kReleaseMode ? round_spot.LogLevel.off : round_spot.LogLevel.warning
 			),
 		)

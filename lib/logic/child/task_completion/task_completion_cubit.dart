@@ -60,15 +60,17 @@ class TaskCompletionCubit extends StatefulCubit<TaskCompletionState> {
 		}
 		else {
 			if(_planInstance.state != PlanInstanceState.active) {
-				_planInstance.state = PlanInstanceState.active;
-				wasPlanStateChanged = true;
-
 				if (_planInstance.state == PlanInstanceState.notStarted)
 					_analyticsService.logPlanStarted(_planInstance);
 				else if (_planInstance.state == PlanInstanceState.notCompleted)
 					_analyticsService.logPlanResumed(_planInstance);
+
+				_planInstance.state = PlanInstanceState.active;
+				wasPlanStateChanged = true;
+
 				var childId = _activeUser().id;
-				updates.add(_dataRepository.updateActivePlanInstanceState(childId, PlanInstanceState.notCompleted));
+				if (await _dataRepository.hasActiveChildPlanInstance(childId))
+					updates.add(_dataRepository.updateActivePlanInstanceState(childId, PlanInstanceState.notCompleted));
 			}
 			if(!isInProgress(_taskInstance.duration) && !isInProgress(_taskInstance.breaks)) {
 				_analyticsService.logTaskStarted(_taskInstance);

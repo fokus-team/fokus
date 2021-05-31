@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mongo_dart/mongo_dart.dart' as Mongo;
+import 'package:round_spot/round_spot.dart' as round_spot;
+
 import 'package:fokus/logic/caregiver/forms/plan/plan_form_cubit.dart';
 import 'package:fokus/model/db/date/date.dart';
 import 'package:fokus/model/db/date_span.dart';
@@ -7,7 +10,6 @@ import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/utils/ui/form_config.dart';
 import 'package:fokus/widgets/buttons/bottom_sheet_confirm_button.dart';
 import 'package:smart_select/smart_select.dart';
-import 'package:mongo_dart/mongo_dart.dart' as Mongo;
 
 import 'package:fokus/model/ui/form/plan_form_model.dart';
 import 'package:fokus/model/ui/user/ui_child.dart';
@@ -67,20 +69,23 @@ class _PlanFormState extends State<PlanForm> {
 			children: [
 				Positioned.fill(
 					bottom: AppBoxProperties.standardBottomNavHeight,
-					child: ListView(
-						shrinkWrap: true,
-						children: <Widget>[
-							buildPlanNameField(),
-							buildChildrenAssignedField(),
-							Divider(),
-							buildRepeatabilityTypeField(),
-							if(widget.plan.repeatability == PlanFormRepeatability.recurring)
-								buildRecurringFields()
-							else if(widget.plan.repeatability == PlanFormRepeatability.onlyOnce)
-								buildOneDayOnlyFields()
-							else
-								buildUntilCompletedFields()
-						]
+					child: round_spot.Detector(
+						areaID: 'plan-form-params',
+					  child: ListView(
+					  	shrinkWrap: true,
+					  	children: <Widget>[
+					  		buildPlanNameField(),
+					  		buildChildrenAssignedField(),
+					  		Divider(),
+					  		buildRepeatabilityTypeField(),
+					  		if(widget.plan.repeatability == PlanFormRepeatability.recurring)
+					  			buildRecurringFields()
+					  		else if(widget.plan.repeatability == PlanFormRepeatability.onlyOnce)
+					  			buildOneDayOnlyFields()
+					  		else
+					  			buildUntilCompletedFields()
+					  	]
+					  ),
 					)
 				),
 				Positioned.fill(

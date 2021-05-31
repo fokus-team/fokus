@@ -27,6 +27,7 @@ class Instrumentator implements ActiveUserObserver {
 	final _routeObserver = GetIt.I<AppRouteObserver>();
 
 	bool _errorPageOpen = false;
+	Set<String> _subLoggers = {'RoundSpot', 'MongoDart'};
 
 	void runAppGuarded(Widget app) {
 		Bloc.observer = FokusBlocObserver();
@@ -44,7 +45,7 @@ class Instrumentator implements ActiveUserObserver {
 	void _setupLogger() {
 		Logger.root.level = Foundation.kReleaseMode ? Level.SEVERE : Level.ALL;
 		Logger.root.onRecord.listen((record) {
-			if (record.loggerName.startsWith('MongoDart'))
+			if (_subLoggers.any((name) => record.loggerName.startsWith(name)))
 				return;
 			var simpleName = record.loggerName;
 			if(simpleName.contains('.'))

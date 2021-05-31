@@ -221,6 +221,7 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 						_getSubtasks(state.taskInstance.subtasks)
 				],
 				showFirst: state.current == TaskCompletionStateType.inProgress,
+				cardType: TaskCompletionStateType.inProgress,
 			),
 			SlidingCard(
 				key: _breakCard,
@@ -241,6 +242,7 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 					)
 				],
 				showFirst: state.current == TaskCompletionStateType.inBreak,
+				cardType: TaskCompletionStateType.inBreak,
 			),
 			SlidingCard(
 				key: _rejectCard,
@@ -254,6 +256,7 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 					_getSubtitle('$_pageKey.cards.rejected.content1'),
 				],
 				showFirst: state.current == TaskCompletionStateType.discarded,
+				cardType: TaskCompletionStateType.discarded,
 			),
 			SlidingCard(
 				key: _doneCard,
@@ -272,6 +275,7 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 					)
 				],
 				showFirst: state.current == TaskCompletionStateType.finished,
+				cardType: TaskCompletionStateType.finished,
 			)
 		];
 	}

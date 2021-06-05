@@ -7,6 +7,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fokus/services/observers/user/authenticated_user_notifier.dart';
 import 'package:fokus/services/remote_config_provider.dart';
 import 'package:get_it/get_it.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -98,14 +99,15 @@ void main() async {
 	await Firebase.initializeApp();
 	var navigatorKey = GlobalKey<NavigatorState>();
 	var routeObserver = AppRouteObserver();
-	await registerServices(navigatorKey, routeObserver);
+	var userNotifier = AuthenticatedUserNotifier();
+	await registerServices(userNotifier, navigatorKey, routeObserver);
 
 	var analytics = GetIt.I<AnalyticsService>()..logAppOpen();
 	var configMap = (await GetIt.I.getAsync<RemoteConfigProvider>()).roundSpotConfig;
 	var config = configMap.isNotEmpty ? round_spot.Config.fromJson(json.decode(configMap)) : round_spot.Config();
 	GetIt.I<Instrumentator>().runAppGuarded(
 		BlocProvider<AuthenticationBloc>(
-			create: (context) => AuthenticationBloc(),
+			create: (context) => AuthenticationBloc(userNotifier),
 			child: round_spot.initialize(
 				child: FokusApp(navigatorKey, routeObserver, analytics.pageObserver),
 				config: config,

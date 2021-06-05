@@ -16,11 +16,11 @@ import 'package:fokus/model/notification/notification_button.dart';
 import 'package:fokus/model/notification/notification_icon.dart';
 import 'package:fokus/services/data/data_repository.dart';
 import 'package:fokus/services/notifications/notification_provider.dart';
-import 'package:fokus/services/observers/user/active_user_observer.dart';
+import 'package:fokus/services/observers/user/user_observer.dart';
 
 import '../observers/notification/notification_notifier.dart';
 
-abstract class NotificationService implements ActiveUserObserver, NotificationNotifier {
+abstract class NotificationService implements UserObserver, NotificationNotifier {
 	NotificationProvider get provider;
 	@protected
 	final DataRepository dataRepository = GetIt.I<DataRepository>();

@@ -13,10 +13,10 @@ import 'package:fokus/model/db/plan/plan_instance.dart';
 import 'package:fokus/services/plan_repeatability_service.dart';
 import 'package:fokus/model/db/date_span.dart';
 
-import 'observers/user/active_user_observer.dart';
+import 'observers/user/user_observer.dart';
 import 'data/data_repository.dart';
 
-class PlanKeeperService implements ActiveUserObserver {
+class PlanKeeperService implements UserObserver {
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final PlanRepeatabilityService _repeatabilityService = GetIt.I<PlanRepeatabilityService>();
 

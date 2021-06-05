@@ -11,6 +11,7 @@ import 'package:get_it/get_it.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:round_spot/round_spot.dart' as round_spot;
 import 'package:flutter/foundation.dart' as Foundation;
+import 'package:mongo_dart/mongo_dart.dart' as mongo;
 
 import 'package:fokus/logic/caregiver/caregiver_friends_cubit.dart';
 import 'package:fokus/logic/caregiver/child_dashboard/child_dashboard_cubit.dart';
@@ -90,12 +91,12 @@ import 'package:fokus/services/locale_service.dart';
 import 'package:fokus/services/observers/current_locale_observer.dart';
 import 'package:fokus/services/remote_storage/remote_storage_provider.dart';
 import 'package:fokus/services/remote_config_provider.dart';
+import 'package:fokus/services/observers/user/authenticated_user_notifier.dart';
 
 import 'package:fokus/utils/ui/theme_config.dart';
 import 'package:fokus/utils/service_injection.dart';
 import 'package:fokus/utils/bloc_utils.dart';
 import 'package:fokus/widgets/page_theme.dart';
-import 'package:mongo_dart/mongo_dart.dart' as mongo;
 
 import 'model/app_error_type.dart';
 import 'model/navigation/plan_instance_params.dart';

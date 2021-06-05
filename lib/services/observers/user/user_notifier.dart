@@ -4,7 +4,7 @@ import 'package:fokus/model/db/user/user.dart';
 import 'user_observer.dart';
 
 class UserNotifier implements UserObserver {
-	User activeUser;
+	User? activeUser;
 	
 	@protected
 	List<UserObserver> userObservers = [];

@@ -27,6 +27,6 @@ extension InfoMetadata on round_spot.OutputInfo {
 		'startTime': '$startTime',
 		'endTime': '$endTime',
 		'isPopup': '$isPopup',
-		'eventCount': '$eventCount',
+		//'eventCount': '$eventCount',
 	};
 }

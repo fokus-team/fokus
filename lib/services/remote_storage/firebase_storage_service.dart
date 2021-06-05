@@ -11,7 +11,7 @@ class FirebaseStorageService extends RemoteStorageProvider {
 	FirebaseStorage _storage = FirebaseStorage.instance;
 
   @override
-  Future uploadFile(Uint8List data, String path, [Map<String, String> metadata]) async {
+  Future uploadFile(Uint8List data, String path, [Map<String, String>? metadata]) async {
 		var fileRef = _storage.ref(path);
 		try {
 			await fileRef.putData(data, metadata != null ? SettableMetadata(customMetadata: metadata) : null);

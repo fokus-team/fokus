@@ -1,30 +1,29 @@
 package io.fokus
 
 import android.annotation.SuppressLint
-import android.app.PendingIntent
-import android.content.Intent
+import android.content.Context
 import androidx.core.app.NotificationCompat
-import com.onesignal.NotificationExtenderService
-import com.onesignal.NotificationOpenedReceiver
-import com.onesignal.OSNotificationReceivedResult
+import com.onesignal.OSNotification
+import com.onesignal.OSNotificationReceivedEvent
+import com.onesignal.OneSignal
 import org.json.JSONArray
 import org.json.JSONObject
 import java.util.*
 
 
-class OneSignalNotificationService : NotificationExtenderService() {
-	override fun onNotificationProcessing(notification: OSNotificationReceivedResult): Boolean {
-		val payload = notification.payload.additionalData
+class OneSignalNotificationService : OneSignal.OSRemoteNotificationReceivedHandler {
+	override fun remoteNotificationReceived(context: Context, event: OSNotificationReceivedEvent) {
+		val notification: OSNotification = event.getNotification()
+		val mutableNotification = notification.mutableCopy()
+		val payload = mutableNotification.additionalData
 		if (payload != null && payload.has("buttons")) {
-			addLocalizedButtons(JSONArray(payload.optString("buttons")))
-			return true
+			mutableNotification.setExtender(addLocalizedButtons(JSONArray(payload.optString("buttons"))))
+			event.complete(mutableNotification)
 		}
-		return false
 	}
 
-	private fun addLocalizedButtons(buttons: JSONArray) {
-		val overrideSettings = OverrideSettings()
-		overrideSettings.extender = NotificationCompat.Extender(
+	private fun addLocalizedButtons(buttons: JSONArray): NotificationCompat.Extender {
+		return NotificationCompat.Extender(
 			fun(builder: NotificationCompat.Builder): NotificationCompat.Builder {
 				val lang = Locale.getDefault().language
 				for (i in 0 until buttons.length()) {
@@ -42,6 +41,5 @@ class OneSignalNotificationService : NotificationExtenderService() {
 				return builder;
 			}
 		)
-		displayNotification(overrideSettings)
 	}
 }

@@ -13,7 +13,7 @@ import 'package:fokus/services/locale_service.dart';
 import 'package:fokus/services/notifications/notification_service.dart';
 import 'package:fokus/services/plan_keeper_service.dart';
 import 'package:fokus/services/analytics_service.dart';
-import 'package:fokus/services/observers/user/user_change_notifier.dart';
+import 'package:fokus/services/observers/user/authenticated_user_notifier.dart';
 import 'package:fokus/services/data/data_repository.dart';
 import 'package:fokus/services/app_config/app_config_repository.dart';
 import 'package:fokus/model/ui/user/ui_user.dart';
@@ -28,7 +28,7 @@ import 'package:fokus/utils/ui/snackbar_utils.dart';
 part 'authentication_event.dart';
 part 'authentication_state.dart';
 
-class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> with UserChangeNotifier {
+class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
 	final Logger _logger = Logger('AuthenticationBloc');
 
 	final _authenticationProvider = GetIt.I<AuthenticationProvider>();
@@ -38,12 +38,13 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 	final _navigatorKey = GetIt.I<GlobalKey<NavigatorState>>();
 
 	late StreamSubscription<AuthenticatedUser> _userSubscription;
+	AuthenticatedUserNotifier _userNotifier;
 
-  AuthenticationBloc() : super(AuthenticationState.unknown()) {
-	  observeUserChanges(GetIt.I<PlanKeeperService>());
-	  observeUserChanges(GetIt.I<NotificationService>());
-	  observeUserChanges(GetIt.I<LocaleService>());
-	  observeUserChanges(GetIt.I<Instrumentator>());
+  AuthenticationBloc(this._userNotifier) : super(AuthenticationState.unknown()) {
+	  _userNotifier.observeUserChanges(GetIt.I<PlanKeeperService>());
+	  _userNotifier.observeUserChanges(GetIt.I<NotificationService>());
+	  _userNotifier.observeUserChanges(GetIt.I<LocaleService>());
+	  _userNotifier.observeUserChanges(GetIt.I<Instrumentator>());
 	  _userSubscription = _authenticationProvider.user.listen((user) => add(AuthenticationUserChanged(user)));
   }
 
@@ -71,7 +72,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 	  var noSignedInUser = event.user == AuthenticatedUser.empty;
 	  var wasAppOpened = state.status == AuthenticationStatus.initial;
 	  if (noSignedInUser && !wasAppOpened) {
-		  onUserSignOut(state.user!.toDBModel());
+		  _userNotifier.userSignOutEvent(state.user!.toDBModel());
 		  return const AuthenticationState.unauthenticated();
 	  }
   	if (noSignedInUser && wasAppOpened)
@@ -121,7 +122,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 	}
 
 	Future<AuthenticationState> _signInUser(User user, [AuthMethod? authMethod, String? photoURL]) async {
-	  onUserSignIn(user);
+		_userNotifier.userSignInEvent(user);
 	  return AuthenticationState.authenticated(UIUser.typedFromDBModel(user, authMethod, photoURL));
   }
 

@@ -4,6 +4,7 @@ import 'package:fokus_auth/fokus_auth.dart';
 
 import 'package:fokus/services/data/db/db_data_repository.dart';
 import 'package:fokus/services/app_route_observer.dart';
+import 'package:fokus/services/observers/user/user_notifier.dart';
 import 'package:fokus/services/app_config/app_config_repository.dart';
 import 'package:fokus/services/app_config/app_shared_preferences_provider.dart';
 import 'package:fokus/services/data/data_repository.dart';
@@ -22,12 +23,13 @@ import 'package:fokus/services/remote_config_provider.dart';
 import 'package:fokus/services/remote_storage/firebase_storage_service.dart';
 import 'package:fokus/services/remote_storage/remote_storage_provider.dart';
 
-Future registerServices(GlobalKey<NavigatorState> navigatorKey, AppRouteObserver routeObserver) {
+Future registerServices(UserNotifier userNotifier, GlobalKey<NavigatorState> navigatorKey, AppRouteObserver routeObserver) {
 	// Semi-services needed for context and navigation state sharing
 	GetIt.I.registerSingleton<GlobalKey<NavigatorState>>(navigatorKey);
 	GetIt.I.registerSingleton<AppRouteObserver>(routeObserver);
 
 	GetIt.I.registerSingleton<AuthenticationProvider>(AuthenticationProvider.instance);
+	GetIt.I.registerSingleton<UserNotifier>(userNotifier);
 	GetIt.I.registerSingletonAsync<AppConfigRepository>(() => AppConfigRepository(AppSharedPreferencesProvider()).initialize());
 	GetIt.I.registerSingleton<DataRepository>(DbDataRepository());
 	GetIt.I.registerSingleton<PlanRepeatabilityService>(PlanRepeatabilityService());

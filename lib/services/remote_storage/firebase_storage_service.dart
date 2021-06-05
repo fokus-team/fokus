@@ -11,12 +11,23 @@ class FirebaseStorageService extends RemoteStorageProvider {
 	FirebaseStorage _storage = FirebaseStorage.instance;
 
   @override
-  Future uploadFile(Uint8List data, String path) async {
+  Future uploadFile(Uint8List data, String path, [Map<String, String> metadata]) async {
 		var fileRef = _storage.ref(path);
 		try {
-			await fileRef.putData(data);
+			await fileRef.putData(data, metadata != null ? SettableMetadata(customMetadata: metadata) : null);
 		} on FirebaseException catch (e, s) {
 			_logger.severe('Uploading $path to remote storage failed', e, s);
 		}
   }
+}
+
+extension RefExists on Reference {
+	Future<bool> get exists async {
+		try {
+			await getDownloadURL();
+		} on FirebaseException catch(e) {
+			return false;
+		}
+		return true;
+	}
 }

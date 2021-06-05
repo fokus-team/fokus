@@ -106,16 +106,18 @@ void main() async {
 	await Firebase.initializeApp();
 	var navigatorKey = GlobalKey<NavigatorState>();
 	var routeObserver = AppRouteObserver();
-	await registerServices(navigatorKey, routeObserver);
+	var userNotifier = AuthenticatedUserNotifier();
+	await registerServices(userNotifier, navigatorKey, routeObserver);
 
 	var analytics = GetIt.I<AnalyticsService>()..logAppOpen();
 	var configMap = (await GetIt.I.getAsync<RemoteConfigProvider>()).roundSpotConfig;
+	var config = configMap.isNotEmpty ? round_spot.Config.fromJson(json.decode(configMap)) : round_spot.Config();
 	GetIt.I<Instrumentator>().runAppGuarded(
 		BlocProvider<AuthenticationBloc>(
-			create: (context) => AuthenticationBloc(),
+			create: (context) => AuthenticationBloc(userNotifier),
 			child: round_spot.initialize(
 				child: FokusApp(navigatorKey, routeObserver, analytics.pageObserver),
-				config: configMap.isNotEmpty ? round_spot.Config.fromJson(json.decode(configMap)) : round_spot.Config(),
+				config: config,
 				heatMapCallback: GetIt.I<RemoteStorageProvider>().uploadRSHeatMap, // saveDebugImage
 				rawDataCallback: GetIt.I<RemoteStorageProvider>().uploadRSData, // saveDebugData
 				loggingLevel: Foundation.kReleaseMode ? round_spot.LogLevel.off : round_spot.LogLevel.warning

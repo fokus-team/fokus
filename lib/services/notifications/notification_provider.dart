@@ -12,12 +12,12 @@ import 'package:fokus/model/notification/notification_channel.dart';
 import 'package:fokus/model/notification/notification_refresh_info.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/services/observers/notification/notification_observer.dart';
-import 'package:fokus/services/observers/user/active_user_observer.dart';
+import 'package:fokus/services/observers/user/user_observer.dart';
 import 'package:fokus/services/observers/current_locale_observer.dart';
 
 import '../observers/notification/notification_notifier.dart';
 
-abstract class NotificationProvider implements ActiveUserObserver, CurrentLocaleObserver, NotificationNotifier {
+abstract class NotificationProvider implements UserObserver, CurrentLocaleObserver, NotificationNotifier {
 	@protected
 	Logger logger = Logger('NotificationProvider');
 	@protected

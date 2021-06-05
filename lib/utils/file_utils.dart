@@ -7,10 +7,7 @@ import 'package:path_provider/path_provider.dart';
 Future saveDebugImage(Uint8List image, round_spot.OutputInfo info) async {
 	final path = await _getLocalPath;
 	var fileName = '$path/${_getFileName(info)}';
-	var file = File('$fileName.png');
-	if (file.existsSync())
-		file = File('$fileName-1.png');
-	return file.writeAsBytes(image);
+	return File('$fileName.png').writeAsBytes(image);
 }
 
 Future saveDebugData(Uint8List data, round_spot.OutputInfo info) async {

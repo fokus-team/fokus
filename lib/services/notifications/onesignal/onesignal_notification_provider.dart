@@ -36,25 +36,18 @@ class OneSignalNotificationProvider extends NotificationProvider {
 
 	void _configureOneSignal() async {
 		OneSignal.shared.setLogLevel(Foundation.kReleaseMode ? OSLogLevel.error : OSLogLevel.warn, OSLogLevel.none);
-		OneSignal.shared.init(
-			appId,
-			iOSSettings: {
-				OSiOSSettings.autoPrompt: false,
-				OSiOSSettings.inAppLaunchUrl: false
-			}
-		);
-		OneSignal.shared.setInFocusDisplayType(OSNotificationDisplayType.notification);
+		OneSignal.shared.setAppId(appId);
 		await OneSignal.shared.promptUserForPushNotificationPermission(fallbackToSettings: true);
 	}
 
 	void _onNotificationOpened(OSNotificationOpenedResult result) async {
-		if (result.notification.payload.additionalData == null)
+		if (result.notification.additionalData == null)
 			return;
     await _routeObserver.navigatorInitialized;
 		logger.fine("onOpenMessage: $result");
     var context = _navigatorKey.currentState!.context;
 
-		var data = NotificationData.fromJson(result.notification.payload.additionalData);
+		var data = NotificationData.fromJson(result.notification.additionalData!);
 		var activeUser = BlocProvider.of<AuthenticationBloc>(context).state.user;
 		if (activeUser == null || activeUser.id != data.recipient) {
 			if (activeUser == null)
@@ -79,16 +72,20 @@ class OneSignalNotificationProvider extends NotificationProvider {
 	}
 
   void _configureNotificationHandlers() {
-	  OneSignal.shared.setNotificationReceivedHandler((OSNotification notification) async {
-	  	if (notification.payload.additionalData == null)
+	  OneSignal.shared.setNotificationWillShowInForegroundHandler((OSNotificationReceivedEvent event) async {
+	  	if (event.notification.additionalData == null) {
+			  event.complete(event.notification);
 	  		return;
+		  }
       await _routeObserver.navigatorInitialized;
-		  logger.fine("onMessage: $notification");
+		  logger.fine("onMessage: ${event.notification}");
 		  var context = _navigatorKey.currentState!.context;
-		  var data = NotificationData.fromJson(notification.payload.additionalData);
+		  var data = NotificationData.fromJson(event.notification.additionalData!);
 		  var activeUser = BlocProvider.of<AuthenticationBloc>(context).state.user;
-		  if (activeUser == null || activeUser.id != data.recipient)
-		  	return;
+		  if (activeUser == null || activeUser.id != data.recipient){
+			  event.complete(event.notification);
+			  return;
+		  }
 		  var authBloc = BlocProvider.of<AuthenticationBloc>(context);
 		  if (data.type == NotificationType.badgeAwarded) {
 			  Child user = await dataRepository.getUser(id: activeUser.id, fields: ['badges']) as Child;
@@ -98,22 +95,23 @@ class OneSignalNotificationProvider extends NotificationProvider {
 			  authBloc.add(AuthenticationActiveUserUpdated(UIChild.from(activeUser as UIChild, points: user.points!.map((points) => UIPoints.fromDBModel(points)).toList())));
 		  }
 		  onNotificationReceived(data);
+		  event.complete(event.notification);
 	  });
 	  OneSignal.shared.setNotificationOpenedHandler(_onNotificationOpened);
 	  OneSignal.shared.setSubscriptionObserver((changes) {
 	  	if (activeUser == null)
 	  		return;
-		  if (changes.from.userId != null && changes.to.userId == null) {
+		  if (changes.from.userId != null) {
 				logger.info('removing ${changes.from.userId}');
-			  removeUserToken(changes.to.userId);
+			  removeUserToken(changes.from.userId!);
 		  }
-		  if (changes.from.userId == null && changes.to.userId != null) {
+		  if (changes.to.userId != null) {
 			  logger.info('adding ${changes.to.userId}');
-			  addUserToken(changes.to.userId);
+			  addUserToken(changes.to.userId!);
 		  }
 	  });
   }
 
   @override
-  Future<String> get userToken async => (await OneSignal.shared.getPermissionSubscriptionState()).subscriptionStatus.userId;
+  Future<String?> get userToken async => (await OneSignal.shared.getDeviceState())?.userId;
 }

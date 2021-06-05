@@ -21,7 +21,7 @@ abstract class NotificationProvider implements ActiveUserObserver, CurrentLocale
 	@protected
 	Logger logger = Logger('NotificationProvider');
 	@protected
-	Future<String> get userToken;
+	Future<String?> get userToken;
 	@protected
 	User? activeUser;
 
@@ -49,13 +49,17 @@ abstract class NotificationProvider implements ActiveUserObserver, CurrentLocale
   	if (user == null)
   		return;
 		activeUser = user;
-		logger.info('sign in ${await userToken}');
-		addUserToken(await userToken);
+	  var token = await userToken;
+		logger.info('sign in $token');
+		if (token != null)
+			addUserToken(token);
 	}
 
 	@override
 	void onUserSignOut(User user) async {
-		removeUserToken(await userToken);
+  	var token = await userToken;
+	  if (token != null)
+		  removeUserToken(token);
 		activeUser = null;
 	}
 

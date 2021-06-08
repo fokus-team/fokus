@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:smart_select/smart_select.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:mongo_dart/mongo_dart.dart' as Mongo;
+import 'package:collection/collection.dart';
 
 import 'package:fokus/logic/common/calendar_cubit.dart';
 import 'package:fokus/model/ui/user/ui_child.dart';
@@ -142,7 +143,7 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 									),
 									isActive: plan.assignedTo!.isNotEmpty,
 									chips: plan.assignedTo!.isNotEmpty ? plan.assignedTo?.map((childID) {
-										UIChild? child = state.children?.keys.firstWhere((UIChild? element) => element != null && element.id == childID, orElse: () => null);
+										UIChild? child = state.children?.keys.firstWhereOrNull((UIChild? element) => element != null && element.id == childID);
 										return child != null ? AttributeChip(
 											content: child.name,
 											color: _getChildColor(state.children!, childID)

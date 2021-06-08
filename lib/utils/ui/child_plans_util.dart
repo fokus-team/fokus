@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
@@ -16,11 +15,12 @@ import 'package:fokus/widgets/cards/item_card.dart';
 import 'package:fokus/widgets/chips/attribute_chip.dart';
 import 'package:fokus/widgets/chips/timer_chip.dart';
 import 'package:fokus/widgets/segment.dart';
+import 'package:collection/collection.dart';
 
 final String _plansKey = 'plans';
 
 List<Widget> buildChildPlanSegments(List<UIPlanInstance?> plans, BuildContext context) {
-	UIPlanInstance? activePlan = plans.firstWhere((plan) => plan != null && plan.state == PlanInstanceState.active, orElse: () => null);
+	UIPlanInstance? activePlan = plans.firstWhereOrNull((plan) => plan != null && plan.state == PlanInstanceState.active);
 	List<UIPlanInstance?> otherPlans = plans.where((plan) => (activePlan == null || (plan!= null && plan.id != activePlan.id)) && (plan != null && plan.state != PlanInstanceState.completed)).toList();
 	var completedPlans = plans.where((plan) => plan!= null && plan.state == PlanInstanceState.completed).toList();
 

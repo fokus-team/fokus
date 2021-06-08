@@ -6,7 +6,7 @@ import 'package:fokus/utils/ui/theme_config.dart';
 class BackIconButton extends StatelessWidget {
 	final Brightness? theme;
 	final Function? exitCallback;
-	final dynamic? args;
+	final dynamic args;
 
 	BackIconButton({this.theme = Brightness.light, this.exitCallback, this.args});
 

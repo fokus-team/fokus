@@ -21,7 +21,7 @@ class TaskAppHeader extends StatefulWidget with PreferredSizeWidget {
 	final String? helpPage;
 	final Function(TaskCompletionState)? breakPerformingTransition;
 	final TaskCompletionState state;
-	final dynamic? popArgs;
+	final dynamic popArgs;
 
 	TaskAppHeader({Key? key, required this.height, required this.state, this.title, this.content, this.helpPage,this.breakPerformingTransition, this.popArgs}) : super(key: key);
 
@@ -155,9 +155,7 @@ class TaskAppHeaderState extends State<TaskAppHeader> with TickerProviderStateMi
 			_buttonController = AnimationController(duration: Duration(milliseconds: 450), vsync: this);
 			if(isBreakNow!) _buttonController.forward();
 		});
-		return RaisedButton(
-			color: !isBreakNow! ? AppColors.childBreakColor : AppColors.childTaskColor,
-			padding: EdgeInsets.zero,
+		return ElevatedButton(
 			child: AnimatedContainer(
 				duration: Duration(milliseconds: 1500),
 				child: Padding(
@@ -189,7 +187,11 @@ class TaskAppHeaderState extends State<TaskAppHeader> with TickerProviderStateMi
 				this.widget.breakPerformingTransition!(this.widget.state),
 				this.widget.state.current == TaskCompletionStateType.inProgress ? _timerCompletionCubit!.pauseTimer() : _timerCompletionCubit!.resumeTimer()
 			},
-			elevation: 4.0
+			style: ElevatedButton.styleFrom(
+				elevation: 4.0,
+				primary: !isBreakNow! ? AppColors.childBreakColor : AppColors.childTaskColor,
+				padding: EdgeInsets.zero
+			)
 		);
 	}
 

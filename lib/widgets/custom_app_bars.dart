@@ -136,7 +136,7 @@ class CustomContentAppBar extends StatelessWidget {
 	final Widget? popupMenuWidget;
 	final TabBar? tabs;
 	final bool? isConstrained;
-	final dynamic? popArgs;
+	final dynamic popArgs;
 
 	CustomContentAppBar({this.title, this.content, this.helpPage, this.popupMenuWidget, this.tabs, this.isConstrained = false, this.popArgs});
 

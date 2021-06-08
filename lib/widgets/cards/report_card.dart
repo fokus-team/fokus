@@ -173,11 +173,11 @@ class _ReportCardState extends State<ReportCard> {
 				Column(
 					crossAxisAlignment: CrossAxisAlignment.stretch,
 					children: [
-						RaisedButton.icon(
-							color: AppColors.caregiverButtonColor,
-							materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-							padding: EdgeInsets.symmetric(vertical: 8.0),
-							colorBrightness: Brightness.dark,
+						ElevatedButton.icon(
+							style: ElevatedButton.styleFrom(
+								primary: AppColors.caregiverButtonColor,
+								padding: EdgeInsets.symmetric(vertical: 8.0),
+							),
 							onPressed: () => Navigator.of(context).pushNamed(AppPage.caregiverReportForm.name, arguments: ReportFormParams(
 								report: widget.report,
 								saveCallback: updateReports

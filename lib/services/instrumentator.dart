@@ -18,6 +18,7 @@ import 'package:fokus/model/ui/app_page.dart';
 import 'analytics_service.dart';
 import 'app_route_observer.dart';
 import 'exception/db_exceptions.dart';
+import 'observers/user/user_notifier.dart';
 import 'observers/user/user_observer.dart';
 
 class Instrumentator implements UserObserver {
@@ -25,9 +26,14 @@ class Instrumentator implements UserObserver {
 	final _navigatorKey = GetIt.I<GlobalKey<NavigatorState>>();
 	final AnalyticsService _analyticsService = GetIt.I<AnalyticsService>();
 	final _routeObserver = GetIt.I<AppRouteObserver>();
+	final UserNotifier _userNotifier = GetIt.I<UserNotifier>();
 
 	bool _errorPageOpen = false;
 	Set<String> _subLoggers = {'RoundSpot', 'MongoDart'};
+
+	Instrumentator() {
+		_userNotifier.observeUserChanges(this);
+	}
 
 	void runAppGuarded(Widget app) {
 		Bloc.observer = FokusBlocObserver();

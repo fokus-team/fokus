@@ -7,12 +7,11 @@ import 'package:fokus/model/ui/user/ui_user.dart';
 import 'package:fokus/services/ui_data_aggregator.dart';
 
 class ChildPanelCubit extends StatefulCubit {
-	final ActiveUserFunction _activeUser;
 	final UIDataAggregator _dataAggregator = GetIt.I<UIDataAggregator>();
 
-  ChildPanelCubit(this._activeUser, ModalRoute pageRoute) : super(pageRoute);
+  ChildPanelCubit(ModalRoute pageRoute) : super(pageRoute);
 
-  Future doLoadData() async => emit(ChildPlansState(await _dataAggregator.loadTodaysPlanInstances(childId: _activeUser().id!)));
+  Future doLoadData() async => emit(ChildPlansState(await _dataAggregator.loadTodaysPlanInstances(childId: activeUser!.id!)));
 }
 
 class ChildPlansState extends StatefulState {

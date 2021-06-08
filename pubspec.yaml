@@ -32,7 +32,7 @@ dependencies:
     # Firebase
     firebase_core: ^1.0.0
     firebase_analytics: ^8.0.0
-    firebase_crashlytics: ^2.0.0
+    firebase_crashlytics: ^2.0.5
     firebase_dynamic_links: ^2.0.4
     firebase_storage: ^8.0.3
     firebase_remote_config: ^0.10.0
@@ -46,8 +46,8 @@ dependencies:
             path: flutter_local_notifications
 
     # Logic
-    bloc: ^7.0.0-nullsafety.3
-    flutter_bloc: ^7.0.0-nullsafety.4
+    bloc: ^7.0.0
+    flutter_bloc: ^7.0.1
     formz: ^0.4.0
     get_it: ^7.1.0
 
@@ -84,7 +84,7 @@ dependencies:
     badges: ^2.0.0-nullsafety.1
     implicitly_animated_reorderable_list: ^0.4.0
     flutter_picker: ^2.0.0
-    table_calendar: ^3.0.0-nullsafety.1
+    table_calendar: ^3.0.0
     carousel_slider: ^4.0.0-nullsafety.0
     flutter_rating_bar: ^4.0.0
     another_flushbar: ^1.10.17

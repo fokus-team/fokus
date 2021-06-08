@@ -188,7 +188,7 @@ class _FokusAppState extends State<FokusApp> implements CurrentLocaleObserver {
 			)),
 			AppPage.caregiverAwards.name: (context, _, __) => _createPage(CaregiverAwardsPage(), context, cubit: CaregiverAwardsCubit(getActiveUser(context), getRoute(context))),
 			// Child pages
-			AppPage.childPanel.name: (context, _, __) =>  _createPage(ChildPanelPage(), context, cubit: ChildPanelCubit(getActiveUser(context), getRoute(context)!)),
+			AppPage.childPanel.name: (context, _, __) =>  _createPage(ChildPanelPage(), context, cubit: ChildPanelCubit(getRoute(context)!)),
 			AppPage.childRewards.name: (context, _, __) =>  _createPage(ChildRewardsPage(), context, cubit: ChildRewardsCubit(getActiveUser(context), getRoute(context)!)),
 			AppPage.childAchievements.name: (context, _, __) =>  _createPage(ChildAchievementsPage(), context)
 		};

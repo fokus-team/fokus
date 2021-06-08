@@ -8,10 +8,6 @@ import 'package:get_it/get_it.dart';
 import 'package:fokus_auth/fokus_auth.dart';
 
 import 'package:fokus/services/exception/auth_exceptions.dart';
-import 'package:fokus/services/instrumentator.dart';
-import 'package:fokus/services/locale_service.dart';
-import 'package:fokus/services/notifications/notification_service.dart';
-import 'package:fokus/services/plan_keeper_service.dart';
 import 'package:fokus/services/analytics_service.dart';
 import 'package:fokus/services/observers/user/authenticated_user_notifier.dart';
 import 'package:fokus/services/data/data_repository.dart';
@@ -41,10 +37,6 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 	AuthenticatedUserNotifier _userNotifier;
 
   AuthenticationBloc(this._userNotifier) : super(AuthenticationState.unknown()) {
-	  _userNotifier.observeUserChanges(GetIt.I<PlanKeeperService>());
-	  _userNotifier.observeUserChanges(GetIt.I<NotificationService>());
-	  _userNotifier.observeUserChanges(GetIt.I<LocaleService>());
-	  _userNotifier.observeUserChanges(GetIt.I<Instrumentator>());
 	  _userSubscription = _authenticationProvider.user.listen((user) => add(AuthenticationUserChanged(user)));
   }
 

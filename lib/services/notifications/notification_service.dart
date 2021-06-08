@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:fokus/services/observers/user/user_notifier.dart';
 import 'package:get_it/get_it.dart';
 import 'package:logging/logging.dart';
 import 'package:meta/meta.dart';
@@ -26,6 +27,11 @@ abstract class NotificationService implements UserObserver, NotificationNotifier
 	final DataRepository dataRepository = GetIt.I<DataRepository>();
 	@protected
 	final Logger logger = Logger('NotificationService');
+	final UserNotifier _userNotifier = GetIt.I<UserNotifier>();
+
+	NotificationService() {
+		_userNotifier.observeUserChanges(this);
+	}
 
 	Future sendNotification(NotificationType type, ObjectId user, {required NotificationText title, required NotificationText body,
 		ObjectId? subject, NotificationIcon? icon, required NotificationGroup group, List<NotificationButton> buttons = const []});

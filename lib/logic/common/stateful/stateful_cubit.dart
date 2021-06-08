@@ -7,6 +7,8 @@ import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart';
 import 'package:meta/meta.dart';
 
+import 'package:fokus/model/db/user/user.dart';
+import 'package:fokus/services/observers/user/user_notifier.dart';
 import 'package:fokus/services/app_route_observer.dart';
 import 'package:fokus/services/notifications/notification_service.dart';
 import 'package:fokus/services/observers/page_foreground_observer.dart';
@@ -23,6 +25,7 @@ enum StatefulOption {
 abstract class StatefulCubit<State extends StatefulState> extends Cubit<State> with NotificationObserver implements RouteAware, PageForegroundObserver {
 	final _routeObserver = GetIt.I<AppRouteObserver>();
 	final NotificationService _notificationService = GetIt.I<NotificationService>();
+	final UserNotifier _userNotifier = GetIt.I<UserNotifier>();
 	@protected
 	final List<StatefulOption> options;
 	@protected
@@ -34,6 +37,9 @@ abstract class StatefulCubit<State extends StatefulState> extends Cubit<State> w
 	  if (pageRoute is PageRoute)
 	    _routeObserver.subscribe(this, pageRoute);
   }
+
+  @protected
+  User? get activeUser => _userNotifier.activeUser;
 
   Future loadData() async {
 	  if (state.loadingInProgress)

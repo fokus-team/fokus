@@ -13,18 +13,24 @@ import 'package:fokus/model/db/plan/plan_instance.dart';
 import 'package:fokus/services/plan_repeatability_service.dart';
 import 'package:fokus/model/db/date_span.dart';
 
+import 'observers/user/user_notifier.dart';
 import 'observers/user/user_observer.dart';
 import 'data/data_repository.dart';
 
 class PlanKeeperService implements UserObserver {
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
+	final UserNotifier _userNotifier = GetIt.I<UserNotifier>();
 	final PlanRepeatabilityService _repeatabilityService = GetIt.I<PlanRepeatabilityService>();
 
 	Timer? _dataCheckTimer;
 	ObjectId? _userId;
 	UserRole? _role;
 
-	@override
+	PlanKeeperService() {
+		_userNotifier.observeUserChanges(this);
+	}
+
+  @override
 	Future onUserSignIn(User user) async {
 		return Future.sync(() async {
 			_userId = user.id;

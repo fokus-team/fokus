@@ -3,10 +3,18 @@ import 'dart:ui';
 import 'package:flutter/widgets.dart';
 import 'package:fokus/model/db/user/user.dart';
 import 'package:fokus/services/observers/user/user_observer.dart';
+import 'package:get_it/get_it.dart';
 
 import 'app_locales.dart';
+import 'observers/user/user_notifier.dart';
 
 class LocaleService implements UserObserver {
+	final UserNotifier _userNotifier = GetIt.I<UserNotifier>();
+
+	LocaleService() {
+		_userNotifier.observeUserChanges(this);
+	}
+
 	static Locale parseLocale(String locale) {
 		List<String> parts = locale.split('_');
 		return Locale(parts[0], parts.length > 1 ? parts[1] : null);

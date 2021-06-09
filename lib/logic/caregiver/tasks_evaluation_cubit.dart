@@ -91,8 +91,8 @@ class TasksEvaluationCubit extends StatefulCubit {
 				updates.add(_dataRepository.updateUser(child.id!, points: points));
 			}
 			_analyticsService.logTaskApproved(report);
-			sendNotification = () =>  _notificationService.sendTaskApprovedNotification(report.task.planInstanceId!,
-					report.task.name!, report.child.id!, report.ratingMark.value!, report.task.points?.type, pointsAwarded);
+			sendNotification = () =>  _notificationService.sendTaskApprovedNotification(report.task.planInstanceId!, report.task.name!,
+				report.child.id!, report.ratingMark.value!, currencyType: report.task.points?.type, pointCount: pointsAwarded, comment: report.ratingComment);
 		}
 		await Future.wait(updates);
 		await sendNotification();

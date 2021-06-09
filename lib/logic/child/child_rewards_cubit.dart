@@ -35,7 +35,7 @@ class ChildRewardsCubit extends StatefulCubit {
 		if (!beginSubmit())
 			return;
     UIChild uiChild = UIChild.fromDBModel(activeUser as Child);
-		List<UIChildReward> rewards = child.rewards!;
+		List<UIChildReward> rewards = uiChild.rewards!;
 		ChildReward model = ChildReward(
 			id: reward.id,
 			name: reward.name, 
@@ -43,12 +43,12 @@ class ChildRewardsCubit extends StatefulCubit {
 			icon: reward.icon,
 			date: TimeDate.now()
 		);
-		Points? pointCurrency = child.points!.firstWhereOrNull((element) => element.type == reward.cost!.type);
+		Points? pointCurrency = uiChild.points!.firstWhereOrNull((element) => element.type == reward.cost!.type);
 		
 		if(pointCurrency != null && pointCurrency.quantity! >= reward.cost!.quantity!) {
-			child.points![child.points!.indexOf(pointCurrency)] = pointCurrency.copyWith(quantity: pointCurrency.quantity! - reward.cost!.quantity!);
+			uiChild.points![uiChild.points!.indexOf(pointCurrency)] = pointCurrency.copyWith(quantity: pointCurrency.quantity! - reward.cost!.quantity!);
 			rewards..add(UIChildReward.fromDBModel(model));
-			await _dataRepository.claimChildReward(child.id!, reward: model, points: child.points!);
+			await _dataRepository.claimChildReward(uiChild.id!, reward: model, points: uiChild.points!);
 			_analyticsService.logRewardBought(reward);
 			await _notificationService.sendRewardBoughtNotification(model.id!, model.name!, uiChild.connections!.first, uiChild);
 			_refreshRewardState(DataSubmissionState.submissionSuccess);

@@ -25,7 +25,7 @@ extension RefExists on Reference {
 	Future<bool> get exists async {
 		try {
 			await getDownloadURL();
-		} on FirebaseException catch(e) {
+		} on FirebaseException {
 			return false;
 		}
 		return true;

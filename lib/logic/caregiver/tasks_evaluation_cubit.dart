@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/widgets.dart';
+import 'package:fokus/model/db/user/caregiver.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 import 'package:collection/collection.dart';
@@ -17,7 +18,6 @@ import 'package:fokus/model/ui/task/ui_task_instance.dart';
 import 'package:fokus/model/ui/task/ui_task_report.dart';
 import 'package:fokus/model/ui/user/ui_caregiver.dart';
 import 'package:fokus/model/ui/user/ui_child.dart';
-import 'package:fokus/model/ui/user/ui_user.dart';
 import 'package:fokus/services/analytics_service.dart';
 import 'package:fokus/services/data/data_repository.dart';
 import 'package:fokus/services/notifications/notification_service.dart';
@@ -29,21 +29,20 @@ class TasksEvaluationCubit extends StatefulCubit {
   final TaskInstanceService _taskInstanceService = GetIt.I<TaskInstanceService>();
   final NotificationService _notificationService = GetIt.I<NotificationService>();
 
-	final ActiveUserFunction _activeUser;
 	late List<UITaskInstance> _uiTaskInstances;
   List<UITaskReport> _completedReports = [];
 	late Map<ObjectId, UIChild> _planInstanceToChild;
 	late Map<ObjectId, String> _planInstanceToName;
 
-	TasksEvaluationCubit(ModalRoute pageRoute, this._activeUser) : super(pageRoute);
+	TasksEvaluationCubit(ModalRoute pageRoute) : super(pageRoute);
 
   @override
   List<NotificationType> notificationTypeSubscription() => [NotificationType.taskFinished];
 
 	@override
 	Future doLoadData() async {
-		var activeUser = _activeUser();
-		List<Child> children = (await _dataRepository.getUsers(ids: (activeUser as UICaregiver).connections, fields: ['_id', 'name', 'avatar'])).map((e) => e as Child).toList();
+		UICaregiver uiCaregiver = UICaregiver.fromDBModel(activeUser as Caregiver);
+		List<Child> children = (await _dataRepository.getUsers(ids: uiCaregiver.connections, fields: ['_id', 'name', 'avatar'])).map((e) => e as Child).toList();
 		var _childMap = Map.fromEntries(children.map((child) => MapEntry(child.id!, child)));
 		List<PlanInstance> planInstances = await _dataRepository.getPlanInstances(childIDs: _childMap.keys.toList(), fields: ['_id', 'assignedTo', 'planID']);
 		_planInstanceToChild = Map.fromEntries(planInstances.map((planInstance) => MapEntry(planInstance.id!, UIChild(planInstance.assignedTo,

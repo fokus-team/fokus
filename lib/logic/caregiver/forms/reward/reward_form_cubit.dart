@@ -1,10 +1,10 @@
 import 'package:flutter/widgets.dart';
+import 'package:fokus/model/db/user/caregiver.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
 import 'package:fokus/model/ui/gamification/ui_currency.dart';
 import 'package:fokus/services/data/data_repository.dart';
-import 'package:fokus/model/ui/user/ui_user.dart';
 import 'package:fokus/model/currency_type.dart';
 import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
 import 'package:fokus/model/ui/gamification/ui_points.dart';
@@ -17,19 +17,18 @@ import 'package:fokus/services/analytics_service.dart';
 part 'reward_form_state.dart';
 
 class RewardFormCubit extends StatefulCubit<BaseFormState> {
-	final ActiveUserFunction _activeUser;
 	final ObjectId? _rewardId;
 
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final AnalyticsService _analyticsService = GetIt.I<AnalyticsService>();
 	
-  RewardFormCubit(this._rewardId, this._activeUser, ModalRoute pageRoute) :
+  RewardFormCubit(this._rewardId, ModalRoute pageRoute) :
 			  super(pageRoute, initialState: BaseFormState(formType: _rewardId == null ? AppFormType.create : AppFormType.edit));
 
   @override
 	Future doLoadData() async {
-	  var user = _activeUser();
-	  var currencies = (user as UICaregiver).currencies!;
+	  UICaregiver user = UICaregiver.fromDBModel(activeUser as Caregiver);
+	  var currencies = user.currencies!;
 	  UIReward reward;
 	  if (state.formType == AppFormType.create)
 	    reward = UIReward(cost: UIPoints.fromUICurrency(currencies.firstWhere((currency) => currency.type == CurrencyType.diamond)), limit: null);
@@ -49,7 +48,7 @@ class RewardFormCubit extends StatefulCubit<BaseFormState> {
 		if (!beginSubmit())
 			return;
 
-		var userId = _activeUser().id!;
+		var userId = activeUser!.id!;
 		var state = this.state as RewardFormDataLoadSuccess;
 		var reward = Reward.fromUIModel(state.reward, userId, state.reward.id);
 

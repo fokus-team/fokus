@@ -1,9 +1,9 @@
 import 'package:flutter/widgets.dart';
+import 'package:fokus/model/db/user/child.dart';
 import 'package:fokus/services/analytics_service.dart';
 import 'package:get_it/get_it.dart';
 import 'package:collection/collection.dart';
 
-import 'package:fokus/model/ui/user/ui_user.dart';
 import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
 import 'package:fokus/services/data/data_repository.dart';
 import 'package:fokus/model/db/date/time_date.dart';
@@ -18,17 +18,16 @@ import 'package:fokus/services/notifications/notification_service.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
 class ChildRewardsCubit extends StatefulCubit {
-	final ActiveUserFunction _activeUser;
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final NotificationService _notificationService = GetIt.I<NotificationService>();
 	final AnalyticsService _analyticsService = GetIt.I<AnalyticsService>();
 
 	List<UIReward>? _rewards;
 
-  ChildRewardsCubit(this._activeUser, ModalRoute pageRoute) : super(pageRoute, options: [StatefulOption.resetSubmissionState]);
+  ChildRewardsCubit(ModalRoute pageRoute) : super(pageRoute, options: [StatefulOption.resetSubmissionState]);
 
   Future doLoadData() async {
-		ObjectId? caregiverID = _activeUser().connections?.first;
+		ObjectId? caregiverID = activeUser!.connections?.first;
 		if(caregiverID != null && _rewards == null)
 			_rewards = (await _dataRepository.getRewards(caregiverId: caregiverID)).map((reward) => UIReward.fromDBModel(reward)).toList();
 	  _refreshRewardState();
@@ -37,9 +36,9 @@ class ChildRewardsCubit extends StatefulCubit {
 	void claimReward(UIReward reward) async {
 		if (!beginSubmit())
 			return;
-    var child = _activeUser() as UIChild;
-		List<UIPoints> points = child.points!;
-		List<UIChildReward> rewards = child.rewards!;
+    UIChild uiChild = UIChild.fromDBModel(activeUser as Child);
+		List<UIPoints> points = uiChild.points!;
+		List<UIChildReward> rewards = uiChild.rewards!;
 		ChildReward model = ChildReward(
 			id: reward.id,
 			name: reward.name, 
@@ -52,17 +51,17 @@ class ChildRewardsCubit extends StatefulCubit {
 		if(pointCurrency != null && pointCurrency.quantity! >= reward.cost!.quantity!) {
 			points[points.indexOf(pointCurrency)] = pointCurrency.copyWith(quantity: pointCurrency.quantity! - reward.cost!.quantity!);
 			rewards..add(UIChildReward.fromDBModel(model));
-			await _dataRepository.claimChildReward(child.id!, reward: model, points: points.map((e) =>
+			await _dataRepository.claimChildReward(uiChild.id!, reward: model, points: points.map((e) =>
 				Points.fromUICurrency(UICurrency(type: e.type, title: e.title), e.quantity!, creator: e.createdBy)).toList()
 			);
 			_analyticsService.logRewardBought(reward);
-			await _notificationService.sendRewardBoughtNotification(model.id!, model.name!, child.connections!.first, child);
+			await _notificationService.sendRewardBoughtNotification(model.id!, model.name!, uiChild.connections!.first, uiChild);
 			_refreshRewardState(DataSubmissionState.submissionSuccess);
 		}
 	}
 
 	void _refreshRewardState([DataSubmissionState? submissionState]) {
-		var child = _activeUser() as UIChild;
+		UIChild child = UIChild.fromDBModel(activeUser as Child);
 		Map<ObjectId, int> claimedCount = Map<ObjectId, int>();
 		child.rewards!.forEach((element) => claimedCount[element.id!] = !claimedCount.containsKey(element.id) ? 1 : claimedCount[element.id]! + 1);
 		emit(ChildRewardsState(

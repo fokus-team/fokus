@@ -179,17 +179,16 @@ class _FokusAppState extends State<FokusApp> implements CurrentLocaleObserver {
 			AppPage.caregiverPanel.name: (context, _, __) => _createPage(
 				withCubit(CaregiverPanelPage(), CaregiverFriendsCubit(getActiveUser(context), authBloc(context))),
 				context,
-				cubit: CaregiverPanelCubit(getActiveUser(context), getRoute(context)!)
+				cubit: CaregiverPanelCubit(getRoute(context)!)
 			),
 			AppPage.caregiverPlans.name: (context, _, __) => _createPage(CaregiverPlansPage(), context, cubit: CaregiverPlansCubit(
-				getActiveUser(context),
 				getRoute(context)!,
 				getParams(context) as MapEntry<mongo.ObjectId, String>?
 			)),
-			AppPage.caregiverAwards.name: (context, _, __) => _createPage(CaregiverAwardsPage(), context, cubit: CaregiverAwardsCubit(getActiveUser(context), getRoute(context))),
+			AppPage.caregiverAwards.name: (context, _, __) => _createPage(CaregiverAwardsPage(), context, cubit: CaregiverAwardsCubit(getRoute(context))),
 			// Child pages
 			AppPage.childPanel.name: (context, _, __) =>  _createPage(ChildPanelPage(), context, cubit: ChildPanelCubit(getRoute(context)!)),
-			AppPage.childRewards.name: (context, _, __) =>  _createPage(ChildRewardsPage(), context, cubit: ChildRewardsCubit(getActiveUser(context), getRoute(context)!)),
+			AppPage.childRewards.name: (context, _, __) =>  _createPage(ChildRewardsPage(), context, cubit: ChildRewardsCubit(getRoute(context)!)),
 			AppPage.childAchievements.name: (context, _, __) =>  _createPage(ChildAchievementsPage(), context)
 		};
 
@@ -249,9 +248,9 @@ class _FokusAppState extends State<FokusApp> implements CurrentLocaleObserver {
 				section: AppPageSection.login
 			),
 			AppPage.caregiverChildDashboard.name: (context) {
-				var plans = DashboardPlansCubit(getActiveUser(context), getRoute(context)!);
-				var rewards = DashboardRewardsCubit(getActiveUser(context), getRoute(context)!);
-				var achievements = DashboardAchievementsCubit(getActiveUser(context), getRoute(context)!);
+				var plans = DashboardPlansCubit(getRoute(context)!);
+				var rewards = DashboardRewardsCubit(getRoute(context)!);
+				var achievements = DashboardAchievementsCubit(getRoute(context)!);
 			  return _createPage(
 					withCubit(withCubit(withCubit(accountManaging(context, CaregiverChildDashboardPage(getParams(context) as ChildDashboardParams),
 							(getParams(context) as ChildDashboardParams).child), plans), achievements), rewards),
@@ -261,17 +260,17 @@ class _FokusAppState extends State<FokusApp> implements CurrentLocaleObserver {
 			AppPage.caregiverCalendar.name: (context) => _createPage(CaregiverCalendarPage(), context, cubit: CalendarCubit(getParams(context) as mongo.ObjectId?, getActiveUser(context))),
 			AppPage.caregiverPlanForm.name: (context) => _createPage(CaregiverPlanFormPage(), context, cubit: PlanFormCubit(getParams(context)  as PlanFormParams?, getActiveUser(context))),
 			AppPage.caregiverTaskForm.name: (context) => _createPage(TaskFormPage(getParams(context) as TaskFormParams), context),
-			AppPage.caregiverRewardForm.name: (context) => _createPage(CaregiverRewardFormPage(), context, cubit: RewardFormCubit(getParams(context) as mongo.ObjectId?, getActiveUser(context), getRoute(context)!)),
-			AppPage.caregiverBadgeForm.name: (context) => _createPage(CaregiverBadgeFormPage(), context, cubit: BadgeFormCubit(getActiveUser(context), authBloc(context), getRoute(context)!)),
-			AppPage.caregiverRatingPage.name: (context) => _createPage(CaregiverRatingPage(), context, cubit: TasksEvaluationCubit(getRoute(context)!, getActiveUser(context))),
+			AppPage.caregiverRewardForm.name: (context) => _createPage(CaregiverRewardFormPage(), context, cubit: RewardFormCubit(getParams(context) as mongo.ObjectId?, getRoute(context)!)),
+			AppPage.caregiverBadgeForm.name: (context) => _createPage(CaregiverBadgeFormPage(), context, cubit: BadgeFormCubit(authBloc(context), getRoute(context)!)),
+			AppPage.caregiverRatingPage.name: (context) => _createPage(CaregiverRatingPage(), context, cubit: TasksEvaluationCubit(getRoute(context)!)),
 			AppPage.caregiverReportForm.name: (context) => _createPage(ReportFormPage(getParams(context) as ReportFormParams), context),
-			AppPage.caregiverCurrencies.name: (context) => _createPage(CaregiverCurrenciesPage(), context, cubit: CaregiverCurrenciesCubit(getActiveUser(context), getRoute(context)!, getActiveUser(context), authBloc(context))),
-			AppPage.caregiverFriendPlans.name: (context) => _createPage(withCubit(CaregiverFriendPlansPage(), CaregiverFriendsCubit(getActiveUser(context), authBloc(context))), context, cubit: CaregiverPlansCubit(getActiveUser(context), getRoute(context)!, getParams(context) as MapEntry<mongo.ObjectId, String>?)),
+			AppPage.caregiverCurrencies.name: (context) => _createPage(CaregiverCurrenciesPage(), context, cubit: CaregiverCurrenciesCubit(getRoute(context)!, authBloc(context))),
+			AppPage.caregiverFriendPlans.name: (context) => _createPage(withCubit(CaregiverFriendPlansPage(), CaregiverFriendsCubit(getActiveUser(context), authBloc(context))), context, cubit: CaregiverPlansCubit(getRoute(context)!, getParams(context) as MapEntry<mongo.ObjectId, String>?)),
 			AppPage.planDetails.name: (context) => _createPage(PlanDetailsPage(), context, cubit: PlanCubit(getParams(context) as mongo.ObjectId, getRoute(context)!)),
 
 			AppPage.childCalendar.name: (context) => _createPage(ChildCalendarPage(), context, cubit: CalendarCubit(getParams(context) as mongo.ObjectId, getActiveUser(context))),
 			AppPage.planInstanceDetails.name: (context) => _createPage(PlanInstanceDetailsPage(getParams(context) as PlanInstanceParams), context, cubit: PlanInstanceCubit(getParams(context) as PlanInstanceParams, getRoute(context)!)),
-			AppPage.childTaskInProgress.name: (context) => _createPage(ChildTaskInProgressPage(), context, cubit: TaskCompletionCubit(getParams(context) as TaskInProgressParams, getActiveUser(context), getRoute(context)!))
+			AppPage.childTaskInProgress.name: (context) => _createPage(ChildTaskInProgressPage(), context, cubit: TaskCompletionCubit(getParams(context) as TaskInProgressParams, getRoute(context)!))
 		};
 	}
 

@@ -6,7 +6,6 @@ import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
 import 'package:fokus/model/ui/plan/ui_plan.dart';
 import 'package:fokus/model/ui/plan/ui_plan_instance.dart';
 import 'package:fokus/model/ui/user/ui_child.dart';
-import 'package:fokus/model/ui/user/ui_user.dart';
 import 'package:fokus/services/data/data_repository.dart';
 import 'package:fokus/model/db/plan/plan.dart';
 import 'package:fokus/model/db/plan/task_status.dart';
@@ -15,7 +14,6 @@ import 'package:fokus/services/ui_data_aggregator.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
 class DashboardPlansCubit extends StatefulCubit {
-	final ActiveUserFunction _activeUser;
 	late UIChild child;
 	late List<Plan> _availablePlans;
 	
@@ -23,17 +21,16 @@ class DashboardPlansCubit extends StatefulCubit {
 	final UIDataAggregator _dataAggregator = GetIt.I<UIDataAggregator>();
 	final PlanKeeperService _planKeeperService = GetIt.I<PlanKeeperService>();
 	
-  DashboardPlansCubit(this._activeUser, ModalRoute pageRoute) : super(pageRoute, options: [StatefulOption.noAutoLoading, StatefulOption.resetSubmissionState]);
+  DashboardPlansCubit(ModalRoute pageRoute) : super(pageRoute, options: [StatefulOption.noAutoLoading, StatefulOption.resetSubmissionState]);
 
   @override
   Future doLoadData() async {
-	  var activeUser = _activeUser();
 	  var planInstances = (await _dataRepository.getPlanInstances(childIDs: [child.id!], fields: ['_id'])).map((plan) => plan.id!).toList();
 	  var data = await Future.wait([
 		  _dataAggregator.loadTodaysPlanInstances(childId: child.id!),
 		  _dataRepository.countTaskInstances(planInstancesId: planInstances, isCompleted: true, state: TaskState.notEvaluated),
-		  _dataRepository.countPlans(caregiverId: activeUser.id),
-		  _dataRepository.getPlans(caregiverId: activeUser.id),
+		  _dataRepository.countPlans(caregiverId: activeUser!.id),
+		  _dataRepository.getPlans(caregiverId: activeUser!.id),
 	  ]);
 	  _availablePlans = (data[3] as List<Plan>).where((plan) {
 	    var toDate = plan.repeatability!.range?.to;

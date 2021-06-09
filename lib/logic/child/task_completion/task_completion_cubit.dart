@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:fokus/model/db/user/user.dart';
 import 'package:fokus/model/navigation/task_in_progress_params.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mongo_dart/mongo_dart.dart';
@@ -25,7 +26,6 @@ part 'task_completion_state.dart';
 
 class TaskCompletionCubit extends StatefulCubit<TaskCompletionState> {
 	final ObjectId _taskInstanceId;
-	final ActiveUserFunction _activeUser;
 
 	late TaskInstance _taskInstance;
 	late PlanInstance _planInstance;
@@ -37,7 +37,7 @@ class TaskCompletionCubit extends StatefulCubit<TaskCompletionState> {
 	final UIDataAggregator _dataAggregator = GetIt.I<UIDataAggregator>();
 	final AnalyticsService _analyticsService = GetIt.I<AnalyticsService>();
 
-	TaskCompletionCubit(TaskInProgressParams params, this._activeUser, ModalRoute pageRoute) : _taskInstanceId = params.taskId,
+	TaskCompletionCubit(TaskInProgressParams params, ModalRoute pageRoute) : _taskInstanceId = params.taskId,
 				super(pageRoute, initialState: TaskCompletionState(planInstance: params.planInstance), options: [StatefulOption.resetSubmissionState]);
 
 	@override
@@ -68,7 +68,7 @@ class TaskCompletionCubit extends StatefulCubit<TaskCompletionState> {
 				_planInstance.state = PlanInstanceState.active;
 				wasPlanStateChanged = true;
 
-				var childId = _activeUser().id!;
+				var childId = activeUser!.id!;
 				if (await _dataRepository.hasActiveChildPlanInstance(childId))
 					updates.add(_dataRepository.updateActivePlanInstanceState(childId, PlanInstanceState.notCompleted));
 			}
@@ -131,7 +131,7 @@ class TaskCompletionCubit extends StatefulCubit<TaskCompletionState> {
 			return;
 		TaskCompletionState state = this.state;
 
-  	_notificationService.sendTaskFinishedNotification(_planInstance.id!, _task.name!, _plan.createdBy!, _activeUser(), completed: true);
+  	_notificationService.sendTaskFinishedNotification(_planInstance.id!, _task.name!, _plan.createdBy!, UIUser.fromDBModel(activeUser as User), completed: true);
 	  _analyticsService.logTaskFinished(_taskInstance);
 	  var updatedTask =  await _onCompletion(TaskState.notEvaluated);
 		var planInstance = await _dataAggregator.loadPlanInstance(planInstance: _planInstance, plan: _plan);
@@ -143,7 +143,7 @@ class TaskCompletionCubit extends StatefulCubit<TaskCompletionState> {
 			return;
 		TaskCompletionState state = this.state;
 
-		_notificationService.sendTaskFinishedNotification(_planInstance.id!, _task.name!, _plan.createdBy!, _activeUser(), completed: false);
+		_notificationService.sendTaskFinishedNotification(_planInstance.id!, _task.name!, _plan.createdBy!, UIUser.fromDBModel(activeUser as User), completed: false);
 		_analyticsService.logTaskNotFinished(_taskInstance);
 		var updatedTask =  await _onCompletion(TaskState.rejected);
 		var planInstance = await _dataAggregator.loadPlanInstance(planInstance: _planInstance, plan: _plan);

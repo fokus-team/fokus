@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:fokus/model/db/user/caregiver.dart';
 import 'package:get_it/get_it.dart';
 
 import 'package:fokus/model/db/gamification/child_badge.dart';
@@ -6,25 +7,23 @@ import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
 import 'package:fokus/model/ui/gamification/ui_badge.dart';
 import 'package:fokus/model/ui/user/ui_caregiver.dart';
 import 'package:fokus/model/ui/user/ui_child.dart';
-import 'package:fokus/model/ui/user/ui_user.dart';
 import 'package:fokus/services/analytics_service.dart';
 import 'package:fokus/services/data/data_repository.dart';
 import 'package:fokus/services/notifications/notification_service.dart';
 
 class DashboardAchievementsCubit extends StatefulCubit {
-	final ActiveUserFunction _activeUser;
 	late UIChild child;
 
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final AnalyticsService _analyticsService = GetIt.I<AnalyticsService>();
 	final NotificationService _notificationService = GetIt.I<NotificationService>();
 
-	DashboardAchievementsCubit(this._activeUser, ModalRoute pageRoute): super(pageRoute, options: [StatefulOption.noAutoLoading, StatefulOption.resetSubmissionState]);
+	DashboardAchievementsCubit(ModalRoute pageRoute): super(pageRoute, options: [StatefulOption.noAutoLoading, StatefulOption.resetSubmissionState]);
 
 	@override
 	Future doLoadData() async {
-		var activeUser = _activeUser() as UICaregiver;
-		var availableBadges = _filterBadges(activeUser.badges!, child.badges!);
+		UICaregiver uiCaregiver = UICaregiver.fromDBModel(activeUser as Caregiver);
+		var availableBadges = _filterBadges(uiCaregiver.badges!, child.badges!);
 		emit(DashboardAchievementsState(availableBadges: availableBadges, childBadges: child.badges!));
 	}
 

@@ -72,12 +72,14 @@ Future<bool?> showExitFormDialog(BuildContext context, bool isSystemPop, bool is
 				title: Text(AppLocales.of(context).translate('alert.unsavedProgressTitle')),
 				content: Text(AppLocales.of(context).translate('alert.unsavedProgressMessage')),
 				actions: [
-					FlatButton(
+					TextButton(
 						child: Text(AppLocales.of(context).translate('actions.cancel')),
 						onPressed: () => Navigator.pop(c, false),
 					),
-					FlatButton(
-						textColor: Colors.red,
+					TextButton(
+						style: TextButton.styleFrom(
+							primary: Colors.red
+						),
 						child: Text(AppLocales.of(context).translate('actions.exit')),
 						onPressed: () {
 							if(isSystemPop)

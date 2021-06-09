@@ -14,9 +14,11 @@ class UIButton {
 	UIButton.ofType(ButtonType type, this.action, [this.color, this.icon]) : textKey = type.key;
 
   Widget getWidget(BuildContext context) {
-    return FlatButton(
+    return TextButton(
 			child: Text(AppLocales.of(context).translate(textKey)),
-			textColor: color ?? AppColors.mainBackgroundColor,
+			style: TextButton.styleFrom(
+				primary: color ?? AppColors.mainBackgroundColor
+			),
 			onPressed: action ?? () => Navigator.of(context).pop()
 		);
   }

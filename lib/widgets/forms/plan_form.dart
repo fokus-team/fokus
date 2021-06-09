@@ -447,12 +447,14 @@ class _PlanFormState extends State<PlanForm> {
 								mainAxisAlignment: MainAxisAlignment.end,
 								crossAxisAlignment: CrossAxisAlignment.end,
 								children: <Widget>[
-									FlatButton(
+									TextButton(
 										onPressed: () {
 											setState(() => fieldsValidated = true);
 											widget.goNextCallback();
 										},
-										textColor: AppColors.mainBackgroundColor,
+										style: TextButton.styleFrom(
+											primary: AppColors.mainBackgroundColor
+										),
 										child: Row(children: <Widget>[Text(AppLocales.of(context).translate('actions.next')), Icon(Icons.chevron_right)])
 									)
 								]

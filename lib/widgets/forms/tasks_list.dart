@@ -102,12 +102,10 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 				task: null,
 				currencies: (BlocProvider.of<PlanFormCubit>(context).state as PlanFormDataLoadSuccess).currencies,
 				createTaskCallback: (newTask) {
-					Future.wait([
-						Future(() => setState(() {
+					return Future(() => setState(() {
 							widget.plan.tasks.add(newTask);
 							sortTasks();
-						}))
-					]);
+						}));
 				}
 		));
 	}
@@ -117,20 +115,16 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 			task: task,
 			currencies: (BlocProvider.of<PlanFormCubit>(context).state as PlanFormDataLoadSuccess).currencies,
 			saveTaskCallback: (TaskFormModel updatedTask) {
-				Future.wait([
-					Future(() => setState(() {
+			return Future(() => setState(() {
 						task.copy(updatedTask);
 						sortTasks();
-					}))
-				]);
+					}));
 			},
 			removeTaskCallback: () {
-				Future.wait([
-					Future(() => setState(() {
+				return Future(() => setState(() {
 						widget.plan.tasks.remove(task);
 						sortTasks();
-					}))
-				]);
+					}));
 			}
 		));
 	}
@@ -277,14 +271,18 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 								mainAxisAlignment: MainAxisAlignment.spaceBetween,
 								crossAxisAlignment: CrossAxisAlignment.end,
 								children: <Widget>[
-									FlatButton(
+									TextButton(
 										onPressed: () => widget.goBackCallback(),
-										textColor: AppColors.mediumTextColor,
+										style: TextButton.styleFrom(
+											primary: AppColors.mediumTextColor
+										),
 										child: Row(children: <Widget>[Icon(Icons.chevron_left), Text(AppLocales.of(context).translate('actions.back'))]),
 									),
-									FlatButton(
+									TextButton(
 										onPressed: () => widget.submitCallback(),
-										textColor: AppColors.mainBackgroundColor,
+										style: TextButton.styleFrom(
+											primary: AppColors.mainBackgroundColor
+										),
 										child: Text(AppLocales.of(context).translate('$_pageKey.${widget.isCreateMode ? 'createPlanButton' : 'savePlanButton'}'))
 									)
 								]

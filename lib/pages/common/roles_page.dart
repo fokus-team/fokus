@@ -49,10 +49,12 @@ class RolesPage extends StatelessWidget {
 	  );
 	  return Container(
 		  padding: EdgeInsets.symmetric(horizontal: AppBoxProperties.screenEdgePadding + 6.0).copyWith(bottom: 8.0),
-		  child: FlatButton(
+		  child: TextButton(
 			  onPressed: () => Navigator.of(context).pushNamed(role.signInPage.name),
-			  color: role == UserRole.caregiver ? AppColors.caregiverButtonColor : AppColors.childButtonColor,
-			  padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 28.0),
+			  style: TextButton.styleFrom(
+					backgroundColor: role == UserRole.caregiver ? AppColors.caregiverButtonColor : AppColors.childButtonColor,
+					padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 28.0)
+				),
 			  child: Wrap(
 				  alignment: WrapAlignment.center,
 				  children: <Widget>[

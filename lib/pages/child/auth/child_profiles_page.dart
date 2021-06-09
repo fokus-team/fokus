@@ -65,13 +65,13 @@ class ChildProfilesPage extends StatelessWidget {
 							  				onTap: () => context.read<SavedChildProfilesCubit>().signIn(child.id!),
 							  				leading: FittedBox(child: AppAvatar(child.avatar)),
 							  				title: Text(child.name!, style: Theme.of(context).textTheme.headline3),
-							  				trailing: FlatButton(
+							  				trailing: TextButton(
 							  					child: Icon(Icons.arrow_forward),
-							  					color: Colors.orange,
-							  					textColor: Colors.white,
-							  					padding: EdgeInsets.all(12),
-							  					materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-							  					minWidth: 20,
+							  					style: TextButton.styleFrom(
+														backgroundColor: Colors.orange,
+														padding: EdgeInsets.all(12),
+														primary: Colors.white
+													),
 							  					onPressed: () => context.read<SavedChildProfilesCubit>().signIn(child.id!)
 							  				),
 							  				contentPadding: EdgeInsets.symmetric(vertical: 6.0, horizontal: 16.0),

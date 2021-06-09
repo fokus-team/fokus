@@ -93,7 +93,7 @@ class AuthFloatingButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-		return FlatButton.icon(
+		return TextButton.icon(
 			onPressed: action,
 			icon: Icon(icon, color: Colors.white),
 			label: Text(text, style: Theme.of(context).textTheme.button)

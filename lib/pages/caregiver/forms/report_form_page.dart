@@ -92,7 +92,7 @@ class _ReportFormPageState extends State<ReportFormPage> {
 				crossAxisAlignment: CrossAxisAlignment.end,
 				children: <Widget>[
 					SizedBox.shrink(),
-					FlatButton(
+					TextButton(
 						onPressed: () async {
 							await widget.saveCallback(isRejected ? UITaskReportMark.rejected : mark, _commentController.value.text);
 							Navigator.of(context).pop();

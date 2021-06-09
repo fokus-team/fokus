@@ -106,7 +106,7 @@ class _CaregiverBadgeFormPageState extends State<CaregiverBadgeFormPage> {
 				crossAxisAlignment: CrossAxisAlignment.end,
 				children: <Widget>[
 					SizedBox.shrink(),
-					FlatButton(
+					TextButton(
 						onPressed: () => saveBadge(context),
 						child: Text(
 							AppLocales.of(context).translate('$_pageKey.addBadgeButton'),

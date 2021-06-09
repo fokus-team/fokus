@@ -23,12 +23,11 @@ class CaregiverCurrenciesPage extends StatefulWidget {
 class _CaregiverCurrenciesPageState extends State<CaregiverCurrenciesPage> {
 	static const String _pageKey = 'page.caregiverSection.currencies';
 	late GlobalKey<FormState>? currenciesKey;
-	late Map<CurrencyType, String?> currencyList;
+	Map<CurrencyType, String?> currencyList = Map<CurrencyType, String?>();
 	bool isDataChanged = false;
 
 	@override
   void initState() {
-		currencyList = Map<CurrencyType, String>();
 		currencyList[CurrencyType.emerald] = null;
 		currencyList[CurrencyType.ruby] = null;
 		currencyList[CurrencyType.amethyst] = null;
@@ -112,7 +111,7 @@ class _CaregiverCurrenciesPageState extends State<CaregiverCurrenciesPage> {
 				crossAxisAlignment: CrossAxisAlignment.end,
 				children: <Widget>[
 					SizedBox.shrink(),
-					FlatButton(
+					TextButton(
 						onPressed: () => saveCurrencies(context),
 						child: Text(
 							AppLocales.of(context).translate('$_pageKey.content.saveCurrenciesButton'),

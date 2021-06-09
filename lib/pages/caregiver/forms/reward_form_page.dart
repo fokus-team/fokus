@@ -87,7 +87,7 @@ class _CaregiverRewardFormPageState extends State<CaregiverRewardFormPage> {
 				crossAxisAlignment: CrossAxisAlignment.end,
 				children: <Widget>[
 					SizedBox.shrink(),
-					FlatButton(
+					TextButton(
 						onPressed: () {
 							if(rewardFormKey.currentState!.validate())
 								context.read<RewardFormCubit>().submitRewardForm();

@@ -131,9 +131,7 @@ class _TaskFormPageState extends State<TaskFormPage> {
 						confirmColor: Colors.red,
 						confirmText: '$_pageKeyTaskForm.removeTaskTitle',
 						confirmAction: () {
-							Future.wait([
-								Future(widget.params.removeTaskCallback!())
-							]);
+							Future.wait([widget.params.removeTaskCallback!()]);
 							Navigator.of(context).pop();
 							Navigator.of(context).pop();
 						}
@@ -146,11 +144,11 @@ class _TaskFormPageState extends State<TaskFormPage> {
 			task.subtasks = subtasksKeys.map((e) => e.value).toList();
 			if (formModeIsCreate())
 				Future.wait([
-					Future(widget.params.createTaskCallback!(task))
+					widget.params.createTaskCallback!(task)
 				]);
 			else
 				Future.wait([
-					Future(widget.params.saveTaskCallback!(task))
+					widget.params.saveTaskCallback!(task)
 				]);
 			Navigator.of(context).pop();
 		}
@@ -245,9 +243,10 @@ class _TaskFormPageState extends State<TaskFormPage> {
 						crossAxisAlignment: CrossAxisAlignment.end,
 						children: <Widget>[
 							!formModeIsCreate() ?
-							FlatButton(
+							TextButton(
 									onPressed: () => showDeleteTaskDialog(),
-									textColor: Colors.red,
+									style: TextButton.styleFrom(
+										primary: Colors.red),
 									child: Row(
 											children: <Widget>[
 												Icon(Icons.close),
@@ -257,7 +256,7 @@ class _TaskFormPageState extends State<TaskFormPage> {
 									)
 							)
 									: SizedBox.shrink(),
-							FlatButton(
+							TextButton(
 									onPressed: () => saveTask(),
 									child: Row(
 											children: <Widget>[
@@ -509,8 +508,8 @@ class _TaskFormPageState extends State<TaskFormPage> {
 				cancel: Wrap(
 						spacing: 6.0,
 						children: <Widget>[
-							FlatButton(
-									textColor: Colors.red,
+							TextButton(
+									style: TextButton.styleFrom(primary: Colors.red),
 									child: Text(
 											AppLocales.of(context).translate('actions.clear')),
 									onPressed: () {
@@ -518,7 +517,7 @@ class _TaskFormPageState extends State<TaskFormPage> {
 										Navigator.of(context).pop();
 									}
 							),
-							FlatButton(
+							TextButton(
 									child: Text(
 											AppLocales.of(context).translate('actions.cancel')),
 									onPressed: () {

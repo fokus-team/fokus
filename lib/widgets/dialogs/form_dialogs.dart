@@ -52,13 +52,17 @@ class FormDialog extends StatelessWidget {
 								child: Row(
 									mainAxisAlignment: MainAxisAlignment.spaceBetween,
 									children: [
-										FlatButton(
-											textColor: AppColors.mediumTextColor,
+										TextButton(
+											style: TextButton.styleFrom(
+												primary: AppColors.mediumTextColor
+											),
 											child: Text(AppLocales.of(context).translate('actions.cancel')),
 											onPressed: () => Navigator.of(context).pop()
 										),
-										FlatButton(
-											textColor: AppColors.caregiverBackgroundColor,
+										TextButton(
+											style: TextButton.styleFrom(
+												primary: AppColors.caregiverBackgroundColor
+											),
 											child: Text(AppLocales.of(context).translate('actions.confirm')),
 											onPressed: () => onConfirm()
 										)

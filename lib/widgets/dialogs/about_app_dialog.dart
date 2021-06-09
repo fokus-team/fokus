@@ -105,8 +105,8 @@ class _AboutAppDialogState extends State<AboutAppDialog> {
 						child: Row(
 							mainAxisAlignment: MainAxisAlignment.spaceBetween,
 							children: [
-								FlatButton(
-									textColor: AppColors.caregiverBackgroundColor,
+								TextButton(
+									style: TextButton.styleFrom(primary: AppColors.caregiverBackgroundColor),
 									child: Text(AppLocales.of(context).translate('$_settingsKey.licences')),
 									onPressed: () => showLicensePage(
 										context: context,
@@ -114,8 +114,10 @@ class _AboutAppDialogState extends State<AboutAppDialog> {
 										applicationIcon: Image.asset('assets/image/sunflower_logo.png', height: 64)
 									),
 								),
-								FlatButton(
-									textColor: AppColors.caregiverBackgroundColor,
+								TextButton(
+									style: TextButton.styleFrom(
+										primary: AppColors.caregiverBackgroundColor
+									),
 									child: Text(AppLocales.of(context).translate('actions.close')),
 									onPressed: () => Navigator.of(context).pop(),
 								)

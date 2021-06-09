@@ -3,7 +3,6 @@ import 'package:get_it/get_it.dart';
 
 import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
 import 'package:fokus/model/ui/plan/ui_plan_instance.dart';
-import 'package:fokus/model/ui/user/ui_user.dart';
 import 'package:fokus/services/ui_data_aggregator.dart';
 
 class ChildPanelCubit extends StatefulCubit {

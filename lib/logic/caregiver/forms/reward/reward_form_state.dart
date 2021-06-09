@@ -1,12 +1,12 @@
 part of 'reward_form_cubit.dart';
 
 extension RewardFormLoad on BaseFormState {
-	RewardFormDataLoadSuccess load({required List<UICurrency> currencies, required UIReward reward}) =>
+	RewardFormDataLoadSuccess load({required List<Currency> currencies, required UIReward reward}) =>
 			RewardFormDataLoadSuccess(currencies: currencies, reward: reward, formType: formType);
 }
 
 class RewardFormDataLoadSuccess extends BaseFormState {
-	final List<UICurrency> currencies;
+	final List<Currency> currencies;
 	final UIReward reward;
 	final bool wasDataChanged;
 

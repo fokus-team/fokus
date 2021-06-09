@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:fokus/model/db/gamification/points.dart';
 import 'package:fokus/model/ui/ui_button.dart';
 import 'package:intl/intl.dart';
 
-import 'package:fokus/model/ui/gamification/ui_points.dart';
 import 'package:fokus/model/ui/gamification/ui_reward.dart';
 import 'package:fokus/model/ui/user/ui_child.dart';
 import 'package:fokus/services/app_locales.dart';
@@ -81,8 +81,8 @@ class ChildItemCard extends StatelessWidget {
 				graphicType: AssetType.avatars,
 				graphic: child.avatar,
 				chips: <Widget>[
-					for (UIPoints pointCurrency in child.points!)
-						AttributeChip.withCurrency(content: '${pointCurrency.quantity}', currencyType: pointCurrency.type!, tooltip: pointCurrency.title)
+					for (Points pointCurrency in child.points!)
+						AttributeChip.withCurrency(content: '${pointCurrency.quantity}', currencyType: pointCurrency.type!, tooltip: pointCurrency.name)
 				]
 		);
 	}

@@ -1,10 +1,10 @@
 import 'package:bson/bson.dart';
+import 'package:fokus/model/db/gamification/points.dart';
 import 'package:fokus/model/db/plan/task.dart';
-import 'package:fokus/model/ui/gamification/ui_points.dart';
 import 'package:fokus/model/ui/task/ui_task_base.dart';
 
 class UITask extends UITaskBase {
-  final UIPoints? points;
+  final Points? points;
   final int? timer;
   final ObjectId? planId;
 
@@ -24,7 +24,7 @@ class UITask extends UITaskBase {
           name: task.name,
           optional: task.optional,
           description: task.description,
-          points: task.points != null ? UIPoints.fromDBModel(task.points!) : null,
+          points: task.points,
           timer: task.timer ?? 0,
           planId: task.planID,
         );

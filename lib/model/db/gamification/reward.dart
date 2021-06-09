@@ -1,22 +1,21 @@
-import 'package:fokus/model/db/date/time_date.dart';
+import 'package:equatable/equatable.dart';
 import 'package:fokus/model/ui/gamification/ui_reward.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 import 'package:fokus/utils/definitions.dart';
 
 import 'points.dart';
 
-class Reward {
-  ObjectId? id;
-  int? icon;
-  int? limit;
-  String? name;
-  Points? cost;
-  ObjectId? createdBy;
-  TimeDate? createdAt;
+class Reward extends Equatable {
+  final ObjectId? id;
+  final int? icon;
+  final int? limit;
+  final String? name;
+  final Points? cost;
+  final ObjectId? createdBy;
 
-  Reward({this.createdBy, this.id, this.icon, this.limit, this.name, this.cost, this.createdAt});
+  Reward({this.createdBy, this.id, this.icon, this.limit, this.name, this.cost});
   Reward.fromUIModel(UIReward reward, ObjectId creator, [ObjectId? id]) : this(name: reward.name, id: id ?? ObjectId(), createdBy: creator,
-		  limit: reward.limit, icon: reward.icon, cost: reward.cost != null ? Points.fromUIPoints(reward.cost!) : null);
+		  limit: reward.limit, icon: reward.icon, cost: reward.cost);
 
   static Reward? fromJson(Json? json) {
     return json != null ? Reward(
@@ -45,4 +44,7 @@ class Reward {
       data['cost'] = this.cost!.toJson();
     return data;
   }
+
+  @override
+  List<Object?> get props => [id, icon, limit, name, cost, createdBy];
 }

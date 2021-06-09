@@ -4,8 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:fokus/logic/caregiver/forms/reward/reward_form_cubit.dart';
 import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
+import 'package:fokus/model/db/gamification/points.dart';
 import 'package:fokus/model/ui/app_page.dart';
-import 'package:fokus/model/ui/gamification/ui_points.dart';
 import 'package:fokus/utils/ui/dialog_utils.dart';
 import 'package:fokus/utils/ui/form_config.dart';
 import 'package:fokus/utils/ui/snackbar_utils.dart';
@@ -191,7 +191,7 @@ class _CaregiverRewardFormPageState extends State<CaregiverRewardFormPage> {
 	}
 	
 	Widget _buildPointsFields([RewardFormDataLoadSuccess? state]) {
-		var onCostChanged = (UIPoints Function(UIPoints) change) => context.read<RewardFormCubit>().onRewardChanged((reward) => reward.copyWith(cost: change(reward.cost!)));
+		var onCostChanged = (Points Function(Points) change) => context.read<RewardFormCubit>().onRewardChanged((reward) => reward.copyWith(cost: change(reward.cost!)));
 		return PointPickerField(
 			controller: _pointsController,
 			pickedCurrency: state?.reward.cost,
@@ -203,7 +203,7 @@ class _CaregiverRewardFormPageState extends State<CaregiverRewardFormPage> {
 			helperValueText: AppLocales.of(context).translate('$_pageKey.fields.rewardPoints.hint'),
 			labelCurrencyText: AppLocales.of(context).translate('$_pageKey.fields.rewardPoints.currencyLabel'),
 			pointValueSetter: (String? val) => onCostChanged((cost) => cost.copyWith(quantity: val != null ? int.tryParse(val) : null)),
-			pointCurrencySetter: (val) => onCostChanged((cost) => cost.copyWith(type: val.type)),
+			pointCurrencySetter: (val) => onCostChanged((cost) => cost.copyWith(icon: val.type)),
 		);
 	}
 

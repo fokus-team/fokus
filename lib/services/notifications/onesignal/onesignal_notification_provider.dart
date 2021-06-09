@@ -12,7 +12,6 @@ import 'package:fokus/model/notification/notification_data.dart';
 import 'package:fokus/services/app_route_observer.dart';
 import 'package:fokus/model/notification/notification_type.dart';
 import 'package:fokus/services/ui_data_aggregator.dart';
-import 'package:fokus/model/ui/gamification/ui_points.dart';
 import 'package:fokus/model/db/user/child.dart';
 import 'package:fokus/model/ui/gamification/ui_badge.dart';
 import 'package:fokus/model/ui/user/ui_child.dart';
@@ -92,7 +91,7 @@ class OneSignalNotificationProvider extends NotificationProvider {
 			  authBloc.add(AuthenticationActiveUserUpdated(UIChild.from(activeUser as UIChild, badges: user.badges!.map((badge) => UIChildBadge.fromDBModel(badge)).toList())));
 		  } else if (data.type == NotificationType.taskApproved) {
 			  Child user = await dataRepository.getUser(id: activeUser.id, fields: ['points']) as Child;
-			  authBloc.add(AuthenticationActiveUserUpdated(UIChild.from(activeUser as UIChild, points: user.points!.map((points) => UIPoints.fromDBModel(points)).toList())));
+			  authBloc.add(AuthenticationActiveUserUpdated(UIChild.from(activeUser as UIChild, points: List.from(user.points!))));
 		  }
 		  onNotificationReceived(data);
 		  event.complete(event.notification);

@@ -106,7 +106,7 @@ class TaskAppHeaderState extends State<TaskAppHeader> with TickerProviderStateMi
 								AttributeChip.withCurrency(
 									content: "+" + this.widget.state.taskInstance!.points!.quantity.toString(),
 									currencyType: this.widget.state.taskInstance!.points!.type!,
-									tooltip: this.widget.state.taskInstance!.points!.title
+									tooltip: this.widget.state.taskInstance!.points!.name
 								)
 							]
 						) :

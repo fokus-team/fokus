@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fokus/model/db/gamification/currency.dart';
 import 'package:mongo_dart/mongo_dart.dart' as Mongo;
 
 import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
@@ -12,7 +13,6 @@ import 'package:fokus/model/ui/plan/ui_plan.dart';
 import 'package:fokus/model/ui/task/ui_task.dart';
 import 'package:fokus/utils/ui/snackbar_utils.dart';
 import 'package:fokus/widgets/stateful_bloc_builder.dart';
-import 'package:fokus/model/ui/gamification/ui_currency.dart';
 import 'package:fokus/model/ui/form/task_form_model.dart';
 import 'package:fokus/model/ui/ui_button.dart';
 import 'package:fokus/services/app_locales.dart';
@@ -113,7 +113,7 @@ class _PlanDetailsPageState extends State<PlanDetailsPage> {
 								title: task.name,
 								timer: task.timer,
 								pointsValue: task.points != null ? task.points!.quantity : null,
-								pointCurrency:  task.points != null ? UICurrency(type: task.points!.type, title: task.points!.title) : null
+								pointCurrency:  task.points != null ? Currency(type: task.points!.type, name: task.points!.name) : null
 							)
 						)
 					)

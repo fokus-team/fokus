@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:fokus/model/db/user/caregiver.dart';
 import 'package:get_it/get_it.dart';
 
 import 'package:fokus/model/ui/user/ui_user.dart';
@@ -7,7 +8,6 @@ import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
 import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
 import 'package:fokus/model/currency_type.dart';
 import 'package:fokus/model/db/gamification/currency.dart';
-import 'package:fokus/model/ui/gamification/ui_currency.dart';
 import 'package:fokus/model/ui/user/ui_caregiver.dart';
 
 class CaregiverCurrenciesCubit extends StatefulCubit {
@@ -20,22 +20,22 @@ class CaregiverCurrenciesCubit extends StatefulCubit {
 	Future doLoadData() async {
     var user = _activeUser();
 		var currencies = await _dataRepository.getCurrencies(user.id!);
-		emit(CaregiverCurrenciesState(currencies: currencies?.map((currency) => UICurrency.fromDBModel(currency)).toList() ?? []));
+		emit(CaregiverCurrenciesState(currencies: currencies ?? []));
   }
 
-	void updateCurrencies(List<UICurrency> currencyList) async {
+	void updateCurrencies(List<Currency> currencyList) async {
 		if (!beginSubmit(CaregiverCurrenciesState(currencies: currencyList)))
 			return;
-    var user = _activeUser() as UICaregiver;
-		_authBloc.add(AuthenticationActiveUserUpdated(UICaregiver.from(user, currencies: [UICurrency(type: CurrencyType.diamond), ...currencyList])));
-		List<Currency> currencies = currencyList.map((currency) => Currency(icon: currency.type, name: currency.title)).toList();
+    var user = activeUser! as Caregiver;
+		_authBloc.add(AuthenticationActiveUserUpdated(UICaregiver.from(UICaregiver.fromDBModel(user), currencies: [Currency(type: CurrencyType.diamond), ...currencyList])));
+		List<Currency> currencies = currencyList.map((currency) => Currency(type: currency.type, name: currency.name)).toList();
 		await _dataRepository.updateCurrencies(user.id!, currencies);
 		emit(CaregiverCurrenciesState(currencies: currencyList, submissionState: DataSubmissionState.submissionSuccess));
 	}
 }
 
 class CaregiverCurrenciesState extends StatefulState {
-	final List<UICurrency> currencies;
+	final List<Currency> currencies;
 
 	CaregiverCurrenciesState({required this.currencies, DataSubmissionState? submissionState}) : super.loaded(submissionState);
 

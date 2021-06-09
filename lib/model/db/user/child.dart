@@ -24,7 +24,7 @@ class Child extends User {
 	    id: json['_id'],
       badges: json['badges'] != null ? (json['badges'] as List).map((i) => ChildBadge.fromJson(i)!).toList() : [],
       permissions: json['permissions'] != null ? (json['badges'] as List).map((i) => ChildPermission.values[i]).toList() : [],
-      points: json['points'] != null ? (json['points'] as List).map((i) => Points.fromJson(i)!).toList() : [],
+      points: json['points'] != null ? (json['points'] as List).map((i) => Points.fromJson(i)).toList() : [],
       rewards: json['rewards'] != null ? (json['rewards'] as List).map((i) => ChildReward.fromJson(i)!).toList() : [],
     )..assignFromJson(json)) : null;
   }

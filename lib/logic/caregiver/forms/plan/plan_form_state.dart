@@ -16,7 +16,7 @@ class PlanFormInitial extends PlanFormState {
 
 class PlanFormDataLoadSuccess extends PlanFormState {
 	final List<UIChild> children;
-	final List<UICurrency> currencies;
+	final List<Currency> currencies;
 	final PlanFormModel? planForm;
 
 	PlanFormDataLoadSuccess(PlanFormState current, this.children, this.currencies, [this.planForm]) : super(current.formType, current.planId);

@@ -1,28 +1,30 @@
+import 'package:equatable/equatable.dart';
 import 'package:fokus/model/currency_type.dart';
 import 'package:fokus/utils/definitions.dart';
-import 'package:meta/meta.dart';
 
-class Currency {
-	String? name;
-	CurrencyType? icon;
+class Currency extends Equatable {
+  final String? name;
+  final CurrencyType? type;
 
-	Currency({this.icon, this.name});
+  Currency({this.type, String? name}) : name = (type == CurrencyType.diamond ? 'points' : name);
 
-	static Currency? fromJson(Json? json) =>
-			json != null ? (Currency()..assignFromJson(json)) : null;
+  Currency.fromJson(Json json)
+      : this(type: CurrencyType.values[json['icon']], name: json['name']);
 
-	@protected
-	void assignFromJson(Json json) {
-		icon = CurrencyType.values[json['icon']];
-		name = json['name'];
-	}
+  Currency copyWith({String? name, CurrencyType? icon}) {
+    return Currency(
+      name: name ?? this.name,
+      type: icon ?? this.type,
+    );
+  }
 
-	Json toJson() {
-		final Json data = new Json();
-		if (this.icon != null)
-      data['icon'] = this.icon!.index;
-		if (this.name != null)
-      data['name'] = this.name;
-		return data;
-	}
+  Json toJson() {
+    final Json data = new Json();
+    if (this.type != null) data['icon'] = this.type!.index;
+    if (this.name != null) data['name'] = this.name;
+    return data;
+  }
+
+  @override
+  List<Object?> get props => [name, type];
 }

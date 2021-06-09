@@ -78,7 +78,8 @@ class TasksEvaluationCubit extends StatefulCubit {
 			bool hasPoints = report.task.points != null;
 			if(hasPoints)
 				pointsAwarded =  getPointsAwarded(report.task.points!.quantity!, report.ratingMark.value!);
-			updates.add(_dataRepository.updateTaskInstanceFields(report.task.id!, state: TaskState.evaluated, rating: report.ratingMark.value, pointsAwarded: pointsAwarded));
+			updates.add(_dataRepository.updateTaskInstanceFields(report.task.id!, state: TaskState.evaluated,
+					rating: report.ratingMark.value, pointsAwarded: pointsAwarded, ratingComment: report.ratingComment));
 			if (hasPoints) {
 			  var child = await _dataRepository.getUser(id: report.child.id!) as Child;
 			  List<Points> points = (child.points ??= []);

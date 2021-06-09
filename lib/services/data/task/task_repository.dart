@@ -19,7 +19,8 @@ abstract class TaskRepository {
 	Future updateTasks(List<Task> tasks);
 	Future createTaskInstances(List<TaskInstance> taskInstances);
 	Future updateTaskInstance(TaskInstance taskInstance);
-	Future updateTaskInstanceFields(ObjectId taskInstanceId, {TaskState? state, List<DateSpan<TimeDate>>? duration, List<DateSpan<TimeDate>>? breaks, bool? isCompleted, int? rating, int? pointsAwarded, List<MapEntry<String, bool>>? subtasks});
+	Future updateTaskInstanceFields(ObjectId taskInstanceId, {TaskState? state, List<DateSpan<TimeDate>>? duration, List<DateSpan<TimeDate>>? breaks,
+		bool? isCompleted, int? rating, int? pointsAwarded, List<MapEntry<String, bool>>? subtasks, String? ratingComment});
 
 	Future removeTasks({required List<ObjectId> planIds});
 	Future removeTaskInstances({List<ObjectId>? tasksIds, List<ObjectId>? planInstancesIds});

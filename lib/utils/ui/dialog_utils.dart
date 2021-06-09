@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fokus/model/db/gamification/badge.dart';
 import 'package:round_spot/round_spot.dart' as round_spot;
 
 import 'package:fokus/logic/caregiver/caregiver_friends_cubit.dart';
@@ -9,7 +10,6 @@ import 'package:fokus/logic/common/settings/account_delete/account_delete_cubit.
 import 'package:fokus/logic/common/settings/name_change/name_change_cubit.dart';
 import 'package:fokus/logic/common/settings/password_change/password_change_cubit.dart';
 import 'package:fokus/model/ui/app_popup.dart';
-import 'package:fokus/model/ui/gamification/ui_badge.dart';
 import 'package:fokus/model/ui/gamification/ui_reward.dart';
 import 'package:fokus/model/ui/user/ui_user.dart';
 
@@ -208,7 +208,7 @@ void showRewardDialog(BuildContext context, UIReward reward, {void Function()? c
 	);
 }
 
-void showBadgeDialog(BuildContext context, UIBadge badge, {bool showHeader = true}) {
+void showBadgeDialog(BuildContext context, Badge badge, {bool showHeader = true}) {
 	showDialog(
 		context: context,
 		builder: (context) => round_spot.Detector(

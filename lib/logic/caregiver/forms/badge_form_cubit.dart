@@ -4,7 +4,6 @@ import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
 import 'package:fokus/model/db/gamification/badge.dart';
 import 'package:fokus/model/db/user/caregiver.dart';
 import 'package:fokus/model/ui/form/badge_form_model.dart';
-import 'package:fokus/model/ui/gamification/ui_badge.dart';
 import 'package:fokus/model/ui/user/ui_caregiver.dart';
 import 'package:fokus/services/analytics_service.dart';
 import 'package:get_it/get_it.dart';
@@ -25,7 +24,7 @@ class BadgeFormCubit extends StatefulCubit {
 		var badge = Badge.fromBadgeForm(badgeForm);
 		await _dataRepository.createBadge(user.id!, badge);
 		_analyticsService.logBadgeCreated(badge);
-		_authBloc.add(AuthenticationActiveUserUpdated(UICaregiver.from(user, badges: user.badges!..add(UIBadge.fromDBModel(badge)))));
+		_authBloc.add(AuthenticationActiveUserUpdated(UICaregiver.from(user, badges: user.badges!..add(badge))));
     emit(state.submissionSuccess());
   }
 

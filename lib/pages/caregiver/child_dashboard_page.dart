@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fokus/model/db/gamification/badge.dart';
 import 'package:round_spot/round_spot.dart' as round_spot;
 import 'package:intl/intl.dart';
 import 'package:fokus_auth/fokus_auth.dart';
@@ -14,7 +15,6 @@ import 'package:fokus/logic/caregiver/child_dashboard/dashboard_rewards_cubit.da
 import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
 import 'package:fokus/model/navigation/child_dashboard_params.dart';
 import 'package:fokus/model/ui/app_page.dart';
-import 'package:fokus/model/ui/gamification/ui_badge.dart';
 import 'package:fokus/model/ui/plan/ui_plan.dart';
 import 'package:fokus/model/ui/ui_button.dart';
 import 'package:fokus/model/ui/user/ui_child.dart';
@@ -201,7 +201,7 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 					content: _buildPlanSelect,
 					model: (tabState) => tabState.availablePlans
 			);
-		return _buildSelect<UIBadge, DashboardAchievementsCubit, DashboardAchievementsState>(
+		return _buildSelect<Badge, DashboardAchievementsCubit, DashboardAchievementsState>(
 				content: _buildBadgeSelect,
 				model: (tabState) => tabState.availableBadges
 		);
@@ -295,8 +295,8 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 		);
 	}
 
-	Widget _buildBadgeSelect([List<UIBadge> availableBadges = const []]) {
-		return _buildFloatingButtonPicker<UIBadge>(
+	Widget _buildBadgeSelect([List<Badge> availableBadges = const []]) {
+		return _buildFloatingButtonPicker<Badge>(
 			buttonLabel: AppLocales.of(context).translate('$_pageKey.header.assignBadgeButton'),
 			buttonIcon: Icons.star,
 			disabledDialogTitle: AppLocales.of(context).translate('$_pageKey.header.assignBadgeButton'),
@@ -304,7 +304,7 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 			pickerTitle: AppLocales.of(context).translate('$_pageKey.header.assignBadgeTitle'),
 			pickedValues: [],
 			options: availableBadges,
-			onChange: (List<UIBadge>? selected) => context.read<DashboardAchievementsCubit>().assignBadges(selected ?? []),
+			onChange: (List<Badge>? selected) => context.read<DashboardAchievementsCubit>().assignBadges(selected ?? []),
 			getName: (badge) => badge.name,
 			builder: (context, selectState, choice) {
 				return Theme(

@@ -1,8 +1,8 @@
 import 'package:bson/bson.dart';
+import 'package:fokus/model/db/gamification/child_badge.dart';
 import 'package:fokus/model/db/gamification/points.dart';
 import 'package:fokus/model/db/user/child.dart';
 import 'package:fokus/model/db/user/user_role.dart';
-import 'package:fokus/model/ui/gamification/ui_badge.dart';
 import 'package:fokus/model/ui/gamification/ui_reward.dart';
 import 'package:fokus/model/ui/user/ui_user.dart';
 
@@ -11,7 +11,7 @@ class UIChild extends UIUser {
 	final bool? hasActivePlan;
 	final List<Points>? points;
 	final List<UIChildReward>? rewards;
-	final List<UIChildBadge>? badges;
+	final List<ChildBadge>? badges;
 
   UIChild(ObjectId? id, String? name, {this.todayPlanCount = 0, this.hasActivePlan = false, List<ObjectId>? connections = const [],
 	    this.points = const [], this.rewards = const [], this.badges = const [], int? avatar = -1}) :
@@ -19,10 +19,10 @@ class UIChild extends UIUser {
   UIChild.fromDBModel(Child child, {this.todayPlanCount = 0, this.hasActivePlan = false}):
 			points = child.points ?? [],
 			rewards = child.rewards != null ? child.rewards!.map((reward) => UIChildReward.fromDBModel(reward)).toList() : [],
-			badges = child.badges != null ? child.badges!.map((badge) => UIChildBadge.fromDBModel(badge)).toList() : [],
+			badges = child.badges ?? [],
 			super.fromDBModel(child);
 
-	UIChild copyWith({List<Points>? points, List<UIChildReward>? rewards, List<UIChildBadge>? badges}) {
+	UIChild copyWith({List<Points>? points, List<UIChildReward>? rewards, List<ChildBadge>? badges}) {
 		return UIChild(
 			id,
 			name,
@@ -36,7 +36,7 @@ class UIChild extends UIUser {
 		);
 	}
 
-	UIChild.from(UIChild original, {String? locale, String? name, List<UIChildBadge>? badges, List<Points>? points}) :
+	UIChild.from(UIChild original, {String? locale, String? name, List<ChildBadge>? badges, List<Points>? points}) :
 			todayPlanCount = original.todayPlanCount,
 			hasActivePlan = original.hasActivePlan,
 			points = points ?? original.points,

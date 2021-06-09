@@ -1,25 +1,16 @@
+import 'package:equatable/equatable.dart';
 import 'package:fokus/model/ui/form/badge_form_model.dart';
 import 'package:fokus/utils/definitions.dart';
-import 'package:meta/meta.dart';
 
-class Badge {
-  String? name;
-  String? description;
-  int? icon;
+class Badge extends Equatable {
+  final String? name;
+  final String? description;
+  final int? icon;
 
   Badge({this.name, this.description, this.icon});
 	Badge.fromBadgeForm(BadgeFormModel badge) : this(name: badge.name, description: badge.description, icon: badge.icon);
 
-  static Badge? fromJson(Json? json) {
-    return json != null ? (Badge()..assignFromJson(json)) : null;
-  }
-
-  @protected
-  void assignFromJson(Json json) {
-	  icon = json['icon'];
-	  name = json['name'];
-	  description = json['description'];
-  }
+  Badge.fromJson(Json json) : this(name: json['name'], icon: json['icon'], description: json['description']);
 
   Json toJson() {
     final Json data = new Json();
@@ -31,4 +22,7 @@ class Badge {
       data['description'] = this.description;
     return data;
   }
+
+  @override
+  List<Object?> get props => [name, description, icon];
 }

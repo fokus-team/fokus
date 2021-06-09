@@ -23,7 +23,7 @@ class Caregiver extends User {
     return json != null ? (Caregiver._(
 	    id: json['_id'],
       friends: json['friends'] != null ? new List<ObjectId>.from(json['friends']) : [],
-	    badges: json['badges'] != null ? (json['badges'] as List).map((i) => Badge.fromJson(i)!).toList() : [],
+	    badges: json['badges'] != null ? (json['badges'] as List).map((i) => Badge.fromJson(i)).toList() : [],
 	    currencies: json['currencies'] != null ? (json['currencies'] as List).map((i) => Currency.fromJson(i)).toList() : [],
 	    authenticationId: json['authenticationID'],
     )..assignFromJson(json)) : null;

@@ -6,7 +6,6 @@ import 'package:fokus/model/ui/user/ui_caregiver.dart';
 import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
 import 'package:fokus/services/data/data_repository.dart';
 import 'package:fokus/model/db/gamification/badge.dart';
-import 'package:fokus/model/ui/gamification/ui_badge.dart';
 import 'package:fokus/model/ui/gamification/ui_reward.dart';
 
 class CaregiverAwardsCubit extends StatefulCubit {
@@ -36,14 +35,14 @@ class CaregiverAwardsCubit extends StatefulCubit {
 		));
 	}
 
-	void removeBadge(UIBadge badge) async {
+	void removeBadge(Badge badge) async {
 		if (!beginSubmit())
 			return;
 		UICaregiver user = UICaregiver.fromDBModel(activeUser as Caregiver);
 		Badge model = Badge(name: badge.name, description: badge.description, icon: badge.icon);
 		await _dataRepository.removeBadge(user.id!, model);
 		emit(BadgeRemovedState(
-			badges: List.from(user.badges!..remove(UIBadge.fromDBModel(model))),
+			badges: List.from(user.badges!..remove(model)),
 			rewards: (state as CaregiverAwardsState).rewards
 		));
 	}
@@ -51,7 +50,7 @@ class CaregiverAwardsCubit extends StatefulCubit {
 
 class CaregiverAwardsState extends StatefulState {
 	final List<UIReward> rewards;
-	final List<UIBadge> badges;
+	final List<Badge> badges;
 
 	CaregiverAwardsState({required this.rewards, required this.badges, DataSubmissionState? submissionState}) : super.loaded(submissionState);
 
@@ -63,11 +62,11 @@ class CaregiverAwardsState extends StatefulState {
 }
 
 class RewardRemovedState extends CaregiverAwardsState {
-	RewardRemovedState({required List<UIReward> rewards, required List<UIBadge> badges})
+	RewardRemovedState({required List<UIReward> rewards, required List<Badge> badges})
 			: super(rewards: rewards, badges: badges, submissionState: DataSubmissionState.submissionSuccess);
 }
 class BadgeRemovedState extends CaregiverAwardsState {
-	BadgeRemovedState({required List<UIReward> rewards, required List<UIBadge> badges})
+	BadgeRemovedState({required List<UIReward> rewards, required List<Badge> badges})
 			: super(rewards: rewards, badges: badges, submissionState: DataSubmissionState.submissionSuccess);
 }
 

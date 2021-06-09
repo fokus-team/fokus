@@ -82,7 +82,7 @@ extension LogReward on Reward {
 	Json get logRecord => {
 		'id': id?.toHexString(),
 		'cost': '${cost?.quantity}',
-		'currency': '${cost?.icon?.index}',
+		'currency': '${cost?.type?.index}',
 		'limit': '$limit'
 	};
 }

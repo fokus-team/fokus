@@ -143,7 +143,7 @@ class _ReportFormPageState extends State<ReportFormPage> {
 		return AttributeChip.withCurrency(
 			currencyType: widget.report.task.points!.type!,
 			content: '$points / $totalPoints',
-			tooltip: widget.report.task.points!.title
+			tooltip: widget.report.task.points!.name
 		);
 	}
 

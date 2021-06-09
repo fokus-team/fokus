@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fokus/model/currency_type.dart';
-import 'package:fokus/model/ui/gamification/ui_currency.dart';
+import 'package:fokus/model/db/gamification/currency.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/ui/app_paths.dart';
 import 'package:fokus/utils/ui/form_config.dart';
@@ -13,15 +13,15 @@ import 'package:smart_select/smart_select.dart';
 
 class PointPickerField extends StatefulWidget {
 	final TextEditingController controller;
-	final UICurrency pickedCurrency;
-	final List<UICurrency> currencies;
+	final Currency pickedCurrency;
+	final List<Currency> currencies;
 	final bool loading;
 	final bool canBeEmpty;
 	final int? minPoints;
 	final int? maxPoints;
 
 	final void Function(String)? pointValueSetter;
-	final void Function(UICurrency)? pointCurrencySetter;
+	final void Function(Currency)? pointCurrencySetter;
 
 	final String labelValueText;
 	final String helperValueText;
@@ -29,8 +29,8 @@ class PointPickerField extends StatefulWidget {
 
 	PointPickerField({
 		required this.controller,
-		required UICurrency? pickedCurrency,
-		required List<UICurrency>? currencies,
+		required Currency? pickedCurrency,
+		required List<Currency>? currencies,
 		this.loading = false,
 		this.canBeEmpty = true,
 		this.minPoints = 0,
@@ -40,7 +40,7 @@ class PointPickerField extends StatefulWidget {
 		required this.labelValueText,
 		required this.helperValueText,
 		required this.labelCurrencyText
-	}) : pickedCurrency = pickedCurrency ?? UICurrency(type: CurrencyType.diamond), currencies = currencies ?? [];
+	}) : pickedCurrency = pickedCurrency ?? Currency(type: CurrencyType.diamond), currencies = currencies ?? [];
 
 	@override
   State<StatefulWidget> createState() => new _PointPickerFieldState();
@@ -48,17 +48,17 @@ class PointPickerField extends StatefulWidget {
 }
 
 class _PointPickerFieldState extends State<PointPickerField> {
-	late UICurrency pickedCurrency;
+	late Currency pickedCurrency;
 
 	@override
   void initState() {
-		pickedCurrency = UICurrency.from(widget.pickedCurrency);
+		pickedCurrency = widget.pickedCurrency.copyWith();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-		return SmartSelect<UICurrency>.single(
+		return SmartSelect<Currency>.single(
 			tileBuilder: (context, selectState) {
 				return Padding(
 					padding: EdgeInsets.only(top: 0.0, bottom: 0.0, left: 20.0, right: 16.0),
@@ -144,14 +144,14 @@ class _PointPickerFieldState extends State<PointPickerField> {
 			title: widget.labelCurrencyText,
 			selectedValue: widget.pickedCurrency,
 			choiceItems: [
-				for(UICurrency element in widget.currencies)
+				for(Currency element in widget.currencies)
 					S2Choice(
-						title: element.getName(),
+						title: getCurrencyName(element),
 						value: element
 					)
 			],
 			choiceBuilder: (context, selectState, choice) {
-				return RadioListTile<UICurrency>(
+				return RadioListTile<Currency>(
 					value: choice.value,
 					groupValue: pickedCurrency,
 					onChanged: (val) {
@@ -166,7 +166,7 @@ class _PointPickerFieldState extends State<PointPickerField> {
 								padding: EdgeInsets.only(right: 6.0),
 								child: SvgPicture.asset(getIconPath(choice.value.type!), width: 30, fit: BoxFit.cover)
 							),
-							Text(choice.value.getName(), style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.currencyColor[choice.value.type]))
+							Text(getCurrencyName(choice.value), style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.currencyColor[choice.value.type]))
 						]
 					)
 				);
@@ -181,6 +181,8 @@ class _PointPickerFieldState extends State<PointPickerField> {
 			onChange: (selected) => widget.pointCurrencySetter!(selected.value!)
 		);
   }
+  
+	String getCurrencyName(Currency currency) => (currency.type == CurrencyType.diamond ? AppLocales.instance.translate(currency.name!) : currency.name) ?? '';
 
   String getIconPath(CurrencyType type) => AssetType.currencies.getPath(type.index);
 }

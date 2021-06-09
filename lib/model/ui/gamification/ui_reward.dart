@@ -1,23 +1,22 @@
 import 'package:equatable/equatable.dart';
 import 'package:fokus/model/db/date/time_date.dart';
 import 'package:fokus/model/db/gamification/child_reward.dart';
+import 'package:fokus/model/db/gamification/points.dart';
 import 'package:fokus/model/db/gamification/reward.dart';
 import 'package:mongo_dart/mongo_dart.dart';
-
-import 'ui_points.dart';
 
 class UIReward extends Equatable {
 	final ObjectId? id;
 	final String? name;
 	final int? limit;
-	final UIPoints? cost;
+	final Points? cost;
 	final int? icon;
 
 	UIReward({this.id, this.name, this.limit = 0, this.cost, this.icon = 0});
 	UIReward.fromDBModel(Reward reward) : this(id: reward.id, name: reward.name, limit: reward.limit, icon: reward.icon,
-			cost: reward.cost != null ? UIPoints.fromDBModel(reward.cost!) : null);
+			cost: reward.cost);
 
-	UIReward copyWith({String? name, int? limit, UIPoints? cost, int? icon}) {
+	UIReward copyWith({String? name, int? limit, Points? cost, int? icon}) {
 		return UIReward(
 			name: name ?? this.name,
 			limit: limit ?? this.limit,
@@ -34,11 +33,11 @@ class UIReward extends Equatable {
 class UIChildReward extends UIReward {
 	final TimeDate? date;
 
-	UIChildReward({ObjectId? id, String? name, int? limit = 0, UIPoints? cost, int? icon = 0, this.date}) : super(id: id, name: name, limit: limit, cost: cost, icon: icon);
+	UIChildReward({ObjectId? id, String? name, int? limit = 0, Points? cost, int? icon = 0, this.date}) : super(id: id, name: name, limit: limit, cost: cost, icon: icon);
 	UIChildReward.fromDBModel(ChildReward reward) : this(id: reward.id, name: reward.name, limit: 0, icon: reward.icon, date: reward.date,
-			cost: reward.cost != null ? UIPoints.fromDBModel(reward.cost!) : null);
+			cost: reward.cost);
 	
-	UIChildReward copyWith({ObjectId? id, String? name, int? limit, UIPoints? cost, int? icon, TimeDate? date}) {
+	UIChildReward copyWith({ObjectId? id, String? name, int? limit, Points? cost, int? icon, TimeDate? date}) {
 		return UIChildReward(
 			id: id ?? this.id,
 			name: name ?? this.name,

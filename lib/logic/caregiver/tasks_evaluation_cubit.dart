@@ -4,7 +4,6 @@ import 'package:flutter/widgets.dart';
 import 'package:fokus/model/db/user/caregiver.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mongo_dart/mongo_dart.dart';
-import 'package:collection/collection.dart';
 
 import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
 import 'package:fokus/model/db/gamification/points.dart';
@@ -76,17 +75,17 @@ class TasksEvaluationCubit extends StatefulCubit {
 			int? pointsAwarded;
 			bool hasPoints = report.task.points != null;
 			if(hasPoints)
-				pointsAwarded =  getPointsAwarded(report.task.points!.quantity!, report.ratingMark.value!);
+				pointsAwarded = getPointsAwarded(report.task.points!.quantity!, report.ratingMark.value!);
 			updates.add(_dataRepository.updateTaskInstanceFields(report.task.id!, state: TaskState.evaluated,
 					rating: report.ratingMark.value, pointsAwarded: pointsAwarded, ratingComment: report.ratingComment));
 			if (hasPoints) {
 			  var child = await _dataRepository.getUser(id: report.child.id!) as Child;
 			  List<Points> points = (child.points ??= []);
-			  var presentType = points.firstWhereOrNull((element) => element.icon == report.task.points!.type);
-			  if(presentType != null)
-				  presentType.quantity = presentType.quantity! + pointsAwarded!;
+			  var pointIndex = points.indexWhere((element) => element.type == report.task.points!.type);
+			  if(pointIndex > -1)
+			  	points[pointIndex] = points[pointIndex].copyWith(quantity: points[pointIndex].quantity! + pointsAwarded!);
 		    else
-				  points.add(Points.fromUICurrency(report.task.points!, pointsAwarded!, creator: report.task.points?.createdBy));
+				  points.add(Points.fromCurrency(currency: report.task.points!, quantity: pointsAwarded!, createdBy: report.task.points?.createdBy));
 				updates.add(_dataRepository.updateUser(child.id!, points: points));
 			}
 			_analyticsService.logTaskApproved(report);

@@ -2,12 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_picker/flutter_picker.dart';
+import 'package:fokus/model/db/gamification/currency.dart';
 import 'package:round_spot/round_spot.dart' as round_spot;
 
 import 'package:fokus/model/currency_type.dart';
 import 'package:fokus/model/navigation/task_form_params.dart';
 import 'package:fokus/model/ui/form/task_form_model.dart';
-import 'package:fokus/model/ui/gamification/ui_currency.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/ui/dialog_utils.dart';
 import 'package:fokus/utils/ui/form_config.dart';
@@ -55,7 +55,7 @@ class _TaskFormPageState extends State<TaskFormPage> {
 		taskFormKey = GlobalKey<FormState>();
 		task = TaskFormModel(
 				key: ValueKey(DateTime.now().toString()),
-				pointCurrency: UICurrency(type: CurrencyType.diamond)
+				pointCurrency: Currency(type: CurrencyType.diamond)
 		);
 
 		if (!formModeIsCreate())
@@ -405,7 +405,7 @@ class _TaskFormPageState extends State<TaskFormPage> {
 	}
 
 	Widget getPointsFields(
-			{List<UICurrency> currencies = const [], bool loading = false}) {
+			{List<Currency> currencies = const [], bool loading = false}) {
 		return PointPickerField(
 			controller: _pointsController,
 			pickedCurrency: task.pointCurrency,

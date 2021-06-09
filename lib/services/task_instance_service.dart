@@ -2,7 +2,6 @@ import 'package:fokus/model/db/plan/plan_instance.dart';
 import 'package:fokus/model/db/plan/task.dart';
 import 'package:fokus/model/db/plan/task_instance.dart';
 import 'package:fokus/model/db/plan/task_status.dart';
-import 'package:fokus/model/ui/gamification/ui_points.dart';
 import 'package:fokus/model/ui/task/ui_task_instance.dart';
 import 'package:fokus/utils/duration_utils.dart';
 import 'package:get_it/get_it.dart';
@@ -21,9 +20,8 @@ class TaskInstanceService {
 			if(taskUiTypes[i].inProgress)
 				elapsedTimePassed = () => taskUiTypes[i] == TaskUIType.currentlyPerformed ? sumDurations(taskInstances[i].duration).inSeconds : sumDurations(taskInstances[i].breaks).inSeconds;
 			else elapsedTimePassed = () => 0;
-			var points = task!.points != null ? UIPoints(quantity: task.points!.quantity, type: task.points!.icon!, title: task.points!.name) : null;
-			uiTaskInstances.add(UITaskInstance.listFromDBModel(taskInstance: taskInstances[i], name: task.name!,
-					description: task.description, points: points, type: taskUiTypes[i], elapsedTimePassed: elapsedTimePassed));
+			uiTaskInstances.add(UITaskInstance.listFromDBModel(taskInstance: taskInstances[i], name: task!.name!,
+					description: task.description, points: task.points, type: taskUiTypes[i], elapsedTimePassed: elapsedTimePassed));
 		}
 		return uiTaskInstances;
 	}

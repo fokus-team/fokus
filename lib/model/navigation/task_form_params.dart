@@ -1,9 +1,9 @@
+import 'package:fokus/model/db/gamification/currency.dart';
 import 'package:fokus/model/ui/form/task_form_model.dart';
-import 'package:fokus/model/ui/gamification/ui_currency.dart';
 
 class TaskFormParams {
 	final TaskFormModel? task;
-	final List<UICurrency> currencies;
+	final List<Currency> currencies;
 	final Future<void> Function(TaskFormModel)? createTaskCallback;
 	final Future<void> Function()? removeTaskCallback;
 	final Future<void> Function(TaskFormModel)? saveTaskCallback;

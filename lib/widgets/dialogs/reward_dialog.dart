@@ -92,7 +92,7 @@ class _RewardDialogState extends State<RewardDialog> with SingleTickerProviderSt
 	                AttributeChip.withCurrency(
 	                  currencyType: widget.reward.cost!.type!,
 	                  content: widget.reward.cost!.quantity.toString(),
-	                  tooltip: widget.reward.cost!.title
+	                  tooltip: widget.reward.cost!.name
 	                )
 	              ]
 	            ),

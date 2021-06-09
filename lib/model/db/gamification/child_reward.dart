@@ -16,7 +16,7 @@ class ChildReward {
     return json != null ? ChildReward(
       id: json['_id'],
       name: json['name'],
-      cost: Points.fromJson(json['cost']),
+      cost: json['cost'] != null ? Points.fromJson(json['cost']) : null,
       date: TimeDate.parseDBDate(json['date']),
       icon: json['icon'],
     ) : null;

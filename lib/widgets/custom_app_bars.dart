@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
+import 'package:fokus/model/db/gamification/points.dart';
 
-import 'package:fokus/model/ui/gamification/ui_points.dart';
 import 'package:fokus/model/ui/user/ui_caregiver.dart';
 import 'package:fokus/model/ui/user/ui_child.dart';
 import 'package:fokus/services/app_locales.dart';
@@ -196,7 +196,7 @@ class CustomContentAppBar extends StatelessWidget {
 }
 
 class CustomChildAppBar extends StatefulWidget {
-	final List<UIPoints>? points;
+	final List<Points>? points;
 
 	CustomChildAppBar({this.points});
 
@@ -214,7 +214,7 @@ class _CustomChildAppBarState extends State<CustomChildAppBar> {
 				BlocBuilder<AuthenticationBloc, AuthenticationState>(
 					buildWhen: (oldState, newState) => newState.signedIn && getPoints(oldState) != getPoints(newState),
 					builder: (context, state) {
-						List<UIPoints> points = getPoints(state) ?? [];
+						List<Points> points = getPoints(state) ?? [];
 						if(points.isNotEmpty)
 							return Container(
 								width: double.infinity,
@@ -240,8 +240,8 @@ class _CustomChildAppBarState extends State<CustomChildAppBar> {
 												'${AppLocales.of(context).translate('page.childSection.panel.header.myPoints')}: ',
 												style: Theme.of(context).textTheme.button?.copyWith(color: AppColors.darkTextColor)
 											),
-										for (UIPoints pointCurrency in points)
-											AttributeChip.withCurrency(content: '${pointCurrency.quantity}', currencyType: pointCurrency.type!, tooltip: pointCurrency.title)
+										for (Points pointCurrency in points)
+											AttributeChip.withCurrency(content: '${pointCurrency.quantity}', currencyType: pointCurrency.type!, tooltip: pointCurrency.name)
 									]
 								)
 							);

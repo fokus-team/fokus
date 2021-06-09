@@ -4,7 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:fokus/logic/caregiver/caregiver_currencies_cubit.dart';
 import 'package:fokus/model/currency_type.dart';
-import 'package:fokus/model/ui/gamification/ui_currency.dart';
+import 'package:fokus/model/db/gamification/currency.dart';
 import 'package:fokus/utils/ui/app_paths.dart';
 import 'package:fokus/utils/ui/dialog_utils.dart';
 import 'package:fokus/utils/ui/icon_sets.dart';
@@ -23,14 +23,15 @@ class CaregiverCurrenciesPage extends StatefulWidget {
 class _CaregiverCurrenciesPageState extends State<CaregiverCurrenciesPage> {
 	static const String _pageKey = 'page.caregiverSection.currencies';
 	late GlobalKey<FormState>? currenciesKey;
-	Map<CurrencyType, String?> currencyList = Map<CurrencyType, String?>();
+	late Map<CurrencyType, String> currencyList;
 	bool isDataChanged = false;
 
 	@override
   void initState() {
-		currencyList[CurrencyType.emerald] = null;
-		currencyList[CurrencyType.ruby] = null;
-		currencyList[CurrencyType.amethyst] = null;
+		currencyList = Map<CurrencyType, String>();
+		currencyList[CurrencyType.emerald] = '';
+		currencyList[CurrencyType.ruby] = '';
+		currencyList[CurrencyType.amethyst] = '';
 		currenciesKey = GlobalKey<FormState>();
     super.initState();
   }
@@ -45,8 +46,8 @@ class _CaregiverCurrenciesPageState extends State<CaregiverCurrenciesPage> {
 		return SimpleStatefulBlocBuilder<CaregiverCurrenciesCubit, CaregiverCurrenciesState>(
 			listener: (context, state) {
 				if (state.loaded) {
-					for(UICurrency currency in (state as CaregiverCurrenciesState).currencies)
-						currencyList[currency.type!] = currency.title;
+					for(Currency currency in (state as CaregiverCurrenciesState).currencies)
+						currencyList[currency.type!] = currency.name!;
 				}
 				if (state.submitted)
 					showSuccessSnackbar(context, '$_pageKey.content.currenciesUpdatedText');
@@ -74,7 +75,7 @@ class _CaregiverCurrenciesPageState extends State<CaregiverCurrenciesPage> {
 									child: Form(
 										key: currenciesKey,
 										child: Material(
-											child: buildCurrenciesFields(context, state.currencies)
+											child: buildCurrenciesFields(context)
 										)
 									)
 								),
@@ -94,8 +95,8 @@ class _CaregiverCurrenciesPageState extends State<CaregiverCurrenciesPage> {
 		if(currenciesKey!.currentState!.validate()) {
 			BlocProvider.of<CaregiverCurrenciesCubit>(context).updateCurrencies(
 				currencyList.entries
-					.where((element) => element.value != null)
-					.map((currency) => UICurrency(type: currency.key, title: currency.value))
+					.where((element) => element.value.isNotEmpty)
+					.map((currency) => Currency(type: currency.key, name: currency.value))
 					.toList()
 			);
 		}
@@ -123,9 +124,9 @@ class _CaregiverCurrenciesPageState extends State<CaregiverCurrenciesPage> {
 		);
 	}
 
-	Widget buildCurrencyTile(CurrencyType type, String? title) {
+	Widget buildCurrencyTile(CurrencyType type, String title) {
 		return ListTile(
-			title: Text(title == null ? AppLocales.of(context).translate('$_pageKey.content.currencyNotUsed') : title),
+			title: Text(title.isEmpty ? AppLocales.of(context).translate('$_pageKey.content.currencyNotUsed') : title),
 			subtitle: Text(AppLocales.of(context).translate('$_pageKey.content.currencies.${type.toString().split('.')[1]}')),
 			leading: Padding(
 				padding: EdgeInsets.only(left: 10.0, top: 4.0),
@@ -134,7 +135,7 @@ class _CaregiverCurrenciesPageState extends State<CaregiverCurrenciesPage> {
 					backgroundColor: AppColors.currencyColor[type]?.withAlpha(50)
 				)
 			),
-			enabled: title != null,
+			enabled: title.isNotEmpty,
 			trailing: type != CurrencyType.diamond ?
 				Row(
 					mainAxisSize: MainAxisSize.min,
@@ -145,7 +146,7 @@ class _CaregiverCurrenciesPageState extends State<CaregiverCurrenciesPage> {
 								showCurrencyEditDialog(
 									context,
 									(val) => setState(() {
-										currencyList[type] = val;
+										currencyList[type] = val!;
 										isDataChanged = true;
 									}),
 									initialValue: currencyList[type]
@@ -154,7 +155,7 @@ class _CaregiverCurrenciesPageState extends State<CaregiverCurrenciesPage> {
 							tooltip: AppLocales.of(context).translate('actions.edit'),
 							splashRadius: 28
 						),
-						if(title != null)
+						if(title.isNotEmpty)
 							IconButton(
 								icon: Icon(Icons.remove_circle, color: Colors.grey[600]),
 								onPressed: () => {
@@ -164,7 +165,7 @@ class _CaregiverCurrenciesPageState extends State<CaregiverCurrenciesPage> {
 											title: AppLocales.of(context).translate('actions.clear'),
 											content: AppLocales.of(context).translate('$_pageKey.content.clearCurrencyText'),
 											confirmAction: () => setState(() {
-												currencyList[type] = null;
+												currencyList[type] = '';
 												isDataChanged = true;
 												Navigator.of(context).pop();
 											})
@@ -180,7 +181,7 @@ class _CaregiverCurrenciesPageState extends State<CaregiverCurrenciesPage> {
 		);
 	}
 
-	Widget buildCurrenciesFields(BuildContext context, List<UICurrency> currencies) {
+	Widget buildCurrenciesFields(BuildContext context) {
 		return ListView(
 			shrinkWrap: true,
 			children: <Widget>[

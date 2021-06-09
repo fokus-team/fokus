@@ -1,15 +1,15 @@
 import 'package:bson/bson.dart';
+import 'package:fokus/model/db/gamification/points.dart';
 import 'package:fokus/model/db/user/child.dart';
 import 'package:fokus/model/db/user/user_role.dart';
 import 'package:fokus/model/ui/gamification/ui_badge.dart';
-import 'package:fokus/model/ui/gamification/ui_points.dart';
 import 'package:fokus/model/ui/gamification/ui_reward.dart';
 import 'package:fokus/model/ui/user/ui_user.dart';
 
 class UIChild extends UIUser {
 	final int? todayPlanCount;
 	final bool? hasActivePlan;
-	final List<UIPoints>? points;
+	final List<Points>? points;
 	final List<UIChildReward>? rewards;
 	final List<UIChildBadge>? badges;
 
@@ -17,12 +17,12 @@ class UIChild extends UIUser {
 	    this.points = const [], this.rewards = const [], this.badges = const [], int? avatar = -1}) :
 			super(id, name, role: UserRole.child, avatar: avatar, connections: connections);
   UIChild.fromDBModel(Child child, {this.todayPlanCount = 0, this.hasActivePlan = false}):
-			points = child.points != null ? child.points!.map((points) => UIPoints.fromDBModel(points)).toList() : [],
+			points = child.points ?? [],
 			rewards = child.rewards != null ? child.rewards!.map((reward) => UIChildReward.fromDBModel(reward)).toList() : [],
 			badges = child.badges != null ? child.badges!.map((badge) => UIChildBadge.fromDBModel(badge)).toList() : [],
 			super.fromDBModel(child);
 
-	UIChild copyWith({List<UIPoints>? points, List<UIChildReward>? rewards, List<UIChildBadge>? badges}) {
+	UIChild copyWith({List<Points>? points, List<UIChildReward>? rewards, List<UIChildBadge>? badges}) {
 		return UIChild(
 			id,
 			name,
@@ -36,7 +36,7 @@ class UIChild extends UIUser {
 		);
 	}
 
-	UIChild.from(UIChild original, {String? locale, String? name, List<UIChildBadge>? badges, List<UIPoints>? points}) :
+	UIChild.from(UIChild original, {String? locale, String? name, List<UIChildBadge>? badges, List<Points>? points}) :
 			todayPlanCount = original.todayPlanCount,
 			hasActivePlan = original.hasActivePlan,
 			points = points ?? original.points,

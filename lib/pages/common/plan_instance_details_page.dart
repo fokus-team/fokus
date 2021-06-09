@@ -308,7 +308,7 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
   	return AttributeChip.withCurrency(
 			content: pointsAwarded ? task.status!.pointsAwarded.toString() : task.points!.quantity.toString(),
 			currencyType: task.points!.type!,
-			tooltip: tooltip ?? task.points!.title
+			tooltip: tooltip ?? task.points!.name
 		);
 	}
 

@@ -1,10 +1,10 @@
 import 'package:bson/bson.dart';
 import 'package:fokus/model/db/date/time_date.dart';
 import 'package:fokus/model/db/date_span.dart';
+import 'package:fokus/model/db/gamification/points.dart';
 import 'package:fokus/model/db/plan/task.dart';
 import 'package:fokus/model/db/plan/task_instance.dart';
 import 'package:fokus/model/db/plan/task_status.dart';
-import 'package:fokus/model/ui/gamification/ui_points.dart';
 import 'package:fokus/model/ui/task/ui_task_base.dart';
 import 'package:fokus/services/task_instance_service.dart';
 
@@ -30,7 +30,7 @@ class UITaskInstance extends UITaskBase {
   final List<DateSpan<TimeDate>>? breaks;
   final ObjectId? planInstanceId;
   final ObjectId? taskId;
-  final UIPoints? points;
+  final Points? points;
   final TaskUIType? taskUiType;
   final TaskStatus? status;
   final int Function()? elapsedTimePassed;
@@ -66,7 +66,7 @@ class UITaskInstance extends UITaskBase {
           duration: taskInstance.duration,
           breaks: taskInstance.breaks,
           planInstanceId: taskInstance.planInstanceID!,
-          points: task.points != null ? UIPoints.fromDBModel(task.points!) : null,
+          points: task.points,
           taskId: taskInstance.taskID!,
           taskUiType: TaskInstanceService.getSingleTaskInstanceStatus(
             task: taskInstance,
@@ -80,7 +80,7 @@ class UITaskInstance extends UITaskBase {
     required TaskInstance taskInstance,
     required String name,
 	  String? description,
-    UIPoints? points,
+    Points? points,
     required TaskUIType type,
     int Function()? elapsedTimePassed,
   }) : this(

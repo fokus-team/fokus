@@ -8,7 +8,6 @@ import 'package:mongo_dart/mongo_dart.dart';
 import 'package:fokus/services/data/data_repository.dart';
 import 'package:fokus/model/currency_type.dart';
 import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
-import 'package:fokus/model/ui/gamification/ui_reward.dart';
 import 'package:fokus/model/db/gamification/reward.dart';
 import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/ui/user/ui_caregiver.dart';
@@ -29,15 +28,15 @@ class RewardFormCubit extends StatefulCubit<BaseFormState> {
 	Future doLoadData() async {
 	  UICaregiver user = UICaregiver.fromDBModel(activeUser as Caregiver);
 	  var currencies = user.currencies!;
-	  UIReward reward;
+	  Reward reward;
 	  if (state.formType == AppFormType.create)
-	    reward = UIReward(cost: Points(icon: CurrencyType.diamond), limit: null);
+	    reward = Reward(cost: Points(icon: CurrencyType.diamond), limit: null);
 	  else
-	    reward = UIReward.fromDBModel((await _dataRepository.getReward(id: _rewardId!))!);
+	    reward = (await _dataRepository.getReward(id: _rewardId!))!;
 		emit(state.load(currencies: currencies, reward: reward));
   }
 
-  void onRewardChanged(UIReward Function(UIReward) update) {
+  void onRewardChanged(Reward Function(Reward) update) {
   	if (!this.state.loaded)
   		return;
 	  var state = this.state as RewardFormDataLoadSuccess;
@@ -50,7 +49,7 @@ class RewardFormCubit extends StatefulCubit<BaseFormState> {
 
 		var userId = activeUser!.id!;
 		var state = this.state as RewardFormDataLoadSuccess;
-		var reward = Reward.fromUIModel(state.reward, userId, state.reward.id);
+		var reward = state.reward.copyWith(createdBy: userId, id: state.reward.id);
 
 		if (state.formType == AppFormType.create) {
 			await _dataRepository.createReward(reward);

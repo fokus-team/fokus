@@ -1,9 +1,9 @@
 import 'package:flutter/widgets.dart';
+import 'package:fokus/model/db/gamification/reward.dart';
 import 'package:get_it/get_it.dart';
 
 import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
 import 'package:fokus/model/notification/notification_type.dart';
-import 'package:fokus/model/ui/gamification/ui_reward.dart';
 import 'package:fokus/model/ui/user/ui_child.dart';
 import 'package:fokus/services/data/data_repository.dart';
 
@@ -25,7 +25,7 @@ class DashboardRewardsCubit extends StatefulCubit {
 }
 
 class DashboardRewardsState extends StatefulState {
-	final List<UIReward> childRewards;
+	final List<Reward> childRewards;
 	final bool noRewardsAdded;
 
 	DashboardRewardsState({required this.childRewards, required this.noRewardsAdded}) : super.loaded();

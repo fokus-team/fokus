@@ -5,7 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fokus/logic/child/child_rewards_cubit.dart';
 import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
 import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
-import 'package:fokus/model/ui/gamification/ui_reward.dart';
+import 'package:fokus/model/db/gamification/reward.dart';
 import 'package:fokus/model/ui/ui_button.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/ui/app_paths.dart';
@@ -16,7 +16,7 @@ import 'package:fokus/widgets/chips/attribute_chip.dart';
 import 'package:fokus/model/db/user/user_role.dart';
 
 class RewardDialog extends StatefulWidget {
-	final UIReward reward;
+	final Reward reward;
 	final void Function()? claimFeedback;
 
 	RewardDialog({required this.reward, this.claimFeedback});

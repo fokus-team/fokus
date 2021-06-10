@@ -1,3 +1,4 @@
+import 'package:fokus/model/db/gamification/reward.dart';
 import 'package:fokus/model/db/user/caregiver.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mongo_dart/mongo_dart.dart';
@@ -6,7 +7,6 @@ import 'package:fokus/model/ui/user/ui_caregiver.dart';
 import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
 import 'package:fokus/services/data/data_repository.dart';
 import 'package:fokus/model/db/gamification/badge.dart';
-import 'package:fokus/model/ui/gamification/ui_reward.dart';
 
 class CaregiverAwardsCubit extends StatefulCubit {
   final DataRepository _dataRepository = GetIt.I<DataRepository>();
@@ -16,10 +16,8 @@ class CaregiverAwardsCubit extends StatefulCubit {
   @override
 	Future doLoadData() async {
     Caregiver user = activeUser as Caregiver;
-    var rewards = await _dataRepository.getRewards(caregiverId: user.id!);
-		
 		emit(CaregiverAwardsState(
-			rewards: rewards.map((reward) => UIReward.fromDBModel(reward)).toList(),
+			rewards: await _dataRepository.getRewards(caregiverId: user.id!),
 			badges: List.from(user.badges!)
 		));
   }
@@ -49,7 +47,7 @@ class CaregiverAwardsCubit extends StatefulCubit {
 }
 
 class CaregiverAwardsState extends StatefulState {
-	final List<UIReward> rewards;
+	final List<Reward> rewards;
 	final List<Badge> badges;
 
 	CaregiverAwardsState({required this.rewards, required this.badges, DataSubmissionState? submissionState}) : super.loaded(submissionState);
@@ -62,11 +60,11 @@ class CaregiverAwardsState extends StatefulState {
 }
 
 class RewardRemovedState extends CaregiverAwardsState {
-	RewardRemovedState({required List<UIReward> rewards, required List<Badge> badges})
+	RewardRemovedState({required List<Reward> rewards, required List<Badge> badges})
 			: super(rewards: rewards, badges: badges, submissionState: DataSubmissionState.submissionSuccess);
 }
 class BadgeRemovedState extends CaregiverAwardsState {
-	BadgeRemovedState({required List<UIReward> rewards, required List<Badge> badges})
+	BadgeRemovedState({required List<Reward> rewards, required List<Badge> badges})
 			: super(rewards: rewards, badges: badges, submissionState: DataSubmissionState.submissionSuccess);
 }
 

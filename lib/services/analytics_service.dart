@@ -7,7 +7,6 @@ import 'package:fokus/model/db/plan/plan.dart';
 import 'package:fokus/model/db/plan/plan_instance.dart';
 import 'package:fokus/model/db/plan/repeatability_type.dart';
 import 'package:fokus/model/db/plan/task_instance.dart';
-import 'package:fokus/model/ui/gamification/ui_reward.dart';
 import 'package:fokus/model/ui/task/ui_task_report.dart';
 import 'package:fokus_auth/fokus_auth.dart';
 import 'package:fokus/utils/definitions.dart';
@@ -44,7 +43,7 @@ class AnalyticsService {
 
 	// Reward
 	void logRewardCreated(Reward reward) => _analytics.logEvent(name: 'reward_created', parameters: reward.logRecord);
-	void logRewardBought(UIReward reward) => _analytics.logEvent(name: 'reward_bought', parameters: reward.logRecord);
+	void logRewardBought(Reward reward) => _analytics.logEvent(name: 'reward_bought', parameters: reward.logRecord);
 
 	// Badge
 	void logBadgeCreated(Badge badge) => _analytics.logEvent(name: 'badge_created');
@@ -83,15 +82,6 @@ extension LogReward on Reward {
 		'id': id?.toHexString(),
 		'cost': '${cost?.quantity}',
 		'currency': '${cost?.type?.index}',
-		'limit': '$limit'
-	};
-}
-
-extension LogUIReward on UIReward {
-	Json get logRecord => {
-		'id': id?.toHexString(),
-		'cost': '${cost?.quantity}',
-		'currency': '$icon',
 		'limit': '$limit'
 	};
 }

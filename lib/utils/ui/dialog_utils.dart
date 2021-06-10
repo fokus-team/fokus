@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/model/db/gamification/badge.dart';
+import 'package:fokus/model/db/gamification/reward.dart';
 import 'package:round_spot/round_spot.dart' as round_spot;
 
 import 'package:fokus/logic/caregiver/caregiver_friends_cubit.dart';
@@ -10,7 +11,6 @@ import 'package:fokus/logic/common/settings/account_delete/account_delete_cubit.
 import 'package:fokus/logic/common/settings/name_change/name_change_cubit.dart';
 import 'package:fokus/logic/common/settings/password_change/password_change_cubit.dart';
 import 'package:fokus/model/ui/app_popup.dart';
-import 'package:fokus/model/ui/gamification/ui_reward.dart';
 import 'package:fokus/model/ui/user/ui_user.dart';
 
 import 'package:fokus/services/app_locales.dart';
@@ -194,7 +194,7 @@ void showCurrencyEditDialog(BuildContext context, Function(String?) callback, {S
 	);
 }
 
-void showRewardDialog(BuildContext context, UIReward reward, {void Function()? claimFeedback}) {
+void showRewardDialog(BuildContext context, Reward reward, {void Function()? claimFeedback}) {
 	showDialog(
 		context: context,
 		builder: (_) => tryForwardCubit<ChildRewardsCubit>(

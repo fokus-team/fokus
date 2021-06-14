@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/model/db/gamification/currency.dart';
+import 'package:fokus/model/db/plan/task.dart';
 import 'package:mongo_dart/mongo_dart.dart' as Mongo;
 
 import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
@@ -10,7 +11,6 @@ import 'package:fokus/model/db/user/user_role.dart';
 import 'package:fokus/model/navigation/plan_form_params.dart';
 import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/ui/plan/ui_plan.dart';
-import 'package:fokus/model/ui/task/ui_task.dart';
 import 'package:fokus/utils/ui/snackbar_utils.dart';
 import 'package:fokus/widgets/stateful_bloc_builder.dart';
 import 'package:fokus/model/ui/form/task_form_model.dart';
@@ -81,8 +81,8 @@ class _PlanDetailsPageState extends State<PlanDetailsPage> {
 	}
 
 	List<Widget> _buildPanelSegments(PlanCubitState state) {
-  	List<UITask> mandatoryTasks = state.tasks.where((task) => task.optional == false).toList();
-		List<UITask> optionalTasks = state.tasks.where((task) => task.optional == true).toList();
+  	List<Task> mandatoryTasks = state.tasks.where((task) => task.optional == false).toList();
+		List<Task> optionalTasks = state.tasks.where((task) => task.optional == true).toList();
 
 		return [
 			if(mandatoryTasks.isNotEmpty) _getTasksSegment(
@@ -97,7 +97,7 @@ class _PlanDetailsPageState extends State<PlanDetailsPage> {
 		];
 	}
 
-	Segment _getTasksSegment({required String title, required List<UITask> tasks, bool isOptional = false}) {
+	Segment _getTasksSegment({required String title, required List<Task> tasks, bool isOptional = false}) {
 		return Segment(
 			title: title,
 			noElementsMessage: '$_pageKey.content.noTasks',

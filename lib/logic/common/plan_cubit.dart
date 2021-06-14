@@ -3,7 +3,6 @@ import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
 import 'package:fokus/model/db/plan/plan.dart';
 import 'package:fokus/model/db/plan/task.dart';
 import 'package:fokus/model/ui/plan/ui_plan.dart';
-import 'package:fokus/model/ui/task/ui_task.dart';
 import 'package:fokus/services/data/data_repository.dart';
 import 'package:fokus/services/plan_repeatability_service.dart';
 import 'package:get_it/get_it.dart';
@@ -26,7 +25,7 @@ class PlanCubit extends StatefulCubit {
     List<Task> tasks = await _dataRepository.getTasks(planId: _planId);
     emit(PlanCubitState(
       uiPlan: UIPlan.fromDBModel(plan, getDescription(plan)),
-      tasks: tasks.map((task) => UITask.fromDBModel(task: task)).toList(),
+      tasks: tasks,
       children: children,
     ));
   }
@@ -48,7 +47,7 @@ class PlanCubit extends StatefulCubit {
 
 class PlanCubitState extends StatefulState {
   final UIPlan uiPlan;
-  final List<UITask> tasks;
+  final List<Task> tasks;
   final Map<ObjectId, String> children;
 
   PlanCubitState({

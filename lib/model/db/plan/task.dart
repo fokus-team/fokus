@@ -1,29 +1,29 @@
+import 'package:equatable/equatable.dart';
 import 'package:fokus/model/db/gamification/points.dart';
 import 'package:fokus/model/ui/form/task_form_model.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 import 'package:fokus/utils/definitions.dart';
 
 
-class Task {
-	String? name;
-  String? description;
-  ObjectId? id;
-  ObjectId? planID;
-	List<String>? subtasks;
+class Task extends Equatable {
+	final String? name;
+  final String? description;
+  final ObjectId? id;
+  final ObjectId? planID;
+	final List<String>? subtasks;
 
-  bool? optional;
-  Points? points;
-  int? timer;
+  final bool? optional;
+  final Points? points;
+  final int? timer;
 
   Task.fromTaskForm(TaskFormModel taskForm, ObjectId planId, ObjectId creator, [ObjectId? taskID])
-		    : this._(name: taskForm.title, description: taskForm.description, planID: planId, subtasks: taskForm.subtasks,
+		    : this(name: taskForm.title, description: taskForm.description, planID: planId, subtasks: taskForm.subtasks,
 		  optional: taskForm.optional, timer: taskForm.timer! > 0 ? taskForm.timer : null, id: taskID ?? ObjectId(),
 		  points: taskForm.pointsValue != null ? Points.fromCurrency(currency: taskForm.pointCurrency!, quantity: taskForm.pointsValue!, createdBy: creator) : null);
 
-  Task._({this.description, this.id, this.name, this.optional, this.planID, this.points, this.subtasks, this.timer});
+  Task({this.description, this.id, this.name, this.optional, this.planID, this.points, this.subtasks, this.timer = 0});
 
-  static Task? fromJson(Json? json) {
-    return json != null ? Task._(
+  Task.fromJson(Json json) : this(
       description: json['description'],
 	    id: json['_id'],
       name: json['name'],
@@ -32,8 +32,7 @@ class Task {
       points: json['points'] != null ? Points.fromJson(json['points']) : null,
       subtasks: json['subtasks'] != null ? new List<String>.from(json['subtasks']) : [],
       timer: json['timer'],
-    ) : null;
-  }
+    );
 
   Json toJson() {
     final Json data = new Json();
@@ -55,4 +54,7 @@ class Task {
       data['subtasks'] = this.subtasks;
     return data;
   }
+
+	@override
+	List<Object?> get props => [id, description, name, optional, planID, timer, points, subtasks];
 }

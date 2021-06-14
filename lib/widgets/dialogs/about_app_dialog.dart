@@ -13,7 +13,7 @@ class AboutAppDialog extends StatefulWidget {
 class _AboutAppDialogState extends State<AboutAppDialog> {
 	final String _settingsKey = 'page.settings.content.appInfo.about';
 
-	PackageInfo _packageInfo = PackageInfo();
+	PackageInfo _packageInfo;
 	final String creators = 'Stanisław Góra,\nMateusz Janicki,\nMikołaj Mirko';
 
 	@override

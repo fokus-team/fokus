@@ -6,6 +6,7 @@ authors:
     - Mateusz Janicki
 repository: https://github.com/fokus-team/fokus
 homepage: https://fokus.link
+publish_to: none
 
 version: 0.7.9-dev
 
@@ -33,7 +34,9 @@ dependencies:
     firebase_remote_config: ^0.9.0-dev.1
 
     onesignal_flutter:
-        git: https://github.com/fokus-team/OneSignal-Flutter-SDK.git
+        git:
+            url: https://github.com/fokus-team/OneSignal-Flutter-SDK.git
+            ref: a4052d37b7995d0073b41acffcdaf78db08e2f8b
     flutter_local_notifications:
         git:
             url: https://github.com/fokus-team/flutter_local_notifications.git
@@ -60,7 +63,10 @@ dependencies:
     url_launcher: ^6.0.2
     uni_links: ^0.4.0
     path_provider: ^2.0.1
-    round_spot: ^0.4.0
+    round_spot:
+        git:
+            url: https://github.com/stasgora/round-spot.git
+            ref: data-output
 
     cupertino_icons: ^1.0.0
     lottie: ^1.0.1

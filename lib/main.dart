@@ -119,8 +119,7 @@ void main() async {
 			child: round_spot.initialize(
 				child: FokusApp(navigatorKey, routeObserver, analytics.pageObserver),
 				config: config,
-				heatMapCallback: GetIt.I<RemoteStorageProvider>().uploadRSHeatMap, // saveDebugImage
-				rawDataCallback: GetIt.I<RemoteStorageProvider>().uploadRSData, // saveDebugData
+				dataCallback: GetIt.I<RemoteStorageProvider>().uploadRSData,
 				loggingLevel: Foundation.kReleaseMode ? round_spot.LogLevel.off : round_spot.LogLevel.warning
 			),
 		)

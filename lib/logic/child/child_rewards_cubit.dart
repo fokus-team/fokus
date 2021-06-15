@@ -50,8 +50,8 @@ class ChildRewardsCubit extends StatefulCubit {
 			await _dataRepository.claimChildReward(user.id!, reward: model, points: user.points!);
 			_analyticsService.logRewardBought(reward);
 			await _notificationService.sendRewardBoughtNotification(model.id!, model.name!, user.connections!.first, user);
-			_refreshRewardState(DataSubmissionState.submissionSuccess);
 		}
+		_refreshRewardState(DataSubmissionState.submissionSuccess);
 	}
 
 	void _refreshRewardState([DataSubmissionState? submissionState]) {

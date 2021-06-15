@@ -1,4 +1,5 @@
 import 'package:bson/bson.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
 import 'package:fokus/model/db/user/user.dart';
@@ -118,6 +119,29 @@ class OneSignalNotificationService extends NotificationService {
 		  androidGroup: group.key,
 		  androidGroupMessage: group.title.getTranslations()
 	  );
-		return OneSignal.shared.postNotification(notification);
+		try {
+			await OneSignal.shared.postNotification(notification);
+		} on PlatformException catch(e, s) {
+			if (_tryHandleError(e, notification, userId))
+				return OneSignal.shared.postNotification(notification);
+			else
+				logger.severe('Notification exception unhandled', e, s);
+		}
+  }
+
+  bool _tryHandleError(PlatformException exception, OSCreateNotification notification, ObjectId userId) {
+		if (exception.details is! Map) return false;
+		var details = exception.details as Map;
+		if (!details.containsKey('errors')) return false;
+		var errors = details['errors'] as Map;
+		if (errors.containsKey('invalid_player_ids')) {
+			for (var id in errors['invalid_player_ids'] as List) {
+				var invalidID = id as String;
+				dataRepository.removeNotificationID(invalidID, userId: userId);
+				notification.playerIds.remove(invalidID);
+			}
+			return true;
+		}
+		return false;
   }
 }

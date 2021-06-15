@@ -127,7 +127,7 @@ class _CaregiverRatingPageState extends State<CaregiverRatingPage> {
 							carouselController: _carouselController,
 							items: reports.map((report) =>
 								Hero(
-									tag: report.task.id.toString() + report.task.duration!.last.to.toString(),
+									tag: report.uiTask.instance.id.toString() + report.uiTask.instance.duration!.last.to.toString(),
 									child: ReportCard(report: report)
 								)
 							).toList()

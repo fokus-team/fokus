@@ -214,11 +214,11 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 				cardColor: AppColors.childTaskColor,
 				content: [
 					_getAnimation('assets/animation/jumping_little_man.json'),
-					_getTitle(state.taskInstance!.name!, translate: false),
-					if(state.taskInstance!.description != null)
-						_getSubtitle(state.taskInstance!.description! ,alignment: TextAlign.justify, translate: false, topPadding: 8),
-					if(state.taskInstance!.subtasks != null && state.taskInstance!.subtasks!.isNotEmpty)
-						_getSubtasks(state.taskInstance!.subtasks!)
+					_getTitle(state.taskInstance!.task.name!, translate: false),
+					if(state.taskInstance!.task.description != null)
+						_getSubtitle(state.taskInstance!.task.description! ,alignment: TextAlign.justify, translate: false, topPadding: 8),
+					if(state.taskInstance!.instance.subtasks != null && state.taskInstance!.instance.subtasks!.isNotEmpty)
+						_getSubtasks(state.taskInstance!.instance.subtasks!)
 				],
 				showFirst: state.current == TaskCompletionStateType.inProgress,
 				cardType: TaskCompletionStateType.inProgress,
@@ -287,9 +287,9 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 		);
 	}
 
-	TimerCubit Function(BuildContext) _getTimerBreakCubit(state) {
+	TimerCubit Function(BuildContext) _getTimerBreakCubit(TaskCompletionState state) {
 		if(_timerBreakCubit == null) {
-			_timerBreakCubit = TimerCubit.up(() => sumDurations(state.taskInstance.breaks).inSeconds);
+			_timerBreakCubit = TimerCubit.up(() => sumDurations(state.taskInstance!.instance.breaks).inSeconds);
 		}
 		if(state.current == TaskCompletionStateType.inProgress) return (_) => _timerBreakCubit!..startTimer(paused: true);
 		else return (_) => _timerBreakCubit!..startTimer();

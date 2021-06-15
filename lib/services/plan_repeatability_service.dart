@@ -63,9 +63,7 @@ class PlanRepeatabilityService {
 	PlanRepeatability mapRepeatabilityModel(PlanFormModel planForm) {
 		RepeatabilityType type = planForm.repeatability == PlanFormRepeatability.recurring ? planForm.repeatabilityRage.dbType : RepeatabilityType.once;
 		var untilCompleted = planForm.repeatability == PlanFormRepeatability.untilCompleted;
-		var range = DateSpan.from(planForm.rangeDate);
-		if (type == RepeatabilityType.once)
-			range.from = planForm.onlyOnceDate;
+		var range = DateSpan(from: type == RepeatabilityType.once ? planForm.onlyOnceDate : planForm.rangeDate.from, to: planForm.rangeDate.to);
 		return PlanRepeatability(type: type, untilCompleted: untilCompleted, range: range, days: planForm.days..sort());
 	}
 

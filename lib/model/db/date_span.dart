@@ -1,21 +1,26 @@
+import 'package:equatable/equatable.dart';
+
 import 'package:fokus/model/db/date/date.dart';
 import 'package:fokus/utils/definitions.dart';
 import 'package:fokus/model/db/date/time_date.dart';
 
 import 'date/date_base.dart';
 
-class DateSpan<D extends DateBase> {
-  D? from;
-  D? to;
+class DateSpan<D extends DateBase> extends Equatable {
+  final D? from;
+  final D? to;
 
   DateSpan({this.from, this.to});
 
   DateSpan.from(DateSpan<D> span) : this(
-	  from: span.from != null ? copy(span.from!) : null,
-		to: span.to != null ? copy(span.to!) : null
+	  from: span.from != null ? _copy(span.from!) : null,
+		to: span.to != null ? _copy(span.to!) : null
   );
 
-  static D copy<D extends DateBase>(D date) => (date is Date ? Date.fromDate(date) : TimeDate.fromDate(date)) as D;
+  DateSpan<D> copyWith({D? from, D? to}) => DateSpan(from: from ?? this.from, to: to ?? this.to);
+  DateSpan<D> end() => copyWith(to: (from is Date ? Date.now() : TimeDate.now()) as D);
+
+  static D _copy<D extends DateBase>(D date) => (date is Date ? Date.fromDate(date) : TimeDate.fromDate(date)) as D;
 
   static DateSpan<D>? fromJson<D extends DateBase>(Json? json) {
   	var parseDate = (DateTime date) => (D == Date ? Date.parseDBDate(date) : TimeDate.parseDBDate(date)) as D;
@@ -39,10 +44,7 @@ class DateSpan<D extends DateBase> {
   }
 
   @override
-  bool operator ==(Object other) => identical(this, other) || other is DateSpan && runtimeType == other.runtimeType && from == other.from && to == other.to;
-
-  @override
-  int get hashCode => from.hashCode ^ to.hashCode;
+  List<Object?> get props => [from, to];
 }
 
 enum SpanDateType {

@@ -12,58 +12,57 @@ class TaskInstanceService {
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 
 	Future<List<UITaskInstance>> mapToUIModels(List<TaskInstance> taskInstances, {bool shouldGetTaskStatus = true}) async {
-		var taskUiTypes = shouldGetTaskStatus ? getTasksInstanceStatus(tasks: taskInstances) : List.filled(taskInstances.length, TaskUIType.notCompletedUndefined);
+		var taskUiTypes = shouldGetTaskStatus ? getTasksInstanceStatus(tasks: taskInstances) : List.filled(taskInstances.length, TaskInstanceState.notCompletedUndefined);
 		List<UITaskInstance> uiTaskInstances = [];
 		for(int i=0; i<taskInstances.length; i++) {
 			var task = await _dataRepository.getTask(taskId: taskInstances[i].taskID);
 			int Function() elapsedTimePassed;
 			if(taskUiTypes[i].inProgress)
-				elapsedTimePassed = () => taskUiTypes[i] == TaskUIType.currentlyPerformed ? sumDurations(taskInstances[i].duration).inSeconds : sumDurations(taskInstances[i].breaks).inSeconds;
+				elapsedTimePassed = () => taskUiTypes[i] == TaskInstanceState.currentlyPerformed ? sumDurations(taskInstances[i].duration).inSeconds : sumDurations(taskInstances[i].breaks).inSeconds;
 			else elapsedTimePassed = () => 0;
-			uiTaskInstances.add(UITaskInstance.listFromDBModel(taskInstance: taskInstances[i], name: task!.name!,
-					description: task.description, points: task.points, type: taskUiTypes[i], elapsedTimePassed: elapsedTimePassed));
+			uiTaskInstances.add(UITaskInstance(instance: taskInstances[i], task: task!, state: taskUiTypes[i], elapsedDuration: elapsedTimePassed));
 		}
 		return uiTaskInstances;
 	}
 
-	List<TaskUIType> getTasksInstanceStatus({required List<TaskInstance> tasks}) {
-		List<TaskUIType> taskStatuses = [];
-		TaskUIType? prevTaskStatus;
+	List<TaskInstanceState> getTasksInstanceStatus({required List<TaskInstance> tasks}) {
+		List<TaskInstanceState> taskStatuses = [];
+		TaskInstanceState? prevTaskStatus;
 		bool isAnyInProgress = false;
 		for(var task in tasks) {
 			var taskStatus;
 			if(task.status != null && task.status!.completed!) {
-				task.status!.state == TaskState.rejected ? taskStatus = TaskUIType.rejected
-					: taskStatus = TaskUIType.completed;
+				task.status!.state == TaskState.rejected ? taskStatus = TaskInstanceState.rejected
+					: taskStatus = TaskInstanceState.completed;
 			}
 			else if((task.optional! && !isAnyInProgress) || prevTaskStatus == null || prevTaskStatus.wasInProgress) {
 				taskStatus = _getInProgressType(task);
-				if(taskStatus != TaskUIType.rejected && taskStatus != TaskUIType.available)
+				if(taskStatus != TaskInstanceState.rejected && taskStatus != TaskInstanceState.available)
 					isAnyInProgress = true;
 			}
-			else taskStatus = TaskUIType.queued;
+			else taskStatus = TaskInstanceState.queued;
 			taskStatuses.add(taskStatus);
 			prevTaskStatus = taskStatus;
 		}
-		while(isAnyInProgress && taskStatuses.contains(TaskUIType.available)) taskStatuses[taskStatuses.indexOf(TaskUIType.available)] = TaskUIType.queued;
+		while(isAnyInProgress && taskStatuses.contains(TaskInstanceState.available)) taskStatuses[taskStatuses.indexOf(TaskInstanceState.available)] = TaskInstanceState.queued;
 		return taskStatuses;
 	}
 
-	static TaskUIType getSingleTaskInstanceStatus({required TaskInstance task}) {
-		if(task.status != null && task.status!.completed!) return TaskUIType.completed;
+	static TaskInstanceState getSingleTaskInstanceStatus({required TaskInstance task}) {
+		if(task.status != null && task.status!.completed!) return TaskInstanceState.completed;
 		else return _getInProgressType(task);
 	}
 
 
-	static TaskUIType _getInProgressType(TaskInstance task) {
-		TaskUIType taskStatus;
+	static TaskInstanceState _getInProgressType(TaskInstance task) {
+		TaskInstanceState taskStatus;
 		if(task.breaks!.length > 0 && task.breaks!.last.to == null)
-			taskStatus = TaskUIType.inBreak;
+			taskStatus = TaskInstanceState.inBreak;
 		else if(task.duration!.length > 0)
-			task.duration!.last.to == null ? taskStatus = TaskUIType.currentlyPerformed
-				: taskStatus = TaskUIType.rejected;
+			task.duration!.last.to == null ? taskStatus = TaskInstanceState.currentlyPerformed
+				: taskStatus = TaskInstanceState.rejected;
 		else
-			taskStatus = TaskUIType.available;
+			taskStatus = TaskInstanceState.available;
 		return taskStatus;
 	}
 

@@ -28,7 +28,7 @@ extension UITaskReportMarkExtension on UITaskReportMark {
 
 class UITaskReport {
 	final String planName;
-	final UITaskInstance task;
+	final UITaskInstance uiTask;
 	final ChildCardModel childCard;
 
 	UITaskReportMark ratingMark;
@@ -36,7 +36,7 @@ class UITaskReport {
 
   UITaskReport({
     required this.planName,
-    required this.task,
+    required this.uiTask,
     required this.childCard,
 		this.ratingMark = UITaskReportMark.notRated,
 		this.ratingComment

@@ -1,4 +1,7 @@
 import 'package:flutter/cupertino.dart';
+import 'package:get_it/get_it.dart';
+import 'package:mongo_dart/mongo_dart.dart';
+
 import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
 import 'package:fokus/model/db/plan/plan_instance.dart';
 import 'package:fokus/model/db/plan/plan_instance_state.dart';
@@ -13,10 +16,7 @@ import 'package:fokus/services/data/data_repository.dart';
 import 'package:fokus/services/ui_data_aggregator.dart';
 import 'package:fokus/services/task_instance_service.dart';
 import 'package:fokus/utils/duration_utils.dart';
-import 'package:get_it/get_it.dart';
-import 'package:mongo_dart/mongo_dart.dart';
 import 'package:fokus/model/db/plan/task_status.dart';
-import 'package:fokus/model/db/date/time_date.dart';
 
 
 class PlanInstanceCubit extends StatefulCubit {
@@ -74,11 +74,11 @@ class PlanInstanceCubit extends StatefulCubit {
 				taskInstance.status!.state = TaskState.rejected;
 				taskInstance.status!.completed = true;
 				if(isInProgress(taskInstance.duration)) {
-					taskInstance.duration!.last.to = TimeDate.now();
+					taskInstance.duration!.last = taskInstance.duration!.last.end();
 					updates.add(_dataRepository.updateTaskInstanceFields(taskInstance.id!, state: taskInstance.status?.state, isCompleted: taskInstance.status?.completed, duration: taskInstance.duration));
 				}
 				else if(isInProgress(taskInstance.breaks)) {
-					taskInstance.breaks!.last.to = TimeDate.now();
+					taskInstance.breaks!.last = taskInstance.breaks!.last.end();
 					updates.add(_dataRepository.updateTaskInstanceFields(taskInstance.id!, state: taskInstance.status?.state, isCompleted: taskInstance.status?.completed, breaks: taskInstance.breaks));
 				}
 				else updates.add(_dataRepository.updateTaskInstanceFields(taskInstance.id!, state: taskInstance.status?.state, isCompleted: taskInstance.status?.completed));
@@ -86,7 +86,7 @@ class PlanInstanceCubit extends StatefulCubit {
 			updatedTaskInstances.add(taskInstance);
 		}
 		if(isInProgress(_planInstance.duration)) {
-			_planInstance.duration!.last.to =  TimeDate.now();
+			_planInstance.duration!.last = _planInstance.duration!.last.end();
 			updates.add(_dataRepository.updatePlanInstanceFields(_planInstance.id!, state: PlanInstanceState.completed, duration: _planInstance.duration));
 		}
 		else updates.add(_dataRepository.updatePlanInstanceFields(_planInstance.id!, state: PlanInstanceState.completed));

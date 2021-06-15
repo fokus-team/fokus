@@ -47,7 +47,7 @@ class TaskCompletionCubit extends StatefulCubit<TaskCompletionState> {
 
 		List<Future> updates = [];
 		bool wasPlanStateChanged = false, wasPlanDurationChanged = false;
-		UITaskInstance uiTaskInstance = UITaskInstance.singleWithTask(taskInstance: _taskInstance, task: _task);
+		UITaskInstance uiTaskInstance = UITaskInstance(instance: _taskInstance, task: _task);
 		var planInstance = await _dataAggregator.loadPlanInstance(planInstance: _planInstance, plan: _plan);
 
 		if (!loadingForFirstTime && _taskInstance.status!.completed! && (_taskInstance.status!.state == TaskState.evaluated || _taskInstance.status!.state == TaskState.rejected)) {
@@ -72,7 +72,6 @@ class TaskCompletionCubit extends StatefulCubit<TaskCompletionState> {
 			}
 			if(!isInProgress(_taskInstance.duration) && !isInProgress(_taskInstance.breaks)) {
 				_analyticsService.logTaskStarted(_taskInstance);
-				if(_taskInstance.duration == null) _taskInstance.duration = [];
 				_taskInstance.duration!.add(DateSpan(from: TimeDate.now()));
 				updates.add(_dataRepository.updateTaskInstanceFields(_taskInstance.id!, duration: _taskInstance.duration, isCompleted: _taskInstance.status!.completed! ? false : null));
 				if(_taskInstance.status!.completed!) _taskInstance.status!.completed = false;
@@ -89,7 +88,7 @@ class TaskCompletionCubit extends StatefulCubit<TaskCompletionState> {
 				);
 			await Future.wait(updates);
 
-		if(isInProgress(uiTaskInstance.duration))
+		if(isInProgress(uiTaskInstance.instance.duration))
 		  emit(TaskCompletionState.inProgress(taskInstance: uiTaskInstance,  planInstance: planInstance));
 		else
 		  emit(TaskCompletionState.inBreak(taskInstance: uiTaskInstance,  planInstance: planInstance));
@@ -101,10 +100,10 @@ class TaskCompletionCubit extends StatefulCubit<TaskCompletionState> {
 			return;
 		TaskCompletionState state = this.state;
 
-		_taskInstance.duration!.last.to = TimeDate.now();
+		_taskInstance.duration!.last = _taskInstance.duration!.last.end();
 		_taskInstance.breaks!.add(DateSpan(from: TimeDate.now()));
 		await _dataRepository.updateTaskInstanceFields(_taskInstance.id!, duration: _taskInstance.duration, breaks: _taskInstance.breaks);
-		UITaskInstance uiTaskInstance = UITaskInstance.singleWithTask(taskInstance: _taskInstance, task: _task);
+		UITaskInstance uiTaskInstance = UITaskInstance(instance: _taskInstance, task: _task);
 		_analyticsService.logTaskPaused(_taskInstance);
 		var planInstance = await _dataAggregator.loadPlanInstance(planInstance: _planInstance, plan: _plan);
 		emit(state.copyWithSubmitted(taskInstance: uiTaskInstance, planInstance: planInstance));
@@ -115,10 +114,10 @@ class TaskCompletionCubit extends StatefulCubit<TaskCompletionState> {
 			return;
 		TaskCompletionState state = this.state;
 
-		_taskInstance.breaks!.last.to = TimeDate.now();
+		_taskInstance.breaks!.last = _taskInstance.breaks!.last.end();
 		_taskInstance.duration!.add(DateSpan(from: TimeDate.now()));
 		await _dataRepository.updateTaskInstanceFields(_taskInstance.id!, duration: _taskInstance.duration, breaks: _taskInstance.breaks);
-		UITaskInstance uiTaskInstance = UITaskInstance.singleWithTask(taskInstance: _taskInstance, task: _task);
+		UITaskInstance uiTaskInstance = UITaskInstance(instance: _taskInstance, task: _task);
 		_analyticsService.logTaskResumed(_taskInstance);
 		var planInstance = await _dataAggregator.loadPlanInstance(planInstance: _planInstance, plan: _plan);
 		emit(state.copyWithSubmitted(taskInstance: uiTaskInstance, planInstance: planInstance));
@@ -151,18 +150,18 @@ class TaskCompletionCubit extends StatefulCubit<TaskCompletionState> {
 	void updateChecks(int index, MapEntry<String, bool> subtask) async {
   	_taskInstance.subtasks![index] = subtask;
 		await _dataRepository.updateTaskInstanceFields(_taskInstance.id!, subtasks: _taskInstance.subtasks);
-		emit(state.copyWith(taskInstance: UITaskInstance.singleWithTask(taskInstance: _taskInstance, task: _task)));
+		emit(state.copyWith(taskInstance: UITaskInstance(instance: _taskInstance, task: _task)));
 	}
 
 	Future<UITaskInstance> _onCompletion(TaskState state) async {
 		_taskInstance.status!.state = state;
 		_taskInstance.status!.completed = true;
 		if(_taskInstance.duration!.last.to == null) {
-			_taskInstance.duration!.last.to = TimeDate.now();
+			_taskInstance.duration!.last = _taskInstance.duration!.last.end();
 			await _dataRepository.updateTaskInstanceFields(_taskInstance.id!, state: state, isCompleted: true, duration: _taskInstance.duration);
 		}
 		else {
-			_taskInstance.breaks!.last.to = TimeDate.now();
+			_taskInstance.breaks!.last = _taskInstance.breaks!.last.end();
 			await _dataRepository.updateTaskInstanceFields(_taskInstance.id!, state: state, isCompleted: true, breaks: _taskInstance.breaks);
 		}
 
@@ -170,9 +169,9 @@ class TaskCompletionCubit extends StatefulCubit<TaskCompletionState> {
 			_planInstance.state = PlanInstanceState.completed;
 			_analyticsService.logPlanCompleted(_planInstance);
 		}
-		_planInstance.duration!.last.to = TimeDate.now();
+		_planInstance.duration!.last = _planInstance.duration!.last.end();
 		await _dataRepository.updatePlanInstanceFields(_planInstance.id!, duration: _planInstance.duration, state: _planInstance.state == PlanInstanceState.completed ? PlanInstanceState.completed : null);
 
-		return UITaskInstance.singleWithTask(taskInstance: _taskInstance, task: _task);
+		return UITaskInstance(instance: _taskInstance, task: _task);
 	}
 }

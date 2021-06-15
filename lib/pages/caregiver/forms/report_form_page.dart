@@ -117,7 +117,7 @@ class _ReportFormPageState extends State<ReportFormPage> {
 		  			Container(
 		  				margin: EdgeInsets.all(AppBoxProperties.screenEdgePadding),
 		  				child: Hero(
-		  					tag: widget.report.task.id.toString() + widget.report.task.duration!.last.to.toString(),
+		  					tag: widget.report.uiTask.instance.id.toString() + widget.report.uiTask.instance.duration!.last.to.toString(),
 		  					child: ReportCard(report: widget.report, hideBottomBar: true)
 		  				)
 		  			),
@@ -138,12 +138,13 @@ class _ReportFormPageState extends State<ReportFormPage> {
 	}
 
 	Widget _getPointsAssigned() {
-		int totalPoints = widget.report.task.points!.quantity!;
+		var taskPoints = widget.report.uiTask.task.points!;
+		int totalPoints = taskPoints.quantity!;
 		int points = TasksEvaluationCubit.getPointsAwarded(totalPoints, mark.value!);
 		return AttributeChip.withCurrency(
-			currencyType: widget.report.task.points!.type!,
+			currencyType: taskPoints.type!,
 			content: '$points / $totalPoints',
-			tooltip: widget.report.task.points!.name
+			tooltip: taskPoints.name
 		);
 	}
 
@@ -188,7 +189,7 @@ class _ReportFormPageState extends State<ReportFormPage> {
 								AppLocales.of(context).translate('$_pageKey.ratingLevels.${mark.toString().split('.').last}') + ')',
 								style: TextStyle(fontWeight: FontWeight.bold)
 							),
-							widget.report.task.points != null ? Padding(
+							widget.report.uiTask.task.points != null ? Padding(
 								padding: EdgeInsets.only(top: 12.0),
 								child: Wrap(
 									alignment: WrapAlignment.center,

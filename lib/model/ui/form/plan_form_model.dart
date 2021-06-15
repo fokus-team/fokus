@@ -40,9 +40,9 @@ class PlanFormModel extends Equatable {
 			repeatability = model.repeatability, repeatabilityRage = model.repeatabilityRage, onlyOnceDate = Date.fromDate(model.onlyOnceDate!),
 			rangeDate = DateSpan.from(model.rangeDate), isActive = model.isActive, tasks = List.from(model.tasks.map((task) => TaskFormModel.from(task)));
 
-	void setOnlyOnceDate(DateTime? date) { onlyOnceDate = date != null ? Date.fromDate(date) : null; }
-	void setRangeFromDate(DateTime? date) { rangeDate.from = date != null ? Date.fromDate(date) : null; }
-	void setRangeToDate(DateTime? date) { rangeDate.to = date != null ? Date.fromDate(date) : null; }
+	void setOnlyOnceDate(DateTime? date) => onlyOnceDate = date != null ? Date.fromDate(date) : null;
+	void setRangeFromDate(DateTime? date) => rangeDate = rangeDate.copyWith(from: date != null ? Date.fromDate(date) : null);
+	void setRangeToDate(DateTime? date) => rangeDate = rangeDate.copyWith(to: date != null ? Date.fromDate(date) : null);
 
 	@override
 	List<Object?> get props => [name, children, repeatability, repeatabilityRage, days, onlyOnceDate, rangeDate, isActive, tasks];

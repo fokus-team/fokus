@@ -79,7 +79,7 @@ class _ReportCardState extends State<ReportCard> {
 						style: TextStyle(color: AppColors.mediumTextColor, fontSize: 15.0)
 					),
 					Text(
-						widget.report.task.name!,
+						widget.report.uiTask.task.name!,
 						maxLines: 3,
 						overflow: TextOverflow.ellipsis,
 						style: Theme.of(context).textTheme.headline3
@@ -102,7 +102,7 @@ class _ReportCardState extends State<ReportCard> {
 					_buildReportTile(
 						Icons.event,
 						Text(
-							widget.report.task.duration!.last.to!.toAppString(DateFormat.yMEd(AppLocales.of(context).locale.toString()).add_jm()),
+							widget.report.uiTask.instance.duration!.last.to!.toAppString(DateFormat.yMEd(AppLocales.of(context).locale.toString()).add_jm()),
 							softWrap: false,
 							overflow: TextOverflow.fade,
 						),
@@ -112,9 +112,9 @@ class _ReportCardState extends State<ReportCard> {
 						Icons.timer,
 						Text(
 							AppLocales.of(context).translate('$_pageKey.raportCard.timeFormat', {
-								'HOURS_NUM': sumDurations(widget.report.task.duration).inHours,
-								'MINUTES_NUM': sumDurations(widget.report.task.duration).inMinutes.remainder(60),
-								'SECONDS_NUM': sumDurations(widget.report.task.duration).inSeconds.remainder(60)
+								'HOURS_NUM': sumDurations(widget.report.uiTask.instance.duration).inHours,
+								'MINUTES_NUM': sumDurations(widget.report.uiTask.instance.duration).inMinutes.remainder(60),
+								'SECONDS_NUM': sumDurations(widget.report.uiTask.instance.duration).inSeconds.remainder(60)
 							}),
 							softWrap: false,
 							overflow: TextOverflow.fade,
@@ -128,17 +128,17 @@ class _ReportCardState extends State<ReportCard> {
 							overflow: TextOverflow.fade,
 							text: TextSpan(
 								text: AppLocales.of(context).translate('$_pageKey.raportCard.breakCount', {
-									'BREAKS_NUM': widget.report.task.breaks!.length
+									'BREAKS_NUM': widget.report.uiTask.instance.breaks!.length
 								}) + ' ',
 								style: Theme.of(context).textTheme.bodyText2,
 								children: [
-									if(widget.report.task.breaks!.length > 0)
+									if(widget.report.uiTask.instance.breaks!.length > 0)
 										TextSpan(
 											text: '(${AppLocales.of(context).translate('$_pageKey.raportCard.totalBreakTime')}: ' +
 												AppLocales.of(context).translate('$_pageKey.raportCard.timeFormat', {
-													'HOURS_NUM': sumDurations(widget.report.task.breaks).inHours,
-													'MINUTES_NUM': sumDurations(widget.report.task.breaks).inMinutes.remainder(60),
-													'SECONDS_NUM': sumDurations(widget.report.task.breaks).inSeconds.remainder(60)
+													'HOURS_NUM': sumDurations(widget.report.uiTask.instance.breaks).inHours,
+													'MINUTES_NUM': sumDurations(widget.report.uiTask.instance.breaks).inMinutes.remainder(60),
+													'SECONDS_NUM': sumDurations(widget.report.uiTask.instance.breaks).inSeconds.remainder(60)
 												}) + ')',
 											style: TextStyle(color: AppColors.mediumTextColor, fontSize: 13.0)
 										)
@@ -211,9 +211,9 @@ class _ReportCardState extends State<ReportCard> {
 	String _getSubtitle() {
   	if(widget.report.ratingMark.value == 0)
   		return AppLocales.of(context).translate('$_pageKey.raportCard.rejectedHint');
-		else if(widget.report.task.points != null)
+		else if(widget.report.uiTask.task.points != null)
 			return AppLocales.of(context).translate('$_pageKey.raportCard.ratedOnHint',
-				{'POINTS_NUM': (TasksEvaluationCubit.getPointsAwarded(widget.report.ratingMark.value!, widget.report.task.points!.quantity!).toString())});
+				{'POINTS_NUM': (TasksEvaluationCubit.getPointsAwarded(widget.report.ratingMark.value!, widget.report.uiTask.task.points!.quantity!).toString())});
 		else
 			return AppLocales.of(context).translate('$_pageKey.raportCard.ratedOnLabel',
 				{'STARS_NUM': widget.report.ratingMark.value.toString()});

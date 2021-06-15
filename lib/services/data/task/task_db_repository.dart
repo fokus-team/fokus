@@ -30,7 +30,7 @@ mixin TaskDbRepository implements DbRepository {
 		var query = _buildTaskQuery(id: taskInstanceId, optionalOnly: optionalOnly, requiredOnly: requiredOnly);
 		if (fields != null)
 			query.fields(fields);
-		return dbClient.queryOneTyped(Collection.taskInstance, query, (json) => TaskInstance.fromJson(json));
+		return dbClient.queryOneTyped(Collection.taskInstance, query, (json) => json != null ? TaskInstance.fromJson(json) : null);
 	}
 
 	Future<List<TaskInstance>> getTaskInstances({ObjectId? planInstanceId, List<ObjectId>? taskInstancesIds, List<ObjectId>? planInstancesId,
@@ -39,7 +39,7 @@ mixin TaskDbRepository implements DbRepository {
 				optionalOnly: optionalOnly, isCompleted: isCompleted, planInstancesIds: planInstancesId, state: state);
 		if (fields != null)
 			query.fields(fields);
-		return dbClient.queryTyped(Collection.taskInstance, query, (json) => TaskInstance.fromJson(json)!);
+		return dbClient.queryTyped(Collection.taskInstance, query, (json) => TaskInstance.fromJson(json));
 	}
 
 	Future<int> countTaskInstances({List<ObjectId>? planInstancesId, bool? isCompleted, TaskState? state}) {

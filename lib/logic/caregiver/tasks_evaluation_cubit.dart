@@ -54,9 +54,9 @@ class TasksEvaluationCubit extends StatefulCubit {
 		_uiTaskInstances = taskInstances.isNotEmpty ? await _taskInstanceService.mapToUIModels(taskInstances, shouldGetTaskStatus: false) : [];
 		_planInstanceToName = Map.fromEntries(planInstances.map((planInstance) => MapEntry(planInstance.id!, nameMap[planInstance.planID]!)));
 		List<UITaskReport> _reports = _uiTaskInstances.map((taskInstance) => UITaskReport(
-			planName: _planInstanceToName[taskInstance.planInstanceId]!,
-			task: taskInstance,
-			childCard: _planInstanceToChild[taskInstance.planInstanceId]!,
+			planName: _planInstanceToName[taskInstance.instance.planInstanceID]!,
+			uiTask: taskInstance,
+			childCard: _planInstanceToChild[taskInstance.instance.planInstanceID]!,
 		)).toList();
 		emit(TasksEvaluationState(reports: _reports..addAll(_completedReports)));
 	}
@@ -68,34 +68,34 @@ class TasksEvaluationCubit extends StatefulCubit {
 		List<Future> updates = [];
 		Future Function() sendNotification;
 		if(report.ratingMark == UITaskReportMark.rejected) {
-			sendNotification = () => _notificationService.sendTaskRejectedNotification(report.task.planInstanceId!, report.task.name!, report.childCard.child.id!);
-			updates.add(_dataRepository.updatePlanInstanceFields(report.task.planInstanceId!, state: PlanInstanceState.notCompleted));
-			updates.add(_dataRepository.updateTaskInstanceFields(report.task.id!, state:TaskState.rejected));
+			sendNotification = () => _notificationService.sendTaskRejectedNotification(report.uiTask.instance.planInstanceID!, report.uiTask.task.name!, report.childCard.child.id!);
+			updates.add(_dataRepository.updatePlanInstanceFields(report.uiTask.instance.planInstanceID!, state: PlanInstanceState.notCompleted));
+			updates.add(_dataRepository.updateTaskInstanceFields(report.uiTask.instance.id!, state:TaskState.rejected));
 			_analyticsService.logTaskRejected(report);
 		} else {
 			int? pointsAwarded;
-			bool hasPoints = report.task.points != null;
+			bool hasPoints = report.uiTask.task.points != null;
 			if(hasPoints)
-				pointsAwarded = getPointsAwarded(report.task.points!.quantity!, report.ratingMark.value!);
-			updates.add(_dataRepository.updateTaskInstanceFields(report.task.id!, state: TaskState.evaluated,
+				pointsAwarded = getPointsAwarded(report.uiTask.task.points!.quantity!, report.ratingMark.value!);
+			updates.add(_dataRepository.updateTaskInstanceFields(report.uiTask.task.id!, state: TaskState.evaluated,
 					rating: report.ratingMark.value, pointsAwarded: pointsAwarded, ratingComment: report.ratingComment));
 			if (hasPoints) {
 			  var child = await _dataRepository.getUser(id: report.childCard.child.id!) as Child;
 			  List<Points> points = child.points!;
-			  var pointIndex = points.indexWhere((element) => element.type == report.task.points!.type);
+			  var pointIndex = points.indexWhere((element) => element.type == report.uiTask.task.points!.type);
 			  if(pointIndex > -1)
 			  	points[pointIndex] = points[pointIndex].copyWith(quantity: points[pointIndex].quantity! + pointsAwarded!);
 		    else
-				  points.add(Points.fromCurrency(currency: report.task.points!, quantity: pointsAwarded!, createdBy: report.task.points?.createdBy));
+				  points.add(Points.fromCurrency(currency: report.uiTask.task.points!, quantity: pointsAwarded!, createdBy: report.uiTask.task.points?.createdBy));
 				updates.add(_dataRepository.updateUser(child.id!, points: points));
 			}
 			_analyticsService.logTaskApproved(report);
 			sendNotification = () => _notificationService.sendTaskApprovedNotification(
-				report.task.planInstanceId!,
-				report.task.name!,
+				report.uiTask.instance.planInstanceID!,
+				report.uiTask.task.name!,
 				report.childCard.child.id!,
 				report.ratingMark.value!,
-				currencyType: report.task.points?.type,
+				currencyType: report.uiTask.task.points?.type,
 				pointCount: pointsAwarded,
 				comment: report.ratingComment
 			);

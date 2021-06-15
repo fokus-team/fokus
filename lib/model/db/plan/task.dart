@@ -16,10 +16,16 @@ class Task extends Equatable {
   final Points? points;
   final int? timer;
 
-  Task.fromTaskForm(TaskFormModel taskForm, ObjectId planId, ObjectId creator, [ObjectId? taskID])
-		    : this(name: taskForm.title, description: taskForm.description, planID: planId, subtasks: taskForm.subtasks,
-		  optional: taskForm.optional, timer: taskForm.timer! > 0 ? taskForm.timer : null, id: taskID ?? ObjectId(),
-		  points: taskForm.pointsValue != null ? Points.fromCurrency(currency: taskForm.pointCurrency!, quantity: taskForm.pointsValue!, createdBy: creator) : null);
+  Task.fromTaskForm({required TaskFormModel taskForm, ObjectId? planID, ObjectId? creator, ObjectId? taskID}) : this(
+	  name: taskForm.title, 
+	  description: taskForm.description, 
+	  planID: planID, 
+	  subtasks: taskForm.subtasks,
+	  optional: taskForm.optional, 
+	  timer: taskForm.timer! > 0 ? taskForm.timer : null, 
+	  id: taskID ?? ObjectId(),
+	  points: taskForm.pointsValue != null ? Points.fromCurrency(currency: taskForm.pointCurrency!, quantity: taskForm.pointsValue!, createdBy: creator) : null
+  );
 
   Task({this.description, this.id, this.name, this.optional, this.planID, this.points, this.subtasks, this.timer = 0});
 

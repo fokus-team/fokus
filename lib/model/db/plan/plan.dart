@@ -1,26 +1,38 @@
+import 'package:equatable/equatable.dart';
 import 'package:fokus/model/db/date/date.dart';
 import 'package:fokus/model/db/date/time_date.dart';
 import 'package:fokus/model/db/plan/plan_repeatability.dart';
 import 'package:fokus/model/ui/form/plan_form_model.dart';
+import 'package:fokus/services/plan_repeatability_service.dart';
 import 'package:fokus/utils/definitions.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
-class Plan {
-  ObjectId? id;
-  String? name;
-  bool? active;
+class Plan extends Equatable {
+  final ObjectId? id;
+  final String? name;
+  final bool? active;
 
-  PlanRepeatability? repeatability;
-  List<Date>? changedInstances;
-  TimeDate? createdAt;
-  ObjectId? createdBy;
+  final PlanRepeatability? repeatability;
+  final List<Date>? changedInstances;
+  final TimeDate? createdAt;
+  final ObjectId? createdBy;
 
-  List<ObjectId>? tasks;
-  List<ObjectId>? instances;
-  List<ObjectId>? assignedTo;
+  final List<ObjectId>? tasks;
+  final List<ObjectId>? instances;
+  final List<ObjectId>? assignedTo;
 
-  Plan.fromPlanForm(PlanFormModel plan, ObjectId creator, PlanRepeatability repeatability, [ObjectId? id]) : this._(name: plan.name, id: id ?? ObjectId(),
-		  active: plan.isActive, assignedTo: plan.children, createdAt: TimeDate.now(), createdBy: creator, repeatability: repeatability);
+  String? get description => repeatability != null ? PlanRepeatabilityService.buildPlanDescription(repeatability!) : null;
+
+  Plan.fromPlanForm({required PlanFormModel plan, ObjectId? creator, PlanRepeatability? repeatability, List<ObjectId>? tasks, ObjectId? id}) : this._(
+	  name: plan.name,
+	  id: id ?? ObjectId(),
+	  active: plan.isActive,
+	  assignedTo: plan.children,
+	  createdAt: TimeDate.now(),
+	  createdBy: creator,
+	  repeatability: repeatability,
+	  tasks: tasks,
+  );
 
   Plan._({this.active, this.assignedTo, this.changedInstances, this.createdAt,
 	  this.createdBy, this.id, this.instances, this.name, this.repeatability, this.tasks});
@@ -35,9 +47,30 @@ class Plan {
       id: json['_id'],
       instances: json['instances'] != null ? new List<ObjectId>.from(json['instances']) : [],
       name: json['name'],
-      repeatability: PlanRepeatability.fromJson(json['repeatability']),
+      repeatability: json['repeatability'] != null ? PlanRepeatability.fromJson(json['repeatability']) : null,
       tasks: json['tasks'] != null ? new List<ObjectId>.from(json['tasks']) : [],
     ) : null;
+  }
+
+  Plan copyWith({
+	  ObjectId? id,
+	  String? name,
+	  bool? active,
+	  List<ObjectId>? assignedTo,
+	  ObjectId? createdBy,
+  }) {
+	  return Plan._(
+		  id: id ?? this.id,
+		  name: name ?? this.name,
+		  active: active ?? this.active,
+		  tasks: tasks ?? this.tasks,
+		  assignedTo: assignedTo ?? (this.assignedTo != null ? List.from(this.assignedTo!) : null),
+		  createdBy: createdBy ?? this.createdBy,
+		  repeatability: repeatability,
+		  changedInstances: changedInstances,
+		  createdAt: createdAt,
+		  instances: instances,
+	  );
   }
 
   Json toJson() {
@@ -64,4 +97,7 @@ class Plan {
       data['tasks'] = this.tasks;
     return data;
   }
+
+  @override
+  List<Object?> get props => [active, createdBy, createdAt, id, name, repeatability, assignedTo, changedInstances, instances, tasks];
 }

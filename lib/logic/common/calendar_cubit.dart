@@ -1,14 +1,13 @@
 import 'package:bloc/bloc.dart';
 import 'package:date_utils/date_utils.dart';
 import 'package:equatable/equatable.dart';
-import 'package:fokus/model/db/user/caregiver.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 import 'package:get_it/get_it.dart';
 import 'package:collection/collection.dart';
 
 import 'package:fokus/model/db/date/date.dart';
-import 'package:fokus/model/ui/plan/ui_plan.dart';
 import 'package:fokus/utils/definitions.dart';
+import 'package:fokus/model/db/user/caregiver.dart';
 import 'package:fokus/services/data/data_repository.dart';
 import 'package:fokus/model/db/user/child.dart';
 import 'package:fokus/model/db/user/user_role.dart';
@@ -22,7 +21,7 @@ class CalendarCubit extends Cubit<CalendarState> {
 	final ObjectId? _initialFilter;
 	late Map<ObjectId, Plan> _plans;
 	late Map<ObjectId, String> _childNames;
-	Map<Date, Map<Date, List<UIPlan>>> _allEvents = {};
+	Map<Date, Map<Date, List<Plan>>> _allEvents = {};
 
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final PlanRepeatabilityService _repeatabilityService = GetIt.I<PlanRepeatabilityService>();
@@ -60,7 +59,7 @@ class CalendarCubit extends Cubit<CalendarState> {
 
   void monthChanged(Date month) async => emit(state.copyWith(day: month, events: await _filterData(state.children, month)));
 
-	Future<Map<Date, List<UIPlan>>> _filterData(Map<Child?, bool>? filter, Date date) async {
+	Future<Map<Date, List<Plan>>> _filterData(Map<Child?, bool>? filter, Date date) async {
 		Date month = Date.fromDate(DateUtils.firstDayOfMonth(date));
 		if (filter == null)
 			return {};
@@ -70,10 +69,10 @@ class CalendarCubit extends Cubit<CalendarState> {
 			filter.keys.map((child) => child!.id).toSet()
 			: filter.keys.where((child) => filter[child]!).map((child) => child!.id).toSet();
 
-		Map<Date, List<UIPlan>> events = {};
+		Map<Date, List<Plan>> events = {};
 		var monthEvents = _allEvents[month] ?? await _loadDataForMonth(month);
 		for (var day in monthEvents.entries) {
-			List<UIPlan> plans = [];
+			List<Plan> plans = [];
 			for (var plan in day.value) {
 				if (filterNotApplied || (!filterNotApplied && ids.any(plan.assignedTo!.contains)))
 					plans.add(plan);
@@ -83,12 +82,12 @@ class CalendarCubit extends Cubit<CalendarState> {
 		return events;
 	}
 
-	Future<Map<Date, List<UIPlan>>> _loadDataForMonth(Date month) async {
+	Future<Map<Date, List<Plan>>> _loadDataForMonth(Date month) async {
 	  if (_allEvents.containsKey(month))
 	  	return _allEvents[month]!;
 	  var currentMonth = Date.fromDate(DateUtils.firstDayOfMonth(Date.now()));
 
-	  Map<Date, List<UIPlan>> events = {};
+	  Map<Date, List<Plan>> events = {};
 	  if (month < currentMonth)
 		  events.addAll(await _loadPastData(_getMonthSpan(month)));
 	  else if (month > currentMonth)
@@ -102,7 +101,7 @@ class CalendarCubit extends Cubit<CalendarState> {
   }
 
   /// [span] - must fit within a month (from 1'st to the end)
-	Future<Map<Date, List<UIPlan>>> _loadPastData(DateSpan<Date> span) async {
+	Future<Map<Date, List<Plan>>> _loadPastData(DateSpan<Date> span) async {
 		var instances = await _dataRepository.getPlanInstances(childIDs: _childNames.keys.toList(), between: span);
 		var unassignedPlanIDs = instances.map((plan) => plan.planID!).where((id) => !_plans.keys.contains(id)).toList();
 		Map<ObjectId, Plan> pastPlans = Map.from(_plans)..addEntries(_planEntries(await _dataRepository.getPlans(ids: unassignedPlanIDs)));
@@ -110,10 +109,9 @@ class CalendarCubit extends Cubit<CalendarState> {
 
 		var planWithAssigned = (MapEntry<ObjectId, List<PlanInstance>> planEntry) {
 			var plan = pastPlans[planEntry.key]!;
-		  return UIPlan(plan.id, plan.name, plan.active, plan.tasks?.length, planEntry.value.map(
-					(instance) => instance.assignedTo!).toList(), _repeatabilityService.buildPlanDescription(plan.repeatability!), plan.createdBy);
+		  return plan.copyWith(assignedTo: planEntry.value.map((instance) => instance.assignedTo!).toList());
 		};
-	  Map<Date, List<UIPlan>> events = {};
+	  Map<Date, List<Plan>> events = {};
 		for (var entry in dateMap.entries) {
 			var planToInstanceMap = groupBy<PlanInstance, ObjectId>(entry.value, (plan) => plan.planID!);
 			events[entry.key] = planToInstanceMap.entries.map((planEntry) => planWithAssigned(planEntry)).toList();
@@ -123,13 +121,12 @@ class CalendarCubit extends Cubit<CalendarState> {
 
 	Iterable<MapEntry<ObjectId, Plan>> _planEntries(List<Plan> plans) => plans.map((plan) => MapEntry(plan.id!, plan));
 
-	Map<Date, List<UIPlan>> _loadFutureData(DateSpan<Date> span) {
-		Map<Date, List<UIPlan>> events = {};
+	Map<Date, List<Plan>> _loadFutureData(DateSpan<Date> span) {
+		Map<Date, List<Plan>> events = {};
 		for (var plan in _plans.entries) {
-			var getDescription = (Plan plan) => _repeatabilityService.buildPlanDescription(plan.repeatability!);
 			var dates = _repeatabilityService.getRepeatabilityDatesInSpan(plan.value.repeatability!, span);
 			for (var date in dates)
-				(events[date] ??= []).add(UIPlan.fromDBModel(plan.value, getDescription(plan.value)));
+				(events[date] ??= []).add(plan.value);
 		}
 		return events;
 	}
@@ -141,11 +138,11 @@ class CalendarCubit extends Cubit<CalendarState> {
 class CalendarState extends Equatable {
 	final Map<Child?, bool>? children;
 	final Date day;
-	final Map<Date, List<UIPlan>>? events;
+	final Map<Date, List<Plan>>? events;
 
 	const CalendarState({required this.day, this.children, this.events});
 
-	CalendarState copyWith({Map<Child?, bool>? children, Map<Date, List<UIPlan>>? events, Date? day}) {
+	CalendarState copyWith({Map<Child?, bool>? children, Map<Date, List<Plan>>? events, Date? day}) {
 	  return CalendarState(
 		  children: children ?? this.children,
 		  events: events ?? this.events,

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fokus/model/db/user/child.dart';
-import 'package:fokus/utils/navigation_utils.dart';
 import 'package:intl/intl.dart';
 import 'package:smart_select/smart_select.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -11,8 +9,10 @@ import 'package:collection/collection.dart';
 import 'package:fokus/logic/common/calendar_cubit.dart';
 import 'package:fokus/model/db/date/date.dart';
 import 'package:fokus/model/navigation/plan_form_params.dart';
+import 'package:fokus/model/db/plan/plan.dart';
+import 'package:fokus/model/db/user/child.dart';
+import 'package:fokus/utils/navigation_utils.dart';
 import 'package:fokus/model/ui/app_page.dart';
-import 'package:fokus/model/ui/plan/ui_plan.dart';
 import 'package:fokus/utils/ui/calendar_utils.dart';
 import 'package:fokus/widgets/buttons/bottom_sheet_confirm_button.dart';
 import 'package:fokus/services/app_locales.dart';
@@ -40,7 +40,7 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 
   CalendarFormat _calendarFormat = CalendarFormat.month;
   RangeSelectionMode _rangeSelectionMode = RangeSelectionMode.toggledOff;
-	ValueNotifier<List<UIPlan>>? _selectedEvents;
+	ValueNotifier<List<Plan>>? _selectedEvents;
 	final Color notAssignedPlanMarkerColor = Colors.grey[400]!;
 	
 	bool canAddPlan = true;
@@ -134,7 +134,7 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 					noElementsIcon: Icons.description,
 					elements: [
 						if(state.events != null && state.events![state.day] != null)
-							for(UIPlan plan in state.events![state.day]!)
+							for(Plan plan in state.events![state.day]!)
 								ItemCard(
 									title: plan.name!,
 									onTapped: () => navigateChecked(context, AppPage.planDetails, arguments: plan.id),
@@ -156,8 +156,8 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 		);
 	}
 
-  List<UIPlan> _getEventsForDay(DateTime day) {
-		Map<Date, List<UIPlan>>? events = BlocProvider.of<CalendarCubit>(context).state.events;
+  List<Plan> _getEventsForDay(DateTime day) {
+		Map<Date, List<Plan>>? events = BlocProvider.of<CalendarCubit>(context).state.events;
     return events != null && events[Date.fromDate(day)] != null ? events[Date.fromDate(day)]! : [];
   }
 
@@ -183,7 +183,7 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 	}
 	
 	TableCalendar _buildCalendar(Map<Child?, bool>? children) {
-		return TableCalendar<UIPlan>(
+		return TableCalendar<Plan>(
 			firstDay: kFirstDay,
 			lastDay: kLastDay,
 			focusedDay: _focusedDay,

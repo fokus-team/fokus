@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fokus/logic/caregiver/caregiver_plans_cubit.dart';
+import 'package:fokus/model/db/plan/plan.dart';
 import 'package:fokus/model/ui/app_page.dart';
-import 'package:fokus/model/ui/plan/ui_plan.dart';
 import 'package:fokus/model/ui/ui_button.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/navigation_utils.dart';
@@ -37,8 +37,8 @@ class CaregiverPlansPage extends StatelessWidget {
 	}
 
   List<Segment> _buildPanelSegments(CaregiverPlansState state, context) {
-	  var activePlans = state.plans.where((blueprint) => (blueprint.isActive!)).toList();
-	  var deactivatedPlans = state.plans.where((blueprint) => (!blueprint.isActive!)).toList();
+	  var activePlans = state.plans.where((blueprint) => (blueprint.active!)).toList();
+	  var deactivatedPlans = state.plans.where((blueprint) => (!blueprint.active!)).toList();
 	  return [
 		  _getPlansSegment(
 			  plans: activePlans,
@@ -57,7 +57,7 @@ class CaregiverPlansPage extends StatelessWidget {
 	  ];
   }
 
-  Segment _getPlansSegment({required List<UIPlan> plans, required String title, UIButton? headerAction, required String subtitle, context}) {
+  Segment _getPlansSegment({required List<Plan> plans, required String title, UIButton? headerAction, required String subtitle, context}) {
 	  return Segment(
 		  title: title,
 			subtitle: subtitle,
@@ -67,11 +67,11 @@ class CaregiverPlansPage extends StatelessWidget {
 			  for (var plan in plans)
 				  ItemCard(
 					  title: plan.name!,
-					  subtitle: plan.description!(context),
+					  subtitle: plan.description,
 						onTapped: () => navigateChecked(context, AppPage.planDetails, arguments: plan.id),
 					  chips: <Widget>[
 						  AttributeChip.withIcon(
-							  content: AppLocales.of(context).translate('$_pageKey.content.tasks', {'NUM_TASKS': plan.taskCount!}),
+							  content: AppLocales.of(context).translate('$_pageKey.content.tasks', {'NUM_TASKS': plan.tasks!.length}),
 							  color: Colors.indigo,
 							  icon: Icons.layers
 						  )

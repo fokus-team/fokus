@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/model/db/gamification/badge.dart';
+import 'package:fokus/model/db/plan/plan.dart';
 import 'package:round_spot/round_spot.dart' as round_spot;
 import 'package:intl/intl.dart';
 import 'package:fokus_auth/fokus_auth.dart';
@@ -15,7 +16,6 @@ import 'package:fokus/logic/caregiver/child_dashboard/dashboard_rewards_cubit.da
 import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
 import 'package:fokus/model/navigation/child_dashboard_params.dart';
 import 'package:fokus/model/ui/app_page.dart';
-import 'package:fokus/model/ui/plan/ui_plan.dart';
 import 'package:fokus/model/ui/ui_button.dart';
 import 'package:fokus/model/ui/child_card_model.dart';
 import 'package:fokus/services/app_locales.dart';
@@ -197,7 +197,7 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 		if (index == 1)
 			return SizedBox.shrink();
 		if (index == 0)
-			return _buildSelect<UIPlan, DashboardPlansCubit, DashboardPlansState>(
+			return _buildSelect<Plan, DashboardPlansCubit, DashboardPlansState>(
 					content: _buildPlanSelect,
 					model: (tabState) => tabState.availablePlans
 			);
@@ -262,8 +262,8 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 		);
 	}
 
-	Widget _buildPlanSelect([List<UIPlan> availablePlans = const []]) {
-		return _buildFloatingButtonPicker<UIPlan>(
+	Widget _buildPlanSelect([List<Plan> availablePlans = const []]) {
+		return _buildFloatingButtonPicker<Plan>(
 			buttonLabel: AppLocales.of(context).translate('$_pageKey.header.assignPlanButton'),
 			buttonIcon: Icons.description,
 			disabledDialogTitle: AppLocales.of(context).translate('$_pageKey.header.assignPlanButton'),
@@ -271,7 +271,7 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 			pickerTitle: AppLocales.of(context).translate('$_pageKey.header.assignPlanTitle'),
 			pickedValues: availablePlans.where((element) => element.assignedTo!.contains(_childCard.child.id)).toList(),
 			options: availablePlans,
-			onChange: (List<UIPlan>? selected) => context.read<DashboardPlansCubit>().assignPlans(selected == null ? [] : selected.map((plan) => plan.id).toList()),
+			onChange: (List<Plan>? selected) => context.read<DashboardPlansCubit>().assignPlans(selected == null ? [] : selected.map((plan) => plan.id).toList()),
 			getName: (plan) => plan.name,
 			builder: (context, selectState, choice) {
 				return Theme(

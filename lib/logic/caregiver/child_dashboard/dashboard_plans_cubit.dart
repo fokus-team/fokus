@@ -2,7 +2,6 @@ import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart';
 
 import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
-import 'package:fokus/model/ui/plan/ui_plan.dart';
 import 'package:fokus/model/ui/plan/ui_plan_instance.dart';
 import 'package:fokus/model/db/date/date.dart';
 import 'package:fokus/model/db/user/child.dart';
@@ -36,10 +35,9 @@ class DashboardPlansCubit extends StatefulCubit {
 	    var toDate = plan.repeatability!.range?.to;
 	    return toDate == null || toDate >= Date.now();
 	  }).toList();
-	  var availablePlans = _availablePlans.map((plan) => UIPlan.fromDBModel(plan)).toList();
 	  emit(DashboardPlansState(
 		  childPlans: data[0] as List<UIPlanInstance>,
-		  availablePlans: availablePlans,
+		  availablePlans: _availablePlans,
 		  unratedTasks: (data[1] as int) > 0,
 		  noPlansAdded: (data[2] as int) == 0
 	  ));
@@ -50,7 +48,7 @@ class DashboardPlansCubit extends StatefulCubit {
 			return;
 		var tabState = state as DashboardPlansState;
 		var childID = child.id!;
-		var filterAssigned = (bool Function(UIPlan) condition) => tabState.availablePlans.where(condition).map((plan) => plan.id!).toList();
+		var filterAssigned = (bool Function(Plan) condition) => tabState.availablePlans.where(condition).map((plan) => plan.id!).toList();
 		var assignedIds = filterAssigned((plan) => ids.contains(plan.id) && !plan.assignedTo!.contains(childID));
 		var unassignedIds = filterAssigned((plan) => !ids.contains(plan.id) && plan.assignedTo!.contains(childID));
 		var assignedPlans = _availablePlans.where((plan) => assignedIds.contains(plan.id)).toList()..forEach((plan) => plan.assignedTo!.add(childID));
@@ -59,7 +57,7 @@ class DashboardPlansCubit extends StatefulCubit {
 			_dataRepository.updatePlanFields(unassignedIds, unassign: childID),
 			_planKeeperService.createPlansForToday(assignedPlans, [childID])
 		]);
-		var updateAssigned = (UIPlan plan) {
+		var updateAssigned = (Plan plan) {
 			var assignedTo = List.of(plan.assignedTo!);
 			if (assignedIds.contains(plan.id))
 				assignedTo.add(childID);
@@ -75,7 +73,7 @@ class DashboardPlansCubit extends StatefulCubit {
 
 class DashboardPlansState extends StatefulState {
 	final List<UIPlanInstance> childPlans;
-	final List<UIPlan> availablePlans;
+	final List<Plan> availablePlans;
 	final bool noPlansAdded;
 	final bool unratedTasks;
 
@@ -87,7 +85,7 @@ class DashboardPlansState extends StatefulState {
 		DataSubmissionState? submissionState,
 	}) : super.loaded(submissionState);
 
-	DashboardPlansState copyWith({List<UIPlan>? availablePlans, List<UIPlanInstance>? childPlans, DataSubmissionState? submissionState}) {
+	DashboardPlansState copyWith({List<Plan>? availablePlans, List<UIPlanInstance>? childPlans, DataSubmissionState? submissionState}) {
 		return DashboardPlansState(
 			childPlans: childPlans ?? this.childPlans,
 			availablePlans: availablePlans ?? this.availablePlans,

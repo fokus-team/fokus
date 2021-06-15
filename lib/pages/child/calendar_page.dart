@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:fokus/model/ui/app_page.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import 'package:fokus/model/db/date/date.dart';
-import 'package:fokus/model/ui/plan/ui_plan.dart';
+import 'package:fokus/model/db/plan/plan.dart';
+import 'package:fokus/model/ui/app_page.dart';
 
 import 'package:fokus/logic/common/calendar_cubit.dart';
 import 'package:fokus/services/app_locales.dart';
@@ -31,7 +31,7 @@ class _ChildCalendarPageState extends State<ChildCalendarPage> with TickerProvid
 
   CalendarFormat _calendarFormat = CalendarFormat.month;
   RangeSelectionMode _rangeSelectionMode = RangeSelectionMode.toggledOff;
-	late ValueNotifier<List<UIPlan>> _selectedEvents;
+	late ValueNotifier<List<Plan>> _selectedEvents;
 	final Color notAssignedPlanMarkerColor = Colors.grey[400]!;
 
 	@override
@@ -92,16 +92,16 @@ class _ChildCalendarPageState extends State<ChildCalendarPage> with TickerProvid
 					noElementsIcon: Icons.description,
 					elements: [
 						if(state.events != null && state.events![state.day] != null)
-							for(UIPlan plan in state.events![state.day]!)
+							for(Plan plan in state.events![state.day]!)
 								ItemCard(
 									title: plan.name!,
-									subtitle: plan.description!(context),
+									subtitle: plan.description,
 									onTapped: () => Navigator.of(context).pushNamed(AppPage.planDetails.name, arguments: plan.id),
 									chips: [
 										AttributeChip.withIcon(
 											icon: Icons.description,
 											color: AppColors.mainBackgroundColor,
-											content: AppLocales.of(context).translate('plans.tasks', {'NUM_TASKS': plan.taskCount!})
+											content: AppLocales.of(context).translate('plans.tasks', {'NUM_TASKS': plan.tasks!.length})
 										)
 									]
 								)
@@ -111,8 +111,8 @@ class _ChildCalendarPageState extends State<ChildCalendarPage> with TickerProvid
 		);
 	}
 
-  List<UIPlan> _getEventsForDay(DateTime day) {
-		Map<Date, List<UIPlan>>? events = BlocProvider.of<CalendarCubit>(context).state.events;
+  List<Plan> _getEventsForDay(DateTime day) {
+		Map<Date, List<Plan>>? events = BlocProvider.of<CalendarCubit>(context).state.events;
     return events != null && events[Date.fromDate(day)] != null ? events[Date.fromDate(day)]! : [];
   }
 
@@ -138,7 +138,7 @@ class _ChildCalendarPageState extends State<ChildCalendarPage> with TickerProvid
 	}
 
 	TableCalendar _buildCalendar() {
-		return TableCalendar<UIPlan>(
+		return TableCalendar<Plan>(
 			firstDay: kFirstDay,
 			lastDay: kLastDay,
 			focusedDay: _focusedDay,

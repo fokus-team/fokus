@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/model/db/gamification/currency.dart';
+import 'package:fokus/model/db/plan/plan.dart';
 import 'package:fokus/model/db/plan/task.dart';
 import 'package:mongo_dart/mongo_dart.dart' as Mongo;
 
@@ -10,7 +11,6 @@ import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
 import 'package:fokus/model/db/user/user_role.dart';
 import 'package:fokus/model/navigation/plan_form_params.dart';
 import 'package:fokus/model/ui/app_page.dart';
-import 'package:fokus/model/ui/plan/ui_plan.dart';
 import 'package:fokus/utils/ui/snackbar_utils.dart';
 import 'package:fokus/widgets/stateful_bloc_builder.dart';
 import 'package:fokus/model/ui/form/task_form_model.dart';
@@ -58,14 +58,14 @@ class _PlanDetailsPageState extends State<PlanDetailsPage> {
 		var authenticationBloc = context.read<AuthenticationBloc>();
 		var currentUser = authenticationBloc.state.user;
 
-		return (state.uiPlan.createdBy != currentUser!.id && currentUser.role == UserRole.caregiver) ? FloatingActionButton.extended(
+		return (state.plan.createdBy != currentUser!.id && currentUser.role == UserRole.caregiver) ? FloatingActionButton.extended(
 			heroTag: null,
 			materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
 			backgroundColor: AppColors.formColor,
 			elevation: 4.0,
 			icon: Icon(Icons.control_point_duplicate),
 			label: Text(AppLocales.of(context).translate('$_pageKey.content.copyPlanButton')),
-			onPressed: () => Navigator.of(context).pushNamed(AppPage.caregiverPlanForm.name, arguments: PlanFormParams(type: AppFormType.copy, id: state.uiPlan.id)),
+			onPressed: () => Navigator.of(context).pushNamed(AppPage.caregiverPlanForm.name, arguments: PlanFormParams(type: AppFormType.copy, id: state.plan.id)),
 		) : SizedBox.shrink();
 	}
 
@@ -75,7 +75,7 @@ class _PlanDetailsPageState extends State<PlanDetailsPage> {
 			verticalDirection: VerticalDirection.up,
 			children: [
 				AppSegments(segments: _buildPanelSegments(state)),
-				_getCardHeader(state.uiPlan, state.children, context)
+				_getCardHeader(state.plan, state.children, context)
 			],
 		);
 	}
@@ -121,7 +121,7 @@ class _PlanDetailsPageState extends State<PlanDetailsPage> {
 		);
 	}
 
-	Widget _getCardHeader(UIPlan plan, Map<Mongo.ObjectId, String> children, BuildContext context) {
+	Widget _getCardHeader(Plan plan, Map<Mongo.ObjectId, String> children, BuildContext context) {
   	int i = 0;
 		// ignore: close_sinks
 		var authenticationBloc = BlocProvider.of<AuthenticationBloc>(context);
@@ -131,12 +131,12 @@ class _PlanDetailsPageState extends State<PlanDetailsPage> {
 			title: '$_pageKey.header.title',
 			content: ItemCard(
 				title: plan.name!,
-				subtitle: plan.description!(context),
+				subtitle: plan.description,
 				//TODO: Open child page with click on chip
 				chips: <Widget>[
 					if (currentUser!.role == UserRole.child || currentUser.id != plan.createdBy)
 						AttributeChip.withIcon(
-							content: AppLocales.of(context).translate('page.caregiverSection.plans.content.tasks', {'NUM_TASKS': plan.taskCount!}),
+							content: AppLocales.of(context).translate('page.caregiverSection.plans.content.tasks', {'NUM_TASKS': plan.tasks!.length}),
 							color: Colors.indigo,
 							icon: Icons.layers
 						)

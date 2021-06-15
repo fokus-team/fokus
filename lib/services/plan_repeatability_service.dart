@@ -88,37 +88,35 @@ class PlanRepeatabilityService {
 	  return false;
   }
 
-	TranslateFunc buildPlanDescription(PlanRepeatability rules, {Date? instanceDate, bool detailed = false}) {
-  	return (context) {
-		  var formatDate = (date) => DateFormat.yMd(AppLocales.instance.locale.toString()).format(date);
-  		String description = '';
-		  if (rules.untilCompleted! && instanceDate != null)
-			  description += AppLocales.of(context).translate('repeatability.startedOn', {'DAY': formatDate(instanceDate)});
-		  else if (rules.type == RepeatabilityType.once)
-		  	description += AppLocales.of(context).translate('repeatability.once', {'DAY': formatDate(rules.range!.from)});
-			else {
-				String andWord = AppLocales.of(context).translate('and');
-			  if (rules.type == RepeatabilityType.weekly) {
-					if(rules.days!.length == 7) {
-						description += AppLocales.of(context).translate('date.everyday');
-					} else {
-						List<String> weekdays = rules.days!.map((day) => AppLocales.of(context).translate('repeatability.weekday', {'WEEKDAY': '$day'})).toList();
-						String weekdayString = displayJoin(weekdays, andWord);
-						description += '${AppLocales.of(context).translate('repeatability.weekly', {'WEEKDAY': '${rules.days![0]}'})} $weekdayString';
-					}
-			  }
-			  else if (rules.type == RepeatabilityType.monthly) {
-				  String dayString = displayJoin(rules.days!.map((day) => '$day').toList(), andWord);
-				  description += AppLocales.of(context).translate('repeatability.monthly', {'DAYS': dayString});
-			  }
+	static buildPlanDescription(PlanRepeatability rules, {Date? instanceDate, bool detailed = false}) {
+  	var formatDate = (date) => DateFormat.yMd(AppLocales.instance.locale.toString()).format(date);
+    String description = '';
+	  if (rules.untilCompleted! && instanceDate != null)
+		  description += AppLocales.instance.translate('repeatability.startedOn', {'DAY': formatDate(instanceDate)});
+	  else if (rules.type == RepeatabilityType.once)
+	    description += AppLocales.instance.translate('repeatability.once', {'DAY': formatDate(rules.range!.from)});
+		else {
+			String andWord = AppLocales.instance.translate('and');
+		  if (rules.type == RepeatabilityType.weekly) {
+				if(rules.days!.length == 7) {
+					description += AppLocales.instance.translate('date.everyday');
+				} else {
+					List<String> weekdays = rules.days!.map((day) => AppLocales.instance.translate('repeatability.weekday', {'WEEKDAY': '$day'})).toList();
+					String weekdayString = displayJoin(weekdays, andWord);
+					description += '${AppLocales.instance.translate('repeatability.weekly', {'WEEKDAY': '${rules.days![0]}'})} $weekdayString';
+				}
 		  }
-			if (!detailed)
-				return description;
-			if (rules.range!.to != null)
-		    description += ', ${AppLocales.of(context).translate('repeatability.range', {'FROM': formatDate(rules.range!.from), 'TO': formatDate(rules.range!.to)})}';
-			if (rules.untilCompleted!)
-		  description += ', ${AppLocales.of(context).translate('repeatability.untilCompleted')}';
-		  return description;
-	  };
+		  else if (rules.type == RepeatabilityType.monthly) {
+			  String dayString = displayJoin(rules.days!.map((day) => '$day').toList(), andWord);
+			  description += AppLocales.instance.translate('repeatability.monthly', {'DAYS': dayString});
+		  }
+	  }
+		if (!detailed)
+			return description;
+		if (rules.range!.to != null)
+	    description += ', ${AppLocales.instance.translate('repeatability.range', {'FROM': formatDate(rules.range!.from), 'TO': formatDate(rules.range!.to)})}';
+		if (rules.untilCompleted!)
+	  description += ', ${AppLocales.instance.translate('repeatability.untilCompleted')}';
+	  return description;
   }
 }

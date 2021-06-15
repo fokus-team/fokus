@@ -72,11 +72,11 @@ class CaregiverFriendPlansPage extends StatelessWidget {
 					for (var plan in state.plans)
 						ItemCard(
 							title: plan.name!,
-							subtitle: plan.description!(context),
+							subtitle: plan.description,
 							onTapped: () => Navigator.of(context).pushNamed(AppPage.planDetails.name, arguments: plan.id),
 							chips: <Widget>[
 								AttributeChip.withIcon(
-									content: AppLocales.of(context).translate('page.caregiverSection.plans.content.tasks', {'NUM_TASKS': plan.taskCount!}),
+									content: AppLocales.of(context).translate('page.caregiverSection.plans.content.tasks', {'NUM_TASKS': plan.tasks!.length}),
 									color: Colors.indigo,
 									icon: Icons.layers
 								)

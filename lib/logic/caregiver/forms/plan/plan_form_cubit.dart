@@ -49,9 +49,15 @@ class PlanFormCubit extends Cubit<PlanFormState> {
 		emit(PlanFormSubmissionInProgress(state));
 		var userId = _activeUser().id!;
 
-		var plan = Plan.fromPlanForm(planForm, userId, _repeatabilityService.mapRepeatabilityModel(planForm), state.formType == AppFormType.edit ? state.planId: null);
-		var tasks = planForm.tasks.map((task) => Task.fromTaskForm(task, plan.id!, userId, state.formType == AppFormType.edit ? task.id : null)).toList();
-		plan.tasks = tasks.map((task) => task.id!).toList();
+		var planID = state.formType == AppFormType.edit ? state.planId! : ObjectId();
+	  var tasks = planForm.tasks.map((task) => Task.fromTaskForm(taskForm: task, planID: planID, creator: userId, taskID: state.formType == AppFormType.edit ? task.id : null)).toList();
+		var plan = Plan.fromPlanForm(
+			plan: planForm,
+			creator: userId,
+			repeatability: _repeatabilityService.mapRepeatabilityModel(planForm),
+			id: planID,
+			tasks: tasks.map((task) => task.id!,
+		).toList());
 
 		List<Future> updates;
 		if (state.formType == AppFormType.create || state.formType == AppFormType.copy) {

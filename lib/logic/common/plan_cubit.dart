@@ -2,29 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
 import 'package:fokus/model/db/plan/plan.dart';
 import 'package:fokus/model/db/plan/task.dart';
-import 'package:fokus/model/ui/plan/ui_plan.dart';
 import 'package:fokus/services/data/data_repository.dart';
-import 'package:fokus/services/plan_repeatability_service.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
 class PlanCubit extends StatefulCubit {
   final ObjectId _planId;
   final DataRepository _dataRepository = GetIt.I<DataRepository>();
-  final PlanRepeatabilityService _repeatabilityService =
-      GetIt.I<PlanRepeatabilityService>();
 
   PlanCubit(this._planId, ModalRoute pageRoute) : super(pageRoute);
 
   @override
   doLoadData() async {
-    var getDescription = (Plan plan) =>
-        _repeatabilityService.buildPlanDescription(plan.repeatability!);
     Plan plan = (await _dataRepository.getPlan(id: _planId))!;
     var children = await _dataRepository.getUserNames(plan.assignedTo!);
     List<Task> tasks = await _dataRepository.getTasks(planId: _planId);
     emit(PlanCubitState(
-      uiPlan: UIPlan.fromDBModel(plan, getDescription(plan)),
+      plan: plan,
       tasks: tasks,
       children: children,
     ));
@@ -46,12 +40,12 @@ class PlanCubit extends StatefulCubit {
 }
 
 class PlanCubitState extends StatefulState {
-  final UIPlan uiPlan;
+  final Plan plan;
   final List<Task> tasks;
   final Map<ObjectId, String> children;
 
   PlanCubitState({
-    required this.uiPlan,
+    required this.plan,
     required this.tasks,
     required this.children,
     DataSubmissionState? submissionState,
@@ -60,12 +54,12 @@ class PlanCubitState extends StatefulState {
   @override
   StatefulState withSubmitState(DataSubmissionState submissionState) =>
       PlanCubitState(
-        uiPlan: uiPlan,
+        plan: plan,
         tasks: tasks,
         children: children,
         submissionState: submissionState,
       );
 
   @override
-  List<Object?> get props => super.props..addAll([uiPlan, tasks, children]);
+  List<Object?> get props => super.props..addAll([plan, tasks, children]);
 }

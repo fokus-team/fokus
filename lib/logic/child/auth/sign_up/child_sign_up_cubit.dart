@@ -1,4 +1,4 @@
-import 'package:fokus/model/ui/user/ui_caregiver.dart';
+import 'package:fokus/model/db/user/caregiver.dart';
 import 'package:fokus/services/analytics_service.dart';
 import 'package:formz/formz.dart';
 
@@ -37,14 +37,14 @@ class ChildSignUpCubit extends ChildAuthCubitBase<ChildSignUpState> {
 
 	  var caregiverId = getIdFromCode(state.caregiverCode.value);
 	  var child = Child.create(name: state.name.value, avatar: state.avatar, connections: [caregiverId]);
-	  child.id = await dataRepository.createUser(child);
+	  await dataRepository.createUser(child);
 	  await dataRepository.updateUser(caregiverId, newConnections: [child.id!]);
 	  appConfigRepository.saveChildProfile(child.id!);
 	  if (!_caregiverSignedIn())
 		  authenticationBloc.add(AuthenticationChildSignInRequested(child));
 	  else {
-		  var user = _authBloc.state.user as UICaregiver;
-	  	authenticationBloc.add(AuthenticationActiveUserUpdated(UICaregiver.from(user, connections: List.from(user.connections!)..add(child.id!))));
+		  var user = _authBloc.state.user as Caregiver;
+	  	authenticationBloc.add(AuthenticationActiveUserUpdated(Caregiver.copyFrom(user, connections: List.from(user.connections!)..add(child.id!))));
 	  }
 	  _analyticsService.logChildSignUp();
 	  emit(state.copyWith(status: FormzStatus.submissionSuccess));

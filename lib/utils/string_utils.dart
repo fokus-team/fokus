@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fokus/model/ui/user/ui_child.dart';
+import 'package:fokus/model/ui/child_card_model.dart';
 import 'package:fokus/services/app_locales.dart';
 
 String displayJoin(List<String> parts, String andWord) {
@@ -13,9 +13,9 @@ String displayJoin(List<String> parts, String andWord) {
 	return parts.join(', ') + tail;
 }
 
-String getChildCardSubtitle(BuildContext context, UIChild child) {
+String getChildCardSubtitle(BuildContext context, ChildCardModel childCard) {
 	String key = 'page.caregiverSection.panel.content';
-	if (child.hasActivePlan!)
+	if (childCard.hasActivePlan)
 		return AppLocales.of(context).translate('$key.activePlan');
-	return AppLocales.of(context).translate('$key.todayPlans', {'NUM_PLANS': '${child.todayPlanCount}'});
+	return AppLocales.of(context).translate('$key.todayPlans', {'NUM_PLANS': '${childCard.todayPlanCount}'});
 }

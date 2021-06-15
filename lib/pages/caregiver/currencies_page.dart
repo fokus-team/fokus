@@ -46,8 +46,10 @@ class _CaregiverCurrenciesPageState extends State<CaregiverCurrenciesPage> {
 		return SimpleStatefulBlocBuilder<CaregiverCurrenciesCubit, CaregiverCurrenciesState>(
 			listener: (context, state) {
 				if (state.loaded) {
-					for(Currency currency in (state as CaregiverCurrenciesState).currencies)
-						currencyList[currency.type!] = currency.name!;
+					for(Currency currency in (state as CaregiverCurrenciesState).currencies) {
+						if (currency.type != CurrencyType.diamond)
+							currencyList[currency.type!] = currency.name!;
+					}
 				}
 				if (state.submitted)
 					showSuccessSnackbar(context, '$_pageKey.content.currenciesUpdatedText');

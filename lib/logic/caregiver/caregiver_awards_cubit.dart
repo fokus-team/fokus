@@ -1,12 +1,11 @@
-import 'package:fokus/model/db/gamification/reward.dart';
-import 'package:fokus/model/db/user/caregiver.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
-import 'package:fokus/model/ui/user/ui_caregiver.dart';
 import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
 import 'package:fokus/services/data/data_repository.dart';
 import 'package:fokus/model/db/gamification/badge.dart';
+import 'package:fokus/model/db/gamification/reward.dart';
+import 'package:fokus/model/db/user/caregiver.dart';
 
 class CaregiverAwardsCubit extends StatefulCubit {
   final DataRepository _dataRepository = GetIt.I<DataRepository>();
@@ -36,7 +35,7 @@ class CaregiverAwardsCubit extends StatefulCubit {
 	void removeBadge(Badge badge) async {
 		if (!beginSubmit())
 			return;
-		UICaregiver user = UICaregiver.fromDBModel(activeUser as Caregiver);
+		var user = activeUser as Caregiver;
 		Badge model = Badge(name: badge.name, description: badge.description, icon: badge.icon);
 		await _dataRepository.removeBadge(user.id!, model);
 		emit(BadgeRemovedState(

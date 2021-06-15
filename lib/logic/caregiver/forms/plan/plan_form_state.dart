@@ -15,7 +15,7 @@ class PlanFormInitial extends PlanFormState {
 }
 
 class PlanFormDataLoadSuccess extends PlanFormState {
-	final List<UIChild> children;
+	final List<Child> children;
 	final List<Currency> currencies;
 	final PlanFormModel? planForm;
 

@@ -1,5 +1,4 @@
 import 'package:flutter/widgets.dart';
-import 'package:fokus/model/db/user/user.dart';
 import 'package:fokus/model/navigation/task_in_progress_params.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mongo_dart/mongo_dart.dart';
@@ -15,7 +14,6 @@ import 'package:fokus/model/db/plan/task_instance.dart';
 import 'package:fokus/model/db/plan/task_status.dart';
 import 'package:fokus/model/ui/plan/ui_plan_instance.dart';
 import 'package:fokus/model/ui/task/ui_task_instance.dart';
-import 'package:fokus/model/ui/user/ui_user.dart';
 import 'package:fokus/services/analytics_service.dart';
 import 'package:fokus/services/data/data_repository.dart';
 import 'package:fokus/services/notifications/notification_service.dart';
@@ -131,7 +129,7 @@ class TaskCompletionCubit extends StatefulCubit<TaskCompletionState> {
 			return;
 		TaskCompletionState state = this.state;
 
-  	_notificationService.sendTaskFinishedNotification(_planInstance.id!, _task.name!, _plan.createdBy!, UIUser.fromDBModel(activeUser as User), completed: true);
+  	_notificationService.sendTaskFinishedNotification(_planInstance.id!, _task.name!, _plan.createdBy!, activeUser!, completed: true);
 	  _analyticsService.logTaskFinished(_taskInstance);
 	  var updatedTask =  await _onCompletion(TaskState.notEvaluated);
 		var planInstance = await _dataAggregator.loadPlanInstance(planInstance: _planInstance, plan: _plan);
@@ -143,7 +141,7 @@ class TaskCompletionCubit extends StatefulCubit<TaskCompletionState> {
 			return;
 		TaskCompletionState state = this.state;
 
-		_notificationService.sendTaskFinishedNotification(_planInstance.id!, _task.name!, _plan.createdBy!, UIUser.fromDBModel(activeUser as User), completed: false);
+		_notificationService.sendTaskFinishedNotification(_planInstance.id!, _task.name!, _plan.createdBy!, activeUser!, completed: false);
 		_analyticsService.logTaskNotFinished(_taskInstance);
 		var updatedTask =  await _onCompletion(TaskState.rejected);
 		var planInstance = await _dataAggregator.loadPlanInstance(planInstance: _planInstance, plan: _plan);

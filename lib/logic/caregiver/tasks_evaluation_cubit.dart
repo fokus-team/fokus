@@ -2,6 +2,8 @@ import 'dart:math';
 
 import 'package:flutter/widgets.dart';
 import 'package:fokus/model/db/user/caregiver.dart';
+import 'package:fokus/model/ui/child_card_model.dart';
+import 'package:fokus/services/ui_data_aggregator.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
@@ -15,8 +17,6 @@ import 'package:fokus/model/db/user/child.dart';
 import 'package:fokus/model/notification/notification_type.dart';
 import 'package:fokus/model/ui/task/ui_task_instance.dart';
 import 'package:fokus/model/ui/task/ui_task_report.dart';
-import 'package:fokus/model/ui/user/ui_caregiver.dart';
-import 'package:fokus/model/ui/user/ui_child.dart';
 import 'package:fokus/services/analytics_service.dart';
 import 'package:fokus/services/data/data_repository.dart';
 import 'package:fokus/services/notifications/notification_service.dart';
@@ -27,10 +27,11 @@ class TasksEvaluationCubit extends StatefulCubit {
   final AnalyticsService _analyticsService = GetIt.I<AnalyticsService>();
   final TaskInstanceService _taskInstanceService = GetIt.I<TaskInstanceService>();
   final NotificationService _notificationService = GetIt.I<NotificationService>();
+  final UIDataAggregator _dataAggregator = GetIt.I<UIDataAggregator>();
 
 	late List<UITaskInstance> _uiTaskInstances;
   List<UITaskReport> _completedReports = [];
-	late Map<ObjectId, UIChild> _planInstanceToChild;
+	late Map<ObjectId, ChildCardModel> _planInstanceToChild;
 	late Map<ObjectId, String> _planInstanceToName;
 
 	TasksEvaluationCubit(ModalRoute pageRoute) : super(pageRoute);
@@ -40,12 +41,12 @@ class TasksEvaluationCubit extends StatefulCubit {
 
 	@override
 	Future doLoadData() async {
-		UICaregiver uiCaregiver = UICaregiver.fromDBModel(activeUser as Caregiver);
-		List<Child> children = (await _dataRepository.getUsers(ids: uiCaregiver.connections, fields: ['_id', 'name', 'avatar'])).map((e) => e as Child).toList();
-		var _childMap = Map.fromEntries(children.map((child) => MapEntry(child.id!, child)));
+		var user = activeUser as Caregiver;
+		Iterable<Child> children = (await _dataRepository.getUsers(ids: user.connections)).map((e) => e as Child);
+		List<ChildCardModel> childCards = await _dataAggregator.loadChildCards(children.toList());
+		var _childMap = Map.fromEntries(childCards.map((childCard) => MapEntry(childCard.child.id!, childCard)));
 		List<PlanInstance> planInstances = await _dataRepository.getPlanInstances(childIDs: _childMap.keys.toList(), fields: ['_id', 'assignedTo', 'planID']);
-		_planInstanceToChild = Map.fromEntries(planInstances.map((planInstance) => MapEntry(planInstance.id!, UIChild(planInstance.assignedTo,
-				_childMap[planInstance.assignedTo]?.name, avatar: _childMap[planInstance.assignedTo]?.avatar))));
+		_planInstanceToChild = Map.fromEntries(planInstances.map((planInstance) => MapEntry(planInstance.id!, _childMap[planInstance.assignedTo]!)));
 		List<TaskInstance> taskInstances = await _dataRepository.getTaskInstances(planInstancesId: _planInstanceToChild.keys.toList(),
 				isCompleted: true, state: TaskState.notEvaluated, fields:['_id', 'taskID', 'planInstanceID', 'duration', 'breaks', 'timer', 'status']);
 		var nameMap = Map.fromEntries((await _dataRepository.getPlans(ids: planInstances.map((planInstance) => planInstance.planID!).toSet().toList(),
@@ -55,7 +56,7 @@ class TasksEvaluationCubit extends StatefulCubit {
 		List<UITaskReport> _reports = _uiTaskInstances.map((taskInstance) => UITaskReport(
 			planName: _planInstanceToName[taskInstance.planInstanceId]!,
 			task: taskInstance,
-			child: _planInstanceToChild[taskInstance.planInstanceId]!,
+			childCard: _planInstanceToChild[taskInstance.planInstanceId]!,
 		)).toList();
 		emit(TasksEvaluationState(reports: _reports..addAll(_completedReports)));
 	}
@@ -67,7 +68,7 @@ class TasksEvaluationCubit extends StatefulCubit {
 		List<Future> updates = [];
 		Future Function() sendNotification;
 		if(report.ratingMark == UITaskReportMark.rejected) {
-			sendNotification = () => _notificationService.sendTaskRejectedNotification(report.task.planInstanceId!, report.task.name!, report.child.id!);
+			sendNotification = () => _notificationService.sendTaskRejectedNotification(report.task.planInstanceId!, report.task.name!, report.childCard.child.id!);
 			updates.add(_dataRepository.updatePlanInstanceFields(report.task.planInstanceId!, state: PlanInstanceState.notCompleted));
 			updates.add(_dataRepository.updateTaskInstanceFields(report.task.id!, state:TaskState.rejected));
 			_analyticsService.logTaskRejected(report);
@@ -79,8 +80,8 @@ class TasksEvaluationCubit extends StatefulCubit {
 			updates.add(_dataRepository.updateTaskInstanceFields(report.task.id!, state: TaskState.evaluated,
 					rating: report.ratingMark.value, pointsAwarded: pointsAwarded, ratingComment: report.ratingComment));
 			if (hasPoints) {
-			  var child = await _dataRepository.getUser(id: report.child.id!) as Child;
-			  List<Points> points = (child.points ??= []);
+			  var child = await _dataRepository.getUser(id: report.childCard.child.id!) as Child;
+			  List<Points> points = child.points!;
 			  var pointIndex = points.indexWhere((element) => element.type == report.task.points!.type);
 			  if(pointIndex > -1)
 			  	points[pointIndex] = points[pointIndex].copyWith(quantity: points[pointIndex].quantity! + pointsAwarded!);
@@ -89,8 +90,15 @@ class TasksEvaluationCubit extends StatefulCubit {
 				updates.add(_dataRepository.updateUser(child.id!, points: points));
 			}
 			_analyticsService.logTaskApproved(report);
-			sendNotification = () =>  _notificationService.sendTaskApprovedNotification(report.task.planInstanceId!, report.task.name!,
-				report.child.id!, report.ratingMark.value!, currencyType: report.task.points?.type, pointCount: pointsAwarded, comment: report.ratingComment);
+			sendNotification = () => _notificationService.sendTaskApprovedNotification(
+				report.task.planInstanceId!,
+				report.task.name!,
+				report.childCard.child.id!,
+				report.ratingMark.value!,
+				currencyType: report.task.points?.type,
+				pointCount: pointsAwarded,
+				comment: report.ratingComment
+			);
 		}
 		await Future.wait(updates);
 		await sendNotification();

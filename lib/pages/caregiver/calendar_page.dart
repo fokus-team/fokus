@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fokus/model/db/user/child.dart';
 import 'package:fokus/utils/navigation_utils.dart';
 import 'package:intl/intl.dart';
 import 'package:smart_select/smart_select.dart';
@@ -8,7 +9,6 @@ import 'package:mongo_dart/mongo_dart.dart' as Mongo;
 import 'package:collection/collection.dart';
 
 import 'package:fokus/logic/common/calendar_cubit.dart';
-import 'package:fokus/model/ui/user/ui_child.dart';
 import 'package:fokus/model/db/date/date.dart';
 import 'package:fokus/model/navigation/plan_form_params.dart';
 import 'package:fokus/model/ui/app_page.dart';
@@ -44,7 +44,7 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 	final Color notAssignedPlanMarkerColor = Colors.grey[400]!;
 	
 	bool canAddPlan = true;
-	List<UIChild>? _selectedChildren = [];
+	List<Child>? _selectedChildren = [];
 
 	@override
 	void initState() {
@@ -62,7 +62,7 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 		super.dispose();
 	}
 
-	Color _getChildColor(Map<UIChild?, bool>? children, Mongo.ObjectId childID) {
+	Color _getChildColor(Map<Child?, bool>? children, Mongo.ObjectId childID) {
 		int childIndex = children!.keys.toList().indexWhere((element) => element != null && element.id == childID);
 		return (childIndex != -1) ? AppColors.markerColors[childIndex % AppColors.markerColors.length] : Colors.cyan;
 	}
@@ -143,7 +143,7 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 									),
 									isActive: plan.assignedTo!.isNotEmpty,
 									chips: plan.assignedTo!.isNotEmpty ? plan.assignedTo?.map((childID) {
-										UIChild? child = state.children?.keys.firstWhereOrNull((UIChild? element) => element != null && element.id == childID);
+										Child? child = state.children?.keys.firstWhereOrNull((Child? element) => element != null && element.id == childID);
 										return child != null ? AttributeChip(
 											content: child.name,
 											color: _getChildColor(state.children!, childID)
@@ -182,7 +182,7 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 		BlocProvider.of<CalendarCubit>(context).monthChanged(Date.fromDate(focusedDay));
 	}
 	
-	TableCalendar _buildCalendar(Map<UIChild?, bool>? children) {
+	TableCalendar _buildCalendar(Map<Child?, bool>? children) {
 		return TableCalendar<UIPlan>(
 			firstDay: kFirstDay,
 			lastDay: kLastDay,
@@ -213,7 +213,7 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 								childrenMarkers.add(notAssignedPlanMarkerColor);
 							else
 								plan.assignedTo!.forEach((childID) {
-									if(_selectedChildren!.isEmpty || _selectedChildren!.firstWhere((element) => element.id == childID, orElse: () => UIChild(null, '')).id != null)
+									if(_selectedChildren!.isEmpty || _selectedChildren!.firstWhereOrNull((element) => element.id == childID) != null)
 										childrenMarkers.add(_getChildColor(children, childID));
 								});
 						});
@@ -225,8 +225,8 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 		);
 	}
 
-	SmartSelect<UIChild> _buildChildPicker({Map<UIChild?, bool>? children = const {}, bool loading = false}) {
-	  return SmartSelect<UIChild>.multiple(
+	SmartSelect<Child> _buildChildPicker({Map<Child?, bool>? children = const {}, bool loading = false}) {
+	  return SmartSelect<Child>.multiple(
 	    title: AppLocales.of(context).translate('$_pageKey.header.filterPlansTitle'),
 	    selectedValue: _selectedChildren,
 	    tileBuilder: (context, selectState) {
@@ -290,8 +290,8 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 	    },
 	    choiceItems: S2Choice.listFrom(
 	      source: children!.keys.toList(),
-	      value: (index, item) => item as UIChild,
-	      title: (index, item) => (item as UIChild).name!,
+	      value: (index, item) => item as Child,
+	      title: (index, item) => (item as Child).name!,
 	      meta: (index, item) => item
 	    ),
 	    choiceType: S2ChoiceType.chips,
@@ -322,7 +322,7 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 			},
 	    onChange: (selected) {
 				setState(() { _selectedChildren = selected!.value; });
-	      Map<UIChild, bool> filter = {};
+	      Map<Child, bool> filter = {};
 				for(var child in children.keys)
 					filter[child!] = selected!.value!.contains(child);
 	      BlocProvider.of<CalendarCubit>(context).childFilterChanged(filter);

@@ -1,14 +1,12 @@
 import 'package:flutter/widgets.dart';
-import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
-import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
-import 'package:fokus/model/db/user/child.dart';
-import 'package:fokus/services/app_config/app_config_repository.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
 import 'package:fokus/services/data/data_repository.dart';
-import 'package:fokus/model/ui/user/ui_child.dart';
-
+import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
+import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
+import 'package:fokus/model/db/user/child.dart';
+import 'package:fokus/services/app_config/app_config_repository.dart';
 
 class SavedChildProfilesCubit extends StatefulCubit {
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
@@ -20,7 +18,7 @@ class SavedChildProfilesCubit extends StatefulCubit {
   Future doLoadData() async {
 	  var savedIds = _appConfigRepository.getSavedChildProfiles();
 	  var children = await _dataRepository.getUsers(ids: savedIds, fields: ['_id', 'name', 'avatar']);
-	  emit(SavedChildProfilesState(savedProfiles: children.map((child) => UIChild.fromDBModel(child as Child)).toList()));
+	  emit(SavedChildProfilesState(savedProfiles: children.map((child) => child as Child).toList()));
   }
 
   void signIn(ObjectId childId) async {
@@ -31,7 +29,7 @@ class SavedChildProfilesCubit extends StatefulCubit {
 }
 
 class SavedChildProfilesState extends StatefulState {
-	final List<UIChild> savedProfiles;
+	final List<Child> savedProfiles;
 
 	SavedChildProfilesState({required this.savedProfiles, DataSubmissionState? submissionState}) : super.loaded(submissionState);
 

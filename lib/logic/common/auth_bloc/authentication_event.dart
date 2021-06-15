@@ -28,11 +28,11 @@ class AuthenticationChildSignInRequested extends AuthenticationEvent {
 class AuthenticationSignOutRequested extends AuthenticationEvent {}
 
 class AuthenticationActiveUserUpdated extends AuthenticationEvent {
-	final UIUser user;
+	final User user;
 
 	AuthenticationActiveUserUpdated(this.user);
-	AuthenticationActiveUserUpdated.fromLocale(UIUser user, String? locale) :
-			user = (user is UICaregiver) ? UICaregiver.from(user, locale: locale) : UIChild.from(user as UIChild, locale: locale);
+	AuthenticationActiveUserUpdated.fromLocale(User user, String? locale) : user = (user is Caregiver) ?
+			Caregiver.copyFrom(user, locale: locale) : Child.copyFrom(user as Child, locale: locale);
 
 	@override
 	List<Object?> get props => [user];

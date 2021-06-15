@@ -1,24 +1,23 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:fokus/model/db/gamification/currency.dart';
-import 'package:fokus/model/db/user/child.dart';
+import 'package:fokus/model/db/user/caregiver.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
 import 'package:fokus/model/db/user/user_role.dart';
-import 'package:fokus/model/ui/user/ui_caregiver.dart';
-import 'package:fokus/model/ui/user/ui_child.dart';
 import 'package:fokus/model/navigation/plan_form_params.dart';
 import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/ui/form/task_form_model.dart';
 import 'package:fokus/services/analytics_service.dart';
+import 'package:fokus/utils/definitions.dart';
 import 'package:fokus/services/plan_keeper_service.dart';
 import 'package:fokus/model/ui/form/plan_form_model.dart';
 import 'package:fokus/services/data/data_repository.dart';
 import 'package:fokus/services/plan_repeatability_service.dart';
 import 'package:fokus/model/db/plan/plan.dart';
 import 'package:fokus/model/db/plan/task.dart';
-import 'package:fokus/model/ui/user/ui_user.dart';
+import 'package:fokus/model/db/gamification/currency.dart';
+import 'package:fokus/model/db/user/child.dart';
 
 part 'plan_form_state.dart';
 
@@ -34,14 +33,14 @@ class PlanFormCubit extends Cubit<PlanFormState> {
   PlanFormCubit(this.argument, this._activeUser) : super(PlanFormInitial(argument?.type ?? AppFormType.create, argument?.id));
 
   void loadFormData() async {
-	  var user = _activeUser();
+	  var user = _activeUser() as Caregiver;
 		var children = await _dataRepository.getUsers(role: UserRole.child, connected: user.id);
 		var planForm;
 		if(argument?.date != null) {
 			planForm = _createPlanFormModelWithDate();
 		}
 	  else planForm = state.formType == AppFormType.create ? PlanFormModel() : await _fillPlanFormModel();
-		emit(PlanFormDataLoadSuccess(state, children.map((child) => UIChild.fromDBModel(child as Child)).toList(), (user as UICaregiver).currencies!, planForm));
+		emit(PlanFormDataLoadSuccess(state, children.map((child) => child as Child).toList(), user.currencies!, planForm));
   }
 
   void submitPlanForm(PlanFormModel planForm) async {

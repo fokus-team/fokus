@@ -8,7 +8,7 @@ import 'package:get_it/get_it.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
 import 'package:fokus/services/data/data_repository.dart';
-import 'package:fokus/model/ui/user/ui_child.dart';
+import 'package:fokus/model/ui/child_card_model.dart';
 import 'package:fokus/model/db/user/user_role.dart';
 
 class CaregiverPanelCubit extends StatefulCubit {
@@ -20,7 +20,7 @@ class CaregiverPanelCubit extends StatefulCubit {
   Future doLoadData() async {
   	Caregiver _activeUser = activeUser as Caregiver;
 	  var children = (await _dataRepository.getUsers(connected: _activeUser.id, role: UserRole.child)).map((e) => e as Child).toList();
-	  var uiChildren = await _dataAggregator.loadChildren(children);
+	  var uiChildren = await _dataAggregator.loadChildCards(children);
 	  Map<ObjectId, String>? friends;
 	  if (_activeUser.friends != null && _activeUser.friends!.isNotEmpty)
 		  friends = await _dataRepository.getUserNames(_activeUser.friends!);
@@ -32,11 +32,11 @@ class CaregiverPanelCubit extends StatefulCubit {
 }
 
 class CaregiverPanelState extends StatefulState {
-	final List<UIChild> children;
+	final List<ChildCardModel> childCards;
 	final Map<ObjectId, String>? friends;
 
-	CaregiverPanelState(this.children, this.friends) : super.loaded();
+	CaregiverPanelState(this.childCards, this.friends) : super.loaded();
 
 	@override
-	List<Object?> get props => super.props..addAll([children, friends]);
+	List<Object?> get props => super.props..addAll([childCards, friends]);
 }

@@ -12,7 +12,6 @@ import 'package:fokus/model/db/user/user_role.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/logic/common/settings/locale_cubit.dart';
 import 'package:fokus/utils/ui/theme_config.dart';
-import 'package:fokus/model/ui/user/ui_caregiver.dart';
 import 'package:fokus/utils/ui/dialog_utils.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -103,14 +102,14 @@ class _SettingsPageState extends State<SettingsPage> {
 	}
 
 	List<Widget> _getProfileFields() {
-  	var user = BlocProvider.of<AuthenticationBloc>(context).state.user as UICaregiver;
+  	var state = BlocProvider.of<AuthenticationBloc>(context).state;
 		return [
 			_buildBasicListTile(
 					title: AppLocales.of(context).translate('$_pageKey.profile.editNameLabel'),
 					icon: Icons.edit,
-					onTap: () => showNameEditDialog(context, user)
+					onTap: () => showNameEditDialog(context, state.user!)
 			),
-			if (user.authMethod == AuthMethod.email)
+			if (state.authMethod == AuthMethod.email)
 				_buildBasicListTile(
 					title: AppLocales.of(context).translate('$_pageKey.profile.changePasswordLabel'),
 					icon: Icons.lock,
@@ -121,7 +120,7 @@ class _SettingsPageState extends State<SettingsPage> {
 				subtitle: AppLocales.of(context).translate('$_pageKey.profile.deleteAccountHint'),
 				icon: Icons.delete,
 				color: Colors.red,
-				onTap: () => showAccountDeleteDialog(context, user)
+				onTap: () => showAccountDeleteDialog(context, state.user!)
 			)
 		];
 	}

@@ -3,12 +3,12 @@ import 'dart:ui';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
-import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
-import 'package:fokus/services/data/data_repository.dart';
 import 'package:get_it/get_it.dart';
 
-import 'package:fokus/model/ui/user/ui_user.dart';
 import 'package:fokus/services/locale_service.dart';
+import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
+import 'package:fokus/services/data/data_repository.dart';
+import 'package:fokus/utils/definitions.dart';
 
 class LocaleCubit extends Cubit<LocaleState> {
 	final ActiveUserFunction _activeUser;

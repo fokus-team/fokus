@@ -77,7 +77,6 @@ import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/db/user/user_role.dart';
 import 'package:fokus/model/ui/auth/password_change_type.dart';
 import 'package:fokus/model/navigation/child_dashboard_params.dart';
-import 'package:fokus/model/ui/user/ui_user.dart';
 import 'package:fokus/model/navigation/plan_form_params.dart';
 import 'package:fokus/model/navigation/report_form_params.dart';
 import 'package:fokus/model/navigation/task_form_params.dart';
@@ -99,6 +98,7 @@ import 'package:fokus/utils/bloc_utils.dart';
 import 'package:fokus/widgets/page_theme.dart';
 
 import 'model/app_error_type.dart';
+import 'model/db/user/user.dart';
 import 'model/navigation/plan_instance_params.dart';
 
 
@@ -221,7 +221,7 @@ class _FokusAppState extends State<FokusApp> implements CurrentLocaleObserver {
 		var getRoute = (BuildContext context) => ModalRoute.of(context);
 		var getParams = (BuildContext context) => getRoute(context)?.settings.arguments;
 		var authBloc = (BuildContext context) => BlocProvider.of<AuthenticationBloc>(context);
-		var accountManaging = (BuildContext context, Widget page, [UIUser? user]) => withCubit(
+		var accountManaging = (BuildContext context, Widget page, [User? user]) => withCubit(
 			withCubit(page, NameChangeCubit(getActiveUser(context), authBloc(context), user)),
 			AccountDeleteCubit(getActiveUser(context), user)
 		);
@@ -252,7 +252,7 @@ class _FokusAppState extends State<FokusApp> implements CurrentLocaleObserver {
 				var achievements = DashboardAchievementsCubit(getRoute(context)!);
 			  return _createPage(
 					withCubit(withCubit(withCubit(accountManaging(context, CaregiverChildDashboardPage(getParams(context) as ChildDashboardParams),
-							(getParams(context) as ChildDashboardParams).child), plans), achievements), rewards),
+							(getParams(context) as ChildDashboardParams).childCard.child), plans), achievements), rewards),
 					context, cubit: ChildDashboardCubit(getParams(context) as ChildDashboardParams, getRoute(context)!, plans, rewards, achievements)
 				);
 			},

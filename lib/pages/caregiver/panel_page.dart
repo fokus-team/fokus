@@ -60,10 +60,10 @@ class CaregiverPanelPage extends StatelessWidget {
 					Icons.add
 				),
 				elements: <Widget>[
-					for (var child in state.children)
+					for (var child in state.childCards)
 						ChildItemCard(
-							child: child,
-							onTapped: () => Navigator.of(context).pushNamed(AppPage.caregiverChildDashboard.name, arguments: ChildDashboardParams(child: child))
+							childCard: child,
+							onTapped: () => Navigator.of(context).pushNamed(AppPage.caregiverChildDashboard.name, arguments: ChildDashboardParams(childCard: child))
 						),
 				]
 			),

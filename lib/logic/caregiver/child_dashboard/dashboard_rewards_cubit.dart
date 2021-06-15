@@ -1,14 +1,14 @@
 import 'package:flutter/widgets.dart';
-import 'package:fokus/model/db/gamification/reward.dart';
 import 'package:get_it/get_it.dart';
 
 import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
 import 'package:fokus/model/notification/notification_type.dart';
-import 'package:fokus/model/ui/user/ui_child.dart';
+import 'package:fokus/model/db/gamification/reward.dart';
+import 'package:fokus/model/db/user/child.dart';
 import 'package:fokus/services/data/data_repository.dart';
 
 class DashboardRewardsCubit extends StatefulCubit {
-	late UIChild child;
+	late Child child;
 
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 

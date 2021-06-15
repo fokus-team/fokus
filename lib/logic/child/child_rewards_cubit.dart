@@ -11,7 +11,6 @@ import 'package:fokus/model/db/date/time_date.dart';
 import 'package:fokus/model/db/gamification/child_reward.dart';
 import 'package:fokus/model/db/gamification/points.dart';
 import 'package:fokus/model/notification/notification_type.dart';
-import 'package:fokus/model/ui/user/ui_child.dart';
 import 'package:fokus/services/notifications/notification_service.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
@@ -34,8 +33,8 @@ class ChildRewardsCubit extends StatefulCubit {
 	void claimReward(Reward reward) async {
 		if (!beginSubmit())
 			return;
-    UIChild uiChild = UIChild.fromDBModel(activeUser as Child);
-		List<ChildReward> rewards = uiChild.rewards!;
+    var user = activeUser as Child;
+		List<ChildReward> rewards = user.rewards!;
 		ChildReward model = ChildReward(
 			id: reward.id,
 			name: reward.name, 
@@ -43,20 +42,20 @@ class ChildRewardsCubit extends StatefulCubit {
 			icon: reward.icon,
 			date: TimeDate.now()
 		);
-		Points? pointCurrency = uiChild.points!.firstWhereOrNull((element) => element.type == reward.cost!.type);
+		Points? pointCurrency = user.points!.firstWhereOrNull((element) => element.type == reward.cost!.type);
 		
 		if(pointCurrency != null && pointCurrency.quantity! >= reward.cost!.quantity!) {
-			uiChild.points![uiChild.points!.indexOf(pointCurrency)] = pointCurrency.copyWith(quantity: pointCurrency.quantity! - reward.cost!.quantity!);
+			user.points![user.points!.indexOf(pointCurrency)] = pointCurrency.copyWith(quantity: pointCurrency.quantity! - reward.cost!.quantity!);
 			rewards..add(model);
-			await _dataRepository.claimChildReward(uiChild.id!, reward: model, points: uiChild.points!);
+			await _dataRepository.claimChildReward(user.id!, reward: model, points: user.points!);
 			_analyticsService.logRewardBought(reward);
-			await _notificationService.sendRewardBoughtNotification(model.id!, model.name!, uiChild.connections!.first, uiChild);
+			await _notificationService.sendRewardBoughtNotification(model.id!, model.name!, user.connections!.first, user);
 			_refreshRewardState(DataSubmissionState.submissionSuccess);
 		}
 	}
 
 	void _refreshRewardState([DataSubmissionState? submissionState]) {
-		UIChild child = UIChild.fromDBModel(activeUser as Child);
+		var child = activeUser as Child;
 		Map<ObjectId, int> claimedCount = Map<ObjectId, int>();
 		child.rewards!.forEach((element) => claimedCount[element.id!] = !claimedCount.containsKey(element.id) ? 1 : claimedCount[element.id]! + 1);
 		emit(ChildRewardsState(

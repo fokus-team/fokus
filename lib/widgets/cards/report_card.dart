@@ -89,9 +89,12 @@ class _ReportCardState extends State<ReportCard> {
 					Tooltip(
 						message: AppLocales.of(context).translate('$_pageKey.raportCard.carriedOutBy'),
 						child: ListTile(
-							onTap: () => Navigator.of(context).pushNamed(AppPage.caregiverChildDashboard.name, arguments: ChildDashboardParams(child: widget.report.child)),
-							leading: AppAvatar(widget.report.child.avatar, size: 48.0),
-							title: Text(widget.report.child.name!),
+							onTap: () => Navigator.of(context).pushNamed(
+								AppPage.caregiverChildDashboard.name, 
+								arguments: ChildDashboardParams(childCard: widget.report.childCard),
+							),
+							leading: AppAvatar(widget.report.childCard.child.avatar, size: 48.0),
+							title: Text(widget.report.childCard.child.name!),
 							visualDensity: VisualDensity.compact
 						)
 					),

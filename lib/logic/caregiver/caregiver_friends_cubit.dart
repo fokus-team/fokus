@@ -1,15 +1,15 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:formz/formz.dart';
+import 'package:mongo_dart/mongo_dart.dart';
+
 import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
 import 'package:fokus/logic/common/formz_state.dart';
+import 'package:fokus/model/db/user/caregiver.dart';
 import 'package:fokus/logic/common/user_code_verifier.dart';
 import 'package:fokus/model/db/user/user_role.dart';
 import 'package:fokus/model/ui/auth/user_code.dart';
-import 'package:fokus/model/ui/user/ui_caregiver.dart';
 import 'package:fokus_auth/fokus_auth.dart';
-import 'package:formz/formz.dart';
-
-import 'package:fokus/model/ui/user/ui_user.dart';
-import 'package:mongo_dart/mongo_dart.dart';
+import 'package:fokus/utils/definitions.dart';
 
 class CaregiverFriendsCubit extends Cubit<CaregiverFriendsState> with UserCodeVerifier<CaregiverFriendsState> {
 	final ActiveUserFunction _activeUser;
@@ -26,7 +26,7 @@ class CaregiverFriendsCubit extends Cubit<CaregiverFriendsState> with UserCodeVe
 		  return;
 	  }
 	  emit(state.copyWith(status: FormzStatus.submissionInProgress));
-	  var user = _activeUser() as UICaregiver;
+	  var user = _activeUser() as Caregiver;
   	var caregiverId = getIdFromCode(state.caregiverCode.value);
 		var caregiverFriends = user.friends != null ? List.of(user.friends!) : <ObjectId>[];
 		
@@ -37,7 +37,7 @@ class CaregiverFriendsCubit extends Cubit<CaregiverFriendsState> with UserCodeVe
 		} else {
 			var friends = caregiverFriends..add(caregiverId);
 			await dataRepository.updateUser(user.id!, friends: friends);
-			_authBloc.add(AuthenticationActiveUserUpdated(UICaregiver.from(user, friends: friends)));
+			_authBloc.add(AuthenticationActiveUserUpdated(Caregiver.copyFrom(user, friends: friends)));
 			emit(state.copyWith(status: FormzStatus.submissionSuccess));
 		}
   }
@@ -59,7 +59,7 @@ class CaregiverFriendsCubit extends Cubit<CaregiverFriendsState> with UserCodeVe
 	void caregiverCodeChanged(String value) => emit(state.copyWith(caregiverCode: UserCode.pure(value), status: FormzStatus.pure));
 	
 	void removeFriend(ObjectId friendID) async {
-    var user = _activeUser() as UICaregiver;
+    var user = _activeUser() as Caregiver;
 		var caregiverFriends = user.friends ?? [];
 		await dataRepository.updateUser(user.id!, friends: caregiverFriends..remove(friendID));
 	}

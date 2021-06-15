@@ -3,11 +3,11 @@ import 'package:formz/formz.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 import 'package:get_it/get_it.dart';
 
-import 'package:fokus/model/ui/user/ui_user.dart';
+import 'package:fokus/model/db/user/user.dart';
+import 'package:fokus/utils/definitions.dart';
 import 'package:fokus/logic/common/formz_state.dart';
 import 'package:fokus/model/ui/auth/password.dart';
 import 'package:fokus/services/data/data_repository.dart';
-import 'package:fokus/model/ui/user/ui_caregiver.dart';
 import 'package:fokus_auth/fokus_auth.dart';
 import 'package:fokus/services/app_config/app_config_repository.dart';
 
@@ -15,13 +15,13 @@ part 'account_delete_state.dart';
 
 class AccountDeleteCubit extends Cubit<AccountDeleteState> {
 	final ActiveUserFunction _activeUser;
-	final UIUser _removedUser;
+	final User _removedUser;
 
 	final AuthenticationProvider _authenticationProvider = GetIt.I<AuthenticationProvider>();
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final AppConfigRepository _appConfigRepository = GetIt.I<AppConfigRepository>();
 
-  AccountDeleteCubit(this._activeUser, UIUser? _removedUser) :
+  AccountDeleteCubit(this._activeUser, User? _removedUser) :
 		  _removedUser = _removedUser ?? _activeUser(), super(AccountDeleteState());
 	
 	Future _deleteChild() async {
@@ -59,10 +59,10 @@ class AccountDeleteCubit extends Cubit<AccountDeleteState> {
 			_appConfigRepository.removeSavedChildProfiles(_removedUser.connections!);
 	}
 
-  Future accountDeleteFormSubmitted() async {
+  Future accountDeleteFormSubmitted(AuthMethod authMethod) async {
 	  if (this.state.status != FormzStatus.pure)
 		  return;
-	  if ((_activeUser() as UICaregiver).authMethod == AuthMethod.email) {
+	  if (authMethod == AuthMethod.email) {
 		  var state = this.state;
 		  state = state.copyWith(password: Password.dirty(state.password.value, false));
 		  state = state.copyWith(status: Formz.validate([state.password]));

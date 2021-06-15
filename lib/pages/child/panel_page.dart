@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:fokus/logic/child/child_panel_cubit.dart';
 import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
+import 'package:fokus/model/db/user/child.dart';
 import 'package:fokus/model/ui/app_page.dart';
-import 'package:fokus/model/ui/user/ui_child.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/widgets/custom_app_bars.dart';
 import 'package:fokus/utils/ui/child_plans_util.dart';
@@ -25,7 +26,7 @@ class _ChildPanelPageState extends State<ChildPanelPage> {
   	var authState = BlocProvider.of<AuthenticationBloc>(context).state;
   	if (!authState.signedIn)
   		return Container();
-		UIChild currentUser = authState.user! as UIChild;
+		var currentUser = authState.user! as Child;
     return Scaffold(
       body: Column(
 	      crossAxisAlignment: CrossAxisAlignment.start,

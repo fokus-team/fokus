@@ -3,7 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
 import 'package:fokus/model/db/gamification/badge.dart';
-import 'package:fokus/model/ui/user/ui_child.dart';
+import 'package:fokus/model/db/user/child.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/ui/app_paths.dart';
 import 'package:fokus/utils/ui/dialog_utils.dart';
@@ -55,7 +55,7 @@ class _ChildAchievementsPageState extends State<ChildAchievementsPage> {
 		return BlocBuilder<AuthenticationBloc, AuthenticationState>(
 			buildWhen: (oldState, newState) => newState.signedIn,
 			builder: (context, state) {
-				List<Badge> badges = (state.user as UIChild).badges ?? [];
+				List<Badge> badges = (state.user as Child).badges ?? [];
 				if(badges.isNotEmpty) {
 					return Padding(
 						padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: AppBoxProperties.screenEdgePadding),

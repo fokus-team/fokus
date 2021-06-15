@@ -1,17 +1,15 @@
 import 'package:flutter/widgets.dart';
+
+import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
+import 'package:fokus/model/db/user/child.dart';
+import 'package:fokus/model/ui/child_card_model.dart';
 import 'package:fokus/logic/caregiver/child_dashboard/dashboard_achievements_cubit.dart';
 import 'package:fokus/logic/caregiver/child_dashboard/dashboard_plans_cubit.dart';
 import 'package:fokus/logic/caregiver/child_dashboard/dashboard_rewards_cubit.dart';
 import 'package:fokus/model/navigation/child_dashboard_params.dart';
-import 'package:get_it/get_it.dart';
-import 'package:mongo_dart/mongo_dart.dart';
-
-import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
-import 'package:fokus/model/ui/user/ui_child.dart';
-import 'package:fokus/services/ui_data_aggregator.dart';
 
 class ChildDashboardCubit extends StatefulCubit {
-	final ObjectId childId;
+	final ChildCardModel _childCard;
 
 	int _initialTab;
 	
@@ -19,24 +17,21 @@ class ChildDashboardCubit extends StatefulCubit {
 	DashboardPlansCubit _plansCubit;
 	DashboardRewardsCubit _rewardsCubit;
 	DashboardAchievementsCubit _achievementsCubit;
-	
-	final UIDataAggregator _dataAggregator = GetIt.I<UIDataAggregator>();
 
   ChildDashboardCubit(ChildDashboardParams args, ModalRoute pageRoute, this._plansCubit, this._rewardsCubit, this._achievementsCubit) :
-			_initialTab = args.tab ?? 0, childId = args.child.id!, super(pageRoute) {
+			_initialTab = args.tab ?? 0, _childCard = args.childCard, super(pageRoute) {
 	  _tabCubits = [_plansCubit, _rewardsCubit, _achievementsCubit];
   }
 
   @override
   Future doLoadData() async {
-  	var child = await _dataAggregator.loadChild(childId);
-	  _plansCubit.child = child;
-	  _rewardsCubit.child = child;
-	  _achievementsCubit.child = child;
+	  _plansCubit.child = _childCard.child;
+	  _rewardsCubit.child = _childCard.child;
+	  _achievementsCubit.child = _childCard.child;
 	  loadTab((_initialTab + 1) % 3);
 	  loadTab((_initialTab + 2) % 3);
 	  await loadTab(_initialTab);
-	  emit(ChildDashboardState(child: child));
+	  emit(ChildDashboardState(childCard: _childCard));
   }
 
   Future loadTab(int tabIndex) {
@@ -50,15 +45,16 @@ class ChildDashboardCubit extends StatefulCubit {
   	var value = await result;
 		if (value == null)
 			return;
-		emit(ChildDashboardState(child: UIChild.from((state as ChildDashboardState).child, name: value)));
+		var childCard = (state as ChildDashboardState).childCard;
+		emit(ChildDashboardState(childCard: childCard.copyWith(child: Child.copyFrom(childCard.child, name: value))));
 	}
 }
 
 class ChildDashboardState extends StatefulState {
-	final UIChild child;
+	final ChildCardModel childCard;
 
-	ChildDashboardState({required this.child}) : super.loaded();
+	ChildDashboardState({required this.childCard}) : super.loaded();
 
 	@override
-	List<Object?> get props => super.props..addAll([child]);
+	List<Object?> get props => super.props..add(childCard);
 }

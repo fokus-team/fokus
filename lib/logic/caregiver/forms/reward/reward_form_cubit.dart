@@ -10,7 +10,6 @@ import 'package:fokus/model/currency_type.dart';
 import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
 import 'package:fokus/model/db/gamification/reward.dart';
 import 'package:fokus/model/ui/app_page.dart';
-import 'package:fokus/model/ui/user/ui_caregiver.dart';
 import 'package:fokus/services/analytics_service.dart';
 
 part 'reward_form_state.dart';
@@ -26,7 +25,7 @@ class RewardFormCubit extends StatefulCubit<BaseFormState> {
 
   @override
 	Future doLoadData() async {
-	  UICaregiver user = UICaregiver.fromDBModel(activeUser as Caregiver);
+	  var user = activeUser as Caregiver;
 	  var currencies = user.currencies!;
 	  Reward reward;
 	  if (state.formType == AppFormType.create)

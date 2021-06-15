@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fokus/model/db/user/child.dart';
 import 'package:mongo_dart/mongo_dart.dart' as Mongo;
 import 'package:round_spot/round_spot.dart' as round_spot;
 
@@ -12,7 +13,6 @@ import 'package:fokus/widgets/buttons/bottom_sheet_confirm_button.dart';
 import 'package:smart_select/smart_select.dart';
 
 import 'package:fokus/model/ui/form/plan_form_model.dart';
-import 'package:fokus/model/ui/user/ui_child.dart';
 
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/ui/icon_sets.dart';
@@ -124,12 +124,12 @@ class _PlanFormState extends State<PlanForm> {
 		);
 	}
 
-	Widget getChildrenAssignedField({List<UIChild> children = const [], bool loading = false}) {
+	Widget getChildrenAssignedField({List<Child> children = const [], bool loading = false}) {
 		return SmartSelect<Mongo.ObjectId>.multiple(
 			title: AppLocales.of(context).translate('$_pageKey.assignedChildren.label'),
 			placeholder: AppLocales.of(context).translate('$_pageKey.assignedChildren.hint'),
 			selectedValue: widget.plan.children,
-			choiceItems: S2Choice.listFrom<Mongo.ObjectId, UIChild>(
+			choiceItems: S2Choice.listFrom<Mongo.ObjectId, Child>(
 				source: children,
 				value: (index, item) => item.id!,
 				title: (index, item) => item.name!,

@@ -12,13 +12,10 @@ import 'package:fokus/services/analytics_service.dart';
 import 'package:fokus/services/observers/user/authenticated_user_notifier.dart';
 import 'package:fokus/services/data/data_repository.dart';
 import 'package:fokus/services/app_config/app_config_repository.dart';
-import 'package:fokus/model/ui/user/ui_user.dart';
 import 'package:fokus/model/db/user/caregiver.dart';
 import 'package:fokus/model/db/user/user_role.dart';
 import 'package:fokus/model/db/user/user.dart';
 import 'package:fokus/model/db/user/child.dart';
-import 'package:fokus/model/ui/user/ui_caregiver.dart';
-import 'package:fokus/model/ui/user/ui_child.dart';
 import 'package:fokus/utils/ui/snackbar_utils.dart';
 
 part 'authentication_event.dart';
@@ -55,8 +52,10 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 			  _appConfigRepository.signOutChild();
 			  add(AuthenticationUserChanged(AuthenticatedUser.empty));
 		  }
-	  } else if (event is AuthenticationActiveUserUpdated)
-		  yield AuthenticationState.authenticated(event.user);
+	  } else if (event is AuthenticationActiveUserUpdated) {
+	  	_userNotifier.userUpdatedEvent(event.user);
+	    yield AuthenticationState.authenticated(event.user);
+	  }
   }
 
 	Future<AuthenticationState> _processUserChangedEvent(AuthenticationUserChanged event) async {
@@ -64,7 +63,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 	  var noSignedInUser = event.user == AuthenticatedUser.empty;
 	  var wasAppOpened = state.status == AuthenticationStatus.initial;
 	  if (noSignedInUser && !wasAppOpened) {
-		  _userNotifier.userSignOutEvent(state.user!.toDBModel());
+		  _userNotifier.userSignOutEvent(state.user!);
 		  return const AuthenticationState.unauthenticated();
 	  }
   	if (noSignedInUser && wasAppOpened)
@@ -115,7 +114,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 
 	Future<AuthenticationState> _signInUser(User user, [AuthMethod? authMethod, String? photoURL]) async {
 		_userNotifier.userSignInEvent(user);
-	  return AuthenticationState.authenticated(UIUser.typedFromDBModel(user, authMethod, photoURL));
+	  return AuthenticationState.authenticated(user, authMethod: authMethod, photoURL: photoURL);
   }
 
 	@override

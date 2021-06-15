@@ -1,21 +1,20 @@
 import 'package:bloc/bloc.dart';
 import 'package:date_utils/date_utils.dart';
 import 'package:equatable/equatable.dart';
+import 'package:fokus/model/db/user/caregiver.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 import 'package:get_it/get_it.dart';
 import 'package:collection/collection.dart';
 
 import 'package:fokus/model/db/date/date.dart';
 import 'package:fokus/model/ui/plan/ui_plan.dart';
-import 'package:fokus/model/ui/user/ui_user.dart';
+import 'package:fokus/utils/definitions.dart';
 import 'package:fokus/services/data/data_repository.dart';
 import 'package:fokus/model/db/user/child.dart';
 import 'package:fokus/model/db/user/user_role.dart';
 import 'package:fokus/model/db/date_span.dart';
 import 'package:fokus/model/db/plan/plan.dart';
 import 'package:fokus/model/db/plan/plan_instance.dart';
-import 'package:fokus/model/ui/user/ui_caregiver.dart';
-import 'package:fokus/model/ui/user/ui_child.dart';
 import 'package:fokus/services/plan_repeatability_service.dart';
 
 class CalendarCubit extends Cubit<CalendarState> {
@@ -36,32 +35,32 @@ class CalendarCubit extends Cubit<CalendarState> {
 	  _plans = Map.fromEntries(_planEntries(await _dataRepository.getPlans(caregiverId: getRoleId(UserRole.caregiver),
 			  childId: getRoleId(UserRole.child), active: true)));
 
-	  Map<UIChild?, bool> filter;
+	  Map<Child?, bool> filter;
 	  if (activeUser.role == UserRole.caregiver) {
-		  var children = await _dataRepository.getUsers(ids: (activeUser as UICaregiver).connections);
+		  var children = await _dataRepository.getUsers(ids: (activeUser as Caregiver).connections);
 		  _childNames = Map.fromEntries(children.map((child) => MapEntry(child.id!, child.name!)));
-		  filter = Map.fromEntries(children.map((child) => MapEntry(UIChild.fromDBModel(child as Child), false)));
+		  filter = Map.fromEntries(children.map((child) => MapEntry(child as Child, false)));
 
 			if(_initialFilter != null) {
 				var childSetByID = children.firstWhereOrNull((element) => element.id == _initialFilter);
 				if(childSetByID != null)
-					filter[UIChild.fromDBModel(childSetByID as Child)] = true;
+					filter[childSetByID as Child] = true;
 			}
 	  } else {
 		  _childNames = {activeUser.id!: activeUser.name!};
-		  filter = {activeUser as UIChild?: true};
+		  filter = {activeUser as Child: true};
 	  }
 	  var events = await _filterData(filter, state.day);
 	  emit(state.copyWith(children: filter, events: events));
   }
   
-  void childFilterChanged(Map<UIChild?, bool> filter) async => emit(state.copyWith(children: filter, events: await _filterData(filter, state.day)));
+  void childFilterChanged(Map<Child?, bool> filter) async => emit(state.copyWith(children: filter, events: await _filterData(filter, state.day)));
 
   void dayChanged(Date day) async => emit(state.copyWith(day: day));
 
   void monthChanged(Date month) async => emit(state.copyWith(day: month, events: await _filterData(state.children, month)));
 
-	Future<Map<Date, List<UIPlan>>> _filterData(Map<UIChild?, bool>? filter, Date date) async {
+	Future<Map<Date, List<UIPlan>>> _filterData(Map<Child?, bool>? filter, Date date) async {
 		Date month = Date.fromDate(DateUtils.firstDayOfMonth(date));
 		if (filter == null)
 			return {};
@@ -140,13 +139,13 @@ class CalendarCubit extends Cubit<CalendarState> {
 }
 
 class CalendarState extends Equatable {
-	final Map<UIChild?, bool>? children;
+	final Map<Child?, bool>? children;
 	final Date day;
 	final Map<Date, List<UIPlan>>? events;
 
 	const CalendarState({required this.day, this.children, this.events});
 
-	CalendarState copyWith({Map<UIChild?, bool>? children, Map<Date, List<UIPlan>>? events, Date? day}) {
+	CalendarState copyWith({Map<Child?, bool>? children, Map<Date, List<UIPlan>>? events, Date? day}) {
 	  return CalendarState(
 		  children: children ?? this.children,
 		  events: events ?? this.events,

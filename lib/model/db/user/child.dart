@@ -9,25 +9,31 @@ import '../gamification/child_reward.dart';
 import 'user_role.dart';
 
 class Child extends User {
-  List<ChildPermission>? permissions;
-  List<Points>? points;
-  List<ChildReward>? rewards;
-  List<ChildBadge>? badges;
+  final List<ChildPermission>? permissions;
+  final List<Points>? points;
+  final List<ChildReward>? rewards;
+  final List<ChildBadge>? badges;
 
-  Child.create({String? name, int? avatar, List<ObjectId>? connections}) : this._(name: name, avatar: avatar, connections: connections);
+  Child.create({String? name, int? avatar, List<ObjectId>? connections}) : this._(name: name, avatar: avatar, connections: connections, id: ObjectId());
 
-  Child._({ObjectId? id, String? name, int? avatar, List<ObjectId>? connections, this.badges, this.permissions, this.points, this.rewards}) :
-			  super(id: id, name: name, role: UserRole.child, avatar: avatar, connections: connections);
+  Child._({
+	  ObjectId? id,
+	  String? name,
+	  int? avatar,
+	  List<ObjectId>? connections,
+	  String? locale,
+	  this.badges = const [],
+	  this.permissions = const [],
+	  this.points = const [],
+	  this.rewards = const [],
+  }) : super(id: id, name: name, role: UserRole.child, avatar: avatar, connections: connections, locale: locale);
 
-  static Child? fromJson(Json? json) {
-    return json != null ? (Child._(
-	    id: json['_id'],
-      badges: json['badges'] != null ? (json['badges'] as List).map((i) => ChildBadge.fromJson(i)).toList() : [],
-      permissions: json['permissions'] != null ? (json['badges'] as List).map((i) => ChildPermission.values[i]).toList() : [],
-      points: json['points'] != null ? (json['points'] as List).map((i) => Points.fromJson(i)).toList() : [],
-      rewards: json['rewards'] != null ? (json['rewards'] as List).map((i) => ChildReward.fromJson(i)).toList() : [],
-    )..assignFromJson(json)) : null;
-  }
+  Child.fromJson(Json json) :
+      badges = json['badges'] != null ? (json['badges'] as List).map((i) => ChildBadge.fromJson(i)).toList() : [],
+      permissions = json['permissions'] != null ? (json['badges'] as List).map((i) => ChildPermission.values[i]).toList() : [],
+      points = json['points'] != null ? (json['points'] as List).map((i) => Points.fromJson(i)).toList() : [],
+      rewards = json['rewards'] != null ? (json['rewards'] as List).map((i) => ChildReward.fromJson(i)).toList() : [],
+      super.fromJson(json);
 
   Json toJson() {
     final Json data = super.toJson();
@@ -41,4 +47,14 @@ class Child extends User {
       data['rewards'] = this.rewards!.map((v) => v.toJson()).toList();
     return data;
   }
+
+  Child.copyFrom(Child user, {String? locale, String? name, List<ChildBadge>? badges, List<Points>? points}) :
+		  points = points ?? user.points,
+		  badges = badges ?? user.badges,
+		  rewards = user.rewards,
+	    permissions = user.permissions,
+		  super.copyFrom(user, locale: locale, name: name);
+
+  @override
+  List<Object?> get props => super.props..addAll([badges, permissions, points, rewards]);
 }

@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
-import 'package:fokus/model/ui/user/ui_user.dart';
-import 'package:fokus/widgets/buttons/bottom_sheet_confirm_button.dart';
 import 'package:formz/formz.dart';
 import 'package:smart_select/smart_select.dart';
 
@@ -11,6 +8,9 @@ import 'package:fokus/model/ui/ui_button.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/ui/icon_sets.dart';
 import 'package:fokus/utils/ui/theme_config.dart';
+import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
+import 'package:fokus/model/db/user/user.dart';
+import 'package:fokus/widgets/buttons/bottom_sheet_confirm_button.dart';
 import 'package:fokus/widgets/general/app_avatar.dart';
 import 'package:fokus/widgets/auth/auth_button.dart';
 import 'package:fokus/widgets/auth/auth_input_field.dart';
@@ -49,7 +49,7 @@ class ChildSignInPage extends StatelessWidget {
 	  );
   }
 
-  Widget _buildForms(BuildContext context, UIUser? activeUser) {
+  Widget _buildForms(BuildContext context, User? activeUser) {
 	  return AuthGroup(
 			title: AppLocales.of(context).translate('$_pageKey.profileAddTitle'),
 			hint: AppLocales.of(context).translate('$_pageKey.profileAddHint${activeUser != null ? 'SignedIn' : ''}'),

@@ -1,6 +1,7 @@
 import 'package:bson/bson.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
+import 'package:fokus/model/db/user/user.dart';
 import 'package:get_it/get_it.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,7 +13,6 @@ import 'package:fokus/services/notifications/onesignal/onesignal_notification_pr
 import 'package:fokus/utils/ui/theme_config.dart';
 import 'package:fokus/model/currency_type.dart';
 import 'package:fokus/model/notification/notification_group.dart';
-import 'package:fokus/model/ui/user/ui_user.dart';
 import 'package:fokus/model/notification/notification_data.dart';
 import 'package:fokus/model/notification/notification_type.dart';
 import 'package:fokus/model/notification/notification_channel.dart';
@@ -25,7 +25,7 @@ class OneSignalNotificationService extends NotificationService {
 	final _navigatorKey = GetIt.I<GlobalKey<NavigatorState>>();
 
 	@override
-	Future sendTaskFinishedNotification(ObjectId planInstanceId, String taskName, ObjectId caregiverId, UIUser child, {required bool completed}) {
+	Future sendTaskFinishedNotification(ObjectId planInstanceId, String taskName, ObjectId caregiverId, User child, {required bool completed}) {
 		var type = completed ? NotificationType.taskFinished : NotificationType.taskUnfinished;
 		return sendNotification(type, caregiverId,
 			title: SimpleNotificationText.appBased(type.title, {'CHILD_NAME': child.name!}),
@@ -38,7 +38,7 @@ class OneSignalNotificationService extends NotificationService {
 	}
 
 	@override
-	Future sendRewardBoughtNotification(ObjectId rewardId, String rewardName, ObjectId caregiverId, UIUser child) {
+	Future sendRewardBoughtNotification(ObjectId rewardId, String rewardName, ObjectId caregiverId, User child) {
 		var type = NotificationType.rewardBought;
 		return sendNotification(type, caregiverId,
 			title: SimpleNotificationText.appBased(type.title, {'CHILD_NAME': child.name!}),

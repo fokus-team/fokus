@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:fokus/model/db/user/caregiver.dart';
 import 'package:fokus/model/db/user/child.dart';
 import 'package:fokus/model/db/user/user_role.dart';
@@ -5,29 +6,49 @@ import 'package:fokus/utils/definitions.dart';
 import 'package:meta/meta.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
-class User {
-  ObjectId? id;
+class User extends Equatable {
+  final ObjectId? id;
   final UserRole? role;
-  String? name;
-  String? locale;
-  List<String>? notificationIDs;
+  final String? name;
+  final String? locale;
+  final List<String>? notificationIDs;
 
-  List<int>? accessCode;
-  int? avatar;
-  List<ObjectId>? connections;
+  final List<int>? accessCode;
+  final int? avatar;
+  final List<ObjectId>? connections;
 
-  User({this.id, this.role, this.name, this.avatar, this.connections, this.notificationIDs, this.accessCode});
+  User({
+	  this.id,
+	  this.role,
+	  this.name,
+	  this.avatar = -1,
+	  this.connections = const [],
+	  this.notificationIDs = const [],
+	  this.accessCode,
+	  this.locale});
+
+  User.copyFrom(User user, {String? locale, String? name, List<ObjectId>? connections}) : this(
+	  id: user.id,
+	  role: user.role,
+	  name: name ?? user.name,
+	  locale: locale ?? user.locale,
+	  avatar: user.avatar,
+	  accessCode: user.accessCode,
+	  connections: connections ?? user.connections,
+	  notificationIDs: user.notificationIDs,
+  );
 
   @protected
-  void assignFromJson(Json json) {
-    name = json['name'];
-    notificationIDs = json['notificationIDs'] != null ? new List<String>.from(json['notificationIDs']) : [];
-    accessCode = json['accessCode'] != null ? new List<int>.from(json['accessCode']) : [];
-    avatar = json['avatar'];
-    locale = json['locale'];
-    connections = json['connections'] != null ? new List<ObjectId>.from(json['connections']) : [];
-    connections = json['connections'] != null ? new List<ObjectId>.from(json['connections']) : null;
-  }
+  User.fromJson(Json json) : this(
+	  id: json['_id'],
+	  role: UserRole.values[json['role']],
+	  name: json['name'],
+    notificationIDs: json['notificationIDs'] != null ? new List<String>.from(json['notificationIDs']) : [],
+    accessCode: json['accessCode'] != null ? new List<int>.from(json['accessCode']) : [],
+    avatar: json['avatar'],
+    locale: json['locale'],
+    connections: json['connections'] != null ? new List<ObjectId>.from(json['connections']) : [],
+  );
 
   Json toJson() {
     final data = Json();
@@ -55,4 +76,7 @@ class User {
   		return null;
   	return json['role'] == UserRole.caregiver.index ? Caregiver.fromJson(json) : Child.fromJson(json);
   }
+
+  @override
+  List<Object?> get props => [id, avatar, name, locale, role, accessCode, notificationIDs, connections];
 }

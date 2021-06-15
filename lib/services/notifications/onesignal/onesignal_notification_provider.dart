@@ -13,7 +13,6 @@ import 'package:fokus/services/app_route_observer.dart';
 import 'package:fokus/model/notification/notification_type.dart';
 import 'package:fokus/services/ui_data_aggregator.dart';
 import 'package:fokus/model/db/user/child.dart';
-import 'package:fokus/model/ui/user/ui_child.dart';
 import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/db/user/user_role.dart';
 import 'package:fokus/utils/ui/snackbar_utils.dart';
@@ -24,7 +23,7 @@ class OneSignalNotificationProvider extends NotificationProvider {
 	final String appId = Foundation.kReleaseMode ? 'ed3ee23f-aa7a-4fc7-91ab-9967fa7712e5' : 'f82c17d5-95cb-48ef-b8dc-ca8a95406221';
 
 	final _navigatorKey = GetIt.I<GlobalKey<NavigatorState>>();
-	final UIDataAggregator _dataAggregator = GetIt.I<UIDataAggregator>();
+	final _dataAggregator = GetIt.I<UIDataAggregator>();
   final _routeObserver = GetIt.I<AppRouteObserver>();
 
 	OneSignalNotificationProvider() {
@@ -62,7 +61,7 @@ class OneSignalNotificationProvider extends NotificationProvider {
 		} else if (data.type.redirectPage == AppPage.caregiverChildDashboard) {
 			navigateChecked(context, data.type.redirectPage, arguments: ChildDashboardParams(
 				tab: data.type == NotificationType.rewardBought ? 1 : 0,
-				child: await _dataAggregator.loadChild(data.sender),
+				childCard: await _dataAggregator.loadChildCard(data.sender),
 				id: data.subject
 			));
 		} else
@@ -87,10 +86,10 @@ class OneSignalNotificationProvider extends NotificationProvider {
 		  var authBloc = BlocProvider.of<AuthenticationBloc>(context);
 		  if (data.type == NotificationType.badgeAwarded) {
 			  Child user = await dataRepository.getUser(id: activeUser.id, fields: ['badges']) as Child;
-			  authBloc.add(AuthenticationActiveUserUpdated(UIChild.from(activeUser as UIChild, badges: user.badges)));
+			  authBloc.add(AuthenticationActiveUserUpdated(Child.copyFrom(activeUser as Child, badges: user.badges)));
 		  } else if (data.type == NotificationType.taskApproved) {
 			  Child user = await dataRepository.getUser(id: activeUser.id, fields: ['points']) as Child;
-			  authBloc.add(AuthenticationActiveUserUpdated(UIChild.from(activeUser as UIChild, points: List.from(user.points!))));
+			  authBloc.add(AuthenticationActiveUserUpdated(Child.copyFrom(activeUser as Child, points: List.from(user.points!))));
 		  }
 		  onNotificationReceived(data);
 		  event.complete(event.notification);

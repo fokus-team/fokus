@@ -1,11 +1,11 @@
 import 'package:flutter/widgets.dart';
-import 'package:fokus/model/db/date/date.dart';
 import 'package:get_it/get_it.dart';
 
 import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
 import 'package:fokus/model/ui/plan/ui_plan.dart';
 import 'package:fokus/model/ui/plan/ui_plan_instance.dart';
-import 'package:fokus/model/ui/user/ui_child.dart';
+import 'package:fokus/model/db/date/date.dart';
+import 'package:fokus/model/db/user/child.dart';
 import 'package:fokus/services/data/data_repository.dart';
 import 'package:fokus/model/db/plan/plan.dart';
 import 'package:fokus/model/db/plan/task_status.dart';
@@ -14,7 +14,7 @@ import 'package:fokus/services/ui_data_aggregator.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
 class DashboardPlansCubit extends StatefulCubit {
-	late UIChild child;
+	late Child child;
 	late List<Plan> _availablePlans;
 	
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
@@ -49,21 +49,22 @@ class DashboardPlansCubit extends StatefulCubit {
 		if (!beginSubmit())
 			return;
 		var tabState = state as DashboardPlansState;
+		var childID = child.id!;
 		var filterAssigned = (bool Function(UIPlan) condition) => tabState.availablePlans.where(condition).map((plan) => plan.id!).toList();
-		var assignedIds = filterAssigned((plan) => ids.contains(plan.id) && !plan.assignedTo!.contains(child.id));
-		var unassignedIds = filterAssigned((plan) => !ids.contains(plan.id) && plan.assignedTo!.contains(child.id));
-		var assignedPlans = _availablePlans.where((plan) => assignedIds.contains(plan.id)).toList()..forEach((plan) => plan.assignedTo!.add(child.id!));
+		var assignedIds = filterAssigned((plan) => ids.contains(plan.id) && !plan.assignedTo!.contains(childID));
+		var unassignedIds = filterAssigned((plan) => !ids.contains(plan.id) && plan.assignedTo!.contains(childID));
+		var assignedPlans = _availablePlans.where((plan) => assignedIds.contains(plan.id)).toList()..forEach((plan) => plan.assignedTo!.add(childID));
 		var results = await Future.wait([
-			_dataRepository.updatePlanFields(assignedIds, assign: child.id),
-			_dataRepository.updatePlanFields(unassignedIds, unassign: child.id),
-			_planKeeperService.createPlansForToday(assignedPlans, [child.id!])
+			_dataRepository.updatePlanFields(assignedIds, assign: childID),
+			_dataRepository.updatePlanFields(unassignedIds, unassign: childID),
+			_planKeeperService.createPlansForToday(assignedPlans, [childID])
 		]);
 		var updateAssigned = (UIPlan plan) {
 			var assignedTo = List.of(plan.assignedTo!);
 			if (assignedIds.contains(plan.id))
-				assignedTo.add(child.id!);
+				assignedTo.add(childID);
 			else if (unassignedIds.contains(plan.id))
-				assignedTo.remove(child.id);
+				assignedTo.remove(childID);
 			return assignedTo;
 		};
 		var newPlans = tabState.availablePlans.map((plan) => plan.copyWith(assignedTo: updateAssigned(plan))).toList();

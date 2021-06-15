@@ -14,7 +14,6 @@ import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
 import 'package:fokus/logic/common/settings/account_delete/account_delete_cubit.dart';
 import 'package:fokus/logic/common/settings/name_change/name_change_cubit.dart';
-import 'package:fokus/model/ui/user/ui_caregiver.dart';
 import 'package:fokus/utils/ui/theme_config.dart';
 import 'package:fokus/widgets/auth/auth_input_field.dart';
 import 'package:fokus/utils/ui/snackbar_utils.dart';
@@ -122,7 +121,7 @@ class AccountDeleteDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 		BlocProvider.of<AccountDeleteCubit>(context).clearForm();
-	  var user = BlocProvider.of<AuthenticationBloc>(context).state.user as UICaregiver;
+	  var state = BlocProvider.of<AuthenticationBloc>(context).state;
   	var getText = (String key, {bool customize = true}) => AppLocales.of(context).translate('$_settingsPageKey.profile.delete${_role == UserRole.child && customize ? 'Child' : ''}Account$key');
 	  return BlocListener<AccountDeleteCubit, AccountDeleteState>(
 		  listener: (context, state) {
@@ -148,7 +147,7 @@ class AccountDeleteDialog extends StatelessWidget {
 						    SizedBox(height: 10),
 						    Text(AppLocales.of(context).translate('deleteWarning'), style: TextStyle(color: Colors.red)),
 						    SizedBox(height: 10),
-					      if (user.authMethod == AuthMethod.email)
+					      if (state.authMethod == AuthMethod.email)
 						      ...[
 						      	Text(getText('Confirm', customize: false)),
 							      SizedBox(height: 10),
@@ -165,7 +164,7 @@ class AccountDeleteDialog extends StatelessWidget {
 					  ),
 				  ),
 			  ],
-			  onConfirm: () => BlocProvider.of<AccountDeleteCubit>(context).accountDeleteFormSubmitted(),
+			  onConfirm: () => BlocProvider.of<AccountDeleteCubit>(context).accountDeleteFormSubmitted(state.authMethod!),
 		  ),
 	  );
   }

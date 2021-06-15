@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fokus/model/db/gamification/child_reward.dart';
 import 'package:intl/intl.dart';
 
-import 'package:fokus/model/ui/user/ui_child.dart';
+import 'package:fokus/model/ui/child_card_model.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/string_utils.dart';
 import 'package:fokus/utils/ui/icon_sets.dart';
@@ -68,21 +68,21 @@ class RewardItemCard extends StatelessWidget {
 }
 
 class ChildItemCard extends StatelessWidget {
-	final UIChild child;
+	final ChildCardModel childCard;
 	final void Function()? onTapped;
 
-	const ChildItemCard({required this.child, this.onTapped});
+	const ChildItemCard({required this.childCard, this.onTapped});
 
 	@override
 	Widget build(BuildContext context) {
 		return ItemCard(
-				title: child.name!,
-				subtitle: getChildCardSubtitle(context, child),
+				title: childCard.child.name!,
+				subtitle: getChildCardSubtitle(context, childCard),
 				onTapped: () => onTapped != null ? onTapped!() : null,
 				graphicType: AssetType.avatars,
-				graphic: child.avatar,
+				graphic: childCard.child.avatar,
 				chips: <Widget>[
-					for (Points pointCurrency in child.points!)
+					for (Points pointCurrency in childCard.child.points!)
 						AttributeChip.withCurrency(content: '${pointCurrency.quantity}', currencyType: pointCurrency.type!, tooltip: pointCurrency.name)
 				]
 		);

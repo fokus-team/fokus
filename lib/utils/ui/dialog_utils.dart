@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus/model/db/gamification/badge.dart';
 import 'package:fokus/model/db/gamification/reward.dart';
+import 'package:fokus/model/db/user/user.dart';
 import 'package:round_spot/round_spot.dart' as round_spot;
 
 import 'package:fokus/logic/caregiver/caregiver_friends_cubit.dart';
@@ -11,7 +12,6 @@ import 'package:fokus/logic/common/settings/account_delete/account_delete_cubit.
 import 'package:fokus/logic/common/settings/name_change/name_change_cubit.dart';
 import 'package:fokus/logic/common/settings/password_change/password_change_cubit.dart';
 import 'package:fokus/model/ui/app_popup.dart';
-import 'package:fokus/model/ui/user/ui_user.dart';
 
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/bloc_utils.dart';
@@ -126,7 +126,7 @@ void showAboutAppDialog(BuildContext context) {
 	);
 }
 
-Future<String?> showNameEditDialog(BuildContext context, UIUser user) {
+Future<String?> showNameEditDialog(BuildContext context, User user) {
 	return showDialog(
 		context: context,
 		builder: (_) => forwardCubit(
@@ -155,7 +155,7 @@ void showPasswordChangeDialog(BuildContext context, {PasswordChangeCubit? cubit,
 	);
 }
 
-Future showAccountDeleteDialog(BuildContext context, UIUser user) {
+Future showAccountDeleteDialog(BuildContext context, User user) {
 	return showDialog(
 		context: context,
 		builder: (_) => forwardCubit(

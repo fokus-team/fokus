@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
 import 'package:fokus/model/db/gamification/points.dart';
+import 'package:fokus/model/db/user/child.dart';
 
-import 'package:fokus/model/ui/user/ui_caregiver.dart';
-import 'package:fokus/model/ui/user/ui_child.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/ui/dialog_utils.dart';
 import 'package:fokus/utils/ui/theme_config.dart';
@@ -15,7 +15,6 @@ import 'package:fokus/widgets/buttons/back_icon_button.dart';
 import 'package:fokus/model/db/user/user_role.dart';
 import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/ui/ui_button.dart';
-import 'package:fokus/model/ui/user/ui_user.dart';
 import 'package:fokus/utils/ui/icon_sets.dart';
 import 'package:fokus/widgets/buttons/popup_menu_list.dart';
 import 'package:fokus/widgets/general/app_avatar.dart';
@@ -50,13 +49,13 @@ class _CustomAppBarState extends State<CustomAppBar>{
 		);
 	}
 
-	Widget _headerImage(UIUser user) {
-		if(user.role == UserRole.caregiver) {
-			if((user as UICaregiver).authMethod == AuthMethod.google)
-				return AppAvatar(0, caregiverPhotoURL: user.photoURL);
+	Widget _headerImage(AuthenticationState state) {
+		if(state.user!.role == UserRole.caregiver) {
+			if(state.authMethod == AuthMethod.google)
+				return AppAvatar(0, caregiverPhotoURL: state.photoURL);
 			return Image.asset('assets/image/sunflower_logo.png', height: 64);
 		} else {
-			return AppAvatar(user.avatar, color: childAvatars[user.avatar]?.color);
+			return AppAvatar(state.user!.avatar, color: childAvatars[state.user!.avatar]?.color);
 		}
 	}
 
@@ -89,7 +88,7 @@ class _CustomAppBarState extends State<CustomAppBar>{
 							children: <Widget>[
 								Padding(
 									padding: EdgeInsets.only(left: 4.0, right: 10.0),
-									child: (widget.type != CustomAppBarType.normal && state.user != null) ? _headerImage(state.user!) : SizedBox(
+									child: (widget.type != CustomAppBarType.normal && state.user != null) ? _headerImage(state) : SizedBox(
 										child: Icon(widget.icon, color: Colors.white, size: 40.0),
 										height: 64,
 										width: 64
@@ -207,7 +206,7 @@ class CustomChildAppBar extends StatefulWidget {
 class _CustomChildAppBarState extends State<CustomChildAppBar> {
 	@override
 	Widget build(BuildContext context) {
-		var getPoints = (AuthenticationState state) => (state.user as UIChild).points;
+		var getPoints = (AuthenticationState state) => (state.user as Child).points;
 		return Column(
 			verticalDirection: VerticalDirection.up,
 			children: [

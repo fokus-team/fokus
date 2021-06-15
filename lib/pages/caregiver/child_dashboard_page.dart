@@ -17,7 +17,7 @@ import 'package:fokus/model/navigation/child_dashboard_params.dart';
 import 'package:fokus/model/ui/app_page.dart';
 import 'package:fokus/model/ui/plan/ui_plan.dart';
 import 'package:fokus/model/ui/ui_button.dart';
-import 'package:fokus/model/ui/user/ui_child.dart';
+import 'package:fokus/model/ui/child_card_model.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/ui/child_plans_util.dart';
 import 'package:fokus/utils/ui/dialog_utils.dart';
@@ -47,11 +47,11 @@ class CaregiverChildDashboardPage extends StatefulWidget {
 class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPage> with TickerProviderStateMixin {
 	static const String _pageKey = 'page.caregiverSection.childDashboard';
 	late TabController _tabController;
-	final UIChild _childProfile;
+	final ChildCardModel _childCard;
 	int _currentIndex;
   StreamController<int> _tabIndexStream = StreamController<int>.broadcast();
 
-	_CaregiverChildDashboardPageState(ChildDashboardParams args) : _currentIndex = args.tab ?? 0, _childProfile = args.child;
+	_CaregiverChildDashboardPageState(ChildDashboardParams args) : _currentIndex = args.tab ?? 0, _childCard = args.childCard;
 
 	final double customBottomBarHeight = 40.0;
 	final Duration bottomBarAnimationDuration = Duration(milliseconds: 400);
@@ -81,7 +81,7 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 		return Scaffold(
 	    body: SimpleStatefulBlocBuilder<ChildDashboardCubit, ChildDashboardState>(
         builder: (context, state) => _getPage(
-					child: state.child,
+					childCard: state.childCard,
 	        content: TabBarView(
             controller: _tabController,
             children: [
@@ -92,7 +92,7 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 					)
 	      ),
 		    loadingBuilder: (context, state) => _getPage(
-			    child: _childProfile,
+			    childCard: _childCard,
 			    content: Center(child: AppLoader())
 		    ),
 	    ),
@@ -115,31 +115,31 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 		);
 	}
 
-	Column _getPage({required UIChild child, required Widget content}) {
+	Column _getPage({required ChildCardModel childCard, required Widget content}) {
 		return Column(
 			crossAxisAlignment: CrossAxisAlignment.start,
 				verticalDirection: VerticalDirection.up,
 			children: [
 				Expanded(child: content),
-				_buildAppHeader(child),
+				_buildAppHeader(childCard),
 			]
 		);
 	}
 
-	CustomContentAppBar _buildAppHeader(UIChild child) {
+	CustomContentAppBar _buildAppHeader(ChildCardModel childCard) {
 		var cubit = BlocProvider.of<ChildDashboardCubit>(context);
     return CustomContentAppBar(
       title: '$_pageKey.header.title',
-      content: ChildItemCard(child: child),
+      content: ChildItemCard(childCard: childCard),
       popupMenuWidget: PopupMenuList(
         lightTheme: true,
         items: [
-          UIButton('$_pageKey.header.childCode',() => showUserCodeDialog(context, '$_pageKey.header.childCode', getCodeFromId(child.id!)),
+          UIButton('$_pageKey.header.childCode',() => showUserCodeDialog(context, '$_pageKey.header.childCode', getCodeFromId(childCard.child.id!)),
 						null, Icons.screen_lock_portrait ),
-          UIButton.ofType(ButtonType.edit, () => cubit.onNameDialogClosed(showNameEditDialog(context, _childProfile)),
+          UIButton.ofType(ButtonType.edit, () => cubit.onNameDialogClosed(showNameEditDialog(context, _childCard.child)),
 						null, Icons.edit),
           UIButton.ofType(ButtonType.unpair, () async {
-            	if ((await showAccountDeleteDialog(context, _childProfile)) ?? false) {
+            	if ((await showAccountDeleteDialog(context, _childCard.child)) ?? false) {
 	            	Navigator.of(context).pop();
 								showSuccessSnackbar(context, 'page.settings.content.profile.accountChildDeletedText');
 							}
@@ -269,7 +269,7 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 			disabledDialogTitle: AppLocales.of(context).translate('$_pageKey.header.assignPlanButton'),
 			disabledDialogText: AppLocales.of(context).translate('$_pageKey.content.alerts.noPlansAdded'),
 			pickerTitle: AppLocales.of(context).translate('$_pageKey.header.assignPlanTitle'),
-			pickedValues: availablePlans.where((element) => element.assignedTo!.contains(_childProfile.id)).toList(),
+			pickedValues: availablePlans.where((element) => element.assignedTo!.contains(_childCard.child.id)).toList(),
 			options: availablePlans,
 			onChange: (List<UIPlan>? selected) => context.read<DashboardPlansCubit>().assignPlans(selected == null ? [] : selected.map((plan) => plan.id).toList()),
 			getName: (plan) => plan.name,

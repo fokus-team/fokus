@@ -7,7 +7,7 @@ import 'package:fokus/model/db/plan/plan.dart';
 import 'package:fokus/model/db/plan/plan_instance.dart';
 import 'package:fokus/model/db/plan/repeatability_type.dart';
 import 'package:fokus/model/db/plan/task_instance.dart';
-import 'package:fokus/model/ui/task/ui_task_report.dart';
+import 'package:fokus/model/ui/plan/ui_task_report.dart';
 import 'package:fokus_auth/fokus_auth.dart';
 import 'package:fokus/utils/definitions.dart';
 

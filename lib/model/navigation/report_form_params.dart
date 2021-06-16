@@ -1,4 +1,4 @@
-import 'package:fokus/model/ui/task/ui_task_report.dart';
+import 'package:fokus/model/ui/plan/ui_task_report.dart';
 
 class ReportFormParams {
 	final UITaskReport report;

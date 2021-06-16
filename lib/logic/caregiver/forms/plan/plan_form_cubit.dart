@@ -50,10 +50,10 @@ class PlanFormCubit extends Cubit<PlanFormState> {
 		var userId = _activeUser().id!;
 
 		var planID = state.formType == AppFormType.edit ? state.planId! : ObjectId();
-	  var tasks = planForm.tasks.map((task) => Task.fromTaskForm(taskForm: task, planID: planID, creator: userId, taskID: state.formType == AppFormType.edit ? task.id : null)).toList();
+	  var tasks = planForm.tasks.map((task) => Task.fromTaskForm(taskForm: task, planID: planID, createdBy: userId, taskID: state.formType == AppFormType.edit ? task.id : null)).toList();
 		var plan = Plan.fromPlanForm(
 			plan: planForm,
-			creator: userId,
+			createdBy: userId,
 			repeatability: _repeatabilityService.mapRepeatabilityModel(planForm),
 			id: planID,
 			tasks: tasks.map((task) => task.id!,

@@ -30,7 +30,8 @@ class TaskInstance extends Equatable {
 	  this.subtasks = const [],
 	  this.timer
   });
-	TaskInstance.fromTask(Task task, ObjectId planInstanceId) : this._(id: ObjectId(), taskID: task.id, planInstanceID: planInstanceId,
+
+	TaskInstance.fromTask(Task task, ObjectId planInstanceID) : this._(id: ObjectId(), taskID: task.id, planInstanceID: planInstanceID,
 			status: TaskStatus(completed: false, state: TaskState.notEvaluated), optional: task.optional,
 			timer: task.timer, subtasks: task.subtasks?.map((subtask) => MapEntry(subtask, false)).toList());
 

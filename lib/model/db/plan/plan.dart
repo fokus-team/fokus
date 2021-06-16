@@ -23,13 +23,13 @@ class Plan extends Equatable {
 
   String? get description => repeatability != null ? PlanRepeatabilityService.buildPlanDescription(repeatability!) : null;
 
-  Plan.fromPlanForm({required PlanFormModel plan, ObjectId? creator, PlanRepeatability? repeatability, List<ObjectId>? tasks, ObjectId? id}) : this._(
+  Plan.fromPlanForm({required PlanFormModel plan, ObjectId? createdBy, PlanRepeatability? repeatability, List<ObjectId>? tasks, ObjectId? id}) : this._(
 	  name: plan.name,
 	  id: id ?? ObjectId(),
 	  active: plan.isActive,
 	  assignedTo: plan.children,
 	  createdAt: TimeDate.now(),
-	  createdBy: creator,
+	  createdBy: createdBy,
 	  repeatability: repeatability,
 	  tasks: tasks,
   );

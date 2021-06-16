@@ -4,7 +4,7 @@ import 'package:fokus/logic/caregiver/tasks_evaluation_cubit.dart';
 import 'package:fokus/model/navigation/child_dashboard_params.dart';
 import 'package:fokus/model/navigation/report_form_params.dart';
 import 'package:fokus/model/ui/app_page.dart';
-import 'package:fokus/model/ui/task/ui_task_report.dart';
+import 'package:fokus/model/ui/plan/ui_task_report.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/duration_utils.dart';
 import 'package:fokus/utils/ui/theme_config.dart';

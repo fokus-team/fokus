@@ -13,7 +13,7 @@ import 'package:fokus/model/db/plan/task.dart';
 import 'package:fokus/model/db/plan/task_instance.dart';
 import 'package:fokus/model/db/plan/task_status.dart';
 import 'package:fokus/model/ui/plan/ui_plan_instance.dart';
-import 'package:fokus/model/ui/task/ui_task_instance.dart';
+import 'package:fokus/model/ui/plan/ui_task_instance.dart';
 import 'package:fokus/services/analytics_service.dart';
 import 'package:fokus/services/data/data_repository.dart';
 import 'package:fokus/services/notifications/notification_service.dart';
@@ -36,7 +36,7 @@ class TaskCompletionCubit extends StatefulCubit<TaskCompletionState> {
 	final AnalyticsService _analyticsService = GetIt.I<AnalyticsService>();
 
 	TaskCompletionCubit(TaskInProgressParams params, ModalRoute pageRoute) : _taskInstanceId = params.taskId,
-				super(pageRoute, initialState: TaskCompletionState(planInstance: params.planInstance), options: [StatefulOption.resetSubmissionState]);
+				super(pageRoute, initialState: TaskCompletionState(uiPlan: params.planInstance), options: [StatefulOption.resetSubmissionState]);
 
 	@override
 	Future doLoadData()  async {
@@ -52,9 +52,9 @@ class TaskCompletionCubit extends StatefulCubit<TaskCompletionState> {
 
 		if (!loadingForFirstTime && _taskInstance.status!.completed! && (_taskInstance.status!.state == TaskState.evaluated || _taskInstance.status!.state == TaskState.rejected)) {
 			if(_taskInstance.status!.state == TaskState.evaluated)
-				emit(TaskCompletionState.finished(taskInstance: uiTaskInstance,  planInstance: planInstance));
+				emit(TaskCompletionState.finished(uiTask: uiTaskInstance,  uiPlan: planInstance));
 			else
-				emit(TaskCompletionState.discarded(taskInstance: uiTaskInstance,  planInstance: planInstance));
+				emit(TaskCompletionState.discarded(uiTask: uiTaskInstance,  uiPlan: planInstance));
 		}
 		else {
 			if(_planInstance.state != PlanInstanceState.active) {
@@ -89,9 +89,9 @@ class TaskCompletionCubit extends StatefulCubit<TaskCompletionState> {
 			await Future.wait(updates);
 
 		if(isInProgress(uiTaskInstance.instance.duration))
-		  emit(TaskCompletionState.inProgress(taskInstance: uiTaskInstance,  planInstance: planInstance));
+		  emit(TaskCompletionState.inProgress(uiTask: uiTaskInstance,  uiPlan: planInstance));
 		else
-		  emit(TaskCompletionState.inBreak(taskInstance: uiTaskInstance,  planInstance: planInstance));
+		  emit(TaskCompletionState.inBreak(uiTask: uiTaskInstance,  uiPlan: planInstance));
 		}
 	}
 

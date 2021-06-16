@@ -61,7 +61,7 @@ class TaskAppHeaderState extends State<TaskAppHeader> with TickerProviderStateMi
 						isConstrained: true,
 						popArgs: widget.popArgs
 					),
-					if(this.widget.state.taskInstance != null)
+					if(this.widget.state.uiTask != null)
 					...[
 						_getTimerButtonSection(),
 						_getCurrencyBar(),
@@ -99,14 +99,14 @@ class TaskAppHeaderState extends State<TaskAppHeader> with TickerProviderStateMi
 					decoration: AppBoxProperties.elevatedContainer.copyWith(borderRadius: BorderRadius.vertical(top: Radius.circular(4.0))),
 					child: Padding(
 						padding: EdgeInsets.symmetric(vertical: 6.0, horizontal: 12.0),
-						child: this.widget.state.taskInstance?.task.points != null ? Row(
+						child: this.widget.state.uiTask?.task.points != null ? Row(
 							mainAxisAlignment: MainAxisAlignment.spaceBetween,
 							children: [
 								Text(AppLocales.of(context).translate('$_pageKey.content.pointsToGet')),
 								AttributeChip.withCurrency(
-									content: "+" + this.widget.state.taskInstance!.task.points!.quantity.toString(),
-									currencyType: this.widget.state.taskInstance!.task.points!.type!,
-									tooltip: this.widget.state.taskInstance!.task.points!.name
+									content: "+" + this.widget.state.uiTask!.task.points!.quantity.toString(),
+									currencyType: this.widget.state.uiTask!.task.points!.type!,
+									tooltip: this.widget.state.uiTask!.task.points!.name
 								)
 							]
 						) :
@@ -219,7 +219,7 @@ class TaskAppHeaderState extends State<TaskAppHeader> with TickerProviderStateMi
 
 	TimerCubit Function(BuildContext) _getTimerFun() {
   	if(_timerCompletionCubit == null) {
-			if(this.widget.state.taskInstance?.instance.timer != null) {
+			if(this.widget.state.uiTask?.instance.timer != null) {
 				if(_getTimerInSeconds() - _getDuration() > 0) {
 					int time = _getTimerInSeconds() - _getDuration();
 					_timeUpdate(Duration(seconds: time));
@@ -235,17 +235,17 @@ class TaskAppHeaderState extends State<TaskAppHeader> with TickerProviderStateMi
 	}
 
 	int _getDuration() {
-  	return sumDurations(this.widget.state.taskInstance!.instance.duration).inSeconds;
+  	return sumDurations(this.widget.state.uiTask!.instance.duration).inSeconds;
 	}
 
 	int _getTimerInSeconds() {
-  	return this.widget.state.taskInstance!.instance.timer!*60;
+  	return this.widget.state.uiTask!.instance.timer!*60;
 	}
 
 
 	String _getTimerTitle() {
-		if(this.widget.state.taskInstance?.instance.timer != null) {
-			if(this.widget.state.taskInstance!.instance.timer! * 60 - sumDurations(this.widget.state.taskInstance!.instance.duration).inSeconds > 0)
+		if(this.widget.state.uiTask?.instance.timer != null) {
+			if(this.widget.state.uiTask!.instance.timer! * 60 - sumDurations(this.widget.state.uiTask!.instance.duration).inSeconds > 0)
 				return '$_pageKey.content.timeLeft';
 			else return '$_pageKey.content.latency';
 		}

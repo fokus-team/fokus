@@ -20,13 +20,14 @@ import 'package:collection/collection.dart';
 final String _plansKey = 'plans';
 
 List<Widget> buildChildPlanSegments(List<UIPlanInstance?> plans, BuildContext context) {
-	UIPlanInstance? activePlan = plans.firstWhereOrNull((plan) => plan != null && plan.state == PlanInstanceState.active);
-	List<UIPlanInstance?> otherPlans = plans.where((plan) => (activePlan == null || (plan!= null && plan.id != activePlan.id)) && (plan != null && plan.state != PlanInstanceState.completed)).toList();
-	var completedPlans = plans.where((plan) => plan!= null && plan.state == PlanInstanceState.completed).toList();
+	UIPlanInstance? activePlan = plans.firstWhereOrNull((plan) => plan != null && plan.instance.state == PlanInstanceState.active);
+	List<UIPlanInstance?> otherPlans = plans.where((plan) => (activePlan == null || (plan != null && plan.instance.id != activePlan.instance.id))
+			&& (plan != null && plan.instance.state != PlanInstanceState.completed)).toList();
+	var completedPlans = plans.where((plan) => plan!= null && plan.instance.state == PlanInstanceState.completed).toList();
 
 	return [
 		if(activePlan != null)
-			isInProgress(activePlan.duration) ?
+			isInProgress(activePlan.instance.duration) ?
 			BlocProvider<TimerCubit>(
 				create: (_) => TimerCubit.up(activePlan.elapsedActiveTime!)..startTimer(),
 				child: _getPlansSegment(
@@ -63,14 +64,14 @@ Segment _getPlansSegment({required BuildContext context, required List<UIPlanIns
 		title: title,
 		noElementsMessage: noElementsMessage,
 		elements: <Widget>[
-			for (var plan in plans)
+			for (var uiPlan in plans)
 				ItemCard(
-					isActive: plan!.state != PlanInstanceState.completed,
-					title: plan.name!,
-					subtitle: plan.description!(context),
-					progressPercentage: (plan.state!.inProgress || plan.state!.ended) ? plan.completedTaskCount! / plan.taskCount! : null,
-					chips: _getTaskChipForPlan(context, plan, displayTimer),
-					onTapped: () => Navigator.of(context).pushNamed(AppPage.planInstanceDetails.name, arguments: PlanInstanceParams(planInstance: plan, actions: userRole == UserRole.child))
+					isActive: uiPlan!.instance.state != PlanInstanceState.completed,
+					title: uiPlan.plan.name!,
+					subtitle: uiPlan.description!,
+					progressPercentage: (uiPlan.instance.state!.inProgress || uiPlan.instance.state!.ended) ? uiPlan.completedTaskCount! / uiPlan.instance.tasks!.length : null,
+					chips: _getTaskChipForPlan(context, uiPlan, displayTimer),
+					onTapped: () => Navigator.of(context).pushNamed(AppPage.planInstanceDetails.name, arguments: PlanInstanceParams(planInstance: uiPlan, actions: userRole == UserRole.child))
 				)
 		],
 	);
@@ -80,22 +81,22 @@ List<Widget> _getTaskChipForPlan(BuildContext context, UIPlanInstance plan, bool
 	List<Widget> chips = [];
 	var taskDescriptionKey = '$_plansKey.' + (plan.completedTaskCount! > 0 ? 'taskProgress' : 'noTaskCompleted');
 	if (displayTimer) chips.add(TimerChip(color: AppColors.childButtonColor));
-	else if(plan.duration != null && plan.duration!.isNotEmpty && !isInProgress(plan.duration))
+	else if(plan.instance.duration != null && plan.instance.duration!.isNotEmpty && !isInProgress(plan.instance.duration))
 		chips.add(AttributeChip.withIcon(
 			icon: Icons.timer,
 			color: Colors.orange,
-			content: formatDuration(sumDurations(plan.duration))
+			content: formatDuration(sumDurations(plan.instance.duration))
 		));
-	if (!plan.state!.inProgress)
+	if (!plan.instance.state!.inProgress)
 		chips.add(AttributeChip.withIcon(
 			icon: Icons.description,
 			color: AppColors.mainBackgroundColor,
-			content: AppLocales.of(context).translate('$_plansKey.tasks', {'NUM_TASKS': plan.taskCount!})
+			content: AppLocales.of(context).translate('$_plansKey.tasks', {'NUM_TASKS': plan.instance.tasks!.length})
 		));
 	else chips.add(AttributeChip.withIcon(
 		icon: Icons.description,
 		color: Colors.lightGreen,
-		content: AppLocales.of(context).translate(taskDescriptionKey, {'NUM_TASKS': plan.completedTaskCount!, 'NUM_ALL_TASKS': plan.taskCount!})
+		content: AppLocales.of(context).translate(taskDescriptionKey, {'NUM_TASKS': plan.completedTaskCount!, 'NUM_ALL_TASKS': plan.instance.tasks!.length})
 	));
 	return chips;
 }

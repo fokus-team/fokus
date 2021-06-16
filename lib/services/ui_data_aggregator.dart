@@ -6,7 +6,6 @@ import 'package:fokus/model/ui/plan/ui_plan_instance.dart';
 import 'package:fokus/model/ui/child_card_model.dart';
 import 'package:fokus/services/data/data_repository.dart';
 import 'package:fokus/services/plan_repeatability_service.dart';
-import 'package:fokus/utils/duration_utils.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
@@ -31,9 +30,7 @@ class UIDataAggregator {
 		planInstance ??= await _dataRepository.getPlanInstance(id: planInstanceId);
 		var completedTasks = await _dataRepository.getCompletedTaskCount(planInstance!.id!);
 		plan ??= await _dataRepository.getPlan(id: planInstance.planID!, fields: ['_id', 'repeatability', 'name']);
-		var getDescription = (Plan plan, [Date? instanceDate]) => PlanRepeatabilityService.buildPlanDescription(plan.repeatability!, instanceDate: instanceDate);
-		var elapsedTime = () => sumDurations(planInstance!.duration).inSeconds;
-		return UIPlanInstance.fromDBModel(planInstance, plan!.name!, completedTasks, elapsedTime, (_) => getDescription(plan!, planInstance?.date));
+		return UIPlanInstance(instance: planInstance, plan: plan!, completedTaskCount: completedTasks);
 	}
 
 	Future<List<UIPlanInstance>> loadTodaysPlanInstances({required ObjectId childId}) async {
@@ -48,19 +45,15 @@ class UIDataAggregator {
 	}
 
 	Future<List<UIPlanInstance>> getUIPlanInstances({required List<Plan> plans, required List<PlanInstance> instances}) async {
-		var getDescription = (Plan plan, [Date? instanceDate]) => PlanRepeatabilityService.buildPlanDescription(plan.repeatability!, instanceDate: instanceDate);
 		var planMap = Map.fromEntries(instances.map((instance) => MapEntry(instance.id, plans.firstWhere((plan) => plan.id == instance.planID))));
 
 		List<UIPlanInstance> uiInstances = [];
 		for (var instance in instances) {
-			var elapsedTime = () => sumDurations(instance.duration).inSeconds;
 			var completedTasks = await _dataRepository.getCompletedTaskCount(instance.id!);
-			uiInstances.add(UIPlanInstance.fromDBModel(
-				instance,
-				planMap[instance.id]!.name!,
-				completedTasks,
-				elapsedTime,
-				(_) => getDescription(planMap[instance.id]!, instance.date)
+			uiInstances.add(UIPlanInstance(
+				instance: instance,
+				plan: planMap[instance.id]!,
+				completedTaskCount: completedTasks,
 			));
 		}
 		return uiInstances;

@@ -10,7 +10,7 @@ import 'package:fokus/model/navigation/plan_instance_params.dart';
 import 'package:fokus/model/notification/notification_refresh_info.dart';
 import 'package:fokus/model/notification/notification_type.dart';
 import 'package:fokus/model/ui/plan/ui_plan_instance.dart';
-import 'package:fokus/model/ui/task/ui_task_instance.dart';
+import 'package:fokus/model/ui/plan/ui_task_instance.dart';
 import 'package:fokus/services/analytics_service.dart';
 import 'package:fokus/services/data/data_repository.dart';
 import 'package:fokus/services/ui_data_aggregator.dart';
@@ -25,27 +25,27 @@ class PlanInstanceCubit extends StatefulCubit {
 	final UIDataAggregator _dataAggregator = GetIt.I<UIDataAggregator>();
 	final AnalyticsService _analyticsService = GetIt.I<AnalyticsService>();
 
-	UIPlanInstance uiPlanInstance;
+	UIPlanInstance uiPlan;
 	late PlanInstance _planInstance;
 
-	PlanInstanceCubit(PlanInstanceParams params, ModalRoute modalRoute) : uiPlanInstance = params.planInstance, super(modalRoute);
+	PlanInstanceCubit(PlanInstanceParams params, ModalRoute modalRoute) : uiPlan = params.planInstance, super(modalRoute);
 
 	@override
 	List<NotificationType> notificationTypeSubscription() => [NotificationType.taskApproved, NotificationType.taskRejected, NotificationType.taskFinished, NotificationType.taskUnfinished];
 
 	@override
-  bool shouldNotificationRefresh(NotificationRefreshInfo info) => info.subject == uiPlanInstance.id;
+  bool shouldNotificationRefresh(NotificationRefreshInfo info) => info.subject == uiPlan.instance.id;
 
   @override
 	Future doLoadData() async {
-		_planInstance = (await _dataRepository.getPlanInstance(id: uiPlanInstance.id))!;
+		_planInstance = (await _dataRepository.getPlanInstance(id: uiPlan.instance.id))!;
 		if(_planInstance.taskInstances == null || _planInstance.taskInstances!.isEmpty)
 			_taskInstancesService.createTaskInstances(_planInstance);
-		uiPlanInstance = await _dataAggregator.loadPlanInstance(planInstance: _planInstance);
-		var allTasksInstances = await _dataRepository.getTaskInstances(planInstanceId: uiPlanInstance.id);
+		uiPlan = await _dataAggregator.loadPlanInstance(planInstance: _planInstance);
+		var allTasksInstances = await _dataRepository.getTaskInstances(planInstanceId: uiPlan.instance.id);
 
 		List<UITaskInstance> uiInstances = await _taskInstancesService.mapToUIModels(allTasksInstances);
-		emit(PlanInstanceCubitState(tasks: uiInstances, planInstance: uiPlanInstance));
+		emit(PlanInstanceCubitState(tasks: uiInstances, uiPlan: uiPlan));
 	}
 
 	Future<bool> isOtherPlanInProgressDbCheck({required ObjectId? tappedTaskInstance}) async {
@@ -67,7 +67,7 @@ class PlanInstanceCubit extends StatefulCubit {
 			return;
 		List<Future> updates = [];
 		_planInstance.state = PlanInstanceState.completed;
-		var allTasksInstances = await _dataRepository.getTaskInstances(planInstanceId: uiPlanInstance.id);
+		var allTasksInstances = await _dataRepository.getTaskInstances(planInstanceId: uiPlan.instance.id);
 		List<TaskInstance> updatedTaskInstances = [];
 		for(var taskInstance in allTasksInstances) {
 			if(!taskInstance.status!.completed!) {
@@ -94,20 +94,20 @@ class PlanInstanceCubit extends StatefulCubit {
 		_analyticsService.logPlanCompleted(_planInstance);
 
 		Future.wait(updates);
-		uiPlanInstance = await _dataAggregator.loadPlanInstance(planInstanceId: _planInstance.id);
-		emit(PlanInstanceCubitState(tasks: uiInstances, planInstance: uiPlanInstance, submissionState: DataSubmissionState.submissionSuccess));
+		uiPlan = await _dataAggregator.loadPlanInstance(planInstanceId: _planInstance.id);
+		emit(PlanInstanceCubitState(tasks: uiInstances, uiPlan: uiPlan, submissionState: DataSubmissionState.submissionSuccess));
 	}
 }
 
 class PlanInstanceCubitState extends StatefulState {
 	final List<UITaskInstance> tasks;
-	final UIPlanInstance planInstance;
+	final UIPlanInstance uiPlan;
 
-	PlanInstanceCubitState({required this.tasks, required this.planInstance, DataSubmissionState? submissionState}) : super.loaded(submissionState);
+	PlanInstanceCubitState({required this.tasks, required this.uiPlan, DataSubmissionState? submissionState}) : super.loaded(submissionState);
 
 	@override
-  StatefulState withSubmitState(DataSubmissionState submissionState) => PlanInstanceCubitState(tasks: tasks, planInstance: planInstance, submissionState: submissionState);
+  StatefulState withSubmitState(DataSubmissionState submissionState) => PlanInstanceCubitState(tasks: tasks, uiPlan: uiPlan, submissionState: submissionState);
 
   @override
-	List<Object?> get props => super.props..addAll([tasks, planInstance]);
+	List<Object?> get props => super.props..addAll([tasks, uiPlan]);
 }

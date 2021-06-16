@@ -4,7 +4,7 @@ import 'package:round_spot/round_spot.dart' as round_spot;
 
 import 'package:fokus/logic/caregiver/tasks_evaluation_cubit.dart';
 import 'package:fokus/model/navigation/report_form_params.dart';
-import 'package:fokus/model/ui/task/ui_task_report.dart';
+import 'package:fokus/model/ui/plan/ui_task_report.dart';
 import 'package:fokus/services/app_locales.dart';
 import 'package:fokus/utils/ui/dialog_utils.dart';
 import 'package:fokus/utils/ui/form_config.dart';

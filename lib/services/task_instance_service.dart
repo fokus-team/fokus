@@ -2,7 +2,7 @@ import 'package:fokus/model/db/plan/plan_instance.dart';
 import 'package:fokus/model/db/plan/task.dart';
 import 'package:fokus/model/db/plan/task_instance.dart';
 import 'package:fokus/model/db/plan/task_status.dart';
-import 'package:fokus/model/ui/task/ui_task_instance.dart';
+import 'package:fokus/model/ui/plan/ui_task_instance.dart';
 import 'package:fokus/utils/duration_utils.dart';
 import 'package:get_it/get_it.dart';
 

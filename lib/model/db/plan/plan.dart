@@ -1,11 +1,12 @@
 import 'package:equatable/equatable.dart';
-import 'package:fokus/model/db/date/date.dart';
-import 'package:fokus/model/db/date/time_date.dart';
-import 'package:fokus/model/db/plan/plan_repeatability.dart';
-import 'package:fokus/model/ui/form/plan_form_model.dart';
-import 'package:fokus/services/plan_repeatability_service.dart';
-import 'package:fokus/utils/definitions.dart';
 import 'package:mongo_dart/mongo_dart.dart';
+
+import '../../../services/plan_repeatability_service.dart';
+import '../../../utils/definitions.dart';
+import '../../ui/form/plan_form_model.dart';
+import '../date/date.dart';
+import '../date/time_date.dart';
+import 'plan_repeatability.dart';
 
 class Plan extends Equatable {
   final ObjectId? id;
@@ -40,15 +41,15 @@ class Plan extends Equatable {
   static Plan? fromJson(Json? json) {
     return json != null ? Plan._(
       active: json['active'],
-      assignedTo: json['assignedTo'] != null ? new List<ObjectId>.from(json['assignedTo']) : [],
+      assignedTo: json['assignedTo'] != null ? List<ObjectId>.from(json['assignedTo']) : [],
       changedInstances: json['changedInstances'] != null ? (json['changedInstances'] as List).map((date) => Date.parseDBDate(date)!).toList() : [],
       createdAt: TimeDate.parseDBDate(json['createdAt']),
       createdBy: json['createdBy'],
       id: json['_id'],
-      instances: json['instances'] != null ? new List<ObjectId>.from(json['instances']) : [],
+      instances: json['instances'] != null ? List<ObjectId>.from(json['instances']) : [],
       name: json['name'],
       repeatability: json['repeatability'] != null ? PlanRepeatability.fromJson(json['repeatability']) : null,
-      tasks: json['tasks'] != null ? new List<ObjectId>.from(json['tasks']) : [],
+      tasks: json['tasks'] != null ? List<ObjectId>.from(json['tasks']) : [],
     ) : null;
   }
 
@@ -63,7 +64,7 @@ class Plan extends Equatable {
 		  id: id ?? this.id,
 		  name: name ?? this.name,
 		  active: active ?? this.active,
-		  tasks: tasks ?? this.tasks,
+		  tasks: tasks ?? tasks,
 		  assignedTo: assignedTo ?? (this.assignedTo != null ? List.from(this.assignedTo!) : null),
 		  createdBy: createdBy ?? this.createdBy,
 		  repeatability: repeatability,
@@ -74,27 +75,27 @@ class Plan extends Equatable {
   }
 
   Json toJson() {
-    final Json data = new Json();
+    final data = <String, dynamic>{};
     if (active != null)
-      data['active'] = this.active;
+      data['active'] = active;
     if (createdAt != null)
-      data['createdAt'] = this.createdAt!.toDBDate();
+      data['createdAt'] = createdAt!.toDBDate();
     if (createdBy != null)
-      data['createdBy'] = this.createdBy;
+      data['createdBy'] = createdBy;
     if (id != null)
-      data['_id'] = this.id;
+      data['_id'] = id;
     if (name != null)
-      data['name'] = this.name;
+      data['name'] = name;
     if (repeatability != null)
-      data['repeatability'] = this.repeatability!.toJson();
-    if (this.assignedTo != null)
-      data['assignedTo'] = this.assignedTo;
-    if (this.changedInstances != null)
-      data['changedInstances'] = this.changedInstances!.map((e) => e.toDBDate()).toList();
-    if (this.instances != null)
-      data['instances'] = this.instances;
-    if (this.tasks != null)
-      data['tasks'] = this.tasks;
+      data['repeatability'] = repeatability!.toJson();
+    if (assignedTo != null)
+      data['assignedTo'] = assignedTo;
+    if (changedInstances != null)
+      data['changedInstances'] = changedInstances!.map((e) => e.toDBDate()).toList();
+    if (instances != null)
+      data['instances'] = instances;
+    if (tasks != null)
+      data['tasks'] = tasks;
     return data;
   }
 

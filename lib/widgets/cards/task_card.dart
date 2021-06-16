@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:fokus/model/ui/form/task_form_model.dart';
-import 'package:fokus/services/app_locales.dart';
+import '../../model/ui/form/task_form_model.dart';
+import '../../services/app_locales.dart';
 import '../chips/attribute_chip.dart';
 
 class TaskCard extends StatelessWidget {
@@ -16,8 +16,8 @@ class TaskCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-		bool haveSetPoints = task.pointsValue != null && task.pointsValue != 0;
-		bool haveSetTimer = task.timer != null && task.timer != 0;
+		var haveSetPoints = task.pointsValue != null && task.pointsValue != 0;
+		var haveSetTimer = task.timer != null && task.timer != 0;
 		
 		return Card(
 			child: InkWell(

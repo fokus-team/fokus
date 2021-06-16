@@ -1,12 +1,12 @@
-import 'package:fokus/model/db/user/child.dart';
+import 'package:fokus_auth/fokus_auth.dart';
 import 'package:formz/formz.dart';
 
-import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
-import 'package:fokus/logic/child/auth/child_auth_cubit_base.dart';
-import 'package:fokus/logic/common/formz_state.dart';
-import 'package:fokus/model/db/user/user_role.dart';
-import 'package:fokus_auth/fokus_auth.dart';
-import 'package:fokus/model/ui/auth/user_code.dart';
+import '../../../../model/db/user/child.dart';
+import '../../../../model/db/user/user_role.dart';
+import '../../../../model/ui/auth/user_code.dart';
+import '../../../common/auth_bloc/authentication_bloc.dart';
+import '../../../common/formz_state.dart';
+import '../child_auth_cubit_base.dart';
 
 part 'child_sign_in_state.dart';
 

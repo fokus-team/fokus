@@ -7,7 +7,7 @@ abstract class DateBase extends DateTime {
 
   DateTime toDBDate();
 
-  String toAppString(DateFormat format) => format.format(this.toLocal());
+  String toAppString(DateFormat format) => format.format(toLocal());
 
   @override
   bool operator ==(dynamic other) => other is DateTime && year == other.year && month == other.month && day == other.day;

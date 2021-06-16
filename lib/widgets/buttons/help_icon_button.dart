@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/ui/dialog_utils.dart';
-import 'package:fokus/utils/ui/theme_config.dart';
+import '../../services/app_locales.dart';
+import '../../utils/ui/dialog_utils.dart';
+import '../../utils/ui/theme_config.dart';
 
 class HelpIconButton extends StatelessWidget {
 	final String helpPage;
@@ -15,7 +15,7 @@ class HelpIconButton extends StatelessWidget {
 		return Tooltip(
 			message: AppLocales.of(context).translate('actions.help'),
 			child: InkWell(
-				customBorder: new CircleBorder(),
+				customBorder: CircleBorder(),
 				onTap: () => { showHelpDialog(context, helpPage) },
 				child: Padding(
 					padding: EdgeInsets.all(8.0),

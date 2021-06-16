@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fokus/utils/ui/theme_config.dart';
 import 'package:formz/formz.dart';
 
-import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/logic/common/formz_state.dart';
+import '../../logic/common/formz_state.dart';
+import '../../services/app_locales.dart';
+import '../../utils/ui/theme_config.dart';
 
 class AuthenticationInputField<Bloc extends Cubit<State>, State extends FormzState> extends StatefulWidget {
 	final List<dynamic> Function(State) getErrorKey;

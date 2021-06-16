@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:fokus/widgets/auth/auth_widgets.dart';
 import 'package:lottie/lottie.dart';
 
-import 'package:fokus/model/ui/app_page.dart';
-import 'package:fokus/model/db/user/user_role.dart';
-import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/ui/dialog_utils.dart';
-import 'package:fokus/utils/ui/theme_config.dart';
+import '../../model/db/user/user_role.dart';
+import '../../model/ui/app_page.dart';
+import '../../services/app_locales.dart';
+import '../../utils/ui/dialog_utils.dart';
+import '../../utils/ui/theme_config.dart';
+import '../../widgets/auth/auth_widgets.dart';
 
 class RolesPage extends StatelessWidget {
   @override
@@ -42,7 +42,7 @@ class RolesPage extends StatelessWidget {
   }
 
   Widget _roleButton(BuildContext context, UserRole role) {
-	  TextStyle roleButtonsStyle = TextStyle(
+	  var roleButtonsStyle = TextStyle(
 			fontSize: 20,
 			color: AppColors.lightTextColor,
 		  fontWeight: FontWeight.normal

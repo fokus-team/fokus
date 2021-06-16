@@ -1,21 +1,21 @@
 import 'package:mongo_dart/mongo_dart.dart';
 
-import 'package:fokus/model/db/collection.dart';
-import 'package:fokus/model/db/date/date.dart';
-import 'package:fokus/model/db/plan/plan.dart';
-import 'package:fokus/services/data/db/db_repository.dart';
-import 'package:fokus/model/db/plan/plan_instance.dart';
-import 'package:fokus/model/db/date/time_date.dart';
-import 'package:fokus/model/db/plan/plan_instance_state.dart';
-import 'package:fokus/services/data/data_repository.dart';
-import 'package:fokus/model/db/date_span.dart';
+import '../../../model/db/collection.dart';
+import '../../../model/db/date/date.dart';
+import '../../../model/db/date/time_date.dart';
+import '../../../model/db/date_span.dart';
+import '../../../model/db/plan/plan.dart';
+import '../../../model/db/plan/plan_instance.dart';
+import '../../../model/db/plan/plan_instance_state.dart';
+import '../data_repository.dart';
+import '../db/db_repository.dart';
 
 mixin PlanDbRepository implements DbRepository {
 	Future<Plan?> getPlan({required ObjectId id, List<String>? fields}) {
 		var query = _buildPlanQuery(id: id);
 		if (fields != null)
 			query.fields(fields);
-		return dbClient.queryOneTyped(Collection.plan, query, (json) => Plan.fromJson(json));
+		return dbClient.queryOneTyped(Collection.plan, query, Plan.fromJson);
 	}
 
 	Future<List<Plan>> getPlans({List<ObjectId>? ids, ObjectId? caregiverId, ObjectId? childId, bool? active, bool? untilCompleted, List<String>? fields}) {
@@ -38,7 +38,7 @@ mixin PlanDbRepository implements DbRepository {
 		var query = _buildPlanQuery(id: id, childId: childId, state: state);
 		if (fields != null)
 			query.fields(fields);
-		return dbClient.queryOneTyped(Collection.planInstance, query, (json) => PlanInstance.fromJson(json));
+		return dbClient.queryOneTyped(Collection.planInstance, query, PlanInstance.fromJson);
 	}
 
 	Future<List<PlanInstance>> getPlanInstances({List<ObjectId>? childIDs, PlanInstanceState? state, ObjectId? planId, Date? date, DateSpan<Date>? between, List<String>? fields}) {
@@ -79,13 +79,13 @@ mixin PlanDbRepository implements DbRepository {
 	}
 
 	Future updatePlanFields(List<ObjectId> planIDs, {ObjectId? assign, ObjectId? unassign}) {
-		var query = (ObjectId id) => where.eq('_id', id);
+		query(ObjectId id) => where.eq('_id', id);
 		var planModify = modify;
 		if (assign != null)
 			planModify.addToSet('assignedTo', assign);
 		if (unassign != null)
 			planModify.pull('assignedTo', unassign);
-		return dbClient.updateAll(Collection.plan, planIDs.map((id) => query(id)).toList(), List.filled(planIDs.length, planModify));
+		return dbClient.updateAll(Collection.plan, planIDs.map(query).toList(), List.filled(planIDs.length, planModify));
 	}
 
 	Future updateActivePlanInstanceState(ObjectId childId, PlanInstanceState? state) {
@@ -96,13 +96,13 @@ mixin PlanDbRepository implements DbRepository {
 	}
 
 	Future createPlanInstances(List<PlanInstance> plans) {
-		var query = (PlanInstance plan) => where.allEq({
+		query(PlanInstance plan) => where.allEq({
 			'planID': plan.planID,
 			'assignedTo': plan.assignedTo,
 			'date': plan.date
 		});
-		var insert = (PlanInstance plan) => modify.setAllOnInsert(plan.toJson());
-	  return dbClient.updateAll(Collection.planInstance, plans.map((plan) => query(plan)).toList(), plans.map((plan) => insert(plan)).toList());
+		insert(PlanInstance plan) => modify.setAllOnInsert(plan.toJson());
+	  return dbClient.updateAll(Collection.planInstance, plans.map(query).toList(), plans.map(insert).toList());
 	}
 
 	Future updatePlan(Plan plan) => dbClient.update(Collection.plan, _buildPlanQuery(id: plan.id), plan.toJson(), multiUpdate: false);
@@ -119,7 +119,7 @@ mixin PlanDbRepository implements DbRepository {
 
 	SelectorBuilder _buildPlanQuery({ObjectId? id, List<ObjectId>? ids, ObjectId? caregiverId, ObjectId? childId, ObjectId? planId,
 			PlanInstanceState? state, Date? date, DateSpan<Date>? between, bool? active, List<ObjectId>? childIDs}) {
-		SelectorBuilder query = where;
+		var query = where;
 		if (id != null)
 			query.eq('_id', id);
 		if (ids != null)

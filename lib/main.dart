@@ -4,102 +4,97 @@ import 'dart:ui';
 import 'package:bloc/bloc.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart' as foundation;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get_it/get_it.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:round_spot/round_spot.dart' as round_spot;
-import 'package:flutter/foundation.dart' as Foundation;
+import 'package:get_it/get_it.dart';
 import 'package:mongo_dart/mongo_dart.dart' as mongo;
+import 'package:round_spot/round_spot.dart' as round_spot;
 
-import 'package:fokus/logic/caregiver/caregiver_friends_cubit.dart';
-import 'package:fokus/logic/caregiver/child_dashboard/child_dashboard_cubit.dart';
-import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
-import 'package:fokus/logic/caregiver/auth/sign_in/caregiver_sign_in_cubit.dart';
-import 'package:fokus/logic/caregiver/auth/sign_up/caregiver_sign_up_cubit.dart';
-import 'package:fokus/logic/child/auth/saved_child_profiles_cubit.dart';
-import 'package:fokus/logic/child/auth/sign_in/child_sign_in_cubit.dart';
-import 'package:fokus/logic/child/auth/sign_up/child_sign_up_cubit.dart';
-import 'package:fokus/logic/caregiver/caregiver_awards_cubit.dart';
-import 'package:fokus/logic/caregiver/caregiver_currencies_cubit.dart';
-import 'package:fokus/logic/common/plan_cubit.dart';
-import 'package:fokus/logic/caregiver/child_dashboard/dashboard_achievements_cubit.dart';
-import 'package:fokus/logic/caregiver/child_dashboard/dashboard_plans_cubit.dart';
-import 'package:fokus/logic/caregiver/child_dashboard/dashboard_rewards_cubit.dart';
-import 'package:fokus/logic/common/plan_instance_cubit.dart';
-import 'package:fokus/logic/common/calendar_cubit.dart';
-import 'package:fokus/logic/caregiver/caregiver_panel_cubit.dart';
-import 'package:fokus/logic/caregiver/caregiver_plans_cubit.dart';
-import 'package:fokus/logic/child/child_panel_cubit.dart';
-import 'package:fokus/logic/child/child_rewards_cubit.dart';
-import 'package:fokus/logic/caregiver/forms/plan/plan_form_cubit.dart';
-import 'package:fokus/logic/common/settings/account_delete/account_delete_cubit.dart';
-import 'package:fokus/logic/common/settings/name_change/name_change_cubit.dart';
-import 'package:fokus/logic/common/settings/password_change/password_change_cubit.dart';
-import 'package:fokus/logic/common/settings/locale_cubit.dart';
-import 'package:fokus/logic/child/task_completion/task_completion_cubit.dart';
-import 'package:fokus/logic/caregiver/forms/reward/reward_form_cubit.dart';
-import 'package:fokus/logic/caregiver/forms/badge_form_cubit.dart';
-import 'package:fokus/logic/caregiver/tasks_evaluation_cubit.dart';
-
-import 'package:fokus/pages/child/calendar_page.dart';
-import 'package:fokus/pages/common/loading_page.dart';
-import 'package:fokus/pages/common/error_page.dart';
-import 'package:fokus/pages/common/plan_details_page.dart';
-import 'package:fokus/pages/common/roles_page.dart';
-import 'package:fokus/pages/common/notifications_page.dart';
-import 'package:fokus/pages/common/settings_page.dart';
-import 'package:fokus/pages/caregiver/auth/caregiver_sign_in_page.dart';
-import 'package:fokus/pages/caregiver/auth/caregiver_sign_up_page.dart';
-import 'package:fokus/pages/caregiver/awards_page.dart';
-import 'package:fokus/pages/caregiver/calendar_page.dart';
-import 'package:fokus/pages/caregiver/child_dashboard_page.dart';
-import 'package:fokus/pages/caregiver/forms/reward_form_page.dart';
-import 'package:fokus/pages/caregiver/forms/badge_form_page.dart';
-import 'package:fokus/pages/caregiver/panel_page.dart';
-import 'package:fokus/pages/caregiver/forms/plan_form_page.dart';
-import 'package:fokus/pages/caregiver/plans_page.dart';
-import 'package:fokus/pages/caregiver/rating_page.dart';
-import 'package:fokus/pages/caregiver/currencies_page.dart';
-import 'package:fokus/pages/caregiver/friend_plans_page.dart';
-import 'package:fokus/pages/child/auth/child_profiles_page.dart';
-import 'package:fokus/pages/child/auth/child_sign_in_page.dart';
-import 'package:fokus/pages/child/rewards_page.dart';
-import 'package:fokus/pages/child/panel_page.dart';
-import 'package:fokus/pages/common/plan_instance_details_page.dart';
-import 'package:fokus/pages/child/task_in_progress_page.dart';
-import 'package:fokus/pages/child/achievements_page.dart';
-import 'package:fokus/pages/caregiver/forms/report_form_page.dart';
-import 'package:fokus/pages/caregiver/forms/task_form_page.dart';
-
-import 'package:fokus/model/ui/app_page.dart';
-import 'package:fokus/model/db/user/user_role.dart';
-import 'package:fokus/model/ui/auth/password_change_type.dart';
-import 'package:fokus/model/navigation/child_dashboard_params.dart';
-import 'package:fokus/model/navigation/plan_form_params.dart';
-import 'package:fokus/model/navigation/report_form_params.dart';
-import 'package:fokus/model/navigation/task_form_params.dart';
-import 'package:fokus/model/navigation/task_in_progress_params.dart';
-
-import 'package:fokus/services/analytics_service.dart';
-import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/services/app_route_observer.dart';
-import 'package:fokus/services/instrumentator.dart';
-import 'package:fokus/services/locale_service.dart';
-import 'package:fokus/services/observers/current_locale_observer.dart';
-import 'package:fokus/services/remote_storage/remote_storage_provider.dart';
-import 'package:fokus/services/remote_config_provider.dart';
-import 'package:fokus/services/observers/user/authenticated_user_notifier.dart';
-
-import 'package:fokus/utils/ui/theme_config.dart';
-import 'package:fokus/utils/service_injection.dart';
-import 'package:fokus/utils/bloc_utils.dart';
-import 'package:fokus/widgets/page_theme.dart';
-
+import 'logic/caregiver/auth/sign_in/caregiver_sign_in_cubit.dart';
+import 'logic/caregiver/auth/sign_up/caregiver_sign_up_cubit.dart';
+import 'logic/caregiver/caregiver_awards_cubit.dart';
+import 'logic/caregiver/caregiver_currencies_cubit.dart';
+import 'logic/caregiver/caregiver_friends_cubit.dart';
+import 'logic/caregiver/caregiver_panel_cubit.dart';
+import 'logic/caregiver/caregiver_plans_cubit.dart';
+import 'logic/caregiver/child_dashboard/child_dashboard_cubit.dart';
+import 'logic/caregiver/child_dashboard/dashboard_achievements_cubit.dart';
+import 'logic/caregiver/child_dashboard/dashboard_plans_cubit.dart';
+import 'logic/caregiver/child_dashboard/dashboard_rewards_cubit.dart';
+import 'logic/caregiver/forms/badge_form_cubit.dart';
+import 'logic/caregiver/forms/plan/plan_form_cubit.dart';
+import 'logic/caregiver/forms/reward/reward_form_cubit.dart';
+import 'logic/caregiver/tasks_evaluation_cubit.dart';
+import 'logic/child/auth/saved_child_profiles_cubit.dart';
+import 'logic/child/auth/sign_in/child_sign_in_cubit.dart';
+import 'logic/child/auth/sign_up/child_sign_up_cubit.dart';
+import 'logic/child/child_panel_cubit.dart';
+import 'logic/child/child_rewards_cubit.dart';
+import 'logic/child/task_completion/task_completion_cubit.dart';
+import 'logic/common/auth_bloc/authentication_bloc.dart';
+import 'logic/common/calendar_cubit.dart';
+import 'logic/common/plan_cubit.dart';
+import 'logic/common/plan_instance_cubit.dart';
+import 'logic/common/settings/account_delete/account_delete_cubit.dart';
+import 'logic/common/settings/locale_cubit.dart';
+import 'logic/common/settings/name_change/name_change_cubit.dart';
+import 'logic/common/settings/password_change/password_change_cubit.dart';
 import 'model/app_error_type.dart';
 import 'model/db/user/user.dart';
+import 'model/db/user/user_role.dart';
+import 'model/navigation/child_dashboard_params.dart';
+import 'model/navigation/plan_form_params.dart';
 import 'model/navigation/plan_instance_params.dart';
+import 'model/navigation/report_form_params.dart';
+import 'model/navigation/task_form_params.dart';
+import 'model/navigation/task_in_progress_params.dart';
+import 'model/ui/app_page.dart';
+import 'model/ui/auth/password_change_type.dart';
+import 'pages/caregiver/auth/caregiver_sign_in_page.dart';
+import 'pages/caregiver/auth/caregiver_sign_up_page.dart';
+import 'pages/caregiver/awards_page.dart';
+import 'pages/caregiver/calendar_page.dart';
+import 'pages/caregiver/child_dashboard_page.dart';
+import 'pages/caregiver/currencies_page.dart';
+import 'pages/caregiver/forms/badge_form_page.dart';
+import 'pages/caregiver/forms/plan_form_page.dart';
+import 'pages/caregiver/forms/report_form_page.dart';
+import 'pages/caregiver/forms/reward_form_page.dart';
+import 'pages/caregiver/forms/task_form_page.dart';
+import 'pages/caregiver/friend_plans_page.dart';
+import 'pages/caregiver/panel_page.dart';
+import 'pages/caregiver/plans_page.dart';
+import 'pages/caregiver/rating_page.dart';
+import 'pages/child/achievements_page.dart';
+import 'pages/child/auth/child_profiles_page.dart';
+import 'pages/child/auth/child_sign_in_page.dart';
+import 'pages/child/calendar_page.dart';
+import 'pages/child/panel_page.dart';
+import 'pages/child/rewards_page.dart';
+import 'pages/child/task_in_progress_page.dart';
+import 'pages/common/error_page.dart';
+import 'pages/common/loading_page.dart';
+import 'pages/common/notifications_page.dart';
+import 'pages/common/plan_details_page.dart';
+import 'pages/common/plan_instance_details_page.dart';
+import 'pages/common/roles_page.dart';
+import 'pages/common/settings_page.dart';
+import 'services/analytics_service.dart';
+import 'services/app_locales.dart';
+import 'services/app_route_observer.dart';
+import 'services/instrumentator.dart';
+import 'services/locale_service.dart';
+import 'services/observers/current_locale_observer.dart';
+import 'services/observers/user/authenticated_user_notifier.dart';
+import 'services/remote_config_provider.dart';
+import 'services/remote_storage/remote_storage_provider.dart';
+import 'utils/bloc_utils.dart';
+import 'utils/service_injection.dart';
+import 'utils/ui/theme_config.dart';
+import 'widgets/page_theme.dart';
 
 
 void main() async {
@@ -120,7 +115,7 @@ void main() async {
 				child: FokusApp(navigatorKey, routeObserver, analytics.pageObserver),
 				config: config,
 				dataCallback: GetIt.I<RemoteStorageProvider>().uploadRSData,
-				loggingLevel: Foundation.kReleaseMode ? round_spot.LogLevel.off : round_spot.LogLevel.warning
+				loggingLevel: foundation.kReleaseMode ? round_spot.LogLevel.off : round_spot.LogLevel.warning
 			),
 		)
 	);
@@ -168,12 +163,12 @@ class _FokusAppState extends State<FokusApp> implements CurrentLocaleObserver {
 	}
 
   Route<dynamic>? _onGenerateRoute(RouteSettings settings) {
-		var getActiveUser = (BuildContext context) => () => BlocProvider.of<AuthenticationBloc>(context).state.user!;
-		var getRoute = (BuildContext context) => ModalRoute.of(context);
-		var getParams = (BuildContext context) => getRoute(context)?.settings.arguments;
-		var authBloc = (BuildContext context) => BlocProvider.of<AuthenticationBloc>(context);
+		getActiveUser(BuildContext context) => () => BlocProvider.of<AuthenticationBloc>(context).state.user!;
+		var getRoute = ModalRoute.of;
+		getParams(BuildContext context) => getRoute(context)?.settings.arguments;
+		authBloc(BuildContext context) => BlocProvider.of<AuthenticationBloc>(context);
 
-		Map<String, RoutePageBuilder> routesWithFadeTransition = {
+		var routesWithFadeTransition = <String, RoutePageBuilder>{
 			// Caregiver pages
 			AppPage.caregiverPanel.name: (context, _, __) => _createPage(
 				withCubit(CaregiverPanelPage(), CaregiverFriendsCubit(getActiveUser(context), authBloc(context))),
@@ -217,11 +212,11 @@ class _FokusAppState extends State<FokusApp> implements CurrentLocaleObserver {
 	}
 
 	Map<String, WidgetBuilder> _createRoutes() {
-		var getActiveUser = (BuildContext context) => () => BlocProvider.of<AuthenticationBloc>(context).state.user!;
-		var getRoute = (BuildContext context) => ModalRoute.of(context);
-		var getParams = (BuildContext context) => getRoute(context)?.settings.arguments;
-		var authBloc = (BuildContext context) => BlocProvider.of<AuthenticationBloc>(context);
-		var accountManaging = (BuildContext context, Widget page, [User? user]) => withCubit(
+		getActiveUser(BuildContext context) => () => BlocProvider.of<AuthenticationBloc>(context).state.user!;
+		var getRoute = ModalRoute.of;
+		getParams(BuildContext context) => getRoute(context)?.settings.arguments;
+		authBloc(BuildContext context) => BlocProvider.of<AuthenticationBloc>(context);
+		accountManaging(BuildContext context, Widget page, [User? user]) => withCubit(
 			withCubit(page, NameChangeCubit(getActiveUser(context), authBloc(context), user)),
 			AccountDeleteCubit(getActiveUser(context), user)
 		);

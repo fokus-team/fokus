@@ -1,10 +1,10 @@
 import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart';
-
-import 'package:fokus/model/db/plan/plan.dart';
-import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
-import 'package:fokus/services/data/data_repository.dart';
 import 'package:mongo_dart/mongo_dart.dart';
+
+import '../../model/db/plan/plan.dart';
+import '../../services/data/data_repository.dart';
+import '../common/stateful/stateful_cubit.dart';
 
 class CaregiverPlansCubit extends StatefulCubit {
 	final MapEntry<ObjectId, String>? _userID;
@@ -13,7 +13,7 @@ class CaregiverPlansCubit extends StatefulCubit {
   CaregiverPlansCubit(ModalRoute pageRoute, this._userID) : super(pageRoute);
 
   @override
-	doLoadData() async {
+	Future doLoadData() async {
     var caregiverId = _userID?.key ?? activeUser!.id;
     var plans = await _dataRepository.getPlans(caregiverId: caregiverId);
 		emit(CaregiverPlansState(plans));

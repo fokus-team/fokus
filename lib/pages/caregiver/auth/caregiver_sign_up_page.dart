@@ -1,24 +1,24 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter/gestures.dart';
-import 'package:fokus/utils/ui/snackbar_utils.dart';
-import 'package:fokus/utils/ui/theme_config.dart';
-import 'package:fokus/widgets/auth/auth_button.dart';
-import 'package:fokus/widgets/auth/auth_widgets.dart';
 import 'package:fokus_auth/fokus_auth.dart';
 import 'package:formz/formz.dart';
-import 'package:fokus/model/ui/external_url.dart';
 
-import 'package:fokus/logic/caregiver/auth/sign_up/caregiver_sign_up_cubit.dart';
-import 'package:fokus/model/ui/ui_button.dart';
-import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/widgets/auth/auth_input_field.dart';
-import 'package:fokus/model/ui/auth/confirmed_password.dart';
-import 'package:fokus/model/ui/auth/email.dart';
-import 'package:fokus/model/ui/auth/name.dart';
-import 'package:fokus/model/ui/auth/password.dart';
-import 'package:fokus/services/exception/auth_exceptions.dart';
+import '../../../logic/caregiver/auth/sign_up/caregiver_sign_up_cubit.dart';
+import '../../../model/ui/auth/confirmed_password.dart';
+import '../../../model/ui/auth/email.dart';
+import '../../../model/ui/auth/name.dart';
+import '../../../model/ui/auth/password.dart';
+import '../../../model/ui/external_url.dart';
+import '../../../model/ui/ui_button.dart';
+import '../../../services/app_locales.dart';
+import '../../../services/exception/auth_exceptions.dart';
+import '../../../utils/ui/snackbar_utils.dart';
+import '../../../utils/ui/theme_config.dart';
+import '../../../widgets/auth/auth_button.dart';
+import '../../../widgets/auth/auth_input_field.dart';
+import '../../../widgets/auth/auth_widgets.dart';
 
 class CaregiverSignUpPage extends StatelessWidget {
 	static const String _pageKey = 'page.loginSection.caregiverSignUp';
@@ -122,7 +122,7 @@ class CaregiverSignUpPage extends StatelessWidget {
 	}
 
 	Widget _buildAgreementCheckbox(BuildContext context) {
-		TextStyle linkTextStyle = TextStyle(
+		var linkTextStyle = TextStyle(
 			color: Colors.blueAccent,
 			decoration: TextDecoration.underline,
 		);

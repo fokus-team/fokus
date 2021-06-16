@@ -3,20 +3,21 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fokus/logic/child/task_completion/task_completion_cubit.dart';
-import 'package:fokus/logic/common/timer/timer_cubit.dart';
-import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/duration_utils.dart';
-import 'package:fokus/utils/ui/theme_config.dart';
-import 'package:fokus/widgets/buttons/double_circular_notched_button.dart';
-import 'package:fokus/widgets/cards/item_card.dart';
-import 'package:fokus/widgets/cards/sliding_card.dart';
-import 'package:fokus/widgets/chips/attribute_chip.dart';
-import 'package:fokus/widgets/general/app_loader.dart';
-import 'package:fokus/widgets/large_timer.dart';
-import 'package:fokus/widgets/stateful_bloc_builder.dart';
-import 'package:fokus/widgets/task_app_header.dart';
 import 'package:lottie/lottie.dart';
+
+import '../../logic/child/task_completion/task_completion_cubit.dart';
+import '../../logic/common/timer/timer_cubit.dart';
+import '../../services/app_locales.dart';
+import '../../utils/duration_utils.dart';
+import '../../utils/ui/theme_config.dart';
+import '../../widgets/buttons/double_circular_notched_button.dart';
+import '../../widgets/cards/item_card.dart';
+import '../../widgets/cards/sliding_card.dart';
+import '../../widgets/chips/attribute_chip.dart';
+import '../../widgets/general/app_loader.dart';
+import '../../widgets/large_timer.dart';
+import '../../widgets/stateful_bloc_builder.dart';
+import '../../widgets/task_app_header.dart';
 
 enum FabType {
 	finish, discard
@@ -105,21 +106,21 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 			  if (state.current == TaskCompletionStateType.finished) {
 				  _closeWidgetsOnFinish(state);
 				  _doneCard.currentState!.openCard();
-				  this._header.currentState!.animateSuccess();
-				  this._header.currentState!.onFinish();
+				  _header.currentState!.animateSuccess();
+				  _header.currentState!.onFinish();
 			  } if(state.current == TaskCompletionStateType.discarded) {
 				  _closeWidgetsOnFinish(state);
 				  _rejectCard.currentState!.openCard();
-				  this._header.currentState!.onFinish();
+				  _header.currentState!.onFinish();
 			  } if(state.current == TaskCompletionStateType.inProgress) {
 				  _breakCard.currentState!.closeCard();
 				  _completingCard.currentState!.openCard();
-				  this._header.currentState!.animateButton();
+				  _header.currentState!.animateButton();
 				  _timerBreakCubit!.pauseTimer();
 			  } else if(state.current == TaskCompletionStateType.inBreak) {
 				  _completingCard.currentState!.closeCard();
 				  _breakCard.currentState!.openCard();
-				  this._header.currentState!.animateButton();
+				  _header.currentState!.animateButton();
 				  _timerBreakCubit!.resumeTimer();
 			  }
 		  });

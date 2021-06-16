@@ -1,27 +1,27 @@
 import 'package:flutter/widgets.dart';
-import 'package:get_it/get_it.dart';
 import 'package:fokus_auth/fokus_auth.dart';
+import 'package:get_it/get_it.dart';
 
-import 'package:fokus/services/data/db/db_data_repository.dart';
-import 'package:fokus/services/app_route_observer.dart';
-import 'package:fokus/services/observers/user/user_notifier.dart';
-import 'package:fokus/services/app_config/app_config_repository.dart';
-import 'package:fokus/services/app_config/app_shared_preferences_provider.dart';
-import 'package:fokus/services/data/data_repository.dart';
-import 'package:fokus/services/plan_repeatability_service.dart';
-import 'package:fokus/services/ui_data_aggregator.dart';
-import 'package:fokus/services/plan_keeper_service.dart';
-import 'package:fokus/services/task_instance_service.dart';
-import 'package:fokus/services/notifications/onesignal/onesignal_notification_service.dart';
-import 'package:fokus/services/notifications/notification_service.dart';
-import 'package:fokus/services/locale_service.dart';
-import 'package:fokus/services/links/firebase_link_service.dart';
-import 'package:fokus/services/links/link_service.dart';
-import 'package:fokus/services/analytics_service.dart';
-import 'package:fokus/services/instrumentator.dart';
-import 'package:fokus/services/remote_config_provider.dart';
-import 'package:fokus/services/remote_storage/firebase_storage_service.dart';
-import 'package:fokus/services/remote_storage/remote_storage_provider.dart';
+import '../services/analytics_service.dart';
+import '../services/app_config/app_config_repository.dart';
+import '../services/app_config/app_shared_preferences_provider.dart';
+import '../services/app_route_observer.dart';
+import '../services/data/data_repository.dart';
+import '../services/data/db/db_data_repository.dart';
+import '../services/instrumentator.dart';
+import '../services/links/firebase_link_service.dart';
+import '../services/links/link_service.dart';
+import '../services/locale_service.dart';
+import '../services/notifications/notification_service.dart';
+import '../services/notifications/onesignal/onesignal_notification_service.dart';
+import '../services/observers/user/user_notifier.dart';
+import '../services/plan_keeper_service.dart';
+import '../services/plan_repeatability_service.dart';
+import '../services/remote_config_provider.dart';
+import '../services/remote_storage/firebase_storage_service.dart';
+import '../services/remote_storage/remote_storage_provider.dart';
+import '../services/task_instance_service.dart';
+import '../services/ui_data_aggregator.dart';
 
 Future registerServices(UserNotifier userNotifier, GlobalKey<NavigatorState> navigatorKey, AppRouteObserver routeObserver) {
 	// Semi-services needed for context and navigation state sharing

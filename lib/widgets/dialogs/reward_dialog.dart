@@ -2,18 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import 'package:fokus/logic/child/child_rewards_cubit.dart';
-import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
-import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
-import 'package:fokus/model/db/gamification/reward.dart';
-import 'package:fokus/model/ui/ui_button.dart';
-import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/ui/app_paths.dart';
-import 'package:fokus/utils/ui/icon_sets.dart';
-import 'package:fokus/utils/ui/theme_config.dart';
-import 'package:fokus/widgets/buttons/rounded_button.dart';
-import 'package:fokus/widgets/chips/attribute_chip.dart';
-import 'package:fokus/model/db/user/user_role.dart';
+import '../../logic/child/child_rewards_cubit.dart';
+import '../../logic/common/auth_bloc/authentication_bloc.dart';
+import '../../logic/common/stateful/stateful_cubit.dart';
+import '../../model/db/gamification/reward.dart';
+import '../../model/db/user/user_role.dart';
+import '../../model/ui/ui_button.dart';
+import '../../services/app_locales.dart';
+import '../../utils/ui/app_paths.dart';
+import '../../utils/ui/icon_sets.dart';
+import '../../utils/ui/theme_config.dart';
+import '../buttons/rounded_button.dart';
+import '../chips/attribute_chip.dart';
 
 class RewardDialog extends StatefulWidget {
 	final Reward reward;
@@ -22,7 +22,7 @@ class RewardDialog extends StatefulWidget {
 	RewardDialog({required this.reward, this.claimFeedback});
 
 	@override
-	_RewardDialogState createState() => new _RewardDialogState();
+	_RewardDialogState createState() => _RewardDialogState();
 }
 
 class _RewardDialogState extends State<RewardDialog> with SingleTickerProviderStateMixin {
@@ -86,7 +86,7 @@ class _RewardDialogState extends State<RewardDialog> with SingleTickerProviderSt
 	              spacing: 2.0,
 	              children: [
 	                Text(
-	                  AppLocales.of(context).translate('rewards.claimCostLabel') + ': ',
+	                  '${AppLocales.of(context).translate('rewards.claimCostLabel')}: ',
 	                  style: TextStyle(color: AppColors.mediumTextColor)
 	                ),
 	                AttributeChip.withCurrency(

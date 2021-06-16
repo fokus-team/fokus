@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/widgets.dart';
 
 class AppRouteObserver extends RouteObserver<PageRoute> {
-  Completer<void> _navigatorInitialized = Completer();
+  final Completer<void> _navigatorInitialized = Completer();
   Future<void> get navigatorInitialized => _navigatorInitialized.future;
 
   @override

@@ -1,5 +1,6 @@
-import 'package:fokus/model/ui/child_card_model.dart';
 import 'package:mongo_dart/mongo_dart.dart';
+
+import '../ui/child_card_model.dart';
 
 class ChildDashboardParams {
 	final ChildCardModel childCard;

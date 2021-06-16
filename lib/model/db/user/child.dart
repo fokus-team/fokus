@@ -1,11 +1,11 @@
-import 'package:fokus/model/db/gamification/child_badge.dart';
-import 'package:fokus/model/db/user/user.dart';
-import 'package:fokus/model/db/user/child_permission.dart';
-import 'package:fokus/utils/definitions.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
-import '../gamification/points.dart';
+import '../../../utils/definitions.dart';
+import '../gamification/child_badge.dart';
 import '../gamification/child_reward.dart';
+import '../gamification/points.dart';
+import 'child_permission.dart';
+import 'user.dart';
 import 'user_role.dart';
 
 class Child extends User {
@@ -35,16 +35,17 @@ class Child extends User {
       rewards = json['rewards'] != null ? (json['rewards'] as List).map((i) => ChildReward.fromJson(i)).toList() : [],
       super.fromJson(json);
 
+  @override
   Json toJson() {
-    final Json data = super.toJson();
-    if (this.badges != null)
-      data['badges'] = this.badges!.map((v) => v.toJson()).toList();
-    if (this.permissions != null)
-      data['permissions'] = this.permissions!.map((v) => v.index).toList();
-    if (this.points != null)
-      data['points'] = this.points!.map((v) => v.toJson()).toList();
-    if (this.rewards != null)
-      data['rewards'] = this.rewards!.map((v) => v.toJson()).toList();
+    final data = super.toJson();
+    if (badges != null)
+      data['badges'] = badges!.map((v) => v.toJson()).toList();
+    if (permissions != null)
+      data['permissions'] = permissions!.map((v) => v.index).toList();
+    if (points != null)
+      data['points'] = points!.map((v) => v.toJson()).toList();
+    if (rewards != null)
+      data['rewards'] = rewards!.map((v) => v.toJson()).toList();
     return data;
   }
 

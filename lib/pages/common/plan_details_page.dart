@@ -1,34 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fokus/model/db/gamification/currency.dart';
-import 'package:fokus/model/db/plan/plan.dart';
-import 'package:fokus/model/db/plan/task.dart';
-import 'package:mongo_dart/mongo_dart.dart' as Mongo;
+import 'package:mongo_dart/mongo_dart.dart' as mongo;
 
-import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
-import 'package:fokus/logic/common/plan_cubit.dart';
-import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
-import 'package:fokus/model/db/user/user_role.dart';
-import 'package:fokus/model/navigation/plan_form_params.dart';
-import 'package:fokus/model/ui/app_page.dart';
-import 'package:fokus/utils/ui/snackbar_utils.dart';
-import 'package:fokus/widgets/stateful_bloc_builder.dart';
-import 'package:fokus/model/ui/form/task_form_model.dart';
-import 'package:fokus/model/ui/ui_button.dart';
-import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/widgets/custom_app_bars.dart';
-import 'package:fokus/utils/ui/dialog_utils.dart';
-import 'package:fokus/utils/ui/theme_config.dart';
-import 'package:fokus/widgets/chips/attribute_chip.dart';
-import 'package:fokus/widgets/dialogs/general_dialog.dart';
-import 'package:fokus/widgets/cards/item_card.dart';
-import 'package:fokus/widgets/buttons/popup_menu_list.dart';
-import 'package:fokus/widgets/segment.dart';
-import 'package:fokus/widgets/cards/task_card.dart';
+import '../../logic/common/auth_bloc/authentication_bloc.dart';
+import '../../logic/common/plan_cubit.dart';
+import '../../logic/common/stateful/stateful_cubit.dart';
+import '../../model/db/gamification/currency.dart';
+import '../../model/db/plan/plan.dart';
+import '../../model/db/plan/task.dart';
+import '../../model/db/user/user_role.dart';
+import '../../model/navigation/plan_form_params.dart';
+import '../../model/ui/app_page.dart';
+import '../../model/ui/form/task_form_model.dart';
+import '../../model/ui/ui_button.dart';
+import '../../services/app_locales.dart';
+import '../../utils/ui/dialog_utils.dart';
+import '../../utils/ui/snackbar_utils.dart';
+import '../../utils/ui/theme_config.dart';
+import '../../widgets/buttons/popup_menu_list.dart';
+import '../../widgets/cards/item_card.dart';
+import '../../widgets/cards/task_card.dart';
+import '../../widgets/chips/attribute_chip.dart';
+import '../../widgets/custom_app_bars.dart';
+import '../../widgets/dialogs/general_dialog.dart';
+import '../../widgets/segment.dart';
+import '../../widgets/stateful_bloc_builder.dart';
 
 class PlanDetailsPage extends StatefulWidget {
   @override
-  _PlanDetailsPageState createState() => new _PlanDetailsPageState();
+  _PlanDetailsPageState createState() => _PlanDetailsPageState();
 }
 
 class _PlanDetailsPageState extends State<PlanDetailsPage> {
@@ -38,7 +38,7 @@ class _PlanDetailsPageState extends State<PlanDetailsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: SimpleStatefulBlocBuilder<PlanCubit, PlanCubitState>(
-          builder: (context, state) => _buildView(context, state),
+          builder: _buildView,
           loadingBuilder: (_, __) => SizedBox.shrink(),
           listener: (context, state) {
             if (state.submitted)
@@ -81,8 +81,8 @@ class _PlanDetailsPageState extends State<PlanDetailsPage> {
 	}
 
 	List<Widget> _buildPanelSegments(PlanCubitState state) {
-  	List<Task> mandatoryTasks = state.tasks.where((task) => task.optional == false).toList();
-		List<Task> optionalTasks = state.tasks.where((task) => task.optional == true).toList();
+  	var mandatoryTasks = state.tasks.where((task) => task.optional == false).toList();
+		var optionalTasks = state.tasks.where((task) => task.optional == true).toList();
 
 		return [
 			if(mandatoryTasks.isNotEmpty) _getTasksSegment(
@@ -121,8 +121,8 @@ class _PlanDetailsPageState extends State<PlanDetailsPage> {
 		);
 	}
 
-	Widget _getCardHeader(Plan plan, Map<Mongo.ObjectId, String> children, BuildContext context) {
-  	int i = 0;
+	Widget _getCardHeader(Plan plan, Map<mongo.ObjectId, String> children, BuildContext context) {
+  	var i = 0;
 		// ignore: close_sinks
 		var authenticationBloc = BlocProvider.of<AuthenticationBloc>(context);
 		var currentUser = authenticationBloc.state.user;
@@ -171,7 +171,7 @@ class _PlanDetailsPageState extends State<PlanDetailsPage> {
 								title: AppLocales.of(context).translate('alert.deletePlan'),
 								richContent: RichText(
 									text: TextSpan(
-										text: AppLocales.of(context).translate('alert.confirmPlanDeletion') + '\n\n',
+										text: '${AppLocales.of(context).translate('alert.confirmPlanDeletion')}\n\n',
 										style: TextStyle(color: AppColors.darkTextColor),
 										children: [TextSpan(
 											text: AppLocales.of(context).translate('deleteWarning'),

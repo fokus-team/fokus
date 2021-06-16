@@ -1,4 +1,4 @@
-import 'package:fokus/model/app_config_entry.dart';
+import '../../model/app_config_entry.dart';
 
 abstract class AppConfigProvider {
 	Future initialize();

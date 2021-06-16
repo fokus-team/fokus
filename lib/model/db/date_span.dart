@@ -1,10 +1,9 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:fokus/model/db/date/date.dart';
-import 'package:fokus/utils/definitions.dart';
-import 'package:fokus/model/db/date/time_date.dart';
-
+import '../../utils/definitions.dart';
+import 'date/date.dart';
 import 'date/date_base.dart';
+import 'date/time_date.dart';
 
 class DateSpan<D extends DateBase> extends Equatable {
   final D? from;
@@ -23,7 +22,7 @@ class DateSpan<D extends DateBase> extends Equatable {
   static D _copy<D extends DateBase>(D date) => (date is Date ? Date.fromDate(date) : TimeDate.fromDate(date)) as D;
 
   static DateSpan<D>? fromJson<D extends DateBase>(Json? json) {
-  	var parseDate = (DateTime date) => (D == Date ? Date.parseDBDate(date) : TimeDate.parseDBDate(date)) as D;
+  	parseDate(DateTime date) => (D == Date ? Date.parseDBDate(date) : TimeDate.parseDBDate(date)) as D;
     return json != null ? DateSpan<D>(
       from: json['from'] != null ? parseDate(json['from']) : null,
       to: json['to'] != null ? parseDate(json['to']) : null,
@@ -31,7 +30,7 @@ class DateSpan<D extends DateBase> extends Equatable {
   }
 
   Json toJson() {
-    final Json data = new Json();
+    final data = <String, dynamic>{};
     if (from != null)
       data['from'] = from!.toDBDate();
     if (to != null)

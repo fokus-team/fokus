@@ -1,8 +1,9 @@
-import 'package:fokus/model/currency_type.dart';
-import 'package:fokus/model/db/gamification/currency.dart';
 import 'package:mongo_dart/mongo_dart.dart';
-import 'package:fokus/model/db/collection.dart';
-import 'package:fokus/services/data/db/db_repository.dart';
+
+import '../../../model/currency_type.dart';
+import '../../../model/db/collection.dart';
+import '../../../model/db/gamification/currency.dart';
+import '../db/db_repository.dart';
 
 mixin CurrencyDbRepository implements DbRepository {
 	Future updateCurrencies(ObjectId caregiverId, List<Currency>? currencies) {

@@ -3,12 +3,12 @@ import 'dart:io';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:fokus/model/ui/ui_button.dart';
-import 'package:fokus/model/app_error_type.dart';
 
-import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/ui/theme_config.dart';
-import 'package:fokus/widgets/auth/auth_button.dart';
+import '../../model/app_error_type.dart';
+import '../../model/ui/ui_button.dart';
+import '../../services/app_locales.dart';
+import '../../utils/ui/theme_config.dart';
+import '../../widgets/auth/auth_button.dart';
 
 class ErrorPage extends StatefulWidget {
 	final AppErrorType errorType;
@@ -16,13 +16,13 @@ class ErrorPage extends StatefulWidget {
 	ErrorPage(this.errorType);
 
 	@override
-	_ErrorPageState createState() => new _ErrorPageState();
+	_ErrorPageState createState() => _ErrorPageState();
 }
 
 class _ErrorPageState extends State<ErrorPage> {
   @override
   Widget build(BuildContext context) {
-		String _localesPath = "page.error.${widget.errorType.toString().split('.')[1]}";
+		var _localesPath = "page.error.${widget.errorType.toString().split('.')[1]}";
     return WillPopScope(
 	    onWillPop: () => Future.value(false),
       child: Scaffold(

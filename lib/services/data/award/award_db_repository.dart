@@ -1,10 +1,11 @@
-import 'package:fokus/model/db/gamification/badge.dart';
-import 'package:fokus/model/db/gamification/child_reward.dart';
-import 'package:fokus/model/db/gamification/points.dart';
 import 'package:mongo_dart/mongo_dart.dart';
-import 'package:fokus/model/db/collection.dart';
-import 'package:fokus/model/db/gamification/reward.dart';
-import 'package:fokus/services/data/db/db_repository.dart';
+
+import '../../../model/db/collection.dart';
+import '../../../model/db/gamification/badge.dart';
+import '../../../model/db/gamification/child_reward.dart';
+import '../../../model/db/gamification/points.dart';
+import '../../../model/db/gamification/reward.dart';
+import '../db/db_repository.dart';
 
 mixin AwardDbRepository implements DbRepository {
 	Future<Reward?> getReward({required ObjectId id}) {
@@ -53,7 +54,7 @@ mixin AwardDbRepository implements DbRepository {
 	}
 
 	SelectorBuilder _buildRewardQuery({ObjectId? id, ObjectId? caregiverId}) {
-		SelectorBuilder query = where;
+		var query = where;
 		if (id != null)
 			query.eq('_id', id);
 		if (caregiverId != null)
@@ -62,7 +63,7 @@ mixin AwardDbRepository implements DbRepository {
 	}
 
 	SelectorBuilder _buildUserQuery({ObjectId? id}) {
-		SelectorBuilder query = where;
+		var query = where;
 		if (id != null)
 			query.eq('_id', id);
 		return query;

@@ -2,38 +2,38 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fokus/model/db/gamification/badge.dart';
-import 'package:fokus/model/db/plan/plan.dart';
-import 'package:round_spot/round_spot.dart' as round_spot;
-import 'package:intl/intl.dart';
 import 'package:fokus_auth/fokus_auth.dart';
+import 'package:intl/intl.dart';
+import 'package:round_spot/round_spot.dart' as round_spot;
 import 'package:smart_select/smart_select.dart';
 
-import 'package:fokus/logic/caregiver/child_dashboard/child_dashboard_cubit.dart';
-import 'package:fokus/logic/caregiver/child_dashboard/dashboard_achievements_cubit.dart';
-import 'package:fokus/logic/caregiver/child_dashboard/dashboard_plans_cubit.dart';
-import 'package:fokus/logic/caregiver/child_dashboard/dashboard_rewards_cubit.dart';
-import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
-import 'package:fokus/model/navigation/child_dashboard_params.dart';
-import 'package:fokus/model/ui/app_page.dart';
-import 'package:fokus/model/ui/ui_button.dart';
-import 'package:fokus/model/ui/child_card_model.dart';
-import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/ui/child_plans_util.dart';
-import 'package:fokus/utils/ui/dialog_utils.dart';
-import 'package:fokus/utils/ui/icon_sets.dart';
-import 'package:fokus/utils/ui/theme_config.dart';
-import 'package:fokus/utils/ui/snackbar_utils.dart';
-import 'package:fokus/widgets/buttons/bottom_sheet_confirm_button.dart';
-import 'package:fokus/widgets/buttons/popup_menu_list.dart';
-import 'package:fokus/widgets/cards/item_card.dart';
-import 'package:fokus/widgets/cards/model_cards.dart';
-import 'package:fokus/widgets/custom_app_bars.dart';
-import 'package:fokus/widgets/dialogs/general_dialog.dart';
-import 'package:fokus/widgets/general/app_alert.dart';
-import 'package:fokus/widgets/general/app_loader.dart';
-import 'package:fokus/widgets/stateful_bloc_builder.dart';
-import 'package:fokus/widgets/segment.dart';
+import '../../logic/caregiver/child_dashboard/child_dashboard_cubit.dart';
+import '../../logic/caregiver/child_dashboard/dashboard_achievements_cubit.dart';
+import '../../logic/caregiver/child_dashboard/dashboard_plans_cubit.dart';
+import '../../logic/caregiver/child_dashboard/dashboard_rewards_cubit.dart';
+import '../../logic/common/stateful/stateful_cubit.dart';
+import '../../model/db/gamification/badge.dart';
+import '../../model/db/plan/plan.dart';
+import '../../model/navigation/child_dashboard_params.dart';
+import '../../model/ui/app_page.dart';
+import '../../model/ui/child_card_model.dart';
+import '../../model/ui/ui_button.dart';
+import '../../services/app_locales.dart';
+import '../../utils/ui/child_plans_util.dart';
+import '../../utils/ui/dialog_utils.dart';
+import '../../utils/ui/icon_sets.dart';
+import '../../utils/ui/snackbar_utils.dart';
+import '../../utils/ui/theme_config.dart';
+import '../../widgets/buttons/bottom_sheet_confirm_button.dart';
+import '../../widgets/buttons/popup_menu_list.dart';
+import '../../widgets/cards/item_card.dart';
+import '../../widgets/cards/model_cards.dart';
+import '../../widgets/custom_app_bars.dart';
+import '../../widgets/dialogs/general_dialog.dart';
+import '../../widgets/general/app_alert.dart';
+import '../../widgets/general/app_loader.dart';
+import '../../widgets/segment.dart';
+import '../../widgets/stateful_bloc_builder.dart';
 
 class CaregiverChildDashboardPage extends StatefulWidget {
 	final ChildDashboardParams _args;
@@ -49,7 +49,7 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 	late TabController _tabController;
 	final ChildCardModel _childCard;
 	int _currentIndex;
-  StreamController<int> _tabIndexStream = StreamController<int>.broadcast();
+  final StreamController<int> _tabIndexStream = StreamController<int>.broadcast();
 
 	_CaregiverChildDashboardPageState(ChildDashboardParams args) : _currentIndex = args.tab ?? 0, _childCard = args.childCard;
 
@@ -60,7 +60,7 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 	void initState() {
 		super.initState();
 		_tabController = TabController(initialIndex: _currentIndex, vsync: this, length: 3);
-		_tabController.animation!..addListener(() {
+		_tabController.animation!.addListener(() {
 		  var newValue = (_tabController.animation!.value).round();
 		  if (_currentIndex != newValue) {
         _currentIndex = newValue;
@@ -222,7 +222,7 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 		String? pickerTitle, List<T>? pickedValues, required List<T> options,
 		required Widget Function(BuildContext, S2MultiState<T>, S2Choice<T>) builder, required Function(List<T>) onChange, required Function(T) getName
 	}) {
-		bool buttonDisabled = options.isEmpty;
+		var buttonDisabled = options.isEmpty;
 		return SmartSelect<T>.multiple(
 			selectedValue: pickedValues,
 			title: pickerTitle,
@@ -376,8 +376,8 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 					for (var badge in state.childBadges)
 						ItemCard(
 							title: badge.name!,
-							subtitle: AppLocales.of(context).translate('page.childSection.achievements.content.earnedBadgeDate') + ': '
-									+ DateFormat.yMd(AppLocales.instance.locale.toString()).format(badge.date!),
+							subtitle: '${AppLocales.of(context).translate('page.childSection.achievements.content.earnedBadgeDate')}: '
+									'${DateFormat.yMd(AppLocales.instance.locale.toString()).format(badge.date!)}',
 							graphicType: AssetType.badges,
 							graphic: badge.icon,
 							graphicHeight: 44.0,

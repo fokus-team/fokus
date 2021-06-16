@@ -1,16 +1,16 @@
 import 'package:flutter/widgets.dart';
-import 'package:fokus/model/db/gamification/currency.dart';
-import 'package:fokus/model/db/gamification/points.dart';
-import 'package:fokus/model/db/user/caregiver.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
-import 'package:fokus/services/data/data_repository.dart';
-import 'package:fokus/model/currency_type.dart';
-import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
-import 'package:fokus/model/db/gamification/reward.dart';
-import 'package:fokus/model/ui/app_page.dart';
-import 'package:fokus/services/analytics_service.dart';
+import '../../../../model/currency_type.dart';
+import '../../../../model/db/gamification/currency.dart';
+import '../../../../model/db/gamification/points.dart';
+import '../../../../model/db/gamification/reward.dart';
+import '../../../../model/db/user/caregiver.dart';
+import '../../../../model/ui/app_page.dart';
+import '../../../../services/analytics_service.dart';
+import '../../../../services/data/data_repository.dart';
+import '../../../common/stateful/stateful_cubit.dart';
 
 part 'reward_form_state.dart';
 

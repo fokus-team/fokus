@@ -1,15 +1,15 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fokus_auth/fokus_auth.dart';
 import 'package:formz/formz.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
-import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
-import 'package:fokus/logic/common/formz_state.dart';
-import 'package:fokus/model/db/user/caregiver.dart';
-import 'package:fokus/logic/common/user_code_verifier.dart';
-import 'package:fokus/model/db/user/user_role.dart';
-import 'package:fokus/model/ui/auth/user_code.dart';
-import 'package:fokus_auth/fokus_auth.dart';
-import 'package:fokus/utils/definitions.dart';
+import '../../model/db/user/caregiver.dart';
+import '../../model/db/user/user_role.dart';
+import '../../model/ui/auth/user_code.dart';
+import '../../utils/definitions.dart';
+import '../common/auth_bloc/authentication_bloc.dart';
+import '../common/formz_state.dart';
+import '../common/user_code_verifier.dart';
 
 class CaregiverFriendsCubit extends Cubit<CaregiverFriendsState> with UserCodeVerifier<CaregiverFriendsState> {
 	final ActiveUserFunction _activeUser;

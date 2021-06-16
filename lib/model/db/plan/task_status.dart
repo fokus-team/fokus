@@ -1,4 +1,4 @@
-import 'package:fokus/utils/definitions.dart';
+import '../../../utils/definitions.dart';
 
 class TaskStatus {
 	bool? completed;
@@ -20,17 +20,17 @@ class TaskStatus {
 	}
 
 	Json toJson() {
-		final Json data = new Json();
-		if (this.completed != null)
-			data['completed'] = this.completed;
-		if (this.state != null)
-			data['state'] = this.state!.index;
-		if (this.pointsAwarded != null)
-			data['pointsAwarded'] = this.pointsAwarded;
-		if (this.rating != null)
-			data['rating'] = this.rating;
-		if (this.comment != null)
-			data['comment'] = this.comment;
+		final data = <String, dynamic>{};
+		if (completed != null)
+			data['completed'] = completed;
+		if (state != null)
+			data['state'] = state!.index;
+		if (pointsAwarded != null)
+			data['pointsAwarded'] = pointsAwarded;
+		if (rating != null)
+			data['rating'] = rating;
+		if (comment != null)
+			data['comment'] = comment;
 		return data;
 	}
 }

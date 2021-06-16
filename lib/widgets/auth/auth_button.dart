@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:fokus/model/ui/ui_button.dart';
-import 'package:fokus/services/app_locales.dart';
+import '../../model/ui/ui_button.dart';
+import '../../services/app_locales.dart';
 
 class AuthButton extends StatelessWidget {
 	final UIButton button;

@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:fokus/model/db/user/child.dart';
+import '../db/user/child.dart';
 
 class ChildCardModel extends Equatable {
 	final int todayPlanCount;

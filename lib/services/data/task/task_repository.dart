@@ -1,9 +1,10 @@
-import 'package:fokus/model/db/date/time_date.dart';
-import 'package:fokus/model/db/date_span.dart';
-import 'package:fokus/model/db/plan/task.dart';
-import 'package:fokus/model/db/plan/task_instance.dart';
-import 'package:fokus/model/db/plan/task_status.dart';
 import 'package:mongo_dart/mongo_dart.dart';
+
+import '../../../model/db/date/time_date.dart';
+import '../../../model/db/date_span.dart';
+import '../../../model/db/plan/task.dart';
+import '../../../model/db/plan/task_instance.dart';
+import '../../../model/db/plan/task_status.dart';
 
 
 abstract class TaskRepository {

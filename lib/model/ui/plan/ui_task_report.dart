@@ -1,5 +1,5 @@
-import 'package:fokus/model/ui/child_card_model.dart';
-import 'package:fokus/model/ui/plan/ui_task_instance.dart';
+import '../child_card_model.dart';
+import 'ui_task_instance.dart';
 
 enum UITaskReportMark { notRated, rated5, rated4, rated3, rated2, rated1, rejected }
 

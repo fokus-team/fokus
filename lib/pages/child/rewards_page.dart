@@ -1,22 +1,22 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:collection/collection.dart';
 
-import 'package:fokus/logic/child/child_rewards_cubit.dart';
-import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
-import 'package:fokus/utils/ui/dialog_utils.dart';
-import 'package:fokus/utils/ui/snackbar_utils.dart';
-import 'package:fokus/utils/ui/theme_config.dart';
-import 'package:fokus/widgets/app_navigation_bar.dart';
-import 'package:fokus/widgets/cards/item_card.dart';
-import 'package:fokus/widgets/cards/model_cards.dart';
-import 'package:fokus/widgets/custom_app_bars.dart';
-import 'package:fokus/widgets/stateful_bloc_builder.dart';
-import 'package:fokus/widgets/segment.dart';
+import '../../logic/child/child_rewards_cubit.dart';
+import '../../logic/common/stateful/stateful_cubit.dart';
+import '../../utils/ui/dialog_utils.dart';
+import '../../utils/ui/snackbar_utils.dart';
+import '../../utils/ui/theme_config.dart';
+import '../../widgets/app_navigation_bar.dart';
+import '../../widgets/cards/item_card.dart';
+import '../../widgets/cards/model_cards.dart';
+import '../../widgets/custom_app_bars.dart';
+import '../../widgets/segment.dart';
+import '../../widgets/stateful_bloc_builder.dart';
 
 class ChildRewardsPage extends StatefulWidget {
 	@override
-	_ChildRewardsPageState createState() => new _ChildRewardsPageState();
+	_ChildRewardsPageState createState() => _ChildRewardsPageState();
 }
 
 class _ChildRewardsPageState extends State<ChildRewardsPage> {
@@ -63,7 +63,7 @@ class _ChildRewardsPageState extends State<ChildRewardsPage> {
 
 	List<Widget> _buildRewardShop(ChildRewardsState state, BuildContext context) {
 		return state.rewards.map((reward) {
-			double percentage = (state.points.firstWhereOrNull((element) => element.type == reward.cost!.type)?.quantity ?? 0) / reward.cost!.quantity!;
+			var percentage = (state.points.firstWhereOrNull((element) => element.type == reward.cost!.type)?.quantity ?? 0) / reward.cost!.quantity!;
 			return RewardItemCard(
 				reward: reward,
 				graphicHeight: 56.0,

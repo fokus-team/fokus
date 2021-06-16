@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/definitions.dart';
+import '../../services/app_locales.dart';
+import '../../utils/definitions.dart';
 
 abstract class NotificationText {
 	String translate();
@@ -32,7 +32,8 @@ class ComplexNotificationText implements NotificationText {
 	  return parts.fold('', (translation, part) => translation += part.translate());
   }
 
-	Json toJson(String name) => {};
+	@override
+  Json toJson(String name) => {};
 }
 
 class SimpleNotificationText implements NotificationText {

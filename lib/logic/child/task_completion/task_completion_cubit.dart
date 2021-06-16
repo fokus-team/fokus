@@ -1,24 +1,24 @@
 import 'package:flutter/widgets.dart';
-import 'package:fokus/model/navigation/task_in_progress_params.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
-import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
-import 'package:fokus/model/db/date/time_date.dart';
-import 'package:fokus/model/db/date_span.dart';
-import 'package:fokus/model/db/plan/plan.dart';
-import 'package:fokus/model/db/plan/plan_instance.dart';
-import 'package:fokus/model/db/plan/plan_instance_state.dart';
-import 'package:fokus/model/db/plan/task.dart';
-import 'package:fokus/model/db/plan/task_instance.dart';
-import 'package:fokus/model/db/plan/task_status.dart';
-import 'package:fokus/model/ui/plan/ui_plan_instance.dart';
-import 'package:fokus/model/ui/plan/ui_task_instance.dart';
-import 'package:fokus/services/analytics_service.dart';
-import 'package:fokus/services/data/data_repository.dart';
-import 'package:fokus/services/notifications/notification_service.dart';
-import 'package:fokus/services/ui_data_aggregator.dart';
-import 'package:fokus/utils/duration_utils.dart';
+import '../../../model/db/date/time_date.dart';
+import '../../../model/db/date_span.dart';
+import '../../../model/db/plan/plan.dart';
+import '../../../model/db/plan/plan_instance.dart';
+import '../../../model/db/plan/plan_instance_state.dart';
+import '../../../model/db/plan/task.dart';
+import '../../../model/db/plan/task_instance.dart';
+import '../../../model/db/plan/task_status.dart';
+import '../../../model/navigation/task_in_progress_params.dart';
+import '../../../model/ui/plan/ui_plan_instance.dart';
+import '../../../model/ui/plan/ui_task_instance.dart';
+import '../../../services/analytics_service.dart';
+import '../../../services/data/data_repository.dart';
+import '../../../services/notifications/notification_service.dart';
+import '../../../services/ui_data_aggregator.dart';
+import '../../../utils/duration_utils.dart';
+import '../../common/stateful/stateful_cubit.dart';
 
 part 'task_completion_state.dart';
 
@@ -45,9 +45,9 @@ class TaskCompletionCubit extends StatefulCubit<TaskCompletionState> {
 		_planInstance = (await _dataRepository.getPlanInstance(id: _taskInstance.planInstanceID))!;
 		_plan = (await _dataRepository.getPlan(id: _planInstance.planID!))!;
 
-		List<Future> updates = [];
-		bool wasPlanStateChanged = false, wasPlanDurationChanged = false;
-		UITaskInstance uiTaskInstance = UITaskInstance(instance: _taskInstance, task: _task);
+		var updates = <Future>[];
+		var wasPlanStateChanged = false, wasPlanDurationChanged = false;
+		var uiTaskInstance = UITaskInstance(instance: _taskInstance, task: _task);
 		var planInstance = await _dataAggregator.loadPlanInstance(planInstance: _planInstance, plan: _plan);
 
 		if (!loadingForFirstTime && _taskInstance.status!.completed! && (_taskInstance.status!.state == TaskState.evaluated || _taskInstance.status!.state == TaskState.rejected)) {
@@ -98,12 +98,12 @@ class TaskCompletionCubit extends StatefulCubit<TaskCompletionState> {
 	void switchToBreak() async {
 		if (!beginSubmit(this.state.copyWith(current: TaskCompletionStateType.inBreak)))
 			return;
-		TaskCompletionState state = this.state;
+		var state = this.state;
 
 		_taskInstance.duration!.last = _taskInstance.duration!.last.end();
 		_taskInstance.breaks!.add(DateSpan(from: TimeDate.now()));
 		await _dataRepository.updateTaskInstanceFields(_taskInstance.id!, duration: _taskInstance.duration, breaks: _taskInstance.breaks);
-		UITaskInstance uiTaskInstance = UITaskInstance(instance: _taskInstance, task: _task);
+		var uiTaskInstance = UITaskInstance(instance: _taskInstance, task: _task);
 		_analyticsService.logTaskPaused(_taskInstance);
 		var planInstance = await _dataAggregator.loadPlanInstance(planInstance: _planInstance, plan: _plan);
 		emit(state.copyWithSubmitted(taskInstance: uiTaskInstance, planInstance: planInstance));
@@ -112,12 +112,12 @@ class TaskCompletionCubit extends StatefulCubit<TaskCompletionState> {
 	void switchToProgress() async {
 		if (!beginSubmit(this.state.copyWith(current: TaskCompletionStateType.inProgress)))
 			return;
-		TaskCompletionState state = this.state;
+		var state = this.state;
 
 		_taskInstance.breaks!.last = _taskInstance.breaks!.last.end();
 		_taskInstance.duration!.add(DateSpan(from: TimeDate.now()));
 		await _dataRepository.updateTaskInstanceFields(_taskInstance.id!, duration: _taskInstance.duration, breaks: _taskInstance.breaks);
-		UITaskInstance uiTaskInstance = UITaskInstance(instance: _taskInstance, task: _task);
+		var uiTaskInstance = UITaskInstance(instance: _taskInstance, task: _task);
 		_analyticsService.logTaskResumed(_taskInstance);
 		var planInstance = await _dataAggregator.loadPlanInstance(planInstance: _planInstance, plan: _plan);
 		emit(state.copyWithSubmitted(taskInstance: uiTaskInstance, planInstance: planInstance));
@@ -126,7 +126,7 @@ class TaskCompletionCubit extends StatefulCubit<TaskCompletionState> {
 	void markAsFinished() async {
 		if (!beginSubmit(this.state.copyWith(current: TaskCompletionStateType.finished)))
 			return;
-		TaskCompletionState state = this.state;
+		var state = this.state;
 
   	_notificationService.sendTaskFinishedNotification(_planInstance.id!, _task.name!, _plan.createdBy!, activeUser!, completed: true);
 	  _analyticsService.logTaskFinished(_taskInstance);
@@ -138,7 +138,7 @@ class TaskCompletionCubit extends StatefulCubit<TaskCompletionState> {
 	void markAsDiscarded() async {
 		if (!beginSubmit(this.state.copyWith(current: TaskCompletionStateType.discarded)))
 			return;
-		TaskCompletionState state = this.state;
+		var state = this.state;
 
 		_notificationService.sendTaskFinishedNotification(_planInstance.id!, _task.name!, _plan.createdBy!, activeUser!, completed: false);
 		_analyticsService.logTaskNotFinished(_taskInstance);

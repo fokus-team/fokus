@@ -5,15 +5,14 @@ import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
-import 'package:fokus/model/db/date/date.dart';
-import 'package:fokus/model/db/plan/plan.dart';
-import 'package:fokus/model/db/plan/repeatability_type.dart';
-import 'package:fokus/model/db/plan/plan_repeatability.dart';
-import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/string_utils.dart';
-import 'package:fokus/model/db/date_span.dart';
-import 'package:fokus/model/ui/form/plan_form_model.dart';
-
+import '../model/db/date/date.dart';
+import '../model/db/date_span.dart';
+import '../model/db/plan/plan.dart';
+import '../model/db/plan/plan_repeatability.dart';
+import '../model/db/plan/repeatability_type.dart';
+import '../model/ui/form/plan_form_model.dart';
+import '../utils/string_utils.dart';
+import 'app_locales.dart';
 import 'data/data_repository.dart';
 
 class PlanRepeatabilityService {
@@ -24,11 +23,11 @@ class PlanRepeatabilityService {
 		if ((repeatability.range?.from != null && repeatability.range!.from! >= span.to)
 				|| (repeatability.range?.to != null && repeatability.range!.to! < span.from))
 			return [];
-		var day = (int index) => repeatability.days![max(index, 0)];
-		List<Date> dates = [];
-		var iterateDays = (int startDay, int baseLength) {
+		day(int index) => repeatability.days![max(index, 0)];
+		var dates = <Date>[];
+		iterateDays(int startDay, int baseLength) {
 			var dayIndex = repeatability.days!.indexWhere((day) => day >= startDay);
-			int daysJump = day(dayIndex) - startDay;
+			var daysJump = day(dayIndex) - startDay;
 			if (dayIndex == -1) {
 				dayIndex = 0;
 				daysJump += baseLength;
@@ -61,7 +60,7 @@ class PlanRepeatabilityService {
 	}
 
 	PlanRepeatability mapRepeatabilityModel(PlanFormModel planForm) {
-		RepeatabilityType type = planForm.repeatability == PlanFormRepeatability.recurring ? planForm.repeatabilityRage.dbType : RepeatabilityType.once;
+		var type = planForm.repeatability == PlanFormRepeatability.recurring ? planForm.repeatabilityRage.dbType : RepeatabilityType.once;
 		var untilCompleted = planForm.repeatability == PlanFormRepeatability.untilCompleted;
 		var range = DateSpan(from: type == RepeatabilityType.once ? planForm.onlyOnceDate : planForm.rangeDate.from, to: planForm.rangeDate.to);
 		return PlanRepeatability(type: type, untilCompleted: untilCompleted, range: range, days: planForm.days..sort());
@@ -88,26 +87,26 @@ class PlanRepeatabilityService {
 	  return false;
   }
 
-	static buildPlanDescription(PlanRepeatability rules, {Date? instanceDate, bool detailed = false}) {
-  	var formatDate = (date) => DateFormat.yMd(AppLocales.instance.locale.toString()).format(date);
-    String description = '';
+	static String buildPlanDescription(PlanRepeatability rules, {Date? instanceDate, bool detailed = false}) {
+  	formatDate(date) => DateFormat.yMd(AppLocales.instance.locale.toString()).format(date);
+    var description = '';
 	  if (rules.untilCompleted! && instanceDate != null)
 		  description += AppLocales.instance.translate('repeatability.startedOn', {'DAY': formatDate(instanceDate)});
 	  else if (rules.type == RepeatabilityType.once)
 	    description += AppLocales.instance.translate('repeatability.once', {'DAY': formatDate(rules.range!.from)});
 		else {
-			String andWord = AppLocales.instance.translate('and');
+			var andWord = AppLocales.instance.translate('and');
 		  if (rules.type == RepeatabilityType.weekly) {
 				if(rules.days!.length == 7) {
 					description += AppLocales.instance.translate('date.everyday');
 				} else {
-					List<String> weekdays = rules.days!.map((day) => AppLocales.instance.translate('repeatability.weekday', {'WEEKDAY': '$day'})).toList();
-					String weekdayString = displayJoin(weekdays, andWord);
+					var weekdays = rules.days!.map((day) => AppLocales.instance.translate('repeatability.weekday', {'WEEKDAY': '$day'})).toList();
+					var weekdayString = displayJoin(weekdays, andWord);
 					description += '${AppLocales.instance.translate('repeatability.weekly', {'WEEKDAY': '${rules.days![0]}'})} $weekdayString';
 				}
 		  }
 		  else if (rules.type == RepeatabilityType.monthly) {
-			  String dayString = displayJoin(rules.days!.map((day) => '$day').toList(), andWord);
+			  var dayString = displayJoin(rules.days!.map((day) => '$day').toList(), andWord);
 			  description += AppLocales.instance.translate('repeatability.monthly', {'DAYS': dayString});
 		  }
 	  }

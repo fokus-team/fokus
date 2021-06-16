@@ -1,32 +1,32 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:mongo_dart/mongo_dart.dart' as mongo;
 import 'package:smart_select/smart_select.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:mongo_dart/mongo_dart.dart' as Mongo;
-import 'package:collection/collection.dart';
 
-import 'package:fokus/logic/common/calendar_cubit.dart';
-import 'package:fokus/model/db/date/date.dart';
-import 'package:fokus/model/navigation/plan_form_params.dart';
-import 'package:fokus/model/db/plan/plan.dart';
-import 'package:fokus/model/db/user/child.dart';
-import 'package:fokus/utils/navigation_utils.dart';
-import 'package:fokus/model/ui/app_page.dart';
-import 'package:fokus/utils/ui/calendar_utils.dart';
-import 'package:fokus/widgets/buttons/bottom_sheet_confirm_button.dart';
-import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/widgets/custom_app_bars.dart';
-import 'package:fokus/utils/ui/icon_sets.dart';
-import 'package:fokus/utils/ui/theme_config.dart';
-import 'package:fokus/widgets/cards/item_card.dart';
-import 'package:fokus/widgets/chips/attribute_chip.dart';
-import 'package:fokus/widgets/segment.dart';
-import 'package:fokus/widgets/general/app_hero.dart';
+import '../../logic/common/calendar_cubit.dart';
+import '../../model/db/date/date.dart';
+import '../../model/db/plan/plan.dart';
+import '../../model/db/user/child.dart';
+import '../../model/navigation/plan_form_params.dart';
+import '../../model/ui/app_page.dart';
+import '../../services/app_locales.dart';
+import '../../utils/navigation_utils.dart';
+import '../../utils/ui/calendar_utils.dart';
+import '../../utils/ui/icon_sets.dart';
+import '../../utils/ui/theme_config.dart';
+import '../../widgets/buttons/bottom_sheet_confirm_button.dart';
+import '../../widgets/cards/item_card.dart';
+import '../../widgets/chips/attribute_chip.dart';
+import '../../widgets/custom_app_bars.dart';
+import '../../widgets/general/app_hero.dart';
+import '../../widgets/segment.dart';
 
 class CaregiverCalendarPage extends StatefulWidget {
 	@override
-	_CaregiverCalendarPageState createState() => new _CaregiverCalendarPageState();
+	_CaregiverCalendarPageState createState() => _CaregiverCalendarPageState();
 }
 
 class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with TickerProviderStateMixin {
@@ -38,8 +38,8 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
   DateTime _focusedDay = Date.now();
   DateTime? _selectedDay;
 
-  CalendarFormat _calendarFormat = CalendarFormat.month;
-  RangeSelectionMode _rangeSelectionMode = RangeSelectionMode.toggledOff;
+  final CalendarFormat _calendarFormat = CalendarFormat.month;
+  final RangeSelectionMode _rangeSelectionMode = RangeSelectionMode.toggledOff;
 	ValueNotifier<List<Plan>>? _selectedEvents;
 	final Color notAssignedPlanMarkerColor = Colors.grey[400]!;
 	
@@ -62,8 +62,8 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 		super.dispose();
 	}
 
-	Color _getChildColor(Map<Child?, bool>? children, Mongo.ObjectId childID) {
-		int childIndex = children!.keys.toList().indexWhere((element) => element != null && element.id == childID);
+	Color _getChildColor(Map<Child?, bool>? children, mongo.ObjectId childID) {
+		var childIndex = children!.keys.toList().indexWhere((element) => element != null && element.id == childID);
 		return (childIndex != -1) ? AppColors.markerColors[childIndex % AppColors.markerColors.length] : Colors.cyan;
 	}
 
@@ -143,7 +143,7 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 									),
 									isActive: plan.assignedTo!.isNotEmpty,
 									chips: plan.assignedTo!.isNotEmpty ? plan.assignedTo?.map((childID) {
-										Child? child = state.children?.keys.firstWhereOrNull((Child? element) => element != null && element.id == childID);
+										var child = state.children?.keys.firstWhereOrNull((Child? element) => element != null && element.id == childID);
 										return child != null ? AttributeChip(
 											content: child.name,
 											color: _getChildColor(state.children!, childID)
@@ -157,7 +157,7 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 	}
 
   List<Plan> _getEventsForDay(DateTime day) {
-		Map<Date, List<Plan>>? events = BlocProvider.of<CalendarCubit>(context).state.events;
+		var events = BlocProvider.of<CalendarCubit>(context).state.events;
     return events != null && events[Date.fromDate(day)] != null ? events[Date.fromDate(day)]! : [];
   }
 
@@ -205,9 +205,9 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 				selectedBuilder: (context, date, _) => buildTableCalendarCell(date, AppColors.caregiverBackgroundColor, isCellSelected: true),
 				todayBuilder: (context, date, _) => buildTableCalendarCell(date, Colors.transparent),
 				markerBuilder: (context, date, events) {
-					final List<Widget> markers = <Widget>[];
+					final markers = <Widget>[];
 					if (events.isNotEmpty) {
-						Set<Color> childrenMarkers = {};
+						var childrenMarkers = <Color>{};
 						events.forEach((plan) {
 							if(plan.assignedTo!.isEmpty)
 								childrenMarkers.add(notAssignedPlanMarkerColor);
@@ -322,7 +322,7 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 			},
 	    onChange: (selected) {
 				setState(() { _selectedChildren = selected!.value; });
-	      Map<Child, bool> filter = {};
+	      var filter = <Child, bool>{};
 				for(var child in children.keys)
 					filter[child!] = selected!.value!.contains(child);
 	      BlocProvider.of<CalendarCubit>(context).childFilterChanged(filter);

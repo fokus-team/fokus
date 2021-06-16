@@ -1,12 +1,12 @@
-import 'package:fokus/model/db/gamification/child_badge.dart';
-import 'package:fokus/model/db/gamification/points.dart';
 import 'package:logging/logging.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
-import 'package:fokus/model/db/collection.dart';
-import 'package:fokus/model/db/user/user.dart';
-import 'package:fokus/model/db/user/user_role.dart';
-import 'package:fokus/services/data/db/db_repository.dart';
+import '../../../model/db/collection.dart';
+import '../../../model/db/gamification/child_badge.dart';
+import '../../../model/db/gamification/points.dart';
+import '../../../model/db/user/user.dart';
+import '../../../model/db/user/user_role.dart';
+import '../db/db_repository.dart';
 
 mixin UserDbRepository implements DbRepository {
 	final Logger _logger = Logger('UserDbRepository');
@@ -17,7 +17,7 @@ mixin UserDbRepository implements DbRepository {
 			fields.add('role');
 		if (fields != null)
 			query.fields(fields);
-		return dbClient.queryOneTyped(Collection.user, query, (json) => User.typedFromJson(json));
+		return dbClient.queryOneTyped(Collection.user, query, User.typedFromJson);
 	}
 
 	Future<List<User>> getUsers({List<ObjectId>? ids, ObjectId? connected, UserRole? role, List<String>? fields}) {
@@ -70,7 +70,7 @@ mixin UserDbRepository implements DbRepository {
 	}
 
 	SelectorBuilder _buildUserQuery({List<ObjectId>? ids, ObjectId? id, ObjectId? connected, String? authenticationId, String? notificationId, UserRole? role}) {
-		SelectorBuilder query = where;
+		var query = where;
 		if (ids != null && id != null)
 			_logger.warning("Both ID and ID list specified in user query");
 

@@ -1,10 +1,10 @@
 import 'package:equatable/equatable.dart';
-import 'package:fokus/model/db/date/time_date.dart';
-import 'package:fokus/model/db/date_span.dart';
-import 'package:fokus/model/db/plan/task.dart';
-import 'package:fokus/utils/definitions.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
+import '../../../utils/definitions.dart';
+import '../date/time_date.dart';
+import '../date_span.dart';
+import 'task.dart';
 import 'task_status.dart';
 
 class TaskInstance extends Equatable {
@@ -48,25 +48,25 @@ class TaskInstance extends Equatable {
   );
 
   Json toJson() {
-    final Json data = new Json();
-    if (this.id != null)
-      data['_id'] = this.id;
-    if (this.planInstanceID != null)
-      data['planInstanceID'] = this.planInstanceID;
-    if (this.taskID != null)
-      data['taskID'] = this.taskID;
-    if (this.timer != null)
-      data['timer'] = this.timer;
-    if (this.optional != null)
-      data['optional'] = this.optional;
-    if (this.breaks != null)
-      data['breaks'] = this.breaks!.map((v) => v.toJson()).toList();
-    if (this.duration != null)
-      data['duration'] = this.duration!.map((v) => v.toJson()).toList();
-    if (this.status != null)
-      data['status'] = this.status!.toJson();
-    if (this.subtasks != null)
-      data['subtasks'] = this.subtasks!.map((v) => {v.key: v.value}).toList();
+    final data = <String, dynamic>{};
+    if (id != null)
+      data['_id'] = id;
+    if (planInstanceID != null)
+      data['planInstanceID'] = planInstanceID;
+    if (taskID != null)
+      data['taskID'] = taskID;
+    if (timer != null)
+      data['timer'] = timer;
+    if (optional != null)
+      data['optional'] = optional;
+    if (breaks != null)
+      data['breaks'] = breaks!.map((v) => v.toJson()).toList();
+    if (duration != null)
+      data['duration'] = duration!.map((v) => v.toJson()).toList();
+    if (status != null)
+      data['status'] = status!.toJson();
+    if (subtasks != null)
+      data['subtasks'] = subtasks!.map((v) => {v.key: v.value}).toList();
     return data;
   }
 

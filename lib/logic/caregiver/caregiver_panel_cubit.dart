@@ -1,15 +1,15 @@
 import 'package:flutter/widgets.dart';
-import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
-import 'package:fokus/model/db/user/caregiver.dart';
-import 'package:fokus/model/db/user/child.dart';
-import 'package:fokus/model/notification/notification_type.dart';
-import 'package:fokus/services/ui_data_aggregator.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
-import 'package:fokus/services/data/data_repository.dart';
-import 'package:fokus/model/ui/child_card_model.dart';
-import 'package:fokus/model/db/user/user_role.dart';
+import '../../model/db/user/caregiver.dart';
+import '../../model/db/user/child.dart';
+import '../../model/db/user/user_role.dart';
+import '../../model/notification/notification_type.dart';
+import '../../model/ui/child_card_model.dart';
+import '../../services/data/data_repository.dart';
+import '../../services/ui_data_aggregator.dart';
+import '../common/stateful/stateful_cubit.dart';
 
 class CaregiverPanelCubit extends StatefulCubit {
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
@@ -17,8 +17,9 @@ class CaregiverPanelCubit extends StatefulCubit {
 
   CaregiverPanelCubit(ModalRoute pageRoute) : super(pageRoute);
 
+  @override
   Future doLoadData() async {
-  	Caregiver _activeUser = activeUser as Caregiver;
+  	var _activeUser = activeUser as Caregiver;
 	  var children = (await _dataRepository.getUsers(connected: _activeUser.id, role: UserRole.child)).map((e) => e as Child).toList();
 	  var uiChildren = await _dataAggregator.loadChildCards(children);
 	  Map<ObjectId, String>? friends;

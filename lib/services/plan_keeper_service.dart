@@ -3,19 +3,18 @@ import 'dart:async';
 import 'package:get_it/get_it.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
-import 'package:fokus/model/db/user/user_role.dart';
-import 'package:fokus/model/db/date/date.dart';
-import 'package:fokus/model/db/user/user.dart';
-import 'package:fokus/model/db/date/time_date.dart';
-import 'package:fokus/model/db/plan/plan_instance_state.dart';
-import 'package:fokus/model/db/plan/plan.dart';
-import 'package:fokus/model/db/plan/plan_instance.dart';
-import 'package:fokus/services/plan_repeatability_service.dart';
-import 'package:fokus/model/db/date_span.dart';
-
+import '../model/db/date/date.dart';
+import '../model/db/date/time_date.dart';
+import '../model/db/date_span.dart';
+import '../model/db/plan/plan.dart';
+import '../model/db/plan/plan_instance.dart';
+import '../model/db/plan/plan_instance_state.dart';
+import '../model/db/user/user.dart';
+import '../model/db/user/user_role.dart';
+import 'data/data_repository.dart';
 import 'observers/user/user_notifier.dart';
 import 'observers/user/user_observer.dart';
-import 'data/data_repository.dart';
+import 'plan_repeatability_service.dart';
 
 class PlanKeeperService implements UserObserver {
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
@@ -39,7 +38,7 @@ class PlanKeeperService implements UserObserver {
 			onUserSignOut(user);
 			await _updateData();
 			var now = DateTime.now();
-			Duration timeToMidnight = DateTime(now.year, now.month, now.day + 1, 0, 0, 10).difference(now);
+			var timeToMidnight = DateTime(now.year, now.month, now.day + 1, 0, 0, 10).difference(now);
 			_dataCheckTimer = Timer(timeToMidnight, _firstTimerCallback);
 		});
 	}
@@ -56,7 +55,7 @@ class PlanKeeperService implements UserObserver {
 	}
 
 	Future _updateData() async {
-		var getRoleId = (UserRole paramRole) => paramRole == _role ? _userId : null;
+		getRoleId(UserRole paramRole) => paramRole == _role ? _userId : null;
 		var plans = await _dataRepository.getPlans(caregiverId: getRoleId(UserRole.caregiver),
 				childId: getRoleId(UserRole.child), fields: ['_id', 'repeatability', 'active', 'assignedTo', 'tasks']);
 		var children = await _dataRepository.getUsers(role: UserRole.child, connected: _userId, fields: ['_id']);
@@ -70,7 +69,7 @@ class PlanKeeperService implements UserObserver {
 
 	Future<List<PlanInstance>> createPlansForToday(List<Plan> plans, List<ObjectId> childrenIDs) async {
 		var todayPlans = _repeatabilityService.filterPlansByDate(plans, Date.now());
-		List<PlanInstance> instances = [];
+		var instances = <PlanInstance>[];
 		for (var plan in todayPlans)
 			instances.addAll(childrenIDs.where(plan.assignedTo!.contains).map((child) => PlanInstance.fromPlan(plan, assignedTo: child)));
 		await _dataRepository.createPlanInstances(instances);
@@ -80,9 +79,9 @@ class PlanKeeperService implements UserObserver {
 	Future _updateOutdatedData(List<Plan> plans, List<ObjectId> childrenIDs) async {
 		var planIDs = plans.where((plan) => !plan.repeatability!.untilCompleted!).map((plan) => plan.id!).toList();
 		var instances = await _dataRepository.getPastNotCompletedPlanInstances(childrenIDs, planIDs, Date.now(), fields: ['_id', 'date', 'duration', 'state']);
-		var getEndTime = (Date date) => TimeDate.fromDate(date.add(Duration(days: 1)));
+		getEndTime(Date date) => TimeDate.fromDate(date.add(Duration(days: 1)));
 
-		List<Future> updates = [];
+		var updates = <Future>[];
 		for (var instance in instances)
 			updates.add(_dataRepository.updatePlanInstanceFields(
 				instance.id!,

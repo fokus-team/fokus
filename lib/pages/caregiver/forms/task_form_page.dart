@@ -2,22 +2,22 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_picker/flutter_picker.dart';
-import 'package:fokus/model/db/gamification/currency.dart';
+import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorderable_list.dart';
 import 'package:round_spot/round_spot.dart' as round_spot;
 
-import 'package:fokus/model/currency_type.dart';
-import 'package:fokus/model/navigation/task_form_params.dart';
-import 'package:fokus/model/ui/form/task_form_model.dart';
-import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/ui/dialog_utils.dart';
-import 'package:fokus/utils/ui/form_config.dart';
-import 'package:fokus/utils/ui/reorderable_list.dart';
-import 'package:fokus/utils/ui/theme_config.dart';
-import 'package:fokus/widgets/buttons/back_icon_button.dart';
-import 'package:fokus/widgets/buttons/help_icon_button.dart';
-import 'package:fokus/widgets/dialogs/general_dialog.dart';
-import 'package:fokus/widgets/forms/pointpicker_field.dart';
-import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorderable_list.dart';
+import '../../../model/currency_type.dart';
+import '../../../model/db/gamification/currency.dart';
+import '../../../model/navigation/task_form_params.dart';
+import '../../../model/ui/form/task_form_model.dart';
+import '../../../services/app_locales.dart';
+import '../../../utils/ui/dialog_utils.dart';
+import '../../../utils/ui/form_config.dart';
+import '../../../utils/ui/reorderable_list.dart';
+import '../../../utils/ui/theme_config.dart';
+import '../../../widgets/buttons/back_icon_button.dart';
+import '../../../widgets/buttons/help_icon_button.dart';
+import '../../../widgets/dialogs/general_dialog.dart';
+import '../../../widgets/forms/pointpicker_field.dart';
 
 class TaskFormPage extends StatefulWidget {
 	final TaskFormParams params;
@@ -25,7 +25,7 @@ class TaskFormPage extends StatefulWidget {
 	TaskFormPage(this.params);
 
 	@override
-	_TaskFormPageState createState() => new _TaskFormPageState();
+	_TaskFormPageState createState() => _TaskFormPageState();
 }
 
 class _TaskFormPageState extends State<TaskFormPage> {
@@ -40,10 +40,10 @@ class _TaskFormPageState extends State<TaskFormPage> {
 	bool inReorder = false;
 
 
-	TextEditingController _titleController = TextEditingController();
-	TextEditingController _descriptionController = TextEditingController();
-	TextEditingController _pointsController = TextEditingController();
-	TextEditingController _subtasksController = TextEditingController();
+	final TextEditingController _titleController = TextEditingController();
+	final TextEditingController _descriptionController = TextEditingController();
+	final TextEditingController _pointsController = TextEditingController();
+	final TextEditingController _subtasksController = TextEditingController();
 
 	Duration dragDelayDuration = Duration(milliseconds: 600);
 	Duration defaultSwitchDuration = Duration(milliseconds: 400);
@@ -87,7 +87,7 @@ class _TaskFormPageState extends State<TaskFormPage> {
 	Widget build(BuildContext context) {
 		return WillPopScope(
 				onWillPop: () async {
-					bool? ret = await showExitFormDialog(context, true, isDataChanged);
+					var ret = await showExitFormDialog(context, true, isDataChanged);
 					if (ret == null || !ret)
 						return false;
 					else
@@ -155,9 +155,9 @@ class _TaskFormPageState extends State<TaskFormPage> {
 	}
 
 	Widget buildCustomHeader() {
-		bool hasTitle = !formModeIsCreate() && task.title != null &&
-				task.title!.length > 0;
-		double appBarVerticalPadding = hasTitle ? 8.0 : 12.0;
+		var hasTitle = !formModeIsCreate() && task.title != null &&
+				task.title!.isNotEmpty;
+		var appBarVerticalPadding = hasTitle ? 8.0 : 12.0;
 		return Material(
 				elevation: 4.0,
 				color: AppColors.formColor,
@@ -244,7 +244,7 @@ class _TaskFormPageState extends State<TaskFormPage> {
 						children: <Widget>[
 							!formModeIsCreate() ?
 							TextButton(
-									onPressed: () => showDeleteTaskDialog(),
+									onPressed: showDeleteTaskDialog,
 									style: TextButton.styleFrom(
 										primary: Colors.red),
 									child: Row(
@@ -257,7 +257,7 @@ class _TaskFormPageState extends State<TaskFormPage> {
 							)
 									: SizedBox.shrink(),
 							TextButton(
-									onPressed: () => saveTask(),
+									onPressed: saveTask,
 									child: Row(
 											children: <Widget>[
 												Hero(
@@ -438,6 +438,11 @@ class _TaskFormPageState extends State<TaskFormPage> {
 	}
 
 	Widget buildTimerField() {
+		var taskTimer = AppLocales.of(context).translate(
+			'$_pageKeyTaskForm.fields.taskTimer.format', {
+			'HOURS_NUM': (task.timer! ~/ 60).toString(),
+			'MINUTES_NUM': (task.timer! % 60).toString()
+		});
 		return Padding(
 				padding: EdgeInsets.only(top: 12.0),
 				child: ListTile(
@@ -449,13 +454,7 @@ class _TaskFormPageState extends State<TaskFormPage> {
 						subtitle: (task.timer == 0) ?
 						Text(AppLocales.of(context).translate(
 								'$_pageKeyTaskForm.fields.taskTimer.notSet'))
-								: Text(AppLocales.of(context).translate(
-								'$_pageKeyTaskForm.fields.taskTimer.set') + ' '
-								+ AppLocales.of(context).translate(
-										'$_pageKeyTaskForm.fields.taskTimer.format', {
-									'HOURS_NUM': (task.timer! ~/ 60).toString(),
-									'MINUTES_NUM': (task.timer! % 60).toString()
-								})),
+								: Text('${AppLocales.of(context).translate('$_pageKeyTaskForm.fields.taskTimer.set')} $taskTimer'),
 						trailing: Icon(Icons.keyboard_arrow_right, color: Colors.grey),
 						onTap: () {
 							FocusManager.instance.primaryFocus?.unfocus();

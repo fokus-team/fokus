@@ -1,7 +1,7 @@
 import 'package:meta/meta.dart';
 
-import 'package:fokus/model/db/date_span.dart';
-import 'package:fokus/services/data/data_repository.dart';
+import '../../../model/db/date_span.dart';
+import '../data_repository.dart';
 
 import 'mongodb_provider.dart';
 

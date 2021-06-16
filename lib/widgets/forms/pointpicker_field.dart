@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:fokus/model/currency_type.dart';
-import 'package:fokus/model/db/gamification/currency.dart';
-import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/ui/app_paths.dart';
-import 'package:fokus/utils/ui/form_config.dart';
-import 'package:fokus/utils/ui/icon_sets.dart';
-import 'package:fokus/utils/ui/theme_config.dart';
-import 'package:fokus/widgets/buttons/bottom_sheet_confirm_button.dart';
 import 'package:smart_select/smart_select.dart';
+
+import '../../model/currency_type.dart';
+import '../../model/db/gamification/currency.dart';
+import '../../services/app_locales.dart';
+import '../../utils/ui/app_paths.dart';
+import '../../utils/ui/form_config.dart';
+import '../../utils/ui/icon_sets.dart';
+import '../../utils/ui/theme_config.dart';
+import '../buttons/bottom_sheet_confirm_button.dart';
 
 class PointPickerField extends StatefulWidget {
 	final TextEditingController controller;
@@ -43,7 +44,7 @@ class PointPickerField extends StatefulWidget {
 	}) : pickedCurrency = pickedCurrency ?? Currency(type: CurrencyType.diamond), currencies = currencies ?? [];
 
 	@override
-  State<StatefulWidget> createState() => new _PointPickerFieldState();
+  State<StatefulWidget> createState() => _PointPickerFieldState();
 
 }
 
@@ -85,7 +86,7 @@ class _PointPickerFieldState extends State<PointPickerField> {
 									),
 									validator: (value) {
 										final range = [widget.minPoints ?? 0, widget.maxPoints ?? 1000000];
-										final int? numValue = int.tryParse(value!);
+										final numValue = int.tryParse(value!);
 										return ((!widget.canBeEmpty && numValue == null) || (numValue != null && (numValue < range[0] || numValue > range[1]))) ? 
 											AppLocales.of(context).translate('alert.genericRangeOverflowValue', {'A': range[0].toString(), 'B': range[1].toString()})
 											: null;

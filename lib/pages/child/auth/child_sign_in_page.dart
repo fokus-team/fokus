@@ -3,21 +3,21 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:smart_select/smart_select.dart';
 
-import 'package:fokus/logic/child/auth/sign_up/child_sign_up_cubit.dart';
-import 'package:fokus/model/ui/ui_button.dart';
-import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/ui/icon_sets.dart';
-import 'package:fokus/utils/ui/theme_config.dart';
-import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
-import 'package:fokus/model/db/user/user.dart';
-import 'package:fokus/widgets/buttons/bottom_sheet_confirm_button.dart';
-import 'package:fokus/widgets/general/app_avatar.dart';
-import 'package:fokus/widgets/auth/auth_button.dart';
-import 'package:fokus/widgets/auth/auth_input_field.dart';
-import 'package:fokus/model/ui/auth/user_code.dart';
-import 'package:fokus/model/ui/auth/name.dart';
-import 'package:fokus/widgets/auth/auth_widgets.dart';
-import 'package:fokus/logic/child/auth/sign_in/child_sign_in_cubit.dart';
+import '../../../logic/child/auth/sign_in/child_sign_in_cubit.dart';
+import '../../../logic/child/auth/sign_up/child_sign_up_cubit.dart';
+import '../../../logic/common/auth_bloc/authentication_bloc.dart';
+import '../../../model/db/user/user.dart';
+import '../../../model/ui/auth/name.dart';
+import '../../../model/ui/auth/user_code.dart';
+import '../../../model/ui/ui_button.dart';
+import '../../../services/app_locales.dart';
+import '../../../utils/ui/icon_sets.dart';
+import '../../../utils/ui/theme_config.dart';
+import '../../../widgets/auth/auth_button.dart';
+import '../../../widgets/auth/auth_input_field.dart';
+import '../../../widgets/auth/auth_widgets.dart';
+import '../../../widgets/buttons/bottom_sheet_confirm_button.dart';
+import '../../../widgets/general/app_avatar.dart';
 
 class ChildSignInPage extends StatelessWidget {
 	static const String _pageKey = 'page.loginSection.childSignIn';
@@ -112,7 +112,7 @@ class ChildSignInPage extends StatelessWidget {
 					child: SmartSelect<int>.single(
 						title: AppLocales.of(context).translate('authentication.avatar'),
 						tileBuilder: (context, selectState) {
-							bool isInvalid = (state.status == FormzStatus.invalid && state.avatar == null);
+							var isInvalid = (state.status == FormzStatus.invalid && state.avatar == null);
 							return ListTile(
 								leading: SizedBox(
 									width: 56.0,
@@ -135,7 +135,7 @@ class ChildSignInPage extends StatelessWidget {
 						},
 						selectedValue: state.avatar,
 						choiceItems: List.generate(childAvatars.length, (index) {
-							final String name = AppLocales.of(context).translate('$_pageKey.avatarGroups.${childAvatars[index]!.label.toString().split('.').last}');
+							final name = AppLocales.of(context).translate('$_pageKey.avatarGroups.${childAvatars[index]!.label.toString().split('.').last}');
 							return S2Choice(
 								title: name,
 								group: name,

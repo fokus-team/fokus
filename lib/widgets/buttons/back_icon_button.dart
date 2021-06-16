@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/ui/theme_config.dart';
+import '../../services/app_locales.dart';
+import '../../utils/ui/theme_config.dart';
 
 class BackIconButton extends StatelessWidget {
 	final Brightness? theme;

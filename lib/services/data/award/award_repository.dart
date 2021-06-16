@@ -1,8 +1,9 @@
-import 'package:fokus/model/db/gamification/badge.dart';
-import 'package:fokus/model/db/gamification/child_reward.dart';
-import 'package:fokus/model/db/gamification/points.dart';
 import 'package:mongo_dart/mongo_dart.dart';
-import 'package:fokus/model/db/gamification/reward.dart';
+
+import '../../../model/db/gamification/badge.dart';
+import '../../../model/db/gamification/child_reward.dart';
+import '../../../model/db/gamification/points.dart';
+import '../../../model/db/gamification/reward.dart';
 
 abstract class AwardRepository {
 	Future<Reward?> getReward({required ObjectId id});

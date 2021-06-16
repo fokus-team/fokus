@@ -1,9 +1,10 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:fokus/model/currency_type.dart';
-import 'package:fokus/model/db/gamification/currency.dart';
-import 'package:fokus/model/db/plan/task.dart';
 import 'package:mongo_dart/mongo_dart.dart';
+
+import '../../currency_type.dart';
+import '../../db/gamification/currency.dart';
+import '../../db/plan/task.dart';
 
 
 // ignore: must_be_immutable

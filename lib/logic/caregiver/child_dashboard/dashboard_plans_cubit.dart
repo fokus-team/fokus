@@ -1,16 +1,16 @@
 import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart';
-
-import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
-import 'package:fokus/model/ui/plan/ui_plan_instance.dart';
-import 'package:fokus/model/db/date/date.dart';
-import 'package:fokus/model/db/user/child.dart';
-import 'package:fokus/services/data/data_repository.dart';
-import 'package:fokus/model/db/plan/plan.dart';
-import 'package:fokus/model/db/plan/task_status.dart';
-import 'package:fokus/services/plan_keeper_service.dart';
-import 'package:fokus/services/ui_data_aggregator.dart';
 import 'package:mongo_dart/mongo_dart.dart';
+
+import '../../../model/db/date/date.dart';
+import '../../../model/db/plan/plan.dart';
+import '../../../model/db/plan/task_status.dart';
+import '../../../model/db/user/child.dart';
+import '../../../model/ui/plan/ui_plan_instance.dart';
+import '../../../services/data/data_repository.dart';
+import '../../../services/plan_keeper_service.dart';
+import '../../../services/ui_data_aggregator.dart';
+import '../../common/stateful/stateful_cubit.dart';
 
 class DashboardPlansCubit extends StatefulCubit {
 	late Child child;
@@ -48,7 +48,7 @@ class DashboardPlansCubit extends StatefulCubit {
 			return;
 		var tabState = state as DashboardPlansState;
 		var childID = child.id!;
-		var filterAssigned = (bool Function(Plan) condition) => tabState.availablePlans.where(condition).map((plan) => plan.id!).toList();
+		filterAssigned(bool Function(Plan) condition) => tabState.availablePlans.where(condition).map((plan) => plan.id!).toList();
 		var assignedIds = filterAssigned((plan) => ids.contains(plan.id) && !plan.assignedTo!.contains(childID));
 		var unassignedIds = filterAssigned((plan) => !ids.contains(plan.id) && plan.assignedTo!.contains(childID));
 		var assignedPlans = _availablePlans.where((plan) => assignedIds.contains(plan.id)).toList()..forEach((plan) => plan.assignedTo!.add(childID));
@@ -57,7 +57,7 @@ class DashboardPlansCubit extends StatefulCubit {
 			_dataRepository.updatePlanFields(unassignedIds, unassign: childID),
 			_planKeeperService.createPlansForToday(assignedPlans, [childID])
 		]);
-		var updateAssigned = (Plan plan) {
+		updateAssigned(Plan plan) {
 			var assignedTo = List.of(plan.assignedTo!);
 			if (assignedIds.contains(plan.id))
 				assignedTo.add(childID);
@@ -66,7 +66,7 @@ class DashboardPlansCubit extends StatefulCubit {
 			return assignedTo;
 		};
 		var newPlans = tabState.availablePlans.map((plan) => plan.copyWith(assignedTo: updateAssigned(plan))).toList();
-		List<UIPlanInstance> childPlans = List.of(tabState.childPlans)..addAll(await _dataAggregator.getUIPlanInstances(plans: assignedPlans, instances: results[2]));
+		var childPlans = List<UIPlanInstance>.of(tabState.childPlans)..addAll(await _dataAggregator.getUIPlanInstances(plans: assignedPlans, instances: results[2]));
 		emit(tabState.copyWith(availablePlans: newPlans, childPlans: childPlans, submissionState: DataSubmissionState.submissionSuccess));
 	}
 }

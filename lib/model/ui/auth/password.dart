@@ -16,7 +16,7 @@ class Password extends FormzInput<String, PasswordValidationError> {
 	const Password.pure([String value = '', this.fullValidation = true]) : super.pure(value);
 	const Password.dirty([String value = '', this.fullValidation = true]) : super.dirty(value);
 
-	static final _lengthRegExp = RegExp(r'^[A-Za-z\d]{' + '$minPasswordLength' + r',}$');
+	static final _lengthRegExp = RegExp(r'^[A-Za-z\d]{' '$minPasswordLength' r',}$');
 
 	@override
 	PasswordValidationError? validator(String? value) {

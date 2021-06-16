@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
-import 'package:fokus/model/db/plan/plan.dart';
-import 'package:fokus/model/db/plan/task.dart';
-import 'package:fokus/services/data/data_repository.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mongo_dart/mongo_dart.dart';
+
+import '../../model/db/plan/plan.dart';
+import '../../model/db/plan/task.dart';
+import '../../services/data/data_repository.dart';
+import 'stateful/stateful_cubit.dart';
 
 class PlanCubit extends StatefulCubit {
   final ObjectId _planId;
@@ -13,10 +14,10 @@ class PlanCubit extends StatefulCubit {
   PlanCubit(this._planId, ModalRoute pageRoute) : super(pageRoute);
 
   @override
-  doLoadData() async {
-    Plan plan = (await _dataRepository.getPlan(id: _planId))!;
+  Future doLoadData() async {
+    var plan = (await _dataRepository.getPlan(id: _planId))!;
     var children = await _dataRepository.getUserNames(plan.assignedTo!);
-    List<Task> tasks = await _dataRepository.getTasks(planId: _planId);
+    var tasks = await _dataRepository.getTasks(planId: _planId);
     emit(PlanCubitState(
       plan: plan,
       tasks: tasks,

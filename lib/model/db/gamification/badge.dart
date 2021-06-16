@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
-import 'package:fokus/model/ui/form/badge_form_model.dart';
-import 'package:fokus/utils/definitions.dart';
+
+import '../../../utils/definitions.dart';
+import '../../ui/form/badge_form_model.dart';
 
 class Badge extends Equatable {
   final String? name;
@@ -13,13 +14,13 @@ class Badge extends Equatable {
   Badge.fromJson(Json json) : this(name: json['name'], icon: json['icon'], description: json['description']);
 
   Json toJson() {
-    final Json data = new Json();
-    if (this.icon != null)
-      data['icon'] = this.icon;
-    if (this.name != null)
-      data['name'] = this.name;
-		if (this.description != null)
-      data['description'] = this.description;
+    final data = <String, dynamic>{};
+    if (icon != null)
+      data['icon'] = icon;
+    if (name != null)
+      data['name'] = name;
+		if (description != null)
+      data['description'] = description;
     return data;
   }
 

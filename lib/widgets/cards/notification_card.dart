@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-
-import 'package:fokus/model/currency_type.dart';
-import 'package:fokus/model/notification/notification_type.dart';
-import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/ui/icon_sets.dart';
-import 'package:fokus/utils/ui/theme_config.dart';
-import 'package:fokus/widgets/chips/attribute_chip.dart';
-import 'package:fokus/widgets/cards/item_card.dart';
-
 import 'package:intl/intl.dart';
+
+import '../../model/currency_type.dart';
+import '../../model/notification/notification_type.dart';
+import '../../services/app_locales.dart';
+import '../../utils/ui/icon_sets.dart';
+import '../../utils/ui/theme_config.dart';
+import '../chips/attribute_chip.dart';
+import 'item_card.dart';
 
 
 class NotificationCard extends ItemCard {

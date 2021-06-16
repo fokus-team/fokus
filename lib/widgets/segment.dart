@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:round_spot/round_spot.dart' as round_spot;
 
-import 'package:fokus/model/ui/ui_button.dart';
-import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/ui/theme_config.dart';
-import 'package:fokus/widgets/general/app_hero.dart';
+import '../model/ui/ui_button.dart';
+import '../services/app_locales.dart';
+import '../utils/ui/theme_config.dart';
+import 'general/app_hero.dart';
 
 class Segment extends StatelessWidget {
 	final String title;
@@ -92,7 +92,7 @@ class Segment extends StatelessWidget {
 				buildSectionHeader(context),
 				if(customContent != null)
 					customContent!
-				else if(elements != null && elements!.length > 0)
+				else if(elements != null && elements!.isNotEmpty)
 					...elements!
 				else if(noElementsMessage != null)
 					AppHero(

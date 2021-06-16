@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:fokus/logic/caregiver/caregiver_plans_cubit.dart';
-import 'package:fokus/model/db/plan/plan.dart';
-import 'package:fokus/model/ui/app_page.dart';
-import 'package:fokus/model/ui/ui_button.dart';
-import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/navigation_utils.dart';
-import 'package:fokus/utils/ui/theme_config.dart';
 
-import 'package:fokus/widgets/app_navigation_bar.dart';
-import 'package:fokus/widgets/cards/item_card.dart';
-import 'package:fokus/widgets/chips/attribute_chip.dart';
-import 'package:fokus/widgets/custom_app_bars.dart';
-import 'package:fokus/widgets/stateful_bloc_builder.dart';
-import 'package:fokus/widgets/segment.dart';
+import '../../logic/caregiver/caregiver_plans_cubit.dart';
+import '../../model/db/plan/plan.dart';
+import '../../model/ui/app_page.dart';
+import '../../model/ui/ui_button.dart';
+import '../../services/app_locales.dart';
+import '../../utils/navigation_utils.dart';
+import '../../utils/ui/theme_config.dart';
+import '../../widgets/app_navigation_bar.dart';
+import '../../widgets/cards/item_card.dart';
+import '../../widgets/chips/attribute_chip.dart';
+import '../../widgets/custom_app_bars.dart';
+import '../../widgets/segment.dart';
+import '../../widgets/stateful_bloc_builder.dart';
 
 class CaregiverPlansPage extends StatelessWidget {
 	static const String _pageKey = 'page.caregiverSection.plans';

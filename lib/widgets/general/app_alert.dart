@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fokus/utils/ui/theme_config.dart';
+import '../../utils/ui/theme_config.dart';
 
 class AppAlert extends StatelessWidget {
 	final String text;
@@ -27,7 +27,7 @@ class AppAlert extends StatelessWidget {
 			child: Material(
 				type: MaterialType.transparency,
 				child: InkWell(
-					onTap: () => onTap(),
+					onTap: onTap,
 					splashColor: Colors.black12,
 					borderRadius: BorderRadius.all(Radius.circular(AppBoxProperties.roundedCornersRadius)),
 					child: Padding(

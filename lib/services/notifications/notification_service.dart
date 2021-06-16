@@ -1,24 +1,23 @@
 import 'dart:math';
 
-import 'package:fokus/services/observers/user/user_notifier.dart';
 import 'package:get_it/get_it.dart';
 import 'package:logging/logging.dart';
 import 'package:meta/meta.dart';
 import 'package:mongo_dart/mongo_dart.dart' show ObjectId;
 
-import 'package:fokus/model/db/user/user.dart';
-import 'package:fokus/model/currency_type.dart';
-import 'package:fokus/model/notification/notification_group.dart';
-import 'package:fokus/model/notification/notification_type.dart';
-import 'package:fokus/services/observers/notification/notification_observer.dart';
-import 'package:fokus/model/notification/notification_text.dart';
-import 'package:fokus/model/notification/notification_button.dart';
-import 'package:fokus/model/notification/notification_icon.dart';
-import 'package:fokus/services/data/data_repository.dart';
-import 'package:fokus/services/notifications/notification_provider.dart';
-import 'package:fokus/services/observers/user/user_observer.dart';
-
+import '../../model/currency_type.dart';
+import '../../model/db/user/user.dart';
+import '../../model/notification/notification_button.dart';
+import '../../model/notification/notification_group.dart';
+import '../../model/notification/notification_icon.dart';
+import '../../model/notification/notification_text.dart';
+import '../../model/notification/notification_type.dart';
+import '../data/data_repository.dart';
 import '../observers/notification/notification_notifier.dart';
+import '../observers/notification/notification_observer.dart';
+import '../observers/user/user_notifier.dart';
+import '../observers/user/user_observer.dart';
+import 'notification_provider.dart';
 
 abstract class NotificationService implements UserObserver, NotificationNotifier {
 	NotificationProvider get provider;
@@ -42,8 +41,10 @@ abstract class NotificationService implements UserObserver, NotificationNotifier
 	Future sendBadgeAwardedNotification(String badgeName, int badgeIcon, ObjectId childId);
 	Future sendTaskRejectedNotification(ObjectId planId, String taskName, ObjectId childId);
 
-	void observeNotifications(NotificationObserver observer) => provider.observeNotifications(observer);
-	void removeNotificationObserver(NotificationObserver observer) => provider.removeNotificationObserver(observer);
+	@override
+  void observeNotifications(NotificationObserver observer) => provider.observeNotifications(observer);
+	@override
+  void removeNotificationObserver(NotificationObserver observer) => provider.removeNotificationObserver(observer);
 
 	@protected
 	Future<List<String>?> getUserTokens(ObjectId userId) async => (await dataRepository.getUser(id: userId, fields: ['notificationIDs']))!.notificationIDs;

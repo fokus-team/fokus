@@ -6,16 +6,15 @@ import 'package:get_it/get_it.dart';
 import 'package:logging/logging.dart';
 import 'package:meta/meta.dart';
 
-import 'package:fokus/model/db/user/user.dart';
-import 'package:fokus/services/data/data_repository.dart';
-import 'package:fokus/model/notification/notification_channel.dart';
-import 'package:fokus/model/notification/notification_refresh_info.dart';
-import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/services/observers/notification/notification_observer.dart';
-import 'package:fokus/services/observers/user/user_observer.dart';
-import 'package:fokus/services/observers/current_locale_observer.dart';
-
+import '../../model/db/user/user.dart';
+import '../../model/notification/notification_channel.dart';
+import '../../model/notification/notification_refresh_info.dart';
+import '../app_locales.dart';
+import '../data/data_repository.dart';
+import '../observers/current_locale_observer.dart';
 import '../observers/notification/notification_notifier.dart';
+import '../observers/notification/notification_observer.dart';
+import '../observers/user/user_observer.dart';
 
 abstract class NotificationProvider implements UserObserver, CurrentLocaleObserver, NotificationNotifier {
 	@protected
@@ -25,9 +24,9 @@ abstract class NotificationProvider implements UserObserver, CurrentLocaleObserv
 	@protected
 	User? activeUser;
 
-	Map<Type, NotificationObserver> _notificationObservers = {};
+	final Map<Type, NotificationObserver> _notificationObservers = {};
 
-	static var localNotifications = FlutterLocalNotificationsPlugin();
+	static FlutterLocalNotificationsPlugin localNotifications = FlutterLocalNotificationsPlugin();
 
 	@protected
 	final DataRepository dataRepository = GetIt.I<DataRepository>();
@@ -79,7 +78,7 @@ abstract class NotificationProvider implements UserObserver, CurrentLocaleObserv
 		if (!Platform.isAndroid)
 			return;
 		var androidPlugin = localNotifications.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
-		var translate = (String key) => AppLocales.instance.translate(key);
+		translate(String key) => AppLocales.instance.translate(key);
 		for (var channelType in NotificationChannel.values) {
 			var androidChannel = AndroidNotificationChannel(channelType.id, translate(channelType.nameKey),
 					translate(channelType.descriptionKey), channelAction: AndroidNotificationChannelAction.update);

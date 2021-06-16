@@ -1,7 +1,8 @@
-import 'package:fokus/model/currency_type.dart';
-import 'package:fokus/model/db/gamification/currency.dart';
-import 'package:fokus/utils/definitions.dart';
 import 'package:mongo_dart/mongo_dart.dart';
+
+import '../../../utils/definitions.dart';
+import '../../currency_type.dart';
+import 'currency.dart';
 
 class Points extends Currency {
   final ObjectId? createdBy;
@@ -12,6 +13,7 @@ class Points extends Currency {
   Points({String? name, CurrencyType? icon, this.createdBy, this.quantity})
 		  : super(name: name, type: icon);
 
+  @override
   Points copyWith({
     String? name,
     CurrencyType? icon,
@@ -20,7 +22,7 @@ class Points extends Currency {
   }) {
     return Points(
       name: name ?? this.name,
-      icon: icon ?? this.type,
+      icon: icon ?? type,
       createdBy: createdBy ?? this.createdBy,
       quantity: quantity ?? this.quantity,
     );
@@ -31,10 +33,11 @@ class Points extends Currency {
         quantity = json['quantity'],
         super.fromJson(json);
 
+  @override
   Json toJson() {
-    final Json data = super.toJson();
-    if (this.quantity != null) data['quantity'] = this.quantity;
-    if (createdBy != null) data['createdBy'] = this.createdBy;
+    final data = super.toJson();
+    if (quantity != null) data['quantity'] = quantity;
+    if (createdBy != null) data['createdBy'] = createdBy;
     return data;
   }
 

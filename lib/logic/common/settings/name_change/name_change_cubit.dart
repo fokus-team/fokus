@@ -1,15 +1,15 @@
 import 'package:bloc/bloc.dart';
-import 'package:fokus/model/db/user/caregiver.dart';
-import 'package:get_it/get_it.dart';
-import 'package:formz/formz.dart';
-
-import 'package:fokus/logic/common/formz_state.dart';
-import 'package:fokus/model/ui/auth/name.dart';
-import 'package:fokus/model/db/user/user.dart';
 import 'package:fokus_auth/fokus_auth.dart';
-import 'package:fokus/utils/definitions.dart';
-import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
-import 'package:fokus/services/data/data_repository.dart';
+import 'package:formz/formz.dart';
+import 'package:get_it/get_it.dart';
+
+import '../../../../model/db/user/caregiver.dart';
+import '../../../../model/db/user/user.dart';
+import '../../../../model/ui/auth/name.dart';
+import '../../../../services/data/data_repository.dart';
+import '../../../../utils/definitions.dart';
+import '../../auth_bloc/authentication_bloc.dart';
+import '../../formz_state.dart';
 
 part 'name_change_state.dart';
 

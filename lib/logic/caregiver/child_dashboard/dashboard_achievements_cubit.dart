@@ -1,14 +1,14 @@
 import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart';
 
-import 'package:fokus/model/db/gamification/child_badge.dart';
-import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
-import 'package:fokus/model/db/gamification/badge.dart';
-import 'package:fokus/model/db/user/caregiver.dart';
-import 'package:fokus/model/db/user/child.dart';
-import 'package:fokus/services/analytics_service.dart';
-import 'package:fokus/services/data/data_repository.dart';
-import 'package:fokus/services/notifications/notification_service.dart';
+import '../../../model/db/gamification/badge.dart';
+import '../../../model/db/gamification/child_badge.dart';
+import '../../../model/db/user/caregiver.dart';
+import '../../../model/db/user/child.dart';
+import '../../../services/analytics_service.dart';
+import '../../../services/data/data_repository.dart';
+import '../../../services/notifications/notification_service.dart';
+import '../../common/stateful/stateful_cubit.dart';
 
 class DashboardAchievementsCubit extends StatefulCubit {
 	late Child child;
@@ -34,7 +34,7 @@ class DashboardAchievementsCubit extends StatefulCubit {
 		_dataRepository.updateUser(child.id!, badges: assignedBadges);
 		for (var badge in badges)
 			_notificationService.sendBadgeAwardedNotification(badge.name!, badge.icon!, child.id!);
-		assignedBadges.forEach((badge) => _analyticsService.logBadgeAwarded(badge));
+		assignedBadges.forEach(_analyticsService.logBadgeAwarded);
 
 		var newAssignedBadges = List.of(tabState.childBadges)..addAll(assignedBadges);
 		var newAvailableBadges = _filterBadges(tabState.availableBadges, assignedBadges);

@@ -1,5 +1,5 @@
-import 'package:fokus/model/db/gamification/currency.dart';
-import 'package:fokus/model/ui/form/task_form_model.dart';
+import '../db/gamification/currency.dart';
+import '../ui/form/task_form_model.dart';
 
 class TaskFormParams {
 	final TaskFormModel? task;

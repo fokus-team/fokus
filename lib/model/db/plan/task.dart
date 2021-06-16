@@ -1,8 +1,9 @@
 import 'package:equatable/equatable.dart';
-import 'package:fokus/model/db/gamification/points.dart';
-import 'package:fokus/model/ui/form/task_form_model.dart';
 import 'package:mongo_dart/mongo_dart.dart';
-import 'package:fokus/utils/definitions.dart';
+
+import '../../../utils/definitions.dart';
+import '../../ui/form/task_form_model.dart';
+import '../gamification/points.dart';
 
 
 class Task extends Equatable {
@@ -36,28 +37,28 @@ class Task extends Equatable {
       optional: json['optional'],
       planID: json['planID'],
       points: json['points'] != null ? Points.fromJson(json['points']) : null,
-      subtasks: json['subtasks'] != null ? new List<String>.from(json['subtasks']) : [],
+      subtasks: json['subtasks'] != null ? List<String>.from(json['subtasks']) : [],
       timer: json['timer'],
     );
 
   Json toJson() {
-    final Json data = new Json();
-    if (this.description != null)
-      data['description'] = this.description;
-    if (this.id != null)
-      data['_id'] = this.id;
-    if (this.name != null)
-      data['name'] = this.name;
-    if (this.optional != null)
-      data['optional'] = this.optional;
-    if (this.planID != null)
-      data['planID'] = this.planID;
-    if (this.timer != null)
-      data['timer'] = this.timer;
-    if (this.points != null)
-      data['points'] = this.points!.toJson();
-    if (this.subtasks != null)
-      data['subtasks'] = this.subtasks;
+    final data = <String, dynamic>{};
+    if (description != null)
+      data['description'] = description;
+    if (id != null)
+      data['_id'] = id;
+    if (name != null)
+      data['name'] = name;
+    if (optional != null)
+      data['optional'] = optional;
+    if (planID != null)
+      data['planID'] = planID;
+    if (timer != null)
+      data['timer'] = timer;
+    if (points != null)
+      data['points'] = points!.toJson();
+    if (subtasks != null)
+      data['subtasks'] = subtasks;
     return data;
   }
 

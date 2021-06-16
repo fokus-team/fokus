@@ -1,27 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fokus/model/db/gamification/badge.dart';
-import 'package:fokus/model/db/gamification/reward.dart';
-import 'package:fokus/model/db/user/user.dart';
 import 'package:round_spot/round_spot.dart' as round_spot;
 
-import 'package:fokus/logic/caregiver/caregiver_friends_cubit.dart';
-import 'package:fokus/logic/child/child_rewards_cubit.dart';
-import 'package:fokus/logic/common/settings/account_delete/account_delete_cubit.dart';
-import 'package:fokus/logic/common/settings/name_change/name_change_cubit.dart';
-import 'package:fokus/logic/common/settings/password_change/password_change_cubit.dart';
-import 'package:fokus/model/ui/app_popup.dart';
-
-import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/bloc_utils.dart';
-import 'package:fokus/utils/ui/snackbar_utils.dart';
-import 'package:fokus/widgets/dialogs/about_app_dialog.dart';
-import 'package:fokus/widgets/dialogs/reward_dialog.dart';
-import 'package:fokus/widgets/dialogs/badge_dialog.dart';
-import 'package:fokus/widgets/dialogs/general_dialog.dart';
-import 'package:fokus/widgets/dialogs/help_dialog.dart';
-import 'package:fokus/widgets/dialogs/form_dialogs.dart';
+import '../../logic/caregiver/caregiver_friends_cubit.dart';
+import '../../logic/child/child_rewards_cubit.dart';
+import '../../logic/common/settings/account_delete/account_delete_cubit.dart';
+import '../../logic/common/settings/name_change/name_change_cubit.dart';
+import '../../logic/common/settings/password_change/password_change_cubit.dart';
+import '../../model/db/gamification/badge.dart';
+import '../../model/db/gamification/reward.dart';
+import '../../model/db/user/user.dart';
+import '../../model/ui/app_popup.dart';
+import '../../services/app_locales.dart';
+import '../../widgets/dialogs/about_app_dialog.dart';
+import '../../widgets/dialogs/badge_dialog.dart';
+import '../../widgets/dialogs/form_dialogs.dart';
+import '../../widgets/dialogs/general_dialog.dart';
+import '../../widgets/dialogs/help_dialog.dart';
+import '../../widgets/dialogs/reward_dialog.dart';
+import '../bloc_utils.dart';
+import 'snackbar_utils.dart';
 
 void showBasicDialog(BuildContext context, GeneralDialog dialog) {
 	showDialog(
@@ -54,7 +53,7 @@ void showHelpDialog(BuildContext context, String helpPage) {
     barrierColor: Colors.black.withOpacity(0.4),
 		context: context,
 		pageBuilder: (context, anim1, anim2) { return SizedBox.shrink(); },
-		routeSettings: RouteSettings(name: AppPopup.help.name + '/$helpPage'),
+		routeSettings: RouteSettings(name: '${AppPopup.help.name}/$helpPage'),
 	);
 }
 

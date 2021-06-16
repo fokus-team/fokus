@@ -9,11 +9,11 @@ import 'package:logging/logging.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter/foundation.dart' as Foundation;
+import 'package:flutter/foundation.dart' as foundation;
 
-import 'package:fokus/model/app_error_type.dart';
-import 'package:fokus/model/db/user/user.dart';
-import 'package:fokus/model/ui/app_page.dart';
+import '../model/app_error_type.dart';
+import '../model/db/user/user.dart';
+import '../model/ui/app_page.dart';
 
 import 'analytics_service.dart';
 import 'app_route_observer.dart';
@@ -29,7 +29,7 @@ class Instrumentator implements UserObserver {
 	final UserNotifier _userNotifier = GetIt.I<UserNotifier>();
 
 	bool _errorPageOpen = false;
-	Set<String> _subLoggers = {'RoundSpot', 'MongoDart'};
+	final Set<String> _subLoggers = {'RoundSpot', 'MongoDart'};
 
 	Instrumentator() {
 		_userNotifier.observeUserChanges(this);
@@ -49,7 +49,7 @@ class Instrumentator implements UserObserver {
 	}
 
 	void _setupLogger() {
-		Logger.root.level = Foundation.kReleaseMode ? Level.SEVERE : Level.ALL;
+		Logger.root.level = foundation.kReleaseMode ? Level.SEVERE : Level.ALL;
 		Logger.root.onRecord.listen((record) {
 			if (_subLoggers.any((name) => record.loggerName.startsWith(name)))
 				return;
@@ -98,7 +98,7 @@ class Instrumentator implements UserObserver {
 	}
 
 	void _navigateToErrorPage(AppErrorType errorType) async {
-		if (_errorPageOpen || !Foundation.kReleaseMode || _navigatorKey.currentState == null)
+		if (_errorPageOpen || !foundation.kReleaseMode || _navigatorKey.currentState == null)
 			return;
 		_errorPageOpen = true;
 	  await Navigator.pushNamed(_navigatorKey.currentState!.context, AppPage.errorPage.name, arguments: errorType);

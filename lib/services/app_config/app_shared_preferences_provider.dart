@@ -1,6 +1,7 @@
-import 'package:fokus/model/app_config_entry.dart';
-import 'package:fokus/services/app_config/app_config_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../model/app_config_entry.dart';
+import 'app_config_provider.dart';
 
 class AppSharedPreferencesProvider implements AppConfigProvider {
 	late SharedPreferences _preferences;

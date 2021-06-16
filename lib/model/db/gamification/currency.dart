@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
-import 'package:fokus/model/currency_type.dart';
-import 'package:fokus/utils/definitions.dart';
+
+import '../../../utils/definitions.dart';
+import '../../currency_type.dart';
 
 class Currency extends Equatable {
   final String? name;
@@ -14,14 +15,14 @@ class Currency extends Equatable {
   Currency copyWith({String? name, CurrencyType? icon}) {
     return Currency(
       name: name ?? this.name,
-      type: icon ?? this.type,
+      type: icon ?? type,
     );
   }
 
   Json toJson() {
-    final Json data = new Json();
-    if (this.type != null) data['icon'] = this.type!.index;
-    if (this.name != null) data['name'] = this.name;
+    final data = <String, dynamic>{};
+    if (type != null) data['icon'] = type!.index;
+    if (name != null) data['name'] = name;
     return data;
   }
 

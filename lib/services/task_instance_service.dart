@@ -1,10 +1,9 @@
-import 'package:fokus/model/db/plan/plan_instance.dart';
-import 'package:fokus/model/db/plan/task.dart';
-import 'package:fokus/model/db/plan/task_instance.dart';
-import 'package:fokus/model/db/plan/task_status.dart';
-import 'package:fokus/model/ui/plan/ui_task_instance.dart';
 import 'package:get_it/get_it.dart';
 
+import '../model/db/plan/plan_instance.dart';
+import '../model/db/plan/task_instance.dart';
+import '../model/db/plan/task_status.dart';
+import '../model/ui/plan/ui_task_instance.dart';
 import 'data/data_repository.dart';
 
 class TaskInstanceService {
@@ -12,8 +11,8 @@ class TaskInstanceService {
 
 	Future<List<UITaskInstance>> mapToUIModels(List<TaskInstance> taskInstances, {bool shouldGetTaskStatus = true}) async {
 		var taskUiTypes = shouldGetTaskStatus ? getTasksInstanceStatus(tasks: taskInstances) : List.filled(taskInstances.length, TaskInstanceState.notCompletedUndefined);
-		List<UITaskInstance> uiTaskInstances = [];
-		for(int i=0; i<taskInstances.length; i++) {
+		var uiTaskInstances = <UITaskInstance>[];
+		for(var i=0; i<taskInstances.length; i++) {
 			var task = await _dataRepository.getTask(taskId: taskInstances[i].taskID);
 			uiTaskInstances.add(UITaskInstance(instance: taskInstances[i], task: task!, state: taskUiTypes[i]));
 		}
@@ -21,9 +20,9 @@ class TaskInstanceService {
 	}
 
 	List<TaskInstanceState> getTasksInstanceStatus({required List<TaskInstance> tasks}) {
-		List<TaskInstanceState> taskStatuses = [];
+		var taskStatuses = <TaskInstanceState>[];
 		TaskInstanceState? prevTaskStatus;
-		bool isAnyInProgress = false;
+		var isAnyInProgress = false;
 		for(var task in tasks) {
 			var taskStatus;
 			if(task.status != null && task.status!.completed!) {
@@ -51,9 +50,9 @@ class TaskInstanceService {
 
 	static TaskInstanceState _getInProgressType(TaskInstance task) {
 		TaskInstanceState taskStatus;
-		if(task.breaks!.length > 0 && task.breaks!.last.to == null)
+		if(task.breaks!.isNotEmpty && task.breaks!.last.to == null)
 			taskStatus = TaskInstanceState.inBreak;
-		else if(task.duration!.length > 0)
+		else if(task.duration!.isNotEmpty)
 			task.duration!.last.to == null ? taskStatus = TaskInstanceState.currentlyPerformed
 				: taskStatus = TaskInstanceState.rejected;
 		else
@@ -62,7 +61,7 @@ class TaskInstanceService {
 	}
 
 	Future createTaskInstances(PlanInstance planInstance) async {
-		List<Task> tasks = await _dataRepository.getTasks(planId: planInstance.planID);
+		var tasks = await _dataRepository.getTasks(planId: planInstance.planID);
 		var taskInstances = tasks.map((task) => TaskInstance.fromTask(task, planInstance.id!)).toList();
 		return Future.wait(
 			[

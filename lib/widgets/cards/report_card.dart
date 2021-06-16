@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fokus/logic/caregiver/tasks_evaluation_cubit.dart';
-import 'package:fokus/model/navigation/child_dashboard_params.dart';
-import 'package:fokus/model/navigation/report_form_params.dart';
-import 'package:fokus/model/ui/app_page.dart';
-import 'package:fokus/model/ui/plan/ui_task_report.dart';
-import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/duration_utils.dart';
-import 'package:fokus/utils/ui/theme_config.dart';
-import 'package:fokus/widgets/general/app_avatar.dart';
 import 'package:intl/intl.dart';
+
+import '../../logic/caregiver/tasks_evaluation_cubit.dart';
+import '../../model/navigation/child_dashboard_params.dart';
+import '../../model/navigation/report_form_params.dart';
+import '../../model/ui/app_page.dart';
+import '../../model/ui/plan/ui_task_report.dart';
+import '../../services/app_locales.dart';
+import '../../utils/duration_utils.dart';
+import '../../utils/ui/theme_config.dart';
+import '../general/app_avatar.dart';
 
 class ReportCard extends StatefulWidget {
 	final UITaskReport report;
@@ -18,7 +19,7 @@ class ReportCard extends StatefulWidget {
 	ReportCard({required this.report, this.hideBottomBar = false});
 
   @override
-  _ReportCardState createState() => new _ReportCardState();
+  _ReportCardState createState() => _ReportCardState();
 }
 
 class _ReportCardState extends State<ReportCard> {
@@ -127,19 +128,19 @@ class _ReportCardState extends State<ReportCard> {
 							softWrap: false,
 							overflow: TextOverflow.fade,
 							text: TextSpan(
-								text: AppLocales.of(context).translate('$_pageKey.raportCard.breakCount', {
+								text: '${AppLocales.of(context).translate('$_pageKey.raportCard.breakCount', {
 									'BREAKS_NUM': widget.report.uiTask.instance.breaks!.length
-								}) + ' ',
+								})} ',
 								style: Theme.of(context).textTheme.bodyText2,
 								children: [
-									if(widget.report.uiTask.instance.breaks!.length > 0)
+									if(widget.report.uiTask.instance.breaks!.isNotEmpty)
 										TextSpan(
-											text: '(${AppLocales.of(context).translate('$_pageKey.raportCard.totalBreakTime')}: ' +
-												AppLocales.of(context).translate('$_pageKey.raportCard.timeFormat', {
+											text: '(${AppLocales.of(context).translate('$_pageKey.raportCard.totalBreakTime')}: '
+													'${AppLocales.of(context).translate('$_pageKey.raportCard.timeFormat', {
 													'HOURS_NUM': sumDurations(widget.report.uiTask.instance.breaks).inHours,
 													'MINUTES_NUM': sumDurations(widget.report.uiTask.instance.breaks).inMinutes.remainder(60),
 													'SECONDS_NUM': sumDurations(widget.report.uiTask.instance.breaks).inSeconds.remainder(60)
-												}) + ')',
+												})})',
 											style: TextStyle(color: AppColors.mediumTextColor, fontSize: 13.0)
 										)
 								]
@@ -161,8 +162,8 @@ class _ReportCardState extends State<ReportCard> {
 	}
 
 	Widget _buildBottomBar(BuildContext context) {
-		bool isNotRated = widget.report.ratingMark.value == null;
-		bool isRejected = widget.report.ratingMark.value == 0;
+		var isNotRated = widget.report.ratingMark.value == null;
+		var isRejected = widget.report.ratingMark.value == 0;
 
 		return Container(
 			width: double.infinity,

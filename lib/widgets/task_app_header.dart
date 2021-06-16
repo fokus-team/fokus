@@ -3,15 +3,16 @@ import 'dart:async';
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fokus/logic/child/task_completion/task_completion_cubit.dart';
-import 'package:fokus/logic/common/timer/timer_cubit.dart';
-import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/duration_utils.dart';
-import 'package:fokus/widgets/custom_app_bars.dart';
-import 'package:fokus/utils/ui/theme_config.dart';
 import 'package:logging/logging.dart';
 import 'package:vibration/vibration.dart';
+
+import '../logic/child/task_completion/task_completion_cubit.dart';
+import '../logic/common/timer/timer_cubit.dart';
+import '../services/app_locales.dart';
+import '../utils/duration_utils.dart';
+import '../utils/ui/theme_config.dart';
 import 'chips/attribute_chip.dart';
+import 'custom_app_bars.dart';
 import 'large_timer.dart';
 
 class TaskAppHeader extends StatefulWidget with PreferredSizeWidget {
@@ -55,13 +56,13 @@ class TaskAppHeaderState extends State<TaskAppHeader> with TickerProviderStateMi
 				mainAxisSize: MainAxisSize.min,
 				children: [
 					CustomContentAppBar(
-						title: this.widget.title,
-						content: this.widget.content,
-						helpPage: this.widget.helpPage,
+						title: widget.title,
+						content: widget.content,
+						helpPage: widget.helpPage,
 						isConstrained: true,
 						popArgs: widget.popArgs
 					),
-					if(this.widget.state.uiTask != null)
+					if(widget.state.uiTask != null)
 					...[
 						_getTimerButtonSection(),
 						_getCurrencyBar(),
@@ -99,14 +100,14 @@ class TaskAppHeaderState extends State<TaskAppHeader> with TickerProviderStateMi
 					decoration: AppBoxProperties.elevatedContainer.copyWith(borderRadius: BorderRadius.vertical(top: Radius.circular(4.0))),
 					child: Padding(
 						padding: EdgeInsets.symmetric(vertical: 6.0, horizontal: 12.0),
-						child: this.widget.state.uiTask?.task.points != null ? Row(
+						child: widget.state.uiTask?.task.points != null ? Row(
 							mainAxisAlignment: MainAxisAlignment.spaceBetween,
 							children: [
 								Text(AppLocales.of(context).translate('$_pageKey.content.pointsToGet')),
 								AttributeChip.withCurrency(
-									content: "+" + this.widget.state.uiTask!.task.points!.quantity.toString(),
-									currencyType: this.widget.state.uiTask!.task.points!.type!,
-									tooltip: this.widget.state.uiTask!.task.points!.name
+									content: "+${widget.state.uiTask!.task.points!.quantity}",
+									currencyType: widget.state.uiTask!.task.points!.type!,
+									tooltip: widget.state.uiTask!.task.points!.name
 								)
 							]
 						) :
@@ -151,7 +152,7 @@ class TaskAppHeaderState extends State<TaskAppHeader> with TickerProviderStateMi
 
 	Widget _getButtonWidget() {
 		if(isBreakNow == null) setState(() {
-			isBreakNow = this.widget.state.current == TaskCompletionStateType.inBreak;
+			isBreakNow = widget.state.current == TaskCompletionStateType.inBreak;
 			_buttonController = AnimationController(duration: Duration(milliseconds: 450), vsync: this);
 			if(isBreakNow!) _buttonController.forward();
 		});
@@ -184,8 +185,8 @@ class TaskAppHeaderState extends State<TaskAppHeader> with TickerProviderStateMi
 				)
 			),
 			onPressed: () => {
-				this.widget.breakPerformingTransition!(this.widget.state),
-				this.widget.state.current == TaskCompletionStateType.inProgress ? _timerCompletionCubit!.pauseTimer() : _timerCompletionCubit!.resumeTimer()
+				widget.breakPerformingTransition!(widget.state),
+				widget.state.current == TaskCompletionStateType.inProgress ? _timerCompletionCubit!.pauseTimer() : _timerCompletionCubit!.resumeTimer()
 			},
 			style: ElevatedButton.styleFrom(
 				elevation: 4.0,
@@ -219,27 +220,27 @@ class TaskAppHeaderState extends State<TaskAppHeader> with TickerProviderStateMi
 
 	TimerCubit Function(BuildContext) _getTimerFun() {
   	if(_timerCompletionCubit == null) {
-			if(this.widget.state.uiTask?.instance.timer != null) {
+			if(widget.state.uiTask?.instance.timer != null) {
 				if(_getTimerInSeconds() - _getDuration() > 0) {
-					int time = _getTimerInSeconds() - _getDuration();
+					var time = _getTimerInSeconds() - _getDuration();
 					_timeUpdate(Duration(seconds: time));
 					_timerCompletionCubit = TimerCubit.down(() => time, true, _onTimerFinish);
 				}
 				else _timerCompletionCubit = TimerCubit.up(() => _getDuration() - _getTimerInSeconds());
 			}
-			else _timerCompletionCubit = TimerCubit.up(() => _getDuration());
+			else _timerCompletionCubit = TimerCubit.up(_getDuration);
 		}
-  	if(this.widget.state.current == TaskCompletionStateType.inProgress)
+  	if(widget.state.current == TaskCompletionStateType.inProgress)
 			return (_) => _timerCompletionCubit!..startTimer();
   	else return (_) => _timerCompletionCubit!..startTimer(paused: true);
 	}
 
-	int _getDuration() => sumDurations(this.widget.state.uiTask!.instance.duration).inSeconds;
-	int _getTimerInSeconds() => this.widget.state.uiTask!.instance.timer! * 60;
+	int _getDuration() => sumDurations(widget.state.uiTask!.instance.duration).inSeconds;
+	int _getTimerInSeconds() => widget.state.uiTask!.instance.timer! * 60;
 
 	String _getTimerTitle() {
-		if(this.widget.state.uiTask?.instance.timer != null) {
-			if(this.widget.state.uiTask!.instance.timer! * 60 - sumDurations(this.widget.state.uiTask!.instance.duration).inSeconds > 0)
+		if(widget.state.uiTask?.instance.timer != null) {
+			if(widget.state.uiTask!.instance.timer! * 60 - sumDurations(widget.state.uiTask!.instance.duration).inSeconds > 0)
 				return '$_pageKey.content.timeLeft';
 			else return '$_pageKey.content.latency';
 		}
@@ -294,9 +295,9 @@ class TaskAppHeaderState extends State<TaskAppHeader> with TickerProviderStateMi
 
   void _onTimerFinish() async {
 		try {
-			bool? hasVibration = await Vibration.hasVibrator();
+			var hasVibration = await Vibration.hasVibrator();
 		  if (hasVibration != null && hasVibration) {
-				bool? hasAmplitudeControl = await Vibration.hasAmplitudeControl();
+				var hasAmplitudeControl = await Vibration.hasAmplitudeControl();
 		  	if (hasAmplitudeControl != null && hasAmplitudeControl) {
 		  		Vibration.vibrate(amplitude: 1024, pattern: vibrationPattern);
 		  	}

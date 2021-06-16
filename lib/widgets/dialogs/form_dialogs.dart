@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fokus/logic/caregiver/caregiver_friends_cubit.dart';
-import 'package:fokus/model/db/user/user_role.dart';
-import 'package:fokus/model/ui/auth/password_change_type.dart';
 import 'package:fokus_auth/fokus_auth.dart';
 import 'package:formz/formz.dart';
 
-import 'package:fokus/logic/common/settings/password_change/password_change_cubit.dart';
-import 'package:fokus/model/ui/auth/password.dart';
-import 'package:fokus/model/ui/auth/name.dart';
-import 'package:fokus/model/ui/auth/confirmed_password.dart';
-import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
-import 'package:fokus/logic/common/settings/account_delete/account_delete_cubit.dart';
-import 'package:fokus/logic/common/settings/name_change/name_change_cubit.dart';
-import 'package:fokus/utils/ui/theme_config.dart';
-import 'package:fokus/widgets/auth/auth_input_field.dart';
-import 'package:fokus/utils/ui/snackbar_utils.dart';
-import 'package:fokus/model/ui/auth/user_code.dart';
-import 'package:fokus/services/exception/auth_exceptions.dart';
+import '../../logic/caregiver/caregiver_friends_cubit.dart';
+import '../../logic/common/auth_bloc/authentication_bloc.dart';
+import '../../logic/common/settings/account_delete/account_delete_cubit.dart';
+import '../../logic/common/settings/name_change/name_change_cubit.dart';
+import '../../logic/common/settings/password_change/password_change_cubit.dart';
+import '../../model/db/user/user_role.dart';
+import '../../model/ui/auth/confirmed_password.dart';
+import '../../model/ui/auth/name.dart';
+import '../../model/ui/auth/password.dart';
+import '../../model/ui/auth/password_change_type.dart';
+import '../../model/ui/auth/user_code.dart';
+import '../../services/app_locales.dart';
+import '../../services/exception/auth_exceptions.dart';
+import '../../utils/ui/snackbar_utils.dart';
+import '../../utils/ui/theme_config.dart';
+import '../auth/auth_input_field.dart';
 
 class FormDialog extends StatelessWidget {
 	final String title;
@@ -93,7 +93,7 @@ class NameEditDialog extends StatelessWidget {
 		    }
 	    },
       child: FormDialog(
-				title: AppLocales.of(context).translate('$_settingsPageKey.profile.' + (_role == UserRole.caregiver ? 'editNameLabel' : 'editChildNameLabel')),
+				title: AppLocales.of(context).translate('$_settingsPageKey.profile.${_role == UserRole.caregiver ? 'editNameLabel' : 'editChildNameLabel'}'),
 				fields: [
 					Padding(
 						padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
@@ -122,7 +122,7 @@ class AccountDeleteDialog extends StatelessWidget {
   Widget build(BuildContext context) {
 		BlocProvider.of<AccountDeleteCubit>(context).clearForm();
 	  var state = BlocProvider.of<AuthenticationBloc>(context).state;
-  	var getText = (String key, {bool customize = true}) => AppLocales.of(context).translate('$_settingsPageKey.profile.delete${_role == UserRole.child && customize ? 'Child' : ''}Account$key');
+  	getText(String key, {bool customize = true}) => AppLocales.of(context).translate('$_settingsPageKey.profile.delete${_role == UserRole.child && customize ? 'Child' : ''}Account$key');
 	  return BlocListener<AccountDeleteCubit, AccountDeleteState>(
 		  listener: (context, state) {
 			  if (state.status.isSubmissionFailure && state.error != null)
@@ -239,7 +239,7 @@ class CurrencyEditDialog extends StatefulWidget {
 	CurrencyEditDialog({required this.callback, required this.initialValue});
 	
 	@override
-	_CurrencyEditDialogState createState() => new _CurrencyEditDialogState();
+	_CurrencyEditDialogState createState() => _CurrencyEditDialogState();
 }
 
 class _CurrencyEditDialogState extends State<CurrencyEditDialog> {

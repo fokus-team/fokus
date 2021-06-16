@@ -1,5 +1,5 @@
-import 'package:fokus/model/db/date/time_date.dart';
-import 'package:fokus/model/db/date_span.dart';
+import '../model/db/date/time_date.dart';
+import '../model/db/date_span.dart';
 
 Duration sumDurations(List<DateSpan<TimeDate>>? durations, [bool limitToOneDay = true]) {
 	if (durations == null || durations.isEmpty)
@@ -32,5 +32,5 @@ String formatDuration(Duration duration) {
 }
 
 bool isInProgress(List<DateSpan<TimeDate>>? durations) {
-	return durations != null && durations.length > 0 && durations.last.to == null;
+	return durations != null && durations.isNotEmpty && durations.last.to == null;
 }

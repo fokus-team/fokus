@@ -5,10 +5,10 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart';
 
-import 'package:fokus/services/locale_service.dart';
-import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
-import 'package:fokus/services/data/data_repository.dart';
-import 'package:fokus/utils/definitions.dart';
+import '../../../services/data/data_repository.dart';
+import '../../../services/locale_service.dart';
+import '../../../utils/definitions.dart';
+import '../auth_bloc/authentication_bloc.dart';
 
 class LocaleCubit extends Cubit<LocaleState> {
 	final ActiveUserFunction _activeUser;

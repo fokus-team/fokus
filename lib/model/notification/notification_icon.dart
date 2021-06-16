@@ -1,5 +1,5 @@
-import 'package:fokus/utils/ui/icon_sets.dart';
-import 'package:fokus/utils/ui/app_paths.dart';
+import '../../utils/ui/app_paths.dart';
+import '../../utils/ui/icon_sets.dart';
 
 class NotificationIcon {
 	final AssetType? type;

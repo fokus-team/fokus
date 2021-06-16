@@ -1,7 +1,7 @@
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
-import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/ui/theme_config.dart';
+import '../../services/app_locales.dart';
+import 'theme_config.dart';
 
 void showBasicSnackbar(BuildContext context, {required String content, Map<String, String>? contentArgs, Color? backgroundColor, IconData? icon}) {
 	Flushbar(
@@ -19,7 +19,7 @@ void showBasicSnackbar(BuildContext context, {required String content, Map<Strin
 		margin: EdgeInsets.all(8.0),
 		borderRadius: BorderRadius.all(Radius.circular(4.0)),
 		duration: Duration(seconds: 5)
-	)..show(context);
+	).show(context);
 }
 
 void showInfoSnackbar(BuildContext context, String content) {

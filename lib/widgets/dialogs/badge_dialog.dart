@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:fokus/model/db/gamification/badge.dart';
-import 'package:fokus/model/db/gamification/child_badge.dart';
-import 'package:fokus/model/ui/ui_button.dart';
-import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/ui/app_paths.dart';
-import 'package:fokus/utils/ui/icon_sets.dart';
-import 'package:fokus/widgets/buttons/rounded_button.dart';
 import 'package:intl/intl.dart';
+
+import '../../model/db/gamification/badge.dart';
+import '../../model/db/gamification/child_badge.dart';
+import '../../model/ui/ui_button.dart';
+import '../../services/app_locales.dart';
+import '../../utils/ui/app_paths.dart';
+import '../../utils/ui/icon_sets.dart';
+import '../buttons/rounded_button.dart';
 
 class BadgeDialog extends StatefulWidget {
 	final Badge badge;
@@ -16,7 +17,7 @@ class BadgeDialog extends StatefulWidget {
 	BadgeDialog({required this.badge, this.showHeader});
 
 	@override
-	_BadgeDialogState createState() => new _BadgeDialogState();
+	_BadgeDialogState createState() => _BadgeDialogState();
 }
 
 class _BadgeDialogState extends State<BadgeDialog> with SingleTickerProviderStateMixin {
@@ -73,10 +74,10 @@ class _BadgeDialogState extends State<BadgeDialog> with SingleTickerProviderStat
 								textAlign: TextAlign.center
 							),
 							SizedBox(height: 6.0),
-							if(widget.badge is ChildBadge && (widget.badge as ChildBadge).date != null)
+							if (widget.badge is ChildBadge && (widget.badge as ChildBadge).date != null)
 								Text(
-									AppLocales.of(context).translate('$_pageKey.earnedBadgeDate') + ': '
-										+ DateFormat.yMd(AppLocales.instance.locale.toString()).format((widget.badge as ChildBadge).date!),
+									'${AppLocales.of(context).translate('$_pageKey.earnedBadgeDate')}: '
+											'${DateFormat.yMd(AppLocales.instance.locale.toString()).format((widget.badge as ChildBadge).date!)}',
 									style: Theme.of(context).textTheme.caption,
 									textAlign: TextAlign.center
 								),

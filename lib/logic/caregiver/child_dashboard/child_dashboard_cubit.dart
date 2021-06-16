@@ -1,22 +1,22 @@
 import 'package:flutter/widgets.dart';
 
-import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
-import 'package:fokus/model/db/user/child.dart';
-import 'package:fokus/model/ui/child_card_model.dart';
-import 'package:fokus/logic/caregiver/child_dashboard/dashboard_achievements_cubit.dart';
-import 'package:fokus/logic/caregiver/child_dashboard/dashboard_plans_cubit.dart';
-import 'package:fokus/logic/caregiver/child_dashboard/dashboard_rewards_cubit.dart';
-import 'package:fokus/model/navigation/child_dashboard_params.dart';
+import '../../../model/db/user/child.dart';
+import '../../../model/navigation/child_dashboard_params.dart';
+import '../../../model/ui/child_card_model.dart';
+import '../../common/stateful/stateful_cubit.dart';
+import 'dashboard_achievements_cubit.dart';
+import 'dashboard_plans_cubit.dart';
+import 'dashboard_rewards_cubit.dart';
 
 class ChildDashboardCubit extends StatefulCubit {
 	final ChildCardModel _childCard;
 
-	int _initialTab;
+	final int _initialTab;
 	
 	late List<StatefulCubit> _tabCubits;
-	DashboardPlansCubit _plansCubit;
-	DashboardRewardsCubit _rewardsCubit;
-	DashboardAchievementsCubit _achievementsCubit;
+	final DashboardPlansCubit _plansCubit;
+	final DashboardRewardsCubit _rewardsCubit;
+	final DashboardAchievementsCubit _achievementsCubit;
 
   ChildDashboardCubit(ChildDashboardParams args, ModalRoute pageRoute, this._plansCubit, this._rewardsCubit, this._achievementsCubit) :
 			_initialTab = args.tab ?? 0, _childCard = args.childCard, super(pageRoute) {

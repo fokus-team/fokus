@@ -1,26 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:fokus/model/ui/app_page.dart';
-import 'package:fokus/model/ui/form/plan_form_model.dart';
-
-import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/ui/dialog_utils.dart';
-import 'package:fokus/utils/ui/snackbar_utils.dart';
-import 'package:fokus/utils/ui/theme_config.dart';
-import 'package:fokus/widgets/dialogs/general_dialog.dart';
-import 'package:fokus/logic/caregiver/forms/plan/plan_form_cubit.dart';
-
-import 'package:fokus/widgets/forms/tasks_list.dart';
-import 'package:fokus/widgets/forms/plan_form.dart';
-import 'package:fokus/widgets/buttons/help_icon_button.dart';
-import 'package:fokus/widgets/general/app_loader.dart';
+import '../../../logic/caregiver/forms/plan/plan_form_cubit.dart';
+import '../../../model/ui/app_page.dart';
+import '../../../model/ui/form/plan_form_model.dart';
+import '../../../services/app_locales.dart';
+import '../../../utils/ui/dialog_utils.dart';
+import '../../../utils/ui/snackbar_utils.dart';
+import '../../../utils/ui/theme_config.dart';
+import '../../../widgets/buttons/help_icon_button.dart';
+import '../../../widgets/dialogs/general_dialog.dart';
+import '../../../widgets/forms/plan_form.dart';
+import '../../../widgets/forms/tasks_list.dart';
+import '../../../widgets/general/app_loader.dart';
 
 enum PlanFormStep { planParameters, taskList }
 
 class CaregiverPlanFormPage extends StatefulWidget {
 	@override
-	_CaregiverPlanFormPageState createState() => new _CaregiverPlanFormPageState();
+	_CaregiverPlanFormPageState createState() => _CaregiverPlanFormPageState();
 }
 
 class _CaregiverPlanFormPageState extends State<CaregiverPlanFormPage> {
@@ -68,7 +66,7 @@ class _CaregiverPlanFormPageState extends State<CaregiverPlanFormPage> {
 					setState(() => plan = PlanFormModel.from(state.planForm!));
 			},
 	    builder: (context, state) {
-				List<Widget> children = [buildStepper()];
+				var children = <Widget>[buildStepper()];
 				if (state is PlanFormInitial) {
 					formType = state.formType;
 					BlocProvider.of<PlanFormCubit>(context).loadFormData();
@@ -84,7 +82,7 @@ class _CaregiverPlanFormPageState extends State<CaregiverPlanFormPage> {
 					));
 		    return WillPopScope(
 					onWillPop: () async {
-						bool? ret = await showExitFormDialog(context, true, state is PlanFormDataLoadSuccess && plan != state.planForm);
+						var ret = await showExitFormDialog(context, true, state is PlanFormDataLoadSuccess && plan != state.planForm);
 						if(ret == null || !ret) return false;
 						else return true;
 					},
@@ -113,7 +111,7 @@ class _CaregiverPlanFormPageState extends State<CaregiverPlanFormPage> {
 			if(formKey.currentState!.validate())
 				if(plan.repeatability == PlanFormRepeatability.onlyOnce ||
 					plan.repeatability == PlanFormRepeatability.untilCompleted ||
-					(plan.repeatability == PlanFormRepeatability.recurring && plan.days.length > 0))
+					(plan.repeatability == PlanFormRepeatability.recurring && plan.days.isNotEmpty))
 					next();
 		}
 	);
@@ -144,7 +142,7 @@ class _CaregiverPlanFormPageState extends State<CaregiverPlanFormPage> {
 								);
 							},
 							layoutBuilder: (Widget? currentChild, List<Widget> previousChildren) {
-								List<Widget> children = previousChildren;
+								var children = previousChildren;
 								if (currentChild != null)
 									children = children.toList()..add(currentChild);
 								return Stack(
@@ -157,7 +155,7 @@ class _CaregiverPlanFormPageState extends State<CaregiverPlanFormPage> {
 								crossAxisAlignment: CrossAxisAlignment.start,
 								children: <Widget>[
 									Text(
-										AppLocales.of(context).translate('$_pageKey.step', {'NUM_STEP': (isCurrentStepOne() ? '1' : '2')}) + '/2',
+										'${AppLocales.of(context).translate('$_pageKey.step', {'NUM_STEP': (isCurrentStepOne() ? '1' : '2')})}/2',
 										style: Theme.of(context).textTheme.headline2
 									),
 									Text(AppLocales.of(context).translate(isCurrentStepOne() ? '$_pageKey.stepOneTitle' : '$_pageKey.stepTwoTitle'),
@@ -194,7 +192,7 @@ class _CaregiverPlanFormPageState extends State<CaregiverPlanFormPage> {
 							}
 						},
 						layoutBuilder: (Widget? currentChild, List<Widget> previousChildren) {
-							List<Widget> children = previousChildren;
+							var children = previousChildren;
 							if (currentChild != null)
 								children = children.toList()..add(currentChild);
 							return Stack(

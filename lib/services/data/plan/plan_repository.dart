@@ -1,13 +1,12 @@
 import 'package:mongo_dart/mongo_dart.dart';
 
-import 'package:fokus/model/db/date/time_date.dart';
-import 'package:fokus/model/db/plan/plan_instance.dart';
-import 'package:fokus/model/db/plan/plan_instance_state.dart';
-import 'package:fokus/services/data/data_repository.dart';
-import 'package:fokus/model/db/date_span.dart';
-
-import 'package:fokus/model/db/date/date.dart';
-import 'package:fokus/model/db/plan/plan.dart';
+import '../../../model/db/date/date.dart';
+import '../../../model/db/date/time_date.dart';
+import '../../../model/db/date_span.dart';
+import '../../../model/db/plan/plan.dart';
+import '../../../model/db/plan/plan_instance.dart';
+import '../../../model/db/plan/plan_instance_state.dart';
+import '../data_repository.dart';
 
 abstract class PlanRepository {
 	Future<Plan?> getPlan({required ObjectId id, List<String>? fields});

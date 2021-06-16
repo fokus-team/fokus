@@ -1,8 +1,9 @@
-import 'package:fokus/model/db/gamification/child_badge.dart';
-import 'package:fokus/model/db/gamification/points.dart';
-import 'package:fokus/model/db/user/user.dart';
-import 'package:fokus/model/db/user/user_role.dart';
 import 'package:mongo_dart/mongo_dart.dart';
+
+import '../../../model/db/gamification/child_badge.dart';
+import '../../../model/db/gamification/points.dart';
+import '../../../model/db/user/user.dart';
+import '../../../model/db/user/user_role.dart';
 
 abstract class UserRepository {
 	Future<User?> getUser({ObjectId? id, ObjectId? connected, String? authenticationId, String? notificationId, UserRole? role, List<String>? fields});

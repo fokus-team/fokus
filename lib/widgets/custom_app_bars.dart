@@ -1,24 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
-import 'package:fokus/model/db/gamification/points.dart';
-import 'package:fokus/model/db/user/child.dart';
-
-import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/ui/dialog_utils.dart';
-import 'package:fokus/utils/ui/theme_config.dart';
-import 'package:fokus/widgets/chips/attribute_chip.dart';
-import 'package:fokus/widgets/buttons/help_icon_button.dart';
-import 'package:fokus/widgets/buttons/back_icon_button.dart';
-
-import 'package:fokus/model/db/user/user_role.dart';
-import 'package:fokus/model/ui/app_page.dart';
-import 'package:fokus/model/ui/ui_button.dart';
-import 'package:fokus/utils/ui/icon_sets.dart';
-import 'package:fokus/widgets/buttons/popup_menu_list.dart';
-import 'package:fokus/widgets/general/app_avatar.dart';
 import 'package:fokus_auth/fokus_auth.dart';
+
+import '../logic/common/auth_bloc/authentication_bloc.dart';
+import '../model/db/gamification/points.dart';
+import '../model/db/user/child.dart';
+import '../model/db/user/user_role.dart';
+import '../model/ui/app_page.dart';
+import '../model/ui/ui_button.dart';
+import '../services/app_locales.dart';
+import '../utils/ui/dialog_utils.dart';
+import '../utils/ui/icon_sets.dart';
+import '../utils/ui/theme_config.dart';
+import 'buttons/back_icon_button.dart';
+import 'buttons/help_icon_button.dart';
+import 'buttons/popup_menu_list.dart';
+import 'chips/attribute_chip.dart';
+import 'general/app_avatar.dart';
 
 enum CustomAppBarType { greetings, normal }
 
@@ -164,8 +162,8 @@ class CustomContentAppBar extends StatelessWidget {
 												mainAxisAlignment: MainAxisAlignment.end,
 												crossAxisAlignment: CrossAxisAlignment.center,
 												children: <Widget>[
-													this.helpPage != null ? HelpIconButton(helpPage: helpPage!) : SizedBox.shrink(),
-													this.popupMenuWidget != null ? popupMenuWidget! : SizedBox.shrink()
+													helpPage != null ? HelpIconButton(helpPage: helpPage!) : SizedBox.shrink(),
+													popupMenuWidget != null ? popupMenuWidget! : SizedBox.shrink()
 												],
 											),
 											leading: BackIconButton(args: popArgs),
@@ -200,20 +198,20 @@ class CustomChildAppBar extends StatefulWidget {
 	CustomChildAppBar({this.points});
 
 	@override
-	_CustomChildAppBarState createState() => new _CustomChildAppBarState();
+	_CustomChildAppBarState createState() => _CustomChildAppBarState();
 }
 
 class _CustomChildAppBarState extends State<CustomChildAppBar> {
 	@override
 	Widget build(BuildContext context) {
-		var getPoints = (AuthenticationState state) => (state.user as Child).points;
+		getPoints(AuthenticationState state) => (state.user as Child).points;
 		return Column(
 			verticalDirection: VerticalDirection.up,
 			children: [
 				BlocBuilder<AuthenticationBloc, AuthenticationState>(
 					buildWhen: (oldState, newState) => newState.signedIn && getPoints(oldState) != getPoints(newState),
 					builder: (context, state) {
-						List<Points> points = getPoints(state) ?? [];
+						var points = getPoints(state) ?? [];
 						if(points.isNotEmpty)
 							return Container(
 								width: double.infinity,

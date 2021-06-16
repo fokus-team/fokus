@@ -1,23 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-import 'package:fokus/model/db/date/date.dart';
-import 'package:fokus/model/db/plan/plan.dart';
-import 'package:fokus/model/ui/app_page.dart';
-
-import 'package:fokus/logic/common/calendar_cubit.dart';
-import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/ui/theme_config.dart';
-import 'package:fokus/utils/ui/calendar_utils.dart';
-import 'package:fokus/widgets/chips/attribute_chip.dart';
-import 'package:fokus/widgets/cards/item_card.dart';
-import 'package:fokus/widgets/segment.dart';
+import '../../logic/common/calendar_cubit.dart';
+import '../../model/db/date/date.dart';
+import '../../model/db/plan/plan.dart';
+import '../../model/ui/app_page.dart';
+import '../../services/app_locales.dart';
+import '../../utils/ui/calendar_utils.dart';
+import '../../utils/ui/theme_config.dart';
+import '../../widgets/cards/item_card.dart';
+import '../../widgets/chips/attribute_chip.dart';
+import '../../widgets/segment.dart';
 
 class ChildCalendarPage extends StatefulWidget {
 	@override
-	_ChildCalendarPageState createState() => new _ChildCalendarPageState();
+	_ChildCalendarPageState createState() => _ChildCalendarPageState();
 }
 
 class _ChildCalendarPageState extends State<ChildCalendarPage> with TickerProviderStateMixin {
@@ -29,8 +28,8 @@ class _ChildCalendarPageState extends State<ChildCalendarPage> with TickerProvid
   DateTime _focusedDay = Date.now();
   late DateTime _selectedDay;
 
-  CalendarFormat _calendarFormat = CalendarFormat.month;
-  RangeSelectionMode _rangeSelectionMode = RangeSelectionMode.toggledOff;
+  final CalendarFormat _calendarFormat = CalendarFormat.month;
+  final RangeSelectionMode _rangeSelectionMode = RangeSelectionMode.toggledOff;
 	late ValueNotifier<List<Plan>> _selectedEvents;
 	final Color notAssignedPlanMarkerColor = Colors.grey[400]!;
 
@@ -112,7 +111,7 @@ class _ChildCalendarPageState extends State<ChildCalendarPage> with TickerProvid
 	}
 
   List<Plan> _getEventsForDay(DateTime day) {
-		Map<Date, List<Plan>>? events = BlocProvider.of<CalendarCubit>(context).state.events;
+		var events = BlocProvider.of<CalendarCubit>(context).state.events;
     return events != null && events[Date.fromDate(day)] != null ? events[Date.fromDate(day)]! : [];
   }
 
@@ -160,9 +159,9 @@ class _ChildCalendarPageState extends State<ChildCalendarPage> with TickerProvid
 				selectedBuilder: (context, date, _) => buildTableCalendarCell(date, AppColors.caregiverBackgroundColor, isCellSelected: true),
 				todayBuilder: (context, date, _) => buildTableCalendarCell(date, Colors.transparent),
 				markerBuilder: (context, date, events) {
-					final List<Widget> markers = <Widget>[];
+					final markers = <Widget>[];
 					if (events.isNotEmpty) {
-						List<Color> planMarkers = [];
+						var planMarkers = <Color>[];
 						events.forEach((plan) { planMarkers.add(AppColors.childButtonColor); });
 						markers.add(buildMarker(colorList: planMarkers, inPast: date.isBefore(Date.now())));
 					}

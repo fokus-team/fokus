@@ -1,8 +1,8 @@
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:fokus/utils/ui/app_paths.dart';
-import 'package:fokus/utils/ui/icon_sets.dart';
+import '../../utils/ui/app_paths.dart';
+import '../../utils/ui/icon_sets.dart';
 
 class AppAvatar extends StatelessWidget {
 	final int? avatar;
@@ -55,7 +55,7 @@ class AppAvatar extends StatelessWidget {
 						color: greyOut,
 						backgroundBlendMode: BlendMode.saturation
 					) : null,
-					color: (color != null) ? color : childAvatars[this.avatar]?.color,
+					color: (color != null) ? color : childAvatars[avatar]?.color,
 					child: Transform.translate(
 						offset: const Offset(0.0, 8.0),
 						child: blankAvatar ? 

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:fokus/logic/common/timer/timer_cubit.dart';
-import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/duration_utils.dart';
+import '../logic/common/timer/timer_cubit.dart';
+import '../services/app_locales.dart';
+import '../utils/duration_utils.dart';
 
 class LargeTimer extends StatelessWidget {
 	final Color textColor;

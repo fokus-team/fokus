@@ -1,10 +1,10 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:fokus/model/db/plan/plan.dart';
-import 'package:fokus/model/db/plan/plan_instance.dart';
-import 'package:fokus/services/plan_repeatability_service.dart';
-import 'package:fokus/utils/definitions.dart';
-import 'package:fokus/utils/duration_utils.dart';
+import '../../../services/plan_repeatability_service.dart';
+import '../../../utils/definitions.dart';
+import '../../../utils/duration_utils.dart';
+import '../../db/plan/plan.dart';
+import '../../db/plan/plan_instance.dart';
 
 class UIPlanInstance extends Equatable {
 	final PlanInstance instance;

@@ -1,5 +1,5 @@
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
-import 'package:fokus/services/links/link_service.dart';
+import 'link_service.dart';
 
 class FirebaseDynamicLinkService extends LinkService {
   @override
@@ -11,7 +11,7 @@ class FirebaseDynamicLinkService extends LinkService {
 			  }
 	  );
 
-	  final PendingDynamicLinkData? data = await FirebaseDynamicLinks.instance.getInitialLink();
+	  final data = await FirebaseDynamicLinks.instance.getInitialLink();
 	  handleLink(data?.link, AppState.opened);
   }
 }

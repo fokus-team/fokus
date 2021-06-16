@@ -2,11 +2,11 @@ import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
-import 'package:fokus/services/data/data_repository.dart';
-import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
-import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
-import 'package:fokus/model/db/user/child.dart';
-import 'package:fokus/services/app_config/app_config_repository.dart';
+import '../../../model/db/user/child.dart';
+import '../../../services/app_config/app_config_repository.dart';
+import '../../../services/data/data_repository.dart';
+import '../../common/auth_bloc/authentication_bloc.dart';
+import '../../common/stateful/stateful_cubit.dart';
 
 class SavedChildProfilesCubit extends StatefulCubit {
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
@@ -15,6 +15,7 @@ class SavedChildProfilesCubit extends StatefulCubit {
 
   SavedChildProfilesCubit(this.authenticationBloc, ModalRoute pageRoute) : super(pageRoute);
 
+  @override
   Future doLoadData() async {
 	  var savedIds = _appConfigRepository.getSavedChildProfiles();
 	  var children = await _dataRepository.getUsers(ids: savedIds, fields: ['_id', 'name', 'avatar']);

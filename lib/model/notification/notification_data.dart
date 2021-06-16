@@ -1,13 +1,15 @@
-import 'package:fokus/model/notification/notification_button.dart';
-import 'package:fokus/utils/definitions.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
+import '../../utils/definitions.dart';
+import 'notification_button.dart';
 import 'notification_refresh_info.dart';
 import 'notification_type.dart';
 
 class NotificationData implements NotificationRefreshInfo {
-	final NotificationType type;
-	final ObjectId? subject;
+	@override
+  final NotificationType type;
+	@override
+  final ObjectId? subject;
 	final ObjectId sender;
 	final ObjectId recipient;
 	final List<NotificationButton>? buttons;

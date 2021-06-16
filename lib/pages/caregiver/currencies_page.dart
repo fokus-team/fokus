@@ -2,22 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import 'package:fokus/logic/caregiver/caregiver_currencies_cubit.dart';
-import 'package:fokus/model/currency_type.dart';
-import 'package:fokus/model/db/gamification/currency.dart';
-import 'package:fokus/utils/ui/app_paths.dart';
-import 'package:fokus/utils/ui/dialog_utils.dart';
-import 'package:fokus/utils/ui/icon_sets.dart';
-import 'package:fokus/utils/ui/snackbar_utils.dart';
-import 'package:fokus/widgets/buttons/help_icon_button.dart';
-import 'package:fokus/widgets/dialogs/general_dialog.dart';
-import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/ui/theme_config.dart';
-import 'package:fokus/widgets/stateful_bloc_builder.dart';
+import '../../logic/caregiver/caregiver_currencies_cubit.dart';
+import '../../model/currency_type.dart';
+import '../../model/db/gamification/currency.dart';
+import '../../services/app_locales.dart';
+import '../../utils/ui/app_paths.dart';
+import '../../utils/ui/dialog_utils.dart';
+import '../../utils/ui/icon_sets.dart';
+import '../../utils/ui/snackbar_utils.dart';
+import '../../utils/ui/theme_config.dart';
+import '../../widgets/buttons/help_icon_button.dart';
+import '../../widgets/dialogs/general_dialog.dart';
+import '../../widgets/stateful_bloc_builder.dart';
 
 class CaregiverCurrenciesPage extends StatefulWidget {
 	@override
-	_CaregiverCurrenciesPageState createState() => new _CaregiverCurrenciesPageState();
+	_CaregiverCurrenciesPageState createState() => _CaregiverCurrenciesPageState();
 }
 
 class _CaregiverCurrenciesPageState extends State<CaregiverCurrenciesPage> {
@@ -28,7 +28,7 @@ class _CaregiverCurrenciesPageState extends State<CaregiverCurrenciesPage> {
 
 	@override
   void initState() {
-		currencyList = Map<CurrencyType, String>();
+		currencyList = <CurrencyType, String>{};
 		currencyList[CurrencyType.emerald] = '';
 		currencyList[CurrencyType.ruby] = '';
 		currencyList[CurrencyType.amethyst] = '';
@@ -46,7 +46,7 @@ class _CaregiverCurrenciesPageState extends State<CaregiverCurrenciesPage> {
 		return SimpleStatefulBlocBuilder<CaregiverCurrenciesCubit, CaregiverCurrenciesState>(
 			listener: (context, state) {
 				if (state.loaded) {
-					for(Currency currency in (state as CaregiverCurrenciesState).currencies) {
+					for(var currency in (state as CaregiverCurrenciesState).currencies) {
 						if (currency.type != CurrencyType.diamond)
 							currencyList[currency.type!] = currency.name!;
 					}
@@ -58,7 +58,7 @@ class _CaregiverCurrenciesPageState extends State<CaregiverCurrenciesPage> {
 	    builder: (context, state) {
 				return WillPopScope(
 					onWillPop: () async {
-						bool? ret = await showExitFormDialog(context, true, isDataChanged);
+						var ret = await showExitFormDialog(context, true, isDataChanged);
 						if(ret == null || !ret) return false;
 						else return true;
 					},

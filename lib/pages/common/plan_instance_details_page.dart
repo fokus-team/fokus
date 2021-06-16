@@ -1,28 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fokus/logic/common/plan_instance_cubit.dart';
-import 'package:fokus/logic/common/timer/timer_cubit.dart';
-import 'package:fokus/model/db/plan/plan_instance_state.dart';
-import 'package:fokus/model/db/plan/task_status.dart';
-import 'package:fokus/model/navigation/plan_instance_params.dart';
-import 'package:fokus/model/navigation/task_in_progress_params.dart';
-import 'package:fokus/model/ui/app_page.dart';
-import 'package:fokus/model/ui/plan/ui_plan_instance.dart';
-import 'package:fokus/utils/navigation_utils.dart';
-import 'package:fokus/utils/ui/dialog_utils.dart';
-import 'package:fokus/utils/ui/snackbar_utils.dart';
-import 'package:fokus/model/ui/plan/ui_task_instance.dart';
-import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/duration_utils.dart';
-import 'package:fokus/utils/ui/theme_config.dart';
-import 'package:fokus/widgets/custom_app_bars.dart';
-import 'package:fokus/widgets/chips/attribute_chip.dart';
-import 'package:fokus/widgets/cards/item_card.dart';
-import 'package:fokus/widgets/chips/timer_chip.dart';
-import 'package:fokus/widgets/dialogs/general_dialog.dart';
-import 'package:fokus/widgets/general/app_loader.dart';
-import 'package:fokus/widgets/stateful_bloc_builder.dart';
-import 'package:fokus/widgets/segment.dart';
+
+import '../../logic/common/plan_instance_cubit.dart';
+import '../../logic/common/timer/timer_cubit.dart';
+import '../../model/db/plan/plan_instance_state.dart';
+import '../../model/db/plan/task_status.dart';
+import '../../model/navigation/plan_instance_params.dart';
+import '../../model/navigation/task_in_progress_params.dart';
+import '../../model/ui/app_page.dart';
+import '../../model/ui/plan/ui_plan_instance.dart';
+import '../../model/ui/plan/ui_task_instance.dart';
+import '../../services/app_locales.dart';
+import '../../utils/duration_utils.dart';
+import '../../utils/navigation_utils.dart';
+import '../../utils/ui/dialog_utils.dart';
+import '../../utils/ui/snackbar_utils.dart';
+import '../../utils/ui/theme_config.dart';
+import '../../widgets/cards/item_card.dart';
+import '../../widgets/chips/attribute_chip.dart';
+import '../../widgets/chips/timer_chip.dart';
+import '../../widgets/custom_app_bars.dart';
+import '../../widgets/dialogs/general_dialog.dart';
+import '../../widgets/general/app_loader.dart';
+import '../../widgets/segment.dart';
+import '../../widgets/stateful_bloc_builder.dart';
 
 class PlanInstanceDetailsPage extends StatefulWidget {
 	final bool showActions;
@@ -30,13 +31,13 @@ class PlanInstanceDetailsPage extends StatefulWidget {
   PlanInstanceDetailsPage(PlanInstanceParams args) : showActions = args.actions ?? true;
 
   @override
-  _PlanInstanceDetailsPageState createState() => new _PlanInstanceDetailsPageState();
+  _PlanInstanceDetailsPageState createState() => _PlanInstanceDetailsPageState();
 }
 
 class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 	static const String _pageKey = 'page.childSection.planInProgress';
 
-	void navigate(context, UITaskInstance task, UIPlanInstance plan) async {
+	void navigate(BuildContext context, UITaskInstance task, UIPlanInstance plan) async {
 		if(await BlocProvider.of<PlanInstanceCubit>(context).isOtherPlanInProgressDbCheck(tappedTaskInstance: task.instance.id)) {
 			showBasicDialog(
 				context,
@@ -217,7 +218,7 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 	}
 
   Widget _getCardHeader(UIPlanInstance uiPlan) {
-		var taskDescriptionKey = 'plans.' + (uiPlan.completedTaskCount! > 0 ? 'taskProgress' : 'noTaskCompleted');
+		var taskDescriptionKey = 'plans.${uiPlan.completedTaskCount! > 0 ? 'taskProgress' : 'noTaskCompleted'}';
 		var card = ItemCard(
 			title: uiPlan.plan.name!,
 			subtitle: uiPlan.description!,

@@ -1,9 +1,10 @@
 import 'package:bloc/bloc.dart';
-import 'package:fokus/model/db/user/user_role.dart';
-import 'package:fokus/services/data/data_repository.dart';
 import 'package:fokus_auth/fokus_auth.dart';
 import 'package:get_it/get_it.dart';
 import 'package:meta/meta.dart';
+
+import '../../model/db/user/user_role.dart';
+import '../../services/data/data_repository.dart';
 
 mixin UserCodeVerifier<State> on Cubit<State> {
 	@protected

@@ -1,6 +1,7 @@
-import 'package:fokus/logic/common/formz_state.dart';
 import 'package:fokus_auth/fokus_auth.dart';
 import 'package:formz/formz.dart';
+
+import '../../common/formz_state.dart';
 
 
 abstract class CaregiverAuthStateBase extends FormzState {

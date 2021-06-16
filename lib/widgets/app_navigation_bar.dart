@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:round_spot/round_spot.dart' as round_spot;
 
-import 'package:fokus/model/ui/app_page.dart';
-import 'package:fokus/model/ui/navigation_item.dart';
-import 'package:fokus/model/db/user/user.dart';
-import 'package:fokus/services/app_locales.dart';
+import '../model/db/user/user.dart';
+import '../model/ui/app_page.dart';
+import '../model/ui/navigation_item.dart';
+import '../services/app_locales.dart';
 
 class AppNavigationBar extends StatefulWidget {
 	final int? currentIndex;

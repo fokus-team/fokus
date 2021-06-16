@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:round_spot/round_spot.dart' as round_spot;
 
-import 'package:fokus/logic/child/auth/saved_child_profiles_cubit.dart';
-import 'package:fokus/model/ui/app_page.dart';
-import 'package:fokus/model/ui/ui_button.dart';
-import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/ui/theme_config.dart';
-import 'package:fokus/widgets/general/app_avatar.dart';
-import 'package:fokus/widgets/auth/auth_button.dart';
-import 'package:fokus/widgets/auth/auth_widgets.dart';
-import 'package:fokus/widgets/stateful_bloc_builder.dart';
+import '../../../logic/child/auth/saved_child_profiles_cubit.dart';
+import '../../../model/ui/app_page.dart';
+import '../../../model/ui/ui_button.dart';
+import '../../../services/app_locales.dart';
+import '../../../utils/ui/theme_config.dart';
+import '../../../widgets/auth/auth_button.dart';
+import '../../../widgets/auth/auth_widgets.dart';
+import '../../../widgets/general/app_avatar.dart';
+import '../../../widgets/stateful_bloc_builder.dart';
 
 class ChildProfilesPage extends StatelessWidget {
 	static const String _pageKey = 'page.loginSection.childProfiles';

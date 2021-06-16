@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:fokus/model/ui/ui_button.dart';
-import 'package:fokus/services/app_locales.dart';
+import '../../model/ui/ui_button.dart';
+import '../../services/app_locales.dart';
 
 class PopupMenuList extends StatelessWidget {
   final List<UIButton> items;
@@ -14,7 +14,7 @@ class PopupMenuList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-			customBorder: new CircleBorder(),
+			customBorder: CircleBorder(),
 			child: PopupMenuButton(
 				tooltip: tooltip,
 				onSelected: (Function a) => a(),
@@ -25,7 +25,7 @@ class PopupMenuList extends StatelessWidget {
   }
 
   List<PopupMenuEntry<Function>> _menuItemFactory(List<UIButton> items, context) {
-		List<PopupMenuEntry<Function>> popupMenuEntries = [];
+		var popupMenuEntries = <PopupMenuEntry<Function>>[];
   	for (var item in items) {
 			popupMenuEntries.add(
 				PopupMenuItem(

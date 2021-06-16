@@ -1,23 +1,23 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:fokus/model/db/user/caregiver.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
-import 'package:fokus/model/db/user/user_role.dart';
-import 'package:fokus/model/navigation/plan_form_params.dart';
-import 'package:fokus/model/ui/app_page.dart';
-import 'package:fokus/model/ui/form/task_form_model.dart';
-import 'package:fokus/services/analytics_service.dart';
-import 'package:fokus/utils/definitions.dart';
-import 'package:fokus/services/plan_keeper_service.dart';
-import 'package:fokus/model/ui/form/plan_form_model.dart';
-import 'package:fokus/services/data/data_repository.dart';
-import 'package:fokus/services/plan_repeatability_service.dart';
-import 'package:fokus/model/db/plan/plan.dart';
-import 'package:fokus/model/db/plan/task.dart';
-import 'package:fokus/model/db/gamification/currency.dart';
-import 'package:fokus/model/db/user/child.dart';
+import '../../../../model/db/gamification/currency.dart';
+import '../../../../model/db/plan/plan.dart';
+import '../../../../model/db/plan/task.dart';
+import '../../../../model/db/user/caregiver.dart';
+import '../../../../model/db/user/child.dart';
+import '../../../../model/db/user/user_role.dart';
+import '../../../../model/navigation/plan_form_params.dart';
+import '../../../../model/ui/app_page.dart';
+import '../../../../model/ui/form/plan_form_model.dart';
+import '../../../../model/ui/form/task_form_model.dart';
+import '../../../../services/analytics_service.dart';
+import '../../../../services/data/data_repository.dart';
+import '../../../../services/plan_keeper_service.dart';
+import '../../../../services/plan_repeatability_service.dart';
+import '../../../../utils/definitions.dart';
 
 part 'plan_form_state.dart';
 

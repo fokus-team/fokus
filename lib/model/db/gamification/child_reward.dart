@@ -1,8 +1,9 @@
-import 'package:fokus/model/db/date/time_date.dart';
-import 'package:fokus/model/db/gamification/points.dart';
-import 'package:fokus/model/db/gamification/reward.dart';
-import 'package:fokus/utils/definitions.dart';
 import 'package:mongo_dart/mongo_dart.dart';
+
+import '../../../utils/definitions.dart';
+import '../date/time_date.dart';
+import 'points.dart';
+import 'reward.dart';
 
 class ChildReward extends Reward {
   final TimeDate? date;
@@ -11,14 +12,16 @@ class ChildReward extends Reward {
 
   ChildReward.fromJson(Json json) : date = TimeDate.parseDBDate(json['date']), super.fromJson(json);
 
+  @override
   Json toJson() {
-	  final Json data = super.toJson();
-    if (this.date != null)
-      data['date'] = this.date!.toDBDate();
+	  final data = super.toJson();
+    if (date != null)
+      data['date'] = date!.toDBDate();
     return data;
   }
 
-	ChildReward copyWith({String? name, int? limit, Points? cost, int? icon, ObjectId? createdBy, ObjectId? id, TimeDate? date}) {
+	@override
+  ChildReward copyWith({String? name, int? limit, Points? cost, int? icon, ObjectId? createdBy, ObjectId? id, TimeDate? date}) {
 		return ChildReward(
 				name: name ?? this.name,
 				cost: cost ?? this.cost,

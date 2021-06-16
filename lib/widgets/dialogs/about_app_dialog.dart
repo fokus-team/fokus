@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/ui/theme_config.dart';
 import 'package:lottie/lottie.dart';
 import 'package:package_info/package_info.dart';
-import 'package:fokus/model/ui/external_url.dart';
+
+import '../../model/ui/external_url.dart';
+import '../../services/app_locales.dart';
+import '../../utils/ui/theme_config.dart';
 
 class AboutAppDialog extends StatefulWidget {
 	@override
-	_AboutAppDialogState createState() => new _AboutAppDialogState();
+	_AboutAppDialogState createState() => _AboutAppDialogState();
 }
 
 class _AboutAppDialogState extends State<AboutAppDialog> {
@@ -64,7 +65,7 @@ class _AboutAppDialogState extends State<AboutAppDialog> {
 									Padding(
 										padding: EdgeInsets.only(bottom: 20.0),
 										child: Text(
-											AppLocales.of(context).translate('$_settingsKey.creators') + ':\n' + creators,
+											'${AppLocales.of(context).translate('$_settingsKey.creators')}:\n$creators',
 											style: TextStyle().copyWith(fontStyle: FontStyle.italic),
 											textAlign: TextAlign.center,
 										)

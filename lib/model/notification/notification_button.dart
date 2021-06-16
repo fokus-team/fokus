@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:fokus/utils/definitions.dart';
+import '../../utils/definitions.dart';
 import 'notification_text.dart';
 
 enum NotificationButton {

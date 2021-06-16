@@ -2,13 +2,13 @@ import 'package:enum_to_string/enum_to_string.dart';
 import 'package:flutter/material.dart';
 import 'package:round_spot/round_spot.dart' as round_spot;
 
-import 'package:fokus/utils/ui/theme_config.dart';
-import 'package:fokus/logic/child/task_completion/task_completion_cubit.dart';
+import '../../logic/child/task_completion/task_completion_cubit.dart';
+import '../../utils/ui/theme_config.dart';
 
 class SlidingCard extends StatefulWidget {
 	final List<Widget> content;
 	final Color cardColor;
-	final showFirst;
+	final bool showFirst;
 	final TaskCompletionStateType cardType;
 
   SlidingCard({required Key key, required this.content, required this.cardColor, this.showFirst = false, required this.cardType}) : super(key: key);
@@ -41,11 +41,11 @@ class SlidingCardState extends State<SlidingCard> with SingleTickerProviderState
     			  	padding: EdgeInsets.all(0),
     			  	children: [
     			  		Container(
-    			  			decoration: AppBoxProperties.elevatedContainer.copyWith(color: this.widget.cardColor, borderRadius: BorderRadius.vertical(bottom: Radius.circular(4))),
+    			  			decoration: AppBoxProperties.elevatedContainer.copyWith(color: widget.cardColor, borderRadius: BorderRadius.vertical(bottom: Radius.circular(4))),
     			  			child: Padding(
     			  				padding: const EdgeInsets.all(12.0),
     			  				child: Column(
-    			  					children: this.widget.content
+    			  					children: widget.content
     			  				),
     			  			),
     			  		),
@@ -77,7 +77,7 @@ class SlidingCardState extends State<SlidingCard> with SingleTickerProviderState
 		_scrollController = ScrollController();
 		WidgetsBinding.instance!.addPostFrameCallback((_) {
 			jumpToEnd();
-			if(this.widget.showFirst) openCard();
+			if(widget.showFirst) openCard();
 		});
 	}
 

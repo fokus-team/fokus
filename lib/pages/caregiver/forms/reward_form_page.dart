@@ -2,23 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:fokus/logic/caregiver/forms/reward/reward_form_cubit.dart';
-import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
-import 'package:fokus/model/db/gamification/points.dart';
-import 'package:fokus/model/ui/app_page.dart';
-import 'package:fokus/utils/ui/dialog_utils.dart';
-import 'package:fokus/utils/ui/form_config.dart';
-import 'package:fokus/utils/ui/snackbar_utils.dart';
-import 'package:fokus/widgets/buttons/help_icon_button.dart';
-import 'package:fokus/widgets/forms/iconpicker_field.dart';
-import 'package:fokus/widgets/forms/pointpicker_field.dart';
-import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/ui/theme_config.dart';
-import 'package:fokus/widgets/stateful_bloc_builder.dart';
+import '../../../logic/caregiver/forms/reward/reward_form_cubit.dart';
+import '../../../logic/common/stateful/stateful_cubit.dart';
+import '../../../model/db/gamification/points.dart';
+import '../../../model/ui/app_page.dart';
+import '../../../services/app_locales.dart';
+import '../../../utils/ui/dialog_utils.dart';
+import '../../../utils/ui/form_config.dart';
+import '../../../utils/ui/snackbar_utils.dart';
+import '../../../utils/ui/theme_config.dart';
+import '../../../widgets/buttons/help_icon_button.dart';
+import '../../../widgets/forms/iconpicker_field.dart';
+import '../../../widgets/forms/pointpicker_field.dart';
+import '../../../widgets/stateful_bloc_builder.dart';
 
 class CaregiverRewardFormPage extends StatefulWidget {
 	@override
-	_CaregiverRewardFormPageState createState() => new _CaregiverRewardFormPageState();
+	_CaregiverRewardFormPageState createState() => _CaregiverRewardFormPageState();
 }
 
 class _CaregiverRewardFormPageState extends State<CaregiverRewardFormPage> {
@@ -26,9 +26,9 @@ class _CaregiverRewardFormPageState extends State<CaregiverRewardFormPage> {
 	late AppFormType _formType;
 	late GlobalKey<FormState> rewardFormKey;
 
-	TextEditingController _titleController = TextEditingController();
-	TextEditingController _limitController = TextEditingController();
-	TextEditingController _pointsController = TextEditingController();
+	final TextEditingController _titleController = TextEditingController();
+	final TextEditingController _limitController = TextEditingController();
+	final TextEditingController _pointsController = TextEditingController();
 
 	@override
   void initState() {
@@ -117,7 +117,7 @@ class _CaregiverRewardFormPageState extends State<CaregiverRewardFormPage> {
 			popConfig: SubmitPopConfig.onSubmitted(),
 			builder: (context, state) => WillPopScope(
 				onWillPop: () async {
-					bool? ret = await showExitFormDialog(context, true, state.wasDataChanged);
+					var ret = await showExitFormDialog(context, true, state.wasDataChanged);
 					if(ret == null || !ret) return false;
 					else return true;
 				},
@@ -191,7 +191,7 @@ class _CaregiverRewardFormPageState extends State<CaregiverRewardFormPage> {
 	}
 	
 	Widget _buildPointsFields([RewardFormDataLoadSuccess? state]) {
-		var onCostChanged = (Points Function(Points) change) => context.read<RewardFormCubit>().onRewardChanged((reward) => reward.copyWith(cost: change(reward.cost!)));
+		onCostChanged(Points Function(Points) change) => context.read<RewardFormCubit>().onRewardChanged((reward) => reward.copyWith(cost: change(reward.cost!)));
 		return PointPickerField(
 			controller: _pointsController,
 			pickedCurrency: state?.reward.cost,

@@ -1,12 +1,12 @@
-import 'package:fokus/model/currency_type.dart';
-import 'package:fokus/model/db/gamification/badge.dart';
-import 'package:fokus/model/db/gamification/currency.dart';
-import 'package:fokus/model/db/user/user_role.dart';
 import 'package:fokus_auth/fokus_auth.dart';
 import 'package:mongo_dart/mongo_dart.dart';
-import 'package:fokus/utils/definitions.dart';
 
+import '../../../utils/definitions.dart';
+import '../../currency_type.dart';
+import '../gamification/badge.dart';
+import '../gamification/currency.dart';
 import 'user.dart';
+import 'user_role.dart';
 
 final _defaultCurrency = Currency(type: CurrencyType.diamond);
 
@@ -32,7 +32,7 @@ class Caregiver extends User {
 			  super(id: id, name: name, role: UserRole.caregiver, notificationIDs: notificationIDs);
 
   Caregiver.fromJson(Json json) :
-      friends = json['friends'] != null ? new List<ObjectId>.from(json['friends']) : [],
+      friends = json['friends'] != null ? List<ObjectId>.from(json['friends']) : [],
 	    badges = json['badges'] != null ? (json['badges'] as List).map((i) => Badge.fromJson(i)).toList() : [],
 	    currencies = (json['currencies'] != null ? (json['currencies'] as List).map((i) => Currency.fromJson(i)).toList() : [])..add(_defaultCurrency),
 	    authenticationId = json['authenticationID'],
@@ -45,16 +45,17 @@ class Caregiver extends User {
 		  authenticationId = user.authenticationId,
 		  super.copyFrom(user, locale: locale, name: name, connections: connections);
 
+  @override
   Json toJson() {
-    final Json data = super.toJson();
-    if (this.authenticationId != null)
-	    data['authenticationID'] = this.authenticationId;
-    if (this.badges != null)
-	    data['badges'] = this.badges!.map((v) => v.toJson()).toList();
-    if (this.currencies != null)
-	    data['currencies'] = this.currencies!.where((c) => c.type != CurrencyType.diamond).map((v) => v.toJson()).toList();
-    if (this.friends != null)
-      data['friends'] = this.friends;
+    final data = super.toJson();
+    if (authenticationId != null)
+	    data['authenticationID'] = authenticationId;
+    if (badges != null)
+	    data['badges'] = badges!.map((v) => v.toJson()).toList();
+    if (currencies != null)
+	    data['currencies'] = currencies!.where((c) => c.type != CurrencyType.diamond).map((v) => v.toJson()).toList();
+    if (friends != null)
+      data['friends'] = friends;
     return data;
   }
 

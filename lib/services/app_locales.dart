@@ -6,8 +6,8 @@ import 'package:logging/logging.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
-import 'package:fokus/utils/definitions.dart';
-import 'package:fokus/services/observers/current_locale_observer.dart';
+import '../utils/definitions.dart';
+import 'observers/current_locale_observer.dart';
 
 typedef TranslateFunc = String Function(BuildContext);
 
@@ -37,14 +37,14 @@ class AppLocalesDelegate extends LocalizationsDelegate<AppLocales> {
 class AppLocales {
 	final Logger _logger = Logger('AppLocales');
 	Locale? locale;
-	List<CurrentLocaleObserver> _localeObservers = [];
+	final List<CurrentLocaleObserver> _localeObservers = [];
 
 	static AppLocales instance = AppLocales();
 	static AppLocales of(BuildContext context) => Localizations.of<AppLocales>(context, AppLocales)!;
 
 	static const LocalizationsDelegate<AppLocales> delegate = AppLocalesDelegate();
 
-	Map<Locale, Json> _translations = {};
+	final Map<Locale, Json> _translations = {};
 
 	Future setLocale(Locale locale) async {
 		if (_translations.isEmpty)
@@ -58,7 +58,7 @@ class AppLocales {
 
 	Future loadLocales() async {
 		for (var locale in AppLocalesDelegate.supportedLocales) {
-			String localeTranslations = await rootBundle.loadString('i18n/$locale.json');
+			var localeTranslations = await rootBundle.loadString('i18n/$locale.json');
 			_translations[locale] = json.decode(localeTranslations);
 		}
 	}
@@ -80,7 +80,7 @@ class AppLocales {
 	}
 
 	Map<String, String> getTranslations(String key, [Map<String, Object>? args]) {
-		Map<String, String> translations = {};
+		var translations = <String, String>{};
 		for (var locale in AppLocalesDelegate.supportedLocales)
 			translations[locale.languageCode] = translate(key, args, locale);
 		return translations;

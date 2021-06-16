@@ -1,22 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:round_spot/round_spot.dart' as round_spot;
 import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorderable_list.dart';
+import 'package:round_spot/round_spot.dart' as round_spot;
 
-import 'package:fokus/logic/caregiver/forms/plan/plan_form_cubit.dart';
-import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/widgets/cards/task_card.dart';
-import 'package:fokus/widgets/general/app_hero.dart';
-import 'package:fokus/widgets/dialogs/general_dialog.dart';
-
-import 'package:fokus/model/ui/form/task_form_model.dart';
-import 'package:fokus/model/ui/form/plan_form_model.dart';
-import 'package:fokus/model/navigation/task_form_params.dart';
-import 'package:fokus/model/ui/app_page.dart';
-
-import 'package:fokus/utils/ui/dialog_utils.dart';
-import 'package:fokus/utils/ui/theme_config.dart';
-import 'package:fokus/utils/ui/reorderable_list.dart';
+import '../../logic/caregiver/forms/plan/plan_form_cubit.dart';
+import '../../model/navigation/task_form_params.dart';
+import '../../model/ui/app_page.dart';
+import '../../model/ui/form/plan_form_model.dart';
+import '../../model/ui/form/task_form_model.dart';
+import '../../services/app_locales.dart';
+import '../../utils/ui/dialog_utils.dart';
+import '../../utils/ui/reorderable_list.dart';
+import '../../utils/ui/theme_config.dart';
+import '../cards/task_card.dart';
+import '../dialogs/general_dialog.dart';
+import '../general/app_hero.dart';
 
 
 class TaskList extends StatefulWidget {
@@ -34,7 +32,7 @@ class TaskList extends StatefulWidget {
 	}) : super(key: key);
 
 	@override
-	TaskListState createState() => new TaskListState();
+	TaskListState createState() => TaskListState();
 }
 
 class TaskListState extends State<TaskList> with TickerProviderStateMixin {
@@ -209,7 +207,7 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 			child: Align(
 				alignment: Alignment.centerLeft,
 				child:Text(
-					title + ' ($count)',
+					'$title ($count)',
 					style: TextStyle(fontWeight: FontWeight.bold)
 				)
 			)
@@ -221,7 +219,7 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 			duration: Duration(seconds: 2),
 			reverseDuration: defaultSwitchDuration,
 			transitionBuilder: (Widget child, Animation<double> animation) {
-				CurvedAnimation delayedAnimation = CurvedAnimation(parent: animation, curve: Interval(0.5, 1.0, curve: Curves.fastOutSlowIn));
+				var delayedAnimation = CurvedAnimation(parent: animation, curve: Interval(0.5, 1.0, curve: Curves.fastOutSlowIn));
 				return FadeTransition(child: child, opacity: delayedAnimation);
 			},
 			child: (widget.plan.tasks.isEmpty) ?
@@ -234,7 +232,7 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 	}
 
 	Widget buildTaskCard(TaskFormModel task, bool optional) {
-		int index = (widget.plan.tasks..where((element) => element.optional == optional)).indexOf(task);
+		var index = (widget.plan.tasks..where((element) => element.optional == optional)).indexOf(task);
 		return TaskCard(task: task, index: index, onTap: editTask);
 	}
 
@@ -324,7 +322,7 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 						);
 					},
 					layoutBuilder: (Widget? currentChild, List<Widget> previousChildren) {
-						List<Widget> children = previousChildren;
+						var children = previousChildren;
 						if (currentChild != null)
 							children = children.toList()..add(currentChild);
 						return Stack(
@@ -345,7 +343,7 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 								child: Padding(padding: EdgeInsets.all(6.0), child: Icon(Icons.delete_sweep)),
 								shape: CircleBorder(),
 								backgroundColor: Colors.red,
-								onPressed: () { clearAllTasks(); }
+								onPressed: clearAllTasks
 							)
 						) 
 						: SizedBox.shrink()

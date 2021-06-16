@@ -1,8 +1,8 @@
 import 'package:equatable/equatable.dart';
-import 'package:fokus/model/db/date/date.dart';
-import 'package:fokus/model/db/date_span.dart';
-import 'package:fokus/utils/definitions.dart';
 
+import '../../../utils/definitions.dart';
+import '../date/date.dart';
+import '../date_span.dart';
 import 'repeatability_type.dart';
 
 class PlanRepeatability extends Equatable {
@@ -14,22 +14,22 @@ class PlanRepeatability extends Equatable {
   PlanRepeatability({this.days, this.range, this.type, this.untilCompleted});
 
   PlanRepeatability.fromJson(Json json) : this(
-    days: json['days'] != null ? new List<int>.from(json['days']) : null,
+    days: json['days'] != null ? List<int>.from(json['days']) : null,
     range: json['range'] != null ? DateSpan.fromJson<Date>(json['range']) : null,
     type: RepeatabilityType.values[json['type']],
     untilCompleted: json['untilCompleted'] ?? false,
   );
 
   Json toJson() {
-    final Json data = new Json();
-    if (this.type != null)
-	    data['type'] = this.type!.index;
-    if (this.untilCompleted != null)
-	    data['untilCompleted'] = this.untilCompleted;
-    if (this.days != null)
-      data['days'] = this.days;
-    if (this.range != null)
-      data['range'] = this.range!.toJson();
+	  final data = <String, dynamic>{};
+    if (type != null)
+	    data['type'] = type!.index;
+    if (untilCompleted != null)
+	    data['untilCompleted'] = untilCompleted;
+    if (days != null)
+      data['days'] = days;
+    if (range != null)
+      data['range'] = range!.toJson();
     return data;
   }
 

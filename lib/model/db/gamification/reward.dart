@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:mongo_dart/mongo_dart.dart';
-import 'package:fokus/utils/definitions.dart';
+import '../../../utils/definitions.dart';
 
 import 'points.dart';
 
@@ -35,19 +35,19 @@ class Reward extends Equatable {
   }
 
   Json toJson() {
-    final Json data = new Json();
-    if (this.createdBy != null)
-	    data['createdBy'] = this.createdBy;
-    if (this.id != null)
-	    data['_id'] = this.id;
-    if (this.icon != null)
-	    data['icon'] = this.icon;
-    if (this.limit != null)
-	    data['limit'] = this.limit;
-    if (this.name != null)
-	    data['name'] = this.name;
-    if (this.cost != null)
-      data['cost'] = this.cost!.toJson();
+	  final data = <String, dynamic>{};
+    if (createdBy != null)
+	    data['createdBy'] = createdBy;
+    if (id != null)
+	    data['_id'] = id;
+    if (icon != null)
+	    data['icon'] = icon;
+    if (limit != null)
+	    data['limit'] = limit;
+    if (name != null)
+	    data['name'] = name;
+    if (cost != null)
+      data['cost'] = cost!.toJson();
     return data;
   }
 

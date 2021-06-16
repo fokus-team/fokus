@@ -1,6 +1,5 @@
-import 'package:fokus/model/db/date/time_date.dart';
-import 'package:fokus/utils/definitions.dart';
-
+import '../../../utils/definitions.dart';
+import '../date/time_date.dart';
 import 'badge.dart';
 
 class ChildBadge extends Badge {
@@ -14,10 +13,11 @@ class ChildBadge extends Badge {
   ChildBadge.fromJson(Json json) :
       date = TimeDate.parseDBDate(json['date']), super.fromJson(json);
 
+  @override
   Json toJson() {
-    final Json data = super.toJson();
-    if (this.date != null)
-      data['date'] = this.date!.toDBDate();
+    final data = super.toJson();
+    if (date != null)
+      data['date'] = date!.toDBDate();
     return data;
   }
 

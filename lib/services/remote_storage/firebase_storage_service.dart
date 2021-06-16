@@ -8,7 +8,7 @@ import 'remote_storage_provider.dart';
 class FirebaseStorageService extends RemoteStorageProvider {
 	final Logger _logger = Logger('UserDbRepository');
 
-	FirebaseStorage _storage = FirebaseStorage.instance;
+	final FirebaseStorage _storage = FirebaseStorage.instance;
 
   @override
   Future uploadFile(Uint8List data, String path, [Map<String, String>? metadata]) async {

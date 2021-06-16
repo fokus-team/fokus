@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:fokus/model/db/date/date.dart';
-import 'package:fokus/model/db/date_span.dart';
-import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/ui/form_config.dart';
+import '../../model/db/date/date.dart';
+import '../../model/db/date_span.dart';
+import '../../services/app_locales.dart';
+import '../../utils/ui/form_config.dart';
 
 class DatePickerField extends StatefulWidget {
 	final String labelText;
@@ -30,7 +30,7 @@ class DatePickerField extends StatefulWidget {
 	});
 
 	@override
-  State<StatefulWidget> createState() => new _DatePickerFieldState();
+  State<StatefulWidget> createState() => _DatePickerFieldState();
 
 }
 
@@ -38,7 +38,7 @@ class _DatePickerFieldState extends State<DatePickerField> {
 	bool _showClearButton = false;
 
 	Future<DateTime?> _selectDate(BuildContext context) async {
-		DateTime initial = DateTime.now();
+		var initial = DateTime.now();
 		if(widget.dateController.text != '') {
 			initial = DateTime.tryParse(widget.dateController.text)!;
 		} else if(widget.rangeDate != null) {
@@ -65,7 +65,7 @@ class _DatePickerFieldState extends State<DatePickerField> {
     super.initState();
 		_showClearButton = widget.dateController.text.isNotEmpty;
     widget.dateController.addListener(() {
-      if (this.mounted) {
+      if (mounted) {
 				setState(() => { _showClearButton = widget.dateController.text.isNotEmpty });
 			}
     });
@@ -73,7 +73,7 @@ class _DatePickerFieldState extends State<DatePickerField> {
 
   @override
   Widget build(BuildContext context) {
-		String errorMessage = (widget.errorText != null) ?
+		var errorMessage = (widget.errorText != null) ?
 			widget.errorText! :
 			AppLocales.of(context).translate('alert.genericEmptyValue');
 		

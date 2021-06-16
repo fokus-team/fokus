@@ -1,11 +1,11 @@
 import 'package:get_it/get_it.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
-import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
-import 'package:fokus/services/data/data_repository.dart';
-import 'package:fokus/model/db/gamification/badge.dart';
-import 'package:fokus/model/db/gamification/reward.dart';
-import 'package:fokus/model/db/user/caregiver.dart';
+import '../../model/db/gamification/badge.dart';
+import '../../model/db/gamification/reward.dart';
+import '../../model/db/user/caregiver.dart';
+import '../../services/data/data_repository.dart';
+import '../common/stateful/stateful_cubit.dart';
 
 class CaregiverAwardsCubit extends StatefulCubit {
   final DataRepository _dataRepository = GetIt.I<DataRepository>();
@@ -14,7 +14,7 @@ class CaregiverAwardsCubit extends StatefulCubit {
 
   @override
 	Future doLoadData() async {
-    Caregiver user = activeUser as Caregiver;
+    var user = activeUser as Caregiver;
 		emit(CaregiverAwardsState(
 			rewards: await _dataRepository.getRewards(caregiverId: user.id!),
 			badges: List.from(user.badges!)
@@ -36,7 +36,7 @@ class CaregiverAwardsCubit extends StatefulCubit {
 		if (!beginSubmit())
 			return;
 		var user = activeUser as Caregiver;
-		Badge model = Badge(name: badge.name, description: badge.description, icon: badge.icon);
+		var model = Badge(name: badge.name, description: badge.description, icon: badge.icon);
 		await _dataRepository.removeBadge(user.id!, model);
 		emit(BadgeRemovedState(
 			badges: List.from(user.badges!..remove(model)),

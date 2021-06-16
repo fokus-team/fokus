@@ -1,27 +1,27 @@
 import 'package:bloc/bloc.dart';
+import 'package:collection/collection.dart';
 import 'package:date_utils/date_utils.dart';
 import 'package:equatable/equatable.dart';
-import 'package:mongo_dart/mongo_dart.dart';
 import 'package:get_it/get_it.dart';
-import 'package:collection/collection.dart';
+import 'package:mongo_dart/mongo_dart.dart';
 
-import 'package:fokus/model/db/date/date.dart';
-import 'package:fokus/utils/definitions.dart';
-import 'package:fokus/model/db/user/caregiver.dart';
-import 'package:fokus/services/data/data_repository.dart';
-import 'package:fokus/model/db/user/child.dart';
-import 'package:fokus/model/db/user/user_role.dart';
-import 'package:fokus/model/db/date_span.dart';
-import 'package:fokus/model/db/plan/plan.dart';
-import 'package:fokus/model/db/plan/plan_instance.dart';
-import 'package:fokus/services/plan_repeatability_service.dart';
+import '../../model/db/date/date.dart';
+import '../../model/db/date_span.dart';
+import '../../model/db/plan/plan.dart';
+import '../../model/db/plan/plan_instance.dart';
+import '../../model/db/user/caregiver.dart';
+import '../../model/db/user/child.dart';
+import '../../model/db/user/user_role.dart';
+import '../../services/data/data_repository.dart';
+import '../../services/plan_repeatability_service.dart';
+import '../../utils/definitions.dart';
 
 class CalendarCubit extends Cubit<CalendarState> {
 	final ActiveUserFunction _activeUser;
 	final ObjectId? _initialFilter;
 	late Map<ObjectId, Plan> _plans;
 	late Map<ObjectId, String> _childNames;
-	Map<Date, Map<Date, List<Plan>>> _allEvents = {};
+	final Map<Date, Map<Date, List<Plan>>> _allEvents = {};
 
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final PlanRepeatabilityService _repeatabilityService = GetIt.I<PlanRepeatabilityService>();
@@ -30,7 +30,7 @@ class CalendarCubit extends Cubit<CalendarState> {
 
   void loadInitialData() async {
 	  var activeUser = _activeUser();
-	  var getRoleId = (UserRole paramRole) => paramRole == activeUser.role ? activeUser.id : null;
+	  getRoleId(UserRole paramRole) => paramRole == activeUser.role ? activeUser.id : null;
 	  _plans = Map.fromEntries(_planEntries(await _dataRepository.getPlans(caregiverId: getRoleId(UserRole.caregiver),
 			  childId: getRoleId(UserRole.child), active: true)));
 
@@ -60,19 +60,19 @@ class CalendarCubit extends Cubit<CalendarState> {
   void monthChanged(Date month) async => emit(state.copyWith(day: month, events: await _filterData(state.children, month)));
 
 	Future<Map<Date, List<Plan>>> _filterData(Map<Child?, bool>? filter, Date date) async {
-		Date month = Date.fromDate(DateUtils.firstDayOfMonth(date));
+		var month = Date.fromDate(DateUtils.firstDayOfMonth(date));
 		if (filter == null)
 			return {};
 
-		bool filterNotApplied = filter.values.every((element) => element == false);
+		var filterNotApplied = filter.values.every((element) => element == false);
 		var ids = filterNotApplied ?
 			filter.keys.map((child) => child!.id).toSet()
 			: filter.keys.where((child) => filter[child]!).map((child) => child!.id).toSet();
 
-		Map<Date, List<Plan>> events = {};
+		var events = <Date, List<Plan>>{};
 		var monthEvents = _allEvents[month] ?? await _loadDataForMonth(month);
 		for (var day in monthEvents.entries) {
-			List<Plan> plans = [];
+			var plans = <Plan>[];
 			for (var plan in day.value) {
 				if (filterNotApplied || (!filterNotApplied && ids.any(plan.assignedTo!.contains)))
 					plans.add(plan);
@@ -87,7 +87,7 @@ class CalendarCubit extends Cubit<CalendarState> {
 	  	return _allEvents[month]!;
 	  var currentMonth = Date.fromDate(DateUtils.firstDayOfMonth(Date.now()));
 
-	  Map<Date, List<Plan>> events = {};
+	  var events = <Date, List<Plan>>{};
 	  if (month < currentMonth)
 		  events.addAll(await _loadPastData(_getMonthSpan(month)));
 	  else if (month > currentMonth)
@@ -104,17 +104,17 @@ class CalendarCubit extends Cubit<CalendarState> {
 	Future<Map<Date, List<Plan>>> _loadPastData(DateSpan<Date> span) async {
 		var instances = await _dataRepository.getPlanInstances(childIDs: _childNames.keys.toList(), between: span);
 		var unassignedPlanIDs = instances.map((plan) => plan.planID!).where((id) => !_plans.keys.contains(id)).toList();
-		Map<ObjectId, Plan> pastPlans = Map.from(_plans)..addEntries(_planEntries(await _dataRepository.getPlans(ids: unassignedPlanIDs)));
+		var pastPlans = Map<ObjectId, Plan>.from(_plans)..addEntries(_planEntries(await _dataRepository.getPlans(ids: unassignedPlanIDs)));
 		var dateMap = groupBy<PlanInstance, Date>(instances, (plan) => plan.date!);
 
-		var planWithAssigned = (MapEntry<ObjectId, List<PlanInstance>> planEntry) {
+		planWithAssigned(MapEntry<ObjectId, List<PlanInstance>> planEntry) {
 			var plan = pastPlans[planEntry.key]!;
 		  return plan.copyWith(assignedTo: planEntry.value.map((instance) => instance.assignedTo!).toList());
 		};
-	  Map<Date, List<Plan>> events = {};
+	  var events = <Date, List<Plan>>{};
 		for (var entry in dateMap.entries) {
 			var planToInstanceMap = groupBy<PlanInstance, ObjectId>(entry.value, (plan) => plan.planID!);
-			events[entry.key] = planToInstanceMap.entries.map((planEntry) => planWithAssigned(planEntry)).toList();
+			events[entry.key] = planToInstanceMap.entries.map(planWithAssigned).toList();
 		}
 		return events;
 	}
@@ -122,7 +122,7 @@ class CalendarCubit extends Cubit<CalendarState> {
 	Iterable<MapEntry<ObjectId, Plan>> _planEntries(List<Plan> plans) => plans.map((plan) => MapEntry(plan.id!, plan));
 
 	Map<Date, List<Plan>> _loadFutureData(DateSpan<Date> span) {
-		Map<Date, List<Plan>> events = {};
+		var events = <Date, List<Plan>>{};
 		for (var plan in _plans.entries) {
 			var dates = _repeatabilityService.getRepeatabilityDatesInSpan(plan.value.repeatability!, span);
 			for (var date in dates)

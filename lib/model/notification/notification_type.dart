@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:fokus/model/db/user/user_role.dart';
-import 'package:fokus/model/ui/app_page.dart';
-import 'package:fokus/utils/ui/icon_sets.dart';
 
+import '../../utils/ui/icon_sets.dart';
+import '../db/user/user_role.dart';
+import '../ui/app_page.dart';
 import 'notification_channel.dart';
 
 enum NotificationType {

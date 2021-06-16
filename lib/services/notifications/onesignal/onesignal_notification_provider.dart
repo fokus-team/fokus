@@ -1,26 +1,26 @@
+import 'package:flutter/foundation.dart' as foundation;
 import 'package:flutter/widgets.dart';
-import 'package:get_it/get_it.dart';
-import 'package:flutter/foundation.dart' as Foundation;
-import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 
-import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
-import 'package:fokus/model/navigation/child_dashboard_params.dart';
-import 'package:fokus/model/navigation/plan_instance_params.dart';
-import 'package:fokus/utils/navigation_utils.dart';
-import 'package:fokus/model/notification/notification_data.dart';
-import 'package:fokus/services/app_route_observer.dart';
-import 'package:fokus/model/notification/notification_type.dart';
-import 'package:fokus/services/ui_data_aggregator.dart';
-import 'package:fokus/model/db/user/child.dart';
-import 'package:fokus/model/ui/app_page.dart';
-import 'package:fokus/model/db/user/user_role.dart';
-import 'package:fokus/utils/ui/snackbar_utils.dart';
-import 'package:fokus/services/notifications/notification_provider.dart';
+import '../../../logic/common/auth_bloc/authentication_bloc.dart';
+import '../../../model/db/user/child.dart';
+import '../../../model/db/user/user_role.dart';
+import '../../../model/navigation/child_dashboard_params.dart';
+import '../../../model/navigation/plan_instance_params.dart';
+import '../../../model/notification/notification_data.dart';
+import '../../../model/notification/notification_type.dart';
+import '../../../model/ui/app_page.dart';
+import '../../../utils/navigation_utils.dart';
+import '../../../utils/ui/snackbar_utils.dart';
+import '../../app_route_observer.dart';
+import '../../ui_data_aggregator.dart';
+import '../notification_provider.dart';
 
 
 class OneSignalNotificationProvider extends NotificationProvider {
-	final String appId = Foundation.kReleaseMode ? 'ed3ee23f-aa7a-4fc7-91ab-9967fa7712e5' : 'f82c17d5-95cb-48ef-b8dc-ca8a95406221';
+	final String appId = foundation.kReleaseMode ? 'ed3ee23f-aa7a-4fc7-91ab-9967fa7712e5' : 'f82c17d5-95cb-48ef-b8dc-ca8a95406221';
 
 	final _navigatorKey = GetIt.I<GlobalKey<NavigatorState>>();
 	final _dataAggregator = GetIt.I<UIDataAggregator>();
@@ -32,7 +32,7 @@ class OneSignalNotificationProvider extends NotificationProvider {
 	}
 
 	void _configureOneSignal() async {
-		OneSignal.shared.setLogLevel(Foundation.kReleaseMode ? OSLogLevel.error : OSLogLevel.warn, OSLogLevel.none);
+		OneSignal.shared.setLogLevel(foundation.kReleaseMode ? OSLogLevel.error : OSLogLevel.warn, OSLogLevel.none);
 		OneSignal.shared.setAppId(appId);
 		await OneSignal.shared.promptUserForPushNotificationPermission(fallbackToSettings: true);
 	}
@@ -85,10 +85,10 @@ class OneSignalNotificationProvider extends NotificationProvider {
 		  }
 		  var authBloc = BlocProvider.of<AuthenticationBloc>(context);
 		  if (data.type == NotificationType.badgeAwarded) {
-			  Child user = await dataRepository.getUser(id: activeUser.id, fields: ['badges']) as Child;
+			  var user = await dataRepository.getUser(id: activeUser.id, fields: ['badges']) as Child;
 			  authBloc.add(AuthenticationActiveUserUpdated(Child.copyFrom(activeUser as Child, badges: user.badges)));
 		  } else if (data.type == NotificationType.taskApproved) {
-			  Child user = await dataRepository.getUser(id: activeUser.id, fields: ['points']) as Child;
+			  var user = await dataRepository.getUser(id: activeUser.id, fields: ['points']) as Child;
 			  authBloc.add(AuthenticationActiveUserUpdated(Child.copyFrom(activeUser as Child, points: List.from(user.points!))));
 		  }
 		  onNotificationReceived(data);

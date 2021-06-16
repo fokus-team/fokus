@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fokus/logic/caregiver/forms/badge_form_cubit.dart';
-import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
-import 'package:fokus/model/ui/form/badge_form_model.dart';
-import 'package:fokus/utils/ui/dialog_utils.dart';
-import 'package:fokus/utils/ui/form_config.dart';
-import 'package:fokus/utils/ui/snackbar_utils.dart';
-import 'package:fokus/widgets/buttons/help_icon_button.dart';
-import 'package:fokus/widgets/forms/iconpicker_field.dart';
 
-import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/ui/theme_config.dart';
+import '../../../logic/caregiver/forms/badge_form_cubit.dart';
+import '../../../logic/common/stateful/stateful_cubit.dart';
+import '../../../model/ui/form/badge_form_model.dart';
+import '../../../services/app_locales.dart';
+import '../../../utils/ui/dialog_utils.dart';
+import '../../../utils/ui/form_config.dart';
+import '../../../utils/ui/snackbar_utils.dart';
+import '../../../utils/ui/theme_config.dart';
+import '../../../widgets/buttons/help_icon_button.dart';
+import '../../../widgets/forms/iconpicker_field.dart';
 
 class CaregiverBadgeFormPage extends StatefulWidget {
 	@override
-	_CaregiverBadgeFormPageState createState() => new _CaregiverBadgeFormPageState();
+	_CaregiverBadgeFormPageState createState() => _CaregiverBadgeFormPageState();
 }
 
 class _CaregiverBadgeFormPageState extends State<CaregiverBadgeFormPage> {
@@ -25,8 +25,8 @@ class _CaregiverBadgeFormPageState extends State<CaregiverBadgeFormPage> {
 
 	BadgeFormModel badge = BadgeFormModel();
 
-	TextEditingController _titleController = TextEditingController();
-	TextEditingController _descriptionController = TextEditingController();
+	final TextEditingController _titleController = TextEditingController();
+	final TextEditingController _descriptionController = TextEditingController();
 
 	@override
   void initState() {
@@ -55,7 +55,7 @@ class _CaregiverBadgeFormPageState extends State<CaregiverBadgeFormPage> {
 	    builder: (context, state) {
 				return WillPopScope(
 					onWillPop: () async {
-						bool? ret = await showExitFormDialog(context, true, isDataChanged);
+						var ret = await showExitFormDialog(context, true, isDataChanged);
 						if(ret == null) return false;
 						else return ret;
 					},

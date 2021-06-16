@@ -1,17 +1,17 @@
 import 'package:flutter/widgets.dart';
-import 'package:fokus/services/app_route_observer.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fokus_auth/fokus_auth.dart';
 import 'package:get_it/get_it.dart';
 import 'package:logging/logging.dart';
 
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
-import 'package:fokus/logic/common/settings/password_change/password_change_cubit.dart';
-import 'package:fokus/model/ui/app_page.dart';
-import 'package:fokus/model/ui/auth/link_payload.dart';
-import 'package:fokus/model/ui/auth/password_change_type.dart';
-import 'package:fokus/utils/ui/dialog_utils.dart';
-import 'package:fokus/utils/ui/snackbar_utils.dart';
-import 'package:fokus_auth/fokus_auth.dart';
+import '../../logic/common/auth_bloc/authentication_bloc.dart';
+import '../../logic/common/settings/password_change/password_change_cubit.dart';
+import '../../model/ui/app_page.dart';
+import '../../model/ui/auth/link_payload.dart';
+import '../../model/ui/auth/password_change_type.dart';
+import '../../utils/ui/dialog_utils.dart';
+import '../../utils/ui/snackbar_utils.dart';
+import '../app_route_observer.dart';
 
 enum AppState {
 	opened, running

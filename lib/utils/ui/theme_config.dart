@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fokus/model/currency_type.dart';
+import '../../model/currency_type.dart';
 
 class AppColors {
   // Main app colors

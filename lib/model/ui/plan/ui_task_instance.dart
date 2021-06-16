@@ -1,7 +1,8 @@
 import 'package:equatable/equatable.dart';
-import 'package:fokus/model/db/plan/task.dart';
-import 'package:fokus/model/db/plan/task_instance.dart';
-import 'package:fokus/services/task_instance_service.dart';
+
+import '../../../services/task_instance_service.dart';
+import '../../db/plan/task.dart';
+import '../../db/plan/task_instance.dart';
 
 enum TaskInstanceState {
   completed,

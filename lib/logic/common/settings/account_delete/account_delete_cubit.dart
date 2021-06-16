@@ -1,15 +1,15 @@
 import 'package:bloc/bloc.dart';
-import 'package:formz/formz.dart';
-import 'package:mongo_dart/mongo_dart.dart';
-import 'package:get_it/get_it.dart';
-
-import 'package:fokus/model/db/user/user.dart';
-import 'package:fokus/utils/definitions.dart';
-import 'package:fokus/logic/common/formz_state.dart';
-import 'package:fokus/model/ui/auth/password.dart';
-import 'package:fokus/services/data/data_repository.dart';
 import 'package:fokus_auth/fokus_auth.dart';
-import 'package:fokus/services/app_config/app_config_repository.dart';
+import 'package:formz/formz.dart';
+import 'package:get_it/get_it.dart';
+import 'package:mongo_dart/mongo_dart.dart';
+
+import '../../../../model/db/user/user.dart';
+import '../../../../model/ui/auth/password.dart';
+import '../../../../services/app_config/app_config_repository.dart';
+import '../../../../services/data/data_repository.dart';
+import '../../../../utils/definitions.dart';
+import '../../formz_state.dart';
 
 part 'account_delete_state.dart';
 
@@ -60,7 +60,7 @@ class AccountDeleteCubit extends Cubit<AccountDeleteState> {
 	}
 
   Future accountDeleteFormSubmitted(AuthMethod authMethod) async {
-	  if (this.state.status != FormzStatus.pure)
+	  if (state.status != FormzStatus.pure)
 		  return;
 	  if (authMethod == AuthMethod.email) {
 		  var state = this.state;

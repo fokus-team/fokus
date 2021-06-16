@@ -1,23 +1,23 @@
 import 'package:bson/bson.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
-import 'package:fokus/model/db/user/user.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:fokus/model/notification/notification_text.dart';
-import 'package:fokus/model/notification/notification_button.dart';
-import 'package:fokus/services/notifications/notification_service.dart';
-import 'package:fokus/services/notifications/onesignal/onesignal_notification_provider.dart';
-import 'package:fokus/utils/ui/theme_config.dart';
-import 'package:fokus/model/currency_type.dart';
-import 'package:fokus/model/notification/notification_group.dart';
-import 'package:fokus/model/notification/notification_data.dart';
-import 'package:fokus/model/notification/notification_type.dart';
-import 'package:fokus/model/notification/notification_channel.dart';
-import 'package:fokus/model/notification/notification_icon.dart';
+import '../../../logic/common/auth_bloc/authentication_bloc.dart';
+import '../../../model/currency_type.dart';
+import '../../../model/db/user/user.dart';
+import '../../../model/notification/notification_button.dart';
+import '../../../model/notification/notification_channel.dart';
+import '../../../model/notification/notification_data.dart';
+import '../../../model/notification/notification_group.dart';
+import '../../../model/notification/notification_icon.dart';
+import '../../../model/notification/notification_text.dart';
+import '../../../model/notification/notification_type.dart';
+import '../../../utils/ui/theme_config.dart';
+import '../notification_service.dart';
+import 'onesignal_notification_provider.dart';
 
 class OneSignalNotificationService extends NotificationService {
 	final String _androidSmallIconId = 'ic_stat_onesignal_default';

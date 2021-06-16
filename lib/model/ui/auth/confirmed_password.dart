@@ -1,5 +1,7 @@
-import 'package:fokus/model/ui/auth/password.dart';
 import 'package:formz/formz.dart';
+import 'package:meta/meta.dart';
+
+import 'password.dart';
 
 enum RepeatedPasswordValidationError { noPasswordMatch }
 
@@ -9,6 +11,7 @@ extension RepeatedPassErrorTextKey on RepeatedPasswordValidationError {
 	}[this]!;
 }
 
+@immutable
 class ConfirmedPassword extends FormzInput<String, RepeatedPasswordValidationError> {
 	final Password original;
 

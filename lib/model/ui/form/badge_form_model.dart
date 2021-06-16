@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:fokus/model/db/gamification/badge.dart';
+import '../../db/gamification/badge.dart';
 
 // ignore: must_be_immutable
 class BadgeFormModel extends Equatable {

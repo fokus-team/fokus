@@ -1,10 +1,11 @@
 import 'package:equatable/equatable.dart';
-import 'package:fokus/model/db/user/caregiver.dart';
-import 'package:fokus/model/db/user/child.dart';
-import 'package:fokus/model/db/user/user_role.dart';
-import 'package:fokus/utils/definitions.dart';
 import 'package:meta/meta.dart';
 import 'package:mongo_dart/mongo_dart.dart';
+
+import '../../../utils/definitions.dart';
+import 'caregiver.dart';
+import 'child.dart';
+import 'user_role.dart';
 
 class User extends Equatable {
   final ObjectId? id;
@@ -43,31 +44,31 @@ class User extends Equatable {
 	  id: json['_id'],
 	  role: UserRole.values[json['role']],
 	  name: json['name'],
-    notificationIDs: json['notificationIDs'] != null ? new List<String>.from(json['notificationIDs']) : [],
-    accessCode: json['accessCode'] != null ? new List<int>.from(json['accessCode']) : [],
+    notificationIDs: json['notificationIDs'] != null ? List<String>.from(json['notificationIDs']) : [],
+    accessCode: json['accessCode'] != null ? List<int>.from(json['accessCode']) : [],
     avatar: json['avatar'],
     locale: json['locale'],
-    connections: json['connections'] != null ? new List<ObjectId>.from(json['connections']) : [],
+    connections: json['connections'] != null ? List<ObjectId>.from(json['connections']) : [],
   );
 
   Json toJson() {
-    final data = Json();
-    if (this.avatar != null)
-      data['avatar'] = this.avatar;
-    if (this.id != null)
-      data['_id'] = this.id;
-    if (this.name != null)
-	    data['name'] = this.name;
-    if (this.locale != null)
-	    data['locale'] = this.locale;
-    if (this.role != null)
-	    data['role'] = this.role!.index;
-    if (this.accessCode != null)
-      data['accessCode'] = this.accessCode;
-    if (this.notificationIDs != null)
-	    data['notificationIDs'] = this.notificationIDs;
-    if (this.connections != null)
-      data['connections'] = this.connections;
+    final data = <String, dynamic>{};
+    if (avatar != null)
+      data['avatar'] = avatar;
+    if (id != null)
+      data['_id'] = id;
+    if (name != null)
+	    data['name'] = name;
+    if (locale != null)
+	    data['locale'] = locale;
+    if (role != null)
+	    data['role'] = role!.index;
+    if (accessCode != null)
+      data['accessCode'] = accessCode;
+    if (notificationIDs != null)
+	    data['notificationIDs'] = notificationIDs;
+    if (connections != null)
+      data['connections'] = connections;
     return data;
   }
 

@@ -3,20 +3,20 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
-import 'package:logging/logging.dart';
-import 'package:get_it/get_it.dart';
 import 'package:fokus_auth/fokus_auth.dart';
+import 'package:get_it/get_it.dart';
+import 'package:logging/logging.dart';
 
-import 'package:fokus/services/exception/auth_exceptions.dart';
-import 'package:fokus/services/analytics_service.dart';
-import 'package:fokus/services/observers/user/authenticated_user_notifier.dart';
-import 'package:fokus/services/data/data_repository.dart';
-import 'package:fokus/services/app_config/app_config_repository.dart';
-import 'package:fokus/model/db/user/caregiver.dart';
-import 'package:fokus/model/db/user/user_role.dart';
-import 'package:fokus/model/db/user/user.dart';
-import 'package:fokus/model/db/user/child.dart';
-import 'package:fokus/utils/ui/snackbar_utils.dart';
+import '../../../model/db/user/caregiver.dart';
+import '../../../model/db/user/child.dart';
+import '../../../model/db/user/user.dart';
+import '../../../model/db/user/user_role.dart';
+import '../../../services/analytics_service.dart';
+import '../../../services/app_config/app_config_repository.dart';
+import '../../../services/data/data_repository.dart';
+import '../../../services/exception/auth_exceptions.dart';
+import '../../../services/observers/user/authenticated_user_notifier.dart';
+import '../../../utils/ui/snackbar_utils.dart';
 
 part 'authentication_event.dart';
 part 'authentication_state.dart';
@@ -31,7 +31,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 	final _navigatorKey = GetIt.I<GlobalKey<NavigatorState>>();
 
 	late StreamSubscription<AuthenticatedUser> _userSubscription;
-	AuthenticatedUserNotifier _userNotifier;
+	final AuthenticatedUserNotifier _userNotifier;
 
   AuthenticationBloc(this._userNotifier) : super(AuthenticationState.unknown()) {
 	  _userSubscription = _authenticationProvider.user.listen((user) => add(AuthenticationUserChanged(user)));

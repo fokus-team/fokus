@@ -1,11 +1,12 @@
 import 'package:equatable/equatable.dart';
-import 'package:fokus/model/db/date/date.dart';
-import 'package:fokus/model/db/date_span.dart';
-import 'package:fokus/model/db/plan/plan.dart';
-import 'package:fokus/model/db/plan/repeatability_type.dart';
-import 'package:fokus/model/ui/form/task_form_model.dart';
-import 'package:fokus/services/plan_repeatability_service.dart';
 import 'package:mongo_dart/mongo_dart.dart' show ObjectId;
+
+import '../../../services/plan_repeatability_service.dart';
+import '../../db/date/date.dart';
+import '../../db/date_span.dart';
+import '../../db/plan/plan.dart';
+import '../../db/plan/repeatability_type.dart';
+import 'task_form_model.dart';
 
 enum PlanFormRepeatability { recurring, onlyOnce, untilCompleted }
 enum PlanFormRepeatabilityRage { weekly, monthly }

@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:round_spot/round_spot.dart' as round_spot;
 
-import 'package:fokus/logic/caregiver/tasks_evaluation_cubit.dart';
-import 'package:fokus/model/navigation/report_form_params.dart';
-import 'package:fokus/model/ui/plan/ui_task_report.dart';
-import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/ui/dialog_utils.dart';
-import 'package:fokus/utils/ui/form_config.dart';
-import 'package:fokus/utils/ui/theme_config.dart';
-import 'package:fokus/widgets/cards/report_card.dart';
-import 'package:fokus/widgets/chips/attribute_chip.dart';
+import '../../../logic/caregiver/tasks_evaluation_cubit.dart';
+import '../../../model/navigation/report_form_params.dart';
+import '../../../model/ui/plan/ui_task_report.dart';
+import '../../../services/app_locales.dart';
+import '../../../utils/ui/dialog_utils.dart';
+import '../../../utils/ui/form_config.dart';
+import '../../../utils/ui/theme_config.dart';
+import '../../../widgets/cards/report_card.dart';
+import '../../../widgets/chips/attribute_chip.dart';
 
 class ReportFormPage extends StatefulWidget {
 	final UITaskReport report;
@@ -19,7 +19,7 @@ class ReportFormPage extends StatefulWidget {
 	ReportFormPage(ReportFormParams params) : report = params.report, saveCallback = params.saveCallback;
 
 	@override
-	_ReportFormPageState createState() => new _ReportFormPageState();
+	_ReportFormPageState createState() => _ReportFormPageState();
 }
 
 class _ReportFormPageState extends State<ReportFormPage> {
@@ -30,7 +30,7 @@ class _ReportFormPageState extends State<ReportFormPage> {
 	bool isDataChanged = false;
 
 	late FocusNode _focusNodeComment;
-	TextEditingController _commentController = TextEditingController();
+	final TextEditingController _commentController = TextEditingController();
 	UITaskReportMark mark = UITaskReportMark.rated3;
 	bool isRejected = false;
 
@@ -52,7 +52,7 @@ class _ReportFormPageState extends State<ReportFormPage> {
   Widget build(BuildContext context) {
 		return WillPopScope(
 			onWillPop: () async {
-				bool? ret = await showExitFormDialog(context, true, isDataChanged);
+				var ret = await showExitFormDialog(context, true, isDataChanged);
 				if(ret == null || !ret) return false;
 				else return true;
 			},
@@ -139,8 +139,8 @@ class _ReportFormPageState extends State<ReportFormPage> {
 
 	Widget _getPointsAssigned() {
 		var taskPoints = widget.report.uiTask.task.points!;
-		int totalPoints = taskPoints.quantity!;
-		int points = TasksEvaluationCubit.getPointsAwarded(totalPoints, mark.value!);
+		var totalPoints = taskPoints.quantity!;
+		var points = TasksEvaluationCubit.getPointsAwarded(totalPoints, mark.value!);
 		return AttributeChip.withCurrency(
 			currencyType: taskPoints.type!,
 			content: '$points / $totalPoints',
@@ -185,8 +185,8 @@ class _ReportFormPageState extends State<ReportFormPage> {
 								},
 							),
 							Text(
-								'${AppLocales.of(context).translate(_pageKey+'.ratingLabel')}: ${mark.value.toString()}/5 (' + 
-								AppLocales.of(context).translate('$_pageKey.ratingLevels.${mark.toString().split('.').last}') + ')',
+								'${AppLocales.of(context).translate('$_pageKey.ratingLabel')}: ${mark.value.toString()}/5 ('
+										'${AppLocales.of(context).translate('$_pageKey.ratingLevels.${mark.toString().split('.').last}')})',
 								style: TextStyle(fontWeight: FontWeight.bold)
 							),
 							widget.report.uiTask.task.points != null ? Padding(
@@ -197,7 +197,7 @@ class _ReportFormPageState extends State<ReportFormPage> {
 									spacing: 2.0,
 									children: [
 										Text(
-											AppLocales.of(context).translate('$_pageKey.pointsAssigned') + ': ',
+											'${AppLocales.of(context).translate('$_pageKey.pointsAssigned')}: ',
 											style: TextStyle(color: AppColors.mediumTextColor)
 										),
 										_getPointsAssigned()

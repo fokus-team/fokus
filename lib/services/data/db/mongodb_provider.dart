@@ -1,10 +1,11 @@
 import 'dart:async';
+
 import 'package:fokus_auth/fokus_auth.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
-import 'package:fokus/model/db/collection.dart';
-import 'package:fokus/services/exception/db_exceptions.dart';
-import 'package:fokus/utils/definitions.dart';
+import '../../../model/db/collection.dart';
+import '../../../utils/definitions.dart';
+import '../../exception/db_exceptions.dart';
 
 
 class MongoDbProvider {
@@ -52,15 +53,15 @@ class MongoDbProvider {
 	Future<bool> exists(Collection collection, SelectorBuilder selector) async => await count(collection, selector) > 0;
 
 	Future<T?> queryOneTyped<T>(Collection collection, SelectorBuilder query, T? Function(Json?) constructElement) {
-		return this._queryOne(collection, query).then((response) => constructElement(response));
+		return _queryOne(collection, query).then((response) => constructElement(response));
 	}
 
 	Future<List<T>> queryTyped<T>(Collection collection, SelectorBuilder query, T Function(Json) constructElement) {
-		return this._query(collection, query).then((response) => response.map((element) => constructElement(element)).toList());
+		return _query(collection, query).then((response) => response.map((element) => constructElement(element)).toList());
 	}
 
 	Future<Map<ObjectId, T>> queryTypedMap<T>(Collection collection, SelectorBuilder query, MapEntry<ObjectId, T> Function(Json) constructEntry) {
-		return this._query(collection, query).then((response) async => Map.fromEntries(response.map((element) => constructEntry(element)).toList()));
+		return _query(collection, query).then((response) async => Map.fromEntries(response.map((element) => constructEntry(element)).toList()));
 	}
 
 	Future<Json?> _queryOne(Collection collection, SelectorBuilder selector) => _execute(() => _client.collection(collection.name).findOne(validateSelector(selector)));
@@ -69,7 +70,7 @@ class MongoDbProvider {
 	}
 
 	Future<T> _execute<T>(Future<T> Function() query) async {
-		var doExecute = ({bool dropConnection = false}) async {
+		doExecute({bool dropConnection = false}) async {
 			await connect(dropExisting: dropConnection);
 			return await query();
 		};
@@ -83,7 +84,7 @@ class MongoDbProvider {
 			return await doExecute(dropConnection: true);
 		} catch(e) {
 			if (e is NoDbConnection)
-				throw e;
+				rethrow;
 			throw DbQueryFailed(e);
 		}
 	}

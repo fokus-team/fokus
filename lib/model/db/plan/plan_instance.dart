@@ -1,9 +1,9 @@
-import 'package:fokus/model/db/date/date.dart';
-import 'package:fokus/model/db/date/time_date.dart';
-import 'package:fokus/model/db/date_span.dart';
-import 'package:fokus/utils/definitions.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
+import '../../../utils/definitions.dart';
+import '../date/date.dart';
+import '../date/time_date.dart';
+import '../date_span.dart';
 import 'plan.dart';
 import 'plan_instance_state.dart';
 
@@ -31,32 +31,32 @@ class PlanInstance {
       assignedTo: json['assignedTo'],
       date: Date.parseDBDate(json['date']),
 	    duration: json['duration'] != null ? (json['duration'] as List).map((i) => DateSpan.fromJson<TimeDate>(i)!).toList() : [],
-      taskInstances: json['taskInstances'] != null ? new List<ObjectId>.from(json['taskInstances']) : [],
-	    tasks: json['tasks'] != null ? new List<ObjectId>.from(json['tasks']) : [],
-	    addedTasks: json['addedTasks'] != null ? new List<ObjectId>.from(json['addedTasks']) : [],
+      taskInstances: json['taskInstances'] != null ? List<ObjectId>.from(json['taskInstances']) : [],
+	    tasks: json['tasks'] != null ? List<ObjectId>.from(json['tasks']) : [],
+	    addedTasks: json['addedTasks'] != null ? List<ObjectId>.from(json['addedTasks']) : [],
     ) : null;
   }
 
   Json toJson() {
-    final Json data = new Json();
+    final data = <String, dynamic>{};
     if (id != null)
-	    data['_id'] = this.id;
+	    data['_id'] = id;
     if (planID != null)
-	    data['planID'] = this.planID;
+	    data['planID'] = planID;
     if (state != null)
-      data['state'] = this.state!.index;
+      data['state'] = state!.index;
     if (assignedTo != null)
-      data['assignedTo'] = this.assignedTo;
+      data['assignedTo'] = assignedTo;
     if (date != null)
-      data['date'] = this.date!.toDBDate();
-    if (this.duration != null)
-	    data['duration'] = this.duration!.map((v) => v.toJson()).toList();
-    if (this.taskInstances != null)
-      data['taskInstances'] = this.taskInstances;
-    if (this.addedTasks != null)
-	    data['addedTasks'] = this.addedTasks;
-    if (this.tasks != null)
-	    data['tasks'] = this.tasks;
+      data['date'] = date!.toDBDate();
+    if (duration != null)
+	    data['duration'] = duration!.map((v) => v.toJson()).toList();
+    if (taskInstances != null)
+      data['taskInstances'] = taskInstances;
+    if (addedTasks != null)
+	    data['addedTasks'] = addedTasks;
+    if (tasks != null)
+	    data['tasks'] = tasks;
     return data;
   }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:fokus/model/ui/ui_button.dart';
-import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/ui/theme_config.dart';
+import '../../model/ui/ui_button.dart';
+import '../../services/app_locales.dart';
+import '../../utils/ui/theme_config.dart';
 
 class RoundedButton extends StatelessWidget {
   final UIButton button;

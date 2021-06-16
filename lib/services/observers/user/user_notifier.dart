@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fokus/model/db/user/user.dart';
+import '../../../model/db/user/user.dart';
 
 import 'user_observer.dart';
 

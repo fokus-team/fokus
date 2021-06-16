@@ -1,13 +1,13 @@
-import 'package:fokus/model/db/date/time_date.dart';
-import 'package:fokus/model/db/date_span.dart';
-import 'package:fokus/model/db/plan/task_status.dart';
 import 'package:logging/logging.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
-import 'package:fokus/model/db/collection.dart';
-import 'package:fokus/model/db/plan/task.dart';
-import 'package:fokus/services/data/db/db_repository.dart';
-import 'package:fokus/model/db/plan/task_instance.dart';
+import '../../../model/db/collection.dart';
+import '../../../model/db/date/time_date.dart';
+import '../../../model/db/date_span.dart';
+import '../../../model/db/plan/task.dart';
+import '../../../model/db/plan/task_instance.dart';
+import '../../../model/db/plan/task_status.dart';
+import '../db/db_repository.dart';
 
 mixin TaskDbRepository implements DbRepository {
 	final Logger _logger = Logger('TaskDbRepository');
@@ -95,7 +95,7 @@ mixin TaskDbRepository implements DbRepository {
 	}
 
 	SelectorBuilder _buildTaskQuery({ObjectId? id, List<ObjectId>? ids, List<ObjectId>? planIds, List<ObjectId>? tasksIds, ObjectId? planId, ObjectId? planInstanceId, List<ObjectId>? planInstancesIds, bool? requiredOnly, bool? optionalOnly, bool? isCompleted, TaskState? state}) {
-		SelectorBuilder query = where;
+		var query = where;
 		if (planId != null && planInstanceId != null)
 			_logger.warning("Both plan and plan instance IDs specified in task query");
 		if ((requiredOnly ?? false) && (optionalOnly ?? false))

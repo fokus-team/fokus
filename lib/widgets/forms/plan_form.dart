@@ -1,26 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fokus/model/db/user/child.dart';
-import 'package:mongo_dart/mongo_dart.dart' as Mongo;
+import 'package:mongo_dart/mongo_dart.dart' as mongo;
 import 'package:round_spot/round_spot.dart' as round_spot;
-
-import 'package:fokus/logic/caregiver/forms/plan/plan_form_cubit.dart';
-import 'package:fokus/model/db/date/date.dart';
-import 'package:fokus/model/db/date_span.dart';
-import 'package:fokus/model/ui/app_page.dart';
-import 'package:fokus/utils/ui/form_config.dart';
-import 'package:fokus/widgets/buttons/bottom_sheet_confirm_button.dart';
 import 'package:smart_select/smart_select.dart';
 
-import 'package:fokus/model/ui/form/plan_form_model.dart';
-
-import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/ui/icon_sets.dart';
-import 'package:fokus/utils/ui/theme_config.dart';
-
-import 'package:fokus/widgets/forms/datepicker_field.dart';
-import 'package:fokus/widgets/cards/item_card.dart';
-import 'package:fokus/widgets/general/app_hero.dart';
+import '../../logic/caregiver/forms/plan/plan_form_cubit.dart';
+import '../../model/db/date/date.dart';
+import '../../model/db/date_span.dart';
+import '../../model/db/user/child.dart';
+import '../../model/ui/app_page.dart';
+import '../../model/ui/form/plan_form_model.dart';
+import '../../services/app_locales.dart';
+import '../../utils/ui/form_config.dart';
+import '../../utils/ui/icon_sets.dart';
+import '../../utils/ui/theme_config.dart';
+import '../buttons/bottom_sheet_confirm_button.dart';
+import '../cards/item_card.dart';
+import '../general/app_hero.dart';
+import 'datepicker_field.dart';
 
 class PlanForm extends StatefulWidget {
 	final PlanFormModel plan;
@@ -32,7 +29,7 @@ class PlanForm extends StatefulWidget {
 	});
 
 	@override
-	_PlanFormState createState() => new _PlanFormState();
+	_PlanFormState createState() => _PlanFormState();
 }
 
 class _PlanFormState extends State<PlanForm> {
@@ -40,10 +37,10 @@ class _PlanFormState extends State<PlanForm> {
 
 	bool fieldsValidated = false;
 
-	TextEditingController _planNameController = TextEditingController();
-	TextEditingController _dateOneDayOnlyController = TextEditingController();
-	TextEditingController _dateRageFromController = TextEditingController();
-	TextEditingController _dateRageToController = TextEditingController();
+	final TextEditingController _planNameController = TextEditingController();
+	final TextEditingController _dateOneDayOnlyController = TextEditingController();
+	final TextEditingController _dateRageFromController = TextEditingController();
+	final TextEditingController _dateRageToController = TextEditingController();
 
 	String getOnlyDatePart(DateTime? date) => date != null ? date.toLocal().toString().split(' ')[0] : '';
 
@@ -125,11 +122,11 @@ class _PlanFormState extends State<PlanForm> {
 	}
 
 	Widget getChildrenAssignedField({List<Child> children = const [], bool loading = false}) {
-		return SmartSelect<Mongo.ObjectId>.multiple(
+		return SmartSelect<mongo.ObjectId>.multiple(
 			title: AppLocales.of(context).translate('$_pageKey.assignedChildren.label'),
 			placeholder: AppLocales.of(context).translate('$_pageKey.assignedChildren.hint'),
 			selectedValue: widget.plan.children,
-			choiceItems: S2Choice.listFrom<Mongo.ObjectId, Child>(
+			choiceItems: S2Choice.listFrom<mongo.ObjectId, Child>(
 				source: children,
 				value: (index, item) => item.id!,
 				title: (index, item) => item.name!,
@@ -228,8 +225,8 @@ class _PlanFormState extends State<PlanForm> {
 	}
 
 	Widget buildRecurringFields() {
-		bool isWeekly = widget.plan.repeatabilityRage == PlanFormRepeatabilityRage.weekly;
-		List<int> dayList = List<int>.generate(isWeekly ? 7 : 31, (i) => i + 1);
+		var isWeekly = widget.plan.repeatabilityRage == PlanFormRepeatabilityRage.weekly;
+		var dayList = List<int>.generate(isWeekly ? 7 : 31, (i) => i + 1);
 
 		String daysDisplay(List<int>? values) {
 			if(values == null || values.isEmpty)
@@ -241,7 +238,7 @@ class _PlanFormState extends State<PlanForm> {
 			).join(', ');
 		}
 
-		List<S2Choice<int>> dayChoiceList = S2Choice.listFrom<int, int>(
+		var dayChoiceList = S2Choice.listFrom<int, int>(
 			source: dayList,
 			value: (index, item) => item,
 			title: (index, item) => isWeekly ? AppLocales.of(context).translate('date.weekday', {'WEEKDAY': item.toString()}) : item.toString()

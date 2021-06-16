@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
-import 'package:fokus/widgets/general/app_loader.dart';
+import '../logic/common/stateful/stateful_cubit.dart';
+import 'general/app_loader.dart';
 
 class SubmitPopConfig {
 	final int count;

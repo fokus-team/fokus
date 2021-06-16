@@ -1,10 +1,10 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/widgets.dart';
-import 'package:fokus/logic/common/user_code_verifier.dart';
 import 'package:get_it/get_it.dart';
 
-import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
-import 'package:fokus/services/app_config/app_config_repository.dart';
+import '../../../services/app_config/app_config_repository.dart';
+import '../../common/auth_bloc/authentication_bloc.dart';
+import '../../common/user_code_verifier.dart';
 
 class ChildAuthCubitBase<State> extends Cubit<State> with UserCodeVerifier<State> {
 	@protected

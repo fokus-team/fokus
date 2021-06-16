@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:fokus/model/db/gamification/child_reward.dart';
 import 'package:intl/intl.dart';
 
-import 'package:fokus/model/ui/child_card_model.dart';
-import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/string_utils.dart';
-import 'package:fokus/utils/ui/icon_sets.dart';
-import 'package:fokus/widgets/chips/attribute_chip.dart';
-import 'package:fokus/model/db/gamification/points.dart';
-import 'package:fokus/model/db/gamification/reward.dart';
-import 'package:fokus/model/ui/ui_button.dart';
-
+import '../../model/db/gamification/child_reward.dart';
+import '../../model/db/gamification/points.dart';
+import '../../model/db/gamification/reward.dart';
+import '../../model/ui/child_card_model.dart';
+import '../../model/ui/ui_button.dart';
+import '../../services/app_locales.dart';
+import '../../utils/string_utils.dart';
+import '../../utils/ui/icon_sets.dart';
+import '../chips/attribute_chip.dart';
 import 'item_card.dart';
 
 class RewardItemCard extends StatelessWidget {
@@ -36,8 +35,9 @@ class RewardItemCard extends StatelessWidget {
   	late String subtitle;
   	if (showSubtitle) {
   		if (reward is ChildReward) {
-  		  subtitle = AppLocales.of(context).translate('$_rewardsKey.claimDateLabel') + ' ' +
-					  DateFormat.yMd(AppLocales.instance.locale.toString()).format((reward as ChildReward).date!).toString();
+  			var label = AppLocales.of(context).translate('$_rewardsKey.claimDateLabel');
+			  var date = DateFormat.yMd(AppLocales.instance.locale.toString()).format((reward as ChildReward).date!);
+  		  subtitle = '$label $date';
   		} else {
   		  subtitle = AppLocales.of(context).translate((reward.limit != null || reward.limit == 0 ) ?
 			  '$_rewardsKey.limitedReward' : '$_rewardsKey.unlimitedReward', {'REWARD_LIMIT': reward.limit.toString()});

@@ -1,16 +1,16 @@
-import 'package:fokus/model/db/user/caregiver.dart';
-import 'package:fokus/services/analytics_service.dart';
-import 'package:formz/formz.dart';
-
-import 'package:fokus/model/ui/auth/name.dart';
-import 'package:fokus/logic/child/auth/child_auth_cubit_base.dart';
-import 'package:fokus/model/db/user/user_role.dart';
-import 'package:fokus/model/ui/auth/user_code.dart';
 import 'package:fokus_auth/fokus_auth.dart';
-import 'package:fokus/model/db/user/child.dart';
-import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
-import 'package:fokus/logic/common/formz_state.dart';
+import 'package:formz/formz.dart';
 import 'package:get_it/get_it.dart';
+
+import '../../../../model/db/user/caregiver.dart';
+import '../../../../model/db/user/child.dart';
+import '../../../../model/db/user/user_role.dart';
+import '../../../../model/ui/auth/name.dart';
+import '../../../../model/ui/auth/user_code.dart';
+import '../../../../services/analytics_service.dart';
+import '../../../common/auth_bloc/authentication_bloc.dart';
+import '../../../common/formz_state.dart';
+import '../child_auth_cubit_base.dart';
 
 part 'child_sign_up_state.dart';
 
@@ -52,7 +52,7 @@ class ChildSignUpCubit extends ChildAuthCubitBase<ChildSignUpState> {
 
   void caregiverCodeChanged(String value) async {
 	  var caregiverField = UserCode.dirty(value);
-	  Set<int> takenAvatars = {};
+	  var takenAvatars = <int>{};
 	  if (caregiverField.valid && await verifyUserCode(value, UserRole.caregiver))
 			  takenAvatars = await _getTakenAvatars(value);
 	  caregiverField = UserCode.pure(value);

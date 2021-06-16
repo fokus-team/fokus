@@ -1,11 +1,12 @@
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/ui/app_paths.dart';
-import 'package:fokus/utils/ui/icon_sets.dart';
-import 'package:fokus/widgets/buttons/bottom_sheet_confirm_button.dart';
 import 'package:smart_select/smart_select.dart';
+
+import '../../services/app_locales.dart';
+import '../../utils/ui/app_paths.dart';
+import '../../utils/ui/icon_sets.dart';
+import '../buttons/bottom_sheet_confirm_button.dart';
 
 enum IconPickerType { reward, badge }
 
@@ -39,7 +40,7 @@ class IconPickerField extends StatefulWidget {
 	}) : this(title: title, groupTextKey: groupTextKey, callback: callback, value: value, type: IconPickerType.badge);
 
 	@override
-  State<StatefulWidget> createState() => new _IconPickerFieldState();
+  State<StatefulWidget> createState() => _IconPickerFieldState();
 
 }
 
@@ -47,7 +48,7 @@ class _IconPickerFieldState extends State<IconPickerField> {
 
   @override
   Widget build(BuildContext context) {
-		bool isRewardType = widget.type == IconPickerType.reward;
+		var isRewardType = widget.type == IconPickerType.reward;
 
 		return Padding(
 			padding: EdgeInsets.symmetric(vertical: 10.0),
@@ -55,8 +56,8 @@ class _IconPickerFieldState extends State<IconPickerField> {
 				title: widget.title,
 				selectedValue: widget.value,
 				choiceItems: List.generate((isRewardType ? rewardIcons : badgeIcons).length, (index) {
-						final String name = AppLocales.of(context).translate(
-							widget.groupTextKey + '.${(isRewardType ? rewardIcons : badgeIcons)[index]?.label.toString().split('.').last}'
+						final name = AppLocales.of(context).translate(
+								'${widget.groupTextKey}.${(isRewardType ? rewardIcons : badgeIcons)[index]?.label.toString().split('.').last}'
 						);
 						return S2Choice(
 							title: name,

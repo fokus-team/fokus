@@ -1,11 +1,11 @@
 import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart';
 
-import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
-import 'package:fokus/model/notification/notification_type.dart';
-import 'package:fokus/model/db/gamification/reward.dart';
-import 'package:fokus/model/db/user/child.dart';
-import 'package:fokus/services/data/data_repository.dart';
+import '../../../model/db/gamification/reward.dart';
+import '../../../model/db/user/child.dart';
+import '../../../model/notification/notification_type.dart';
+import '../../../services/data/data_repository.dart';
+import '../../common/stateful/stateful_cubit.dart';
 
 class DashboardRewardsCubit extends StatefulCubit {
 	late Child child;

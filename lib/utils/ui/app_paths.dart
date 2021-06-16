@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:fokus/model/currency_type.dart';
-import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/ui/icon_sets.dart';
+import '../../model/currency_type.dart';
+import '../../services/app_locales.dart';
+import 'icon_sets.dart';
 
 enum AssetPathType { flutter, drawable }
 

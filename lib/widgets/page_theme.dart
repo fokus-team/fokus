@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
-import 'package:fokus/model/db/user/user_role.dart';
-import 'package:fokus/model/ui/app_page.dart';
-import 'package:fokus/utils/ui/theme_config.dart';
+import '../logic/common/auth_bloc/authentication_bloc.dart';
+import '../model/db/user/user_role.dart';
+import '../model/ui/app_page.dart';
+import '../utils/ui/theme_config.dart';
 
 class PageTheme extends StatelessWidget {
 	final Widget child;

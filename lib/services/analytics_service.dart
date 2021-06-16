@@ -1,15 +1,15 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
-
-import 'package:fokus/model/db/gamification/badge.dart';
-import 'package:fokus/model/db/gamification/reward.dart';
-import 'package:fokus/model/db/plan/plan.dart';
-import 'package:fokus/model/db/plan/plan_instance.dart';
-import 'package:fokus/model/db/plan/repeatability_type.dart';
-import 'package:fokus/model/db/plan/task_instance.dart';
-import 'package:fokus/model/ui/plan/ui_task_report.dart';
 import 'package:fokus_auth/fokus_auth.dart';
-import 'package:fokus/utils/definitions.dart';
+
+import '../model/db/gamification/badge.dart';
+import '../model/db/gamification/reward.dart';
+import '../model/db/plan/plan.dart';
+import '../model/db/plan/plan_instance.dart';
+import '../model/db/plan/repeatability_type.dart';
+import '../model/db/plan/task_instance.dart';
+import '../model/ui/plan/ui_task_report.dart';
+import '../utils/definitions.dart';
 
 class AnalyticsService {
 	final FirebaseAnalytics _analytics = FirebaseAnalytics();

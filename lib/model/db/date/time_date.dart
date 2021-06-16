@@ -10,13 +10,15 @@ class TimeDate extends DateBase {
   static TimeDate? parseDBDate(DateTime? date) => date != null ? TimeDate.fromDate(date.toLocal()) : null;
 
   @override
-  DateTime toDBDate() => this.toUtc();
+  DateTime toDBDate() => toUtc();
 
   @override
   bool operator ==(dynamic other) => super==(other) && hour == other.hour && minute == other.minute && second == other.second;
   @override
   int get hashCode => combine(combine(combine(super.hashCode, hour.hashCode), minute.hashCode), second.hashCode);
 
+  @override
   bool operator >(DateBase? other) => super>=(other) && (hour > other!.hour || (hour == other.hour && (minute > other.minute || (minute == other.minute && second > other.second))));
+  @override
   bool operator <(DateBase? other) => super>=(other) && (hour < other!.hour || (hour == other.hour && (minute < other.minute || (minute == other.minute && second < other.second))));
 }

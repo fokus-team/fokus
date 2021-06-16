@@ -234,14 +234,8 @@ class TaskAppHeaderState extends State<TaskAppHeader> with TickerProviderStateMi
   	else return (_) => _timerCompletionCubit!..startTimer(paused: true);
 	}
 
-	int _getDuration() {
-  	return sumDurations(this.widget.state.uiTask!.instance.duration).inSeconds;
-	}
-
-	int _getTimerInSeconds() {
-  	return this.widget.state.uiTask!.instance.timer!*60;
-	}
-
+	int _getDuration() => sumDurations(this.widget.state.uiTask!.instance.duration).inSeconds;
+	int _getTimerInSeconds() => this.widget.state.uiTask!.instance.timer! * 60;
 
 	String _getTimerTitle() {
 		if(this.widget.state.uiTask?.instance.timer != null) {

@@ -23,19 +23,15 @@ class UITaskInstance extends Equatable {
   final TaskInstance instance;
   final Task task;
   final TaskInstanceState? state;
-  final int Function()? elapsedDuration;
 
   UITaskInstance({
     required this.instance,
 	  required this.task,
 	  TaskInstanceState? state,
-    this.elapsedDuration = _defElapsedDuration,
   }) : state = state ?? TaskInstanceService.getSingleTaskInstanceStatus(
 	  task: instance,
   );
 
   @override
   List<Object?> get props => [instance, task, state];
-
-  static int _defElapsedDuration() => 0;
 }

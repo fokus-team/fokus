@@ -3,7 +3,6 @@ import 'package:fokus/model/db/plan/task.dart';
 import 'package:fokus/model/db/plan/task_instance.dart';
 import 'package:fokus/model/db/plan/task_status.dart';
 import 'package:fokus/model/ui/plan/ui_task_instance.dart';
-import 'package:fokus/utils/duration_utils.dart';
 import 'package:get_it/get_it.dart';
 
 import 'data/data_repository.dart';
@@ -16,11 +15,7 @@ class TaskInstanceService {
 		List<UITaskInstance> uiTaskInstances = [];
 		for(int i=0; i<taskInstances.length; i++) {
 			var task = await _dataRepository.getTask(taskId: taskInstances[i].taskID);
-			int Function() elapsedTimePassed;
-			if(taskUiTypes[i].inProgress)
-				elapsedTimePassed = () => taskUiTypes[i] == TaskInstanceState.currentlyPerformed ? sumDurations(taskInstances[i].duration).inSeconds : sumDurations(taskInstances[i].breaks).inSeconds;
-			else elapsedTimePassed = () => 0;
-			uiTaskInstances.add(UITaskInstance(instance: taskInstances[i], task: task!, state: taskUiTypes[i], elapsedDuration: elapsedTimePassed));
+			uiTaskInstances.add(UITaskInstance(instance: taskInstances[i], task: task!, state: taskUiTypes[i]));
 		}
 		return uiTaskInstances;
 	}

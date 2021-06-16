@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:fokus/utils/definitions.dart';
 
 import 'package:fokus/utils/ticker.dart';
 
@@ -9,19 +10,19 @@ part 'timer_state.dart';
 
 class TimerCubit extends Cubit<TimerState> {
 	final Ticker _ticker;
-	int Function() _currentValue;
+	ElapsedTime _elapsedTIme;
 	CountDirection _direction;
 	final bool countUpOnComplete;
 	void Function()? _onFinish;
 
 	StreamSubscription<int>? _tickerSubscription;
 
-	TimerCubit.up(this._currentValue, [this._onFinish]) : _ticker = Ticker(), _direction = CountDirection.up, countUpOnComplete = false, super(TimerInitial(_currentValue()));
-	TimerCubit.down(this._currentValue, [this.countUpOnComplete = false, this._onFinish]) : _ticker = Ticker(), this._direction = CountDirection.down, super(TimerInitial(_currentValue()));
+	TimerCubit.up(this._elapsedTIme, [this._onFinish]) : _ticker = Ticker(), _direction = CountDirection.up, countUpOnComplete = false, super(TimerInitial(_elapsedTIme()));
+	TimerCubit.down(this._elapsedTIme, [this.countUpOnComplete = false, this._onFinish]) : _ticker = Ticker(), this._direction = CountDirection.down, super(TimerInitial(_elapsedTIme()));
 
 
 	void startTimer({bool paused = false}) {
-		int value = _currentValue();
+		int value = _elapsedTIme();
 		emit(TimerInProgress(value));
 		_tickerSubscription?.cancel();
 		_tickerSubscription = _ticker.tick(direction: _direction, initialValue: value).listen((value) => _timerTicked(value));
@@ -38,11 +39,11 @@ class TimerCubit extends Cubit<TimerState> {
 			_tickerSubscription!.resume();
 	}
 
-	void resetTimer({required int Function() currentValue, CountDirection direction = CountDirection.up}) {
-		this._currentValue = currentValue;
+	void resetTimer({required ElapsedTime elapsedTIme, CountDirection direction = CountDirection.up}) {
+		this._elapsedTIme = elapsedTIme;
 		this._direction = direction;
 		_tickerSubscription?.cancel();
-		emit(TimerInitial(_currentValue()));
+		emit(TimerInitial(_elapsedTIme()));
 	}
 
 	void _timerTicked(int value) {
@@ -52,7 +53,7 @@ class TimerCubit extends Cubit<TimerState> {
 		else {
 			if(_onFinish != null) _onFinish!();
 			if(countUpOnComplete) {
-				resetTimer(currentValue: () => 0, direction: CountDirection.up);
+				resetTimer(elapsedTIme: () => 0, direction: CountDirection.up);
 				startTimer();
 			}
 			else {

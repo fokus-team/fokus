@@ -107,7 +107,7 @@ class FokusApp extends StatefulWidget {
 	final RouteObserver<PageRoute> routeObserver;
 	final FirebaseAnalyticsObserver pageObserver;
 
-  FokusApp({required this.navigatorKey, required this.routeObserver, required this.pageObserver});
+  const FokusApp({required this.navigatorKey, required this.routeObserver, required this.pageObserver});
 
   @override
   _FokusAppState createState() => _FokusAppState();
@@ -118,7 +118,7 @@ class _FokusAppState extends State<FokusApp> implements CurrentLocaleObserver {
 	Widget build(BuildContext context) {
 		return MaterialApp(
 			title: 'Fokus',
-			localizationsDelegates: [
+			localizationsDelegates: const [
 				AppLocales.delegate,
 				GlobalMaterialLocalizations.delegate,
 				GlobalWidgetsLocalizations.delegate,

@@ -63,7 +63,7 @@ class _TaskFormPageState extends State<TaskFormPage> {
 
 		if (widget.params.task != null) {
 			_titleController.text = widget.params.task!.title!;
-			_descriptionController.text = widget.params.task!.description!;
+			_descriptionController.text = widget.params.task!.description ?? '';
 			_pointsController.text =
 			widget.params.task!.pointsValue != null ? widget.params.task!.pointsValue
 					.toString() : '';

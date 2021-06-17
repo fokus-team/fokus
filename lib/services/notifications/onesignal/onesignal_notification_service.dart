@@ -122,10 +122,12 @@ class OneSignalNotificationService extends NotificationService {
 		try {
 			await OneSignal.shared.postNotification(notification);
 		} on PlatformException catch(e, s) {
-			if (_tryHandleError(e, notification, userId))
-				return OneSignal.shared.postNotification(notification);
-			else
-				logger.severe('Notification exception unhandled', e, s);
+			if (_tryHandleError(e, notification, userId)) {
+				if (notification.playerIds.isNotEmpty)
+			    return OneSignal.shared.postNotification(notification);
+			} else {
+			  logger.severe('Notification exception unhandled', e, s);
+			}
 		}
   }
 

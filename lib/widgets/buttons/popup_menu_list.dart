@@ -15,20 +15,20 @@ class PopupMenuList extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
 			customBorder: CircleBorder(),
-			child: PopupMenuButton(
+			child: PopupMenuButton<void Function()>(
 				tooltip: tooltip,
-				onSelected: (Function a) => a(),
+				onSelected: (action) => action(),
 				icon: lightTheme ? Icon(customIcon, size: 26.0, color: Colors.white,) : Icon(customIcon, size: 26.0, color: Colors.black),
 				itemBuilder: (BuildContext context) => _menuItemFactory(items,  context),
 			)
 		);
   }
 
-  List<PopupMenuEntry<Function>> _menuItemFactory(List<UIButton> items, context) {
-		var popupMenuEntries = <PopupMenuEntry<Function>>[];
+  List<PopupMenuEntry<void Function()>> _menuItemFactory(List<UIButton> items, context) {
+		var popupMenuEntries = <PopupMenuEntry<void Function()>>[];
   	for (var item in items) {
 			popupMenuEntries.add(
-				PopupMenuItem(
+				PopupMenuItem<void Function()>(
 					value: item.action,
 					child: Row(
 						children: <Widget>[

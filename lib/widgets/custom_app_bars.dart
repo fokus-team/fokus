@@ -49,7 +49,7 @@ class _CustomAppBarState extends State<CustomAppBar>{
 
 	Widget _headerImage(AuthenticationState state) {
 		if(state.user!.role == UserRole.caregiver) {
-			if(state.authMethod == AuthMethod.google)
+			if(state.authMethod == AuthMethod.google && state.photoURL != null)
 				return AppAvatar(0, caregiverPhotoURL: state.photoURL);
 			return Image.asset('assets/image/sunflower_logo.png', height: 64);
 		} else {

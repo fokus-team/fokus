@@ -44,10 +44,10 @@ class _PlanFormState extends State<PlanForm> {
 
 	String getOnlyDatePart(DateTime? date) => date != null ? date.toLocal().toString().split(' ')[0] : '';
 
-	void setDateCallback(DateTime? pickedDate, void Function(DateTime) dateSetter, TextEditingController dateContoller) {
+	void setDateCallback(DateTime? pickedDate, void Function(DateTime) dateSetter, TextEditingController dateController) {
 		setState(() {
 			dateSetter(pickedDate!);
-			dateContoller.value = TextEditingValue(text: getOnlyDatePart(pickedDate));
+			dateController.value = TextEditingValue(text: getOnlyDatePart(pickedDate));
 		});
 	}
 	
@@ -428,7 +428,7 @@ class _PlanFormState extends State<PlanForm> {
 	}
 
 	Widget buildBottomNavigation() {
-		return Container(
+		return SizedBox(
 			height: AppBoxProperties.standardBottomNavHeight,
 			child: Stack(
 				children: [

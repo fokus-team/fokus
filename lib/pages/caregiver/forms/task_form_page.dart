@@ -161,71 +161,69 @@ class _TaskFormPageState extends State<TaskFormPage> {
 		return Material(
 				elevation: 4.0,
 				color: AppColors.formColor,
-				child: Container(
-						child: SafeArea(
-								child: ListTile(
-										dense: true,
-										contentPadding: EdgeInsets.symmetric(
-												vertical: 0.0, horizontal: 4.0),
-										trailing: HelpIconButton(helpPage: 'task_creation'),
-										leading: BackIconButton(exitCallback: () =>
-												showExitFormDialog(context, false, isDataChanged)),
-										title: Padding(
-												padding: EdgeInsets.only(top: appBarVerticalPadding,
-														bottom: appBarVerticalPadding,
-														left: 4.0),
-												child: Column(
-														crossAxisAlignment: CrossAxisAlignment.start,
-														children: <Widget>[
-															AnimatedDefaultTextStyle(
-																	duration: Duration(milliseconds: 200),
-																	child: Text(AppLocales.of(context).translate(
-																			'$_pageKeyPlanForm.${formModeIsCreate()
-																					? 'addTaskButton'
-																					: 'editTaskButton'}')),
-																	style: hasTitle ?
-																	Theme
-																			.of(context)
-																			.textTheme
-																			.bodyText1! :
-																	Theme
-																			.of(context)
-																			.textTheme
-																			.headline3!
-																			.copyWith(
-																			color: Colors.white, fontSize: 20.0)
-															),
-															AnimatedSwitcher(
-																	duration: Duration(milliseconds: 400),
-																	transitionBuilder: (child, animation) {
-																		return SizeTransition(
-																				sizeFactor: animation,
-																				axisAlignment: 1,
-																				axis: Axis.vertical,
-																				child: child
-																		);
-																	},
-																	child: hasTitle ?
-																	Hero(
-																			tag: formModeIsCreate()
-																					? "none3463634634"
-																					: widget.params.task!.key,
-																			child: Text(
-																					task.title!,
-																					style: Theme
-																							.of(context)
-																							.textTheme
-																							.headline2
-																							?.copyWith(color: Colors.white),
-																					overflow: TextOverflow.fade,
-																					softWrap: false,
-																					maxLines: 1
-																			)
+				child: SafeArea(
+						child: ListTile(
+								dense: true,
+								contentPadding: EdgeInsets.symmetric(
+										vertical: 0.0, horizontal: 4.0),
+								trailing: HelpIconButton(helpPage: 'task_creation'),
+								leading: BackIconButton(exitCallback: () =>
+										showExitFormDialog(context, false, isDataChanged)),
+								title: Padding(
+										padding: EdgeInsets.only(top: appBarVerticalPadding,
+												bottom: appBarVerticalPadding,
+												left: 4.0),
+										child: Column(
+												crossAxisAlignment: CrossAxisAlignment.start,
+												children: <Widget>[
+													AnimatedDefaultTextStyle(
+															duration: Duration(milliseconds: 200),
+															child: Text(AppLocales.of(context).translate(
+																	'$_pageKeyPlanForm.${formModeIsCreate()
+																			? 'addTaskButton'
+																			: 'editTaskButton'}')),
+															style: hasTitle ?
+															Theme
+																	.of(context)
+																	.textTheme
+																	.bodyText1! :
+															Theme
+																	.of(context)
+																	.textTheme
+																	.headline3!
+																	.copyWith(
+																	color: Colors.white, fontSize: 20.0)
+													),
+													AnimatedSwitcher(
+															duration: Duration(milliseconds: 400),
+															transitionBuilder: (child, animation) {
+																return SizeTransition(
+																		sizeFactor: animation,
+																		axisAlignment: 1,
+																		axis: Axis.vertical,
+																		child: child
+																);
+															},
+															child: hasTitle ?
+															Hero(
+																	tag: formModeIsCreate()
+																			? "none3463634634"
+																			: widget.params.task!.key,
+																	child: Text(
+																			task.title!,
+																			style: Theme
+																					.of(context)
+																					.textTheme
+																					.headline2
+																					?.copyWith(color: Colors.white),
+																			overflow: TextOverflow.fade,
+																			softWrap: false,
+																			maxLines: 1
 																	)
-																			: SizedBox.shrink()
 															)
-														]
-												)
+																	: SizedBox.shrink()
+													)
+												]
 										)
 								)
 						)

@@ -173,7 +173,7 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
   Widget _getBottomNavBar() {
 		return SlideTransition(
 			position: _offsetAnimation,
-			child: Container(
+			child: SizedBox(
 				height: 50,
 				child: BottomAppBar(
 					color: AppColors.childTaskFiller,

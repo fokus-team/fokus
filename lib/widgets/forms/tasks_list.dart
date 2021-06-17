@@ -253,7 +253,7 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 	}
 
 	Widget buildBottomNavigation(BuildContext context) {
-		return Container(
+		return SizedBox(
 			height: bottomBarHeight + 34.0,
 			child: Stack(
 				children: [

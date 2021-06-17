@@ -96,17 +96,15 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 							margin: EdgeInsets.symmetric(horizontal: 20.0, vertical: 6.0).copyWith(bottom: 6.0),
 							child: InkWell(
 								onTap: () => {},
-								child: Container(
-								  child: BlocBuilder<CalendarCubit, CalendarState>(
-                    buildWhen: (oldState, newState) => oldState.children != newState.children,
-									  builder: (context, state) {
-										  if (state.children == null) {
-											  BlocProvider.of<CalendarCubit>(context).loadInitialData();
-											  return _buildChildPicker(loading: true);
-										  }
-									    return _buildChildPicker(children: state.children);
-									  }
-								  )
+								child: BlocBuilder<CalendarCubit, CalendarState>(
+									buildWhen: (oldState, newState) => oldState.children != newState.children,
+									builder: (context, state) {
+										if (state.children == null) {
+											BlocProvider.of<CalendarCubit>(context).loadInitialData();
+											return _buildChildPicker(loading: true);
+										}
+										return _buildChildPicker(children: state.children);
+									}
 								)
 							)
 						)

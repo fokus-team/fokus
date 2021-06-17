@@ -74,19 +74,17 @@ class TaskAppHeaderState extends State<TaskAppHeader> with TickerProviderStateMi
   }
 
   Widget _getTimerButtonSection() {
-  	return Container(
-			child: Padding(
-				padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
-				child: Row(
-					mainAxisAlignment: MainAxisAlignment.spaceBetween,
-					children: [
-						Expanded(child: _getTimerSection()),
-						SlideTransition(
-							position: _offsetAnimation,
-							child: _getButtonWidget()
-						)
-					]
-				)
+  	return Padding(
+			padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+			child: Row(
+				mainAxisAlignment: MainAxisAlignment.spaceBetween,
+				children: [
+					Expanded(child: _getTimerSection()),
+					SlideTransition(
+						position: _offsetAnimation,
+						child: _getButtonWidget()
+					)
+				]
 			)
 		);
 	}

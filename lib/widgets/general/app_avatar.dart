@@ -32,7 +32,7 @@ class AppAvatar extends StatelessWidget {
 	@override
   Widget build(BuildContext context) {
 		if(caregiverPhotoURL != null) {
-			return Container(
+			return SizedBox(
 				width: size,
 				height: size,
 				child: CircleAvatar(

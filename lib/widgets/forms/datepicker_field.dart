@@ -9,12 +9,12 @@ class DatePickerField extends StatefulWidget {
 	final String? errorText;
 	final String? helperText;
 	final IconData icon;
-	final void Function(DateTime) dateSetter;
+	final void Function(DateTime?) dateSetter;
 	final TextEditingController dateController;
 	final bool canBeEmpty;
 	final DateSpan<Date>? rangeDate;
 	final Date? initialDate;
-	final void Function(DateTime?, void Function(DateTime), TextEditingController) callback;
+	final void Function(DateTime?, void Function(DateTime?), TextEditingController) callback;
 
 	DatePickerField({
 		required this.labelText,

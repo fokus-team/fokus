@@ -44,9 +44,9 @@ class _PlanFormState extends State<PlanForm> {
 
 	String getOnlyDatePart(DateTime? date) => date != null ? date.toLocal().toString().split(' ')[0] : '';
 
-	void setDateCallback(DateTime? pickedDate, void Function(DateTime) dateSetter, TextEditingController dateController) {
+	void setDateCallback(DateTime? pickedDate, void Function(DateTime?) dateSetter, TextEditingController dateController) {
 		setState(() {
-			dateSetter(pickedDate!);
+			dateSetter(pickedDate);
 			dateController.value = TextEditingValue(text: getOnlyDatePart(pickedDate));
 		});
 	}

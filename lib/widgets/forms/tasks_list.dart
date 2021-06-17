@@ -19,8 +19,8 @@ import '../general/app_hero.dart';
 
 class TaskList extends StatefulWidget {
 	final PlanFormModel plan;
-	final Function goBackCallback;
-	final Function submitCallback;
+	final void Function() goBackCallback;
+	final void Function() submitCallback;
 	final bool isCreateMode;
 
 	TaskList({
@@ -236,7 +236,7 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 		return TaskCard(task: task, index: index, onTap: editTask);
 	}
 
-	void showConfirmClearAllDialog(BuildContext context, Function clearCallback) {
+	void showConfirmClearAllDialog(BuildContext context, void Function() clearCallback) {
 		showBasicDialog(
 			context,
 			GeneralDialog.confirm(

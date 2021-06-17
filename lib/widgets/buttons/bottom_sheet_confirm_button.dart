@@ -4,7 +4,7 @@ import '../../services/app_locales.dart';
 import '../../utils/ui/theme_config.dart';
 
 class ButtonSheetConfirmButton extends StatelessWidget {
-	final Function callback;
+	final void Function() callback;
 
 	ButtonSheetConfirmButton({required this.callback});
 
@@ -19,7 +19,7 @@ class ButtonSheetConfirmButton extends StatelessWidget {
 					materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
 					child: Icon(Icons.done, color: Colors.white, size: 30),
 					color: AppColors.caregiverButtonColor,
-					onPressed: () => callback(),
+					onPressed: callback,
 					padding: EdgeInsets.all(12.0),
 					shape: CircleBorder(),
 					minWidth: 0

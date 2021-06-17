@@ -6,7 +6,7 @@ import '../chips/attribute_chip.dart';
 class TaskCard extends StatelessWidget {
 	final TaskFormModel task;
 	final int? index;
-	final Function? onTap;
+	final void Function(TaskFormModel)? onTap;
 
 	TaskCard({
 		required this.task,

@@ -15,7 +15,7 @@ import 'chips/attribute_chip.dart';
 import 'custom_app_bars.dart';
 import 'large_timer.dart';
 
-class TaskAppHeader extends StatefulWidget with PreferredSizeWidget {
+class TaskAppHeader extends StatefulWidget implements PreferredSizeWidget {
 	final double height;
 	final String? title;
 	final Widget? content;

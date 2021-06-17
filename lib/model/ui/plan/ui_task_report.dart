@@ -7,6 +7,7 @@ extension UITaskReportMarkExtension on UITaskReportMark {
   int? get value {
     switch (this) {
       case UITaskReportMark.notRated:
+        // ignore: avoid_returning_null
         return null;
       case UITaskReportMark.rejected:
         return 0;
@@ -21,6 +22,7 @@ extension UITaskReportMarkExtension on UITaskReportMark {
       case UITaskReportMark.rated5:
         return 5;
       default:
+        // ignore: avoid_returning_null
         return null;
     }
   }

@@ -498,7 +498,7 @@ class _TaskFormPageState extends State<TaskFormPage> {
 				title: Text(AppLocales.of(context).translate(
 						'$_pageKeyTaskForm.fields.taskTimer.label')),
 				onConfirm: (Picker picker, List value) {
-					var times = picker.getSelectedValues();
+					var times = picker.getSelectedValues().cast<int>();
 					var timeInMinutes = times[0] * 60 + times[1];
 					setState(() => task.timer = timeInMinutes);
 				},

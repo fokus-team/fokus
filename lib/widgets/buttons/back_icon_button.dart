@@ -5,7 +5,7 @@ import '../../utils/ui/theme_config.dart';
 
 class BackIconButton extends StatelessWidget {
 	final Brightness? theme;
-	final Function? exitCallback;
+	final void Function()? exitCallback;
 	final dynamic args;
 
 	BackIconButton({this.theme = Brightness.light, this.exitCallback, this.args});

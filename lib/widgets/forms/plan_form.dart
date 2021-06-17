@@ -21,7 +21,7 @@ import 'datepicker_field.dart';
 
 class PlanForm extends StatefulWidget {
 	final PlanFormModel plan;
-	final Function goNextCallback;
+	final void Function() goNextCallback;
 
 	PlanForm({
 		required this.plan,
@@ -44,9 +44,9 @@ class _PlanFormState extends State<PlanForm> {
 
 	String getOnlyDatePart(DateTime? date) => date != null ? date.toLocal().toString().split(' ')[0] : '';
 
-	void setDateCallback(DateTime pickedDate, Function dateSetter, TextEditingController dateContoller) {
+	void setDateCallback(DateTime? pickedDate, void Function(DateTime) dateSetter, TextEditingController dateContoller) {
 		setState(() {
-			dateSetter(pickedDate);
+			dateSetter(pickedDate!);
 			dateContoller.value = TextEditingValue(text: getOnlyDatePart(pickedDate));
 		});
 	}
@@ -139,7 +139,7 @@ class _PlanFormState extends State<PlanForm> {
 					title: choice.title!,
 					subtitle: AppLocales.of(context).translate(choice.selected ? 'actions.selected' : 'actions.tapToSelect'),
 					graphicType: AssetType.avatars,
-					graphic: choice.meta.avatar,
+					graphic: (choice.meta as Child).avatar,
 					graphicShowCheckmark: choice.selected,
 					graphicHeight: 44.0,
 					onTapped: () => choice.select!(!choice.selected),

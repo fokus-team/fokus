@@ -23,7 +23,7 @@ import '../auth/auth_input_field.dart';
 class FormDialog extends StatelessWidget {
 	final String title;
 	final List<Widget>? fields;
-	final Function onConfirm;
+	final void Function() onConfirm;
 
 	FormDialog({required this.title, required this.fields, required this.onConfirm});
 
@@ -63,7 +63,7 @@ class FormDialog extends StatelessWidget {
 												primary: AppColors.caregiverBackgroundColor
 											),
 											child: Text(AppLocales.of(context).translate('actions.confirm')),
-											onPressed: () => onConfirm()
+											onPressed: onConfirm
 										)
 									]
 								)

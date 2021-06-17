@@ -301,7 +301,7 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 					title: choice.title!,
 					subtitle: AppLocales.of(context).translate(choice.selected ? 'actions.selected' : 'actions.tapToSelect'),
 					graphicType: AssetType.avatars,
-					graphic: choice.meta.avatar,
+					graphic: (choice.meta as Child).avatar,
 					graphicShowCheckmark: choice.selected,
 					graphicHeight: 44.0,
 					onTapped: () => choice.select!(!choice.selected),

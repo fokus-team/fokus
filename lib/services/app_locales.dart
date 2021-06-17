@@ -70,9 +70,11 @@ class AppLocales {
 			if (args == null)
 				return string;
 			return MessageFormat(string, locale: locale.toString()).format(args);
+// ignore: avoid_catching_errors
 		} on NoSuchMethodError {
 			_logger.warning('Key $key has no localized string in language ${locale!.languageCode}');
 			return '';
+// ignore: avoid_catching_errors
 		} on Error catch (e) {
 			_logger.severe('$e');
 			return '';

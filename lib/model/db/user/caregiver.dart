@@ -28,18 +28,18 @@ class Caregiver extends User {
 	  this.authenticationId, 
 	  List<Currency> currencies = const [],
   }) :
-			  currencies = currencies..add(_defaultCurrency), 
+			  currencies = currencies..insert(0, _defaultCurrency),
 			  super(id: id, name: name, role: UserRole.caregiver, notificationIDs: notificationIDs);
 
   Caregiver.fromJson(Json json) :
       friends = json['friends'] != null ? List<ObjectId>.from(json['friends']) : [],
 	    badges = json['badges'] != null ? (json['badges'] as List).map((i) => Badge.fromJson(i)).toList() : [],
-	    currencies = (json['currencies'] != null ? (json['currencies'] as List).map((i) => Currency.fromJson(i)).toList() : [])..add(_defaultCurrency),
+	    currencies = (json['currencies'] != null ? (json['currencies'] as List).map((i) => Currency.fromJson(i)).toList() : [])..insert(0, _defaultCurrency),
 	    authenticationId = json['authenticationID'],
       super.fromJson(json);
 
   Caregiver.copyFrom(Caregiver user, {List<Currency>? currencies, List<Badge>? badges, String? locale, String? name, List<ObjectId>? friends, List<ObjectId>? connections}) : 
-		  currencies = (currencies?..add(_defaultCurrency)) ?? user.currencies,
+		  currencies = (currencies?..insert(0, _defaultCurrency)) ?? user.currencies,
 		  badges = badges ?? user.badges,
 		  friends = friends ?? user.friends,
 		  authenticationId = user.authenticationId,

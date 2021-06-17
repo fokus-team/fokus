@@ -240,11 +240,18 @@ class _FokusAppState extends State<FokusApp> implements CurrentLocaleObserver {
 			AppPage.caregiverRatingPage.name: (context) => _createPage(CaregiverRatingPage(), context, cubit: TasksEvaluationCubit(getRoute(context)!)),
 			AppPage.caregiverReportForm.name: (context) => _createPage(ReportFormPage(getParams(context) as ReportFormParams), context),
 			AppPage.caregiverCurrencies.name: (context) => _createPage(CaregiverCurrenciesPage(), context, cubit: CaregiverCurrenciesCubit(getRoute(context)!, authBloc(context))),
-			AppPage.caregiverFriendPlans.name: (context) => _createPage(withCubit(CaregiverFriendPlansPage(), CaregiverFriendsCubit(getActiveUser(context), authBloc(context))), context, cubit: CaregiverPlansCubit(getRoute(context)!, getParams(context) as MapEntry<mongo.ObjectId, String>?)),
+			AppPage.caregiverFriendPlans.name: (context) => _createPage(
+				withCubit(CaregiverFriendPlansPage(), CaregiverFriendsCubit(getActiveUser(context), authBloc(context))),
+				context,
+				cubit: CaregiverPlansCubit(getRoute(context)!, getParams(context) as MapEntry<mongo.ObjectId, String>?)
+			),
 			AppPage.planDetails.name: (context) => _createPage(PlanDetailsPage(), context, cubit: PlanCubit(getParams(context) as mongo.ObjectId, getRoute(context)!)),
-
 			AppPage.childCalendar.name: (context) => _createPage(ChildCalendarPage(), context, cubit: CalendarCubit(getParams(context) as mongo.ObjectId, getActiveUser(context))),
-			AppPage.planInstanceDetails.name: (context) => _createPage(PlanInstanceDetailsPage(getParams(context) as PlanInstanceParams), context, cubit: PlanInstanceCubit(getParams(context) as PlanInstanceParams, getRoute(context)!)),
+			AppPage.planInstanceDetails.name: (context) => _createPage(
+				PlanInstanceDetailsPage(getParams(context) as PlanInstanceParams),
+				context,
+				cubit: PlanInstanceCubit(getParams(context) as PlanInstanceParams, getRoute(context)!)
+			),
 			AppPage.childTaskInProgress.name: (context) => _createPage(ChildTaskInProgressPage(), context, cubit: TaskCompletionCubit(getParams(context) as TaskInProgressParams, getRoute(context)!))
 		};
 	}

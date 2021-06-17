@@ -29,7 +29,7 @@ List<Widget> buildChildPlanSegments(List<UIPlanInstance?> plans, BuildContext co
 		if(activePlan != null)
 			isInProgress(activePlan.instance.duration) ?
 			BlocProvider<TimerCubit>(
-				create: (_) => TimerCubit.up(activePlan.elapsedActiveTime!)..startTimer(),
+				create: (_) => TimerCubit.up(elapsedTime: activePlan.elapsedActiveTime!)..startTimer(),
 				child: _getPlansSegment(
 					context: context,
 					plans: [activePlan],

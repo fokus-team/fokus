@@ -1,6 +1,7 @@
 import 'package:intl/intl.dart';
 import 'package:meta/meta.dart';
 
+@immutable
 abstract class DateBase extends DateTime {
 	DateBase(int year, int month, int day, [int hour = 0, int minute = 0, int second = 0]) : super(year, month, day, hour, minute, second);
 	DateBase.utc(int year, int month, int day, [int hour = 0, int minute = 0, int second = 0]) : super.utc(year, month, day, hour, minute, second);
@@ -10,7 +11,7 @@ abstract class DateBase extends DateTime {
   String toAppString(DateFormat format) => format.format(toLocal());
 
   @override
-  bool operator ==(dynamic other) => other is DateTime && year == other.year && month == other.month && day == other.day;
+  bool operator ==(dynamic other) => identical(this, other) || other is DateTime && year == other.year && month == other.month && day == other.day;
   @override
   int get hashCode => combine(combine(combine(0, year.hashCode), month.hashCode), day.hashCode);
 

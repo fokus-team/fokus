@@ -224,11 +224,11 @@ class TaskAppHeaderState extends State<TaskAppHeader> with TickerProviderStateMi
 				if(_getTimerInSeconds() - _getDuration() > 0) {
 					var time = _getTimerInSeconds() - _getDuration();
 					_timeUpdate(Duration(seconds: time));
-					_timerCompletionCubit = TimerCubit.down(() => time, true, _onTimerFinish);
+					_timerCompletionCubit = TimerCubit.down(elapsedTime: () => time, countUpOnComplete: true, onFinish: _onTimerFinish);
 				}
-				else _timerCompletionCubit = TimerCubit.up(() => _getDuration() - _getTimerInSeconds());
+				else _timerCompletionCubit = TimerCubit.up(elapsedTime: () => _getDuration() - _getTimerInSeconds());
 			}
-			else _timerCompletionCubit = TimerCubit.up(_getDuration);
+			else _timerCompletionCubit = TimerCubit.up(elapsedTime: _getDuration);
 		}
   	if(widget.state.current == TaskCompletionStateType.inProgress)
 			return (_) => _timerCompletionCubit!..startTimer();

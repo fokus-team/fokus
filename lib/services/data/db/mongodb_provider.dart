@@ -82,9 +82,9 @@ class MongoDbProvider {
 			return await doExecute();
 		} on MongoQueryTimeout { // Query timeout, retry
 			return await doExecute(dropConnection: true);
-		} catch(e) {
-			if (e is NoDbConnection)
-				rethrow;
+		} on NoDbConnection {
+			rethrow;
+		} on Exception catch(e) {
 			throw DbQueryFailed(e);
 		}
 	}

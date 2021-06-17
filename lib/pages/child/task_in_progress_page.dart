@@ -293,7 +293,7 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 
 	TimerCubit Function(BuildContext) _getTimerBreakCubit(TaskCompletionState state) {
 		if(_timerBreakCubit == null) {
-			_timerBreakCubit = TimerCubit.up(() => sumDurations(state.uiTask!.instance.breaks).inSeconds);
+			_timerBreakCubit = TimerCubit.up(elapsedTime: () => sumDurations(state.uiTask!.instance.breaks).inSeconds);
 		}
 		if(state.current == TaskCompletionStateType.inProgress) return (_) => _timerBreakCubit!..startTimer(paused: true);
 		else return (_) => _timerBreakCubit!..startTimer();

@@ -13,7 +13,8 @@ class TimeDate extends DateBase {
   DateTime toDBDate() => toUtc();
 
   @override
-  bool operator ==(dynamic other) => super==(other) && hour == other.hour && minute == other.minute && second == other.second;
+  bool operator ==(dynamic other) => identical(this, other) || other is TimeDate &&
+		  super==(other) && hour == other.hour && minute == other.minute && second == other.second;
   @override
   int get hashCode => combine(combine(combine(super.hashCode, hour.hashCode), minute.hashCode), second.hashCode);
 

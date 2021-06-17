@@ -36,22 +36,20 @@ import '../../widgets/segment.dart';
 import '../../widgets/stateful_bloc_builder.dart';
 
 class CaregiverChildDashboardPage extends StatefulWidget {
-	final ChildDashboardParams _args;
+	final ChildDashboardParams args;
 
-	CaregiverChildDashboardPage(this._args);
+	CaregiverChildDashboardPage(this.args);
 
 	@override
-	_CaregiverChildDashboardPageState createState() => _CaregiverChildDashboardPageState(_args);
+	_CaregiverChildDashboardPageState createState() => _CaregiverChildDashboardPageState();
 }
 
 class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPage> with TickerProviderStateMixin {
 	static const String _pageKey = 'page.caregiverSection.childDashboard';
 	late TabController _tabController;
-	final ChildCardModel _childCard;
-	int _currentIndex;
+	late final ChildCardModel _childCard;
+	late int _currentIndex;
   final StreamController<int> _tabIndexStream = StreamController<int>.broadcast();
-
-	_CaregiverChildDashboardPageState(ChildDashboardParams args) : _currentIndex = args.tab ?? 0, _childCard = args.childCard;
 
 	final double customBottomBarHeight = 40.0;
 	final Duration bottomBarAnimationDuration = Duration(milliseconds: 400);
@@ -59,6 +57,8 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 	@override
 	void initState() {
 		super.initState();
+		_currentIndex = widget.args.tab ?? 0;
+		_childCard = widget.args.childCard;
 		_tabController = TabController(initialIndex: _currentIndex, vsync: this, length: 3);
 		_tabController.animation!.addListener(() {
 		  var newValue = (_tabController.animation!.value).round();

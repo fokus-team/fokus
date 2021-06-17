@@ -63,6 +63,7 @@ class Instrumentator implements UserObserver {
 				if (record.stackTrace != null)
 					message += '\nStacktrace:\n${record.stackTrace}';
 			}
+// ignore: avoid_print
 			print(message);
 		});
 	}

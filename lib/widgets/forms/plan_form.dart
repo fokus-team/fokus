@@ -1,38 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mongo_dart/mongo_dart.dart' as Mongo;
+import 'package:mongo_dart/mongo_dart.dart' as mongo;
 import 'package:round_spot/round_spot.dart' as round_spot;
-
-import 'package:fokus/logic/caregiver/forms/plan/plan_form_cubit.dart';
-import 'package:fokus/model/db/date/date.dart';
-import 'package:fokus/model/db/date_span.dart';
-import 'package:fokus/model/ui/app_page.dart';
-import 'package:fokus/utils/ui/form_config.dart';
-import 'package:fokus/widgets/buttons/bottom_sheet_confirm_button.dart';
 import 'package:smart_select/smart_select.dart';
 
-import 'package:fokus/model/ui/form/plan_form_model.dart';
-import 'package:fokus/model/ui/user/ui_child.dart';
-
-import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/ui/icon_sets.dart';
-import 'package:fokus/utils/ui/theme_config.dart';
-
-import 'package:fokus/widgets/forms/datepicker_field.dart';
-import 'package:fokus/widgets/cards/item_card.dart';
-import 'package:fokus/widgets/general/app_hero.dart';
+import '../../logic/caregiver/forms/plan/plan_form_cubit.dart';
+import '../../model/db/date/date.dart';
+import '../../model/db/date_span.dart';
+import '../../model/db/user/child.dart';
+import '../../model/ui/app_page.dart';
+import '../../model/ui/form/plan_form_model.dart';
+import '../../services/app_locales.dart';
+import '../../utils/ui/form_config.dart';
+import '../../utils/ui/icon_sets.dart';
+import '../../utils/ui/theme_config.dart';
+import '../buttons/bottom_sheet_confirm_button.dart';
+import '../cards/item_card.dart';
+import '../general/app_hero.dart';
+import 'datepicker_field.dart';
 
 class PlanForm extends StatefulWidget {
 	final PlanFormModel plan;
-	final Function goNextCallback;
+	final void Function() goNextCallback;
 
 	PlanForm({
-		@required this.plan,
-		@required this.goNextCallback
+		required this.plan,
+		required this.goNextCallback
 	});
 
 	@override
-	_PlanFormState createState() => new _PlanFormState();
+	_PlanFormState createState() => _PlanFormState();
 }
 
 class _PlanFormState extends State<PlanForm> {
@@ -40,17 +37,17 @@ class _PlanFormState extends State<PlanForm> {
 
 	bool fieldsValidated = false;
 
-	TextEditingController _planNameController = TextEditingController();
-	TextEditingController _dateOneDayOnlyController = TextEditingController();
-	TextEditingController _dateRageFromController = TextEditingController();
-	TextEditingController _dateRageToController = TextEditingController();
+	final TextEditingController _planNameController = TextEditingController();
+	final TextEditingController _dateOneDayOnlyController = TextEditingController();
+	final TextEditingController _dateRageFromController = TextEditingController();
+	final TextEditingController _dateRageToController = TextEditingController();
 
-	String getOnlyDatePart(DateTime date) => date != null ? date.toLocal().toString().split(' ')[0] : '';
+	String getOnlyDatePart(DateTime? date) => date != null ? date.toLocal().toString().split(' ')[0] : '';
 
-	void setDateCallback(DateTime pickedDate, Function dateSetter, TextEditingController dateContoller) {
+	void setDateCallback(DateTime? pickedDate, void Function(DateTime?) dateSetter, TextEditingController dateController) {
 		setState(() {
 			dateSetter(pickedDate);
-			dateContoller.value = TextEditingValue(text: getOnlyDatePart(pickedDate));
+			dateController.value = TextEditingValue(text: getOnlyDatePart(pickedDate));
 		});
 	}
 	
@@ -107,7 +104,7 @@ class _PlanFormState extends State<PlanForm> {
 				maxLength: AppFormProperties.textFieldMaxLength,
 				textCapitalization: TextCapitalization.sentences,
 				validator: (value) {
-					return value.trim().isEmpty ? AppLocales.of(context).translate('$_pageKey.planName.emptyError') : null;
+					return value!.trim().isEmpty ? AppLocales.of(context).translate('$_pageKey.planName.emptyError') : null;
 				},
 				onChanged: (val) => setState(() => widget.plan.name = val)
 			)
@@ -124,101 +121,115 @@ class _PlanFormState extends State<PlanForm> {
 		);
 	}
 
-	Widget getChildrenAssignedField({List<UIChild> children = const [], bool loading = false}) {
-		return SmartSelect<Mongo.ObjectId>.multiple(
+	Widget getChildrenAssignedField({List<Child> children = const [], bool loading = false}) {
+		return SmartSelect<mongo.ObjectId>.multiple(
 			title: AppLocales.of(context).translate('$_pageKey.assignedChildren.label'),
 			placeholder: AppLocales.of(context).translate('$_pageKey.assignedChildren.hint'),
-			value: widget.plan.children,
-			options: SmartSelectOption.listFrom<Mongo.ObjectId, UIChild>(
+			selectedValue: widget.plan.children,
+			choiceItems: S2Choice.listFrom<mongo.ObjectId, Child>(
 				source: children,
-				value: (index, item) => item.id,
-				title: (index, item) => item.name,
+				value: (index, item) => item.id!,
+				title: (index, item) => item.name!,
 				meta: (index, item) => item
 			),
-			isTwoLine: true,
-			isLoading: loading,
-			loadingText: AppLocales.of(context).translate('loading'),
-			choiceType: SmartSelectChoiceType.chips,
-			choiceConfig: SmartSelectChoiceConfig(
-				builder: (item, checked, onChange) => Theme(
-					data: ThemeData(textTheme: Theme.of(context).textTheme),
-					child: ItemCard(
-						title: item.title,
-						subtitle: AppLocales.of(context).translate(checked ? 'actions.selected' : 'actions.tapToSelect'),
-						graphicType: AssetType.avatars,
-						graphic: item.meta.avatar,
-						graphicShowCheckmark: checked,
-						graphicHeight: 44.0,
-						onTapped: onChange != null ? () => onChange(item.value, !checked) : null,
-						isActive: checked
-					)
-				),
-				emptyBuilder: (str) => AppHero(
-					icon: Icons.warning,
-					header: AppLocales.of(context).translate('$_pageKey.assignedChildren.emptyListHeader'),
-					title: AppLocales.of(context).translate('$_pageKey.assignedChildren.emptyListText')
+			choiceType: S2ChoiceType.chips,
+			choiceBuilder: (context, selectState, choice) => Theme(
+				data: ThemeData(textTheme: Theme.of(context).textTheme),
+				child: ItemCard(
+					title: choice.title!,
+					subtitle: AppLocales.of(context).translate(choice.selected ? 'actions.selected' : 'actions.tapToSelect'),
+					graphicType: AssetType.avatars,
+					graphic: (choice.meta as Child).avatar,
+					graphicShowCheckmark: choice.selected,
+					graphicHeight: 44.0,
+					onTapped: () => choice.select!(!choice.selected),
+					isActive: choice.selected
 				)
 			),
-			modalType: SmartSelectModalType.bottomSheet,
-			modalConfig: SmartSelectModalConfig(
-				searchBarHint: AppLocales.of(context).translate('actions.search'),
-				useConfirmation: true,
-				confirmationBuilder: (context, callback) => ButtonSheetConfirmButton(callback: () => callback)
+			choiceEmptyBuilder: (context, selectState) => AppHero(
+				icon: Icons.warning,
+				header: AppLocales.of(context).translate('$_pageKey.assignedChildren.emptyListHeader'),
+				title: AppLocales.of(context).translate('$_pageKey.assignedChildren.emptyListText')
 			),
-			leading: Padding(padding: EdgeInsets.all(8.0), child: Icon(Icons.people)),
-			onChange: (val) => setState(() {
-				FocusManager.instance.primaryFocus.unfocus();
+			tileBuilder: (context, selectState) {
+				return ListTile(
+					leading: Padding(padding: EdgeInsets.all(8.0), child: Icon(Icons.people)),
+					title: Text(AppLocales.of(context).translate('$_pageKey.assignedChildren.label')),
+					subtitle: Text(
+						loading ?
+							AppLocales.of(context).translate('loading')
+							: selectState.selected == null || selectState.selected?.length == 0 ?
+								AppLocales.of(context).translate('$_pageKey.assignedChildren.hint')
+								: selectState.selected!.title!.join(', '),
+						style: TextStyle(color: Colors.grey),
+						overflow: TextOverflow.ellipsis,
+						maxLines: 1
+					),
+					enabled: !loading,
+					trailing: Icon(Icons.keyboard_arrow_right, color: Colors.grey),
+					onTap: () => selectState.showModal()
+				);
+			},
+			modalType: S2ModalType.bottomSheet,
+			modalConfig: S2ModalConfig(
+				useConfirm: true
+			),
+			modalConfirmBuilder: (context, selectState) {
+				return ButtonSheetConfirmButton(callback: () => selectState.closeModal(confirmed: true));
+			},
+			onChange: (selected) => setState(() {
+				FocusManager.instance.primaryFocus?.unfocus();
 				widget.plan.children.clear();
-				widget.plan.children = val;
+				widget.plan.children = selected!.value!;
 			})
 		);
-	}
-
-	void onSelectAll(List<dynamic> sourceList, List<dynamic> valueList) {
-		// TODO Smart Select is really stuborn, fix state overwriting 
-		if(sourceList.length == valueList.length) {
-			setState(() {
-				valueList.clear();
-			});
-		} else {
-			setState(() {
-				valueList.clear();
-				valueList.addAll(sourceList);
-			});
-		}
 	}
 
 	Widget buildRepeatabilityTypeField() {
 		return SmartSelect<PlanFormRepeatability>.single(
 			title: AppLocales.of(context).translate('$_pageKey.repeatability.label'),
-			value: widget.plan.repeatability,
-			options: [
+			selectedValue: widget.plan.repeatability,
+			choiceItems: [
 				for(PlanFormRepeatability element in PlanFormRepeatability.values)
-					SmartSelectOption(
+					S2Choice(
 						title: AppLocales.of(context).translate('$_pageKey.repeatability.options.${element.toString().split('.').last}'),
 						value: element
 					)
 			],
-			isTwoLine: true,
-			modalType: SmartSelectModalType.bottomSheet,
-			modalConfig: SmartSelectModalConfig(
-				useConfirmation: true,
-				confirmationBuilder: (context, callback) => ButtonSheetConfirmButton(callback: () => callback)
+			modalType: S2ModalType.bottomSheet,
+			modalConfig: S2ModalConfig(
+				useConfirm: true
 			),
-			leading: Padding(padding: EdgeInsets.all(8.0), child: Icon(Icons.refresh)),
-			onChange: (val) {
-				FocusManager.instance.primaryFocus.unfocus();
-				setState(() => widget.plan.repeatability = val);
+			modalConfirmBuilder: (context, selectState) {
+				return ButtonSheetConfirmButton(callback: () => selectState.closeModal(confirmed: true));
+			},
+			tileBuilder: (context, selectState) {
+				return ListTile(
+					leading: Padding(padding: EdgeInsets.all(8.0), child: Icon(Icons.refresh)),
+					title: Text(AppLocales.of(context).translate('$_pageKey.repeatability.label')),
+					subtitle: Text(
+						AppLocales.of(context).translate('$_pageKey.repeatability.options.${selectState.selected?.value.toString().split('.').last}'),
+						style: TextStyle(color: Colors.grey),
+						overflow: TextOverflow.ellipsis,
+						maxLines: 1
+					),
+					trailing: Icon(Icons.keyboard_arrow_right, color: Colors.grey),
+					onTap: () => selectState.showModal()
+				);
+			},
+			onChange: (selected) {
+				FocusManager.instance.primaryFocus?.unfocus();
+				setState(() => widget.plan.repeatability = selected.value!);
 			}
 		);
 	}
 
 	Widget buildRecurringFields() {
-		bool isWeekly = widget.plan.repeatabilityRage == PlanFormRepeatabilityRage.weekly;
-		List<int> dayList = List<int>.generate(isWeekly ? 7 : 31, (i) => i + 1);
+		var isWeekly = widget.plan.repeatabilityRage == PlanFormRepeatabilityRage.weekly;
+		var dayList = List<int>.generate(isWeekly ? 7 : 31, (i) => i + 1);
 
-		String daysDisplay(List<int> values) {
-			if(values.isEmpty)
+		String daysDisplay(List<int>? values) {
+			if(values == null || values.isEmpty)
 				return AppLocales.of(context).translate('$_pageKey.days.hint');
 			if(values.length == dayList.length)
 				return AppLocales.of(context).translate('date.everyday');
@@ -227,62 +238,121 @@ class _PlanFormState extends State<PlanForm> {
 			).join(', ');
 		}
 
+		var dayChoiceList = S2Choice.listFrom<int, int>(
+			source: dayList,
+			value: (index, item) => item,
+			title: (index, item) => isWeekly ? AppLocales.of(context).translate('date.weekday', {'WEEKDAY': item.toString()}) : item.toString()
+		);
+
 		return Column(
 			children: <Widget>[
 				SmartSelect<PlanFormRepeatabilityRage>.single(
 					title: AppLocales.of(context).translate('$_pageKey.repeatabilityRange.label'),
-					value: widget.plan.repeatabilityRage,
-					options: [
+					selectedValue: widget.plan.repeatabilityRage,
+					choiceItems: [
 						for(PlanFormRepeatabilityRage element in PlanFormRepeatabilityRage.values)
-							SmartSelectOption(
+							S2Choice(
 								title: AppLocales.of(context).translate('$_pageKey.repeatabilityRange.options.${element.toString().split('.').last}'),
 								value: element
 							)
 					],
-					isTwoLine: true,
-					modalType: SmartSelectModalType.bottomSheet,
-					modalConfig: SmartSelectModalConfig(
-						useConfirmation: true,
-						confirmationBuilder: (context, callback) => ButtonSheetConfirmButton(callback: () => callback)
+					modalType: S2ModalType.bottomSheet,
+					modalConfig: S2ModalConfig(
+						useConfirm: true
 					),
-					leading: Padding(padding: EdgeInsets.all(8.0), child: Icon(Icons.event)),
-					onChange: (val) => setState(() {
-						FocusManager.instance.primaryFocus.unfocus();
-						widget.plan.repeatabilityRage = val;
-						widget.plan.days.clear();
+					modalConfirmBuilder: (context, selectState) {
+						return ButtonSheetConfirmButton(callback: () => selectState.closeModal(confirmed: true));
+					},
+					tileBuilder: (context, selectState) {
+						return ListTile(
+							leading: Padding(padding: EdgeInsets.all(8.0), child: Icon(Icons.event)),
+							title: Text(AppLocales.of(context).translate('$_pageKey.repeatabilityRange.label')),
+							subtitle: Text(
+								AppLocales.of(context).translate('$_pageKey.repeatabilityRange.options.${selectState.selected?.value.toString().split('.').last}'),
+								style: TextStyle(color: Colors.grey),
+								overflow: TextOverflow.ellipsis,
+								maxLines: 1
+							),
+							trailing: Icon(Icons.keyboard_arrow_right, color: Colors.grey),
+							onTap: () => selectState.showModal()
+						);
+					},
+					onChange: (selected) => setState(() {
+						FocusManager.instance.primaryFocus?.unfocus();
+						widget.plan.repeatabilityRage = selected.value!;
 					}),
 				),
 				SmartSelect<int>.multiple(
 					title: AppLocales.of(context).translate('$_pageKey.days.label${isWeekly ? 'Weekly' : 'Monthly'}'),
-					value: widget.plan.days,
-					options: SmartSelectOption.listFrom<int, int>(
-						source: dayList,
-						value: (index, item) => item,
-						title: (index, item) => isWeekly ? AppLocales.of(context).translate('date.weekday', {'WEEKDAY': item.toString()}) : item.toString()
+					selectedValue: widget.plan.days,
+					choiceItems: dayChoiceList,
+					choiceType: S2ChoiceType.chips,
+					validation: (chosen) {
+            if (chosen.isEmpty) return AppLocales.of(context).translate('$_pageKey.days.hint');
+            return '';
+          },
+					modalType: S2ModalType.bottomSheet,
+					modalConfig: S2ModalConfig(
+						useConfirm: true
 					),
-					choiceType: SmartSelectChoiceType.chips,
-					modalType: SmartSelectModalType.bottomSheet,
-					modalConfig: SmartSelectModalConfig(
-						useConfirmation: true,
-						confirmationBuilder: (context, callback) => ButtonSheetConfirmButton(callback: () => callback)
-					),
-					builder: (context, state, callback) {
+					modalFooterBuilder: (context, selectState) {
+						return Padding(
+							padding: const EdgeInsets.only(bottom: 8.0, left: 4.0, right: 4.0),
+							child: Column(
+								children: [
+									CheckboxListTile(
+										title: Text(AppLocales.of(context).translate('date.everyday')),
+										activeColor: selectState.choiceActiveStyle?.color ?? selectState.defaultActiveChoiceStyle.color,
+										value: selectState.selection?.length == selectState.choices?.length
+											? true : false,
+										onChanged: (value) {
+											if (value == true) {
+												selectState.selection?.clear();
+												selectState.selection?.merge(dayChoiceList.toList());
+											} else {
+												selectState.selection?.clear();
+											}
+										},
+									),
+									if(isWeekly)
+										CheckboxListTile(
+											title: Text(AppLocales.of(context).translate('date.workdays')),
+											activeColor: selectState.choiceActiveStyle?.color ?? selectState.defaultActiveChoiceStyle.color,
+											value: selectState.selection!.hasAll(dayChoiceList.take(5).toList()) && !selectState.selection!.hasAny(dayChoiceList.skip(5).toList())
+												? true : false,
+											onChanged: (value) {
+												if (value == true) {
+													selectState.selection?.clear();
+													selectState.selection?.merge(dayChoiceList.take(5).toList());
+												} else {
+													selectState.selection?.clear();
+												}
+											},
+										)
+								]
+							)
+						);
+					},
+					modalConfirmBuilder: (context, selectState) {
+						return ButtonSheetConfirmButton(callback: () => selectState.closeModal(confirmed: true));
+					},
+					tileBuilder: (context, selectState) {
 						return ListTile(
 							leading: Padding(padding: EdgeInsets.all(8.0), child: Icon(Icons.date_range)),
 							title: Text(AppLocales.of(context).translate('$_pageKey.days.label${isWeekly ? 'Weekly' : 'Monthly'}')),
 							subtitle: Text(
-								daysDisplay(state.values),
+								daysDisplay(selectState.selected!.value),
 								style: TextStyle(color: (fieldsValidated && widget.plan.days.isEmpty) ? Theme.of(context).errorColor : Colors.grey),
 								overflow: TextOverflow.ellipsis,
 								maxLines: 1
 							),
 							trailing: Icon(Icons.keyboard_arrow_right, color: Colors.grey),
-							onTap: () => callback(context)
+							onTap: () => selectState.showModal()
 						);
 					},
-					onChange: (val) {
-						FocusManager.instance.primaryFocus.unfocus();
-						setState(() => { widget.plan.days = val });
+					onChange: (selected) {
+						FocusManager.instance.primaryFocus?.unfocus();
+						setState(() => { widget.plan.days = selected!.value! });
 					}
 				),
 				Divider(),
@@ -358,7 +428,7 @@ class _PlanFormState extends State<PlanForm> {
 	}
 
 	Widget buildBottomNavigation() {
-		return Container(
+		return SizedBox(
 			height: AppBoxProperties.standardBottomNavHeight,
 			child: Stack(
 				children: [
@@ -374,12 +444,14 @@ class _PlanFormState extends State<PlanForm> {
 								mainAxisAlignment: MainAxisAlignment.end,
 								crossAxisAlignment: CrossAxisAlignment.end,
 								children: <Widget>[
-									FlatButton(
+									TextButton(
 										onPressed: () {
 											setState(() => fieldsValidated = true);
 											widget.goNextCallback();
 										},
-										textColor: AppColors.mainBackgroundColor,
+										style: TextButton.styleFrom(
+											primary: AppColors.mainBackgroundColor
+										),
 										child: Row(children: <Widget>[Text(AppLocales.of(context).translate('actions.next')), Icon(Icons.chevron_right)])
 									)
 								]

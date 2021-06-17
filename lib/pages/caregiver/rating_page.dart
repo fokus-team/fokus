@@ -2,24 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:round_spot/round_spot.dart' as round_spot;
 
-import 'package:fokus/logic/caregiver/tasks_evaluation_cubit.dart';
-import 'package:fokus/model/ui/task/ui_task_report.dart';
-import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/ui/theme_config.dart';
-import 'package:fokus/widgets/buttons/help_icon_button.dart';
-import 'package:fokus/widgets/cards/report_card.dart';
-import 'package:fokus/widgets/general/app_hero.dart';
-import 'package:fokus/widgets/stateful_bloc_builder.dart';
+import '../../logic/caregiver/tasks_evaluation_cubit.dart';
+import '../../model/ui/plan/ui_task_report.dart';
+import '../../services/app_locales.dart';
+import '../../utils/ui/theme_config.dart';
+import '../../widgets/buttons/help_icon_button.dart';
+import '../../widgets/cards/report_card.dart';
+import '../../widgets/general/app_hero.dart';
+import '../../widgets/stateful_bloc_builder.dart';
 
 
 class CaregiverRatingPage extends StatefulWidget {
   @override
-  _CaregiverRatingPageState createState() => new _CaregiverRatingPageState();
+  _CaregiverRatingPageState createState() => _CaregiverRatingPageState();
 }
 
 class _CaregiverRatingPageState extends State<CaregiverRatingPage> {
 	static const String _pageKey = 'page.caregiverSection.rating';
-	CarouselController _carouselController;
+	late CarouselController _carouselController;
 	int _currentRaport = 0;
 
 	@override
@@ -62,7 +62,7 @@ class _CaregiverRatingPageState extends State<CaregiverRatingPage> {
 	}
 
 	Widget _buildCarousel(List<UITaskReport> reports) {
-		int notRatedCount = reports.where((element) => element.ratingMark == UITaskReportMark.notRated).length;
+		var notRatedCount = reports.where((element) => element.ratingMark == UITaskReportMark.notRated).length;
 		return Column(
 			children: [
 				SizedBox(height: 8.0),
@@ -127,7 +127,7 @@ class _CaregiverRatingPageState extends State<CaregiverRatingPage> {
 							carouselController: _carouselController,
 							items: reports.map((report) =>
 								Hero(
-									tag: report.task.id.toString() + report.task.duration.last.to.toString(),
+									tag: report.uiTask.instance.id.toString() + report.uiTask.instance.duration!.last.to.toString(),
 									child: ReportCard(report: report)
 								)
 							).toList()

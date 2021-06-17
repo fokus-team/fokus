@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
-import 'package:fokus/model/navigation/child_dashboard_params.dart';
 
-import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/logic/caregiver/caregiver_panel_cubit.dart';
-import 'package:fokus/model/ui/app_page.dart';
-import 'package:fokus/model/ui/ui_button.dart';
-import 'package:fokus/utils/ui/dialog_utils.dart';
-import 'package:fokus/utils/ui/theme_config.dart';
-import 'package:fokus/widgets/app_navigation_bar.dart';
-import 'package:fokus/widgets/cards/item_card.dart';
-import 'package:fokus/widgets/custom_app_bars.dart';
-import 'package:fokus/widgets/cards/model_cards.dart';
-import 'package:fokus/widgets/stateful_bloc_builder.dart';
-import 'package:fokus/widgets/segment.dart';
+import '../../logic/caregiver/caregiver_panel_cubit.dart';
+import '../../logic/common/auth_bloc/authentication_bloc.dart';
+import '../../model/navigation/child_dashboard_params.dart';
+import '../../model/ui/app_page.dart';
+import '../../model/ui/ui_button.dart';
+import '../../services/app_locales.dart';
+import '../../utils/ui/dialog_utils.dart';
+import '../../utils/ui/theme_config.dart';
+import '../../widgets/app_navigation_bar.dart';
+import '../../widgets/cards/item_card.dart';
+import '../../widgets/cards/model_cards.dart';
+import '../../widgets/custom_app_bars.dart';
+import '../../widgets/segment.dart';
+import '../../widgets/stateful_bloc_builder.dart';
 
 class CaregiverPanelPage extends StatelessWidget {
 	static const String _pageKey = 'page.caregiverSection.panel';
@@ -60,8 +60,11 @@ class CaregiverPanelPage extends StatelessWidget {
 					Icons.add
 				),
 				elements: <Widget>[
-					for (var child in state.children)
-						ChildItemCard(child: child, onTapped: () => Navigator.of(context).pushNamed(AppPage.caregiverChildDashboard.name, arguments: ChildDashboardParams(child: child))),
+					for (var child in state.childCards)
+						ChildItemCard(
+							childCard: child,
+							onTapped: () => Navigator.of(context).pushNamed(AppPage.caregiverChildDashboard.name, arguments: ChildDashboardParams(childCard: child))
+						),
 				]
 			),
 			Segment(
@@ -71,7 +74,7 @@ class CaregiverPanelPage extends StatelessWidget {
 				headerAction: UIButton('$_pageKey.header.addCaregiver', () => showAddFriendDialog(context), AppColors.caregiverButtonColor, Icons.add),
 				elements: <Widget>[
 					if (state.friends != null)
-						for (var friend in state.friends.entries)
+						for (var friend in state.friends!.entries)
 							ItemCard(
 								title: friend.value,
 								rightIcon: Icon(Icons.chevron_right, color: Colors.grey),

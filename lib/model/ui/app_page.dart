@@ -68,7 +68,7 @@ extension AppPageName on AppPage {
 		AppPage.childRewards: '/child/rewards-page',
 		AppPage.childAchievements: '/child/achievements-page',
 		AppPage.childTaskInProgress: '/child/task-in-progress-page'
-	}[this];
+	}[this]!;
 }
 
 

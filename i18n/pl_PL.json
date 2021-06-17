@@ -650,7 +650,8 @@
 	},
 	"date": {
 		"weekday": "{WEEKDAY, select, 1 {Poniedziałek} 2 {Wtorek} 3 {Środa} 4 {Czwartek} 5 {Piątek} 6 {Sobota} 7 {Niedziela} other {}}",
-		"everyday": "Codziennie"
+		"everyday": "Codziennie",
+		"workdays": "Tylko dni robocze"
 	},
 	"alert": {
 		"errorOccurred": "Wystąpił błąd",

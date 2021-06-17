@@ -1,19 +1,19 @@
 import 'package:bloc/bloc.dart';
-import 'package:fokus/model/ui/auth/password_change_type.dart';
+import 'package:fokus_auth/fokus_auth.dart';
 import 'package:formz/formz.dart';
 import 'package:get_it/get_it.dart';
 
-import 'package:fokus/logic/common/formz_state.dart';
-import 'package:fokus/model/ui/auth/password.dart';
-import 'package:fokus/model/ui/auth/confirmed_password.dart';
-import 'package:fokus_auth/fokus_auth.dart';
+import '../../../../model/ui/auth/confirmed_password.dart';
+import '../../../../model/ui/auth/password.dart';
+import '../../../../model/ui/auth/password_change_type.dart';
+import '../../formz_state.dart';
 
 part 'password_change_state.dart';
 
 class PasswordChangeCubit extends Cubit<PasswordChangeState> {
 	final AuthenticationProvider _authenticationProvider = GetIt.I<AuthenticationProvider>();
 
-  PasswordChangeCubit(PasswordChangeType type, {String passwordResetCode}) : super(PasswordChangeState(formType: type, passwordResetCode: passwordResetCode));
+  PasswordChangeCubit(PasswordChangeType type, {String? passwordResetCode}) : super(PasswordChangeState(formType: type, passwordResetCode: passwordResetCode));
 
   Future changePasswordFormSubmitted() async {
 	  if (this.state.status != FormzStatus.pure)
@@ -28,7 +28,7 @@ class PasswordChangeCubit extends Cubit<PasswordChangeState> {
 	  	if (state.formType == PasswordChangeType.change)
 		    await _authenticationProvider.changePassword(state.currentPassword.value, state.newPassword.value);
 		  else if (state.formType == PasswordChangeType.reset)
-		  	await _authenticationProvider.completePasswordReset(password: state.newPassword.value, resetCode: state.passwordResetCode);
+		  	await _authenticationProvider.completePasswordReset(password: state.newPassword.value, resetCode: state.passwordResetCode!);
 		  emit(state.copyWith(status: FormzStatus.submissionSuccess));
 	  } on PasswordConfirmFailure catch (e) {
 		  emit(state.copyWith(status: FormzStatus.submissionFailure, error: e.reason));
@@ -42,7 +42,7 @@ class PasswordChangeCubit extends Cubit<PasswordChangeState> {
 	  state = state.copyWith(currentPassword: Password.dirty(state.currentPassword.value, false));
 	  state = state.copyWith(newPassword: Password.dirty(state.newPassword.value));
 	  state = state.copyWith(confirmedPassword: state.confirmedPassword.copyDirty(original: state.newPassword));
-	  List<FormzInput> fields = [state.newPassword, state.confirmedPassword];
+	  var fields = <FormzInput>[state.newPassword, state.confirmedPassword];
 	  if (state.formType != PasswordChangeType.reset)
 	  	fields.add(state.currentPassword);
 	  return state.copyWith(status: Formz.validate(fields));

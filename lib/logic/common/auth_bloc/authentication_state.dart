@@ -1,22 +1,28 @@
-part of '../../common/auth_bloc/authentication_bloc.dart';
+part of 'authentication_bloc.dart';
 
 enum AuthenticationStatus { authenticated, unauthenticated, initial }
 
 class AuthenticationState extends Equatable {
 	final AuthenticationStatus status;
-	final UIUser user;
+	final User? user;
+	final AuthMethod? authMethod;
+	final String? photoURL;
+
+	bool get signedIn => status == AuthenticationStatus.authenticated;
 
 	const AuthenticationState._({
 		this.status = AuthenticationStatus.initial,
 		this.user,
+		this.authMethod,
+		this.photoURL,
 	});
 
 	const AuthenticationState.unknown() : this._();
 
-	const AuthenticationState.authenticated(UIUser user) : this._(status: AuthenticationStatus.authenticated, user: user);
+	const AuthenticationState.authenticated(this.user, {this.authMethod, this.photoURL}) : status = AuthenticationStatus.authenticated;
 
 	const AuthenticationState.unauthenticated() : this._(status: AuthenticationStatus.unauthenticated);
 
 	@override
-	List<Object> get props => [status, user];
+	List<Object?> get props => [status, user];
 }

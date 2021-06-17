@@ -1,62 +1,69 @@
-import 'package:date_utils/date_utils.dart' as du;
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fokus/utils/navigation_utils.dart';
 import 'package:intl/intl.dart';
+import 'package:mongo_dart/mongo_dart.dart' as mongo;
 import 'package:smart_select/smart_select.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:mongo_dart/mongo_dart.dart' as Mongo;
 
-import 'package:fokus/logic/common/calendar_cubit.dart';
-import 'package:fokus/model/ui/user/ui_child.dart';
-import 'package:fokus/model/db/date/date.dart';
-import 'package:fokus/model/navigation/plan_form_params.dart';
-import 'package:fokus/model/ui/app_page.dart';
-import 'package:fokus/model/ui/plan/ui_plan.dart';
-import 'package:fokus/utils/ui/calendar_utils.dart';
-import 'package:fokus/widgets/buttons/bottom_sheet_confirm_button.dart';
-import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/widgets/custom_app_bars.dart';
-import 'package:fokus/utils/ui/icon_sets.dart';
-import 'package:fokus/utils/ui/theme_config.dart';
-import 'package:fokus/widgets/cards/item_card.dart';
-import 'package:fokus/widgets/chips/attribute_chip.dart';
-import 'package:fokus/widgets/segment.dart';
-import 'package:fokus/widgets/general/app_hero.dart';
+import '../../logic/common/calendar_cubit.dart';
+import '../../model/db/date/date.dart';
+import '../../model/db/plan/plan.dart';
+import '../../model/db/user/child.dart';
+import '../../model/navigation/plan_form_params.dart';
+import '../../model/ui/app_page.dart';
+import '../../services/app_locales.dart';
+import '../../utils/navigation_utils.dart';
+import '../../utils/ui/calendar_utils.dart';
+import '../../utils/ui/icon_sets.dart';
+import '../../utils/ui/theme_config.dart';
+import '../../widgets/buttons/bottom_sheet_confirm_button.dart';
+import '../../widgets/cards/item_card.dart';
+import '../../widgets/chips/attribute_chip.dart';
+import '../../widgets/custom_app_bars.dart';
+import '../../widgets/general/app_hero.dart';
+import '../../widgets/segment.dart';
 
 class CaregiverCalendarPage extends StatefulWidget {
 	@override
-	_CaregiverCalendarPageState createState() => new _CaregiverCalendarPageState();
+	_CaregiverCalendarPageState createState() => _CaregiverCalendarPageState();
 }
 
 class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with TickerProviderStateMixin {
 	static const String _pageKey = 'page.caregiverSection.calendar';
-	AnimationController _animationController;
-	CalendarController _calendarController;
+
+	final DateTime kNow = DateTime.now();
+	DateTime kFirstDay = DateTime(2000);
+	DateTime kLastDay = DateTime(2200);
+  DateTime _focusedDay = Date.now();
+  DateTime? _selectedDay;
+
+  final CalendarFormat _calendarFormat = CalendarFormat.month;
+  final RangeSelectionMode _rangeSelectionMode = RangeSelectionMode.toggledOff;
+	ValueNotifier<List<Plan>>? _selectedEvents;
+	final Color notAssignedPlanMarkerColor = Colors.grey[400]!;
+	
 	bool canAddPlan = true;
-	List<UIChild> _selectedChildren = [];
-
-	final Duration _animationDuration = Duration(milliseconds: 250);
-	final Color notAssignedPlanMarkerColor = Colors.grey[400];
-
+	List<Child>? _selectedChildren = [];
 
 	@override
 	void initState() {
 		super.initState();
-		_calendarController = CalendarController();
-		_animationController = AnimationController(vsync: this, duration: _animationDuration);
-		_animationController.forward();
+		kFirstDay = DateTime(kNow.year, kNow.month - 6, kNow.day);
+		kLastDay = DateTime(kNow.year, kNow.month + 6, kNow.day);
+
+    _selectedDay = _focusedDay;
+		_selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay!));
 	}
 
 	@override
 	void dispose() {
-		_calendarController.dispose();
-		_animationController.dispose();
+		_selectedEvents?.dispose();
 		super.dispose();
 	}
 
-	Color _getChildColor(Map<UIChild, bool> children, Mongo.ObjectId childID) {
-		int childIndex = children.keys.toList().indexWhere((element) => element.id == childID);
+	Color _getChildColor(Map<Child?, bool>? children, mongo.ObjectId childID) {
+		var childIndex = children!.keys.toList().indexWhere((element) => element != null && element.id == childID);
 		return (childIndex != -1) ? AppColors.markerColors[childIndex % AppColors.markerColors.length] : Colors.cyan;
 	}
 
@@ -73,7 +80,7 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 								padding: EdgeInsets.symmetric(horizontal: AppBoxProperties.screenEdgePadding),
 								child: BlocBuilder<CalendarCubit, CalendarState>(
 									builder: (context, state) {
-										return _buildCalendar(state.events, state.children);
+										return _buildCalendar(state.children);
 									},
 								)
 							),
@@ -89,17 +96,15 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 							margin: EdgeInsets.symmetric(horizontal: 20.0, vertical: 6.0).copyWith(bottom: 6.0),
 							child: InkWell(
 								onTap: () => {},
-								child: Container(
-								  child: BlocBuilder<CalendarCubit, CalendarState>(
-                    buildWhen: (oldState, newState) => oldState.children != newState.children,
-									  builder: (context, state) {
-										  if (state.children == null) {
-											  BlocProvider.of<CalendarCubit>(context).loadInitialData();
-											  return _buildChildPicker(loading: true);
-										  }
-									    return _buildChildPicker(children: state.children);
-									  }
-								  )
+								child: BlocBuilder<CalendarCubit, CalendarState>(
+									buildWhen: (oldState, newState) => oldState.children != newState.children,
+									builder: (context, state) {
+										if (state.children == null) {
+											BlocProvider.of<CalendarCubit>(context).loadInitialData();
+											return _buildChildPicker(loading: true);
+										}
+										return _buildChildPicker(children: state.children);
+									}
 								)
 							)
 						)
@@ -107,7 +112,7 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 				]
 			),
 			floatingActionButton: canAddPlan ? FloatingActionButton.extended(
-				onPressed: () => Navigator.of(context).pushNamed(AppPage.caregiverPlanForm.name, arguments: PlanFormParams(type: AppFormType.create, date: Date.fromDate(_calendarController.focusedDay))),
+				onPressed: () => Navigator.of(context).pushNamed(AppPage.caregiverPlanForm.name, arguments: PlanFormParams(type: AppFormType.create, date: BlocProvider.of<CalendarCubit>(context).state.day)),
 				label: Text(AppLocales.of(context).translate('$_pageKey.content.addPlan')),
 				icon: Icon(Icons.insert_invitation),
 				backgroundColor: Colors.lightBlue,
@@ -126,20 +131,20 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 					noElementsMessage: '$_pageKey.content.noPlansOnDateTitle',
 					noElementsIcon: Icons.description,
 					elements: [
-						if(state.events != null && state.events[state.day] != null)
-							for(UIPlan plan in state.events[state.day])
+						if(state.events != null && state.events![state.day] != null)
+							for(Plan plan in state.events![state.day]!)
 								ItemCard(
-									title: plan.name,
+									title: plan.name!,
 									onTapped: () => navigateChecked(context, AppPage.planDetails, arguments: plan.id),
 									subtitle: AppLocales.of(context).translate(
-										'$_pageKey.content.${plan.assignedTo.isNotEmpty ? 'planAssignedToSubtitle' : 'planNotAssignedToSubtitle'}'
+										'$_pageKey.content.${plan.assignedTo!.isNotEmpty ? 'planAssignedToSubtitle' : 'planNotAssignedToSubtitle'}'
 									),
-									isActive: plan.assignedTo.isNotEmpty,
-									chips: plan.assignedTo.isNotEmpty ? plan.assignedTo.map((childID) {
-										var child = state.children.keys.firstWhere((element) => element.id == childID, orElse: () => null);
+									isActive: plan.assignedTo!.isNotEmpty,
+									chips: plan.assignedTo!.isNotEmpty ? plan.assignedTo?.map((childID) {
+										var child = state.children?.keys.firstWhereOrNull((Child? element) => element != null && element.id == childID);
 										return child != null ? AttributeChip(
 											content: child.name,
-											color: _getChildColor(state.children, childID)
+											color: _getChildColor(state.children!, childID)
 										) : SizedBox.shrink();
 									}).toList() : []
 								)
@@ -149,75 +154,91 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 		);
 	}
 
-	TableCalendar _buildCalendar(Map<Date, List<UIPlan>> events, Map<UIChild, bool> children) {
-	  return buildCalendar(
-			controller: _calendarController, 
-			context: context,
-			events: events,
-			onDaySelected: onDayChanged,
-			onCalendarCreated: onCalendarCreated,
-			onVisibleDaysChanged: onMonthChanged,
-			builders: CalendarBuilders(
-				selectedDayBuilder: (context, date, _) =>
-          FadeTransition(
-            opacity: Tween(begin: 0.0, end: 1.0).animate(_animationController),
-            child: buildTableCalendarCell(date, AppColors.caregiverBackgroundColor, isCellSelected: true)
-					),
-        todayDayBuilder: (context, date, _) => buildTableCalendarCell(date, Colors.transparent),
-				markersBuilder: (context, date, events, holidays) {
+  List<Plan> _getEventsForDay(DateTime day) {
+		var events = BlocProvider.of<CalendarCubit>(context).state.events;
+    return events != null && events[Date.fromDate(day)] != null ? events[Date.fromDate(day)]! : [];
+  }
+
+  void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
+    if (!isSameDay(_selectedDay, selectedDay)) {
+      setState(() {
+        _selectedDay = selectedDay;
+        _focusedDay = focusedDay;
+				_selectedEvents!.value = _getEventsForDay(selectedDay);
+      });
+			BlocProvider.of<CalendarCubit>(context).dayChanged(Date.fromDate(selectedDay));
+    }
+  }
+
+	void _onPageChanged(DateTime focusedDay) {
+		setState(() {
+      _selectedDay = focusedDay;
+			_focusedDay = focusedDay;
+			_selectedEvents!.value = _getEventsForDay(focusedDay);
+		});
+		BlocProvider.of<CalendarCubit>(context).dayChanged(Date.fromDate(focusedDay));
+		BlocProvider.of<CalendarCubit>(context).monthChanged(Date.fromDate(focusedDay));
+	}
+	
+	TableCalendar _buildCalendar(Map<Child?, bool>? children) {
+		return TableCalendar<Plan>(
+			firstDay: kFirstDay,
+			lastDay: kLastDay,
+			focusedDay: _focusedDay,
+			calendarFormat: _calendarFormat,
+			rangeSelectionMode: _rangeSelectionMode,
+			eventLoader: _getEventsForDay,
+			startingDayOfWeek: StartingDayOfWeek.monday,
+			calendarStyle: CalendarStyle(
+				outsideDaysVisible: false
+			),
+			headerStyle: HeaderStyle(
+				titleCentered: true,
+				formatButtonVisible: false
+			),
+			selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+			onDaySelected: _onDaySelected,
+			onPageChanged: _onPageChanged,
+			calendarBuilders: CalendarBuilders(
+				selectedBuilder: (context, date, _) => buildTableCalendarCell(date, AppColors.caregiverBackgroundColor, isCellSelected: true),
+				todayBuilder: (context, date, _) => buildTableCalendarCell(date, Colors.transparent),
+				markerBuilder: (context, date, events) {
 					final markers = <Widget>[];
 					if (events.isNotEmpty) {
-						Set<Color> childrenMarkers = {};
+						var childrenMarkers = <Color>{};
 						events.forEach((plan) {
-							if(plan.assignedTo.isEmpty)
+							if(plan.assignedTo!.isEmpty)
 								childrenMarkers.add(notAssignedPlanMarkerColor);
 							else
-								plan.assignedTo.forEach((childID) {
-									if(_selectedChildren.isEmpty || _selectedChildren.firstWhere((element) => element.id == childID, orElse: () => null) != null)
+								plan.assignedTo!.forEach((childID) {
+									if(_selectedChildren!.isEmpty || _selectedChildren!.firstWhereOrNull((element) => element.id == childID) != null)
 										childrenMarkers.add(_getChildColor(children, childID));
-							});
+								});
 						});
-						markers.add(buildMarker(colorSet: childrenMarkers, inPast: date.isBefore(Date.now())));
+						markers.add(buildMarker(colorSet: childrenMarkers, inPast: date.isBefore(DateTime.now())));
 					}
-					return markers;
+					return Wrap(children: markers);
 				}
 			)
 		);
 	}
 
-	void onDayChanged(DateTime day, List<dynamic> events, List<dynamic> holidays) {
-		setState(() {
-			canAddPlan = Date.fromDate(day) >= Date.now();
-		});
-		BlocProvider.of<CalendarCubit>(context).dayChanged(Date.fromDate(day));
-		_animationController.forward(from: 0.0);
-	}
-
-	void onCalendarCreated(DateTime first, DateTime last, CalendarFormat format) {
-		BlocProvider.of<CalendarCubit>(context).monthChanged(Date.fromDate(_calendarController.focusedDay));
-	}
-
-	void onMonthChanged(DateTime first, DateTime last, CalendarFormat format) {
-		onCalendarCreated(first, last, format);
-		_calendarController.setSelectedDay(Date.fromDate(du.DateUtils.firstDayOfMonth(_calendarController.focusedDay)));
-	}
-
-	SmartSelect<UIChild> _buildChildPicker({Map<UIChild, bool> children = const {}, bool loading = false}) {
-	  return SmartSelect<UIChild>.multiple(
+	SmartSelect<Child> _buildChildPicker({Map<Child?, bool>? children = const {}, bool loading = false}) {
+	  return SmartSelect<Child>.multiple(
 	    title: AppLocales.of(context).translate('$_pageKey.header.filterPlansTitle'),
-	    value: _selectedChildren,
-	    builder: (context, state, callback) {
+	    selectedValue: _selectedChildren,
+	    tileBuilder: (context, selectState) {
 	      return InkWell(
 	        onTap: () {
-	          FocusManager.instance.primaryFocus.unfocus();
+	          FocusManager.instance.primaryFocus?.unfocus();
 	          if(!loading)
-							callback(context);
+							selectState.showModal();
 	        },
 	        child: Column(
 	          crossAxisAlignment: CrossAxisAlignment.start,
 	          children: [
 	            ListTile(
-	              title: Text(AppLocales.of(context).translate(state.values.isNotEmpty ?
+	              title: Text(AppLocales.of(context).translate(selectState.selected!.isNotEmpty ?
 									'$_pageKey.header.showPlansForTitle'
 									: '$_pageKey.header.filterPlansTitle'
 								)),
@@ -236,7 +257,7 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 									: Icon(Icons.keyboard_arrow_right, color: Colors.grey)
 	            ),
 							AnimatedSwitcher(
-								duration: _animationDuration,
+								duration: Duration(milliseconds: 250),
 								switchInCurve: Curves.easeIn,
 								switchOutCurve: Curves.easeOut,
 								transitionBuilder: (child, animation) {
@@ -246,16 +267,16 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 										child: child
 									);
 								},
-								child: state.values.isNotEmpty ?
+								child: selectState.selected!.isNotEmpty ?
 									Padding(
 										padding: EdgeInsets.symmetric(horizontal: 12.0).copyWith(bottom: 10.0),
 										child: Wrap(
 											spacing: 4.0,
 											runSpacing: 4.0,
-											children: state.values.map((child) {
+											children: selectState.selected!.value!.map((child) {
 												return AttributeChip(
 													content: child.name,
-													color: _getChildColor(children, child.id)
+													color: _getChildColor(children, child.id!)
 												);
 											}).toList(),
 										)
@@ -265,43 +286,43 @@ class _CaregiverCalendarPageState extends State<CaregiverCalendarPage> with Tick
 	        )
 	      );
 	    },
-	    options: SmartSelectOption.listFrom(
-	      source: children.keys.toList(),
-	      value: (index, item) => item,
-	      title: (index, item) => item.name,
+	    choiceItems: S2Choice.listFrom(
+	      source: children!.keys.toList(),
+	      value: (index, item) => item as Child,
+	      title: (index, item) => (item as Child).name!,
 	      meta: (index, item) => item
 	    ),
-	    choiceType: SmartSelectChoiceType.chips,
-	    choiceConfig: SmartSelectChoiceConfig(
-	      builder: (item, checked, onChange) => Theme(
-	        data: ThemeData(textTheme: Theme.of(context).textTheme),
-	        child: ItemCard(
-	          title: item.title,
-	          subtitle: AppLocales.of(context).translate(checked ? 'actions.selected' : 'actions.tapToSelect'),
-	          graphicType: AssetType.avatars,
-	          graphic: item.meta.avatar,
-	          graphicShowCheckmark: checked,
-	          graphicHeight: 44.0,
-	          onTapped: onChange != null ? () => onChange(item.value, !checked) : null,
-	          isActive: checked
-	        )
-	      ),
-				emptyBuilder: (str) => AppHero(
-					icon: Icons.warning,
-					header: AppLocales.of(context).translate('$_pageKey.header.emptyListHeader'),
-					title: AppLocales.of(context).translate('$_pageKey.header.emptyListText'),
+	    choiceType: S2ChoiceType.chips,
+			choiceBuilder: (context, selectState, choice) => Theme(
+				data: ThemeData(textTheme: Theme.of(context).textTheme),
+				child: ItemCard(
+					title: choice.title!,
+					subtitle: AppLocales.of(context).translate(choice.selected ? 'actions.selected' : 'actions.tapToSelect'),
+					graphicType: AssetType.avatars,
+					graphic: (choice.meta as Child).avatar,
+					graphicShowCheckmark: choice.selected,
+					graphicHeight: 44.0,
+					onTapped: () => choice.select!(!choice.selected),
+					isActive: choice.selected
 				)
 	    ),
-	    modalType: SmartSelectModalType.bottomSheet,
-			modalConfig: SmartSelectModalConfig(
-				useConfirmation: true,
-				confirmationBuilder: (context, callback) => ButtonSheetConfirmButton(callback: () => callback)
+			choiceEmptyBuilder: (context, selectState) => AppHero(
+				icon: Icons.warning,
+				header: AppLocales.of(context).translate('$_pageKey.header.emptyListHeader'),
+				title: AppLocales.of(context).translate('$_pageKey.header.emptyListText'),
 			),
-	    onChange: (val) {
-				setState(() { _selectedChildren = val; });
-	      Map<UIChild, bool> filter = {};
+	    modalType: S2ModalType.bottomSheet,
+			modalConfig: S2ModalConfig(
+				useConfirm: true
+			),
+			modalConfirmBuilder: (context, selectState) {
+				return ButtonSheetConfirmButton(callback: () => selectState.closeModal(confirmed: true));
+			},
+	    onChange: (selected) {
+				setState(() { _selectedChildren = selected!.value; });
+	      var filter = <Child, bool>{};
 				for(var child in children.keys)
-					filter[child] = val.contains(child);
+					filter[child!] = selected!.value!.contains(child);
 	      BlocProvider.of<CalendarCubit>(context).childFilterChanged(filter);
 	    }
 	  );

@@ -1,55 +1,67 @@
-import 'package:fokus/model/db/gamification/points.dart';
-import 'package:fokus/model/ui/form/task_form_model.dart';
+import 'package:equatable/equatable.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
-class Task {
-	String name;
-  String description;
-  ObjectId id;
-  ObjectId planID;
-	List<String> subtasks;
+import '../../../utils/definitions.dart';
+import '../../ui/form/task_form_model.dart';
+import '../gamification/points.dart';
 
-  bool optional;
-  Points points;
-  int timer;
 
-  Task.fromTaskForm(TaskFormModel taskForm, ObjectId planId, ObjectId creator, [ObjectId taskID]) : this._(name: taskForm.title, description: taskForm.description,
-		  planID: planId, subtasks: taskForm.subtasks, optional: taskForm.optional, timer: taskForm.timer > 0 ? taskForm.timer : null, id: taskID ?? ObjectId(),
-		  points: taskForm.pointsValue != null ? Points.fromUICurrency(taskForm.pointCurrency, taskForm.pointsValue, creator: creator) : null);
+class Task extends Equatable {
+	final String? name;
+  final String? description;
+  final ObjectId? id;
+  final ObjectId? planID;
+	final List<String>? subtasks;
 
-  Task._({this.description, this.id, this.name, this.optional, this.planID, this.points, this.subtasks, this.timer});
+  final bool? optional;
+  final Points? points;
+  final int? timer;
 
-  factory Task.fromJson(Map<String, dynamic> json) {
-    return json != null ? Task._(
+  Task.fromTaskForm({required TaskFormModel taskForm, ObjectId? planID, ObjectId? createdBy, ObjectId? taskID}) : this(
+	  name: taskForm.title, 
+	  description: taskForm.description, 
+	  planID: planID, 
+	  subtasks: taskForm.subtasks,
+	  optional: taskForm.optional, 
+	  timer: taskForm.timer! > 0 ? taskForm.timer : null, 
+	  id: taskID ?? ObjectId(),
+	  points: taskForm.pointsValue != null ? Points.fromCurrency(currency: taskForm.pointCurrency!, quantity: taskForm.pointsValue!, createdBy: createdBy) : null
+  );
+
+  Task({this.description, this.id, this.name, this.optional, this.planID, this.points, this.subtasks, this.timer = 0});
+
+  Task.fromJson(Json json) : this(
       description: json['description'],
 	    id: json['_id'],
       name: json['name'],
       optional: json['optional'],
       planID: json['planID'],
       points: json['points'] != null ? Points.fromJson(json['points']) : null,
-      subtasks: json['subtasks'] != null ? new List<String>.from(json['subtasks']) : [],
+      subtasks: json['subtasks'] != null ? List<String>.from(json['subtasks']) : [],
       timer: json['timer'],
-    ) : null;
-  }
+    );
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.description != null)
-      data['description'] = this.description;
-    if (this.id != null)
-      data['_id'] = this.id;
-    if (this.name != null)
-      data['name'] = this.name;
-    if (this.optional != null)
-      data['optional'] = this.optional;
-    if (this.planID != null)
-      data['planID'] = this.planID;
-    if (this.timer != null)
-      data['timer'] = this.timer;
-    if (this.points != null)
-      data['points'] = this.points.toJson();
-    if (this.subtasks != null)
-      data['subtasks'] = this.subtasks;
+  Json toJson() {
+    final data = <String, dynamic>{};
+    if (description != null)
+      data['description'] = description;
+    if (id != null)
+      data['_id'] = id;
+    if (name != null)
+      data['name'] = name;
+    if (optional != null)
+      data['optional'] = optional;
+    if (planID != null)
+      data['planID'] = planID;
+    if (timer != null)
+      data['timer'] = timer;
+    if (points != null)
+      data['points'] = points!.toJson();
+    if (subtasks != null)
+      data['subtasks'] = subtasks;
     return data;
   }
+
+	@override
+	List<Object?> get props => [id, description, name, optional, planID, timer, points, subtasks];
 }

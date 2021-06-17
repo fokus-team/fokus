@@ -1,7 +1,7 @@
 import 'package:mongo_dart/mongo_dart.dart';
-import 'package:fokus/model/db/gamification/currency.dart';
+import '../../../model/db/gamification/currency.dart';
 
+// ignore: one_member_abstracts
 abstract class CurrencyRepository {
-	Future<List<Currency>> getCurrencies(ObjectId caregiverId);
-	Future updateCurrencies(ObjectId caregiverId, List<Currency> currencies);
+	Future updateCurrencies(ObjectId caregiverId, List<Currency>? currencies);
 }

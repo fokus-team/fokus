@@ -5,7 +5,7 @@ enum AgreementValidationError { invalid }
 extension AgreementValidationErrorTextKey on AgreementValidationError {
 	String get key => const {
 		AgreementValidationError.invalid: 'authentication.error.agreementNotAccepted',
-	}[this];
+	}[this]!;
 }
 
 class Agreement extends FormzInput<bool, AgreementValidationError> {
@@ -13,5 +13,5 @@ class Agreement extends FormzInput<bool, AgreementValidationError> {
 	const Agreement.dirty([bool value = false]) : super.dirty(value);
 
 	@override
-	AgreementValidationError validator(bool value) => value ? null : AgreementValidationError.invalid;
+	AgreementValidationError? validator(bool? value) => value! ? null : AgreementValidationError.invalid;
 }

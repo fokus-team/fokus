@@ -2,46 +2,43 @@ import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
-import 'package:fokus/model/ui/gamification/ui_currency.dart';
-import 'package:fokus/services/data/data_repository.dart';
-import 'package:fokus/model/ui/user/ui_user.dart';
-import 'package:fokus/model/currency_type.dart';
-import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
-import 'package:fokus/model/ui/gamification/ui_points.dart';
-import 'package:fokus/model/ui/gamification/ui_reward.dart';
-import 'package:fokus/model/db/gamification/reward.dart';
-import 'package:fokus/model/ui/app_page.dart';
-import 'package:fokus/model/ui/user/ui_caregiver.dart';
-import 'package:fokus/services/analytics_service.dart';
+import '../../../../model/currency_type.dart';
+import '../../../../model/db/gamification/currency.dart';
+import '../../../../model/db/gamification/points.dart';
+import '../../../../model/db/gamification/reward.dart';
+import '../../../../model/db/user/caregiver.dart';
+import '../../../../model/ui/app_page.dart';
+import '../../../../services/analytics_service.dart';
+import '../../../../services/data/data_repository.dart';
+import '../../../common/stateful/stateful_cubit.dart';
 
 part 'reward_form_state.dart';
 
 class RewardFormCubit extends StatefulCubit<BaseFormState> {
-	final ActiveUserFunction _activeUser;
-	final ObjectId _rewardId;
+	final ObjectId? _rewardId;
 
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final AnalyticsService _analyticsService = GetIt.I<AnalyticsService>();
 	
-  RewardFormCubit(this._rewardId, this._activeUser, ModalRoute pageRoute) :
+  RewardFormCubit(this._rewardId, ModalRoute pageRoute) :
 			  super(pageRoute, initialState: BaseFormState(formType: _rewardId == null ? AppFormType.create : AppFormType.edit));
 
   @override
 	Future doLoadData() async {
-	  var user = _activeUser();
-	  var currencies = (user as UICaregiver).currencies;
-	  UIReward reward;
+	  var user = activeUser as Caregiver;
+	  var currencies = user.currencies!;
+	  Reward reward;
 	  if (state.formType == AppFormType.create)
-	    reward = UIReward(cost: UIPoints.fromUICurrency(currencies.firstWhere((currency) => currency.type == CurrencyType.diamond)), limit: null);
+	    reward = Reward(cost: Points(icon: CurrencyType.diamond), limit: null);
 	  else
-	    reward = UIReward.fromDBModel(await _dataRepository.getReward(id: _rewardId));
+	    reward = (await _dataRepository.getReward(id: _rewardId!))!;
 		emit(state.load(currencies: currencies, reward: reward));
   }
 
-  void onRewardChanged(UIReward Function(UIReward) update) {
+  void onRewardChanged(Reward Function(Reward) update) {
   	if (!this.state.loaded)
   		return;
-	  RewardFormDataLoadSuccess state = this.state;
+	  var state = this.state as RewardFormDataLoadSuccess;
     emit(state.copyWith(reward: update(state.reward)));
   }
 	
@@ -49,9 +46,9 @@ class RewardFormCubit extends StatefulCubit<BaseFormState> {
 		if (!beginSubmit())
 			return;
 
-		var userId = _activeUser().id;
-		RewardFormDataLoadSuccess state = this.state;
-		var reward = Reward.fromUIModel(state.reward, userId, state.reward.id);
+		var userId = activeUser!.id!;
+		var state = this.state as RewardFormDataLoadSuccess;
+		var reward = state.reward.copyWith(createdBy: userId, id: state.reward.id);
 
 		if (state.formType == AppFormType.create) {
 			await _dataRepository.createReward(reward);
@@ -59,6 +56,6 @@ class RewardFormCubit extends StatefulCubit<BaseFormState> {
 		} else {
 	    await _dataRepository.updateReward(reward);
 		}
-		emit(state.submissionSuccess());
+		emit(state.submissionSuccess() as BaseFormState);
   }
 }

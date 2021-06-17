@@ -8,7 +8,7 @@ class NameChangeState extends FormzState {
 	  FormzStatus status = FormzStatus.pure,
 	}) : super(status);
 
-	NameChangeState copyWith({Name name, FormzStatus status}) {
+	NameChangeState copyWith({Name? name, FormzStatus? status}) {
 		return NameChangeState(
 			name: name ?? this.name,
 			status: status ?? this.status,
@@ -16,5 +16,5 @@ class NameChangeState extends FormzState {
 	}
 
 	@override
-	List<Object> get props => [name, status];
+	List<Object?> get props => [name, status];
 }

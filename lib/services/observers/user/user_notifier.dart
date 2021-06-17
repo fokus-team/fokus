@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:fokus/model/db/user/user.dart';
+import '../../../model/db/user/user.dart';
 
 import 'user_observer.dart';
 
 class UserNotifier implements UserObserver {
-	User activeUser;
+	@protected
+	User? user;
+
+	User? get activeUser => user;
 	
 	@protected
 	List<UserObserver> userObservers = [];
@@ -16,8 +19,8 @@ class UserNotifier implements UserObserver {
 	void observeUserChanges(UserObserver observer) => userObservers.add(observer);
 
   @override
-  void onUserSignIn(User user) => activeUser = user;
+  void onUserSignIn(User user) => this.user = user;
 
   @override
-  void onUserSignOut(User user) => activeUser = null;
+  void onUserSignOut(User user) => this.user = null;
 }

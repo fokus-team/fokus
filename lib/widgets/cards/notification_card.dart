@@ -1,30 +1,29 @@
 import 'package:flutter/material.dart';
-
-import 'package:fokus/model/currency_type.dart';
-import 'package:fokus/model/notification/notification_type.dart';
-import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/ui/icon_sets.dart';
-import 'package:fokus/utils/ui/theme_config.dart';
-import 'package:fokus/widgets/chips/attribute_chip.dart';
-import 'package:fokus/widgets/cards/item_card.dart';
-
 import 'package:intl/intl.dart';
+
+import '../../model/currency_type.dart';
+import '../../model/notification/notification_type.dart';
+import '../../services/app_locales.dart';
+import '../../utils/ui/icon_sets.dart';
+import '../../utils/ui/theme_config.dart';
+import '../chips/attribute_chip.dart';
+import 'item_card.dart';
 
 
 class NotificationCard extends ItemCard {
 	static const String _pageKey = "page.notifications.content";
 
-  final DateTime dateTime;
+  final DateTime? dateTime;
 
   NotificationCard({
-	  @required NotificationType notificationType,
+	  required NotificationType notificationType,
 	  String childName = "",
     this.dateTime,
 	  int currencyValue = 0,
-    String title,
-    String subtitle,
-    AssetType graphicType,
-    int graphic
+    String? title,
+    String? subtitle,
+    AssetType? graphicType,
+    int? graphic
   }) : super(
     title: AppLocales.instance.translate("${notificationType.title}", {'CHILD_NAME' : childName}),
     subtitle: subtitle,
@@ -42,7 +41,7 @@ class NotificationCard extends ItemCard {
 	    else if (notificationType == NotificationType.taskApproved)
 		    AttributeChip.withIcon(
 			    content: currencyValue.toString(),
-			    color: AppColors.currencyColor[CurrencyType.values[graphic]],
+			    color: AppColors.currencyColor[CurrencyType.values[graphic!]],
 			    icon: Icons.add
 		    )
     ]
@@ -62,7 +61,7 @@ class NotificationCard extends ItemCard {
 				Padding(
 					padding: EdgeInsets.only(top: 2.0, bottom: 4.0),
 					child: Text(
-						subtitle,
+						subtitle!,
 						style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
 						overflow: TextOverflow.ellipsis,
 						maxLines: titleMaxLines,
@@ -71,7 +70,7 @@ class NotificationCard extends ItemCard {
 				),
 			if(dateTime != null)
 				Text(
-					"${DateFormat.yMd(AppLocales.instance.locale.toString()).add_Hm().format(dateTime)}",
+					"${DateFormat.yMd(AppLocales.instance.locale.toString()).add_Hm().format(dateTime!)}",
 					style: Theme.of(context).textTheme.subtitle2,
 					overflow: TextOverflow.ellipsis,
 					maxLines: 1,

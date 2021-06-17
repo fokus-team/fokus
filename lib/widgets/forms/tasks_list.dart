@@ -1,40 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:round_spot/round_spot.dart' as round_spot;
 import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorderable_list.dart';
+import 'package:round_spot/round_spot.dart' as round_spot;
 
-import 'package:fokus/logic/caregiver/forms/plan/plan_form_cubit.dart';
-import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/widgets/cards/task_card.dart';
-import 'package:fokus/widgets/general/app_hero.dart';
-import 'package:fokus/widgets/dialogs/general_dialog.dart';
-
-import 'package:fokus/model/ui/form/task_form_model.dart';
-import 'package:fokus/model/ui/form/plan_form_model.dart';
-import 'package:fokus/model/navigation/task_form_params.dart';
-import 'package:fokus/model/ui/app_page.dart';
-
-import 'package:fokus/utils/ui/dialog_utils.dart';
-import 'package:fokus/utils/ui/theme_config.dart';
-import 'package:fokus/utils/ui/reorderable_list.dart';
+import '../../logic/caregiver/forms/plan/plan_form_cubit.dart';
+import '../../model/navigation/task_form_params.dart';
+import '../../model/ui/app_page.dart';
+import '../../model/ui/form/plan_form_model.dart';
+import '../../model/ui/form/task_form_model.dart';
+import '../../services/app_locales.dart';
+import '../../utils/ui/dialog_utils.dart';
+import '../../utils/ui/reorderable_list.dart';
+import '../../utils/ui/theme_config.dart';
+import '../cards/task_card.dart';
+import '../dialogs/general_dialog.dart';
+import '../general/app_hero.dart';
 
 
 class TaskList extends StatefulWidget {
 	final PlanFormModel plan;
-	final Function goBackCallback;
-	final Function submitCallback;
+	final void Function() goBackCallback;
+	final void Function() submitCallback;
 	final bool isCreateMode;
 
 	TaskList({
-		@required this.plan,
-		@required this.goBackCallback,
-		@required this.submitCallback,
-		@required this.isCreateMode,
-		Key key
+		required this.plan,
+		required this.goBackCallback,
+		required this.submitCallback,
+		required this.isCreateMode,
+		Key? key
 	}) : super(key: key);
 
 	@override
-	TaskListState createState() => new TaskListState();
+	TaskListState createState() => TaskListState();
 }
 
 class TaskListState extends State<TaskList> with TickerProviderStateMixin {
@@ -78,9 +76,9 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 	void sortTasks() {
 		setState(() {
 			widget.plan.tasks.sort((a, b) {
-				if (a.optional && !b.optional) 
+				if (a.optional! && !b.optional!)
 					return 1;
-				if (!a.optional && b.optional) 
+				if (!a.optional! && b.optional!)
 					return -1;
 				return 0;
 			});
@@ -102,12 +100,10 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 				task: null,
 				currencies: (BlocProvider.of<PlanFormCubit>(context).state as PlanFormDataLoadSuccess).currencies,
 				createTaskCallback: (newTask) {
-					Future.wait([
-						Future(() => setState(() {
+					return Future(() => setState(() {
 							widget.plan.tasks.add(newTask);
 							sortTasks();
-						}))
-					]);
+						}));
 				}
 		));
 	}
@@ -117,20 +113,16 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 			task: task,
 			currencies: (BlocProvider.of<PlanFormCubit>(context).state as PlanFormDataLoadSuccess).currencies,
 			saveTaskCallback: (TaskFormModel updatedTask) {
-				Future.wait([
-					Future(() => setState(() {
+			return Future(() => setState(() {
 						task.copy(updatedTask);
 						sortTasks();
-					}))
-				]);
+					}));
 			},
 			removeTaskCallback: () {
-				Future.wait([
-					Future(() => setState(() {
+				return Future(() => setState(() {
 						widget.plan.tasks.remove(task);
 						sortTasks();
-					}))
-				]);
+					}));
 			}
 		));
 	}
@@ -215,7 +207,7 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 			child: Align(
 				alignment: Alignment.centerLeft,
 				child:Text(
-					title + ' ($count)',
+					'$title ($count)',
 					style: TextStyle(fontWeight: FontWeight.bold)
 				)
 			)
@@ -227,7 +219,7 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 			duration: Duration(seconds: 2),
 			reverseDuration: defaultSwitchDuration,
 			transitionBuilder: (Widget child, Animation<double> animation) {
-				CurvedAnimation delayedAnimation = CurvedAnimation(parent: animation, curve: Interval(0.5, 1.0, curve: Curves.fastOutSlowIn));
+				var delayedAnimation = CurvedAnimation(parent: animation, curve: Interval(0.5, 1.0, curve: Curves.fastOutSlowIn));
 				return FadeTransition(child: child, opacity: delayedAnimation);
 			},
 			child: (widget.plan.tasks.isEmpty) ?
@@ -240,11 +232,11 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 	}
 
 	Widget buildTaskCard(TaskFormModel task, bool optional) {
-		int index = (widget.plan.tasks..where((element) => element.optional == optional)).indexOf(task);
+		var index = (widget.plan.tasks..where((element) => element.optional == optional)).indexOf(task);
 		return TaskCard(task: task, index: index, onTap: editTask);
 	}
 
-	void showConfirmClearAllDialog(BuildContext context, Function clearCallback) {
+	void showConfirmClearAllDialog(BuildContext context, void Function() clearCallback) {
 		showBasicDialog(
 			context,
 			GeneralDialog.confirm(
@@ -261,7 +253,7 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 	}
 
 	Widget buildBottomNavigation(BuildContext context) {
-		return Container(
+		return SizedBox(
 			height: bottomBarHeight + 34.0,
 			child: Stack(
 				children: [
@@ -277,14 +269,18 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 								mainAxisAlignment: MainAxisAlignment.spaceBetween,
 								crossAxisAlignment: CrossAxisAlignment.end,
 								children: <Widget>[
-									FlatButton(
+									TextButton(
 										onPressed: () => widget.goBackCallback(),
-										textColor: AppColors.mediumTextColor,
+										style: TextButton.styleFrom(
+											primary: AppColors.mediumTextColor
+										),
 										child: Row(children: <Widget>[Icon(Icons.chevron_left), Text(AppLocales.of(context).translate('actions.back'))]),
 									),
-									FlatButton(
+									TextButton(
 										onPressed: () => widget.submitCallback(),
-										textColor: AppColors.mainBackgroundColor,
+										style: TextButton.styleFrom(
+											primary: AppColors.mainBackgroundColor
+										),
 										child: Text(AppLocales.of(context).translate('$_pageKey.${widget.isCreateMode ? 'createPlanButton' : 'savePlanButton'}'))
 									)
 								]
@@ -325,14 +321,14 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 							)
 						);
 					},
-					layoutBuilder: (Widget currentChild, List<Widget> previousChildren) {
-						List<Widget> children = previousChildren;
+					layoutBuilder: (Widget? currentChild, List<Widget> previousChildren) {
+						var children = previousChildren;
 						if (currentChild != null)
 							children = children.toList()..add(currentChild);
 						return Stack(
 							children: children,
 							alignment: Alignment.center,
-							overflow: Overflow.visible
+							clipBehavior: Clip.none,
 						);
 					},
 					child: widget.plan.tasks.isNotEmpty ?
@@ -347,7 +343,7 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 								child: Padding(padding: EdgeInsets.all(6.0), child: Icon(Icons.delete_sweep)),
 								shape: CircleBorder(),
 								backgroundColor: Colors.red,
-								onPressed: () { clearAllTasks(); }
+								onPressed: clearAllTasks
 							)
 						) 
 						: SizedBox.shrink()

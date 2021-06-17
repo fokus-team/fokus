@@ -1,57 +1,83 @@
-import 'package:fokus/model/db/user/caregiver.dart';
-import 'package:fokus/model/db/user/child.dart';
-import 'package:fokus/model/db/user/user_role.dart';
+import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
-class User {
-  ObjectId id;
-  final UserRole role;
-  String name;
-  String locale;
-  List<String> notificationIDs;
+import '../../../utils/definitions.dart';
+import 'caregiver.dart';
+import 'child.dart';
+import 'user_role.dart';
 
-  List<int> accessCode;
-  int avatar;
-  List<ObjectId> connections;
+class User extends Equatable {
+  final ObjectId? id;
+  final UserRole? role;
+  final String? name;
+  final String? locale;
+  final List<String>? notificationIDs;
 
-  User({this.id, this.role, this.name, this.avatar, this.connections, this.notificationIDs, this.accessCode});
+  final List<int>? accessCode;
+  final int? avatar;
+  final List<ObjectId>? connections;
+
+  User({
+	  this.id,
+	  this.role,
+	  this.name,
+	  this.avatar = -1,
+	  this.connections = const [],
+	  this.notificationIDs = const [],
+	  this.accessCode,
+	  this.locale});
+
+  User.copyFrom(User user, {String? locale, String? name, List<ObjectId>? connections}) : this(
+	  id: user.id,
+	  role: user.role,
+	  name: name ?? user.name,
+	  locale: locale ?? user.locale,
+	  avatar: user.avatar,
+	  accessCode: user.accessCode,
+	  connections: connections ?? user.connections,
+	  notificationIDs: user.notificationIDs,
+  );
 
   @protected
-  void fromJson(Map<String, dynamic> json) {
-    name = json['name'];
-    notificationIDs = json['notificationIDs'] != null ? new List<String>.from(json['notificationIDs']) : [];
-    accessCode = json['accessCode'] != null ? new List<int>.from(json['accessCode']) : [];
-    avatar = json['avatar'];
-    locale = json['locale'];
-    connections = json['connections'] != null ? new List<ObjectId>.from(json['connections']) : [];
-    connections = json['connections'] != null ? new List<ObjectId>.from(json['connections']) : null;
-  }
+  User.fromJson(Json json) : this(
+	  id: json['_id'],
+	  role: UserRole.values[json['role']],
+	  name: json['name'],
+    notificationIDs: json['notificationIDs'] != null ? List<String>.from(json['notificationIDs']) : [],
+    accessCode: json['accessCode'] != null ? List<int>.from(json['accessCode']) : [],
+    avatar: json['avatar'],
+    locale: json['locale'],
+    connections: json['connections'] != null ? List<ObjectId>.from(json['connections']) : [],
+  );
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.avatar != null)
-      data['avatar'] = this.avatar;
-    if (this.id != null)
-      data['_id'] = this.id;
-    if (this.name != null)
-	    data['name'] = this.name;
-    if (this.locale != null)
-	    data['locale'] = this.locale;
-    if (this.role != null)
-	    data['role'] = this.role.index;
-    if (this.accessCode != null)
-      data['accessCode'] = this.accessCode;
-    if (this.notificationIDs != null)
-	    data['notificationIDs'] = this.notificationIDs;
-    if (this.connections != null)
-      data['connections'] = this.connections;
+  Json toJson() {
+    final data = <String, dynamic>{};
+    if (avatar != null)
+      data['avatar'] = avatar;
+    if (id != null)
+      data['_id'] = id;
+    if (name != null)
+	    data['name'] = name;
+    if (locale != null)
+	    data['locale'] = locale;
+    if (role != null)
+	    data['role'] = role!.index;
+    if (accessCode != null)
+      data['accessCode'] = accessCode;
+    if (notificationIDs != null)
+	    data['notificationIDs'] = notificationIDs;
+    if (connections != null)
+      data['connections'] = connections;
     return data;
   }
 
-  factory User.typedFromJson(Map<String, dynamic> json) {
+  static User? typedFromJson(Json? json) {
   	if (json == null || json['role'] == null)
   		return null;
   	return json['role'] == UserRole.caregiver.index ? Caregiver.fromJson(json) : Child.fromJson(json);
   }
+
+  @override
+  List<Object?> get props => [id, avatar, name, locale, role, accessCode, notificationIDs, connections];
 }

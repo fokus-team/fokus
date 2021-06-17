@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
-import 'package:fokus/model/ui/user/ui_user.dart';
-import 'package:fokus/widgets/buttons/bottom_sheet_confirm_button.dart';
 import 'package:formz/formz.dart';
 import 'package:smart_select/smart_select.dart';
 
-import 'package:fokus/logic/child/auth/sign_up/child_sign_up_cubit.dart';
-import 'package:fokus/model/ui/ui_button.dart';
-import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/ui/icon_sets.dart';
-import 'package:fokus/utils/ui/theme_config.dart';
-import 'package:fokus/widgets/general/app_avatar.dart';
-import 'package:fokus/widgets/auth/auth_button.dart';
-import 'package:fokus/widgets/auth/auth_input_field.dart';
-import 'package:fokus/model/ui/auth/user_code.dart';
-import 'package:fokus/model/ui/auth/name.dart';
-import 'package:fokus/widgets/auth/auth_widgets.dart';
-import 'package:fokus/logic/child/auth/sign_in/child_sign_in_cubit.dart';
+import '../../../logic/child/auth/sign_in/child_sign_in_cubit.dart';
+import '../../../logic/child/auth/sign_up/child_sign_up_cubit.dart';
+import '../../../logic/common/auth_bloc/authentication_bloc.dart';
+import '../../../model/db/user/user.dart';
+import '../../../model/ui/auth/name.dart';
+import '../../../model/ui/auth/user_code.dart';
+import '../../../model/ui/ui_button.dart';
+import '../../../services/app_locales.dart';
+import '../../../utils/ui/icon_sets.dart';
+import '../../../utils/ui/theme_config.dart';
+import '../../../widgets/auth/auth_button.dart';
+import '../../../widgets/auth/auth_input_field.dart';
+import '../../../widgets/auth/auth_widgets.dart';
+import '../../../widgets/buttons/bottom_sheet_confirm_button.dart';
+import '../../../widgets/general/app_avatar.dart';
 
 class ChildSignInPage extends StatelessWidget {
 	static const String _pageKey = 'page.loginSection.childSignIn';
@@ -49,7 +49,7 @@ class ChildSignInPage extends StatelessWidget {
 	  );
   }
 
-  Widget _buildForms(BuildContext context, UIUser activeUser) {
+  Widget _buildForms(BuildContext context, User? activeUser) {
 	  return AuthGroup(
 			title: AppLocales.of(context).translate('$_pageKey.profileAddTitle'),
 			hint: AppLocales.of(context).translate('$_pageKey.profileAddHint${activeUser != null ? 'SignedIn' : ''}'),
@@ -63,7 +63,7 @@ class ChildSignInPage extends StatelessWidget {
 								changedAction: (cubit, value) => cubit.childCodeChanged(value), // temp
 								labelKey: '$_pageKey.childCode',
 								icon: Icons.screen_lock_portrait,
-								getErrorKey: (state) => [state.childCode.error.key], // temp
+								getErrorKey: (state) => [state.childCode.error!.key], // temp
 							),
 							AuthButton(
 								button: UIButton(
@@ -78,7 +78,7 @@ class ChildSignInPage extends StatelessWidget {
 								changedAction: (cubit, value) => cubit.caregiverCodeChanged(value),
 								labelKey: '$_pageKey.caregiverCode',
 								icon: Icons.phonelink_lock,
-								getErrorKey: (state) => [state.caregiverCode.error.key],
+								getErrorKey: (state) => [state.caregiverCode.error!.key],
 								disabled: activeUser != null,
 							),
 						],
@@ -87,7 +87,7 @@ class ChildSignInPage extends StatelessWidget {
 						changedAction: (cubit, value) => cubit.nameChanged(value),
 						labelKey: 'authentication.name',
 						icon: Icons.edit,
-						getErrorKey: (state) => [state.name.error.key],
+						getErrorKey: (state) => [state.name.error!.key],
 					),
 					_buildAvatarPicker(context),
 					AuthButton(
@@ -105,14 +105,14 @@ class ChildSignInPage extends StatelessWidget {
 	Widget _buildAvatarPicker(BuildContext context) {
 		return BlocBuilder<ChildSignUpCubit, ChildSignUpState>(
 			buildWhen: (oldState, newState) => oldState.avatar != newState.avatar || oldState.takenAvatars != newState.takenAvatars,
-			cubit: BlocProvider.of<ChildSignUpCubit>(context),
+			bloc: BlocProvider.of<ChildSignUpCubit>(context),
 			builder: (context, state) {
 				return Padding(
 					padding: EdgeInsets.symmetric(vertical: 10.0),
 					child: SmartSelect<int>.single(
 						title: AppLocales.of(context).translate('authentication.avatar'),
-						builder: (context, selectState, callback) {
-							bool isInvalid = (state.status == FormzStatus.invalid && state.avatar == null);
+						tileBuilder: (context, selectState) {
+							var isInvalid = (state.status == FormzStatus.invalid && state.avatar == null);
 							return ListTile(
 								leading: SizedBox(
 									width: 56.0,
@@ -130,40 +130,41 @@ class ChildSignInPage extends StatelessWidget {
 									maxLines: 1
 								),
 								trailing: Icon(Icons.keyboard_arrow_right, color: Colors.grey),
-								onTap: () => callback(context)
+								onTap: () => selectState.showModal()
 							);
 						},
-						value: state.avatar,
-						options: List.generate(childAvatars.length, (index) {
-							final String name = AppLocales.of(context).translate('$_pageKey.avatarGroups.${childAvatars[index].label.toString().split('.').last}');
-							return SmartSelectOption(
+						selectedValue: state.avatar,
+						choiceItems: List.generate(childAvatars.length, (index) {
+							final name = AppLocales.of(context).translate('$_pageKey.avatarGroups.${childAvatars[index]!.label.toString().split('.').last}');
+							return S2Choice(
 								title: name,
 								group: name,
 								value: index,
 								disabled: state.takenAvatars.contains(index)
 							);
 						}),
-						choiceConfig: SmartSelectChoiceConfig(
-							glowingOverscrollIndicatorColor: Colors.teal,
+						choiceConfig: S2ChoiceConfig(
+							overscrollColor: Colors.teal,
 							runSpacing: 10.0,
 							spacing: 10.0,
-							useWrap: true,
-							isGrouped: true,
-							builder: (item, checked, onChange) {
-								return GestureDetector(
-									onTap: item.disabled ? null : () => { onChange(item.value, !checked) },
-									child: AppAvatar(item.value, checked: checked, disabled: item.disabled)
-								);
-							}
+							layout: S2ChoiceLayout.wrap
 						),
-						modalType: SmartSelectModalType.bottomSheet,
-						modalConfig: SmartSelectModalConfig(
-							useConfirmation: true,
-							confirmationBuilder: (context, callback) => ButtonSheetConfirmButton(callback: () => callback)
+						choiceBuilder: (context, selectState, choice) {
+							return GestureDetector(
+								onTap: choice.disabled ? null : () => choice.select!(!choice.selected),
+								child: AppAvatar(choice.value, checked: choice.selected, disabled: choice.disabled)
+							);
+						},
+						modalType: S2ModalType.bottomSheet,
+						modalConfig: S2ModalConfig(
+							useConfirm: true
 						),
-						onChange: (val) {
-							FocusManager.instance.primaryFocus.unfocus();
-							BlocProvider.of<ChildSignUpCubit>(context).avatarChanged(val);
+						modalConfirmBuilder: (context, selectState) {
+							return ButtonSheetConfirmButton(callback: () => selectState.closeModal(confirmed: true));
+						},
+						onChange: (selected) {
+							FocusManager.instance.primaryFocus!.unfocus();
+							BlocProvider.of<ChildSignUpCubit>(context).avatarChanged(selected.value!);
 						}
 					)
 				);

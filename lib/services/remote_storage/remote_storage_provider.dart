@@ -1,5 +1,4 @@
 import 'dart:typed_data';
-import 'package:round_spot/round_spot.dart' as round_spot;
 
 abstract class RemoteStorageProvider {
 	static const _roundSpotDirectory = 'Round Spot';

@@ -6,5 +6,5 @@ extension CurrencyTypeName on CurrencyType {
 		CurrencyType.emerald: 'emerald',
 		CurrencyType.ruby: 'ruby',
 		CurrencyType.amethyst: 'amethyst',
-	}[this];
+	}[this]!;
 }

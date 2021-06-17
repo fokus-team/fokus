@@ -1,26 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fokus/logic/caregiver/caregiver_awards_cubit.dart';
-import 'package:fokus/model/ui/app_page.dart';
-import 'package:fokus/model/ui/app_popup.dart';
-import 'package:fokus/model/ui/ui_button.dart';
-import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/ui/dialog_utils.dart';
-import 'package:fokus/utils/ui/icon_sets.dart';
-import 'package:fokus/utils/ui/snackbar_utils.dart';
-import 'package:fokus/utils/ui/theme_config.dart';
 
-import 'package:fokus/widgets/custom_app_bars.dart';
-import 'package:fokus/widgets/app_navigation_bar.dart';
-import 'package:fokus/widgets/cards/item_card.dart';
-import 'package:fokus/widgets/cards/model_cards.dart';
-import 'package:fokus/widgets/dialogs/general_dialog.dart';
-import 'package:fokus/widgets/stateful_bloc_builder.dart';
-import 'package:fokus/widgets/segment.dart';
+import '../../logic/caregiver/caregiver_awards_cubit.dart';
+import '../../model/ui/app_page.dart';
+import '../../model/ui/ui_button.dart';
+import '../../services/app_locales.dart';
+import '../../utils/ui/dialog_utils.dart';
+import '../../utils/ui/icon_sets.dart';
+import '../../utils/ui/snackbar_utils.dart';
+import '../../utils/ui/theme_config.dart';
+import '../../widgets/app_navigation_bar.dart';
+import '../../widgets/cards/item_card.dart';
+import '../../widgets/cards/model_cards.dart';
+import '../../widgets/custom_app_bars.dart';
+import '../../widgets/dialogs/general_dialog.dart';
+import '../../widgets/segment.dart';
+import '../../widgets/stateful_bloc_builder.dart';
 
 class CaregiverAwardsPage extends StatefulWidget {
 	@override
-	_CaregiverAwardsPageState createState() => new _CaregiverAwardsPageState();
+	_CaregiverAwardsPageState createState() => _CaregiverAwardsPageState();
 }
 
 class _CaregiverAwardsPageState extends State<CaregiverAwardsPage> {
@@ -65,7 +64,7 @@ class _CaregiverAwardsPageState extends State<CaregiverAwardsPage> {
 											content: AppLocales.of(context).translate('$_pageKey.content.removeRewardText'),
 											confirmColor: Colors.red,
 											confirmText: 'actions.delete',
-											confirmAction: () => context.read<CaregiverAwardsCubit>().removeReward(reward.id)
+											confirmAction: () => context.read<CaregiverAwardsCubit>().removeReward(reward.id!)
 										)
 									);
 								}, null, Icons.delete)
@@ -82,8 +81,8 @@ class _CaregiverAwardsPageState extends State<CaregiverAwardsPage> {
 				elements: <Widget>[
 					for (var badge in state.badges)
 						ItemCard(
-							title: badge.name, 
-							subtitle: badge.description != null ? badge.description : AppLocales.of(context).translate('$_pageKey.content.noDescriptionSubtitle'),
+							title: badge.name!,
+							subtitle: badge.description != null ? badge.description! : AppLocales.of(context).translate('$_pageKey.content.noDescriptionSubtitle'),
 							menuItems: [
 								UIButton.ofType(ButtonType.delete, () {
 									showBasicDialog(context,
@@ -99,7 +98,7 @@ class _CaregiverAwardsPageState extends State<CaregiverAwardsPage> {
 							],
 							onTapped: () => showBadgeDialog(context, badge, showHeader: false),
 							graphicType: AssetType.badges,
-							graphic: badge.icon,
+							graphic: badge.icon!,
 							graphicHeight: 44.0
 						)
 				]

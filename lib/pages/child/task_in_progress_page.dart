@@ -3,20 +3,21 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fokus/logic/child/task_completion/task_completion_cubit.dart';
-import 'package:fokus/logic/common/timer/timer_cubit.dart';
-import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/duration_utils.dart';
-import 'package:fokus/utils/ui/theme_config.dart';
-import 'package:fokus/widgets/buttons/double_circular_notched_button.dart';
-import 'package:fokus/widgets/cards/item_card.dart';
-import 'package:fokus/widgets/cards/sliding_card.dart';
-import 'package:fokus/widgets/chips/attribute_chip.dart';
-import 'package:fokus/widgets/general/app_loader.dart';
-import 'package:fokus/widgets/large_timer.dart';
-import 'package:fokus/widgets/stateful_bloc_builder.dart';
-import 'package:fokus/widgets/task_app_header.dart';
 import 'package:lottie/lottie.dart';
+
+import '../../logic/child/task_completion/task_completion_cubit.dart';
+import '../../logic/common/timer/timer_cubit.dart';
+import '../../services/app_locales.dart';
+import '../../utils/duration_utils.dart';
+import '../../utils/ui/theme_config.dart';
+import '../../widgets/buttons/double_circular_notched_button.dart';
+import '../../widgets/cards/item_card.dart';
+import '../../widgets/cards/sliding_card.dart';
+import '../../widgets/chips/attribute_chip.dart';
+import '../../widgets/general/app_loader.dart';
+import '../../widgets/large_timer.dart';
+import '../../widgets/stateful_bloc_builder.dart';
+import '../../widgets/task_app_header.dart';
 
 enum FabType {
 	finish, discard
@@ -24,7 +25,7 @@ enum FabType {
 
 class ChildTaskInProgressPage extends StatefulWidget {
 
-  const ChildTaskInProgressPage({Key key}) : super(key: key);
+  const ChildTaskInProgressPage({Key? key}) : super(key: key);
 
   @override
   _ChildTaskInProgressPageState createState() => _ChildTaskInProgressPageState();
@@ -32,12 +33,12 @@ class ChildTaskInProgressPage extends StatefulWidget {
 
 class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with TickerProviderStateMixin {
   final String _pageKey = 'page.childSection.taskInProgress';
-	Animation<Offset> _offsetAnimation;
-	Animation<Offset> _taskListFabAnimation;
-	AnimationController _bottomBarController;
+	late Animation<Offset> _offsetAnimation;
+	late Animation<Offset> _taskListFabAnimation;
+	late AnimationController _bottomBarController;
 	bool _isButtonDisabled = false;
 	bool _isCheckboxDisabled = false;
-	TimerCubit _timerBreakCubit;
+	TimerCubit? _timerBreakCubit;
 
 	final GlobalKey<SlidingCardState> _breakCard = GlobalKey<SlidingCardState>();
 	final GlobalKey<SlidingCardState> _completingCard = GlobalKey<SlidingCardState>();
@@ -57,11 +58,11 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
   Widget _buildPage(TaskCompletionState state) {
 	  return WillPopScope(
 		  onWillPop: () async {
-			  Navigator.of(context).pop(state is TaskCompletionState ? state.planInstance : null);
+			  Navigator.of(context).pop(state is TaskCompletionState ? state.uiPlan : null);
 			  return false;
 		  },
 		  child: Scaffold(
-			  appBar: !state.loaded ? _getHeader(TaskCompletionState(taskInstance: null, planInstance: state.planInstance)) : _getHeader(state),
+			  appBar: !state.loaded ? _getHeader(TaskCompletionState(uiTask: null, uiPlan: state.uiPlan)) : _getHeader(state),
 			  body: !state.loaded ? Center(child: AppLoader()) : Padding(
 				  padding: EdgeInsets.only(bottom: 0.0),
 				  child: Stack(
@@ -87,7 +88,7 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 									  ),
 								  ],
 							  ),
-							  onPressed: () => Navigator.of(context).pop(state is TaskCompletionState ? state.planInstance : null),
+							  onPressed: () => Navigator.of(context).pop(state is TaskCompletionState ? state.uiPlan : null),
 							  heroTag: "fabTasks",
 							  backgroundColor: AppColors.childTaskColor,
 						  ),
@@ -104,37 +105,37 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 		  setState(() {
 			  if (state.current == TaskCompletionStateType.finished) {
 				  _closeWidgetsOnFinish(state);
-				  _doneCard.currentState.openCard();
-				  this._header.currentState.animateSuccess();
-				  this._header.currentState.onFinish();
+				  _doneCard.currentState!.openCard();
+				  _header.currentState!.animateSuccess();
+				  _header.currentState!.onFinish();
 			  } if(state.current == TaskCompletionStateType.discarded) {
 				  _closeWidgetsOnFinish(state);
-				  _rejectCard.currentState.openCard();
-				  this._header.currentState.onFinish();
+				  _rejectCard.currentState!.openCard();
+				  _header.currentState!.onFinish();
 			  } if(state.current == TaskCompletionStateType.inProgress) {
-				  _breakCard.currentState.closeCard();
-				  _completingCard.currentState.openCard();
-				  this._header.currentState.animateButton();
-				  _timerBreakCubit.pauseTimer();
+				  _breakCard.currentState!.closeCard();
+				  _completingCard.currentState!.openCard();
+				  _header.currentState!.animateButton();
+				  _timerBreakCubit!.pauseTimer();
 			  } else if(state.current == TaskCompletionStateType.inBreak) {
-				  _completingCard.currentState.closeCard();
-				  _breakCard.currentState.openCard();
-				  this._header.currentState.animateButton();
-				  _timerBreakCubit.resumeTimer();
+				  _completingCard.currentState!.closeCard();
+				  _breakCard.currentState!.openCard();
+				  _header.currentState!.animateButton();
+				  _timerBreakCubit!.resumeTimer();
 			  }
 		  });
   }
 
-  Widget _getHeader(TaskCompletionState state) {
+  TaskAppHeader _getHeader(TaskCompletionState state) {
 		return TaskAppHeader(
 			height: 330,
 			title: '$_pageKey.header.title',
-			popArgs: state is TaskCompletionState ? state.planInstance : null,
+			popArgs: state is TaskCompletionState ? state.uiPlan : null,
 			content: ItemCard(
-				title: state.planInstance.name,
-				subtitle: state.planInstance.description(context),
+				title: state.uiPlan.plan.name!,
+				subtitle: state.uiPlan.description!,
 				isActive: true,
-				progressPercentage: state.planInstance.completedTaskCount.ceilToDouble() / state.planInstance.taskCount.ceilToDouble(),
+				progressPercentage: state.uiPlan.completedTaskCount!.ceilToDouble() / state.uiPlan.instance.tasks!.length.ceilToDouble(),
 				activeProgressBarColor: AppColors.childActionColor,
 				textMaxLines: 2,
 				chips:
@@ -142,7 +143,10 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 					AttributeChip.withIcon(
 						icon: Icons.description,
 						color: AppColors.childBackgroundColor,
-						content: AppLocales.of(context).translate('plans.taskProgress', {'NUM_TASKS': state.planInstance.completedTaskCount, 'NUM_ALL_TASKS': state.planInstance.taskCount})
+						content: AppLocales.of(context).translate(
+							'plans.taskProgress',
+							{'NUM_TASKS': state.uiPlan.completedTaskCount!, 'NUM_ALL_TASKS': state.uiPlan.instance.tasks!.length}
+						)
 					)
 				],
 			),
@@ -169,7 +173,7 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
   Widget _getBottomNavBar() {
 		return SlideTransition(
 			position: _offsetAnimation,
-			child: Container(
+			child: SizedBox(
 				height: 50,
 				child: BottomAppBar(
 					color: AppColors.childTaskFiller,
@@ -214,11 +218,11 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 				cardColor: AppColors.childTaskColor,
 				content: [
 					_getAnimation('assets/animation/jumping_little_man.json'),
-					_getTitle(state.taskInstance.name, translate: false),
-					if(state.taskInstance.description != null)
-						_getSubtitle(state.taskInstance.description ,alignment: TextAlign.justify, translate: false, topPadding: 8),
-					if(state.taskInstance.subtasks != null && state.taskInstance.subtasks.isNotEmpty)
-						_getSubtasks(state.taskInstance.subtasks)
+					_getTitle(state.uiTask!.task.name!, translate: false),
+					if(state.uiTask!.task.description != null)
+						_getSubtitle(state.uiTask!.task.description! ,alignment: TextAlign.justify, translate: false, topPadding: 8),
+					if(state.uiTask!.instance.subtasks != null && state.uiTask!.instance.subtasks!.isNotEmpty)
+						_getSubtasks(state.uiTask!.instance.subtasks!)
 				],
 				showFirst: state.current == TaskCompletionStateType.inProgress,
 				cardType: TaskCompletionStateType.inProgress,
@@ -269,7 +273,7 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 							padding: const EdgeInsets.only(top: 16.0),
 							child: Text(
 								AppLocales.of(context).translate('$_pageKey.cards.done.content2'),
-								style: Theme.of(context).textTheme.subtitle2.copyWith(color: AppColors.lightTextColor, fontWeight: FontWeight.bold),
+								style: Theme.of(context).textTheme.subtitle2!.copyWith(color: AppColors.lightTextColor, fontWeight: FontWeight.bold),
 								textAlign: TextAlign.center,
 							)
 					)
@@ -287,18 +291,18 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 		);
 	}
 
-	TimerCubit Function(BuildContext) _getTimerBreakCubit(state) {
+	TimerCubit Function(BuildContext) _getTimerBreakCubit(TaskCompletionState state) {
 		if(_timerBreakCubit == null) {
-			_timerBreakCubit = TimerCubit.up(() => sumDurations(state.taskInstance.breaks).inSeconds);
+			_timerBreakCubit = TimerCubit.up(elapsedTime: () => sumDurations(state.uiTask!.instance.breaks).inSeconds);
 		}
-		if(state.current == TaskCompletionStateType.inProgress) return (_) => _timerBreakCubit..startTimer(paused: true);
-		else return (_) => _timerBreakCubit..startTimer();
+		if(state.current == TaskCompletionStateType.inProgress) return (_) => _timerBreakCubit!..startTimer(paused: true);
+		else return (_) => _timerBreakCubit!..startTimer();
 	}
 
 	Widget _getTitle(String title, {bool translate = true}) {
 		return Text(
 			translate ? AppLocales.of(context).translate(title) : title,
-			style: Theme.of(context).textTheme.headline1.copyWith(color: AppColors.lightTextColor),
+			style: Theme.of(context).textTheme.headline1!.copyWith(color: AppColors.lightTextColor),
 			textAlign: TextAlign.center
 		);
 	}
@@ -308,7 +312,7 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 			padding: EdgeInsets.only(top: topPadding),
 			child: Text(
 				translate ? AppLocales.of(context).translate(subtitle) : subtitle,
-				style: Theme.of(context).textTheme.subtitle1.copyWith(color: AppColors.lightTextColor, fontWeight: FontWeight.bold),
+				style: Theme.of(context).textTheme.subtitle1!.copyWith(color: AppColors.lightTextColor, fontWeight: FontWeight.bold),
 				textAlign: alignment,
 			)
 		);
@@ -334,14 +338,14 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 												padding: const EdgeInsets.symmetric(vertical: 4.0),
 												child: Text(
 													subtasks[i].key,
-													style: Theme.of(context).textTheme.subtitle1.copyWith(color: AppColors.darkTextColor, decoration: subtasks[i].value ? TextDecoration.lineThrough : TextDecoration.none),
+													style: Theme.of(context).textTheme.subtitle1!.copyWith(color: AppColors.darkTextColor, decoration: subtasks[i].value ? TextDecoration.lineThrough : TextDecoration.none),
 												),
 											),
 											onChanged: (val) {
 												setState(() {
 													if(!_isCheckboxDisabled) {
 														_isCheckboxDisabled = true;
-														BlocProvider.of<TaskCompletionCubit>(context).updateChecks(i, MapEntry(subtasks[i].key, val));
+														BlocProvider.of<TaskCompletionCubit>(context).updateChecks(i, MapEntry(subtasks[i].key, val!));
 														Timer(Duration(milliseconds: 200), () {
 															_isCheckboxDisabled = false;
 														});
@@ -383,8 +387,8 @@ class _ChildTaskInProgressPageState extends State<ChildTaskInProgressPage> with 
 	}
 
 	void _closeWidgetsOnFinish(state) {
-	  _completingCard.currentState.closeCard();
-		_breakCard.currentState.closeCard();
+	  _completingCard.currentState!.closeCard();
+		_breakCard.currentState!.closeCard();
 		_bottomBarController.forward();
 	}
 

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:fokus/model/ui/ui_button.dart';
-import 'package:fokus/services/app_locales.dart';
+import '../../model/ui/ui_button.dart';
+import '../../services/app_locales.dart';
 
 class AuthButton extends StatelessWidget {
 	final UIButton button;
 	final bool isGoogleButton;
 
-  const AuthButton({this.button, this.isGoogleButton = false});
+  const AuthButton({required this.button, this.isGoogleButton = false});
   const AuthButton.google(UIButton button) : this(button: button, isGoogleButton: true);
 
   @override
@@ -16,7 +16,7 @@ class AuthButton extends StatelessWidget {
 				Expanded(
 					child: Padding(
 						padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
-						child: FlatButton(
+						child: TextButton(
 							child: Row(
 								mainAxisAlignment: MainAxisAlignment.center,
 								children: [
@@ -40,10 +40,13 @@ class AuthButton extends StatelessWidget {
 									)
 								]
 							),
-							padding: EdgeInsets.zero,
-							onPressed: button.action != null ? () => button.action() : null,
-							disabledColor: Colors.grey,
-							color: isGoogleButton ? Color.fromARGB(255, 66, 133, 244) : button.color
+							style: TextButton.styleFrom(
+								padding: EdgeInsets.zero,
+								onSurface: Colors.grey,
+								backgroundColor: isGoogleButton ? Color.fromARGB(255, 66, 133, 244) : button.color
+							),
+							onPressed: button.action != null ? () => button.action!() : null,
+
 						)
 					)
 				)

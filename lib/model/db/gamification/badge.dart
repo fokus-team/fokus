@@ -1,29 +1,29 @@
-import 'package:fokus/model/ui/form/badge_form_model.dart';
+import 'package:equatable/equatable.dart';
 
-class Badge {
-  String name;
-  String description;
-  int icon;
+import '../../../utils/definitions.dart';
+import '../../ui/form/badge_form_model.dart';
 
-  Badge({this.name, this.description, this.icon});
+class Badge extends Equatable {
+  final String? name;
+  final String? description;
+  final int? icon;
+
+  Badge({this.name, this.description, this.icon = 0});
 	Badge.fromBadgeForm(BadgeFormModel badge) : this(name: badge.name, description: badge.description, icon: badge.icon);
 
-  factory Badge.fromJson(Map<String, dynamic> json) {
-    return json != null ? Badge(
-      icon: json['icon'],
-      name: json['name'],
-			description: json['description']
-    ) : null;
-  }
+  Badge.fromJson(Json json) : this(name: json['name'], icon: json['icon'], description: json['description']);
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.icon != null)
-      data['icon'] = this.icon;
-    if (this.name != null)
-      data['name'] = this.name;
-		if (this.description != null)
-      data['description'] = this.description;
+  Json toJson() {
+    final data = <String, dynamic>{};
+    if (icon != null)
+      data['icon'] = icon;
+    if (name != null)
+      data['name'] = name;
+		if (description != null)
+      data['description'] = description;
     return data;
   }
+
+  @override
+  List<Object?> get props => [name, description, icon];
 }

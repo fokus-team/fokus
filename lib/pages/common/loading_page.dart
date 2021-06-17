@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/ui/theme_config.dart';
-import 'package:fokus/widgets/general/app_loader.dart';
+import '../../services/app_locales.dart';
+import '../../utils/ui/theme_config.dart';
+import '../../widgets/general/app_loader.dart';
 
 class LoadingPage extends StatelessWidget {
   @override

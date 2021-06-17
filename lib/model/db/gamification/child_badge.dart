@@ -1,27 +1,26 @@
-import 'package:fokus/model/db/date/time_date.dart';
-import 'package:fokus/model/ui/gamification/ui_badge.dart';
-
+import '../../../utils/definitions.dart';
+import '../date/time_date.dart';
 import 'badge.dart';
 
 class ChildBadge extends Badge {
-  TimeDate date;
+  final TimeDate? date;
 
-  ChildBadge({String description, this.date, int icon, String name}) : super(description: description, name: name, icon: icon);
-  ChildBadge.fromUIModel(UIChildBadge badge) : this(name: badge.name, description: badge.description, icon: badge.icon, date: badge.date);
+  ChildBadge({String? description, this.date, int? icon, String? name})
+		  : super(description: description, name: name, icon: icon);
+  ChildBadge.fromBadge(Badge badge, {TimeDate? date})
+		  : this(name: badge.name, description: badge.description, icon: badge.icon, date: date ?? TimeDate.now());
 
-  factory ChildBadge.fromJson(Map<String, dynamic> json) {
-    return json != null ? ChildBadge(
-      description: json['description'],
-      date: TimeDate.parseDBDate(json['date']),
-      icon: json['icon'],
-      name: json['name'],
-    ) : null;
-  }
+  ChildBadge.fromJson(Json json) :
+      date = TimeDate.parseDBDate(json['date']), super.fromJson(json);
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = super.toJson();
-    if (this.date != null)
-      data['date'] = this.date.toDBDate();
+  @override
+  Json toJson() {
+    final data = super.toJson();
+    if (date != null)
+      data['date'] = date!.toDBDate();
     return data;
   }
+
+  @override
+  List<Object?> get props => super.props..add(date);
 }

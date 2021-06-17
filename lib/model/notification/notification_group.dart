@@ -1,4 +1,4 @@
-import 'package:fokus/model/notification/notification_text.dart';
+import 'notification_text.dart';
 
 class NotificationGroup {
 	final String key;

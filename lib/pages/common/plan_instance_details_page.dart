@@ -1,28 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fokus/logic/common/plan_instance_cubit.dart';
-import 'package:fokus/logic/common/timer/timer_cubit.dart';
-import 'package:fokus/model/db/plan/plan_instance_state.dart';
-import 'package:fokus/model/db/plan/task_status.dart';
-import 'package:fokus/model/navigation/plan_instance_params.dart';
-import 'package:fokus/model/navigation/task_in_progress_params.dart';
-import 'package:fokus/model/ui/app_page.dart';
-import 'package:fokus/model/ui/plan/ui_plan_instance.dart';
-import 'package:fokus/utils/navigation_utils.dart';
-import 'package:fokus/utils/ui/dialog_utils.dart';
-import 'package:fokus/utils/ui/snackbar_utils.dart';
-import 'package:fokus/model/ui/task/ui_task_instance.dart';
-import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/duration_utils.dart';
-import 'package:fokus/utils/ui/theme_config.dart';
-import 'package:fokus/widgets/custom_app_bars.dart';
-import 'package:fokus/widgets/chips/attribute_chip.dart';
-import 'package:fokus/widgets/cards/item_card.dart';
-import 'package:fokus/widgets/chips/timer_chip.dart';
-import 'package:fokus/widgets/dialogs/general_dialog.dart';
-import 'package:fokus/widgets/general/app_loader.dart';
-import 'package:fokus/widgets/stateful_bloc_builder.dart';
-import 'package:fokus/widgets/segment.dart';
+
+import '../../logic/common/plan_instance_cubit.dart';
+import '../../logic/common/timer/timer_cubit.dart';
+import '../../model/db/plan/plan_instance_state.dart';
+import '../../model/db/plan/task_status.dart';
+import '../../model/navigation/plan_instance_params.dart';
+import '../../model/navigation/task_in_progress_params.dart';
+import '../../model/ui/app_page.dart';
+import '../../model/ui/plan/ui_plan_instance.dart';
+import '../../model/ui/plan/ui_task_instance.dart';
+import '../../services/app_locales.dart';
+import '../../utils/duration_utils.dart';
+import '../../utils/navigation_utils.dart';
+import '../../utils/ui/dialog_utils.dart';
+import '../../utils/ui/snackbar_utils.dart';
+import '../../utils/ui/theme_config.dart';
+import '../../widgets/cards/item_card.dart';
+import '../../widgets/chips/attribute_chip.dart';
+import '../../widgets/chips/timer_chip.dart';
+import '../../widgets/custom_app_bars.dart';
+import '../../widgets/dialogs/general_dialog.dart';
+import '../../widgets/general/app_loader.dart';
+import '../../widgets/segment.dart';
+import '../../widgets/stateful_bloc_builder.dart';
 
 class PlanInstanceDetailsPage extends StatefulWidget {
 	final bool showActions;
@@ -30,14 +31,14 @@ class PlanInstanceDetailsPage extends StatefulWidget {
   PlanInstanceDetailsPage(PlanInstanceParams args) : showActions = args.actions ?? true;
 
   @override
-  _PlanInstanceDetailsPageState createState() => new _PlanInstanceDetailsPageState();
+  _PlanInstanceDetailsPageState createState() => _PlanInstanceDetailsPageState();
 }
 
 class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 	static const String _pageKey = 'page.childSection.planInProgress';
 
-	void navigate(context, UITaskInstance task, UIPlanInstance plan) async {
-		if(await BlocProvider.of<PlanInstanceCubit>(context).isOtherPlanInProgressDbCheck(tappedTaskInstance: task.id)) {
+	void navigate(BuildContext context, UITaskInstance task, UIPlanInstance plan) async {
+		if(await BlocProvider.of<PlanInstanceCubit>(context).isOtherPlanInProgressDbCheck(tappedTaskInstance: task.instance.id)) {
 			showBasicDialog(
 				context,
 				GeneralDialog.discard(
@@ -47,25 +48,25 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 			);
 		}
 		else {
-			final result = await navigateChecked(context, AppPage.childTaskInProgress, arguments: TaskInProgressParams(taskId: task.id, planInstance: plan));
+			final result = await navigateChecked(context, AppPage.childTaskInProgress, arguments: TaskInProgressParams(taskId: task.instance.id!, planInstance: plan));
 			if(result != null)
-				BlocProvider.of<PlanInstanceCubit>(context).uiPlanInstance = result;
+				BlocProvider.of<PlanInstanceCubit>(context).uiPlan = result;
 		}
 	}
 
 	@override
   Widget build(BuildContext context) {
-    var showEndButton = !context.watch<PlanInstanceCubit>().uiPlanInstance.state.ended && widget.showActions;
+    var showEndButton = !context.watch<PlanInstanceCubit>().uiPlan.instance.state!.ended && widget.showActions;
     return Scaffold(
       body: SimpleStatefulBlocBuilder<PlanInstanceCubit, PlanInstanceCubitState>(
         builder: (context, state) {
           return _getView(
-            planInstance: state.planInstance,
+            planInstance: state.uiPlan,
             content: AppSegments(segments: _buildPanelSegments(state))
           );
         },
         loadingBuilder: (context, state) => _getView(
-          planInstance: BlocProvider.of<PlanInstanceCubit>(context).uiPlanInstance,
+          planInstance: BlocProvider.of<PlanInstanceCubit>(context).uiPlan,
           content: Expanded(child: Center(child: AppLoader()))
         ),
         listener: (context, state) {
@@ -85,7 +86,7 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
     );
   }
 
-  Column _getView({UIPlanInstance planInstance, Widget content}) {
+  Column _getView({required UIPlanInstance planInstance, required Widget content}) {
 		return Column(
 			crossAxisAlignment: CrossAxisAlignment.start,
 			verticalDirection: VerticalDirection.up,
@@ -97,109 +98,110 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 	}
 
   List<Widget> _buildPanelSegments(PlanInstanceCubitState state) {
-  	var mandatoryTasks = state.tasks.where((task) => task.optional == false).toList();
-  	var optionalTasks = state.tasks.where((task) => task.optional == true).toList();
+  	var mandatoryTasks = state.tasks.where((uiTask) => uiTask.task.optional == false).toList();
+  	var optionalTasks = state.tasks.where((uiTask) => uiTask.task.optional == true).toList();
     return [
     	if(mandatoryTasks.isNotEmpty)
       _getTasksSegment(
 				tasks: mandatoryTasks,
         title: '$_pageKey.content.toDoTasks',
-				uiPlanInstance: state.planInstance,
+				uiPlanInstance: state.uiPlan,
       ),
 			if(optionalTasks.isNotEmpty)
       	_getTasksSegment(
 					tasks: optionalTasks,
 					title: '$_pageKey.content.additionalTasks',
-					uiPlanInstance: state.planInstance,
+					uiPlanInstance: state.uiPlan,
 				)
     ];
   }
 
-  Segment _getTasksSegment({List<UITaskInstance> tasks,String title, UIPlanInstance uiPlanInstance}) {
+  Segment _getTasksSegment({required List<UITaskInstance> tasks, required String title, required UIPlanInstance uiPlanInstance}) {
     return Segment(
 			title: title,
 			noElementsMessage: '$_pageKey.content.noTasks',
 			elements: <Widget>[
-				for(var task in tasks)
-					if(task.taskUiType == TaskUIType.completed)
-						_getCompletedTaskCard(task)
-					else if(task.taskUiType == TaskUIType.available)
+				for(var uiTask in tasks)
+					if(uiTask.state == TaskInstanceState.completed)
+						_getCompletedTaskCard(uiTask)
+					else if(uiTask.state == TaskInstanceState.available)
 						ItemCard(
-							title: task.name,
-							subtitle: task.description,
+							title: uiTask.task.name!,
+							subtitle: uiTask.task.description,
 							chips:<Widget>[
-								if (task.timer != null && task.timer > 0) _getTimeChip(task),
-								if (task.points != null && task.points.quantity != 0) _getCurrencyChip(task)
+								if (uiTask.instance.timer != null && uiTask.instance.timer! > 0) _getTimeChip(uiTask),
+								if (uiTask.task.points != null && uiTask.task.points!.quantity != 0) _getCurrencyChip(uiTask)
 							],
-							onTapped: () => widget.showActions ? navigate(context, task, uiPlanInstance) : null,
+							onTapped: () => widget.showActions ? navigate(context, uiTask, uiPlanInstance) : null,
 							actionButton: ItemCardActionButton(
 								color: AppColors.childButtonColor,
 								icon: Icons.play_arrow,
-								onTapped: () => navigate(context, task, uiPlanInstance),
+								onTapped: () => navigate(context, uiTask, uiPlanInstance),
 								disabled: !widget.showActions,
 							),
 						)
-					else if(task.taskUiType == TaskUIType.rejected)
+					else if(uiTask.state == TaskInstanceState.rejected)
 						ItemCard(
-							title: task.name,
-							subtitle: task.description,
+							title: uiTask.task.name!,
+							subtitle: uiTask.task.description,
 							chips:<Widget>[
-								if (task.timer != null && task.timer > 0) _getTimeChip(task),
-								if (task.points != null && task.points.quantity != 0) _getCurrencyChip(task)
+								if (uiTask.instance.timer != null && uiTask.instance.timer! > 0) _getTimeChip(uiTask),
+								if (uiTask.task.points != null && uiTask.task.points!.quantity != 0) _getCurrencyChip(uiTask)
 							],
-							onTapped: () => widget.showActions ? navigate(context, task, uiPlanInstance) : null,
+							onTapped: () => widget.showActions ? navigate(context, uiTask, uiPlanInstance) : null,
 							actionButton: ItemCardActionButton(
 								color: AppColors.childButtonColor,
 								icon: Icons.refresh,
-								onTapped: () => navigate(context, task, uiPlanInstance),
+								onTapped: () => navigate(context, uiTask, uiPlanInstance),
 								disabled: !widget.showActions
 							),
 						)
-					else if(task.taskUiType.inProgress)
+					else if(uiTask.state!.inProgress)
 						BlocProvider<TimerCubit>(
-							create: (_) => TimerCubit.up(() => task.taskUiType == TaskUIType.currentlyPerformed ? sumDurations(task.duration).inSeconds : sumDurations(task.breaks).inSeconds)..startTimer(),
+							create: (_) => TimerCubit.up(elapsedTime: () => uiTask.state == TaskInstanceState.currentlyPerformed ?
+								sumDurations(uiTask.instance.duration).inSeconds : sumDurations(uiTask.instance.breaks).inSeconds)..startTimer(),
 							child:	ItemCard(
-								title: task.name,
-								subtitle: task.description,
+								title: uiTask.task.name!,
+								subtitle: uiTask.task.description,
 								chips:
 								<Widget>[
-									if(task.taskUiType == TaskUIType.currentlyPerformed)
+									if(uiTask.state == TaskInstanceState.currentlyPerformed)
 										...[
 											TimerChip(
 												icon: Icons.access_time,
 												color: Colors.lightGreen,
 											),
-											_getBreaksChip(task)
+											_getBreaksChip(uiTask)
 										]
 									else
 										...[
-											_getDurationChip(task),
+											_getDurationChip(uiTask),
 											TimerChip(
 												icon: Icons.free_breakfast,
 												color: Colors.indigo,
 											),
 										]
 								],
-								onTapped: () => widget.showActions ? navigate(context, task, uiPlanInstance) : null,
+								onTapped: () => widget.showActions ? navigate(context, uiTask, uiPlanInstance) : null,
 								actionButton: ItemCardActionButton(
 									color: AppColors.childActionColor,
 									icon: Icons.launch,
-									onTapped: () => navigate(context, task, uiPlanInstance),
+									onTapped: () => navigate(context, uiTask, uiPlanInstance),
 									disabled: !widget.showActions
 								),
 							)
 						)
-					else if(task.taskUiType == TaskUIType.queued)
+					else if(uiTask.state == TaskInstanceState.queued)
 						ItemCard(
-							title: task.name,
-							subtitle: task.description,
+							title: uiTask.task.name!,
+							subtitle: uiTask.task.description,
 							chips: <Widget>[
-								if (task.timer != null && task.timer > 0) _getTimeChip(task),
-								if (task.points != null && task.points.quantity != 0) _getCurrencyChip(task)
+								if (uiTask.instance.timer != null && uiTask.instance.timer! > 0) _getTimeChip(uiTask),
+								if (uiTask.task.points != null && uiTask.task.points!.quantity != 0) _getCurrencyChip(uiTask)
 							],
 							isActive: false,
 							actionButton: ItemCardActionButton(
-								color: Colors.grey[400],
+								color: Colors.grey[400]!,
 								icon: Icons.keyboard_arrow_up,
 								disabled: !widget.showActions
 							),
@@ -215,28 +217,32 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 		);
 	}
 
-  Widget _getCardHeader(UIPlanInstance _planInstance) {
-		var taskDescriptionKey = 'plans.' + (_planInstance.completedTaskCount > 0 ? 'taskProgress' : 'noTaskCompleted');
+  Widget _getCardHeader(UIPlanInstance uiPlan) {
+		var taskDescriptionKey = 'plans.${uiPlan.completedTaskCount! > 0 ? 'taskProgress' : 'noTaskCompleted'}';
 		var card = ItemCard(
-			title: _planInstance.name,
-			subtitle: _planInstance.description(context),
-			isActive: _planInstance.state != PlanInstanceState.completed,
+			title: uiPlan.plan.name!,
+			subtitle: uiPlan.description!,
+			isActive: uiPlan.instance.state != PlanInstanceState.completed,
 			activeProgressBarColor: AppColors.childActionColor,
-			progressPercentage: (_planInstance.state.inProgress ||  _planInstance.state.ended) ? _planInstance.completedTaskCount.ceilToDouble() / _planInstance.taskCount.ceilToDouble() : null,
+			progressPercentage: (uiPlan.instance.state!.inProgress ||  uiPlan.instance.state!.ended)
+					? uiPlan.completedTaskCount!.ceilToDouble() / uiPlan.instance.tasks!.length.ceilToDouble() : null,
 			chips: [
-				if(_planInstance.state.inProgress)
+				if(uiPlan.instance.state!.inProgress)
 				...[
-					isInProgress(_planInstance.duration) ? TimerChip(color: AppColors.childButtonColor) :
+					isInProgress(uiPlan.instance.duration) ? TimerChip(color: AppColors.childButtonColor) :
 					AttributeChip.withIcon(
 						icon: Icons.timer,
 						color: Colors.orange,
-						content: formatDuration(sumDurations(_planInstance.duration)),
+						content: formatDuration(sumDurations(uiPlan.instance.duration)),
 						tooltip: AppLocales.of(context).translate('$_pageKey.content.chips.timer')
 					),
 					AttributeChip.withIcon(
 						icon: Icons.description,
 						color: Colors.lightGreen,
-						content: AppLocales.of(context).translate(taskDescriptionKey, {'NUM_TASKS': _planInstance.completedTaskCount, 'NUM_ALL_TASKS': _planInstance.taskCount})
+						content: AppLocales.of(context).translate(
+							taskDescriptionKey,
+							{'NUM_TASKS': uiPlan.completedTaskCount!, 'NUM_ALL_TASKS': uiPlan.instance.tasks!.length}
+						)
 					)
 				]
 				else
@@ -244,49 +250,49 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 					AttributeChip.withIcon(
 						icon: Icons.timer,
 						color: Colors.orange,
-						content: formatDuration(sumDurations(_planInstance.duration)),
+						content: formatDuration(sumDurations(uiPlan.instance.duration)),
 						tooltip: AppLocales.of(context).translate('$_pageKey.content.chips.timer')
 					),
 					AttributeChip.withIcon(
 						icon: Icons.description,
 						color: AppColors.mainBackgroundColor,
-						content: AppLocales.of(context).translate('$_pageKey.content.tasks', {'NUM_TASKS': _planInstance.taskCount})
+						content: AppLocales.of(context).translate('$_pageKey.content.tasks', {'NUM_TASKS': uiPlan.instance.tasks!.length})
 					)
 				]
 			]);
-  	if(isInProgress(_planInstance.duration))
+  	if(isInProgress(uiPlan.instance.duration))
   		return BlocProvider<TimerCubit>(
-				create: (_) => TimerCubit.up(_planInstance.elapsedActiveTime)..startTimer(),
+				create: (_) => TimerCubit.up(elapsedTime: uiPlan.elapsedActiveTime!)..startTimer(),
 				child: card
 			);
   	else return card;
 	}
 
-	Widget _getCompletedTaskCard(UITaskInstance task) {
+	Widget _getCompletedTaskCard(UITaskInstance uiTask) {
 		return ItemCard(
-			title: task.name,
-			subtitle: task.description,
+			title: uiTask.task.name!,
+			subtitle: uiTask.task.description,
 			chips:
 			<Widget>[
-				if(task.status.state == TaskState.evaluated)
+				if(uiTask.instance.status!.state == TaskState.evaluated)
 					...[
 						AttributeChip.withIcon(
 							content: AppLocales.of(context).translate('$_pageKey.content.chips.rating', {
-								'RATING' : task.status.rating
+								'RATING' : uiTask.instance.status!.rating!
 							}),
 							icon: Icons.star,
-							color: AppColors.chipRatingColors[task.status.rating],
+							color: AppColors.chipRatingColors[uiTask.instance.status!.rating!],
 						),
-						if (task.points != null && task.points.quantity != 0) _getCurrencyChip(task, pointsAwarded: true),
+						if (uiTask.task.points != null && uiTask.task.points!.quantity != 0) _getCurrencyChip(uiTask, pointsAwarded: true),
 					]
-				else if(task.status.state == TaskState.rejected)
+				else if(uiTask.instance.status!.state == TaskState.rejected)
 					AttributeChip.withIcon(
 						content: AppLocales.of(context).translate('$_pageKey.content.chips.rejected'),
 						icon: Icons.close,
 						color: Colors.red,
 						tooltip: AppLocales.of(context).translate('$_pageKey.content.chips.rejectedTooltip'),
 					)
-				else if(task.status.state == TaskState.notEvaluated)
+				else if(uiTask.instance.status!.state == TaskState.notEvaluated)
 						...[
 							AttributeChip.withIcon(
 								content: AppLocales.of(context).translate('$_pageKey.content.chips.notEvaluated'),
@@ -304,18 +310,18 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 		);
 	}
 
-	AttributeChip _getCurrencyChip(UITaskInstance task, {String tooltip, bool pointsAwarded = false}) {
+	AttributeChip _getCurrencyChip(UITaskInstance uiTask, {String? tooltip, bool pointsAwarded = false}) {
   	return AttributeChip.withCurrency(
-			content: pointsAwarded ? task.status.pointsAwarded.toString() : task.points.quantity.toString(),
-			currencyType: task.points.type,
-			tooltip: tooltip ?? task.points.title
+			content: pointsAwarded ? uiTask.instance.status!.pointsAwarded.toString() : uiTask.task.points!.quantity.toString(),
+			currencyType: uiTask.task.points!.type!,
+			tooltip: tooltip ?? uiTask.task.points!.name
 		);
 	}
 
-	AttributeChip _getBreaksChip(UITaskInstance task) {
+	AttributeChip _getBreaksChip(UITaskInstance uiTask) {
 		return AttributeChip.withIcon(
 			content: AppLocales.of(context).translate('$_pageKey.content.taskTimer.formatBreak', {
-				'TIME_NUM' : formatDuration(Duration(seconds: sumDurations(task.breaks).inSeconds))
+				'TIME_NUM' : formatDuration(Duration(seconds: sumDurations(uiTask.instance.breaks).inSeconds))
 			}),
 			icon: Icons.free_breakfast,
 			color: Colors.indigo,
@@ -323,22 +329,22 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
 		);
 	}
 
-	AttributeChip _getDurationChip(UITaskInstance task) {
+	AttributeChip _getDurationChip(UITaskInstance uiTask) {
 		return AttributeChip.withIcon(
 			content: AppLocales.of(context).translate('$_pageKey.content.taskTimer.formatDuration', {
-				'TIME_NUM': formatDuration(Duration(seconds: sumDurations(task.duration).inSeconds))
+				'TIME_NUM': formatDuration(Duration(seconds: sumDurations(uiTask.instance.duration).inSeconds))
 			}),
 			icon: Icons.access_time,
-			color: task.timer == null || task.timer > sumDurations(task.duration).inMinutes ? Colors.lightGreen : Colors.deepOrange,
+			color: uiTask.instance.timer == null || uiTask.instance.timer! > sumDurations(uiTask.instance.duration).inMinutes ? Colors.lightGreen : Colors.deepOrange,
 			tooltip: AppLocales.of(context).translate('$_pageKey.content.taskTimer.duration'),
 		);
 	}
 
-	AttributeChip _getTimeChip(UITaskInstance task) {
+	AttributeChip _getTimeChip(UITaskInstance uiTask) {
   	return AttributeChip.withIcon(
 			content: AppLocales.of(context).translate('$_pageKey.content.taskTimer.format', {
-				'HOURS_NUM': (task.timer ~/ 60).toString(),
-				'MINUTES_NUM': (task.timer % 60).toString()
+				'HOURS_NUM': (uiTask.instance.timer! ~/ 60).toString(),
+				'MINUTES_NUM': (uiTask.instance.timer! % 60).toString()
 			}),
 			icon: Icons.timer,
 			color: Colors.orange,

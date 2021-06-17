@@ -3,25 +3,24 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:round_spot/round_spot.dart' as round_spot;
 
-import 'package:fokus/logic/caregiver/caregiver_friends_cubit.dart';
-import 'package:fokus/logic/child/child_rewards_cubit.dart';
-import 'package:fokus/logic/common/settings/account_delete/account_delete_cubit.dart';
-import 'package:fokus/logic/common/settings/name_change/name_change_cubit.dart';
-import 'package:fokus/logic/common/settings/password_change/password_change_cubit.dart';
-import 'package:fokus/model/ui/app_popup.dart';
-import 'package:fokus/model/ui/gamification/ui_badge.dart';
-import 'package:fokus/model/ui/gamification/ui_reward.dart';
-import 'package:fokus/model/ui/user/ui_user.dart';
-
-import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/bloc_utils.dart';
-import 'package:fokus/utils/ui/snackbar_utils.dart';
-import 'package:fokus/widgets/dialogs/about_app_dialog.dart';
-import 'package:fokus/widgets/dialogs/reward_dialog.dart';
-import 'package:fokus/widgets/dialogs/badge_dialog.dart';
-import 'package:fokus/widgets/dialogs/general_dialog.dart';
-import 'package:fokus/widgets/dialogs/help_dialog.dart';
-import 'package:fokus/widgets/dialogs/form_dialogs.dart';
+import '../../logic/caregiver/caregiver_friends_cubit.dart';
+import '../../logic/child/child_rewards_cubit.dart';
+import '../../logic/common/settings/account_delete/account_delete_cubit.dart';
+import '../../logic/common/settings/name_change/name_change_cubit.dart';
+import '../../logic/common/settings/password_change/password_change_cubit.dart';
+import '../../model/db/gamification/badge.dart';
+import '../../model/db/gamification/reward.dart';
+import '../../model/db/user/user.dart';
+import '../../model/ui/app_popup.dart';
+import '../../services/app_locales.dart';
+import '../../widgets/dialogs/about_app_dialog.dart';
+import '../../widgets/dialogs/badge_dialog.dart';
+import '../../widgets/dialogs/form_dialogs.dart';
+import '../../widgets/dialogs/general_dialog.dart';
+import '../../widgets/dialogs/help_dialog.dart';
+import '../../widgets/dialogs/reward_dialog.dart';
+import '../bloc_utils.dart';
+import 'snackbar_utils.dart';
 
 void showBasicDialog(BuildContext context, GeneralDialog dialog) {
 	showDialog(
@@ -54,16 +53,16 @@ void showHelpDialog(BuildContext context, String helpPage) {
     barrierColor: Colors.black.withOpacity(0.4),
 		context: context,
 		pageBuilder: (context, anim1, anim2) { return SizedBox.shrink(); },
-		routeSettings: RouteSettings(name: AppPopup.help.name + '/$helpPage'),
+		routeSettings: RouteSettings(name: '${AppPopup.help.name}/$helpPage'),
 	);
 }
 
-Future<bool> showExitFormDialog(BuildContext context, bool isSystemPop, bool isDataChanged) {
+Future<bool?> showExitFormDialog(BuildContext context, bool isSystemPop, bool isDataChanged) {
 	if (!isDataChanged) {
 		Navigator.pop(context, true);
 		return Future.value(false);
 	}
-	FocusManager.instance.primaryFocus.unfocus();
+	FocusManager.instance.primaryFocus?.unfocus();
 	return showDialog<bool>(
 		context: context,
 		builder: (c) => round_spot.Detector(
@@ -72,12 +71,14 @@ Future<bool> showExitFormDialog(BuildContext context, bool isSystemPop, bool isD
 				title: Text(AppLocales.of(context).translate('alert.unsavedProgressTitle')),
 				content: Text(AppLocales.of(context).translate('alert.unsavedProgressMessage')),
 				actions: [
-					FlatButton(
+					TextButton(
 						child: Text(AppLocales.of(context).translate('actions.cancel')),
 						onPressed: () => Navigator.pop(c, false),
 					),
-					FlatButton(
-						textColor: Colors.red,
+					TextButton(
+						style: TextButton.styleFrom(
+							primary: Colors.red
+						),
 						child: Text(AppLocales.of(context).translate('actions.exit')),
 						onPressed: () {
 							if(isSystemPop)
@@ -124,13 +125,13 @@ void showAboutAppDialog(BuildContext context) {
 	);
 }
 
-Future<String> showNameEditDialog(BuildContext context, UIUser user) {
+Future<String?> showNameEditDialog(BuildContext context, User user) {
 	return showDialog(
 		context: context,
 		builder: (_) => forwardCubit(
 			round_spot.Detector(
 				areaID: AppPopup.nameEdit.name,
-				child: NameEditDialog(user.role),
+				child: NameEditDialog(user.role!),
 			),
 			BlocProvider.of<NameChangeCubit>(context)
 		),
@@ -138,7 +139,7 @@ Future<String> showNameEditDialog(BuildContext context, UIUser user) {
 	);
 }
 
-void showPasswordChangeDialog(BuildContext context, {PasswordChangeCubit cubit, bool dismissible = true}) {
+void showPasswordChangeDialog(BuildContext context, {PasswordChangeCubit? cubit, bool dismissible = true}) {
 	showDialog(
 		context: context,
 		barrierDismissible: dismissible,
@@ -153,13 +154,13 @@ void showPasswordChangeDialog(BuildContext context, {PasswordChangeCubit cubit, 
 	);
 }
 
-Future showAccountDeleteDialog(BuildContext context, UIUser user) {
+Future showAccountDeleteDialog(BuildContext context, User user) {
 	return showDialog(
 		context: context,
 		builder: (_) => forwardCubit(
 			round_spot.Detector(
 				areaID: AppPopup.accountDelete.name,
-				child: AccountDeleteDialog(user.role),
+				child: AccountDeleteDialog(user.role!),
 			),
 			BlocProvider.of<AccountDeleteCubit>(context)
 		),
@@ -181,7 +182,7 @@ Future showAddFriendDialog(BuildContext context) {
 	);
 }
 
-void showCurrencyEditDialog(BuildContext context, Function(String) callback, {String initialValue}) {
+void showCurrencyEditDialog(BuildContext context, Function(String?) callback, {String? initialValue}) {
 	showDialog(
 		context: context,
 		builder: (context) => round_spot.Detector(
@@ -192,7 +193,7 @@ void showCurrencyEditDialog(BuildContext context, Function(String) callback, {St
 	);
 }
 
-void showRewardDialog(BuildContext context, UIReward reward, {Function claimFeedback}) {
+void showRewardDialog(BuildContext context, Reward reward, {void Function()? claimFeedback}) {
 	showDialog(
 		context: context,
 		builder: (_) => tryForwardCubit<ChildRewardsCubit>(
@@ -206,7 +207,7 @@ void showRewardDialog(BuildContext context, UIReward reward, {Function claimFeed
 	);
 }
 
-void showBadgeDialog(BuildContext context, UIBadge badge, {bool showHeader = true}) {
+void showBadgeDialog(BuildContext context, Badge badge, {bool showHeader = true}) {
 	showDialog(
 		context: context,
 		builder: (context) => round_spot.Detector(

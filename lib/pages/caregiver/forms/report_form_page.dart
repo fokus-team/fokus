@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:round_spot/round_spot.dart' as round_spot;
 
-import 'package:fokus/logic/caregiver/tasks_evaluation_cubit.dart';
-import 'package:fokus/model/navigation/report_form_params.dart';
-import 'package:fokus/model/ui/task/ui_task_report.dart';
-import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/ui/dialog_utils.dart';
-import 'package:fokus/utils/ui/form_config.dart';
-import 'package:fokus/utils/ui/theme_config.dart';
-import 'package:fokus/widgets/cards/report_card.dart';
-import 'package:fokus/widgets/chips/attribute_chip.dart';
+import '../../../logic/caregiver/tasks_evaluation_cubit.dart';
+import '../../../model/navigation/report_form_params.dart';
+import '../../../model/ui/plan/ui_task_report.dart';
+import '../../../services/app_locales.dart';
+import '../../../utils/ui/dialog_utils.dart';
+import '../../../utils/ui/form_config.dart';
+import '../../../utils/ui/theme_config.dart';
+import '../../../widgets/cards/report_card.dart';
+import '../../../widgets/chips/attribute_chip.dart';
 
 class ReportFormPage extends StatefulWidget {
 	final UITaskReport report;
@@ -19,18 +19,18 @@ class ReportFormPage extends StatefulWidget {
 	ReportFormPage(ReportFormParams params) : report = params.report, saveCallback = params.saveCallback;
 
 	@override
-	_ReportFormPageState createState() => new _ReportFormPageState();
+	_ReportFormPageState createState() => _ReportFormPageState();
 }
 
 class _ReportFormPageState extends State<ReportFormPage> {
 	static const String _pageKey = 'page.caregiverSection.rating.content.form';
 	final double customBottomBarHeight = 40.0;
 
-	GlobalKey<FormState> reportFormKey;
+	late GlobalKey<FormState> reportFormKey;
 	bool isDataChanged = false;
 
-	FocusNode _focusNodeComment;
-	TextEditingController _commentController = TextEditingController();
+	late FocusNode _focusNodeComment;
+	final TextEditingController _commentController = TextEditingController();
 	UITaskReportMark mark = UITaskReportMark.rated3;
 	bool isRejected = false;
 
@@ -51,7 +51,11 @@ class _ReportFormPageState extends State<ReportFormPage> {
   @override
   Widget build(BuildContext context) {
 		return WillPopScope(
-			onWillPop: () => showExitFormDialog(context, true, isDataChanged),
+			onWillPop: () async {
+				var ret = await showExitFormDialog(context, true, isDataChanged);
+				if(ret == null || !ret) return false;
+				else return true;
+			},
 			child: Scaffold(
 				appBar: AppBar(
 					title: Text(AppLocales.of(context).translate('page.caregiverSection.rating.content.rateTaskButton')),
@@ -88,14 +92,14 @@ class _ReportFormPageState extends State<ReportFormPage> {
 				crossAxisAlignment: CrossAxisAlignment.end,
 				children: <Widget>[
 					SizedBox.shrink(),
-					FlatButton(
+					TextButton(
 						onPressed: () async {
 							await widget.saveCallback(isRejected ? UITaskReportMark.rejected : mark, _commentController.value.text);
 							Navigator.of(context).pop();
 						},
 						child: Text(
 							AppLocales.of(context).translate('actions.confirm'),
-							style: Theme.of(context).textTheme.button.copyWith(color: AppColors.mainBackgroundColor)
+							style: Theme.of(context).textTheme.button?.copyWith(color: AppColors.mainBackgroundColor)
 						)
 					)
 				]
@@ -113,7 +117,7 @@ class _ReportFormPageState extends State<ReportFormPage> {
 		  			Container(
 		  				margin: EdgeInsets.all(AppBoxProperties.screenEdgePadding),
 		  				child: Hero(
-		  					tag: widget.report.task.id.toString() + widget.report.task.duration.last.to.toString(),
+		  					tag: widget.report.uiTask.instance.id.toString() + widget.report.uiTask.instance.duration!.last.to.toString(),
 		  					child: ReportCard(report: widget.report, hideBottomBar: true)
 		  				)
 		  			),
@@ -134,12 +138,13 @@ class _ReportFormPageState extends State<ReportFormPage> {
 	}
 
 	Widget _getPointsAssigned() {
-		int totalPoints = widget.report.task.points.quantity;
-		int points = TasksEvaluationCubit.getPointsAwarded(totalPoints, mark.value);
+		var taskPoints = widget.report.uiTask.task.points!;
+		var totalPoints = taskPoints.quantity!;
+		var points = TasksEvaluationCubit.getPointsAwarded(totalPoints, mark.value!);
 		return AttributeChip.withCurrency(
-			currencyType: widget.report.task.points.type,
+			currencyType: taskPoints.type!,
 			content: '$points / $totalPoints',
-			tooltip: widget.report.task.points.title
+			tooltip: taskPoints.name
 		);
 	}
 
@@ -167,7 +172,7 @@ class _ReportFormPageState extends State<ReportFormPage> {
 							RatingBar.builder(
 								minRating: 0.0,
 								maxRating: 5.0,
-								initialRating: mark.value.toDouble() ?? 3,
+								initialRating: mark.value?.toDouble() ?? 3,
 								itemCount: 5,
 								itemSize: 50.0,
 								unratedColor: Colors.grey[300],
@@ -175,16 +180,16 @@ class _ReportFormPageState extends State<ReportFormPage> {
 								glow: false,
 								itemBuilder: (context, index) => Icon(Icons.star, color: Colors.amber),
 								onRatingUpdate: (val) {
-									FocusManager.instance.primaryFocus.unfocus();
+									FocusManager.instance.primaryFocus?.unfocus();
 									setState((){ mark = UITaskReportMark.values.firstWhere((element) => element.value == val.toInt()); });
 								},
 							),
 							Text(
-								'${AppLocales.of(context).translate(_pageKey+'.ratingLabel')}: ${mark.value.toString()}/5 (' + 
-								AppLocales.of(context).translate('$_pageKey.ratingLevels.${mark.toString().split('.').last}') + ')',
+								'${AppLocales.of(context).translate('$_pageKey.ratingLabel')}: ${mark.value.toString()}/5 ('
+										'${AppLocales.of(context).translate('$_pageKey.ratingLevels.${mark.toString().split('.').last}')})',
 								style: TextStyle(fontWeight: FontWeight.bold)
 							),
-							widget.report.task.points != null ? Padding(
+							widget.report.uiTask.task.points != null ? Padding(
 								padding: EdgeInsets.only(top: 12.0),
 								child: Wrap(
 									alignment: WrapAlignment.center,
@@ -192,7 +197,7 @@ class _ReportFormPageState extends State<ReportFormPage> {
 									spacing: 2.0,
 									children: [
 										Text(
-											AppLocales.of(context).translate('$_pageKey.pointsAssigned') + ': ',
+											'${AppLocales.of(context).translate('$_pageKey.pointsAssigned')}: ',
 											style: TextStyle(color: AppColors.mediumTextColor)
 										),
 										_getPointsAssigned()
@@ -213,7 +218,7 @@ class _ReportFormPageState extends State<ReportFormPage> {
 			secondary: Padding(padding: EdgeInsets.only(left: 8.0), child: Icon(Icons.block, color: Colors.red)),
 			value: isRejected,
 			onChanged: (val) => setState(() {
-				isRejected = val;
+				isRejected = val!;
 			})
 		);
 	}

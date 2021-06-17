@@ -1,7 +1,7 @@
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 
 class RemoteConfigProvider {
-	RemoteConfig _remoteConfig = RemoteConfig.instance;
+	final RemoteConfig _remoteConfig = RemoteConfig.instance;
 
 	static const String _roundSpotConfigKey = "roundSpotConfig";
 

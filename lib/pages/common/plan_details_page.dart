@@ -1,34 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mongo_dart/mongo_dart.dart' as Mongo;
+import 'package:mongo_dart/mongo_dart.dart' as mongo;
 
-import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
-import 'package:fokus/logic/common/plan_cubit.dart';
-import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
-import 'package:fokus/model/db/user/user_role.dart';
-import 'package:fokus/model/navigation/plan_form_params.dart';
-import 'package:fokus/model/ui/app_page.dart';
-import 'package:fokus/model/ui/plan/ui_plan.dart';
-import 'package:fokus/model/ui/task/ui_task.dart';
-import 'package:fokus/utils/ui/snackbar_utils.dart';
-import 'package:fokus/widgets/stateful_bloc_builder.dart';
-import 'package:fokus/model/ui/gamification/ui_currency.dart';
-import 'package:fokus/model/ui/form/task_form_model.dart';
-import 'package:fokus/model/ui/ui_button.dart';
-import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/widgets/custom_app_bars.dart';
-import 'package:fokus/utils/ui/dialog_utils.dart';
-import 'package:fokus/utils/ui/theme_config.dart';
-import 'package:fokus/widgets/chips/attribute_chip.dart';
-import 'package:fokus/widgets/dialogs/general_dialog.dart';
-import 'package:fokus/widgets/cards/item_card.dart';
-import 'package:fokus/widgets/buttons/popup_menu_list.dart';
-import 'package:fokus/widgets/segment.dart';
-import 'package:fokus/widgets/cards/task_card.dart';
+import '../../logic/common/auth_bloc/authentication_bloc.dart';
+import '../../logic/common/plan_cubit.dart';
+import '../../logic/common/stateful/stateful_cubit.dart';
+import '../../model/db/gamification/currency.dart';
+import '../../model/db/plan/plan.dart';
+import '../../model/db/plan/task.dart';
+import '../../model/db/user/user_role.dart';
+import '../../model/navigation/plan_form_params.dart';
+import '../../model/ui/app_page.dart';
+import '../../model/ui/form/task_form_model.dart';
+import '../../model/ui/ui_button.dart';
+import '../../services/app_locales.dart';
+import '../../utils/ui/dialog_utils.dart';
+import '../../utils/ui/snackbar_utils.dart';
+import '../../utils/ui/theme_config.dart';
+import '../../widgets/buttons/popup_menu_list.dart';
+import '../../widgets/cards/item_card.dart';
+import '../../widgets/cards/task_card.dart';
+import '../../widgets/chips/attribute_chip.dart';
+import '../../widgets/custom_app_bars.dart';
+import '../../widgets/dialogs/general_dialog.dart';
+import '../../widgets/segment.dart';
+import '../../widgets/stateful_bloc_builder.dart';
 
 class PlanDetailsPage extends StatefulWidget {
   @override
-  _PlanDetailsPageState createState() => new _PlanDetailsPageState();
+  _PlanDetailsPageState createState() => _PlanDetailsPageState();
 }
 
 class _PlanDetailsPageState extends State<PlanDetailsPage> {
@@ -38,7 +38,7 @@ class _PlanDetailsPageState extends State<PlanDetailsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: SimpleStatefulBlocBuilder<PlanCubit, PlanCubitState>(
-          builder: (context, state) => _buildView(context, state),
+          builder: _buildView,
           loadingBuilder: (_, __) => SizedBox.shrink(),
           listener: (context, state) {
             if (state.submitted)
@@ -58,14 +58,14 @@ class _PlanDetailsPageState extends State<PlanDetailsPage> {
 		var authenticationBloc = context.read<AuthenticationBloc>();
 		var currentUser = authenticationBloc.state.user;
 
-		return (state.uiPlan?.createdBy != currentUser.id && currentUser.role == UserRole.caregiver) ? FloatingActionButton.extended(
+		return (state.plan.createdBy != currentUser!.id && currentUser.role == UserRole.caregiver) ? FloatingActionButton.extended(
 			heroTag: null,
 			materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
 			backgroundColor: AppColors.formColor,
 			elevation: 4.0,
 			icon: Icon(Icons.control_point_duplicate),
 			label: Text(AppLocales.of(context).translate('$_pageKey.content.copyPlanButton')),
-			onPressed: () => Navigator.of(context).pushNamed(AppPage.caregiverPlanForm.name, arguments: PlanFormParams(type: AppFormType.copy, id: state.uiPlan.id)),
+			onPressed: () => Navigator.of(context).pushNamed(AppPage.caregiverPlanForm.name, arguments: PlanFormParams(type: AppFormType.copy, id: state.plan.id)),
 		) : SizedBox.shrink();
 	}
 
@@ -75,14 +75,14 @@ class _PlanDetailsPageState extends State<PlanDetailsPage> {
 			verticalDirection: VerticalDirection.up,
 			children: [
 				AppSegments(segments: _buildPanelSegments(state)),
-				_getCardHeader(state.uiPlan, state.children, context)
+				_getCardHeader(state.plan, state.children, context)
 			],
 		);
 	}
 
 	List<Widget> _buildPanelSegments(PlanCubitState state) {
-  	List<UITask> mandatoryTasks = state.tasks.where((task) => task.optional == false).toList();
-		List<UITask> optionalTasks = state.tasks.where((task) => task.optional == true).toList();
+  	var mandatoryTasks = state.tasks.where((task) => task.optional == false).toList();
+		var optionalTasks = state.tasks.where((task) => task.optional == true).toList();
 
 		return [
 			if(mandatoryTasks.isNotEmpty) _getTasksSegment(
@@ -97,7 +97,7 @@ class _PlanDetailsPageState extends State<PlanDetailsPage> {
 		];
 	}
 
-	Segment _getTasksSegment({String title, List<UITask> tasks, bool isOptional = false}) {
+	Segment _getTasksSegment({required String title, required List<Task> tasks, bool isOptional = false}) {
 		return Segment(
 			title: title,
 			noElementsMessage: '$_pageKey.content.noTasks',
@@ -112,8 +112,8 @@ class _PlanDetailsPageState extends State<PlanDetailsPage> {
 								key: ValueKey(DateTime.now()),
 								title: task.name,
 								timer: task.timer,
-								pointsValue: task.points != null ? task.points.quantity : null,
-								pointCurrency:  task.points != null ? UICurrency(type: task.points.type, title: task.points.title) : null
+								pointsValue: task.points != null ? task.points!.quantity : null,
+								pointCurrency:  task.points != null ? Currency(type: task.points!.type, name: task.points!.name) : null
 							)
 						)
 					)
@@ -121,8 +121,8 @@ class _PlanDetailsPageState extends State<PlanDetailsPage> {
 		);
 	}
 
-	Widget _getCardHeader(UIPlan plan, Map<Mongo.ObjectId, String> children, BuildContext context) {
-  	int i = 0;
+	Widget _getCardHeader(Plan plan, Map<mongo.ObjectId, String> children, BuildContext context) {
+  	var i = 0;
 		// ignore: close_sinks
 		var authenticationBloc = BlocProvider.of<AuthenticationBloc>(context);
 		var currentUser = authenticationBloc.state.user;
@@ -130,13 +130,13 @@ class _PlanDetailsPageState extends State<PlanDetailsPage> {
 		return CustomContentAppBar(
 			title: '$_pageKey.header.title',
 			content: ItemCard(
-				title: plan.name,
-				subtitle: plan.description(context),
+				title: plan.name!,
+				subtitle: plan.description,
 				//TODO: Open child page with click on chip
 				chips: <Widget>[
-					if (currentUser.role == UserRole.child || currentUser.id != plan.createdBy)
+					if (currentUser!.role == UserRole.child || currentUser.id != plan.createdBy)
 						AttributeChip.withIcon(
-							content: AppLocales.of(context).translate('page.caregiverSection.plans.content.tasks', {'NUM_TASKS': plan.taskCount}),
+							content: AppLocales.of(context).translate('page.caregiverSection.plans.content.tasks', {'NUM_TASKS': plan.tasks!.length}),
 							color: Colors.indigo,
 							icon: Icons.layers
 						)
@@ -171,7 +171,7 @@ class _PlanDetailsPageState extends State<PlanDetailsPage> {
 								title: AppLocales.of(context).translate('alert.deletePlan'),
 								richContent: RichText(
 									text: TextSpan(
-										text: AppLocales.of(context).translate('alert.confirmPlanDeletion') + '\n\n',
+										text: '${AppLocales.of(context).translate('alert.confirmPlanDeletion')}\n\n',
 										style: TextStyle(color: AppColors.darkTextColor),
 										children: [TextSpan(
 											text: AppLocales.of(context).translate('deleteWarning'),

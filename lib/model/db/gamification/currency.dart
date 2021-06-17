@@ -1,26 +1,31 @@
-import 'package:fokus/model/currency_type.dart';
-import 'package:meta/meta.dart';
+import 'package:equatable/equatable.dart';
 
-class Currency {
-	String name;
-	CurrencyType icon;
+import '../../../utils/definitions.dart';
+import '../../currency_type.dart';
 
-	Currency({this.icon, this.name});
+class Currency extends Equatable {
+  final String? name;
+  final CurrencyType? type;
 
-	factory Currency.fromJson(Map<String, dynamic> json) => json != null ? (Currency()..fromJson(json)) : null;
+  Currency({this.type, String? name}) : name = (type == CurrencyType.diamond ? 'points' : name);
 
-	@protected
-	void fromJson(Map<String, dynamic> json) {
-		icon = CurrencyType.values[json['icon']];
-		name = json['name'];
-	}
+  Currency.fromJson(Json json)
+      : this(type: CurrencyType.values[json['icon']], name: json['name']);
 
-	Map<String, dynamic> toJson() {
-		final Map<String, dynamic> data = new Map<String, dynamic>();
-		if (this.icon != null)
-      data['icon'] = this.icon.index;
-		if (this.name != null)
-      data['name'] = this.name;
-		return data;
-	}
+  Currency copyWith({String? name, CurrencyType? icon}) {
+    return Currency(
+      name: name ?? this.name,
+      type: icon ?? type,
+    );
+  }
+
+  Json toJson() {
+    final data = <String, dynamic>{};
+    if (type != null) data['icon'] = type!.index;
+    if (name != null) data['name'] = name;
+    return data;
+  }
+
+  @override
+  List<Object?> get props => [name, type];
 }

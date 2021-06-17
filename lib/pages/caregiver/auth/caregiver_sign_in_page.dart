@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
-import 'package:fokus/utils/ui/form_config.dart';
 import 'package:fokus_auth/fokus_auth.dart';
 import 'package:formz/formz.dart';
 
-import 'package:fokus/logic/caregiver/auth/sign_in/caregiver_sign_in_cubit.dart';
-import 'package:fokus/model/ui/app_page.dart';
-import 'package:fokus/model/ui/ui_button.dart';
-import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/ui/theme_config.dart';
-import 'package:fokus/widgets/auth/auth_input_field.dart';
-import 'package:fokus/model/ui/auth/email.dart';
-import 'package:fokus/services/exception/auth_exceptions.dart';
-import 'package:fokus/model/ui/auth/password.dart';
-import 'package:fokus/utils/ui/snackbar_utils.dart';
-import 'package:fokus/widgets/auth/auth_button.dart';
-import 'package:fokus/widgets/auth/auth_widgets.dart';
-import 'package:fokus/widgets/buttons/popup_menu_list.dart';
+import '../../../logic/caregiver/auth/sign_in/caregiver_sign_in_cubit.dart';
+import '../../../model/ui/app_page.dart';
+import '../../../model/ui/auth/email.dart';
+import '../../../model/ui/auth/password.dart';
+import '../../../model/ui/ui_button.dart';
+import '../../../services/app_locales.dart';
+import '../../../services/exception/auth_exceptions.dart';
+import '../../../utils/ui/form_config.dart';
+import '../../../utils/ui/snackbar_utils.dart';
+import '../../../utils/ui/theme_config.dart';
+import '../../../widgets/auth/auth_button.dart';
+import '../../../widgets/auth/auth_input_field.dart';
+import '../../../widgets/auth/auth_widgets.dart';
+import '../../../widgets/buttons/popup_menu_list.dart';
 
 class CaregiverSignInPage extends StatelessWidget {
 	static const String _pageKey = 'page.loginSection.caregiverSignIn';
@@ -30,11 +30,11 @@ class CaregiverSignInPage extends StatelessWidget {
 				  listener: (context, state) {
 					  if (state.status.isSubmissionFailure) {
 					  	if (state.signInError != null)
-							  showFailSnackbar(context, state.signInError?.key);
+							  showFailSnackbar(context, state.signInError!.key);
 					  	else if (state.passwordResetError != null)
 								showFailSnackbar(context, 'authentication.error.emailLink', {
 	                'TYPE': '${AppLinkType.passwordReset.index}',
-	                'ERR': '${state.passwordResetError.index}'
+	                'ERR': '${state.passwordResetError!.index}'
 	              });
 				    }
 				  },
@@ -58,7 +58,7 @@ class CaregiverSignInPage extends StatelessWidget {
 
   Widget _buildSignInForm(BuildContext context) {
 		return BlocBuilder<CaregiverSignInCubit, CaregiverSignInState>(
-			cubit: BlocProvider.of<CaregiverSignInCubit>(context),
+			bloc: BlocProvider.of<CaregiverSignInCubit>(context),
 			builder: (context, state) { 
 				return AuthGroup(
 					title: AppLocales.of(context).translate('$_pageKey.logInTitle'),
@@ -76,7 +76,7 @@ class CaregiverSignInPage extends StatelessWidget {
 								changedAction: (cubit, value) => cubit.emailChanged(value),
 								labelKey: 'authentication.email',
 								icon: Icons.email,
-								getErrorKey: (state) => [state.email.error.key],
+								getErrorKey: (state) => [state.email.error!.key],
 								inputType: TextInputType.emailAddress,
 								autofillHints: [AutofillHints.email]
 							),
@@ -85,7 +85,7 @@ class CaregiverSignInPage extends StatelessWidget {
 								changedAction: (cubit, value) => cubit.passwordChanged(value),
 								labelKey: 'authentication.password',
 								icon: Icons.lock,
-								getErrorKey: (state) => [state.password.error.key],
+								getErrorKey: (state) => [state.password.error!.key],
 								hideInput: true,
 								autofillHints: [AutofillHints.password]
 							),

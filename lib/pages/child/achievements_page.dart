@@ -1,22 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
-import 'package:fokus/model/ui/gamification/ui_badge.dart';
-import 'package:fokus/model/ui/user/ui_child.dart';
-import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/ui/app_paths.dart';
-import 'package:fokus/utils/ui/dialog_utils.dart';
-import 'package:fokus/utils/ui/icon_sets.dart';
-import 'package:fokus/utils/ui/theme_config.dart';
-import 'package:fokus/widgets/app_navigation_bar.dart';
-import 'package:fokus/widgets/custom_app_bars.dart';
-import 'package:fokus/widgets/general/app_hero.dart';
-import 'package:fokus/widgets/segment.dart';
+import '../../logic/common/auth_bloc/authentication_bloc.dart';
+import '../../model/db/user/child.dart';
+import '../../services/app_locales.dart';
+import '../../utils/ui/app_paths.dart';
+import '../../utils/ui/dialog_utils.dart';
+import '../../utils/ui/icon_sets.dart';
+import '../../utils/ui/theme_config.dart';
+import '../../widgets/app_navigation_bar.dart';
+import '../../widgets/custom_app_bars.dart';
+import '../../widgets/general/app_hero.dart';
+import '../../widgets/segment.dart';
 
 class ChildAchievementsPage extends StatefulWidget {
 	@override
-	_ChildAchievementsPageState createState() => new _ChildAchievementsPageState();
+	_ChildAchievementsPageState createState() => _ChildAchievementsPageState();
 }
 
 class _ChildAchievementsPageState extends State<ChildAchievementsPage> {
@@ -53,14 +52,15 @@ class _ChildAchievementsPageState extends State<ChildAchievementsPage> {
 
 	Widget _buildBadgeShelves() {
 		return BlocBuilder<AuthenticationBloc, AuthenticationState>(
+			buildWhen: (oldState, newState) => newState.signedIn,
 			builder: (context, state) {
-				List<UIBadge> badges = (state.user as UIChild)?.badges ?? [];
+				var badges = (state.user as Child).badges ?? [];
 				if(badges.isNotEmpty) {
 					return Padding(
 						padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: AppBoxProperties.screenEdgePadding),
 						child: Builder(
 							builder: (context) {
-								List<Widget> rows = [];
+								var rows = <Widget>[];
 								for (var i = 0; i < badges.length; i += badgesPerShelf) {
 									rows.add(Row(
 										children: badges.sublist(i, i+badgesPerShelf > badges.length ? badges.length : i+badgesPerShelf).map((badge) =>

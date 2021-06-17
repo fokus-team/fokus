@@ -8,8 +8,8 @@ class AppBottomNavigationItem {
   final Icon icon;
 
   AppBottomNavigationItem({
-	  @required this.navigationRoute,
-    @required this.title,
-    @required this.icon,
+	  required this.navigationRoute,
+    required this.title,
+    required this.icon,
   });
 }

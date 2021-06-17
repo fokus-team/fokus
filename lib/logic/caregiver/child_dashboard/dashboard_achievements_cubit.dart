@@ -1,59 +1,56 @@
 import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart';
 
-import 'package:fokus/model/db/gamification/child_badge.dart';
-import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
-import 'package:fokus/model/ui/gamification/ui_badge.dart';
-import 'package:fokus/model/ui/user/ui_caregiver.dart';
-import 'package:fokus/model/ui/user/ui_child.dart';
-import 'package:fokus/model/ui/user/ui_user.dart';
-import 'package:fokus/services/analytics_service.dart';
-import 'package:fokus/services/data/data_repository.dart';
-import 'package:fokus/services/notifications/notification_service.dart';
+import '../../../model/db/gamification/badge.dart';
+import '../../../model/db/gamification/child_badge.dart';
+import '../../../model/db/user/caregiver.dart';
+import '../../../model/db/user/child.dart';
+import '../../../services/analytics_service.dart';
+import '../../../services/data/data_repository.dart';
+import '../../../services/notifications/notification_service.dart';
+import '../../common/stateful/stateful_cubit.dart';
 
 class DashboardAchievementsCubit extends StatefulCubit {
-	final ActiveUserFunction _activeUser;
-	UIChild child;
+	late Child child;
 
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final AnalyticsService _analyticsService = GetIt.I<AnalyticsService>();
 	final NotificationService _notificationService = GetIt.I<NotificationService>();
 
-	DashboardAchievementsCubit(this._activeUser, ModalRoute pageRoute): super(pageRoute, options: [StatefulOption.noAutoLoading, StatefulOption.resetSubmissionState]);
+	DashboardAchievementsCubit(ModalRoute pageRoute): super(pageRoute, options: [StatefulOption.noAutoLoading, StatefulOption.resetSubmissionState]);
 
 	@override
 	Future doLoadData() async {
-		UICaregiver activeUser = _activeUser();
-		var availableBadges = _filterBadges(activeUser.badges, child.badges);
-		emit(DashboardAchievementsState(availableBadges: availableBadges, childBadges: child.badges));
+		var user = activeUser as Caregiver;
+		var availableBadges = _filterBadges(user.badges!, child.badges!);
+		emit(DashboardAchievementsState(availableBadges: availableBadges, childBadges: child.badges!));
 	}
 
-	Future assignBadges(List<UIBadge> badges) async {
+	Future assignBadges(List<Badge> badges) async {
 		if (!beginSubmit())
 			return;
-		DashboardAchievementsState tabState = state;
-		var assignedBadges = badges.map((badge) => UIChildBadge.fromBadge(badge)).toList();
-		var childBadges = assignedBadges.map((badge) => ChildBadge.fromUIModel(badge)).toList();
-		_dataRepository.updateUser(child.id, badges: childBadges);
+		var tabState = state as DashboardAchievementsState;
+		var assignedBadges = badges.map((badge) => ChildBadge.fromBadge(badge)).toList();
+		_dataRepository.updateUser(child.id!, badges: assignedBadges);
 		for (var badge in badges)
-			_notificationService.sendBadgeAwardedNotification(badge.name, badge.icon, child.id);
-		childBadges.forEach((badge) => _analyticsService.logBadgeAwarded(badge));
+			_notificationService.sendBadgeAwardedNotification(badge.name!, badge.icon!, child.id!);
+		assignedBadges.forEach(_analyticsService.logBadgeAwarded);
 
 		var newAssignedBadges = List.of(tabState.childBadges)..addAll(assignedBadges);
 		var newAvailableBadges = _filterBadges(tabState.availableBadges, assignedBadges);
 		emit(tabState.copyWith(availableBadges: newAvailableBadges, childBadges: newAssignedBadges, submissionState: DataSubmissionState.submissionSuccess));
 	}
 
-	List<UIBadge> _filterBadges(List<UIBadge> list, List<UIChildBadge> excluded) => list.where((badge) => !excluded.any((exclude) => badge.sameAs(exclude))).toList();
+	List<Badge> _filterBadges(List<Badge> list, List<ChildBadge> excluded) => list.where((badge) => !excluded.any((exclude) => badge == exclude)).toList();
 }
 
 class DashboardAchievementsState extends StatefulState {
-	final List<UIBadge> availableBadges;
-	final List<UIChildBadge> childBadges;
+	final List<Badge> availableBadges;
+	final List<ChildBadge> childBadges;
 
-	DashboardAchievementsState({this.availableBadges, this.childBadges, DataSubmissionState submissionState}) : super.loaded(submissionState);
+	DashboardAchievementsState({required this.availableBadges, required this.childBadges, DataSubmissionState? submissionState}) : super.loaded(submissionState);
 
-	DashboardAchievementsState copyWith({List<UIBadge> availableBadges, List<UIChildBadge> childBadges, DataSubmissionState submissionState}) {
+	DashboardAchievementsState copyWith({List<Badge>? availableBadges, List<ChildBadge>? childBadges, DataSubmissionState? submissionState}) {
 		return DashboardAchievementsState(
 			availableBadges: availableBadges ?? this.availableBadges,
 			childBadges: childBadges ?? this.childBadges,
@@ -65,5 +62,5 @@ class DashboardAchievementsState extends StatefulState {
 	StatefulState withSubmitState(DataSubmissionState submissionState) => copyWith(submissionState: submissionState);
 
 	@override
-	List<Object> get props => super.props..addAll([availableBadges, childBadges]);
+	List<Object?> get props => super.props..addAll([availableBadges, childBadges]);
 }

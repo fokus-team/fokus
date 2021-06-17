@@ -19,6 +19,7 @@ Widget tryForwardCubit<CubitType extends Cubit>(Widget widget, BuildContext cont
 	CubitType cubit;
 	try {
 		cubit = BlocProvider.of<CubitType>(context);
+// ignore: avoid_catching_errors
 	} on Error {
 		return widget;
 	}

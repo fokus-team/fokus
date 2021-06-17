@@ -1,27 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:fokus/model/ui/form/task_form_model.dart';
-import 'package:fokus/services/app_locales.dart';
+import '../../model/ui/form/task_form_model.dart';
+import '../../services/app_locales.dart';
 import '../chips/attribute_chip.dart';
 
 class TaskCard extends StatelessWidget {
 	final TaskFormModel task;
-	final int index;
-	final Function onTap;
+	final int? index;
+	final void Function(TaskFormModel)? onTap;
 
 	TaskCard({
-		@required this.task,
-		this.index,
+		required this.task,
+		required this.index,
 		this.onTap
 	});
 
   @override
   Widget build(BuildContext context) {
-		bool haveSetPoints = task.pointsValue != null && task.pointsValue != 0;
-		bool haveSetTimer = task.timer != null && task.timer != 0;
+		var haveSetPoints = task.pointsValue != null && task.pointsValue != 0;
+		var haveSetTimer = task.timer != null && task.timer != 0;
 		
 		return Card(
 			child: InkWell(
-				onTap: () => onTap != null ? onTap(task) : () => {},
+				onTap: () => onTap != null ? onTap!(task) : () => {},
 				splashColor: onTap != null ? Colors.blueGrey[50] : Colors.transparent,
 				highlightColor: onTap != null ? Colors.blueGrey[50] : Colors.transparent,
 				child: Padding(
@@ -31,8 +31,8 @@ class TaskCard extends StatelessWidget {
 						crossAxisAlignment: CrossAxisAlignment.start,
 						children: <Widget>[
 							AttributeChip.withIcon(
-								content: task.optional ? null : '#${(index+1).toString()}',
-								icon: task.optional ? Icons.label_important : null,
+								content: task.optional! ? null : '#${(index!+1).toString()}',
+								icon: task.optional! ? Icons.label_important : null,
 								color: Colors.blueGrey[600]
 							),
 							Expanded(
@@ -48,8 +48,8 @@ class TaskCard extends StatelessWidget {
 													child: Hero(
 													tag: task.key,
 													child: Text(
-														task.title,
-														style: Theme.of(context).textTheme.bodyText2.copyWith(fontSize: 17.0),
+														task.title!,
+														style: Theme.of(context).textTheme.bodyText2!.copyWith(fontSize: 17.0),
 														maxLines: 3,
 														overflow: TextOverflow.ellipsis
 													)
@@ -62,14 +62,14 @@ class TaskCard extends StatelessWidget {
 													if(haveSetPoints)
 														AttributeChip.withCurrency(
 															content: task.pointsValue.toString(),
-															currencyType: task.pointCurrency.type,
-															tooltip: task.pointCurrency.title
+															currencyType: task.pointCurrency!.type!,
+															tooltip: task.pointCurrency!.name
 														),
 													if(haveSetTimer)
 														AttributeChip.withIcon(
 															content: AppLocales.of(context).translate('page.caregiverSection.taskForm.fields.taskTimer.format', {
-																'HOURS_NUM': (task.timer ~/ 60).toString(),
-																'MINUTES_NUM': (task.timer % 60).toString()
+																'HOURS_NUM': (task.timer! ~/ 60).toString(),
+																'MINUTES_NUM': (task.timer! % 60).toString()
 															}),
 															icon: Icons.timer, 
 															color: Colors.orange

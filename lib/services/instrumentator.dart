@@ -9,15 +9,16 @@ import 'package:logging/logging.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter/foundation.dart' as Foundation;
+import 'package:flutter/foundation.dart' as foundation;
 
-import 'package:fokus/model/app_error_type.dart';
-import 'package:fokus/model/db/user/user.dart';
-import 'package:fokus/model/ui/app_page.dart';
+import '../model/app_error_type.dart';
+import '../model/db/user/user.dart';
+import '../model/ui/app_page.dart';
 
 import 'analytics_service.dart';
 import 'app_route_observer.dart';
 import 'exception/db_exceptions.dart';
+import 'observers/user/user_notifier.dart';
 import 'observers/user/user_observer.dart';
 
 class Instrumentator implements UserObserver {
@@ -25,9 +26,14 @@ class Instrumentator implements UserObserver {
 	final _navigatorKey = GetIt.I<GlobalKey<NavigatorState>>();
 	final AnalyticsService _analyticsService = GetIt.I<AnalyticsService>();
 	final _routeObserver = GetIt.I<AppRouteObserver>();
+	final UserNotifier _userNotifier = GetIt.I<UserNotifier>();
 
 	bool _errorPageOpen = false;
-	Set<String> _subLoggers = {'RoundSpot', 'MongoDart'};
+	final Set<String> _subLoggers = {'RoundSpot', 'MongoDart'};
+
+	Instrumentator() {
+		_userNotifier.observeUserChanges(this);
+	}
 
 	void runAppGuarded(Widget app) {
 		Bloc.observer = FokusBlocObserver();
@@ -43,7 +49,7 @@ class Instrumentator implements UserObserver {
 	}
 
 	void _setupLogger() {
-		Logger.root.level = Foundation.kReleaseMode ? Level.SEVERE : Level.ALL;
+		Logger.root.level = foundation.kReleaseMode ? Level.SEVERE : Level.ALL;
 		Logger.root.onRecord.listen((record) {
 			if (_subLoggers.any((name) => record.loggerName.startsWith(name)))
 				return;
@@ -57,6 +63,7 @@ class Instrumentator implements UserObserver {
 				if (record.stackTrace != null)
 					message += '\nStacktrace:\n${record.stackTrace}';
 			}
+// ignore: avoid_print
 			print(message);
 		});
 	}
@@ -80,7 +87,7 @@ class Instrumentator implements UserObserver {
 	Future<bool> _handleError(dynamic error, StackTrace stackTrace) async {
 		await _routeObserver.navigatorInitialized;
 		if (_navigatorKey.currentState?.context != null) {
-			if (error is CubitUnhandledErrorException)
+			if (error is BlocUnhandledErrorException)
 				error = error.error;
 			if (error is! SocketException) { // ignore database disconnected socket exception
 				var errorType = error is NoDbConnection ? AppErrorType.noConnectionError : AppErrorType.unknownError;
@@ -92,16 +99,18 @@ class Instrumentator implements UserObserver {
 	}
 
 	void _navigateToErrorPage(AppErrorType errorType) async {
-		if (_errorPageOpen || !Foundation.kReleaseMode)
+		if (_errorPageOpen || !foundation.kReleaseMode || _navigatorKey.currentState == null)
 			return;
 		_errorPageOpen = true;
-	  await Navigator.of(_navigatorKey.currentState.context).pushNamed(AppPage.errorPage.name, arguments: errorType);
+	  await Navigator.pushNamed(_navigatorKey.currentState!.context, AppPage.errorPage.name, arguments: errorType);
 	  _errorPageOpen = false;
 	}
 
   @override
   void onUserSignIn(User user) {
-		var id = user.id.toHexString();
+		if (user.id == null)
+			return;
+		var id = user.id!.toHexString();
 	  FirebaseCrashlytics.instance.setUserIdentifier(id);
 	  _analyticsService.setUserId(id);
   }
@@ -109,7 +118,7 @@ class Instrumentator implements UserObserver {
   @override
   void onUserSignOut(User user) {
 	  FirebaseCrashlytics.instance.setUserIdentifier('');
-	  _analyticsService.setUserId('');
+	  _analyticsService.setUserId(null);
   }
 }
 
@@ -117,7 +126,7 @@ class FokusBlocObserver extends BlocObserver {
 	final Logger _logger = Logger('FokusBlocObserver');
 
 	@override
-  void onError(Cubit cubit, Object error, StackTrace stackTrace) {
+  void onError(BlocBase cubit, Object error, StackTrace stackTrace) {
 		_logger.severe('Cubit ${cubit.runtimeType} exception unhandled', error, stackTrace);
 		super.onError(cubit, error, stackTrace);
   }

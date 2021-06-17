@@ -1,15 +1,15 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
-import 'package:fokus/logic/common/formz_state.dart';
-import 'package:fokus/logic/common/user_code_verifier.dart';
-import 'package:fokus/model/db/user/user_role.dart';
-import 'package:fokus/model/ui/auth/user_code.dart';
-import 'package:fokus/model/ui/user/ui_caregiver.dart';
 import 'package:fokus_auth/fokus_auth.dart';
 import 'package:formz/formz.dart';
-
-import 'package:fokus/model/ui/user/ui_user.dart';
 import 'package:mongo_dart/mongo_dart.dart';
+
+import '../../model/db/user/caregiver.dart';
+import '../../model/db/user/user_role.dart';
+import '../../model/ui/auth/user_code.dart';
+import '../../utils/definitions.dart';
+import '../common/auth_bloc/authentication_bloc.dart';
+import '../common/formz_state.dart';
+import '../common/user_code_verifier.dart';
 
 class CaregiverFriendsCubit extends Cubit<CaregiverFriendsState> with UserCodeVerifier<CaregiverFriendsState> {
 	final ActiveUserFunction _activeUser;
@@ -26,9 +26,9 @@ class CaregiverFriendsCubit extends Cubit<CaregiverFriendsState> with UserCodeVe
 		  return;
 	  }
 	  emit(state.copyWith(status: FormzStatus.submissionInProgress));
-    UICaregiver user = _activeUser();
+	  var user = _activeUser() as Caregiver;
   	var caregiverId = getIdFromCode(state.caregiverCode.value);
-		var caregiverFriends = List.of(user.friends) ?? [];
+		var caregiverFriends = user.friends != null ? List.of(user.friends!) : <ObjectId>[];
 		
 		if(caregiverFriends.contains(caregiverId)) {
 			emit(state.copyWith(status: FormzStatus.submissionFailure, error: 'caregiverAlreadyBefriendedError'));
@@ -36,8 +36,8 @@ class CaregiverFriendsCubit extends Cubit<CaregiverFriendsState> with UserCodeVe
 			emit(state.copyWith(status: FormzStatus.submissionFailure, error: 'enteredOwnCaregiverCodeError'));
 		} else {
 			var friends = caregiverFriends..add(caregiverId);
-			await dataRepository.updateUser(user.id, friends: friends);
-			_authBloc.add(AuthenticationActiveUserUpdated(UICaregiver.from(user, friends: friends)));
+			await dataRepository.updateUser(user.id!, friends: friends);
+			_authBloc.add(AuthenticationActiveUserUpdated(Caregiver.copyFrom(user, friends: friends)));
 			emit(state.copyWith(status: FormzStatus.submissionSuccess));
 		}
   }
@@ -59,15 +59,15 @@ class CaregiverFriendsCubit extends Cubit<CaregiverFriendsState> with UserCodeVe
 	void caregiverCodeChanged(String value) => emit(state.copyWith(caregiverCode: UserCode.pure(value), status: FormzStatus.pure));
 	
 	void removeFriend(ObjectId friendID) async {
-    UICaregiver user = _activeUser();
+    var user = _activeUser() as Caregiver;
 		var caregiverFriends = user.friends ?? [];
-		await dataRepository.updateUser(user.id, friends: caregiverFriends..remove(friendID));
+		await dataRepository.updateUser(user.id!, friends: caregiverFriends..remove(friendID));
 	}
 }
 
 class CaregiverFriendsState extends FormzState {
 	final UserCode caregiverCode;
-	final String error;
+	final String? error;
 
   CaregiverFriendsState({
 	  this.caregiverCode = const UserCode.pure(),
@@ -75,14 +75,14 @@ class CaregiverFriendsState extends FormzState {
     FormzStatus status = FormzStatus.pure
   }) : super(status);
 
-  @override
-  List<Object> get props => [caregiverCode, error, status];
-
-  CaregiverFriendsState copyWith({UserCode caregiverCode, String error, FormzStatus status}) {
+  CaregiverFriendsState copyWith({UserCode? caregiverCode, String? error, FormzStatus? status}) {
 	  return CaregiverFriendsState(
 		  caregiverCode: caregiverCode ?? this.caregiverCode,
 			error: error ?? this.error,
 		  status: status ?? this.status,
 	  );
   }
+
+	@override
+	List<Object?> get props => [caregiverCode, error, status];
 }

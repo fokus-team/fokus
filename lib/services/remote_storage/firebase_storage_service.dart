@@ -8,10 +8,10 @@ import 'remote_storage_provider.dart';
 class FirebaseStorageService extends RemoteStorageProvider {
 	final Logger _logger = Logger('UserDbRepository');
 
-	FirebaseStorage _storage = FirebaseStorage.instance;
+	final FirebaseStorage _storage = FirebaseStorage.instance;
 
   @override
-  Future uploadFile(Uint8List data, String path, [Map<String, String> metadata]) async {
+  Future uploadFile(Uint8List data, String path, [Map<String, String>? metadata]) async {
 		var fileRef = _storage.ref(path);
 		try {
 			await fileRef.putData(data, metadata != null ? SettableMetadata(customMetadata: metadata) : null);
@@ -25,7 +25,7 @@ extension RefExists on Reference {
 	Future<bool> get exists async {
 		try {
 			await getDownloadURL();
-		} on FirebaseException catch(e) {
+		} on FirebaseException {
 			return false;
 		}
 		return true;

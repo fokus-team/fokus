@@ -1,15 +1,15 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
-
-import 'package:fokus/model/db/gamification/badge.dart';
-import 'package:fokus/model/db/gamification/reward.dart';
-import 'package:fokus/model/db/plan/plan.dart';
-import 'package:fokus/model/db/plan/plan_instance.dart';
-import 'package:fokus/model/db/plan/repeatability_type.dart';
-import 'package:fokus/model/db/plan/task_instance.dart';
-import 'package:fokus/model/ui/gamification/ui_reward.dart';
-import 'package:fokus/model/ui/task/ui_task_report.dart';
 import 'package:fokus_auth/fokus_auth.dart';
+
+import '../model/db/gamification/badge.dart';
+import '../model/db/gamification/reward.dart';
+import '../model/db/plan/plan.dart';
+import '../model/db/plan/plan_instance.dart';
+import '../model/db/plan/repeatability_type.dart';
+import '../model/db/plan/task_instance.dart';
+import '../model/ui/plan/ui_task_report.dart';
+import '../utils/definitions.dart';
 
 class AnalyticsService {
 	final FirebaseAnalytics _analytics = FirebaseAnalytics();
@@ -24,9 +24,9 @@ class AnalyticsService {
 
 	// Plan
 	void logPlanCreated(Plan plan) => _analytics.logEvent(name: 'plan_created', parameters: {
-		'id': plan.id.toHexString(),
-		'task_count': plan.tasks.length,
-		'repeatability': plan.repeatability.type.name
+		'id': plan.id?.toHexString(),
+		'task_count': plan.tasks?.length,
+		'repeatability': plan.repeatability?.type?.name
 	});
 	void logPlanStarted(PlanInstance plan) => _analytics.logEvent(name: 'plan_started', parameters: plan.logRecord);
 	void logPlanCompleted(PlanInstance plan) => _analytics.logEvent(name: 'plan_completed', parameters: plan.logRecord);
@@ -43,54 +43,45 @@ class AnalyticsService {
 
 	// Reward
 	void logRewardCreated(Reward reward) => _analytics.logEvent(name: 'reward_created', parameters: reward.logRecord);
-	void logRewardBought(UIReward reward) => _analytics.logEvent(name: 'reward_bought', parameters: reward.logRecord);
+	void logRewardBought(Reward reward) => _analytics.logEvent(name: 'reward_bought', parameters: reward.logRecord);
 
 	// Badge
 	void logBadgeCreated(Badge badge) => _analytics.logEvent(name: 'badge_created');
 	void logBadgeAwarded(Badge badge) => _analytics.logEvent(name: 'badge_awarded');
 
 	void logAppOpen() => _analytics.logAppOpen();
-	void setUserId(String id) => _analytics.setUserId(id);
+	void setUserId(String? id) => _analytics.setUserId(id);
 }
 
 extension LogPlanInstance on PlanInstance {
-	Map<String, dynamic> get logRecord => {
-		'id': id.toHexString(),
-		'plan_id': planID.toHexString()
+	Json get logRecord => {
+		'id': id?.toHexString(),
+		'plan_id': planID?.toHexString()
 	};
 }
 
 extension LogTaskInstance on TaskInstance {
-	Map<String, dynamic> get logRecord => {
-		'id': id.toHexString(),
-		'task_id': taskID.toHexString(),
-		'plan_id': planInstanceID.toHexString(),
-		'subtask_count': '${subtasks.length}'
+	Json get logRecord => {
+		'id': id?.toHexString(),
+		'task_id': taskID?.toHexString(),
+		'plan_id': planInstanceID?.toHexString(),
+		'subtask_count': '${subtasks?.length}'
 	};
 }
 
 extension LogUITaskReport on UITaskReport {
-	Map<String, dynamic> get logRecord => {
-		'child_id': child.id.toHexString(),
-		'id': task.id.toHexString(),
+	Json get logRecord => {
+		'child_id': childCard.child.id?.toHexString(),
+		'id': uiTask.instance.id?.toHexString(),
 		'rating': '${ratingMark.value}'
 	};
 }
 
 extension LogReward on Reward {
-	Map<String, dynamic> get logRecord => {
-		'id': id.toHexString(),
-		'cost': '${cost.quantity}',
-		'currency': '${cost.icon.index}',
-		'limit': '$limit'
-	};
-}
-
-extension LogUIReward on UIReward {
-	Map<String, dynamic> get logRecord => {
-		'id': id.toHexString(),
-		'cost': '${cost.quantity}',
-		'currency': '$icon',
+	Json get logRecord => {
+		'id': id?.toHexString(),
+		'cost': '${cost?.quantity}',
+		'currency': '${cost?.type?.index}',
 		'limit': '$limit'
 	};
 }

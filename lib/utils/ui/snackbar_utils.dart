@@ -1,9 +1,9 @@
-import 'package:flushbar/flushbar.dart';
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
-import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/ui/theme_config.dart';
+import '../../services/app_locales.dart';
+import 'theme_config.dart';
 
-void showBasicSnackbar(BuildContext context, {String content, Map<String, String> contentArgs, Color backgroundColor, IconData icon}) {
+void showBasicSnackbar(BuildContext context, {required String content, Map<String, String>? contentArgs, Color? backgroundColor, IconData? icon}) {
 	Flushbar(
 		padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 20.0),
 		messageText: Text(
@@ -17,16 +17,16 @@ void showBasicSnackbar(BuildContext context, {String content, Map<String, String
 		) : SizedBox.shrink(),
 		flushbarStyle: FlushbarStyle.FLOATING,
 		margin: EdgeInsets.all(8.0),
-		borderRadius: 4.0,
+		borderRadius: BorderRadius.all(Radius.circular(4.0)),
 		duration: Duration(seconds: 5)
-	)..show(context);
+	).show(context);
 }
 
 void showInfoSnackbar(BuildContext context, String content) {
 	showBasicSnackbar(context, content: content, backgroundColor: AppColors.infoColor, icon: Icons.info);
 }
 
-void showFailSnackbar(BuildContext context, String content, [Map<String, String> contentArgs]) {
+void showFailSnackbar(BuildContext context, String content, [Map<String, String>? contentArgs]) {
 	showBasicSnackbar(context, content: content, contentArgs: contentArgs, backgroundColor: AppColors.failColor, icon: Icons.error);
 }
 

@@ -1,22 +1,22 @@
 import 'package:flutter/cupertino.dart';
-import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
-import 'package:fokus/model/db/plan/plan_instance.dart';
-import 'package:fokus/model/db/plan/plan_instance_state.dart';
-import 'package:fokus/model/db/plan/task_instance.dart';
-import 'package:fokus/model/navigation/plan_instance_params.dart';
-import 'package:fokus/model/notification/notification_refresh_info.dart';
-import 'package:fokus/model/notification/notification_type.dart';
-import 'package:fokus/model/ui/plan/ui_plan_instance.dart';
-import 'package:fokus/model/ui/task/ui_task_instance.dart';
-import 'package:fokus/services/analytics_service.dart';
-import 'package:fokus/services/data/data_repository.dart';
-import 'package:fokus/services/ui_data_aggregator.dart';
-import 'package:fokus/services/task_instance_service.dart';
-import 'package:fokus/utils/duration_utils.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mongo_dart/mongo_dart.dart';
-import 'package:fokus/model/db/plan/task_status.dart';
-import 'package:fokus/model/db/date/time_date.dart';
+
+import '../../model/db/plan/plan_instance.dart';
+import '../../model/db/plan/plan_instance_state.dart';
+import '../../model/db/plan/task_instance.dart';
+import '../../model/db/plan/task_status.dart';
+import '../../model/navigation/plan_instance_params.dart';
+import '../../model/notification/notification_refresh_info.dart';
+import '../../model/notification/notification_type.dart';
+import '../../model/ui/plan/ui_plan_instance.dart';
+import '../../model/ui/plan/ui_task_instance.dart';
+import '../../services/analytics_service.dart';
+import '../../services/data/data_repository.dart';
+import '../../services/task_instance_service.dart';
+import '../../services/ui_data_aggregator.dart';
+import '../../utils/duration_utils.dart';
+import 'stateful/stateful_cubit.dart';
 
 
 class PlanInstanceCubit extends StatefulCubit {
@@ -25,33 +25,33 @@ class PlanInstanceCubit extends StatefulCubit {
 	final UIDataAggregator _dataAggregator = GetIt.I<UIDataAggregator>();
 	final AnalyticsService _analyticsService = GetIt.I<AnalyticsService>();
 
-	UIPlanInstance uiPlanInstance;
-	PlanInstance _planInstance;
+	UIPlanInstance uiPlan;
+	late PlanInstance _planInstance;
 
-	PlanInstanceCubit(PlanInstanceParams params, ModalRoute modalRoute) : uiPlanInstance = params.planInstance, super(modalRoute);
+	PlanInstanceCubit(PlanInstanceParams params, ModalRoute modalRoute) : uiPlan = params.planInstance, super(modalRoute);
 
 	@override
 	List<NotificationType> notificationTypeSubscription() => [NotificationType.taskApproved, NotificationType.taskRejected, NotificationType.taskFinished, NotificationType.taskUnfinished];
 
 	@override
-  bool shouldNotificationRefresh(NotificationRefreshInfo info) => info.subject == uiPlanInstance.id;
+  bool shouldNotificationRefresh(NotificationRefreshInfo info) => info.subject == uiPlan.instance.id;
 
   @override
 	Future doLoadData() async {
-		_planInstance = await _dataRepository.getPlanInstance(id: uiPlanInstance.id);
-		if(_planInstance.taskInstances == null || _planInstance.taskInstances.isEmpty)
+		_planInstance = (await _dataRepository.getPlanInstance(id: uiPlan.instance.id))!;
+		if(_planInstance.taskInstances == null || _planInstance.taskInstances!.isEmpty)
 			_taskInstancesService.createTaskInstances(_planInstance);
-		uiPlanInstance = await _dataAggregator.loadPlanInstance(planInstance: _planInstance);
-		var allTasksInstances = await _dataRepository.getTaskInstances(planInstanceId: uiPlanInstance.id);
+		uiPlan = await _dataAggregator.loadPlanInstance(planInstance: _planInstance);
+		var allTasksInstances = await _dataRepository.getTaskInstances(planInstanceId: uiPlan.instance.id);
 
-		List<UITaskInstance> uiInstances = await _taskInstancesService.mapToUIModels(allTasksInstances);
-		emit(PlanInstanceCubitState(tasks: uiInstances, planInstance: uiPlanInstance));
+		var uiInstances = await _taskInstancesService.mapToUIModels(allTasksInstances);
+		emit(PlanInstanceCubitState(tasks: uiInstances, uiPlan: uiPlan));
 	}
 
-	Future<bool> isOtherPlanInProgressDbCheck({ObjectId tappedTaskInstance}) async {
-		PlanInstance activePlanInstance = await _dataRepository.getPlanInstance(childId: _planInstance.assignedTo, state: PlanInstanceState.active, fields: ["_id"]);
+	Future<bool> isOtherPlanInProgressDbCheck({required ObjectId? tappedTaskInstance}) async {
+		var activePlanInstance = await _dataRepository.getPlanInstance(childId: _planInstance.assignedTo, state: PlanInstanceState.active, fields: ["_id"]);
 		if(activePlanInstance != null) {
-			List<TaskInstance> taskInstances = await _dataRepository.getTaskInstances(planInstanceId: activePlanInstance.id);
+			var taskInstances = await _dataRepository.getTaskInstances(planInstanceId: activePlanInstance.id);
 			for(var instance in taskInstances) {
 				if(isInProgress(instance.duration) || isInProgress(instance.breaks)) {
 					if(tappedTaskInstance != null && tappedTaskInstance == instance.id) return false;
@@ -65,49 +65,49 @@ class PlanInstanceCubit extends StatefulCubit {
 	void completePlan() async {
 		if (!beginSubmit())
 			return;
-		List<Future> updates = [];
+		var updates = <Future>[];
 		_planInstance.state = PlanInstanceState.completed;
-		var allTasksInstances = await _dataRepository.getTaskInstances(planInstanceId: uiPlanInstance.id);
-		List<TaskInstance> updatedTaskInstances = [];
+		var allTasksInstances = await _dataRepository.getTaskInstances(planInstanceId: uiPlan.instance.id);
+		var updatedTaskInstances = <TaskInstance>[];
 		for(var taskInstance in allTasksInstances) {
-			if(!taskInstance.status.completed) {
-				taskInstance.status.state = TaskState.rejected;
-				taskInstance.status.completed = true;
+			if(!taskInstance.status!.completed!) {
+				taskInstance.status!.state = TaskState.rejected;
+				taskInstance.status!.completed = true;
 				if(isInProgress(taskInstance.duration)) {
-					taskInstance.duration.last.to = TimeDate.now();
-					updates.add(_dataRepository.updateTaskInstanceFields(taskInstance.id, state: taskInstance.status.state, isCompleted: taskInstance.status.completed, duration: taskInstance.duration));
+					taskInstance.duration!.last = taskInstance.duration!.last.end();
+					updates.add(_dataRepository.updateTaskInstanceFields(taskInstance.id!, state: taskInstance.status?.state, isCompleted: taskInstance.status?.completed, duration: taskInstance.duration));
 				}
 				else if(isInProgress(taskInstance.breaks)) {
-					taskInstance.breaks.last.to = TimeDate.now();
-					updates.add(_dataRepository.updateTaskInstanceFields(taskInstance.id, state: taskInstance.status.state, isCompleted: taskInstance.status.completed, breaks: taskInstance.breaks));
+					taskInstance.breaks!.last = taskInstance.breaks!.last.end();
+					updates.add(_dataRepository.updateTaskInstanceFields(taskInstance.id!, state: taskInstance.status?.state, isCompleted: taskInstance.status?.completed, breaks: taskInstance.breaks));
 				}
-				else updates.add(_dataRepository.updateTaskInstanceFields(taskInstance.id, state: taskInstance.status.state, isCompleted: taskInstance.status.completed));
+				else updates.add(_dataRepository.updateTaskInstanceFields(taskInstance.id!, state: taskInstance.status?.state, isCompleted: taskInstance.status?.completed));
 			}
 			updatedTaskInstances.add(taskInstance);
 		}
 		if(isInProgress(_planInstance.duration)) {
-			_planInstance.duration.last.to =  TimeDate.now();
-			updates.add(_dataRepository.updatePlanInstanceFields(_planInstance.id, state: PlanInstanceState.completed, duration: _planInstance.duration));
+			_planInstance.duration!.last = _planInstance.duration!.last.end();
+			updates.add(_dataRepository.updatePlanInstanceFields(_planInstance.id!, state: PlanInstanceState.completed, duration: _planInstance.duration));
 		}
-		else updates.add(_dataRepository.updatePlanInstanceFields(_planInstance.id, state: PlanInstanceState.completed));
-		List<UITaskInstance> uiInstances = await _taskInstancesService.mapToUIModels(updatedTaskInstances);
+		else updates.add(_dataRepository.updatePlanInstanceFields(_planInstance.id!, state: PlanInstanceState.completed));
+		var uiInstances = await _taskInstancesService.mapToUIModels(updatedTaskInstances);
 		_analyticsService.logPlanCompleted(_planInstance);
 
 		Future.wait(updates);
-		uiPlanInstance = await _dataAggregator.loadPlanInstance(planInstanceId: _planInstance.id);
-		emit(PlanInstanceCubitState(tasks: uiInstances, planInstance: uiPlanInstance, submissionState: DataSubmissionState.submissionSuccess));
+		uiPlan = await _dataAggregator.loadPlanInstance(planInstanceId: _planInstance.id);
+		emit(PlanInstanceCubitState(tasks: uiInstances, uiPlan: uiPlan, submissionState: DataSubmissionState.submissionSuccess));
 	}
 }
 
 class PlanInstanceCubitState extends StatefulState {
 	final List<UITaskInstance> tasks;
-	final UIPlanInstance planInstance;
+	final UIPlanInstance uiPlan;
 
-	PlanInstanceCubitState({this.tasks, this.planInstance, DataSubmissionState submissionState}) : super.loaded(submissionState);
+	PlanInstanceCubitState({required this.tasks, required this.uiPlan, DataSubmissionState? submissionState}) : super.loaded(submissionState);
 
 	@override
-  StatefulState withSubmitState(DataSubmissionState submissionState) => PlanInstanceCubitState(tasks: tasks, planInstance: planInstance, submissionState: submissionState);
+  StatefulState withSubmitState(DataSubmissionState submissionState) => PlanInstanceCubitState(tasks: tasks, uiPlan: uiPlan, submissionState: submissionState);
 
   @override
-	List<Object> get props => super.props..addAll([tasks, planInstance]);
+	List<Object?> get props => super.props..addAll([tasks, uiPlan]);
 }

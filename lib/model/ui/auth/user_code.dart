@@ -7,7 +7,7 @@ extension UserCodeValidationErrorTextKey on UserCodeValidationError {
 		UserCodeValidationError.toShort: 'authentication.error.userCodeToShort',
 		UserCodeValidationError.toLong: 'authentication.error.userCodeToLong',
 		UserCodeValidationError.noSuchUser: 'authentication.error.noSuchUser',
-	}[this];
+	}[this]!;
 }
 
 class UserCode extends FormzInput<String, UserCodeValidationError> {
@@ -18,10 +18,10 @@ class UserCode extends FormzInput<String, UserCodeValidationError> {
 	const UserCode.dirty([String value = '', this.exists = true]) : super.dirty(value);
 
 	@override
-	UserCodeValidationError validator(String value) {
+	UserCodeValidationError? validator(String? value) {
 		if (!exists)
 			return UserCodeValidationError.noSuchUser;
-	  if (value.length == userCodeLength)
+	  if (value!.length == userCodeLength)
 	  	return null;
 	  return value.length < userCodeLength ? UserCodeValidationError.toShort : UserCodeValidationError.toLong;
 	}

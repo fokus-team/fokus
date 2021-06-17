@@ -1,46 +1,51 @@
-import 'package:date_utils/date_utils.dart' as du;
 import 'package:flutter/material.dart';
-import 'package:fokus/model/ui/app_page.dart';
-import 'package:intl/intl.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-import 'package:fokus/model/db/date/date.dart';
-import 'package:fokus/model/ui/user/ui_child.dart';
-import 'package:fokus/model/ui/plan/ui_plan.dart';
-
-import 'package:fokus/logic/common/calendar_cubit.dart';
-import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/ui/theme_config.dart';
-import 'package:fokus/utils/ui/calendar_utils.dart';
-import 'package:fokus/widgets/chips/attribute_chip.dart';
-import 'package:fokus/widgets/cards/item_card.dart';
-import 'package:fokus/widgets/segment.dart';
+import '../../logic/common/calendar_cubit.dart';
+import '../../model/db/date/date.dart';
+import '../../model/db/plan/plan.dart';
+import '../../model/ui/app_page.dart';
+import '../../services/app_locales.dart';
+import '../../utils/ui/calendar_utils.dart';
+import '../../utils/ui/theme_config.dart';
+import '../../widgets/cards/item_card.dart';
+import '../../widgets/chips/attribute_chip.dart';
+import '../../widgets/segment.dart';
 
 class ChildCalendarPage extends StatefulWidget {
 	@override
-	_ChildCalendarPageState createState() => new _ChildCalendarPageState();
+	_ChildCalendarPageState createState() => _ChildCalendarPageState();
 }
 
 class _ChildCalendarPageState extends State<ChildCalendarPage> with TickerProviderStateMixin {
 	static const String _pageKey = 'page.childSection.calendar';
-	AnimationController _animationController;
-	CalendarController _calendarController;
 
-	final Duration _animationDuration = Duration(milliseconds: 250);
+	final DateTime kNow = DateTime.now();
+	DateTime kFirstDay = DateTime(2000);
+	DateTime kLastDay = DateTime(2200);
+  DateTime _focusedDay = Date.now();
+  late DateTime _selectedDay;
+
+  final CalendarFormat _calendarFormat = CalendarFormat.month;
+  final RangeSelectionMode _rangeSelectionMode = RangeSelectionMode.toggledOff;
+	late ValueNotifier<List<Plan>> _selectedEvents;
+	final Color notAssignedPlanMarkerColor = Colors.grey[400]!;
 
 	@override
 	void initState() {
 		super.initState();
-		_calendarController = CalendarController();
-		_animationController = AnimationController(vsync: this, duration: _animationDuration);
-		_animationController.forward();
+		kFirstDay = DateTime(kNow.year, kNow.month - 6, kNow.day);
+		kLastDay = DateTime(kNow.year, kNow.month + 6, kNow.day);
+
+    _selectedDay = _focusedDay;
+		_selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay));
 	}
 
 	@override
 	void dispose() {
-		_calendarController.dispose();
-		_animationController.dispose();
+		_selectedEvents.dispose();
 		super.dispose();
 	}
 
@@ -61,7 +66,7 @@ class _ChildCalendarPageState extends State<ChildCalendarPage> with TickerProvid
 									builder: (context, state) {
 										if (state.children == null)
 											BlocProvider.of<CalendarCubit>(context).loadInitialData();
-										return _buildCalendar(state.events, state.children);
+										return _buildCalendar();
 									},
 								)
 							),
@@ -85,17 +90,17 @@ class _ChildCalendarPageState extends State<ChildCalendarPage> with TickerProvid
 					noElementsMessage: '$_pageKey.content.noPlansOnDateTitle',
 					noElementsIcon: Icons.description,
 					elements: [
-						if(state.events != null && state.events[state.day] != null)
-							for(UIPlan plan in state.events[state.day])
+						if(state.events != null && state.events![state.day] != null)
+							for(Plan plan in state.events![state.day]!)
 								ItemCard(
-									title: plan.name,
-									subtitle: plan.description(context),
+									title: plan.name!,
+									subtitle: plan.description,
 									onTapped: () => Navigator.of(context).pushNamed(AppPage.planDetails.name, arguments: plan.id),
 									chips: [
 										AttributeChip.withIcon(
 											icon: Icons.description,
 											color: AppColors.mainBackgroundColor,
-											content: AppLocales.of(context).translate('plans.tasks', {'NUM_TASKS': plan.taskCount})
+											content: AppLocales.of(context).translate('plans.tasks', {'NUM_TASKS': plan.tasks!.length})
 										)
 									]
 								)
@@ -105,46 +110,65 @@ class _ChildCalendarPageState extends State<ChildCalendarPage> with TickerProvid
 		);
 	}
 
-	TableCalendar _buildCalendar(Map<Date, List<UIPlan>> events, Map<UIChild, bool> children) {
-	  return buildCalendar(
-			controller: _calendarController, 
-			context: context,
-			events: events,
-			onDaySelected: onDayChanged,
-			onCalendarCreated: onCalendarCreated,
-			onVisibleDaysChanged: onMonthChanged,
-			builders: CalendarBuilders(
-				selectedDayBuilder: (context, date, _) =>
-          FadeTransition(
-            opacity: Tween(begin: 0.0, end: 1.0).animate(_animationController),
-            child: buildTableCalendarCell(date, AppColors.childBackgroundColor, isCellSelected: true)
-					),
-        todayDayBuilder: (context, date, _) => buildTableCalendarCell(date, Colors.transparent),
-				markersBuilder: (context, date, events, holidays) {
+  List<Plan> _getEventsForDay(DateTime day) {
+		var events = BlocProvider.of<CalendarCubit>(context).state.events;
+    return events != null && events[Date.fromDate(day)] != null ? events[Date.fromDate(day)]! : [];
+  }
+
+  void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
+    if (!isSameDay(_selectedDay, selectedDay)) {
+      setState(() {
+        _selectedDay = selectedDay;
+        _focusedDay = focusedDay;
+				_selectedEvents.value = _getEventsForDay(selectedDay);
+      });
+			BlocProvider.of<CalendarCubit>(context).dayChanged(Date.fromDate(selectedDay));
+    }
+  }
+
+	void _onPageChanged(DateTime focusedDay) {
+		setState(() {
+      _selectedDay = focusedDay;
+			_focusedDay = focusedDay;
+			_selectedEvents.value = _getEventsForDay(focusedDay);
+		});
+		BlocProvider.of<CalendarCubit>(context).dayChanged(Date.fromDate(focusedDay));
+		BlocProvider.of<CalendarCubit>(context).monthChanged(Date.fromDate(focusedDay));
+	}
+
+	TableCalendar _buildCalendar() {
+		return TableCalendar<Plan>(
+			firstDay: kFirstDay,
+			lastDay: kLastDay,
+			focusedDay: _focusedDay,
+			calendarFormat: _calendarFormat,
+			rangeSelectionMode: _rangeSelectionMode,
+			eventLoader: _getEventsForDay,
+			startingDayOfWeek: StartingDayOfWeek.monday,
+			calendarStyle: CalendarStyle(
+				outsideDaysVisible: false
+			),
+			headerStyle: HeaderStyle(
+				titleCentered: true,
+				formatButtonVisible: false
+			),
+			selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+			onDaySelected: _onDaySelected,
+			onPageChanged: _onPageChanged,
+			calendarBuilders: CalendarBuilders(
+				selectedBuilder: (context, date, _) => buildTableCalendarCell(date, AppColors.caregiverBackgroundColor, isCellSelected: true),
+				todayBuilder: (context, date, _) => buildTableCalendarCell(date, Colors.transparent),
+				markerBuilder: (context, date, events) {
 					final markers = <Widget>[];
 					if (events.isNotEmpty) {
-						List<Color> planMarkers = [];
+						var planMarkers = <Color>[];
 						events.forEach((plan) { planMarkers.add(AppColors.childButtonColor); });
 						markers.add(buildMarker(colorList: planMarkers, inPast: date.isBefore(Date.now())));
 					}
-					return markers;
+					return Wrap(children: markers);
 				}
 			)
 		);
-	}
-
-	void onDayChanged(DateTime day, List<dynamic> events, List<dynamic> holidays) {
-		BlocProvider.of<CalendarCubit>(context).dayChanged(Date.fromDate(day));
-		_animationController.forward(from: 0.0);
-	}
-
-	void onCalendarCreated(DateTime first, DateTime last, CalendarFormat format) {
-		BlocProvider.of<CalendarCubit>(context).monthChanged(Date.fromDate(_calendarController.focusedDay));
-	}
-
-	void onMonthChanged(DateTime first, DateTime last, CalendarFormat format) {
-		onCalendarCreated(first, last, format);
-		_calendarController.setSelectedDay(Date.fromDate(du.DateUtils.firstDayOfMonth(_calendarController.focusedDay)));
 	}
 
 }

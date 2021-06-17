@@ -5,5 +5,5 @@ extension RepeatabilityTypeName on RepeatabilityType {
 		RepeatabilityType.once: 'once',
 		RepeatabilityType.weekly: 'weekly',
 		RepeatabilityType.monthly: 'monthly',
-	}[this];
+	}[this]!;
 }

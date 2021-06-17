@@ -1,15 +1,16 @@
-import 'package:fokus/model/app_config_entry.dart';
-import 'package:fokus/services/app_config/app_config_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../model/app_config_entry.dart';
+import 'app_config_provider.dart';
+
 class AppSharedPreferencesProvider implements AppConfigProvider {
-	SharedPreferences _preferences;
+	late SharedPreferences _preferences;
 
 	@override
 	Future initialize() async => _preferences = await SharedPreferences.getInstance();
 
 	@override
-	String getString(AppConfigEntry entry) => _preferences.getString(entry.key);
+	String? getString(AppConfigEntry entry) => _preferences.getString(entry.key);
 
 	@override
 	void remove(AppConfigEntry entry) => _preferences.remove(entry.key);
@@ -21,16 +22,13 @@ class AppSharedPreferencesProvider implements AppConfigProvider {
   bool containsEntry(AppConfigEntry entry) => _preferences.containsKey(entry.key);
 
   @override
-  Set<AppConfigEntry> getEntries() => _preferences.getKeys().map((e) => AppConfigEntry.values.firstWhere((entry) => entry.key == e, orElse: () => null)).toSet();
-
-  @override
-  List<String> getStringList(AppConfigEntry entry) => _preferences.getStringList(entry.key);
+  List<String>? getStringList(AppConfigEntry entry) => _preferences.getStringList(entry.key);
 
   @override
   void setStringList(AppConfigEntry entry, List<String> list) => _preferences.setStringList(entry.key, list);
 
   @override
-  bool getBool(AppConfigEntry entry) => _preferences.getBool(entry.key);
+  bool? getBool(AppConfigEntry entry) => _preferences.getBool(entry.key);
 
   @override
   void setBool(AppConfigEntry entry, bool value) => _preferences.setBool(entry.key, value);

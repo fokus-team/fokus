@@ -1,66 +1,66 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:fokus/model/currency_type.dart';
-import 'package:fokus/model/ui/gamification/ui_currency.dart';
-import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/ui/app_paths.dart';
-import 'package:fokus/utils/ui/form_config.dart';
-import 'package:fokus/utils/ui/icon_sets.dart';
-import 'package:fokus/utils/ui/theme_config.dart';
-import 'package:fokus/widgets/buttons/bottom_sheet_confirm_button.dart';
 import 'package:smart_select/smart_select.dart';
+
+import '../../model/currency_type.dart';
+import '../../model/db/gamification/currency.dart';
+import '../../services/app_locales.dart';
+import '../../utils/ui/app_paths.dart';
+import '../../utils/ui/form_config.dart';
+import '../../utils/ui/icon_sets.dart';
+import '../../utils/ui/theme_config.dart';
+import '../buttons/bottom_sheet_confirm_button.dart';
 
 class PointPickerField extends StatefulWidget {
 	final TextEditingController controller;
-	final UICurrency pickedCurrency;
-	final List<UICurrency> currencies;
+	final Currency pickedCurrency;
+	final List<Currency> currencies;
 	final bool loading;
 	final bool canBeEmpty;
-	final int minPoints;
-	final int maxPoints;
+	final int? minPoints;
+	final int? maxPoints;
 
-	final Function(String) pointValueSetter;
-	final Function(UICurrency) pointCurrencySetter;
+	final void Function(String)? pointValueSetter;
+	final void Function(Currency)? pointCurrencySetter;
 
 	final String labelValueText;
 	final String helperValueText;
 	final String labelCurrencyText;
 
 	PointPickerField({
-		@required this.controller,
-		@required UICurrency pickedCurrency,
-		@required List<UICurrency> currencies,
+		required this.controller,
+		required Currency? pickedCurrency,
+		required List<Currency>? currencies,
 		this.loading = false,
 		this.canBeEmpty = true,
 		this.minPoints = 0,
 		this.maxPoints = 1000000,
 		this.pointValueSetter,
 		this.pointCurrencySetter,
-		@required this.labelValueText,
-		@required this.helperValueText,
-		@required this.labelCurrencyText
-	}) : pickedCurrency = pickedCurrency ?? UICurrency(type: CurrencyType.diamond), currencies = currencies ?? [];
+		required this.labelValueText,
+		required this.helperValueText,
+		required this.labelCurrencyText
+	}) : pickedCurrency = pickedCurrency ?? Currency(type: CurrencyType.diamond), currencies = currencies ?? [];
 
 	@override
-  State<StatefulWidget> createState() => new _PointPickerFieldState();
+  State<StatefulWidget> createState() => _PointPickerFieldState();
 
 }
 
 class _PointPickerFieldState extends State<PointPickerField> {
-	UICurrency pickedCurrency;
+	late Currency pickedCurrency;
 
 	@override
   void initState() {
-		pickedCurrency = UICurrency.from(widget.pickedCurrency);
+		pickedCurrency = widget.pickedCurrency.copyWith();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-		return SmartSelect<UICurrency>.single(
-			isLoading: widget.loading,
-			builder: (context, state, function) {
+		return SmartSelect<Currency>.single(
+			tileBuilder: (context, selectState) {
 				return Padding(
 					padding: EdgeInsets.only(top: 0.0, bottom: 0.0, left: 20.0, right: 16.0),
 					child: Row(
@@ -79,14 +79,14 @@ class _PointPickerFieldState extends State<PointPickerField> {
 											onPressed: () {
 												FocusScope.of(context).requestFocus(FocusNode());
 												widget.controller.clear();
-												widget.pointValueSetter(null);
+												widget.pointValueSetter!('');
 											},
 											icon: Icon(Icons.clear)
 										)
 									),
 									validator: (value) {
 										final range = [widget.minPoints ?? 0, widget.maxPoints ?? 1000000];
-										final int numValue = int.tryParse(value);
+										final numValue = int.tryParse(value!);
 										return ((!widget.canBeEmpty && numValue == null) || (numValue != null && (numValue < range[0] || numValue > range[1]))) ? 
 											AppLocales.of(context).translate('alert.genericRangeOverflowValue', {'A': range[0].toString(), 'B': range[1].toString()})
 											: null;
@@ -95,14 +95,14 @@ class _PointPickerFieldState extends State<PointPickerField> {
 									inputFormatters: <TextInputFormatter>[
 											FilteringTextInputFormatter.digitsOnly
 									],
-									onChanged: (val) => widget.pointValueSetter(val)
+									onChanged: (val) => widget.pointValueSetter!(val)
 								)
 							),
 							GestureDetector(
 								onTap: () {
 									if(!widget.loading && widget.currencies.length > 1) {
-										FocusManager.instance.primaryFocus.unfocus();
-										function(context);
+										FocusManager.instance.primaryFocus?.unfocus();
+										selectState.showModal();
 									}
 								},
 								child: Tooltip(
@@ -112,8 +112,8 @@ class _PointPickerFieldState extends State<PointPickerField> {
 											Padding(
 												padding: EdgeInsets.only(left: 10.0, top: 4.0),
 												child: CircleAvatar(
-													child: SvgPicture.asset(getIconPath(state.value != null ? state.value.type : CurrencyType.diamond), width: 28, fit: BoxFit.cover),
-													backgroundColor: AppColors.currencyColor[state.value != null ? state.value.type : CurrencyType.diamond].withAlpha(50)
+													child: SvgPicture.asset(getIconPath(selectState.selected?.value != null ? selectState.selected!.value!.type! : CurrencyType.diamond), width: 28, fit: BoxFit.cover),
+													backgroundColor: AppColors.currencyColor[selectState.selected?.value != null ? selectState.selected!.value!.type! : CurrencyType.diamond]!.withAlpha(50)
 												)
 											),
 											(widget.loading) ?
@@ -143,45 +143,47 @@ class _PointPickerFieldState extends State<PointPickerField> {
 				);
 			},
 			title: widget.labelCurrencyText,
-			value: widget.pickedCurrency,
-			options: [
-				for(UICurrency element in widget.currencies)
-					SmartSelectOption(
-						title: element.getName(context),
+			selectedValue: widget.pickedCurrency,
+			choiceItems: [
+				for(Currency element in widget.currencies)
+					S2Choice(
+						title: getCurrencyName(element),
 						value: element
 					)
 			],
-			choiceConfig: SmartSelectChoiceConfig(
-				builder: (item, checked, onChange) {
-					return RadioListTile<UICurrency>(
-						value: item.value,
-						groupValue: pickedCurrency,
-						onChanged: (val) {
-							onChange(item.value, !checked);
-							setState(() {
-							  pickedCurrency = item.value;
-							});
-						},
-						title: Row(
-							children: [
-								Padding(
-									padding: EdgeInsets.only(right: 6.0),
-									child: SvgPicture.asset(getIconPath(item.value.type), width: 30, fit: BoxFit.cover)
-								),
-								Text(item.value.getName(context), style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.currencyColor[item.value.type]))
-							]
-						)
-					);
-				}
+			choiceBuilder: (context, selectState, choice) {
+				return RadioListTile<Currency>(
+					value: choice.value,
+					groupValue: pickedCurrency,
+					onChanged: (val) {
+						choice.select!(!choice.selected);
+						setState(() {
+							pickedCurrency = choice.value;
+						});
+					},
+					title: Row(
+						children: [
+							Padding(
+								padding: EdgeInsets.only(right: 6.0),
+								child: SvgPicture.asset(getIconPath(choice.value.type!), width: 30, fit: BoxFit.cover)
+							),
+							Text(getCurrencyName(choice.value), style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.currencyColor[choice.value.type]))
+						]
+					)
+				);
+			},
+			modalType: S2ModalType.bottomSheet,
+			modalConfig: S2ModalConfig(
+				useConfirm: true
 			),
-			modalType: SmartSelectModalType.bottomSheet,
-			modalConfig: SmartSelectModalConfig(
-				useConfirmation: true,
-				confirmationBuilder: (context, callback) => ButtonSheetConfirmButton(callback: () => callback)
-			),
-			onChange: (val) => widget.pointCurrencySetter(val)
+			modalConfirmBuilder: (context, selectState) {
+				return ButtonSheetConfirmButton(callback: () => selectState.closeModal(confirmed: true));
+			},
+			onChange: (selected) => widget.pointCurrencySetter!(selected.value!)
 		);
   }
+  
+	String getCurrencyName(Currency currency) => (currency.type == CurrencyType.diamond ? AppLocales.instance.translate(currency.name!) : currency.name) ?? '';
 
   String getIconPath(CurrencyType type) => AssetType.currencies.getPath(type.index);
 }

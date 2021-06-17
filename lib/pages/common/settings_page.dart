@@ -1,30 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
-import 'package:fokus/model/ui/app_page.dart';
-import 'package:fokus/utils/ui/form_config.dart';
-import 'package:fokus/widgets/buttons/bottom_sheet_confirm_button.dart';
 import 'package:fokus_auth/fokus_auth.dart';
 import 'package:smart_select/smart_select.dart';
 
-import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
-import 'package:fokus/model/db/user/user_role.dart';
-import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/logic/common/settings/locale_cubit.dart';
-import 'package:fokus/utils/ui/theme_config.dart';
-import 'package:fokus/model/ui/user/ui_caregiver.dart';
-import 'package:fokus/utils/ui/dialog_utils.dart';
+import '../../logic/common/auth_bloc/authentication_bloc.dart';
+import '../../logic/common/settings/locale_cubit.dart';
+import '../../model/db/user/user_role.dart';
+import '../../model/ui/app_page.dart';
+import '../../services/app_locales.dart';
+import '../../utils/ui/dialog_utils.dart';
+import '../../utils/ui/form_config.dart';
+import '../../utils/ui/theme_config.dart';
+import '../../widgets/buttons/bottom_sheet_confirm_button.dart';
 
 class SettingsPage extends StatefulWidget {
 	@override
-	_SettingsPageState createState() => new _SettingsPageState();
+	_SettingsPageState createState() => _SettingsPageState();
 }
 
 class _SettingsPageState extends State<SettingsPage> {
 	static const String _pageKey = 'page.settings.content';
 
 	List<String> languages = [LocaleCubit.defaultLanguageKey, ...AppLocalesDelegate.supportedLocales.map((locale) => '$locale')];
-	String _pickedLanguage;
+	String? _pickedLanguage;
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +32,7 @@ class _SettingsPageState extends State<SettingsPage> {
     var isCurrentUserCaregiver = authenticationBloc.state.user?.role == UserRole.caregiver;
 
 		// Loading current locale (don't work with "default" option)
-    _pickedLanguage = _pickedLanguage ?? AppLocales.of(context).locale.languageCode;
+    _pickedLanguage = _pickedLanguage ?? AppLocales.of(context).locale!.languageCode;
 
     return Scaffold(
       appBar: AppBar(
@@ -86,7 +85,7 @@ class _SettingsPageState extends State<SettingsPage> {
 		];
 	}
 
-	Widget _buildBasicListTile({String title, String subtitle, IconData icon, Color color, Function onTap}) {
+	Widget _buildBasicListTile({required String title, String? subtitle, required IconData icon, Color? color, required void Function() onTap}) {
 		return ListTile(
 			title: Text(title, style: TextStyle(color: color ?? Colors.black)),
 			subtitle: subtitle != null ? Text(subtitle) : null,
@@ -103,14 +102,14 @@ class _SettingsPageState extends State<SettingsPage> {
 	}
 
 	List<Widget> _getProfileFields() {
-  	var user = BlocProvider.of<AuthenticationBloc>(context).state.user as UICaregiver;
+  	var state = BlocProvider.of<AuthenticationBloc>(context).state;
 		return [
 			_buildBasicListTile(
 					title: AppLocales.of(context).translate('$_pageKey.profile.editNameLabel'),
 					icon: Icons.edit,
-					onTap: () => showNameEditDialog(context, user)
+					onTap: () => showNameEditDialog(context, state.user!)
 			),
-			if (user.authMethod == AuthMethod.email)
+			if (state.authMethod == AuthMethod.email)
 				_buildBasicListTile(
 					title: AppLocales.of(context).translate('$_pageKey.profile.changePasswordLabel'),
 					icon: Icons.lock,
@@ -121,7 +120,7 @@ class _SettingsPageState extends State<SettingsPage> {
 				subtitle: AppLocales.of(context).translate('$_pageKey.profile.deleteAccountHint'),
 				icon: Icons.delete,
 				color: Colors.red,
-				onTap: () => showAccountDeleteDialog(context, user)
+				onTap: () => showAccountDeleteDialog(context, state.user!)
 			)
 		];
 	}
@@ -144,25 +143,32 @@ class _SettingsPageState extends State<SettingsPage> {
 			BlocBuilder<LocaleCubit, LocaleState>(
 				builder: (context, state) {
 					return SmartSelect.single(
-						value: BlocProvider.of<LocaleCubit>(context).state.languageKey,
+						selectedValue: BlocProvider.of<LocaleCubit>(context).state.languageKey,
 						title: AppLocales.of(context).translate('$_pageKey.appSettings.changeLanguageLabel'),
-						modalType: SmartSelectModalType.bottomSheet,
-						modalConfig: SmartSelectModalConfig(
-							useConfirmation: true,
-							confirmationBuilder: (context, callback) => ButtonSheetConfirmButton(callback: () => callback)
+						modalType: S2ModalType.bottomSheet,
+						modalConfig: S2ModalConfig(
+							useConfirm: true
 						),
-						options: [
+						modalConfirmBuilder: (context, selectState) {
+							return ButtonSheetConfirmButton(callback: () => selectState.closeModal(confirmed: true));
+						},
+						choiceItems: [
 							for(String lang in languages)
-								SmartSelectOption(
+								S2Choice(
 									title: AppLocales.of(context).translate('$_pageKey.appSettings.languages.$lang'),
 									value: lang
 								)
 						],
-						leading: Padding(
-							padding: EdgeInsets.only(left: 8.0),
-							child: Icon(Icons.language)
-						),
-						onChange: (langKey) => _setLanguage(langKey),
+						tileBuilder: (context, state) {
+            	return S2Tile.fromState(
+              	state,
+								leading: Padding(
+									padding: EdgeInsets.only(left: 8.0),
+									child: Icon(Icons.language)
+								)
+							);
+						},
+						onChange: (selected) => _setLanguage(selected.value as String),
 					);
 				}
 			)

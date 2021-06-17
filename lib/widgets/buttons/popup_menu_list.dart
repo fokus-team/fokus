@@ -1,34 +1,34 @@
 import 'package:flutter/material.dart';
-import 'package:fokus/model/ui/ui_button.dart';
-import 'package:fokus/services/app_locales.dart';
+import '../../model/ui/ui_button.dart';
+import '../../services/app_locales.dart';
 
 class PopupMenuList extends StatelessWidget {
   final List<UIButton> items;
 	final bool lightTheme;
 	final bool includeDivider;
 	final IconData customIcon;
-	final String tooltip;
+	final String? tooltip;
 
-	PopupMenuList({this.items, this.lightTheme = false, this.includeDivider = false, this.customIcon = Icons.more_vert, this.tooltip});
+	PopupMenuList({required this.items, this.lightTheme = false, this.includeDivider = false, this.customIcon = Icons.more_vert, this.tooltip});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-			customBorder: new CircleBorder(),
-			child: PopupMenuButton(
+			customBorder: CircleBorder(),
+			child: PopupMenuButton<void Function()>(
 				tooltip: tooltip,
-				onSelected: (Function a) => a(),
+				onSelected: (action) => action(),
 				icon: lightTheme ? Icon(customIcon, size: 26.0, color: Colors.white,) : Icon(customIcon, size: 26.0, color: Colors.black),
 				itemBuilder: (BuildContext context) => _menuItemFactory(items,  context),
 			)
 		);
   }
 
-  List<PopupMenuEntry<Function>> _menuItemFactory(List<UIButton> items, context) {
-		List<PopupMenuEntry<Function>> popupMenuEntries = [];
+  List<PopupMenuEntry<void Function()>> _menuItemFactory(List<UIButton> items, context) {
+		var popupMenuEntries = <PopupMenuEntry<void Function()>>[];
   	for (var item in items) {
 			popupMenuEntries.add(
-				PopupMenuItem(
+				PopupMenuItem<void Function()>(
 					value: item.action,
 					child: Row(
 						children: <Widget>[

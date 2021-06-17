@@ -1,19 +1,19 @@
 import 'package:fokus_auth/fokus_auth.dart';
 import 'package:formz/formz.dart';
 
-import 'package:fokus/logic/caregiver/auth/caregiver_auth_cubit_base.dart';
-import 'package:fokus/model/ui/auth/email.dart';
-import 'package:fokus/model/ui/auth/password.dart';
-import 'package:fokus/logic/caregiver/auth/caregiver_auth_state_base.dart';
+import '../../../../model/ui/auth/email.dart';
+import '../../../../model/ui/auth/password.dart';
+import '../caregiver_auth_cubit_base.dart';
+import '../caregiver_auth_state_base.dart';
 
 part 'caregiver_sign_in_state.dart';
 
 
 class CaregiverSignInCubit extends CaregiverAuthCubitBase<CaregiverSignInState> {
-  CaregiverSignInCubit(String email) : super(CaregiverSignInState(email: Email.pure(email ?? '')));
+  CaregiverSignInCubit(String? email) : super(CaregiverSignInState(email: Email.pure(email ?? '')));
 
 	Future<void> logInWithCredentials() async {
-		if (this.state.status != FormzStatus.pure || !_validateFields())
+		if (state.status != FormzStatus.pure || !_validateFields())
 			return;
 		emit(state.copyWith(status: FormzStatus.submissionInProgress, authMethod: AuthMethod.email));
 		try {
@@ -47,7 +47,7 @@ class CaregiverSignInCubit extends CaregiverAuthCubitBase<CaregiverSignInState> 
 	  return true;
   }
 
-  Future<VerificationAttemptOutcome> resendVerificationEmail() async {
+  Future<VerificationAttemptOutcome?> resendVerificationEmail() async {
     if (!_validateFields())
       return null;
     try {

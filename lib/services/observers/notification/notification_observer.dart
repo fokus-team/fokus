@@ -1,5 +1,5 @@
-import 'package:fokus/model/notification/notification_refresh_info.dart';
-import 'package:fokus/model/notification/notification_type.dart';
+import '../../../model/notification/notification_refresh_info.dart';
+import '../../../model/notification/notification_type.dart';
 
 mixin NotificationObserver {
 	List<NotificationType> notificationTypeSubscription() => [];

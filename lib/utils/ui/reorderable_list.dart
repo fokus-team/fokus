@@ -3,8 +3,8 @@ import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorder
 import 'theme_config.dart';
 
 
-Widget buildReorderableList<Type>({Widget header, Widget Function(Type) child, List<Type> items, Key Function(Type) getKey,
-		void Function(Type, int) onReorderStarted, void Function(Type, int, int, List<Type>) onReorderFinished}) {
+Widget buildReorderableList<Type extends Object>({required Widget header, required Widget Function(Type) child, required List<Type> items, required Key Function(Type) getKey,
+		required void Function(Type, int?) onReorderStarted, required void Function(Type, int?, int, List<Type>) onReorderFinished}) {
 	return ImplicitlyAnimatedReorderableList<Type>(
 		shrinkWrap: true,
 		physics: NeverScrollableScrollPhysics(),
@@ -14,7 +14,7 @@ Widget buildReorderableList<Type>({Widget header, Widget Function(Type) child, L
 		onReorderFinished: onReorderFinished,
 		insertDuration: AnimationsProperties.insertDuration,
 		removeDuration: AnimationsProperties.removeDuration,
-		dragDuration: AnimationsProperties.dragDuration,
+		reorderDuration: AnimationsProperties.dragDuration,
 		itemBuilder: (_context, itemAnimation, item, index) {
 			return Reorderable(
 				key: getKey(item),

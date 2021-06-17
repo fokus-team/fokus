@@ -1,85 +1,91 @@
 import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart';
-
-import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
-import 'package:fokus/model/ui/plan/ui_plan.dart';
-import 'package:fokus/model/ui/plan/ui_plan_instance.dart';
-import 'package:fokus/model/ui/user/ui_child.dart';
-import 'package:fokus/model/ui/user/ui_user.dart';
-import 'package:fokus/services/data/data_repository.dart';
-import 'package:fokus/model/db/plan/plan.dart';
-import 'package:fokus/model/db/plan/task_status.dart';
-import 'package:fokus/services/plan_keeper_service.dart';
-import 'package:fokus/services/ui_data_aggregator.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
+import '../../../model/db/date/date.dart';
+import '../../../model/db/plan/plan.dart';
+import '../../../model/db/plan/task_status.dart';
+import '../../../model/db/user/child.dart';
+import '../../../model/ui/plan/ui_plan_instance.dart';
+import '../../../services/data/data_repository.dart';
+import '../../../services/plan_keeper_service.dart';
+import '../../../services/ui_data_aggregator.dart';
+import '../../common/stateful/stateful_cubit.dart';
+
 class DashboardPlansCubit extends StatefulCubit {
-	final ActiveUserFunction _activeUser;
-	UIChild child;
-	List<Plan> _availablePlans;
+	late Child child;
+	late List<Plan> _availablePlans;
 	
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final UIDataAggregator _dataAggregator = GetIt.I<UIDataAggregator>();
 	final PlanKeeperService _planKeeperService = GetIt.I<PlanKeeperService>();
 	
-  DashboardPlansCubit(this._activeUser, ModalRoute pageRoute) : super(pageRoute, options: [StatefulOption.noAutoLoading, StatefulOption.resetSubmissionState]);
+  DashboardPlansCubit(ModalRoute pageRoute) : super(pageRoute, options: [StatefulOption.noAutoLoading, StatefulOption.resetSubmissionState]);
 
   @override
   Future doLoadData() async {
-	  var activeUser = _activeUser();
-	  var planInstances = (await _dataRepository.getPlanInstances(childIDs: [child.id], fields: ['_id'])).map((plan) => plan.id).toList();
+	  var planInstances = (await _dataRepository.getPlanInstances(childIDs: [child.id!], fields: ['_id'])).map((plan) => plan.id!).toList();
 	  var data = await Future.wait([
-		  _dataAggregator.loadTodaysPlanInstances(childId: child.id),
+		  _dataAggregator.loadTodaysPlanInstances(childId: child.id!),
 		  _dataRepository.countTaskInstances(planInstancesId: planInstances, isCompleted: true, state: TaskState.notEvaluated),
-		  _dataRepository.countPlans(caregiverId: activeUser.id),
-		  _dataRepository.getPlans(caregiverId: activeUser.id),
+		  _dataRepository.countPlans(caregiverId: activeUser!.id),
+		  _dataRepository.getPlans(caregiverId: activeUser!.id),
 	  ]);
-	  _availablePlans = data[3];
-	  var availablePlans = _availablePlans.map((plan) => UIPlan.fromDBModel(plan)).toList();
+	  _availablePlans = (data[3] as List<Plan>).where((plan) {
+	    var toDate = plan.repeatability!.range?.to;
+	    return toDate == null || toDate >= Date.now();
+	  }).toList();
 	  emit(DashboardPlansState(
-		  childPlans: data[0],
-		  availablePlans: availablePlans,
+		  childPlans: data[0] as List<UIPlanInstance>,
+		  availablePlans: _availablePlans,
 		  unratedTasks: (data[1] as int) > 0,
 		  noPlansAdded: (data[2] as int) == 0
 	  ));
   }
 
-	Future assignPlans(List<ObjectId> ids) async {
+	Future assignPlans(List<ObjectId?> ids) async {
 		if (!beginSubmit())
 			return;
-		DashboardPlansState tabState = state;
-		var filterAssigned = (bool Function(UIPlan) condition) => tabState.availablePlans.where(condition).map((plan) => plan.id).toList();
-		var assignedIds = filterAssigned((plan) => ids.contains(plan.id) && !plan.assignedTo.contains(child.id));
-		var unassignedIds = filterAssigned((plan) => !ids.contains(plan.id) && plan.assignedTo.contains(child.id));
-		var assignedPlans = _availablePlans.where((plan) => assignedIds.contains(plan.id)).toList()..forEach((plan) => plan.assignedTo.add(child.id));
+		var tabState = state as DashboardPlansState;
+		var childID = child.id!;
+		filterAssigned(bool Function(Plan) condition) => tabState.availablePlans.where(condition).map((plan) => plan.id!).toList();
+		var assignedIds = filterAssigned((plan) => ids.contains(plan.id) && !plan.assignedTo!.contains(childID));
+		var unassignedIds = filterAssigned((plan) => !ids.contains(plan.id) && plan.assignedTo!.contains(childID));
+		var assignedPlans = _availablePlans.where((plan) => assignedIds.contains(plan.id)).toList()..forEach((plan) => plan.assignedTo!.add(childID));
 		var results = await Future.wait([
-			_dataRepository.updatePlanFields(assignedIds, assign: child.id),
-			_dataRepository.updatePlanFields(unassignedIds, unassign: child.id),
-			_planKeeperService.createPlansForToday(assignedPlans, [child.id])
+			_dataRepository.updatePlanFields(assignedIds, assign: childID),
+			_dataRepository.updatePlanFields(unassignedIds, unassign: childID),
+			_planKeeperService.createPlansForToday(assignedPlans, [childID])
 		]);
-		var updateAssigned = (UIPlan plan) {
-			var assignedTo = List.of(plan.assignedTo);
+		updateAssigned(Plan plan) {
+			var assignedTo = List.of(plan.assignedTo!);
 			if (assignedIds.contains(plan.id))
-				assignedTo.add(child.id);
+				assignedTo.add(childID);
 			else if (unassignedIds.contains(plan.id))
-				assignedTo.remove(child.id);
+				assignedTo.remove(childID);
 			return assignedTo;
 		};
 		var newPlans = tabState.availablePlans.map((plan) => plan.copyWith(assignedTo: updateAssigned(plan))).toList();
-		List<UIPlanInstance> childPlans = List.of(tabState.childPlans)..addAll(await _dataAggregator.getUIPlanInstances(plans: assignedPlans, instances: results[2]));
+		var childPlans = List<UIPlanInstance>.of(tabState.childPlans)..addAll(await _dataAggregator.getUIPlanInstances(plans: assignedPlans, instances: results[2]));
 		emit(tabState.copyWith(availablePlans: newPlans, childPlans: childPlans, submissionState: DataSubmissionState.submissionSuccess));
 	}
 }
 
 class DashboardPlansState extends StatefulState {
 	final List<UIPlanInstance> childPlans;
-	final List<UIPlan> availablePlans;
+	final List<Plan> availablePlans;
 	final bool noPlansAdded;
 	final bool unratedTasks;
 
-	DashboardPlansState({this.childPlans, this.availablePlans, this.noPlansAdded, this.unratedTasks, DataSubmissionState submissionState}) : super.loaded(submissionState);
+	DashboardPlansState({
+		required this.childPlans,
+		required this.availablePlans,
+		required this.noPlansAdded,
+		required this.unratedTasks,
+		DataSubmissionState? submissionState,
+	}) : super.loaded(submissionState);
 
-	DashboardPlansState copyWith({List<UIPlan> availablePlans, List<UIPlanInstance> childPlans, DataSubmissionState submissionState}) {
+	DashboardPlansState copyWith({List<Plan>? availablePlans, List<UIPlanInstance>? childPlans, DataSubmissionState? submissionState}) {
 		return DashboardPlansState(
 			childPlans: childPlans ?? this.childPlans,
 			availablePlans: availablePlans ?? this.availablePlans,
@@ -93,5 +99,5 @@ class DashboardPlansState extends StatefulState {
   StatefulState withSubmitState(DataSubmissionState submissionState) => copyWith(submissionState: submissionState);
 
   @override
-	List<Object> get props => super.props..addAll([childPlans, availablePlans, noPlansAdded, unratedTasks]);
+	List<Object?> get props => super.props..addAll([childPlans, availablePlans, noPlansAdded, unratedTasks]);
 }

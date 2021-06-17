@@ -2,32 +2,32 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import 'package:fokus/logic/child/child_rewards_cubit.dart';
-import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
-import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
-import 'package:fokus/model/ui/gamification/ui_reward.dart';
-import 'package:fokus/model/ui/ui_button.dart';
-import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/ui/app_paths.dart';
-import 'package:fokus/utils/ui/icon_sets.dart';
-import 'package:fokus/utils/ui/theme_config.dart';
-import 'package:fokus/widgets/buttons/rounded_button.dart';
-import 'package:fokus/widgets/chips/attribute_chip.dart';
-import 'package:fokus/model/db/user/user_role.dart';
+import '../../logic/child/child_rewards_cubit.dart';
+import '../../logic/common/auth_bloc/authentication_bloc.dart';
+import '../../logic/common/stateful/stateful_cubit.dart';
+import '../../model/db/gamification/reward.dart';
+import '../../model/db/user/user_role.dart';
+import '../../model/ui/ui_button.dart';
+import '../../services/app_locales.dart';
+import '../../utils/ui/app_paths.dart';
+import '../../utils/ui/icon_sets.dart';
+import '../../utils/ui/theme_config.dart';
+import '../buttons/rounded_button.dart';
+import '../chips/attribute_chip.dart';
 
 class RewardDialog extends StatefulWidget {
-	final UIReward reward;
-	final Function claimFeedback;
+	final Reward reward;
+	final void Function()? claimFeedback;
 
-	RewardDialog({@required this.reward, this.claimFeedback});
+	RewardDialog({required this.reward, this.claimFeedback});
 
 	@override
-	_RewardDialogState createState() => new _RewardDialogState();
+	_RewardDialogState createState() => _RewardDialogState();
 }
 
 class _RewardDialogState extends State<RewardDialog> with SingleTickerProviderStateMixin {
   static const String _pageKey = 'page.childSection.rewards.content';
-	AnimationController _rotationController;
+	late AnimationController _rotationController;
 
 	@override
 	void initState() {
@@ -44,7 +44,7 @@ class _RewardDialogState extends State<RewardDialog> with SingleTickerProviderSt
 
   @override
   Widget build(BuildContext context) {
-		var userRole = context.watch<AuthenticationBloc>().state.user.role;
+		var userRole = context.watch<AuthenticationBloc>().state.user?.role;
 		return Dialog(
 	    insetPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
 	    child: SingleChildScrollView(
@@ -75,7 +75,7 @@ class _RewardDialogState extends State<RewardDialog> with SingleTickerProviderSt
 	              ]
 	            ),
 	            Text(
-	              widget.reward.name,
+	              widget.reward.name!,
 	              style: Theme.of(context).textTheme.headline1,
 	              textAlign: TextAlign.center
 	            ),
@@ -86,13 +86,13 @@ class _RewardDialogState extends State<RewardDialog> with SingleTickerProviderSt
 	              spacing: 2.0,
 	              children: [
 	                Text(
-	                  AppLocales.of(context).translate('rewards.claimCostLabel') + ': ',
+	                  '${AppLocales.of(context).translate('rewards.claimCostLabel')}: ',
 	                  style: TextStyle(color: AppColors.mediumTextColor)
 	                ),
 	                AttributeChip.withCurrency(
-	                  currencyType: widget.reward.cost.type,
-	                  content: widget.reward.cost.quantity.toString(),
-	                  tooltip: widget.reward.cost.title
+	                  currencyType: widget.reward.cost!.type!,
+	                  content: widget.reward.cost!.quantity.toString(),
+	                  tooltip: widget.reward.cost!.name
 	                )
 	              ]
 	            ),

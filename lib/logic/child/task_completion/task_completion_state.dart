@@ -5,33 +5,33 @@ enum TaskCompletionStateType {
 }
 
 class TaskCompletionState extends StatefulState {
-	final UITaskInstance taskInstance;
-	final UIPlanInstance planInstance;
-	final TaskCompletionStateType current;
+	final UITaskInstance? uiTask;
+	final UIPlanInstance uiPlan;
+	final TaskCompletionStateType? current;
 
-	TaskCompletionState({this.taskInstance, this.planInstance, this.current, DataLoadingState loadingState, DataSubmissionState submissionState}) :
+	TaskCompletionState({this.uiTask, required this.uiPlan, this.current, DataLoadingState? loadingState, DataSubmissionState? submissionState}) :
 				super(loadingState: loadingState, submissionState: submissionState);
-	TaskCompletionState.inProgress({this.taskInstance, this.planInstance, DataSubmissionState submissionState}) :
-				this.current = TaskCompletionStateType.inProgress, super.loaded(submissionState);
-	TaskCompletionState.inBreak({this.taskInstance, this.planInstance, DataSubmissionState submissionState}) :
-				this.current = TaskCompletionStateType.inBreak, super.loaded(submissionState);
-	TaskCompletionState.finished({this.taskInstance, this.planInstance, DataSubmissionState submissionState}) :
-				this.current = TaskCompletionStateType.finished, super.loaded(submissionState);
-	TaskCompletionState.discarded({this.taskInstance, this.planInstance, DataSubmissionState submissionState}) :
-				this.current = TaskCompletionStateType.discarded, super.loaded(submissionState);
+	TaskCompletionState.inProgress({this.uiTask, required this.uiPlan, DataSubmissionState? submissionState}) :
+				current = TaskCompletionStateType.inProgress, super.loaded(submissionState);
+	TaskCompletionState.inBreak({this.uiTask, required this.uiPlan, DataSubmissionState? submissionState}) :
+				current = TaskCompletionStateType.inBreak, super.loaded(submissionState);
+	TaskCompletionState.finished({this.uiTask, required this.uiPlan, DataSubmissionState? submissionState}) :
+				current = TaskCompletionStateType.finished, super.loaded(submissionState);
+	TaskCompletionState.discarded({this.uiTask, required this.uiPlan, DataSubmissionState? submissionState}) :
+				current = TaskCompletionStateType.discarded, super.loaded(submissionState);
 
-	TaskCompletionState copyWith({UITaskInstance taskInstance, UIPlanInstance planInstance,
-			TaskCompletionStateType current, DataLoadingState loadingState, DataSubmissionState submissionState}) {
+	TaskCompletionState copyWith({UITaskInstance? taskInstance, UIPlanInstance? planInstance,
+			TaskCompletionStateType? current, DataLoadingState? loadingState, DataSubmissionState? submissionState}) {
 		return TaskCompletionState(
-			taskInstance: taskInstance ?? this.taskInstance,
-			planInstance: planInstance ?? this.planInstance,
+			uiTask: taskInstance ?? uiTask,
+			uiPlan: planInstance ?? uiPlan,
 			current: current ?? this.current,
 			loadingState: loadingState ?? this.loadingState,
 			submissionState: submissionState ?? this.submissionState
 		);
 	}
 
-	TaskCompletionState copyWithSubmitted({UITaskInstance taskInstance, UIPlanInstance planInstance, TaskCompletionStateType current}) =>
+	TaskCompletionState copyWithSubmitted({UITaskInstance? taskInstance, UIPlanInstance? planInstance, TaskCompletionStateType? current}) =>
 			copyWith(taskInstance: taskInstance, planInstance: planInstance, current: current, submissionState: DataSubmissionState.submissionSuccess);
 
 	@override
@@ -41,5 +41,5 @@ class TaskCompletionState extends StatefulState {
   StatefulState withSubmitState(DataSubmissionState submissionState) => copyWith(submissionState: submissionState);
 
   @override
-  List<Object> get props => super.props..addAll([this.taskInstance, this.planInstance, this.current]);
+  List<Object?> get props => super.props..addAll([uiTask, uiPlan, current]);
 }

@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/ui/theme_config.dart';
 import 'package:lottie/lottie.dart';
 import 'package:package_info/package_info.dart';
-import 'package:fokus/model/ui/external_url.dart';
+
+import '../../model/ui/external_url.dart';
+import '../../services/app_locales.dart';
+import '../../utils/ui/theme_config.dart';
 
 class AboutAppDialog extends StatefulWidget {
 	@override
-	_AboutAppDialogState createState() => new _AboutAppDialogState();
+	_AboutAppDialogState createState() => _AboutAppDialogState();
 }
 
 class _AboutAppDialogState extends State<AboutAppDialog> {
 	final String _settingsKey = 'page.settings.content.appInfo.about';
 
-	PackageInfo _packageInfo;
+	PackageInfo? _packageInfo;
 	final String creators = 'Stanisław Góra,\nMateusz Janicki,\nMikołaj Mirko';
 
 	@override
@@ -23,7 +24,7 @@ class _AboutAppDialogState extends State<AboutAppDialog> {
 	}
 
   Future<void> _initPackageInfo() async {
-    final PackageInfo info = await PackageInfo.fromPlatform();
+    final PackageInfo? info = await PackageInfo.fromPlatform();
     setState(() {
       _packageInfo = info;
     });
@@ -45,12 +46,12 @@ class _AboutAppDialogState extends State<AboutAppDialog> {
 										child: Center(child: Lottie.asset('assets/animation/sunflower.json', width: 140.0))
 									),
 									Text(
-										_packageInfo.appName ?? AppLocales.of(context).translate('fokus'),
+										_packageInfo?.appName ?? AppLocales.of(context).translate('fokus'),
 										style: Theme.of(context).textTheme.headline1,
 										textAlign: TextAlign.center,
 									),
 									Text(
-										'${AppLocales.of(context).translate('$_settingsKey.version')} ${_packageInfo.version ?? ''}',
+										'${AppLocales.of(context).translate('$_settingsKey.version')} ${_packageInfo?.version ?? ''}',
 										style: Theme.of(context).textTheme.caption,
 										textAlign: TextAlign.center,
 									),
@@ -64,7 +65,7 @@ class _AboutAppDialogState extends State<AboutAppDialog> {
 									Padding(
 										padding: EdgeInsets.only(bottom: 20.0),
 										child: Text(
-											AppLocales.of(context).translate('$_settingsKey.creators') + ':\n' + creators,
+											'${AppLocales.of(context).translate('$_settingsKey.creators')}:\n$creators',
 											style: TextStyle().copyWith(fontStyle: FontStyle.italic),
 											textAlign: TextAlign.center,
 										)
@@ -105,8 +106,8 @@ class _AboutAppDialogState extends State<AboutAppDialog> {
 						child: Row(
 							mainAxisAlignment: MainAxisAlignment.spaceBetween,
 							children: [
-								FlatButton(
-									textColor: AppColors.caregiverBackgroundColor,
+								TextButton(
+									style: TextButton.styleFrom(primary: AppColors.caregiverBackgroundColor),
 									child: Text(AppLocales.of(context).translate('$_settingsKey.licences')),
 									onPressed: () => showLicensePage(
 										context: context,
@@ -114,8 +115,10 @@ class _AboutAppDialogState extends State<AboutAppDialog> {
 										applicationIcon: Image.asset('assets/image/sunflower_logo.png', height: 64)
 									),
 								),
-								FlatButton(
-									textColor: AppColors.caregiverBackgroundColor,
+								TextButton(
+									style: TextButton.styleFrom(
+										primary: AppColors.caregiverBackgroundColor
+									),
 									child: Text(AppLocales.of(context).translate('actions.close')),
 									onPressed: () => Navigator.of(context).pop(),
 								)

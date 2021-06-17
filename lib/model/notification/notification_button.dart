@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import '../../utils/definitions.dart';
 import 'notification_text.dart';
 
 enum NotificationButton {
@@ -12,13 +13,13 @@ extension NotificationButtonInfo on NotificationButton {
 	String get action => const {
 		NotificationButton.rate: 'rate',
 		NotificationButton.view: 'view',
-	}[this];
+	}[this]!;
 	SimpleNotificationText get name => const {
 		NotificationButton.rate: SimpleNotificationText.appBased('$_key.rate'),
 		NotificationButton.view: SimpleNotificationText.appBased('$_key.view'),
-	}[this];
+	}[this]!;
 
-	Map<String, dynamic> toJson() => {
+	Json toJson() => {
 		'id': action,
 		'text': json.encode(name.getTranslations())
 	};

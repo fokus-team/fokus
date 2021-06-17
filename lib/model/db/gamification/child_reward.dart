@@ -1,38 +1,36 @@
-import 'package:fokus/model/db/date/time_date.dart';
-import 'package:fokus/model/db/gamification/points.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
-class ChildReward {
-	ObjectId id;
-	String name;
-  Points cost;
-  TimeDate date;
-	int icon;
+import '../../../utils/definitions.dart';
+import '../date/time_date.dart';
+import 'points.dart';
+import 'reward.dart';
 
-  ChildReward({this.id, this.name, this.cost, this.date, this.icon});
+class ChildReward extends Reward {
+  final TimeDate? date;
 
-  factory ChildReward.fromJson(Map<String, dynamic> json) {
-    return json != null ? ChildReward(
-      id: json['_id'],
-      name: json['name'],
-      cost: Points.fromJson(json['cost']),
-      date: TimeDate.parseDBDate(json['date']),
-      icon: json['icon'],
-    ) : null;
-  }
+  ChildReward({ObjectId? id, String? name, Points? cost, this.date, int? icon}) : super(id: id, name: name, cost: cost, icon: icon);
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.id != null)
-      data['_id'] = this.id;
-    if (this.name != null)
-      data['name'] = this.name;
-    if (this.cost != null)
-      data['cost'] = this.cost.toJson();
-    if (this.date != null)
-      data['date'] = this.date.toDBDate();
-    if (this.icon != null)
-      data['icon'] = this.icon;
+  ChildReward.fromJson(Json json) : date = TimeDate.parseDBDate(json['date']), super.fromJson(json);
+
+  @override
+  Json toJson() {
+	  final data = super.toJson();
+    if (date != null)
+      data['date'] = date!.toDBDate();
     return data;
   }
+
+	@override
+  ChildReward copyWith({String? name, int? limit, Points? cost, int? icon, ObjectId? createdBy, ObjectId? id, TimeDate? date}) {
+		return ChildReward(
+				name: name ?? this.name,
+				cost: cost ?? this.cost,
+				icon: icon ?? this.icon,
+				id: id ?? this.id,
+				date: date ?? this.date
+		);
+	}
+
+	@override
+	List<Object?> get props => super.props..add(date);
 }

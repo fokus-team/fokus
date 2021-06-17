@@ -9,7 +9,7 @@ enum BadgeAssetLabel { praise, medal, trophy }
 class GraphicAsset<GraphicLabel> {
 	final String filename;
 	final GraphicLabel label;
-	final Color color;
+	final Color? color;
 	
 	GraphicAsset(this.filename, this.label, [this.color]);
 }

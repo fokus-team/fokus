@@ -3,12 +3,12 @@ import 'dart:ui';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
-import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
-import 'package:fokus/services/data/data_repository.dart';
 import 'package:get_it/get_it.dart';
 
-import 'package:fokus/model/ui/user/ui_user.dart';
-import 'package:fokus/services/locale_provider.dart';
+import '../../../services/data/data_repository.dart';
+import '../../../services/locale_service.dart';
+import '../../../utils/definitions.dart';
+import '../auth_bloc/authentication_bloc.dart';
 
 class LocaleCubit extends Cubit<LocaleState> {
 	final ActiveUserFunction _activeUser;
@@ -18,22 +18,22 @@ class LocaleCubit extends Cubit<LocaleState> {
 	final LocaleService _localeProvider = GetIt.I<LocaleService>();
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 
-  LocaleCubit(this._activeUser, this._authenticationBloc) : super(LocaleState(_getLocaleCode(_activeUser()?.locale)));
+  LocaleCubit(this._activeUser, this._authenticationBloc) : super(LocaleState(_getLocaleCode(_activeUser().locale)));
 
-  void setLocale({Locale locale, bool setDefault = false}) {
+  void setLocale({Locale? locale, bool setDefault = false}) {
   	var activeUser = _activeUser();
 	  if (setDefault) {
 		  locale = LocaleService.userAwareLocaleSelector();
-		  _dataRepository.updateUser(activeUser.id, locale: '');
+		  _dataRepository.updateUser(activeUser.id!, locale: '');
 	  } else
-		  _dataRepository.updateUser(activeUser.id, locale: '$locale');
+		  _dataRepository.updateUser(activeUser.id!, locale: '$locale');
 	  var userLocale = setDefault ? null : '$locale';
-  	if (_localeProvider.setLocale(locale))
+  	if (_localeProvider.setLocale(locale!))
 			_authenticationBloc.add(AuthenticationActiveUserUpdated.fromLocale(activeUser, userLocale));
 	  emit(LocaleState(_getLocaleCode(userLocale)));
   }
 
-  static String _getLocaleCode(String userLocale) => userLocale != null ? '${LocaleService.parseLocale(userLocale)}' : defaultLanguageKey;
+  static String _getLocaleCode(String? userLocale) => userLocale != null ? '${LocaleService.parseLocale(userLocale)}' : defaultLanguageKey;
 }
 
 class LocaleState extends Equatable {
@@ -42,5 +42,5 @@ class LocaleState extends Equatable {
   LocaleState(this.languageKey);
 
 	@override
-	List<Object> get props => [languageKey];
+	List<Object?> get props => [languageKey];
 }

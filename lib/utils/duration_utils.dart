@@ -1,13 +1,14 @@
-import 'package:fokus/model/db/date/time_date.dart';
-import 'package:fokus/model/db/date_span.dart';
+import '../model/db/date/time_date.dart';
+import '../model/db/date_span.dart';
 
-Duration sumDurations(List<DateSpan<TimeDate>> durations, [bool limitToOneDay = true]) {
+Duration sumDurations(List<DateSpan<TimeDate>>? durations, [bool limitToOneDay = true]) {
 	if (durations == null || durations.isEmpty)
 		return Duration();
-	var sum = durations.sublist(0, durations.length - 1).fold<Duration>(Duration(), (sum, span) => sum + span.to.difference(span.from));
-	var midnight = TimeDate(durations.last.from.year, durations.last.from.month, durations.last.from.day + 1);
-	var lastSpanEnd = durations.last.to ?? (limitToOneDay && durations.last.from.day != TimeDate.now().day ? midnight : TimeDate.now());
-	return sum + lastSpanEnd.difference(durations.last.from);
+	var sum = durations.sublist(0, durations.length - 1).fold<Duration>(Duration(), (sum, span) => sum + span.to!.difference(span.from!));
+	var lastFromDate = durations.last.from!;
+	var midnight = TimeDate(lastFromDate.year, lastFromDate.month, lastFromDate.day + 1);
+	var lastSpanEnd = durations.last.to ?? (limitToOneDay && lastFromDate.day != TimeDate.now().day ? midnight : TimeDate.now());
+	return sum + lastSpanEnd.difference(lastFromDate);
 }
 
 String formatDuration(Duration duration) {
@@ -30,6 +31,6 @@ String formatDuration(Duration duration) {
 	return string;
 }
 
-bool isInProgress(List<DateSpan<TimeDate>> durations) {
-	return durations != null && durations.length > 0 && durations.last.to == null;
+bool isInProgress(List<DateSpan<TimeDate>>? durations) {
+	return durations != null && durations.isNotEmpty && durations.last.to == null;
 }

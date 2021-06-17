@@ -1,17 +1,17 @@
 import 'package:flutter/widgets.dart';
-import 'package:fokus/services/app_route_observer.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fokus_auth/fokus_auth.dart';
 import 'package:get_it/get_it.dart';
 import 'package:logging/logging.dart';
 
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
-import 'package:fokus/logic/common/settings/password_change/password_change_cubit.dart';
-import 'package:fokus/model/ui/app_page.dart';
-import 'package:fokus/model/ui/auth/link_payload.dart';
-import 'package:fokus/model/ui/auth/password_change_type.dart';
-import 'package:fokus/utils/ui/dialog_utils.dart';
-import 'package:fokus/utils/ui/snackbar_utils.dart';
-import 'package:fokus_auth/fokus_auth.dart';
+import '../../logic/common/auth_bloc/authentication_bloc.dart';
+import '../../logic/common/settings/password_change/password_change_cubit.dart';
+import '../../model/ui/app_page.dart';
+import '../../model/ui/auth/link_payload.dart';
+import '../../model/ui/auth/password_change_type.dart';
+import '../../utils/ui/dialog_utils.dart';
+import '../../utils/ui/snackbar_utils.dart';
+import '../app_route_observer.dart';
 
 enum AppState {
 	opened, running
@@ -32,7 +32,7 @@ abstract class LinkService {
   @protected
 	void initialize();
 
-	void handleLink(Uri link, AppState appState) async {
+	void handleLink(Uri? link, AppState appState) async {
 		if (link == null)
 			return;
 		// Wait for the navigator
@@ -54,20 +54,20 @@ abstract class LinkService {
 		}
 	}
 	
-	Future<bool> _navigateToCaregiverSignInPage({NavigatorState navigator, LinkPayload payload}) async {
+	Future<bool> _navigateToCaregiverSignInPage({required NavigatorState navigator, required LinkPayload payload}) async {
 		// ignore: close_sinks
 		var authBloc = BlocProvider.of<AuthenticationBloc>(navigator.context);
 		var userState = authBloc.state;
 		// If the app was opened wait for the first auth state to figure out if we need to sign out anyone
 		if (userState.status == AuthenticationStatus.initial)
-			userState = (await authBloc.firstWhere((element) => element.status != AuthenticationStatus.initial));
+			userState = (await authBloc.stream.firstWhere((element) => element.status != AuthenticationStatus.initial));
 		// Bail out early if the code is not valid
 		if (payload.type == AppLinkType.passwordReset && !(await _runGuarded(_authenticationProvider.verifyPasswordResetCode, payload, navigator.context)))
 			return false;
 		// Sign out a user if necessary
-		if (userState.status == AuthenticationStatus.authenticated) {
+		if (userState.signedIn) {
 			authBloc.add(AuthenticationSignOutRequested());
-			var nextState = (await authBloc.first);
+			var nextState = (await authBloc.stream.first);
 			if (nextState.status != AuthenticationStatus.unauthenticated)
 				logger.warning("Current user was not signed out");
 		}
@@ -82,7 +82,7 @@ abstract class LinkService {
     } on EmailCodeFailure catch (e) {
       showFailSnackbar(context, 'authentication.error.emailLink', {
         'TYPE': '${payload.type.index}',
-        'ERR': '${e.reason.index}'
+        'ERR': '${e.reason!.index}'
       });
       return false;
     }

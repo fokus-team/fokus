@@ -1,13 +1,12 @@
 import 'package:flutter/widgets.dart';
-import 'package:fokus/logic/common/auth_bloc/authentication_bloc.dart';
-import 'package:fokus/logic/common/stateful/stateful_cubit.dart';
-import 'package:fokus/services/app_config/app_config_repository.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
-import 'package:fokus/services/data/data_repository.dart';
-import 'package:fokus/model/ui/user/ui_child.dart';
-
+import '../../../model/db/user/child.dart';
+import '../../../services/app_config/app_config_repository.dart';
+import '../../../services/data/data_repository.dart';
+import '../../common/auth_bloc/authentication_bloc.dart';
+import '../../common/stateful/stateful_cubit.dart';
 
 class SavedChildProfilesCubit extends StatefulCubit {
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
@@ -16,27 +15,28 @@ class SavedChildProfilesCubit extends StatefulCubit {
 
   SavedChildProfilesCubit(this.authenticationBloc, ModalRoute pageRoute) : super(pageRoute);
 
+  @override
   Future doLoadData() async {
 	  var savedIds = _appConfigRepository.getSavedChildProfiles();
 	  var children = await _dataRepository.getUsers(ids: savedIds, fields: ['_id', 'name', 'avatar']);
-	  emit(SavedChildProfilesState(savedProfiles: children.map((child) => UIChild.fromDBModel(child)).toList()));
+	  emit(SavedChildProfilesState(savedProfiles: children.map((child) => child as Child).toList()));
   }
 
   void signIn(ObjectId childId) async {
   	if (!beginSubmit())
   		return;
-		authenticationBloc.add(AuthenticationChildSignInRequested(await _dataRepository.getUser(id: childId)));
+		authenticationBloc.add(AuthenticationChildSignInRequested((await _dataRepository.getUser(id: childId)) as Child));
 	}
 }
 
 class SavedChildProfilesState extends StatefulState {
-	final List<UIChild> savedProfiles;
+	final List<Child> savedProfiles;
 
-	SavedChildProfilesState({this.savedProfiles, DataSubmissionState submissionState}) : super.loaded(submissionState);
+	SavedChildProfilesState({required this.savedProfiles, DataSubmissionState? submissionState}) : super.loaded(submissionState);
 
 	@override
   StatefulState withSubmitState(DataSubmissionState submissionState) => SavedChildProfilesState(savedProfiles: savedProfiles, submissionState: submissionState);
 
   @override
-	List<Object> get props => super.props..add(savedProfiles);
+	List<Object?> get props => super.props..add(savedProfiles);
 }

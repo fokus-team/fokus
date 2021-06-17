@@ -1,7 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/animation.dart';
-import 'package:fokus/utils/ui/theme_config.dart';
+import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+
+import '../../utils/ui/theme_config.dart';
 
 class AppLoader extends StatefulWidget {
 	final bool hasOverlay;
@@ -10,14 +11,16 @@ class AppLoader extends StatefulWidget {
 		this.hasOverlay = false
 	});
 
+  @override
   _AppLoaderState createState() => _AppLoaderState();
 }
 
 class _AppLoaderState extends State<AppLoader> with TickerProviderStateMixin {
-  AnimationController controller;
-  Animation<double> animation;
+  late AnimationController controller;
+  late Animation<double> animation;
 
-  initState() {
+  @override
+  void initState() {
     super.initState();
     controller = AnimationController(duration: const Duration(milliseconds: 200), vsync: this);
     animation = CurvedAnimation(parent: controller, curve: Curves.easeIn);
@@ -29,6 +32,7 @@ class _AppLoaderState extends State<AppLoader> with TickerProviderStateMixin {
 		super.dispose();
 	}
 
+  @override
   Widget build(BuildContext context) {
 		return FadeTransition(
 			opacity: animation,

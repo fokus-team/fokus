@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:fokus/logic/common/timer/timer_cubit.dart';
-import 'package:fokus/utils/duration_utils.dart';
-import 'package:fokus/widgets/chips/attribute_chip.dart';
+import '../../logic/common/timer/timer_cubit.dart';
+import '../../utils/duration_utils.dart';
+import 'attribute_chip.dart';
 
 class TimerChip extends StatelessWidget {
 	final Color color;
 	final IconData icon;
 
-	TimerChip({this.color, this.icon = Icons.timer});
+	TimerChip({required this.color, this.icon = Icons.timer});
 
 	@override
 	Widget build(BuildContext context) {

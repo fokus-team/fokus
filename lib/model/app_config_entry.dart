@@ -7,5 +7,5 @@ extension AppConfigEntryKey on AppConfigEntry {
 		AppConfigEntry.savedChildProfiles: 'savedChildProfiles',
 		AppConfigEntry.signedInChild: 'signedInChild',
 		AppConfigEntry.userLanguage: 'userLanguage'
-	}[this];
+	}[this]!;
 }

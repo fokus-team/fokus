@@ -1,4 +1,4 @@
-part of '../../../child/auth/sign_in/child_sign_in_cubit.dart';
+part of 'child_sign_in_cubit.dart';
 
 class ChildSignInState extends FormzState {
 	final UserCode childCode;
@@ -9,9 +9,9 @@ class ChildSignInState extends FormzState {
   }) : super(status);
 
   @override
-  List<Object> get props => [childCode, status];
+  List<Object?> get props => [childCode, status];
 
-  ChildSignInState copyWith({UserCode childCode, FormzStatus status}) {
+  ChildSignInState copyWith({UserCode? childCode, FormzStatus? status}) {
 	  return ChildSignInState(
 		  childCode: childCode ?? this.childCode,
 		  status: status ?? this.status,

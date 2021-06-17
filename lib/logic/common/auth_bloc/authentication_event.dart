@@ -4,7 +4,7 @@ abstract class AuthenticationEvent extends Equatable {
   const AuthenticationEvent();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 class AuthenticationUserChanged extends AuthenticationEvent {
@@ -13,7 +13,7 @@ class AuthenticationUserChanged extends AuthenticationEvent {
 	const AuthenticationUserChanged(this.user);
 
 	@override
-	List<Object> get props => [user];
+	List<Object?> get props => [user];
 }
 
 class AuthenticationChildSignInRequested extends AuthenticationEvent {
@@ -22,18 +22,18 @@ class AuthenticationChildSignInRequested extends AuthenticationEvent {
 	const AuthenticationChildSignInRequested(this.child);
 
 	@override
-	List<Object> get props => [child.id];
+	List<Object?> get props => [child.id];
 }
 
 class AuthenticationSignOutRequested extends AuthenticationEvent {}
 
 class AuthenticationActiveUserUpdated extends AuthenticationEvent {
-	final UIUser user;
+	final User user;
 
 	AuthenticationActiveUserUpdated(this.user);
-	AuthenticationActiveUserUpdated.fromLocale(UIUser user, String locale) :
-			user = (user is UICaregiver) ? UICaregiver.from(user, locale: locale) : UIChild.from(user, locale: locale);
+	AuthenticationActiveUserUpdated.fromLocale(User user, String? locale) : user = (user is Caregiver) ?
+			Caregiver.copyFrom(user, locale: locale) : Child.copyFrom(user as Child, locale: locale);
 
 	@override
-	List<Object> get props => [user];
+	List<Object?> get props => [user];
 }

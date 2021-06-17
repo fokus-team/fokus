@@ -1,13 +1,13 @@
 import 'package:fokus_auth/fokus_auth.dart';
 import 'package:formz/formz.dart';
 
-import 'package:fokus/model/ui/auth/confirmed_password.dart';
-import 'package:fokus/model/ui/auth/email.dart';
-import 'package:fokus/model/ui/auth/name.dart';
-import 'package:fokus/model/ui/auth/password.dart';
-import 'package:fokus/model/ui/auth/agreement.dart';
-import 'package:fokus/logic/caregiver/auth/caregiver_auth_cubit_base.dart';
-import 'package:fokus/logic/caregiver/auth/caregiver_auth_state_base.dart';
+import '../../../../model/ui/auth/agreement.dart';
+import '../../../../model/ui/auth/confirmed_password.dart';
+import '../../../../model/ui/auth/email.dart';
+import '../../../../model/ui/auth/name.dart';
+import '../../../../model/ui/auth/password.dart';
+import '../caregiver_auth_cubit_base.dart';
+import '../caregiver_auth_state_base.dart';
 
 part 'caregiver_sign_up_state.dart';
 

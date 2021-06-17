@@ -10,5 +10,5 @@ extension CollectionName on Collection {
     Collection.currency: 'Currency',
     Collection.reward: 'Reward',
     Collection.badge: 'Badge'
-  }[this];
+  }[this]!;
 }

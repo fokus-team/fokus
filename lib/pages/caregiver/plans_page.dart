@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:fokus/logic/caregiver/caregiver_plans_cubit.dart';
-import 'package:fokus/model/ui/app_page.dart';
-import 'package:fokus/model/ui/plan/ui_plan.dart';
-import 'package:fokus/model/ui/ui_button.dart';
-import 'package:fokus/services/app_locales.dart';
-import 'package:fokus/utils/navigation_utils.dart';
-import 'package:fokus/utils/ui/theme_config.dart';
 
-import 'package:fokus/widgets/app_navigation_bar.dart';
-import 'package:fokus/widgets/cards/item_card.dart';
-import 'package:fokus/widgets/chips/attribute_chip.dart';
-import 'package:fokus/widgets/custom_app_bars.dart';
-import 'package:fokus/widgets/stateful_bloc_builder.dart';
-import 'package:fokus/widgets/segment.dart';
+import '../../logic/caregiver/caregiver_plans_cubit.dart';
+import '../../model/db/plan/plan.dart';
+import '../../model/ui/app_page.dart';
+import '../../model/ui/ui_button.dart';
+import '../../services/app_locales.dart';
+import '../../utils/navigation_utils.dart';
+import '../../utils/ui/theme_config.dart';
+import '../../widgets/app_navigation_bar.dart';
+import '../../widgets/cards/item_card.dart';
+import '../../widgets/chips/attribute_chip.dart';
+import '../../widgets/custom_app_bars.dart';
+import '../../widgets/segment.dart';
+import '../../widgets/stateful_bloc_builder.dart';
 
 class CaregiverPlansPage extends StatelessWidget {
 	static const String _pageKey = 'page.caregiverSection.plans';
@@ -37,8 +37,8 @@ class CaregiverPlansPage extends StatelessWidget {
 	}
 
   List<Segment> _buildPanelSegments(CaregiverPlansState state, context) {
-	  var activePlans = state.plans.where((blueprint) => (blueprint.isActive)).toList();
-	  var deactivatedPlans = state.plans.where((blueprint) => (!blueprint.isActive)).toList();
+	  var activePlans = state.plans.where((blueprint) => (blueprint.active!)).toList();
+	  var deactivatedPlans = state.plans.where((blueprint) => (!blueprint.active!)).toList();
 	  return [
 		  _getPlansSegment(
 			  plans: activePlans,
@@ -57,7 +57,7 @@ class CaregiverPlansPage extends StatelessWidget {
 	  ];
   }
 
-  Segment _getPlansSegment({List<UIPlan> plans, String title, UIButton headerAction, String subtitle, context}) {
+  Segment _getPlansSegment({required List<Plan> plans, required String title, UIButton? headerAction, required String subtitle, context}) {
 	  return Segment(
 		  title: title,
 			subtitle: subtitle,
@@ -66,12 +66,12 @@ class CaregiverPlansPage extends StatelessWidget {
 		  elements: <Widget>[
 			  for (var plan in plans)
 				  ItemCard(
-					  title: plan.name,
-					  subtitle: plan.description(context),
+					  title: plan.name!,
+					  subtitle: plan.description,
 						onTapped: () => navigateChecked(context, AppPage.planDetails, arguments: plan.id),
 					  chips: <Widget>[
 						  AttributeChip.withIcon(
-							  content: AppLocales.of(context).translate('$_pageKey.content.tasks', {'NUM_TASKS': plan.taskCount}),
+							  content: AppLocales.of(context).translate('$_pageKey.content.tasks', {'NUM_TASKS': plan.tasks!.length}),
 							  color: Colors.indigo,
 							  icon: Icons.layers
 						  )

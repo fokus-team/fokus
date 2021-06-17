@@ -1,10 +1,7 @@
-import 'dart:convert';
 import 'dart:ui';
 
 import 'package:bloc/bloc.dart';
 import 'package:firebase_analytics/observer.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/foundation.dart' as foundation;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -85,48 +82,32 @@ import 'pages/common/settings_page.dart';
 import 'services/analytics_service.dart';
 import 'services/app_locales.dart';
 import 'services/app_route_observer.dart';
-import 'services/instrumentator.dart';
 import 'services/locale_service.dart';
 import 'services/observers/current_locale_observer.dart';
-import 'services/observers/user/authenticated_user_notifier.dart';
-import 'services/remote_config_provider.dart';
-import 'services/remote_storage/remote_storage_provider.dart';
+import 'utils/app_initialization.dart';
 import 'utils/bloc_utils.dart';
-import 'utils/service_injection.dart';
 import 'utils/ui/theme_config.dart';
 import 'widgets/page_theme.dart';
 
 
 void main() async {
-	WidgetsFlutterBinding.ensureInitialized();
-	await Firebase.initializeApp();
-	var navigatorKey = GlobalKey<NavigatorState>();
-	var routeObserver = AppRouteObserver();
-	var userNotifier = AuthenticatedUserNotifier();
-	await registerServices(userNotifier, navigatorKey, routeObserver);
+	await initializeComponents();
 
-	var analytics = GetIt.I<AnalyticsService>()..logAppOpen();
-	var configMap = (await GetIt.I.getAsync<RemoteConfigProvider>()).roundSpotConfig;
-	var config = configMap.isNotEmpty ? round_spot.Config.fromJson(json.decode(configMap)) : round_spot.Config();
-	GetIt.I<Instrumentator>().runAppGuarded(
-		BlocProvider<AuthenticationBloc>(
-			create: (context) => AuthenticationBloc(userNotifier),
-			child: round_spot.initialize(
-				child: FokusApp(navigatorKey, routeObserver, analytics.pageObserver),
-				config: config,
-				dataCallback: GetIt.I<RemoteStorageProvider>().uploadRSData,
-				loggingLevel: foundation.kReleaseMode ? round_spot.LogLevel.off : round_spot.LogLevel.warning
-			),
-		)
+	bootstrapApplication(
+		app: FokusApp(
+			navigatorKey: GetIt.I<GlobalKey<NavigatorState>>(),
+			routeObserver: GetIt.I<AppRouteObserver>(),
+			pageObserver: GetIt.I<AnalyticsService>().pageObserver
+		),
 	);
 }
 
 class FokusApp extends StatefulWidget {
-	final GlobalKey<NavigatorState> _navigatorKey;
-	final RouteObserver<PageRoute> _routeObserver;
-	final FirebaseAnalyticsObserver _pageObserver;
+	final GlobalKey<NavigatorState> navigatorKey;
+	final RouteObserver<PageRoute> routeObserver;
+	final FirebaseAnalyticsObserver pageObserver;
 
-  FokusApp(this._navigatorKey, this._routeObserver, this._pageObserver);
+  FokusApp({required this.navigatorKey, required this.routeObserver, required this.pageObserver});
 
   @override
   _FokusAppState createState() => _FokusAppState();
@@ -146,10 +127,10 @@ class _FokusAppState extends State<FokusApp> implements CurrentLocaleObserver {
 			supportedLocales: AppLocalesDelegate.supportedLocales,
 			localeListResolutionCallback: LocaleService.localeSelector,
 
-			navigatorKey: widget._navigatorKey,
+			navigatorKey: widget.navigatorKey,
 			navigatorObservers: [
-				widget._routeObserver,
-				widget._pageObserver,
+				widget.routeObserver,
+				widget.pageObserver,
 				round_spot.Observer()
 			],
 			initialRoute: AppPage.loadingPage.name,
@@ -205,7 +186,7 @@ class _FokusAppState extends State<FokusApp> implements CurrentLocaleObserver {
 			listenWhen: (oldState, newState) => oldState.status != newState.status,
 			listener: (context, state) {
 				var redirectPage = state.signedIn ? state.user!.role!.panelPage : AppPage.rolesPage;
-				widget._navigatorKey.currentState?.pushNamedAndRemoveUntil(redirectPage.name, (route) => false);
+				widget.navigatorKey.currentState?.pushNamedAndRemoveUntil(redirectPage.name, (route) => false);
 			},
 			child: child
 		);

@@ -95,57 +95,53 @@ class TaskCompletionCubit extends StatefulCubit<TaskCompletionState> {
 		}
 	}
 
-	void switchToBreak() async {
-		if (!beginSubmit(this.state.copyWith(current: TaskCompletionStateType.inBreak)))
-			return;
-		var state = this.state;
+	Future switchToBreak() => submitData(
+		withState: state.copyWith(current: TaskCompletionStateType.inBreak),
+		body: () async {
+			_taskInstance.duration!.last = _taskInstance.duration!.last.end();
+			_taskInstance.breaks!.add(DateSpan(from: TimeDate.now()));
+			await _dataRepository.updateTaskInstanceFields(_taskInstance.id!, duration: _taskInstance.duration, breaks: _taskInstance.breaks);
+			var uiTaskInstance = UITaskInstance(instance: _taskInstance, task: _task);
+			_analyticsService.logTaskPaused(_taskInstance);
+			var planInstance = await _dataAggregator.loadPlanInstance(planInstance: _planInstance, plan: _plan);
+			emit(state.copyWithSubmitted(taskInstance: uiTaskInstance, planInstance: planInstance));
+		},
+	);
 
-		_taskInstance.duration!.last = _taskInstance.duration!.last.end();
-		_taskInstance.breaks!.add(DateSpan(from: TimeDate.now()));
-		await _dataRepository.updateTaskInstanceFields(_taskInstance.id!, duration: _taskInstance.duration, breaks: _taskInstance.breaks);
-		var uiTaskInstance = UITaskInstance(instance: _taskInstance, task: _task);
-		_analyticsService.logTaskPaused(_taskInstance);
-		var planInstance = await _dataAggregator.loadPlanInstance(planInstance: _planInstance, plan: _plan);
-		emit(state.copyWithSubmitted(taskInstance: uiTaskInstance, planInstance: planInstance));
-	}
+	Future switchToProgress() => submitData(
+		withState: state.copyWith(current: TaskCompletionStateType.inProgress),
+		body: () async {
+			_taskInstance.breaks!.last = _taskInstance.breaks!.last.end();
+			_taskInstance.duration!.add(DateSpan(from: TimeDate.now()));
+			await _dataRepository.updateTaskInstanceFields(_taskInstance.id!, duration: _taskInstance.duration, breaks: _taskInstance.breaks);
+			var uiTaskInstance = UITaskInstance(instance: _taskInstance, task: _task);
+			_analyticsService.logTaskResumed(_taskInstance);
+			var planInstance = await _dataAggregator.loadPlanInstance(planInstance: _planInstance, plan: _plan);
+			emit(state.copyWithSubmitted(taskInstance: uiTaskInstance, planInstance: planInstance));
+		},
+	);
 
-	void switchToProgress() async {
-		if (!beginSubmit(this.state.copyWith(current: TaskCompletionStateType.inProgress)))
-			return;
-		var state = this.state;
+	Future markAsFinished() => submitData(
+		withState: state.copyWith(current: TaskCompletionStateType.finished),
+		body: () async {
+	    _notificationService.sendTaskFinishedNotification(_planInstance.id!, _task.name!, _plan.createdBy!, activeUser!, completed: true);
+		  _analyticsService.logTaskFinished(_taskInstance);
+		  var updatedTask =  await _onCompletion(TaskState.notEvaluated);
+			var planInstance = await _dataAggregator.loadPlanInstance(planInstance: _planInstance, plan: _plan);
+			emit(state.copyWithSubmitted(taskInstance: updatedTask, planInstance: planInstance));
+		},
+	);
 
-		_taskInstance.breaks!.last = _taskInstance.breaks!.last.end();
-		_taskInstance.duration!.add(DateSpan(from: TimeDate.now()));
-		await _dataRepository.updateTaskInstanceFields(_taskInstance.id!, duration: _taskInstance.duration, breaks: _taskInstance.breaks);
-		var uiTaskInstance = UITaskInstance(instance: _taskInstance, task: _task);
-		_analyticsService.logTaskResumed(_taskInstance);
-		var planInstance = await _dataAggregator.loadPlanInstance(planInstance: _planInstance, plan: _plan);
-		emit(state.copyWithSubmitted(taskInstance: uiTaskInstance, planInstance: planInstance));
-	}
-
-	void markAsFinished() async {
-		if (!beginSubmit(this.state.copyWith(current: TaskCompletionStateType.finished)))
-			return;
-		var state = this.state;
-
-  	_notificationService.sendTaskFinishedNotification(_planInstance.id!, _task.name!, _plan.createdBy!, activeUser!, completed: true);
-	  _analyticsService.logTaskFinished(_taskInstance);
-	  var updatedTask =  await _onCompletion(TaskState.notEvaluated);
-		var planInstance = await _dataAggregator.loadPlanInstance(planInstance: _planInstance, plan: _plan);
-		emit(state.copyWithSubmitted(taskInstance: updatedTask, planInstance: planInstance));
-  }
-
-	void markAsDiscarded() async {
-		if (!beginSubmit(this.state.copyWith(current: TaskCompletionStateType.discarded)))
-			return;
-		var state = this.state;
-
-		_notificationService.sendTaskFinishedNotification(_planInstance.id!, _task.name!, _plan.createdBy!, activeUser!, completed: false);
-		_analyticsService.logTaskNotFinished(_taskInstance);
-		var updatedTask =  await _onCompletion(TaskState.rejected);
-		var planInstance = await _dataAggregator.loadPlanInstance(planInstance: _planInstance, plan: _plan);
-		emit(state.copyWithSubmitted(taskInstance: updatedTask, planInstance: planInstance));
-	}
+	Future markAsDiscarded() => submitData(
+		withState: state.copyWith(current: TaskCompletionStateType.discarded),
+		body: () async {
+			_notificationService.sendTaskFinishedNotification(_planInstance.id!, _task.name!, _plan.createdBy!, activeUser!, completed: false);
+			_analyticsService.logTaskNotFinished(_taskInstance);
+			var updatedTask =  await _onCompletion(TaskState.rejected);
+			var planInstance = await _dataAggregator.loadPlanInstance(planInstance: _planInstance, plan: _plan);
+			emit(state.copyWithSubmitted(taskInstance: updatedTask, planInstance: planInstance));
+		},
+	);
 
 	void updateChecks(int index, MapEntry<String, bool> subtask) async {
   	_taskInstance.subtasks![index] = subtask;

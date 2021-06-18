@@ -22,11 +22,9 @@ class SavedChildProfilesCubit extends StatefulCubit {
 	  emit(SavedChildProfilesState(savedProfiles: children.map((child) => child as Child).toList()));
   }
 
-  void signIn(ObjectId childId) async {
-  	if (!beginSubmit())
-  		return;
-		authenticationBloc.add(AuthenticationChildSignInRequested((await _dataRepository.getUser(id: childId)) as Child));
-	}
+  Future signIn(ObjectId childId) => submitData(body: () async {
+	  authenticationBloc.add(AuthenticationChildSignInRequested((await _dataRepository.getUser(id: childId)) as Child));
+  });
 }
 
 class SavedChildProfilesState extends StatefulState {

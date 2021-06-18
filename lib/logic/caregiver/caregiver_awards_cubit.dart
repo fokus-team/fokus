@@ -21,20 +21,16 @@ class CaregiverAwardsCubit extends StatefulCubit {
 		));
   }
 
-	void removeReward(ObjectId id) async {
-		if (!beginSubmit())
-			return;
+	Future removeReward(ObjectId id) => submitData(body: () async {
 		var state = this.state as CaregiverAwardsState;
 		await _dataRepository.removeRewards(id: id);
 		emit(RewardRemovedState(
 			rewards: state.rewards.where((element) => element.id != id).toList(),
 			badges: state.badges
 		));
-	}
+	});
 
-	void removeBadge(Badge badge) async {
-		if (!beginSubmit())
-			return;
+	Future removeBadge(Badge badge) => submitData(body: () async {
 		var user = activeUser as Caregiver;
 		var model = Badge(name: badge.name, description: badge.description, icon: badge.icon);
 		await _dataRepository.removeBadge(user.id!, model);
@@ -42,7 +38,7 @@ class CaregiverAwardsCubit extends StatefulCubit {
 			badges: List.from(user.badges!..remove(model)),
 			rewards: (state as CaregiverAwardsState).rewards
 		));
-	}
+	});
 }
 
 class CaregiverAwardsState extends StatefulState {

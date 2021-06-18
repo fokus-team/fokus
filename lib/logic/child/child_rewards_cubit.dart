@@ -31,21 +31,19 @@ class ChildRewardsCubit extends StatefulCubit {
 	  _refreshRewardState();
   }
 
-	void claimReward(Reward reward) async {
-		if (!beginSubmit())
-			return;
-    var user = activeUser as Child;
+	Future claimReward(Reward reward) => submitData(body: () async {
+		var user = activeUser as Child;
 		var rewards = user.rewards!;
 		var model = ChildReward(
 			id: reward.id,
-			name: reward.name, 
+			name: reward.name,
 			cost: reward.cost,
 			icon: reward.icon,
 			date: TimeDate.now()
 		);
 		var pointCurrency = user.points!.firstWhereOrNull((element) => element.type == reward.cost!.type);
-		
-		if(pointCurrency != null && pointCurrency.quantity! >= reward.cost!.quantity!) {
+
+		if (pointCurrency != null && pointCurrency.quantity! >= reward.cost!.quantity!) {
 			user.points![user.points!.indexOf(pointCurrency)] = pointCurrency.copyWith(quantity: pointCurrency.quantity! - reward.cost!.quantity!);
 			rewards.add(model);
 			await _dataRepository.claimChildReward(user.id!, reward: model, points: user.points!);
@@ -53,7 +51,7 @@ class ChildRewardsCubit extends StatefulCubit {
 			await _notificationService.sendRewardBoughtNotification(model.id!, model.name!, user.connections!.first, user);
 		}
 		_refreshRewardState(DataSubmissionState.submissionSuccess);
-	}
+	});
 
 	void _refreshRewardState([DataSubmissionState? submissionState]) {
 		var child = activeUser as Child;

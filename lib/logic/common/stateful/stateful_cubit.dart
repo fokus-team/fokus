@@ -70,12 +70,16 @@ abstract class StatefulCubit<State extends StatefulState> extends Cubit<State> w
 
 	bool hasOption(StatefulOption option) => options.contains(option);
 
-	bool beginSubmit([State? state]) {
-		state ??= this.state;
-		if (!state.isNotSubmitted)
-			return false;
+	Future submitData({required Future Function() body, State? withState}) async {
+		var state = withState ?? this.state;
+		if (!state.isNotSubmitted) return;
 		emit(state.submit() as State);
-		return true;
+		try {
+			await body();
+		} on Exception {
+			emit(state.withSubmitState(DataSubmissionState.submissionFailure) as State);
+			rethrow;
+		}
 	}
 
 	@override

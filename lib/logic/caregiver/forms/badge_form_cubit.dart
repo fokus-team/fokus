@@ -17,16 +17,14 @@ class BadgeFormCubit extends StatefulCubit {
 	
   BadgeFormCubit(this._authBloc, ModalRoute pageRoute) : super(pageRoute);
   
-  void submitBadgeForm(BadgeFormModel badgeForm) async {
-  	if (!beginSubmit())
-  		return;
-		var user = activeUser! as Caregiver;
-		var badge = Badge.fromBadgeForm(badgeForm);
-		await _dataRepository.createBadge(user.id!, badge);
-		_analyticsService.logBadgeCreated(badge);
-		_authBloc.add(AuthenticationActiveUserUpdated(Caregiver.copyFrom(user, badges: user.badges!..add(badge))));
-    emit(state.submissionSuccess());
-  }
+  Future submitBadgeForm(BadgeFormModel badgeForm) => submitData(body: () async {
+	  var user = activeUser! as Caregiver;
+	  var badge = Badge.fromBadgeForm(badgeForm);
+	  await _dataRepository.createBadge(user.id!, badge);
+	  _analyticsService.logBadgeCreated(badge);
+	  _authBloc.add(AuthenticationActiveUserUpdated(Caregiver.copyFrom(user, badges: user.badges!..add(badge))));
+	  emit(state.submissionSuccess());
+  });
 
   @override
   Future doLoadData() async => emit(StatefulState.loaded());

@@ -26,9 +26,7 @@ class DashboardAchievementsCubit extends StatefulCubit {
 		emit(DashboardAchievementsState(availableBadges: availableBadges, childBadges: child.badges!));
 	}
 
-	Future assignBadges(List<Badge> badges) async {
-		if (!beginSubmit())
-			return;
+	Future assignBadges(List<Badge> badges) => submitData(body: () async {
 		var tabState = state as DashboardAchievementsState;
 		var assignedBadges = badges.map((badge) => ChildBadge.fromBadge(badge)).toList();
 		_dataRepository.updateUser(child.id!, badges: assignedBadges);
@@ -39,7 +37,7 @@ class DashboardAchievementsCubit extends StatefulCubit {
 		var newAssignedBadges = List.of(tabState.childBadges)..addAll(assignedBadges);
 		var newAvailableBadges = _filterBadges(tabState.availableBadges, assignedBadges);
 		emit(tabState.copyWith(availableBadges: newAvailableBadges, childBadges: newAssignedBadges, submissionState: DataSubmissionState.submissionSuccess));
-	}
+	});
 
 	List<Badge> _filterBadges(List<Badge> list, List<ChildBadge> excluded) => list.where((badge) => !excluded.any((exclude) => badge == exclude)).toList();
 }

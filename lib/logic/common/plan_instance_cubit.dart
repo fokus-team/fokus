@@ -62,41 +62,55 @@ class PlanInstanceCubit extends StatefulCubit {
 		return false;
 	}
 
-	void completePlan() async {
-		if (!beginSubmit())
-			return;
+	Future completePlan() => submitData(body: () async {
 		var updates = <Future>[];
 		_planInstance.state = PlanInstanceState.completed;
 		var allTasksInstances = await _dataRepository.getTaskInstances(planInstanceId: uiPlan.instance.id);
 		var updatedTaskInstances = <TaskInstance>[];
-		for(var taskInstance in allTasksInstances) {
-			if(!taskInstance.status!.completed!) {
+		for (var taskInstance in allTasksInstances) {
+			if (!taskInstance.status!.completed!) {
 				taskInstance.status!.state = TaskState.rejected;
 				taskInstance.status!.completed = true;
-				if(isInProgress(taskInstance.duration)) {
+				if (isInProgress(taskInstance.duration)) {
 					taskInstance.duration!.last = taskInstance.duration!.last.end();
-					updates.add(_dataRepository.updateTaskInstanceFields(taskInstance.id!, state: taskInstance.status?.state, isCompleted: taskInstance.status?.completed, duration: taskInstance.duration));
+					updates.add(_dataRepository.updateTaskInstanceFields(
+						taskInstance.id!,
+						state: taskInstance.status?.state,
+						isCompleted: taskInstance.status?.completed,
+						duration: taskInstance.duration,
+					));
 				}
-				else if(isInProgress(taskInstance.breaks)) {
+				else if (isInProgress(taskInstance.breaks)) {
 					taskInstance.breaks!.last = taskInstance.breaks!.last.end();
-					updates.add(_dataRepository.updateTaskInstanceFields(taskInstance.id!, state: taskInstance.status?.state, isCompleted: taskInstance.status?.completed, breaks: taskInstance.breaks));
+					updates.add(_dataRepository.updateTaskInstanceFields(
+						taskInstance.id!,
+						state: taskInstance.status?.state,
+						isCompleted: taskInstance.status?.completed,
+						breaks: taskInstance.breaks,
+					));
 				}
-				else updates.add(_dataRepository.updateTaskInstanceFields(taskInstance.id!, state: taskInstance.status?.state, isCompleted: taskInstance.status?.completed));
+				else
+					updates.add(_dataRepository.updateTaskInstanceFields(
+						taskInstance.id!,
+						state: taskInstance.status?.state,
+						isCompleted: taskInstance.status?.completed,
+					));
 			}
 			updatedTaskInstances.add(taskInstance);
 		}
-		if(isInProgress(_planInstance.duration)) {
+		if (isInProgress(_planInstance.duration)) {
 			_planInstance.duration!.last = _planInstance.duration!.last.end();
 			updates.add(_dataRepository.updatePlanInstanceFields(_planInstance.id!, state: PlanInstanceState.completed, duration: _planInstance.duration));
 		}
-		else updates.add(_dataRepository.updatePlanInstanceFields(_planInstance.id!, state: PlanInstanceState.completed));
+		else
+			updates.add(_dataRepository.updatePlanInstanceFields(_planInstance.id!, state: PlanInstanceState.completed));
 		var uiInstances = await _taskInstancesService.mapToUIModels(updatedTaskInstances);
 		_analyticsService.logPlanCompleted(_planInstance);
 
 		Future.wait(updates);
 		uiPlan = await _dataAggregator.loadPlanInstance(planInstanceId: _planInstance.id);
 		emit(PlanInstanceCubitState(tasks: uiInstances, uiPlan: uiPlan, submissionState: DataSubmissionState.submissionSuccess));
-	}
+	});
 }
 
 class PlanInstanceCubitState extends StatefulState {

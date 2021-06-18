@@ -18,15 +18,16 @@ class CaregiverCurrenciesCubit extends StatefulCubit {
 		emit(CaregiverCurrenciesState(currencies: (activeUser! as Caregiver).currencies ?? []));
   }
 
-	void updateCurrencies(List<Currency> currencyList) async {
-		if (!beginSubmit(CaregiverCurrenciesState(currencies: currencyList)))
-			return;
-		var user = activeUser! as Caregiver;
-		_authBloc.add(AuthenticationActiveUserUpdated(Caregiver.copyFrom(user, currencies: currencyList)));
-		var currencies = currencyList.map((currency) => Currency(type: currency.type, name: currency.name)).toList();
-		await _dataRepository.updateCurrencies(user.id!, currencies);
-		emit(CaregiverCurrenciesState(currencies: currencyList, submissionState: DataSubmissionState.submissionSuccess));
-	}
+	Future updateCurrencies(List<Currency> currencyList) => submitData(
+		withState: CaregiverCurrenciesState(currencies: currencyList),
+		body: () async {
+			var user = activeUser! as Caregiver;
+			_authBloc.add(AuthenticationActiveUserUpdated(Caregiver.copyFrom(user, currencies: currencyList)));
+			var currencies = currencyList.map((currency) => Currency(type: currency.type, name: currency.name)).toList();
+			await _dataRepository.updateCurrencies(user.id!, currencies);
+			emit(CaregiverCurrenciesState(currencies: currencyList, submissionState: DataSubmissionState.submissionSuccess));
+		},
+	);
 }
 
 class CaregiverCurrenciesState extends StatefulState {

@@ -25,19 +25,16 @@ class PlanCubit extends StatefulCubit {
     ));
   }
 
-  Future deletePlan() async {
-    if (!beginSubmit()) return;
-    var instances = await _dataRepository
-        .getPlanInstances(planId: _planId, fields: ['_id']);
+  Future deletePlan() => submitData(body: () async {
+    var instances = await _dataRepository.getPlanInstances(planId: _planId, fields: ['_id']);
     await Future.wait([
-      _dataRepository.removePlans(ids: [_planId]),
-      _dataRepository.removePlanInstances(planId: _planId),
-      _dataRepository.removeTasks(planIds: [_planId]),
-      _dataRepository.removeTaskInstances(
-          planInstancesIds: instances.map((plan) => plan.id!).toList()),
+	    _dataRepository.removePlans(ids: [_planId]),
+	    _dataRepository.removePlanInstances(planId: _planId),
+	    _dataRepository.removeTasks(planIds: [_planId]),
+	    _dataRepository.removeTaskInstances(planInstancesIds: instances.map((plan) => plan.id!).toList()),
     ]);
     emit(state.submissionSuccess());
-  }
+  });
 }
 
 class PlanCubitState extends StatefulState {

@@ -42,20 +42,17 @@ class RewardFormCubit extends StatefulCubit<BaseFormState> {
     emit(state.copyWith(reward: update(state.reward)));
   }
 	
-  void submitRewardForm() async {
-		if (!beginSubmit())
-			return;
+  Future submitRewardForm() => submitData(body: () async {
+	  var userId = activeUser!.id!;
+	  var state = this.state as RewardFormDataLoadSuccess;
+	  var reward = state.reward.copyWith(createdBy: userId, id: state.reward.id);
 
-		var userId = activeUser!.id!;
-		var state = this.state as RewardFormDataLoadSuccess;
-		var reward = state.reward.copyWith(createdBy: userId, id: state.reward.id);
-
-		if (state.formType == AppFormType.create) {
-			await _dataRepository.createReward(reward);
-			_analyticsService.logRewardCreated(reward);
-		} else {
-	    await _dataRepository.updateReward(reward);
-		}
-		emit(state.submissionSuccess() as BaseFormState);
-  }
+	  if (state.formType == AppFormType.create) {
+		  await _dataRepository.createReward(reward);
+		  _analyticsService.logRewardCreated(reward);
+	  } else {
+		  await _dataRepository.updateReward(reward);
+	  }
+	  emit(state.submissionSuccess() as BaseFormState);
+  });
 }

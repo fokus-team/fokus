@@ -59,49 +59,51 @@ class TasksEvaluationCubit extends StatefulCubit {
 		emit(TasksEvaluationState(reports: _reports..addAll(_completedReports)));
 	}
 
-	Future rateTask(UITaskReport report) async {
-		if (!beginSubmit())
-			return;
+	Future rateTask(UITaskReport report) => submitData(body: () async {
 		_completedReports.add(report);
 		var updates = <Future>[];
 		Future Function() sendNotification;
-		if(report.ratingMark == UITaskReportMark.rejected) {
-			sendNotification = () => _notificationService.sendTaskRejectedNotification(report.uiTask.instance.planInstanceID!, report.uiTask.task.name!, report.childCard.child.id!);
+		if (report.ratingMark == UITaskReportMark.rejected) {
+			sendNotification = () => _notificationService.sendTaskRejectedNotification(
+				report.uiTask.instance.planInstanceID!,
+				report.uiTask.task.name!,
+				report.childCard.child.id!
+			);
 			updates.add(_dataRepository.updatePlanInstanceFields(report.uiTask.instance.planInstanceID!, state: PlanInstanceState.notCompleted));
-			updates.add(_dataRepository.updateTaskInstanceFields(report.uiTask.instance.id!, state:TaskState.rejected));
+			updates.add(_dataRepository.updateTaskInstanceFields(report.uiTask.instance.id!, state: TaskState.rejected));
 			_analyticsService.logTaskRejected(report);
 		} else {
 			int? pointsAwarded;
 			var hasPoints = report.uiTask.task.points != null;
-			if(hasPoints)
+			if (hasPoints)
 				pointsAwarded = getPointsAwarded(report.uiTask.task.points!.quantity!, report.ratingMark.value!);
 			updates.add(_dataRepository.updateTaskInstanceFields(report.uiTask.task.id!, state: TaskState.evaluated,
 					rating: report.ratingMark.value, pointsAwarded: pointsAwarded, ratingComment: report.ratingComment));
 			if (hasPoints) {
-			  var child = await _dataRepository.getUser(id: report.childCard.child.id!) as Child;
-			  var points = child.points!;
-			  var pointIndex = points.indexWhere((element) => element.type == report.uiTask.task.points!.type);
-			  if(pointIndex > -1)
-			  	points[pointIndex] = points[pointIndex].copyWith(quantity: points[pointIndex].quantity! + pointsAwarded!);
-		    else
-				  points.add(Points.fromCurrency(currency: report.uiTask.task.points!, quantity: pointsAwarded!, createdBy: report.uiTask.task.points?.createdBy));
+				var child = await _dataRepository.getUser(id: report.childCard.child.id!) as Child;
+				var points = child.points!;
+				var pointIndex = points.indexWhere((element) => element.type == report.uiTask.task.points!.type);
+				if (pointIndex > -1)
+					points[pointIndex] = points[pointIndex].copyWith(quantity: points[pointIndex].quantity! + pointsAwarded!);
+				else
+					points.add(Points.fromCurrency(currency: report.uiTask.task.points!, quantity: pointsAwarded!, createdBy: report.uiTask.task.points?.createdBy));
 				updates.add(_dataRepository.updateUser(child.id!, points: points));
 			}
 			_analyticsService.logTaskApproved(report);
 			sendNotification = () => _notificationService.sendTaskApprovedNotification(
-				report.uiTask.instance.planInstanceID!,
-				report.uiTask.task.name!,
-				report.childCard.child.id!,
-				report.ratingMark.value!,
-				currencyType: report.uiTask.task.points?.type,
-				pointCount: pointsAwarded,
-				comment: report.ratingComment
-			);
+					report.uiTask.instance.planInstanceID!,
+					report.uiTask.task.name!,
+					report.childCard.child.id!,
+					report.ratingMark.value!,
+					currencyType: report.uiTask.task.points?.type,
+					pointCount: pointsAwarded,
+					comment: report.ratingComment
+				);
 		}
 		await Future.wait(updates);
 		await sendNotification();
 		return emit(state.submissionSuccess());
-	}
+	});
 
 	static int getPointsAwarded(int quantity, int ratingMark) => max((quantity * ratingMark / 5).round(), 1);
 }

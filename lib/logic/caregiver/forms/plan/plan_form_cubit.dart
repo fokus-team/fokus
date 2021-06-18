@@ -15,8 +15,8 @@ import '../../../../model/ui/form/plan_form_model.dart';
 import '../../../../model/ui/form/task_form_model.dart';
 import '../../../../services/analytics_service.dart';
 import '../../../../services/data/data_repository.dart';
+import '../../../../services/model_helpers/plan_repeatability_service.dart';
 import '../../../../services/plan_keeper_service.dart';
-import '../../../../services/plan_repeatability_service.dart';
 import '../../../../utils/definitions.dart';
 
 part 'plan_form_state.dart';

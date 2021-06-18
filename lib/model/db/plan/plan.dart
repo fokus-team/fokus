@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
-import '../../../services/plan_repeatability_service.dart';
+import '../../../services/model_helpers/plan_repeatability_service.dart';
 import '../../../utils/definitions.dart';
 import '../../ui/form/plan_form_model.dart';
 import '../date/date.dart';

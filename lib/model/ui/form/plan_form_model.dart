@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:mongo_dart/mongo_dart.dart' show ObjectId;
 
-import '../../../services/plan_repeatability_service.dart';
+import '../../../services/model_helpers/plan_repeatability_service.dart';
 import '../../db/date/date.dart';
 import '../../db/date_span.dart';
 import '../../db/plan/plan.dart';

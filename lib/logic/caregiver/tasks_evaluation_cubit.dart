@@ -15,9 +15,9 @@ import '../../model/ui/plan/ui_task_instance.dart';
 import '../../model/ui/plan/ui_task_report.dart';
 import '../../services/analytics_service.dart';
 import '../../services/data/data_repository.dart';
+import '../../services/model_helpers/task_instance_service.dart';
+import '../../services/model_helpers/ui_data_aggregator.dart';
 import '../../services/notifications/notification_service.dart';
-import '../../services/task_instance_service.dart';
-import '../../services/ui_data_aggregator.dart';
 import '../common/stateful/stateful_cubit.dart';
 
 class TasksEvaluationCubit extends StatefulCubit {

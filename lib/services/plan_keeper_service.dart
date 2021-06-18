@@ -12,9 +12,9 @@ import '../model/db/plan/plan_instance_state.dart';
 import '../model/db/user/user.dart';
 import '../model/db/user/user_role.dart';
 import 'data/data_repository.dart';
+import 'model_helpers/plan_repeatability_service.dart';
 import 'observers/user/user_notifier.dart';
 import 'observers/user/user_observer.dart';
-import 'plan_repeatability_service.dart';
 
 class PlanKeeperService implements UserObserver {
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();

@@ -8,7 +8,7 @@ import '../../model/db/user/user_role.dart';
 import '../../model/notification/notification_type.dart';
 import '../../model/ui/child_card_model.dart';
 import '../../services/data/data_repository.dart';
-import '../../services/ui_data_aggregator.dart';
+import '../../services/model_helpers/ui_data_aggregator.dart';
 import '../common/stateful/stateful_cubit.dart';
 
 class CaregiverPanelCubit extends StatefulCubit {

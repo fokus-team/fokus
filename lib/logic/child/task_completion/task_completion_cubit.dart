@@ -15,8 +15,8 @@ import '../../../model/ui/plan/ui_plan_instance.dart';
 import '../../../model/ui/plan/ui_task_instance.dart';
 import '../../../services/analytics_service.dart';
 import '../../../services/data/data_repository.dart';
+import '../../../services/model_helpers/ui_data_aggregator.dart';
 import '../../../services/notifications/notification_service.dart';
-import '../../../services/ui_data_aggregator.dart';
 import '../../../utils/duration_utils.dart';
 import '../../common/stateful/stateful_cubit.dart';
 

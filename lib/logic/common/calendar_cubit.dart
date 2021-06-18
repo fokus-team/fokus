@@ -13,7 +13,7 @@ import '../../model/db/user/caregiver.dart';
 import '../../model/db/user/child.dart';
 import '../../model/db/user/user_role.dart';
 import '../../services/data/data_repository.dart';
-import '../../services/plan_repeatability_service.dart';
+import '../../services/model_helpers/plan_repeatability_service.dart';
 import '../../utils/definitions.dart';
 
 class CalendarCubit extends Cubit<CalendarState> {

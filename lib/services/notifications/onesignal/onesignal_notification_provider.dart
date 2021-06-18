@@ -15,7 +15,7 @@ import '../../../model/ui/app_page.dart';
 import '../../../utils/navigation_utils.dart';
 import '../../../utils/ui/snackbar_utils.dart';
 import '../../app_route_observer.dart';
-import '../../ui_data_aggregator.dart';
+import '../../model_helpers/ui_data_aggregator.dart';
 import '../notification_provider.dart';
 
 

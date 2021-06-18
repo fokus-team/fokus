@@ -8,8 +8,8 @@ import '../../../model/db/plan/task_status.dart';
 import '../../../model/db/user/child.dart';
 import '../../../model/ui/plan/ui_plan_instance.dart';
 import '../../../services/data/data_repository.dart';
+import '../../../services/model_helpers/ui_data_aggregator.dart';
 import '../../../services/plan_keeper_service.dart';
-import '../../../services/ui_data_aggregator.dart';
 import '../../common/stateful/stateful_cubit.dart';
 
 class DashboardPlansCubit extends StatefulCubit {

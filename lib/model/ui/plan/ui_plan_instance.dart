@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import '../../../services/plan_repeatability_service.dart';
+import '../../../services/model_helpers/plan_repeatability_service.dart';
 import '../../../utils/definitions.dart';
 import '../../../utils/duration_utils.dart';
 import '../../db/plan/plan.dart';

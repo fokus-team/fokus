@@ -1,10 +1,10 @@
 import 'package:get_it/get_it.dart';
 
-import '../model/db/plan/plan_instance.dart';
-import '../model/db/plan/task_instance.dart';
-import '../model/db/plan/task_status.dart';
-import '../model/ui/plan/ui_task_instance.dart';
-import 'data/data_repository.dart';
+import '../../model/db/plan/plan_instance.dart';
+import '../../model/db/plan/task_instance.dart';
+import '../../model/db/plan/task_status.dart';
+import '../../model/ui/plan/ui_task_instance.dart';
+import '../data/data_repository.dart';
 
 class TaskInstanceService {
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();

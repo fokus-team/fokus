@@ -19,17 +19,17 @@ import '../services/instrumentator.dart';
 import '../services/links/firebase_link_service.dart';
 import '../services/links/link_service.dart';
 import '../services/locale_service.dart';
+import '../services/model_helpers/plan_repeatability_service.dart';
+import '../services/model_helpers/task_instance_service.dart';
+import '../services/model_helpers/ui_data_aggregator.dart';
 import '../services/notifications/notification_service.dart';
 import '../services/notifications/onesignal/onesignal_notification_service.dart';
 import '../services/observers/user/authenticated_user_notifier.dart';
 import '../services/observers/user/user_notifier.dart';
 import '../services/plan_keeper_service.dart';
-import '../services/plan_repeatability_service.dart';
 import '../services/remote_config_provider.dart';
 import '../services/remote_storage/firebase_storage_service.dart';
 import '../services/remote_storage/remote_storage_provider.dart';
-import '../services/task_instance_service.dart';
-import '../services/ui_data_aggregator.dart';
 
 Future registerServices() {
 	// Semi-services needed for context and navigation state sharing

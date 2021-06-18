@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import '../../../services/task_instance_service.dart';
+import '../../../services/model_helpers/task_instance_service.dart';
 import '../../db/plan/task.dart';
 import '../../db/plan/task_instance.dart';
 

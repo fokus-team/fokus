@@ -41,13 +41,13 @@ class _CaregiverRatingPageState extends State<CaregiverRatingPage> {
 					HelpIconButton(helpPage: 'rating')
 				]
 			),
-			body: SimpleStatefulBlocBuilder<TasksEvaluationCubit, TasksEvaluationState>(
+			body: StatefulBlocBuilder<TasksEvaluationCubit, TasksEvaluationData>(
 				builder: (context, state) {
 					return Column(
-						mainAxisSize: state.reports.isNotEmpty ? MainAxisSize.min : MainAxisSize.max,
+						mainAxisSize: state.data!.reports.isNotEmpty ? MainAxisSize.min : MainAxisSize.max,
 						mainAxisAlignment: MainAxisAlignment.center,
 						crossAxisAlignment: CrossAxisAlignment.center,
-						children: [state.reports.isNotEmpty ? Expanded(child: _buildCarousel(state.reports)) :
+						children: [state.data!.reports.isNotEmpty ? Expanded(child: _buildCarousel(state.data!.reports)) :
 							AppHero(
 							  title: AppLocales.of(context).translate('$_pageKey.content.noTasksToRate'),
 							  color: Colors.white,

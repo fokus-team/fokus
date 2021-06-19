@@ -29,19 +29,19 @@ class _ChildRewardsPageState extends State<ChildRewardsPage> {
 	      crossAxisAlignment: CrossAxisAlignment.start,
 				verticalDirection: VerticalDirection.up,
 	      children: [
-		      SimpleStatefulBlocBuilder<ChildRewardsCubit, ChildRewardsState>(
+		      StatefulBlocBuilder<ChildRewardsCubit, ChildRewardsData>(
 				    builder: (context, state) => AppSegments(
 							segments: [
 								Segment(
 									title: '$_pageKey.rewardsTitle',
 									subtitle: '$_pageKey.rewardsHint',
 									noElementsMessage: '$_pageKey.noRewardsMessage',
-									elements: _buildRewardShop(state, context)
+									elements: _buildRewardShop(state.data!, context)
 								),
-								if(state.claimedRewards.isNotEmpty)
+								if(state.data!.claimedRewards.isNotEmpty)
 									Segment(
 										title: '$_pageKey.claimedRewardsTitle',
-										elements: _buildRewardHistory(state)
+										elements: _buildRewardHistory(state.data!)
 									)
 							]
 						),
@@ -52,8 +52,8 @@ class _ChildRewardsPageState extends State<ChildRewardsPage> {
 						expandLoader: true,
 			      popConfig: SubmitPopConfig(),
 		      ),
-					BlocBuilder<ChildRewardsCubit, StatefulState>(
-						builder: (context, state) => CustomChildAppBar(points: state is ChildRewardsState ? state.points : null)
+					BlocBuilder<ChildRewardsCubit, StatefulState<ChildRewardsData>>(
+						builder: (context, state) => CustomChildAppBar(points: state.loaded ? state.data!.points : null)
 					)
 	      ]
       ),
@@ -61,7 +61,7 @@ class _ChildRewardsPageState extends State<ChildRewardsPage> {
     );
   }
 
-	List<Widget> _buildRewardShop(ChildRewardsState state, BuildContext context) {
+	List<Widget> _buildRewardShop(ChildRewardsData state, BuildContext context) {
 		return state.rewards.map((reward) {
 			var percentage = (state.points.firstWhereOrNull((element) => element.type == reward.cost!.type)?.quantity ?? 0) / reward.cost!.quantity!;
 			return RewardItemCard(
@@ -83,7 +83,7 @@ class _ChildRewardsPageState extends State<ChildRewardsPage> {
 		}).toList();
 	}
 
-	List<Widget> _buildRewardHistory(ChildRewardsState state) {
+	List<Widget> _buildRewardHistory(ChildRewardsData state) {
 		return (state.claimedRewards..sort((a, b) => -a.date!.compareTo(b.date!))).map((reward) {
 			return RewardItemCard(
 				reward: reward,

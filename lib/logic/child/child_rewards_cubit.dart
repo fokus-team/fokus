@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mongo_dart/mongo_dart.dart';
@@ -14,7 +15,7 @@ import '../../services/data/data_repository.dart';
 import '../../services/notifications/notification_service.dart';
 import '../common/stateful/stateful_cubit.dart';
 
-class ChildRewardsCubit extends StatefulCubit {
+class ChildRewardsCubit extends StatefulCubit<ChildRewardsData> {
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final NotificationService _notificationService = GetIt.I<NotificationService>();
 	final AnalyticsService _analyticsService = GetIt.I<AnalyticsService>();
@@ -24,14 +25,15 @@ class ChildRewardsCubit extends StatefulCubit {
   ChildRewardsCubit(ModalRoute pageRoute) : super(pageRoute, options: [StatefulOption.resetSubmissionState]);
 
   @override
-  Future doLoadData() async {
+  Future load() => doLoad(body: () async {
+	  if (activeUser == null) return null;
 		var caregiverID = activeUser!.connections?.first;
 		if(caregiverID != null && _rewards == null)
 			_rewards = await _dataRepository.getRewards(caregiverId: caregiverID);
-	  _refreshRewardState();
-  }
+	  return _refreshRewardState();
+  });
 
-	Future claimReward(Reward reward) => submitData(body: () async {
+	Future claimReward(Reward reward) => submit(body: () async {
 		var user = activeUser as Child;
 		var rewards = user.rewards!;
 		var model = ChildReward(
@@ -50,47 +52,35 @@ class ChildRewardsCubit extends StatefulCubit {
 			_analyticsService.logRewardBought(reward);
 			await _notificationService.sendRewardBoughtNotification(model.id!, model.name!, user.connections!.first, user);
 		}
-		_refreshRewardState(DataSubmissionState.submissionSuccess);
+		return _refreshRewardState();
 	});
 
-	void _refreshRewardState([DataSubmissionState? submissionState]) {
+	ChildRewardsData _refreshRewardState() {
 		var child = activeUser as Child;
 		var claimedCount = <ObjectId, int>{};
 		child.rewards!.forEach((element) => claimedCount[element.id!] = !claimedCount.containsKey(element.id) ? 1 : claimedCount[element.id]! + 1);
-		emit(ChildRewardsState(
+		return ChildRewardsData(
 			rewards: _rewards!.where((reward) => reward.limit != null ? reward.limit! > (claimedCount[reward.id] ?? 0) : true).toList(),
 			claimedRewards: List.from(child.rewards!),
 			points: List.from(child.points!),
-			submissionState: submissionState
-		));
+		);
 	}
 
 	@override
 	List<NotificationType> notificationTypeSubscription() => [NotificationType.taskApproved];
 }
 
-class ChildRewardsState extends StatefulState {
+class ChildRewardsData extends Equatable {
 	final List<Reward> rewards;
 	final List<ChildReward> claimedRewards;
 	final List<Points> points;
 
-	ChildRewardsState({
+	ChildRewardsData({
 		required this.rewards,
 		required this.claimedRewards,
 		required this.points,
-		DataSubmissionState? submissionState,
-	}) : super.loaded(submissionState);
-
-	@override
-	ChildRewardsState withSubmitState(DataSubmissionState? submissionState) {
-		return ChildRewardsState(
-			rewards: rewards,
-			claimedRewards: claimedRewards,
-			points: points,
-			submissionState: submissionState ?? this.submissionState
-		);
-	}
+	});
 
   @override
-	List<Object?> get props => super.props..addAll([rewards, claimedRewards, points]);
+	List<Object?> get props => [rewards, claimedRewards, points];
 }

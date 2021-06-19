@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mongo_dart/mongo_dart.dart';
@@ -8,7 +9,7 @@ import '../../../services/data/data_repository.dart';
 import '../../common/auth_bloc/authentication_bloc.dart';
 import '../../common/stateful/stateful_cubit.dart';
 
-class SavedChildProfilesCubit extends StatefulCubit {
+class SavedChildProfilesCubit extends StatefulCubit<SavedChildProfilesData> {
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final AppConfigRepository _appConfigRepository = GetIt.I<AppConfigRepository>();
 	final AuthenticationBloc authenticationBloc;
@@ -16,25 +17,23 @@ class SavedChildProfilesCubit extends StatefulCubit {
   SavedChildProfilesCubit(this.authenticationBloc, ModalRoute pageRoute) : super(pageRoute);
 
   @override
-  Future doLoadData() async {
+  Future load() => doLoad(body: () async {
 	  var savedIds = _appConfigRepository.getSavedChildProfiles();
 	  var children = await _dataRepository.getUsers(ids: savedIds, fields: ['_id', 'name', 'avatar']);
-	  emit(SavedChildProfilesState(savedProfiles: children.map((child) => child as Child).toList()));
-  }
+	  return SavedChildProfilesData(savedProfiles: children.map((child) => child as Child).toList());
+  });
 
-  Future signIn(ObjectId childId) => submitData(body: () async {
+  Future signIn(ObjectId childId) => submit(body: () async {
 	  authenticationBloc.add(AuthenticationChildSignInRequested((await _dataRepository.getUser(id: childId)) as Child));
+	  return data!;
   });
 }
 
-class SavedChildProfilesState extends StatefulState {
+class SavedChildProfilesData extends Equatable {
 	final List<Child> savedProfiles;
 
-	SavedChildProfilesState({required this.savedProfiles, DataSubmissionState? submissionState}) : super.loaded(submissionState);
-
-	@override
-  StatefulState withSubmitState(DataSubmissionState submissionState) => SavedChildProfilesState(savedProfiles: savedProfiles, submissionState: submissionState);
+	SavedChildProfilesData({required this.savedProfiles});
 
   @override
-	List<Object?> get props => super.props..add(savedProfiles);
+	List<Object?> get props => savedProfiles;
 }

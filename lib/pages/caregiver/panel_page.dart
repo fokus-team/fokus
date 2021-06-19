@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../logic/caregiver/caregiver_panel_cubit.dart';
-import '../../logic/common/auth_bloc/authentication_bloc.dart';
 import '../../model/navigation/child_dashboard_params.dart';
 import '../../model/ui/app_page.dart';
 import '../../model/ui/ui_button.dart';
@@ -23,16 +21,10 @@ class CaregiverPanelPage extends StatelessWidget {
 	Widget build(BuildContext context) {
     return Scaffold(
 			appBar: CustomAppBar(type: CustomAppBarType.greetings),
-			body: BlocListener<AuthenticationBloc, AuthenticationState>(
-				listenWhen: (oldState, newState) => newState.status != AuthenticationStatus.unauthenticated,
-				listener: (context, state) {
-				  BlocProvider.of<CaregiverPanelCubit>(context).reload();
-				},
-				child: SimpleStatefulBlocBuilder<CaregiverPanelCubit, CaregiverPanelState>(
-					builder: (context, state) => AppSegments(
-						segments: _buildPanelSegments(state, context),
-						fullBody: true
-					),
+			body: StatefulBlocBuilder<CaregiverPanelCubit, CaregiverPanelData>(
+				builder: (context, state) => AppSegments(
+					segments: _buildPanelSegments(state.data!, context),
+					fullBody: true
 				),
 			),
 			floatingActionButton: FloatingActionButton.extended(
@@ -47,7 +39,7 @@ class CaregiverPanelPage extends StatelessWidget {
     );
 	}
 
-	List<Segment> _buildPanelSegments(CaregiverPanelState state, BuildContext context) {
+	List<Segment> _buildPanelSegments(CaregiverPanelData state, BuildContext context) {
 		return [
 			Segment(
 				title: '$_pageKey.content.childProfilesTitle',

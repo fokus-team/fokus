@@ -23,7 +23,7 @@ import 'logic/caregiver/child_dashboard/dashboard_plans_cubit.dart';
 import 'logic/caregiver/child_dashboard/dashboard_rewards_cubit.dart';
 import 'logic/caregiver/forms/badge_form_cubit.dart';
 import 'logic/caregiver/forms/plan/plan_form_cubit.dart';
-import 'logic/caregiver/forms/reward/reward_form_cubit.dart';
+import 'logic/caregiver/forms/reward_form_cubit.dart';
 import 'logic/caregiver/tasks_evaluation_cubit.dart';
 import 'logic/child/auth/saved_child_profiles_cubit.dart';
 import 'logic/child/auth/sign_in/child_sign_in_cubit.dart';

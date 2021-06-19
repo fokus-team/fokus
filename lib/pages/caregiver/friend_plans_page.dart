@@ -64,12 +64,12 @@ class CaregiverFriendPlansPage extends StatelessWidget {
 	}
 
 	Widget _buildFriendPlans() {
-		return SimpleStatefulBlocBuilder<CaregiverPlansCubit, CaregiverPlansState>(
+		return StatefulBlocBuilder<CaregiverPlansCubit, CaregiverPlansData>(
 			builder: (context, state) => Segment(
 				title: '$_pageKey.content.plansTitle',
 				noElementsMessage: '$_pageKey.content.noPlansText',
 				elements: <Widget>[
-					for (var plan in state.plans)
+					for (var plan in state.data!.plans)
 						ItemCard(
 							title: plan.name!,
 							subtitle: plan.description,

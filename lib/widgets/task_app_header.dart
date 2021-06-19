@@ -20,8 +20,8 @@ class TaskAppHeader extends StatefulWidget implements PreferredSizeWidget {
 	final String? title;
 	final Widget? content;
 	final String? helpPage;
-	final Function(TaskCompletionState)? breakPerformingTransition;
-	final TaskCompletionState state;
+	final Function(TaskCompletionData, BuildContext)? breakPerformingTransition;
+	final TaskCompletionData state;
 	final dynamic popArgs;
 
 	TaskAppHeader({Key? key, required this.height, required this.state, this.title, this.content, this.helpPage,this.breakPerformingTransition, this.popArgs}) : super(key: key);
@@ -183,7 +183,7 @@ class TaskAppHeaderState extends State<TaskAppHeader> with TickerProviderStateMi
 				)
 			),
 			onPressed: () => {
-				widget.breakPerformingTransition!(widget.state),
+				widget.breakPerformingTransition!(widget.state, context),
 				widget.state.current == TaskCompletionStateType.inProgress ? _timerCompletionCubit!.pauseTimer() : _timerCompletionCubit!.resumeTimer()
 			},
 			style: ElevatedButton.styleFrom(

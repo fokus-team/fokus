@@ -29,11 +29,11 @@ class _CaregiverAwardsPageState extends State<CaregiverAwardsPage> {
 	Widget build(BuildContext context) {
 		return Scaffold(
 			appBar: CustomAppBar(type: CustomAppBarType.normal, title: '$_pageKey.header.title', subtitle: '$_pageKey.header.pageHint', icon: Icons.stars),
-			body: SimpleStatefulBlocBuilder<CaregiverAwardsCubit, CaregiverAwardsState>(
-				builder: (context, state) => AppSegments(segments: _buildPanelSegments(state, context), fullBody: true),
+			body: StatefulBlocBuilder<CaregiverAwardsCubit, CaregiverAwardsData>(
+				builder: (context, state) => AppSegments(segments: _buildPanelSegments(state.data!, context), fullBody: true),
 				listener: (context, state) {
 					if (state.submitted) {
-						var snackbarText = state is BadgeRemovedState ? 'badgeRemovedText' : 'rewardRemovedText';
+						var snackbarText = state.data!.removedType == RemovedType.badge ? 'badgeRemovedText' : 'rewardRemovedText';
 						showSuccessSnackbar(context, '$_pageKey.content.$snackbarText');
 					}
 				},
@@ -43,7 +43,7 @@ class _CaregiverAwardsPageState extends State<CaregiverAwardsPage> {
     );
 	}
 
-	List<Segment> _buildPanelSegments(CaregiverAwardsState state, BuildContext context) {
+	List<Segment> _buildPanelSegments(CaregiverAwardsData state, BuildContext context) {
 		return [
 			Segment(
 				title: '$_pageKey.content.addedRewardsTitle',

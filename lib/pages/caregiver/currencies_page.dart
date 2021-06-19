@@ -43,10 +43,10 @@ class _CaregiverCurrenciesPageState extends State<CaregiverCurrenciesPage> {
 
   @override
   Widget build(BuildContext context) {
-		return SimpleStatefulBlocBuilder<CaregiverCurrenciesCubit, CaregiverCurrenciesState>(
+		return StatefulBlocBuilder<CaregiverCurrenciesCubit, CaregiverCurrenciesData>(
 			listener: (context, state) {
 				if (state.loaded) {
-					for(var currency in (state as CaregiverCurrenciesState).currencies) {
+					for(var currency in state.data!.currencies) {
 						if (currency.type != CurrencyType.diamond)
 							currencyList[currency.type!] = currency.name!;
 					}

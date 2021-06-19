@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 
@@ -7,59 +8,50 @@ import '../../model/db/user/caregiver.dart';
 import '../../services/data/data_repository.dart';
 import '../common/stateful/stateful_cubit.dart';
 
-class CaregiverAwardsCubit extends StatefulCubit {
+class CaregiverAwardsCubit extends StatefulCubit<CaregiverAwardsData> {
   final DataRepository _dataRepository = GetIt.I<DataRepository>();
 
   CaregiverAwardsCubit(pageRoute) : super(pageRoute, options: [StatefulOption.resetSubmissionState]);
 
   @override
-	Future doLoadData() async {
+	Future load() => doLoad(body: () async {
     var user = activeUser as Caregiver;
-		emit(CaregiverAwardsState(
+		return CaregiverAwardsData(
 			rewards: await _dataRepository.getRewards(caregiverId: user.id!),
 			badges: List.from(user.badges!)
-		));
-  }
+		);
+  });
 
-	Future removeReward(ObjectId id) => submitData(body: () async {
-		var state = this.state as CaregiverAwardsState;
+	Future removeReward(ObjectId id) => submit(body: () async {
 		await _dataRepository.removeRewards(id: id);
-		emit(RewardRemovedState(
-			rewards: state.rewards.where((element) => element.id != id).toList(),
-			badges: state.badges
-		));
+		return CaregiverAwardsData(
+			rewards: state.data!.rewards.where((element) => element.id != id).toList(),
+			badges: state.data!.badges
+		);
 	});
 
-	Future removeBadge(Badge badge) => submitData(body: () async {
+	Future removeBadge(Badge badge) => submit(body: () async {
 		var user = activeUser as Caregiver;
 		var model = Badge(name: badge.name, description: badge.description, icon: badge.icon);
 		await _dataRepository.removeBadge(user.id!, model);
-		emit(BadgeRemovedState(
+		return CaregiverAwardsData(
 			badges: List.from(user.badges!..remove(model)),
-			rewards: (state as CaregiverAwardsState).rewards
-		));
+			rewards: state.data!.rewards
+		);
 	});
 }
 
-class CaregiverAwardsState extends StatefulState {
+enum RemovedType {
+	badge, reward
+}
+
+class CaregiverAwardsData extends Equatable {
 	final List<Reward> rewards;
 	final List<Badge> badges;
+	final RemovedType? removedType;
 
-	CaregiverAwardsState({required this.rewards, required this.badges, DataSubmissionState? submissionState}) : super.loaded(submissionState);
-
-	@override
-  StatefulState withSubmitState(DataSubmissionState submissionState) => CaregiverAwardsState(rewards: rewards, badges: badges, submissionState: submissionState);
+	CaregiverAwardsData({required this.rewards, required this.badges, this.removedType});
 
   @override
-	List<Object?> get props => super.props..addAll([rewards, badges]);
+	List<Object?> get props => [rewards, badges, removedType];
 }
-
-class RewardRemovedState extends CaregiverAwardsState {
-	RewardRemovedState({required List<Reward> rewards, required List<Badge> badges})
-			: super(rewards: rewards, badges: badges, submissionState: DataSubmissionState.submissionSuccess);
-}
-class BadgeRemovedState extends CaregiverAwardsState {
-	BadgeRemovedState({required List<Reward> rewards, required List<Badge> badges})
-			: super(rewards: rewards, badges: badges, submissionState: DataSubmissionState.submissionSuccess);
-}
-

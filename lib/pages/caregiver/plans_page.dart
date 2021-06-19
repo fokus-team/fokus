@@ -21,8 +21,8 @@ class CaregiverPlansPage extends StatelessWidget {
   Widget build(BuildContext context) {
 		return Scaffold(
 			appBar: CustomAppBar(type: CustomAppBarType.normal, title: '$_pageKey.header.title', subtitle: '$_pageKey.header.pageHint', icon: Icons.description),
-			body: SimpleStatefulBlocBuilder<CaregiverPlansCubit, CaregiverPlansState>(
-				builder: (context, state) => AppSegments(segments: _buildPanelSegments(state, context), fullBody: true),
+			body: StatefulBlocBuilder<CaregiverPlansCubit, CaregiverPlansData>(
+				builder: (context, state) => AppSegments(segments: _buildPanelSegments(state.data!, context), fullBody: true),
 			),
 			floatingActionButton: FloatingActionButton.extended(
 				onPressed: () => Navigator.of(context).pushNamed(AppPage.caregiverCalendar.name),
@@ -36,7 +36,7 @@ class CaregiverPlansPage extends StatelessWidget {
     );
 	}
 
-  List<Segment> _buildPanelSegments(CaregiverPlansState state, context) {
+  List<Segment> _buildPanelSegments(CaregiverPlansData state, context) {
 	  var activePlans = state.plans.where((blueprint) => (blueprint.active!)).toList();
 	  var deactivatedPlans = state.plans.where((blueprint) => (!blueprint.active!)).toList();
 	  return [

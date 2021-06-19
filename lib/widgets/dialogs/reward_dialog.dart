@@ -103,11 +103,11 @@ class _RewardDialogState extends State<RewardDialog> with SingleTickerProviderSt
 	                children: <Widget>[
 	                  RoundedButton(button: UIButton('actions.close', () => Navigator.of(context).pop(), Colors.blueGrey, Icons.close)),
 	                  if(userRole == UserRole.child)
-	                    BlocBuilder<ChildRewardsCubit, StatefulState>(
+	                    BlocBuilder<ChildRewardsCubit, StatefulState<ChildRewardsData>>(
 	                      builder: (context, state) => RoundedButton(
 	                        button: UIButton(
 	                          '$_pageKey.claimButton',
-	                          state.submissionInProgress ? null : widget.claimFeedback,
+	                          state.beingSubmitted ? null : widget.claimFeedback,
 	                          AppColors.childButtonColor,
 	                          Icons.add_shopping_cart
 	                        )

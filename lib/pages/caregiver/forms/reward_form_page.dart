@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../logic/caregiver/forms/reward/reward_form_cubit.dart';
-import '../../../logic/common/stateful/stateful_cubit.dart';
+import '../../../logic/caregiver/forms/reward_form_cubit.dart';
 import '../../../model/db/gamification/points.dart';
 import '../../../model/ui/app_page.dart';
 import '../../../services/app_locales.dart';
@@ -23,7 +22,7 @@ class CaregiverRewardFormPage extends StatefulWidget {
 
 class _CaregiverRewardFormPageState extends State<CaregiverRewardFormPage> {
 	static const String _pageKey = 'page.caregiverSection.rewardForm';
-	late AppFormType _formType;
+	AppFormType? _formType;
 	late GlobalKey<FormState> rewardFormKey;
 
 	final TextEditingController _titleController = TextEditingController();
@@ -46,7 +45,6 @@ class _CaregiverRewardFormPageState extends State<CaregiverRewardFormPage> {
 
   @override
   Widget build(BuildContext context) {
-		_formType = context.watch<RewardFormCubit>().state.formType;
 		return Scaffold(
 			appBar: AppBar(
 				backgroundColor: AppColors.formColor,
@@ -103,32 +101,33 @@ class _CaregiverRewardFormPageState extends State<CaregiverRewardFormPage> {
 	}
 
 	Widget _buildFormFields() {
-		return StatefulBlocBuilder<RewardFormCubit, BaseFormState, RewardFormDataLoadSuccess>(
+		return StatefulBlocBuilder<RewardFormCubit, RewardFormData>(
 			listener: (context, state) {
 				if (state.submitted)
 					showSuccessSnackbar(context, 'page.caregiverSection.awards.content.reward${_formType == AppFormType.create ? 'Added' : 'Updated'}Text');
-				else if (state is RewardFormDataLoadSuccess && !state.wasDataChanged)
+				else if (state.loaded && !state.data!.wasDataChanged)
 					setState(() {
-						_titleController.text = state.reward.name ?? '';
-						_limitController.text = state.reward.limit?.toString() ?? '';
-						_pointsController.text = state.reward.cost?.quantity?.toString() ?? '';
+						_titleController.text = state.data!.reward!.name ?? '';
+						_limitController.text = state.data!.reward!.limit?.toString() ?? '';
+						_pointsController.text = state.data!.reward!.cost?.quantity?.toString() ?? '';
 					});
 			},
 			popConfig: SubmitPopConfig.onSubmitted(),
 			builder: (context, state) => WillPopScope(
 				onWillPop: () async {
-					var ret = await showExitFormDialog(context, true, state.wasDataChanged);
+					var ret = await showExitFormDialog(context, true, state.data!.wasDataChanged);
 					if(ret == null || !ret) return false;
 					else return true;
 				},
-				child: _buildForm(state)
+				child: _buildForm(state.data!)
 			),
 			loadingBuilder: (context, state) => _buildForm(),
 			overlayLoader: true,
 		);
 	}
 
-	Widget _buildForm([RewardFormDataLoadSuccess? state]) {
+	Widget _buildForm([RewardFormData? state]) {
+		_formType = context.watch<RewardFormCubit>().state.data!.formType;
 		return ListView(
 			shrinkWrap: true,
 			children: <Widget>[
@@ -190,11 +189,11 @@ class _CaregiverRewardFormPageState extends State<CaregiverRewardFormPage> {
 		);
 	}
 	
-	Widget _buildPointsFields([RewardFormDataLoadSuccess? state]) {
+	Widget _buildPointsFields([RewardFormData? state]) {
 		onCostChanged(Points Function(Points) change) => context.read<RewardFormCubit>().onRewardChanged((reward) => reward.copyWith(cost: change(reward.cost!)));
 		return PointPickerField(
 			controller: _pointsController,
-			pickedCurrency: state?.reward.cost,
+			pickedCurrency: state?.reward!.cost,
 			currencies: state?.currencies,
 			loading: state == null,
 			minPoints: 1,
@@ -207,11 +206,11 @@ class _CaregiverRewardFormPageState extends State<CaregiverRewardFormPage> {
 		);
 	}
 
-	Widget _buildIconField([RewardFormDataLoadSuccess? state]) {
+	Widget _buildIconField([RewardFormData? state]) {
 		return IconPickerField.reward(
 			title: AppLocales.of(context).translate('$_pageKey.fields.rewardIcon.label'),
 			groupTextKey: '$_pageKey.fields.rewardIcon.groups',
-			value: state != null ? state.reward.icon! : 1,
+			value: state != null ? state.reward!.icon! : 1,
 			callback: (val) {
 				context.read<RewardFormCubit>().onRewardChanged((reward) => reward.copyWith(icon: val));
 			  setState(() => FocusManager.instance.primaryFocus?.unfocus());

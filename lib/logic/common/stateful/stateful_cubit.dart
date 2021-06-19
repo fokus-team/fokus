@@ -9,7 +9,6 @@ import 'package:meta/meta.dart';
 
 import '../../../model/db/user/user.dart';
 import '../../../model/notification/notification_refresh_info.dart';
-import '../../../model/ui/app_page.dart';
 import '../../../services/app_route_observer.dart';
 import '../../../services/notifications/notification_service.dart';
 import '../../../services/observers/notification/notification_observer.dart';
@@ -22,65 +21,65 @@ enum StatefulOption {
 	resetSubmissionState, noAutoLoading, noDataLoading
 }
 
-abstract class StatefulCubit<State extends StatefulState> extends Cubit<State> with NotificationObserver implements RouteAware, PageForegroundObserver {
+abstract class StatefulCubit<CubitData extends Equatable> extends Cubit<StatefulState<CubitData>> with NotificationObserver implements RouteAware, PageForegroundObserver {
 	final _routeObserver = GetIt.I<AppRouteObserver>();
 	final NotificationService _notificationService = GetIt.I<NotificationService>();
 	final UserNotifier _userNotifier = GetIt.I<UserNotifier>();
+
 	@protected
 	final List<StatefulOption> options;
 	@protected
 	bool loadingForFirstTime = true;
+	@protected
+	User? get activeUser => _userNotifier.activeUser;
+	@protected
+	CubitData? get data => state.data;
 
-  StatefulCubit(ModalRoute pageRoute, {this.options = const [], State? initialState}) :
-        super(initialState ?? StatefulState.notLoaded() as State) {
-	  onGoToForeground(firstTime: true);
+  StatefulCubit(ModalRoute pageRoute, {this.options = const []}) : super(StatefulState()) {
 	  if (pageRoute is PageRoute)
 	    _routeObserver.subscribe(this, pageRoute);
   }
 
-  @protected
-  User? get activeUser => _userNotifier.activeUser;
-
-  Future loadData() async {
-	  if (state.loadingInProgress)
-	  	return;
-	  emit(state.loading() as State);
+	@protected
+  Future doLoad({required FutureOr<CubitData?> Function() body, CubitData? initial}) async {
+	  if (state.beingLoaded) return;
+	  emit(state.copyWith(loadingState: DataLoadingState.loadingInProgress, data: initial));
 	  try {
-		  await doLoadData();
+		  emit(state.copyWith(data: await body(), loadingState: DataLoadingState.loadSuccess));
 		  loadingForFirstTime = false;
 	  } on Exception {
-		  emit(state.withLoadState(DataLoadingState.loadFailure) as State);
+		  emit(state.copyWith(loadingState: DataLoadingState.loadFailure));
 		  rethrow;
 	  }
   }
 
+	@protected
+	Future submit({required FutureOr<CubitData?> Function() body, CubitData? initial}) async {
+		if (!state.notSubmitted) return;
+		emit(state.copyWith(submissionState: DataSubmissionState.submissionInProgress, data: initial));
+		try {
+			emit(state.copyWith(data: await body(), submissionState: DataSubmissionState.submissionSuccess));
+		} on Exception {
+			emit(state.copyWith(submissionState: DataSubmissionState.submissionFailure));
+			rethrow;
+		}
+	}
+
+	@protected
+  Future load() => Future.value(state.copyWith(submissionState: DataSubmissionState.submissionSuccess));
   @protected
-  Future doLoadData();
+  void update(CubitData data) => emit(state.copyWith(data: data));
 
-	void reload() => emit(state.notLoaded() as State);
-
-	void resetSubmissionState() => emit(state.notSubmitted() as State);
+	void resetSubmissionState() => emit(state.copyWith(submissionState: DataSubmissionState.notSubmitted));
 
 	@override
 	@nonVirtual
 	void onNotificationReceived(NotificationRefreshInfo info) {
 		if (notificationTypeSubscription().contains(info.type) && shouldNotificationRefresh(info))
-	    reload();
+	    load();
 	}
 
 	bool hasOption(StatefulOption option) => options.contains(option);
-
-	Future submitData({required Future Function() body, State? withState}) async {
-		var state = withState ?? this.state;
-		if (!state.isNotSubmitted) return;
-		emit(state.submit() as State);
-		try {
-			await body();
-		} on Exception {
-			emit(state.withSubmitState(DataSubmissionState.submissionFailure) as State);
-			rethrow;
-		}
-	}
 
 	@override
 	Future<void> close() {
@@ -89,11 +88,11 @@ abstract class StatefulCubit<State extends StatefulState> extends Cubit<State> w
 	}
 
 	@override
-  void onGoToForeground({bool firstTime = false}) {
+  void onGoToForeground() {
 		if (notificationTypeSubscription().isNotEmpty)
 			_notificationService.observeNotifications(this);
-		if (!firstTime)
-			reload();
+		if (!hasOption(StatefulOption.noAutoLoading))
+			load();
   }
 
 	@override
@@ -108,7 +107,7 @@ abstract class StatefulCubit<State extends StatefulState> extends Cubit<State> w
 	void didPop() => onGoToBackground();
 
 	@override
-	void didPush() {}
+	void didPush() => onGoToForeground();
 
 	@override
 	void didPushNext() => onGoToBackground();

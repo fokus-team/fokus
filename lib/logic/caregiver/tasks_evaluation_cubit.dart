@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mongo_dart/mongo_dart.dart';
@@ -20,7 +21,7 @@ import '../../services/model_helpers/ui_data_aggregator.dart';
 import '../../services/notifications/notification_service.dart';
 import '../common/stateful/stateful_cubit.dart';
 
-class TasksEvaluationCubit extends StatefulCubit {
+class TasksEvaluationCubit extends StatefulCubit<TasksEvaluationData> {
   final DataRepository _dataRepository = GetIt.I<DataRepository>();
   final AnalyticsService _analyticsService = GetIt.I<AnalyticsService>();
   final TaskInstanceService _taskInstanceService = GetIt.I<TaskInstanceService>();
@@ -38,7 +39,7 @@ class TasksEvaluationCubit extends StatefulCubit {
   List<NotificationType> notificationTypeSubscription() => [NotificationType.taskFinished];
 
 	@override
-	Future doLoadData() async {
+	Future load() => doLoad(body: () async {
 		var user = activeUser as Caregiver;
 		var children = (await _dataRepository.getUsers(ids: user.connections)).map((e) => e as Child);
 		var childCards = await _dataAggregator.loadChildCards(children.toList());
@@ -56,10 +57,10 @@ class TasksEvaluationCubit extends StatefulCubit {
 			uiTask: taskInstance,
 			childCard: _planInstanceToChild[taskInstance.instance.planInstanceID]!,
 		)).toList();
-		emit(TasksEvaluationState(reports: _reports..addAll(_completedReports)));
-	}
+		return TasksEvaluationData(reports: _reports..addAll(_completedReports));
+	});
 
-	Future rateTask(UITaskReport report) => submitData(body: () async {
+	Future rateTask(UITaskReport report) => submit(body: () async {
 		_completedReports.add(report);
 		var updates = <Future>[];
 		Future Function() sendNotification;
@@ -102,20 +103,16 @@ class TasksEvaluationCubit extends StatefulCubit {
 		}
 		await Future.wait(updates);
 		await sendNotification();
-		return emit(state.submissionSuccess());
 	});
 
 	static int getPointsAwarded(int quantity, int ratingMark) => max((quantity * ratingMark / 5).round(), 1);
 }
 
-class TasksEvaluationState extends StatefulState {
+class TasksEvaluationData extends Equatable {
 	final List<UITaskReport> reports;
 
-	TasksEvaluationState({required this.reports, DataSubmissionState? submissionState}) : super.loaded(submissionState);
-
-	@override
-	StatefulState withSubmitState(DataSubmissionState submissionState) => TasksEvaluationState(reports: reports, submissionState: submissionState);
+	TasksEvaluationData({required this.reports});
 
   @override
-	List<Object?> get props => super.props..add(reports);
+	List<Object?> get props => [reports];
 }

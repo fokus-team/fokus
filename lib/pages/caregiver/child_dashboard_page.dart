@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus_auth/fokus_auth.dart';
@@ -79,15 +80,15 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
   @override
   Widget build(BuildContext context) {
 		return Scaffold(
-	    body: SimpleStatefulBlocBuilder<ChildDashboardCubit, ChildDashboardState>(
+	    body: StatefulBlocBuilder<ChildDashboardCubit, ChildDashboardData>(
         builder: (context, state) => _getPage(
-					childCard: state.childCard,
+					childCard: state.data!.childCard,
 	        content: TabBarView(
             controller: _tabController,
             children: [
-	            _buildTab<DashboardPlansCubit, DashboardPlansState>(_buildPlansTab, 0),
-	            _buildTab<DashboardRewardsCubit, DashboardRewardsState>(_buildRewardsTab, 1),
-	            _buildTab<DashboardAchievementsCubit, DashboardAchievementsState>(_buildAchievementsTab, 2),
+	            _buildTab<DashboardPlansCubit, DashboardPlansData>(_buildPlansTab, 0),
+	            _buildTab<DashboardRewardsCubit, DashboardRewardsData>(_buildRewardsTab, 1),
+	            _buildTab<DashboardAchievementsCubit, DashboardAchievementsData>(_buildAchievementsTab, 2),
             ]
 					)
 	      ),
@@ -102,14 +103,14 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 		);
 	}
 
-	Widget _buildTab<Cubit extends StatefulCubit, State extends StatefulState>(List<Widget> Function(State) content, int index) {
-		return SimpleStatefulBlocBuilder<Cubit, State>(
+	Widget _buildTab<CubitType extends StatefulCubit<CubitData>, CubitData extends Equatable>(List<Widget> Function(CubitData) content, int index) {
+		return StatefulBlocBuilder<CubitType, CubitData>(
 			builder: (context, state) => round_spot.Detector(
 				areaID: '$index',
 				child: ListView(
 					padding: EdgeInsets.zero,
 					physics: BouncingScrollPhysics(),
-					children: content(state),
+					children: content(state.data!),
 				),
 			)
 		);
@@ -197,22 +198,25 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 		if (index == 1)
 			return SizedBox.shrink();
 		if (index == 0)
-			return _buildSelect<Plan, DashboardPlansCubit, DashboardPlansState>(
-					content: _buildPlanSelect,
-					model: (tabState) => tabState.availablePlans
+			return _buildSelect<Plan, DashboardPlansCubit, DashboardPlansData>(
+				content: _buildPlanSelect,
+				model: (tabState) => tabState.availablePlans
 			);
-		return _buildSelect<Badge, DashboardAchievementsCubit, DashboardAchievementsState>(
-				content: _buildBadgeSelect,
-				model: (tabState) => tabState.availableBadges
+		return _buildSelect<Badge, DashboardAchievementsCubit, DashboardAchievementsData>(
+			content: _buildBadgeSelect,
+			model: (tabState) => tabState.availableBadges
 		);
 	}
 
-	Widget _buildSelect<Type, Cubit extends StatefulCubit, State>({required Widget Function([List<Type>]) content, required List<Type> Function(State) model}) {
-		return BlocBuilder<Cubit, StatefulState>(
+	Widget _buildSelect<Type, CubitType extends StatefulCubit<CubitData>, CubitData extends Equatable>({
+		required Widget Function([List<Type>]) content,
+		required List<Type> Function(CubitData) model
+	}) {
+		return BlocBuilder<CubitType, StatefulState>(
 			builder: (context, state) {
 				if (!state.loaded)
 					return content();
-				return content(model(state as State));
+				return content(model(state.data! as CubitData));
 			}
 		);
 	}
@@ -324,7 +328,7 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 		);
 	}
 
-	List<Widget> _buildPlansTab(DashboardPlansState state) {
+	List<Widget> _buildPlansTab(DashboardPlansData state) {
 		return [
 			if (state.unratedTasks)
 				AppAlert(
@@ -343,7 +347,7 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 		];
 	}
 
-	List<Widget> _buildRewardsTab(DashboardRewardsState state) {
+	List<Widget> _buildRewardsTab(DashboardRewardsData state) {
 		return [
 			if (state.noRewardsAdded)
 				AppAlert(
@@ -361,7 +365,7 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 		];
 	}
 
-	List<Widget> _buildAchievementsTab(DashboardAchievementsState state) {
+	List<Widget> _buildAchievementsTab(DashboardAchievementsData state) {
 		return [
 			if (state.availableBadges.isEmpty && state.childBadges.isEmpty)
 				AppAlert(

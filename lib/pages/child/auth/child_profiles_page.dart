@@ -23,8 +23,8 @@ class ChildProfilesPage extends StatelessWidget {
 					padding: EdgeInsets.symmetric(vertical: AppBoxProperties.screenEdgePadding),
 					shrinkWrap: true,
 					children: [
-					  SimpleStatefulBlocBuilder<SavedChildProfilesCubit, SavedChildProfilesState>(
-						  builder: (context, state) => _buildSavedProfiles(context, state: state),
+					  StatefulBlocBuilder<SavedChildProfilesCubit, SavedChildProfilesData>(
+						  builder: (context, state) => _buildSavedProfiles(context, state: state.data!),
 						  loadingBuilder: (context, state) => _buildSavedProfiles(context),
 				    ),
 						AuthFloatingButton(
@@ -38,7 +38,7 @@ class ChildProfilesPage extends StatelessWidget {
     );
   }
 
-	AuthGroup _buildSavedProfiles(BuildContext context, {SavedChildProfilesState? state}) {
+	AuthGroup _buildSavedProfiles(BuildContext context, {SavedChildProfilesData? state}) {
 	  return AuthGroup(
 			title: AppLocales.of(context).translate('$_pageKey.profileLogInTitle'),
 			hint: AppLocales.of(context).translate('$_pageKey.profileLogInHint'),

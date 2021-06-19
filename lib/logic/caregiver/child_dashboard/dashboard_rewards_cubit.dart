@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart';
 
@@ -7,7 +8,7 @@ import '../../../model/notification/notification_type.dart';
 import '../../../services/data/data_repository.dart';
 import '../../common/stateful/stateful_cubit.dart';
 
-class DashboardRewardsCubit extends StatefulCubit {
+class DashboardRewardsCubit extends StatefulCubit<DashboardRewardsData> {
 	late Child child;
 
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
@@ -15,21 +16,21 @@ class DashboardRewardsCubit extends StatefulCubit {
 	DashboardRewardsCubit(ModalRoute pageRoute) : super(pageRoute, options: [StatefulOption.noAutoLoading]);
 
 	@override
-	Future doLoadData() async {
+	Future load() => doLoad(body: () async {
 		var rewardsAdded = await _dataRepository.countRewards(caregiverId: activeUser!.id!);
-		emit(DashboardRewardsState(childRewards: child.rewards!, noRewardsAdded: rewardsAdded == 0));
-	}
+		return DashboardRewardsData(childRewards: child.rewards!, noRewardsAdded: rewardsAdded == 0);
+	});
 
 	@override
 	List<NotificationType> notificationTypeSubscription() => [NotificationType.rewardBought];
 }
 
-class DashboardRewardsState extends StatefulState {
+class DashboardRewardsData extends Equatable {
 	final List<Reward> childRewards;
 	final bool noRewardsAdded;
 
-	DashboardRewardsState({required this.childRewards, required this.noRewardsAdded}) : super.loaded();
+	DashboardRewardsData({required this.childRewards, required this.noRewardsAdded});
 
 	@override
-	List<Object?> get props => super.props..addAll([childRewards, noRewardsAdded]);
+	List<Object?> get props => [childRewards, noRewardsAdded];
 }

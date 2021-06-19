@@ -37,23 +37,23 @@ class _PlanDetailsPageState extends State<PlanDetailsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: SimpleStatefulBlocBuilder<PlanCubit, PlanCubitState>(
-          builder: _buildView,
-          loadingBuilder: (_, __) => SizedBox.shrink(),
-          listener: (context, state) {
-            if (state.submitted)
-              showSuccessSnackbar(context, '$_pageKey.content.planRemovedText');
-          },
-          popConfig: SubmitPopConfig(count: 2, moment: DataSubmissionState.submissionSuccess),
-        ),
-        floatingActionButton: SimpleStatefulBlocBuilder<PlanCubit, PlanCubitState>(
-            builder: (context, state) => _buildFloatingButton(state)
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat
+      body: StatefulBlocBuilder<PlanCubit, PlanData>(
+        builder: (_, state) => _buildView(state.data!),
+        loadingBuilder: (_, __) => SizedBox.shrink(),
+        listener: (context, state) {
+          if (state.submitted)
+            showSuccessSnackbar(context, '$_pageKey.content.planRemovedText');
+        },
+        popConfig: SubmitPopConfig(count: 2, moment: DataSubmissionState.submissionSuccess),
+      ),
+      floatingActionButton: StatefulBlocBuilder<PlanCubit, PlanData>(
+          builder: (context, state) => _buildFloatingButton(state.data!)
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat
     );
 	}
 
-	Widget _buildFloatingButton(PlanCubitState state) {
+	Widget _buildFloatingButton(PlanData state) {
 		// ignore: close_sinks
 		var authenticationBloc = context.read<AuthenticationBloc>();
 		var currentUser = authenticationBloc.state.user;
@@ -69,7 +69,7 @@ class _PlanDetailsPageState extends State<PlanDetailsPage> {
 		) : SizedBox.shrink();
 	}
 
-	Column _buildView(BuildContext context, PlanCubitState state) {
+	Column _buildView(PlanData state) {
   	return Column(
 			crossAxisAlignment: CrossAxisAlignment.start,
 			verticalDirection: VerticalDirection.up,
@@ -80,7 +80,7 @@ class _PlanDetailsPageState extends State<PlanDetailsPage> {
 		);
 	}
 
-	List<Widget> _buildPanelSegments(PlanCubitState state) {
+	List<Widget> _buildPanelSegments(PlanData state) {
   	var mandatoryTasks = state.tasks.where((task) => task.optional == false).toList();
 		var optionalTasks = state.tasks.where((task) => task.optional == true).toList();
 

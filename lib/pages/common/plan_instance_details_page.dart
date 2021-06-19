@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../logic/common/plan_instance_cubit.dart';
+import '../../logic/common/stateful/stateful_cubit.dart';
 import '../../logic/common/timer/timer_cubit.dart';
 import '../../model/db/plan/plan_instance_state.dart';
 import '../../model/db/plan/task_status.dart';
@@ -21,7 +22,6 @@ import '../../widgets/chips/attribute_chip.dart';
 import '../../widgets/chips/timer_chip.dart';
 import '../../widgets/custom_app_bars.dart';
 import '../../widgets/dialogs/general_dialog.dart';
-import '../../widgets/general/app_loader.dart';
 import '../../widgets/segment.dart';
 import '../../widgets/stateful_bloc_builder.dart';
 
@@ -58,17 +58,9 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
   Widget build(BuildContext context) {
     var showEndButton = !context.watch<PlanInstanceCubit>().uiPlan.instance.state!.ended && widget.showActions;
     return Scaffold(
-      body: SimpleStatefulBlocBuilder<PlanInstanceCubit, PlanInstanceCubitState>(
-        builder: (context, state) {
-          return _getView(
-            planInstance: state.uiPlan,
-            content: AppSegments(segments: _buildPanelSegments(state))
-          );
-        },
-        loadingBuilder: (context, state) => _getView(
-          planInstance: BlocProvider.of<PlanInstanceCubit>(context).uiPlan,
-          content: Expanded(child: Center(child: AppLoader()))
-        ),
+      body: StatefulBlocBuilder<PlanInstanceCubit, PlanInstanceData>(
+	      builder: (context, state) => _getView(state),
+	      loadingBuilder: (context, state) => _getView(state),
         listener: (context, state) {
           if (state.submitted)
             showSuccessSnackbar(context, '$_pageKey.content.fab.completed');
@@ -86,20 +78,20 @@ class _PlanInstanceDetailsPageState extends State<PlanInstanceDetailsPage> {
     );
   }
 
-  Column _getView({required UIPlanInstance planInstance, required Widget content}) {
+  Column _getView(StatefulState<PlanInstanceData> state) {
 		return Column(
 			crossAxisAlignment: CrossAxisAlignment.start,
 			verticalDirection: VerticalDirection.up,
 			children: [
-				content,
-				_getHeader(planInstance),
+				state.loaded ? AppSegments(segments: _buildPanelSegments(state.data!)) : StatefulBlocBuilder.loader(expanded: true),
+				_getHeader(state.data!.uiPlan),
 			],
 		);
 	}
 
-  List<Widget> _buildPanelSegments(PlanInstanceCubitState state) {
-  	var mandatoryTasks = state.tasks.where((uiTask) => uiTask.task.optional == false).toList();
-  	var optionalTasks = state.tasks.where((uiTask) => uiTask.task.optional == true).toList();
+  List<Widget> _buildPanelSegments(PlanInstanceData state) {
+  	var mandatoryTasks = state.tasks!.where((uiTask) => uiTask.task.optional == false).toList();
+  	var optionalTasks = state.tasks!.where((uiTask) => uiTask.task.optional == true).toList();
     return [
     	if(mandatoryTasks.isNotEmpty)
       _getTasksSegment(

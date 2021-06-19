@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart';
 
@@ -10,7 +11,7 @@ import '../../../services/data/data_repository.dart';
 import '../../../services/notifications/notification_service.dart';
 import '../../common/stateful/stateful_cubit.dart';
 
-class DashboardAchievementsCubit extends StatefulCubit {
+class DashboardAchievementsCubit extends StatefulCubit<DashboardAchievementsData> {
 	late Child child;
 
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
@@ -20,45 +21,40 @@ class DashboardAchievementsCubit extends StatefulCubit {
 	DashboardAchievementsCubit(ModalRoute pageRoute): super(pageRoute, options: [StatefulOption.noAutoLoading, StatefulOption.resetSubmissionState]);
 
 	@override
-	Future doLoadData() async {
+	Future load() => doLoad(body: () async {
 		var user = activeUser as Caregiver;
 		var availableBadges = _filterBadges(user.badges!, child.badges!);
-		emit(DashboardAchievementsState(availableBadges: availableBadges, childBadges: child.badges!));
-	}
+		return DashboardAchievementsData(availableBadges: availableBadges, childBadges: child.badges!);
+	});
 
-	Future assignBadges(List<Badge> badges) => submitData(body: () async {
-		var tabState = state as DashboardAchievementsState;
+	Future assignBadges(List<Badge> badges) => submit(body: () async {
 		var assignedBadges = badges.map((badge) => ChildBadge.fromBadge(badge)).toList();
 		_dataRepository.updateUser(child.id!, badges: assignedBadges);
 		for (var badge in badges)
 			_notificationService.sendBadgeAwardedNotification(badge.name!, badge.icon!, child.id!);
 		assignedBadges.forEach(_analyticsService.logBadgeAwarded);
 
-		var newAssignedBadges = List.of(tabState.childBadges)..addAll(assignedBadges);
-		var newAvailableBadges = _filterBadges(tabState.availableBadges, assignedBadges);
-		emit(tabState.copyWith(availableBadges: newAvailableBadges, childBadges: newAssignedBadges, submissionState: DataSubmissionState.submissionSuccess));
+		var newAssignedBadges = List.of(state.data!.childBadges)..addAll(assignedBadges);
+		var newAvailableBadges = _filterBadges(state.data!.availableBadges, assignedBadges);
+		return state.data!.copyWith(availableBadges: newAvailableBadges, childBadges: newAssignedBadges);
 	});
 
 	List<Badge> _filterBadges(List<Badge> list, List<ChildBadge> excluded) => list.where((badge) => !excluded.any((exclude) => badge == exclude)).toList();
 }
 
-class DashboardAchievementsState extends StatefulState {
+class DashboardAchievementsData extends Equatable {
 	final List<Badge> availableBadges;
 	final List<ChildBadge> childBadges;
 
-	DashboardAchievementsState({required this.availableBadges, required this.childBadges, DataSubmissionState? submissionState}) : super.loaded(submissionState);
+	DashboardAchievementsData({required this.availableBadges, required this.childBadges});
 
-	DashboardAchievementsState copyWith({List<Badge>? availableBadges, List<ChildBadge>? childBadges, DataSubmissionState? submissionState}) {
-		return DashboardAchievementsState(
+	DashboardAchievementsData copyWith({List<Badge>? availableBadges, List<ChildBadge>? childBadges}) {
+		return DashboardAchievementsData(
 			availableBadges: availableBadges ?? this.availableBadges,
 			childBadges: childBadges ?? this.childBadges,
-			submissionState: submissionState
 		);
 	}
 
 	@override
-	StatefulState withSubmitState(DataSubmissionState submissionState) => copyWith(submissionState: submissionState);
-
-	@override
-	List<Object?> get props => super.props..addAll([availableBadges, childBadges]);
+	List<Object?> get props => [availableBadges, childBadges];
 }

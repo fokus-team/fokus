@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,10 +13,10 @@ class SubmitPopConfig {
 	SubmitPopConfig.onSubmitted({this.count = 1}) : moment = DataSubmissionState.submissionSuccess;
 }
 
-class StatefulBlocBuilder<CubitType extends StatefulCubit<InitialState>, InitialState extends StatefulState, LoadedState extends InitialState> extends StatelessWidget {
-  final BlocWidgetBuilder<LoadedState> builder;
-	final BlocWidgetListener<InitialState>? listener;
-	final BlocWidgetBuilder<InitialState>? loadingBuilder;
+class StatefulBlocBuilder<CubitType extends StatefulCubit<CubitData>, CubitData extends Equatable> extends StatelessWidget {
+  final BlocWidgetBuilder<StatefulState<CubitData>> builder;
+	final BlocWidgetListener<StatefulState<CubitData>>? listener;
+	final BlocWidgetBuilder<StatefulState<CubitData>>? loadingBuilder;
 
 	final bool expandLoader;
 	final bool overlayLoader;
@@ -25,14 +26,10 @@ class StatefulBlocBuilder<CubitType extends StatefulCubit<InitialState>, Initial
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<CubitType, InitialState>(
+    return BlocConsumer<CubitType, StatefulState<CubitData>>(
 	    builder: (context, state) {
-		    var cubit = context.watch<CubitType>();
-		    if (!cubit.hasOption(StatefulOption.noAutoLoading) && state.loadingState == DataLoadingState.notLoaded)
-			    cubit.loadData();
-		    else if (state.loaded)
-			    return builder(context, state as LoadedState);
-
+		    if (state.loaded)
+			    return builder(context, state);
 		    return _getBuilderWidget(context, state);
 	    },
 	    listener: (context, state) {
@@ -49,10 +46,10 @@ class StatefulBlocBuilder<CubitType extends StatefulCubit<InitialState>, Initial
     );
   }
 
-  Widget _getBuilderWidget(BuildContext context, InitialState state) {
-  	var baseLoader = Center(child: AppLoader(hasOverlay: overlayLoader));
-	  var defaultLoader = expandLoader ? Expanded(child: baseLoader) : baseLoader;
+  Widget _getBuilderWidget(BuildContext context, StatefulState<CubitData> state) {
+	  var defaultLoader = loader(expanded: expandLoader, hasOverlay: overlayLoader);
 
+	  if (state.notLoaded) return defaultLoader;
 	  if (loadingBuilder != null) {
 		  if (overlayLoader)
 			  return Stack(children: [
@@ -62,12 +59,10 @@ class StatefulBlocBuilder<CubitType extends StatefulCubit<InitialState>, Initial
 		  else
 			  return loadingBuilder!(context, state);
 	  } else
-		  return expandLoader ? Expanded(child: Center(child: AppLoader())) : Center(child: AppLoader());
+		  return defaultLoader;
   }
-}
 
-class SimpleStatefulBlocBuilder<CubitType extends StatefulCubit, LoadedState extends StatefulState> extends StatefulBlocBuilder<CubitType, StatefulState, LoadedState> {
-	SimpleStatefulBlocBuilder({required BlocWidgetBuilder<LoadedState> builder, BlocWidgetListener<StatefulState>? listener,
-		BlocWidgetBuilder<StatefulState>? loadingBuilder, bool expandLoader = false, SubmitPopConfig? popConfig}) :
-				super(builder: builder, listener: listener, loadingBuilder: loadingBuilder, expandLoader: expandLoader, popConfig: popConfig);
-}
+  static Widget loader({bool expanded = false, bool hasOverlay = false}) {
+    var loader = Center(child: AppLoader(hasOverlay: hasOverlay));
+    return expanded ? Expanded(child: loader) : loader;
+  }}

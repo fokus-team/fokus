@@ -1,8 +1,8 @@
+import 'package:bloc_extensions/bloc_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../logic/common/plan_instance_cubit.dart';
-import '../../logic/common/stateful/stateful_cubit.dart';
 import '../../logic/common/timer/timer_cubit.dart';
 import '../../model/db/plan/plan_instance_state.dart';
 import '../../model/db/plan/task_status.dart';

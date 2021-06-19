@@ -4,15 +4,15 @@ import 'package:get_it/get_it.dart';
 
 import '../../model/ui/plan/ui_plan_instance.dart';
 import '../../services/model_helpers/ui_data_aggregator.dart';
-import '../common/stateful/stateful_cubit.dart';
+import '../common/cubit_base.dart';
 
-class ChildPanelCubit extends StatefulCubit<ChildPlansData> {
+class ChildPanelCubit extends CubitBase<ChildPlansData> {
 	final UIDataAggregator _dataAggregator = GetIt.I<UIDataAggregator>();
 
   ChildPanelCubit(ModalRoute pageRoute) : super(pageRoute);
 
   @override
-  Future load() => doLoad(body: () async {
+  Future loadData() => load(body: () async {
   	if (activeUser == null) return null;
     return ChildPlansData(await _dataAggregator.loadTodaysPlanInstances(childId: activeUser!.id!));
   });

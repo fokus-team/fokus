@@ -1,4 +1,4 @@
-part of 'stateful_cubit.dart';
+import 'package:equatable/equatable.dart';
 
 enum DataSubmissionState {
 	notSubmitted, submissionInProgress, submissionSuccess, submissionFailure
@@ -8,7 +8,7 @@ enum DataLoadingState {
 	notLoaded, loadingInProgress, loadSuccess, loadFailure
 }
 
-class StatefulState<CubitData extends Equatable> extends Equatable {
+class StatefulState<CubitData> extends Equatable {
 	final CubitData? data;
 	final DataLoadingState loadingState;
 	final DataSubmissionState submissionState;

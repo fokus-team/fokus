@@ -11,9 +11,9 @@ import '../../../model/ui/plan/ui_plan_instance.dart';
 import '../../../services/data/data_repository.dart';
 import '../../../services/model_helpers/ui_data_aggregator.dart';
 import '../../../services/plan_keeper_service.dart';
-import '../../common/stateful/stateful_cubit.dart';
+import '../../common/cubit_base.dart';
 
-class DashboardPlansCubit extends StatefulCubit<DashboardPlansData> {
+class DashboardPlansCubit extends CubitBase<DashboardPlansData> {
 	late Child child;
 	late List<Plan> _availablePlans;
 	
@@ -24,7 +24,7 @@ class DashboardPlansCubit extends StatefulCubit<DashboardPlansData> {
   DashboardPlansCubit(ModalRoute pageRoute) : super(pageRoute, options: [StatefulOption.noAutoLoading, StatefulOption.resetSubmissionState]);
 
   @override
-  Future load() => doLoad(body: () async {
+  Future loadData() => load(body: () async {
 	  var planInstances = (await _dataRepository.getPlanInstances(childIDs: [child.id!], fields: ['_id'])).map((plan) => plan.id!).toList();
 	  var data = await Future.wait([
 		  _dataAggregator.loadTodaysPlanInstances(childId: child.id!),

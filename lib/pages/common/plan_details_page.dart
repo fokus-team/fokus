@@ -4,7 +4,6 @@ import 'package:mongo_dart/mongo_dart.dart' as mongo;
 
 import '../../logic/common/auth_bloc/authentication_bloc.dart';
 import '../../logic/common/plan_cubit.dart';
-import '../../logic/common/stateful/stateful_cubit.dart';
 import '../../model/db/gamification/currency.dart';
 import '../../model/db/plan/plan.dart';
 import '../../model/db/plan/task.dart';
@@ -44,7 +43,7 @@ class _PlanDetailsPageState extends State<PlanDetailsPage> {
           if (state.submitted)
             showSuccessSnackbar(context, '$_pageKey.content.planRemovedText');
         },
-        popConfig: SubmitPopConfig(count: 2, moment: DataSubmissionState.submissionSuccess),
+        popConfig: SubmitPopConfig.onSubmitted(count: 2),
       ),
       floatingActionButton: StatefulBlocBuilder<PlanCubit, PlanData>(
           builder: (context, state) => _buildFloatingButton(state.data!)

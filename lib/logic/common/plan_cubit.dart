@@ -6,16 +6,16 @@ import 'package:mongo_dart/mongo_dart.dart';
 import '../../model/db/plan/plan.dart';
 import '../../model/db/plan/task.dart';
 import '../../services/data/data_repository.dart';
-import 'stateful/stateful_cubit.dart';
+import 'cubit_base.dart';
 
-class PlanCubit extends StatefulCubit<PlanData> {
+class PlanCubit extends CubitBase<PlanData> {
   final ObjectId _planId;
   final DataRepository _dataRepository = GetIt.I<DataRepository>();
 
   PlanCubit(this._planId, ModalRoute pageRoute) : super(pageRoute);
 
   @override
-  Future load() => doLoad(body: () async {
+  Future loadData() => load(body: () async {
     var plan = (await _dataRepository.getPlan(id: _planId))!;
     var children = await _dataRepository.getUserNames(plan.assignedTo!);
     var tasks = await _dataRepository.getTasks(planId: _planId);

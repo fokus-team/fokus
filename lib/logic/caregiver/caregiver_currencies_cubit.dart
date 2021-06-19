@@ -6,21 +6,21 @@ import '../../model/db/gamification/currency.dart';
 import '../../model/db/user/caregiver.dart';
 import '../../services/data/data_repository.dart';
 import '../common/auth_bloc/authentication_bloc.dart';
-import '../common/stateful/stateful_cubit.dart';
+import '../common/cubit_base.dart';
 
-class CaregiverCurrenciesCubit extends StatefulCubit<CaregiverCurrenciesData> {
+class CaregiverCurrenciesCubit extends CubitBase<CaregiverCurrenciesData> {
 	final AuthenticationBloc _authBloc;
   final DataRepository _dataRepository = GetIt.I<DataRepository>();
 
   CaregiverCurrenciesCubit(ModalRoute pageRoute, this._authBloc) : super(pageRoute);
 
 	@override
-  Future load() => doLoad(body: () async {
+  Future loadData() => load(body: () async {
 		return CaregiverCurrenciesData(currencies: (activeUser! as Caregiver).currencies ?? []);
   });
 
 	Future updateCurrencies(List<Currency> currencyList) => submit(
-		initial: CaregiverCurrenciesData(currencies: currencyList),
+	  initialState: CaregiverCurrenciesData(currencies: currencyList),
 		body: () async {
 			var user = activeUser! as Caregiver;
 			_authBloc.add(AuthenticationActiveUserUpdated(Caregiver.copyFrom(user, currencies: currencyList)));

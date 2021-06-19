@@ -9,9 +9,9 @@ import '../../../model/db/user/child.dart';
 import '../../../services/analytics_service.dart';
 import '../../../services/data/data_repository.dart';
 import '../../../services/notifications/notification_service.dart';
-import '../../common/stateful/stateful_cubit.dart';
+import '../../common/cubit_base.dart';
 
-class DashboardAchievementsCubit extends StatefulCubit<DashboardAchievementsData> {
+class DashboardAchievementsCubit extends CubitBase<DashboardAchievementsData> {
 	late Child child;
 
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
@@ -21,7 +21,7 @@ class DashboardAchievementsCubit extends StatefulCubit<DashboardAchievementsData
 	DashboardAchievementsCubit(ModalRoute pageRoute): super(pageRoute, options: [StatefulOption.noAutoLoading, StatefulOption.resetSubmissionState]);
 
 	@override
-	Future load() => doLoad(body: () async {
+	Future loadData() => load(body: () async {
 		var user = activeUser as Caregiver;
 		var availableBadges = _filterBadges(user.badges!, child.badges!);
 		return DashboardAchievementsData(availableBadges: availableBadges, childBadges: child.badges!);

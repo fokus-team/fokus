@@ -6,15 +6,16 @@ import '../../model/db/gamification/badge.dart';
 import '../../model/db/gamification/reward.dart';
 import '../../model/db/user/caregiver.dart';
 import '../../services/data/data_repository.dart';
-import '../common/stateful/stateful_cubit.dart';
+import '../common/cubit_base.dart';
 
-class CaregiverAwardsCubit extends StatefulCubit<CaregiverAwardsData> {
+class CaregiverAwardsCubit extends CubitBase<CaregiverAwardsData> {
   final DataRepository _dataRepository = GetIt.I<DataRepository>();
 
   CaregiverAwardsCubit(pageRoute) : super(pageRoute, options: [StatefulOption.resetSubmissionState]);
 
   @override
-	Future load() => doLoad(body: () async {
+	Future loadData() => load(body: () async {
+	  if (activeUser == null) return null;
     var user = activeUser as Caregiver;
 		return CaregiverAwardsData(
 			rewards: await _dataRepository.getRewards(caregiverId: user.id!),

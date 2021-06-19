@@ -1,8 +1,10 @@
+import 'package:bloc_extensions/bloc_extensions.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../logic/common/stateful/stateful_cubit.dart';
+
+import '../logic/common/cubit_base.dart';
 import 'general/app_loader.dart';
 
 class SubmitPopConfig {
@@ -13,7 +15,7 @@ class SubmitPopConfig {
 	SubmitPopConfig.onSubmitted({this.count = 1}) : moment = DataSubmissionState.submissionSuccess;
 }
 
-class StatefulBlocBuilder<CubitType extends StatefulCubit<CubitData>, CubitData extends Equatable> extends StatelessWidget {
+class StatefulBlocBuilder<CubitType extends CubitBase<CubitData>, CubitData extends Equatable> extends StatelessWidget {
   final BlocWidgetBuilder<StatefulState<CubitData>> builder;
 	final BlocWidgetListener<StatefulState<CubitData>>? listener;
 	final BlocWidgetBuilder<StatefulState<CubitData>>? loadingBuilder;

@@ -4,17 +4,17 @@ import 'package:flutter/widgets.dart';
 import '../../../model/db/user/child.dart';
 import '../../../model/navigation/child_dashboard_params.dart';
 import '../../../model/ui/child_card_model.dart';
-import '../../common/stateful/stateful_cubit.dart';
+import '../../common/cubit_base.dart';
 import 'dashboard_achievements_cubit.dart';
 import 'dashboard_plans_cubit.dart';
 import 'dashboard_rewards_cubit.dart';
 
-class ChildDashboardCubit extends StatefulCubit<ChildDashboardData> {
+class ChildDashboardCubit extends CubitBase<ChildDashboardData> {
 	final ChildCardModel _childCard;
 
 	final int _initialTab;
 	
-	final List<StatefulCubit> _tabCubits;
+	final List<CubitBase> _tabCubits;
 	final DashboardPlansCubit _plansCubit;
 	final DashboardRewardsCubit _rewardsCubit;
 	final DashboardAchievementsCubit _achievementsCubit;
@@ -26,7 +26,7 @@ class ChildDashboardCubit extends StatefulCubit<ChildDashboardData> {
 			  super(pageRoute, options: [StatefulOption.resetSubmissionState]);
 
   @override
-  Future load() => doLoad(body: () async {
+  Future loadData() => load(body: () async {
 	  _plansCubit.child = _childCard.child;
 	  _rewardsCubit.child = _childCard.child;
 	  _achievementsCubit.child = _childCard.child;
@@ -38,7 +38,7 @@ class ChildDashboardCubit extends StatefulCubit<ChildDashboardData> {
 
   Future loadTab(int tabIndex) {
   	var cubit = _tabCubits[tabIndex.clamp(0, 3)];
-  	return cubit.load();
+  	return cubit.loadData();
   }
 
 	Future onNameDialogClosed(Future<String?> result) => submit(body: () async {

@@ -19,9 +19,9 @@ import '../../services/data/data_repository.dart';
 import '../../services/model_helpers/task_instance_service.dart';
 import '../../services/model_helpers/ui_data_aggregator.dart';
 import '../../services/notifications/notification_service.dart';
-import '../common/stateful/stateful_cubit.dart';
+import '../common/cubit_base.dart';
 
-class TasksEvaluationCubit extends StatefulCubit<TasksEvaluationData> {
+class TasksEvaluationCubit extends CubitBase<TasksEvaluationData> {
   final DataRepository _dataRepository = GetIt.I<DataRepository>();
   final AnalyticsService _analyticsService = GetIt.I<AnalyticsService>();
   final TaskInstanceService _taskInstanceService = GetIt.I<TaskInstanceService>();
@@ -39,7 +39,7 @@ class TasksEvaluationCubit extends StatefulCubit<TasksEvaluationData> {
   List<NotificationType> notificationTypeSubscription() => [NotificationType.taskFinished];
 
 	@override
-	Future load() => doLoad(body: () async {
+	Future loadData() => load(body: () async {
 		var user = activeUser as Caregiver;
 		var children = (await _dataRepository.getUsers(ids: user.connections)).map((e) => e as Child);
 		var childCards = await _dataAggregator.loadChildCards(children.toList());

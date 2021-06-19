@@ -7,9 +7,9 @@ import '../../../model/db/user/child.dart';
 import '../../../services/app_config/app_config_repository.dart';
 import '../../../services/data/data_repository.dart';
 import '../../common/auth_bloc/authentication_bloc.dart';
-import '../../common/stateful/stateful_cubit.dart';
+import '../../common/cubit_base.dart';
 
-class SavedChildProfilesCubit extends StatefulCubit<SavedChildProfilesData> {
+class SavedChildProfilesCubit extends CubitBase<SavedChildProfilesData> {
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final AppConfigRepository _appConfigRepository = GetIt.I<AppConfigRepository>();
 	final AuthenticationBloc authenticationBloc;
@@ -17,7 +17,7 @@ class SavedChildProfilesCubit extends StatefulCubit<SavedChildProfilesData> {
   SavedChildProfilesCubit(this.authenticationBloc, ModalRoute pageRoute) : super(pageRoute);
 
   @override
-  Future load() => doLoad(body: () async {
+  Future loadData() => load(body: () async {
 	  var savedIds = _appConfigRepository.getSavedChildProfiles();
 	  var children = await _dataRepository.getUsers(ids: savedIds, fields: ['_id', 'name', 'avatar']);
 	  return SavedChildProfilesData(savedProfiles: children.map((child) => child as Child).toList());

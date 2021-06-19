@@ -17,10 +17,10 @@ import '../../services/data/data_repository.dart';
 import '../../services/model_helpers/task_instance_service.dart';
 import '../../services/model_helpers/ui_data_aggregator.dart';
 import '../../utils/duration_utils.dart';
-import 'stateful/stateful_cubit.dart';
+import 'cubit_base.dart';
 
 
-class PlanInstanceCubit extends StatefulCubit<PlanInstanceData> {
+class PlanInstanceCubit extends CubitBase<PlanInstanceData> {
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final TaskInstanceService _taskInstancesService = GetIt.I<TaskInstanceService>();
 	final UIDataAggregator _dataAggregator = GetIt.I<UIDataAggregator>();
@@ -38,8 +38,8 @@ class PlanInstanceCubit extends StatefulCubit<PlanInstanceData> {
   bool shouldNotificationRefresh(NotificationRefreshInfo info) => info.subject == uiPlan.instance.id;
 
   @override
-	Future load() => doLoad(
-	  initial: PlanInstanceData(uiPlan: uiPlan),
+	Future loadData() => load(
+	  initialState: PlanInstanceData(uiPlan: uiPlan),
 	  body: () async {
 		  _planInstance = (await _dataRepository.getPlanInstance(id: uiPlan.instance.id))!;
 		  if(_planInstance.taskInstances == null || _planInstance.taskInstances!.isEmpty)

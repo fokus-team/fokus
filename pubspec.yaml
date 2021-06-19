@@ -23,6 +23,8 @@ dependencies:
     # Modules
     fokus_auth:
         path: fokus_auth
+    bloc_extensions:
+        path: bloc_extensions
 
     mongo_dart:
         git:

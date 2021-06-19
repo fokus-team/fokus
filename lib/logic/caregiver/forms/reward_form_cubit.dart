@@ -11,9 +11,9 @@ import '../../../model/db/user/caregiver.dart';
 import '../../../model/ui/app_page.dart';
 import '../../../services/analytics_service.dart';
 import '../../../services/data/data_repository.dart';
-import '../../common/stateful/stateful_cubit.dart';
+import '../../common/cubit_base.dart';
 
-class RewardFormCubit extends StatefulCubit<RewardFormData> {
+class RewardFormCubit extends CubitBase<RewardFormData> {
 	final ObjectId? _rewardId;
 
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
@@ -22,8 +22,8 @@ class RewardFormCubit extends StatefulCubit<RewardFormData> {
   RewardFormCubit(this._rewardId, ModalRoute pageRoute) : super(pageRoute);
 
   @override
-	Future load() => doLoad(
-	  initial: RewardFormData(formType: _rewardId == null ? AppFormType.create : AppFormType.edit),
+	Future loadData() => load(
+	  initialState: RewardFormData(formType: _rewardId == null ? AppFormType.create : AppFormType.edit),
 	  body: () async {
 		  var user = activeUser as Caregiver;
 		  var currencies = user.currencies!;

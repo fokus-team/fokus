@@ -1,10 +1,10 @@
+import 'package:bloc_extensions/bloc_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../logic/child/child_rewards_cubit.dart';
 import '../../logic/common/auth_bloc/authentication_bloc.dart';
-import '../../logic/common/stateful/stateful_cubit.dart';
 import '../../model/db/gamification/reward.dart';
 import '../../model/db/user/user_role.dart';
 import '../../model/ui/ui_button.dart';

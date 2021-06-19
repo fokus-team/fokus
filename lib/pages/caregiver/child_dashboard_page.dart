@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:bloc_extensions/bloc_extensions.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,7 +13,7 @@ import '../../logic/caregiver/child_dashboard/child_dashboard_cubit.dart';
 import '../../logic/caregiver/child_dashboard/dashboard_achievements_cubit.dart';
 import '../../logic/caregiver/child_dashboard/dashboard_plans_cubit.dart';
 import '../../logic/caregiver/child_dashboard/dashboard_rewards_cubit.dart';
-import '../../logic/common/stateful/stateful_cubit.dart';
+import '../../logic/common/cubit_base.dart';
 import '../../model/db/gamification/badge.dart';
 import '../../model/db/plan/plan.dart';
 import '../../model/navigation/child_dashboard_params.dart';
@@ -103,7 +104,7 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 		);
 	}
 
-	Widget _buildTab<CubitType extends StatefulCubit<CubitData>, CubitData extends Equatable>(List<Widget> Function(CubitData) content, int index) {
+	Widget _buildTab<CubitType extends CubitBase<CubitData>, CubitData extends Equatable>(List<Widget> Function(CubitData) content, int index) {
 		return StatefulBlocBuilder<CubitType, CubitData>(
 			builder: (context, state) => round_spot.Detector(
 				areaID: '$index',
@@ -208,7 +209,7 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 		);
 	}
 
-	Widget _buildSelect<Type, CubitType extends StatefulCubit<CubitData>, CubitData extends Equatable>({
+	Widget _buildSelect<Type, CubitType extends CubitBase<CubitData>, CubitData extends Equatable>({
 		required Widget Function([List<Type>]) content,
 		required List<Type> Function(CubitData) model
 	}) {

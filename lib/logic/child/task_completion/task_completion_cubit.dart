@@ -19,11 +19,11 @@ import '../../../services/data/data_repository.dart';
 import '../../../services/model_helpers/ui_data_aggregator.dart';
 import '../../../services/notifications/notification_service.dart';
 import '../../../utils/duration_utils.dart';
-import '../../common/stateful/stateful_cubit.dart';
+import '../../common/cubit_base.dart';
 
 part 'task_completion_state.dart';
 
-class TaskCompletionCubit extends StatefulCubit<TaskCompletionData> {
+class TaskCompletionCubit extends CubitBase<TaskCompletionData> {
 	final ObjectId _taskInstanceId;
 	final TaskInProgressParams params;
 
@@ -41,8 +41,8 @@ class TaskCompletionCubit extends StatefulCubit<TaskCompletionData> {
 				super(pageRoute, options: [StatefulOption.resetSubmissionState]);
 
 	@override
-	Future load() => doLoad(
-		initial: TaskCompletionData(uiPlan: params.planInstance),
+	Future loadData() => load(
+		initialState: TaskCompletionData(uiPlan: params.planInstance),
 		body: () async {
 			_taskInstance = (await _dataRepository.getTaskInstance(taskInstanceId: _taskInstanceId))!;
 			_task = (await _dataRepository.getTask(taskId: _taskInstance.taskID))!;
@@ -101,7 +101,7 @@ class TaskCompletionCubit extends StatefulCubit<TaskCompletionData> {
 	);
 
 	Future switchToBreak() => submit(
-		initial: data?.copyWith(current: TaskCompletionStateType.inBreak),
+	  initialState: data?.copyWith(current: TaskCompletionStateType.inBreak),
 		body: () async {
 			_taskInstance.duration!.last = _taskInstance.duration!.last.end();
 			_taskInstance.breaks!.add(DateSpan(from: TimeDate.now()));
@@ -114,7 +114,7 @@ class TaskCompletionCubit extends StatefulCubit<TaskCompletionData> {
 	);
 
 	Future switchToProgress() => submit(
-		initial: data?.copyWith(current: TaskCompletionStateType.inProgress),
+	  initialState: data?.copyWith(current: TaskCompletionStateType.inProgress),
 		body: () async {
 			_taskInstance.breaks!.last = _taskInstance.breaks!.last.end();
 			_taskInstance.duration!.add(DateSpan(from: TimeDate.now()));
@@ -127,7 +127,7 @@ class TaskCompletionCubit extends StatefulCubit<TaskCompletionData> {
 	);
 
 	Future markAsFinished() => submit(
-		initial: data?.copyWith(current: TaskCompletionStateType.finished),
+	  initialState: data?.copyWith(current: TaskCompletionStateType.finished),
 		body: () async {
 	    _notificationService.sendTaskFinishedNotification(_planInstance.id!, _task.name!, _plan.createdBy!, activeUser!, completed: true);
 		  _analyticsService.logTaskFinished(_taskInstance);
@@ -138,7 +138,7 @@ class TaskCompletionCubit extends StatefulCubit<TaskCompletionData> {
 	);
 
 	Future markAsDiscarded() => submit(
-		initial: data?.copyWith(current: TaskCompletionStateType.discarded),
+	  initialState: data?.copyWith(current: TaskCompletionStateType.discarded),
 		body: () async {
 			_notificationService.sendTaskFinishedNotification(_planInstance.id!, _task.name!, _plan.createdBy!, activeUser!, completed: false);
 			_analyticsService.logTaskNotFinished(_taskInstance);
@@ -148,7 +148,7 @@ class TaskCompletionCubit extends StatefulCubit<TaskCompletionData> {
 		},
 	);
 
-	void updateChecks(int index, MapEntry<String, bool> subtask) => doLoad(body: () async {
+	void updateChecks(int index, MapEntry<String, bool> subtask) => submit(body: () async {
   	_taskInstance.subtasks![index] = subtask;
 		await _dataRepository.updateTaskInstanceFields(_taskInstance.id!, subtasks: _taskInstance.subtasks);
 		return data!.copyWith(taskInstance: UITaskInstance(instance: _taskInstance, task: _task));

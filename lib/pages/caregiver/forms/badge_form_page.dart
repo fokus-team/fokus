@@ -1,9 +1,9 @@
+import 'package:bloc_extensions/bloc_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../logic/caregiver/forms/badge_form_cubit.dart';
-import '../../../logic/common/stateful/stateful_cubit.dart';
 import '../../../model/ui/form/badge_form_model.dart';
 import '../../../services/app_locales.dart';
 import '../../../utils/ui/dialog_utils.dart';

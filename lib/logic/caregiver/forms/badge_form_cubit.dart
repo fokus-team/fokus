@@ -7,9 +7,9 @@ import '../../../model/ui/form/badge_form_model.dart';
 import '../../../services/analytics_service.dart';
 import '../../../services/data/data_repository.dart';
 import '../../common/auth_bloc/authentication_bloc.dart';
-import '../../common/stateful/stateful_cubit.dart';
+import '../../common/cubit_base.dart';
 
-class BadgeFormCubit extends StatefulCubit {
+class BadgeFormCubit extends CubitBase {
 	final AuthenticationBloc _authBloc;
 
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();

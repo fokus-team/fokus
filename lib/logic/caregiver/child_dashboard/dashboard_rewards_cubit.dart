@@ -6,9 +6,9 @@ import '../../../model/db/gamification/reward.dart';
 import '../../../model/db/user/child.dart';
 import '../../../model/notification/notification_type.dart';
 import '../../../services/data/data_repository.dart';
-import '../../common/stateful/stateful_cubit.dart';
+import '../../common/cubit_base.dart';
 
-class DashboardRewardsCubit extends StatefulCubit<DashboardRewardsData> {
+class DashboardRewardsCubit extends CubitBase<DashboardRewardsData> {
 	late Child child;
 
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
@@ -16,7 +16,7 @@ class DashboardRewardsCubit extends StatefulCubit<DashboardRewardsData> {
 	DashboardRewardsCubit(ModalRoute pageRoute) : super(pageRoute, options: [StatefulOption.noAutoLoading]);
 
 	@override
-	Future load() => doLoad(body: () async {
+	Future loadData() => load(body: () async {
 		var rewardsAdded = await _dataRepository.countRewards(caregiverId: activeUser!.id!);
 		return DashboardRewardsData(childRewards: child.rewards!, noRewardsAdded: rewardsAdded == 0);
 	});

@@ -10,16 +10,17 @@ import '../../model/notification/notification_type.dart';
 import '../../model/ui/child_card_model.dart';
 import '../../services/data/data_repository.dart';
 import '../../services/model_helpers/ui_data_aggregator.dart';
-import '../common/stateful/stateful_cubit.dart';
+import '../common/cubit_base.dart';
 
-class CaregiverPanelCubit extends StatefulCubit<CaregiverPanelData> {
+class CaregiverPanelCubit extends CubitBase<CaregiverPanelData> {
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final UIDataAggregator _dataAggregator = GetIt.I<UIDataAggregator>();
 
   CaregiverPanelCubit(ModalRoute pageRoute) : super(pageRoute);
 
   @override
-  Future load() => doLoad(body: () async {
+  Future loadData() => load(body: () async {
+	  if (activeUser == null) return null;
   	var _activeUser = activeUser as Caregiver;
 	  var children = (await _dataRepository.getUsers(connected: _activeUser.id, role: UserRole.child)).map((e) => e as Child).toList();
 	  var uiChildren = await _dataAggregator.loadChildCards(children);

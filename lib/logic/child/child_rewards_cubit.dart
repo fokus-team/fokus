@@ -13,9 +13,9 @@ import '../../model/notification/notification_type.dart';
 import '../../services/analytics_service.dart';
 import '../../services/data/data_repository.dart';
 import '../../services/notifications/notification_service.dart';
-import '../common/stateful/stateful_cubit.dart';
+import '../common/cubit_base.dart';
 
-class ChildRewardsCubit extends StatefulCubit<ChildRewardsData> {
+class ChildRewardsCubit extends CubitBase<ChildRewardsData> {
 	final DataRepository _dataRepository = GetIt.I<DataRepository>();
 	final NotificationService _notificationService = GetIt.I<NotificationService>();
 	final AnalyticsService _analyticsService = GetIt.I<AnalyticsService>();
@@ -25,7 +25,7 @@ class ChildRewardsCubit extends StatefulCubit<ChildRewardsData> {
   ChildRewardsCubit(ModalRoute pageRoute) : super(pageRoute, options: [StatefulOption.resetSubmissionState]);
 
   @override
-  Future load() => doLoad(body: () async {
+  Future loadData() => load(body: () async {
 	  if (activeUser == null) return null;
 		var caregiverID = activeUser!.connections?.first;
 		if(caregiverID != null && _rewards == null)

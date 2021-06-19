@@ -1,9 +1,9 @@
+import 'package:bloc_extensions/bloc_extensions.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../logic/child/child_rewards_cubit.dart';
-import '../../logic/common/stateful/stateful_cubit.dart';
 import '../../utils/ui/dialog_utils.dart';
 import '../../utils/ui/snackbar_utils.dart';
 import '../../utils/ui/theme_config.dart';

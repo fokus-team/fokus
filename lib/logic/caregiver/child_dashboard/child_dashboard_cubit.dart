@@ -1,3 +1,4 @@
+import 'package:bloc_extensions/bloc_extensions.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
 
@@ -23,22 +24,22 @@ class ChildDashboardCubit extends CubitBase<ChildDashboardData> {
 			  _initialTab = args.tab ?? 0,
 			  _childCard = args.childCard,
 			  _tabCubits = [_plansCubit, _rewardsCubit, _achievementsCubit],
-			  super(pageRoute, options: [StatefulOption.resetSubmissionState]);
+			  super(pageRoute);
 
   @override
-  Future loadData() => load(body: () async {
+  Future reload(ReloadReason reason) => load(body: () async {
 	  _plansCubit.child = _childCard.child;
 	  _rewardsCubit.child = _childCard.child;
 	  _achievementsCubit.child = _childCard.child;
-	  loadTab((_initialTab + 1) % 3);
-	  loadTab((_initialTab + 2) % 3);
-	  await loadTab(_initialTab);
+	  loadTab((_initialTab + 1) % 3, reason);
+	  loadTab((_initialTab + 2) % 3, reason);
+	  await loadTab(_initialTab, reason);
 	  return ChildDashboardData(childCard: _childCard);
   });
 
-  Future loadTab(int tabIndex) {
+  Future loadTab(int tabIndex, ReloadReason reason) {
   	var cubit = _tabCubits[tabIndex.clamp(0, 3)];
-  	return cubit.loadData();
+  	return cubit.reload(reason);
   }
 
 	Future onNameDialogClosed(Future<String?> result) => submit(body: () async {

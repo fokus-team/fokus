@@ -38,7 +38,7 @@ class PlanInstanceCubit extends CubitBase<PlanInstanceData> {
   bool shouldNotificationRefresh(NotificationRefreshInfo info) => info.subject == uiPlan.instance.id;
 
   @override
-	Future loadData() => load(
+	Future reload(_) => load(
 	  initialState: PlanInstanceData(uiPlan: uiPlan),
 	  body: () async {
 		  _planInstance = (await _dataRepository.getPlanInstance(id: uiPlan.instance.id))!;

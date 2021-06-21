@@ -18,10 +18,10 @@ class DashboardAchievementsCubit extends CubitBase<DashboardAchievementsData> {
 	final AnalyticsService _analyticsService = GetIt.I<AnalyticsService>();
 	final NotificationService _notificationService = GetIt.I<NotificationService>();
 
-	DashboardAchievementsCubit(ModalRoute pageRoute): super(pageRoute, options: [StatefulOption.noAutoLoading, StatefulOption.resetSubmissionState]);
+	DashboardAchievementsCubit(ModalRoute pageRoute): super(pageRoute, options: [StatefulOption.noAutoLoading]);
 
 	@override
-	Future loadData() => load(body: () async {
+	Future reload(_) => load(body: () async {
 		var user = activeUser as Caregiver;
 		var availableBadges = _filterBadges(user.badges!, child.badges!);
 		return DashboardAchievementsData(availableBadges: availableBadges, childBadges: child.badges!);

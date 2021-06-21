@@ -16,7 +16,7 @@ class DashboardRewardsCubit extends CubitBase<DashboardRewardsData> {
 	DashboardRewardsCubit(ModalRoute pageRoute) : super(pageRoute, options: [StatefulOption.noAutoLoading]);
 
 	@override
-	Future loadData() => load(body: () async {
+	Future reload(_) => load(body: () async {
 		var rewardsAdded = await _dataRepository.countRewards(caregiverId: activeUser!.id!);
 		return DashboardRewardsData(childRewards: child.rewards!, noRewardsAdded: rewardsAdded == 0);
 	});

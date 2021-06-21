@@ -35,15 +35,12 @@ class StatefulBlocBuilder<CubitType extends CubitBase<CubitData>, CubitData exte
 		    return _getBuilderWidget(context, state);
 	    },
 	    listener: (context, state) {
-	    	var cubit = context.read<CubitType>();
 	    	if (popConfig != null && popConfig!.moment == state.submissionState) {
 			    for (var i = 0; i < popConfig!.count; i++)
 				    Navigator.of(context).pop();
 		    }
 		    if (listener != null)
 		      listener!(context, state);
-				if (cubit.hasOption(StatefulOption.resetSubmissionState) && state.submitted)
-					cubit.resetSubmissionState();
 	    }
     );
   }

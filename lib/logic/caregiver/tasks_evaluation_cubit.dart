@@ -39,7 +39,7 @@ class TasksEvaluationCubit extends CubitBase<TasksEvaluationData> {
   List<NotificationType> notificationTypeSubscription() => [NotificationType.taskFinished];
 
 	@override
-	Future loadData() => load(body: () async {
+	Future reload(_) => load(body: () async {
 		var user = activeUser as Caregiver;
 		var children = (await _dataRepository.getUsers(ids: user.connections)).map((e) => e as Child);
 		var childCards = await _dataAggregator.loadChildCards(children.toList());

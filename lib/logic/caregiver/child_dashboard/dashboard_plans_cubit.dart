@@ -21,10 +21,10 @@ class DashboardPlansCubit extends CubitBase<DashboardPlansData> {
 	final UIDataAggregator _dataAggregator = GetIt.I<UIDataAggregator>();
 	final PlanKeeperService _planKeeperService = GetIt.I<PlanKeeperService>();
 	
-  DashboardPlansCubit(ModalRoute pageRoute) : super(pageRoute, options: [StatefulOption.noAutoLoading, StatefulOption.resetSubmissionState]);
+  DashboardPlansCubit(ModalRoute pageRoute) : super(pageRoute, options: [StatefulOption.noAutoLoading]);
 
   @override
-  Future loadData() => load(body: () async {
+  Future reload(_) => load(body: () async {
 	  var planInstances = (await _dataRepository.getPlanInstances(childIDs: [child.id!], fields: ['_id'])).map((plan) => plan.id!).toList();
 	  var data = await Future.wait([
 		  _dataAggregator.loadTodaysPlanInstances(childId: child.id!),

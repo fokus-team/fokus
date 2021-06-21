@@ -11,10 +11,10 @@ import '../common/cubit_base.dart';
 class CaregiverAwardsCubit extends CubitBase<CaregiverAwardsData> {
   final DataRepository _dataRepository = GetIt.I<DataRepository>();
 
-  CaregiverAwardsCubit(pageRoute) : super(pageRoute, options: [StatefulOption.resetSubmissionState]);
+  CaregiverAwardsCubit(pageRoute) : super(pageRoute);
 
   @override
-	Future loadData() => load(body: () async {
+	Future reload(_) => load(body: () async {
 	  if (activeUser == null) return null;
     var user = activeUser as Caregiver;
 		return CaregiverAwardsData(

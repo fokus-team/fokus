@@ -5,15 +5,15 @@ import 'package:meta/meta.dart';
 
 import 'stateful_state.dart';
 
-mixin StatefulCubit<CubitData> on Cubit<StatefulState<CubitData>> {
+mixin StatefulCubit<Data> on Cubit<StatefulState<Data>> {
 	@protected
-	CubitData? get data => state.data;
+	Data? get data => state.data;
 
 	@protected
-	void update(CubitData data) => emit(state.copyWith(data: data));
+	void emitData(Data data) => emit(state.copyWith(data: data));
 
 	@protected
-	Future load({required FutureOr<CubitData?> Function() body, CubitData? initialState}) async {
+	Future load({required FutureOr<Data?> Function() body, Data? initialState}) async {
 		if (state.beingLoaded) return;
 		emit(state.copyWith(loadingState: DataLoadingState.loadingInProgress, data: initialState));
 		try {
@@ -25,8 +25,8 @@ mixin StatefulCubit<CubitData> on Cubit<StatefulState<CubitData>> {
 	}
 
 	@protected
-	Future submit({required FutureOr<CubitData?> Function() body, CubitData? initialState}) async {
-		if (!state.notSubmitted) return;
+	Future submit({required FutureOr<Data?> Function() body, Data? initialState}) async {
+		if (state.beingSubmitted) return;
 		emit(state.copyWith(submissionState: DataSubmissionState.submissionInProgress, data: initialState));
 		try {
 			emit(state.copyWith(data: await body(), submissionState: DataSubmissionState.submissionSuccess));

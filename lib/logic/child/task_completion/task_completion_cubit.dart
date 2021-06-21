@@ -1,3 +1,4 @@
+import 'package:bloc_extensions/bloc_extensions.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart';
@@ -37,11 +38,10 @@ class TaskCompletionCubit extends CubitBase<TaskCompletionData> {
 	final UIDataAggregator _dataAggregator = GetIt.I<UIDataAggregator>();
 	final AnalyticsService _analyticsService = GetIt.I<AnalyticsService>();
 
-	TaskCompletionCubit(this.params, ModalRoute pageRoute) : _taskInstanceId = params.taskId,
-				super(pageRoute, options: [StatefulOption.resetSubmissionState]);
+	TaskCompletionCubit(this.params, ModalRoute pageRoute) : _taskInstanceId = params.taskId, super(pageRoute);
 
 	@override
-	Future loadData() => load(
+	Future reload(ReloadReason reason) => load(
 		initialState: TaskCompletionData(uiPlan: params.planInstance),
 		body: () async {
 			_taskInstance = (await _dataRepository.getTaskInstance(taskInstanceId: _taskInstanceId))!;
@@ -54,7 +54,7 @@ class TaskCompletionCubit extends CubitBase<TaskCompletionData> {
 			var uiTaskInstance = UITaskInstance(instance: _taskInstance, task: _task);
 			var planInstance = await _dataAggregator.loadPlanInstance(planInstance: _planInstance, plan: _plan);
 
-			if (!loadingForFirstTime && _taskInstance.status!.completed! && (_taskInstance.status!.state == TaskState.evaluated || _taskInstance.status!.state == TaskState.rejected)) {
+			if (reason != ReloadReason.push && _taskInstance.status!.completed! && (_taskInstance.status!.state == TaskState.evaluated || _taskInstance.status!.state == TaskState.rejected)) {
 				if(_taskInstance.status!.state == TaskState.evaluated)
 					return TaskCompletionData.finished(uiTask: uiTaskInstance,  uiPlan: planInstance);
 				else

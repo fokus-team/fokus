@@ -19,7 +19,7 @@ class CaregiverPanelCubit extends CubitBase<CaregiverPanelData> {
   CaregiverPanelCubit(ModalRoute pageRoute) : super(pageRoute);
 
   @override
-  Future loadData() => load(body: () async {
+  Future reload(_) => load(body: () async {
 	  if (activeUser == null) return null;
   	var _activeUser = activeUser as Caregiver;
 	  var children = (await _dataRepository.getUsers(connected: _activeUser.id, role: UserRole.child)).map((e) => e as Child).toList();

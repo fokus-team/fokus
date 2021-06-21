@@ -15,7 +15,7 @@ class PlanCubit extends CubitBase<PlanData> {
   PlanCubit(this._planId, ModalRoute pageRoute) : super(pageRoute);
 
   @override
-  Future loadData() => load(body: () async {
+  Future reload(_) => load(body: () async {
     var plan = (await _dataRepository.getPlan(id: _planId))!;
     var children = await _dataRepository.getUserNames(plan.assignedTo!);
     var tasks = await _dataRepository.getTasks(planId: _planId);

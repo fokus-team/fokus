@@ -15,7 +15,7 @@ class CaregiverCurrenciesCubit extends CubitBase<CaregiverCurrenciesData> {
   CaregiverCurrenciesCubit(ModalRoute pageRoute, this._authBloc) : super(pageRoute);
 
 	@override
-  Future loadData() => load(body: () async {
+  Future reload(_) => load(body: () async {
 		return CaregiverCurrenciesData(currencies: (activeUser! as Caregiver).currencies ?? []);
   });
 

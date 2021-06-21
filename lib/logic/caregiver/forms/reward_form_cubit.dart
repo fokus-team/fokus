@@ -22,7 +22,7 @@ class RewardFormCubit extends CubitBase<RewardFormData> {
   RewardFormCubit(this._rewardId, ModalRoute pageRoute) : super(pageRoute);
 
   @override
-	Future loadData() => load(
+	Future reload(_) => load(
 	  initialState: RewardFormData(formType: _rewardId == null ? AppFormType.create : AppFormType.edit),
 	  body: () async {
 		  var user = activeUser as Caregiver;
@@ -39,7 +39,7 @@ class RewardFormCubit extends CubitBase<RewardFormData> {
   void onRewardChanged(Reward Function(Reward) function) {
   	if (!state.loaded)
   		return;
-    update(state.data!.copyWith(reward: function(state.data!.reward!)));
+    emitData(state.data!.copyWith(reward: function(state.data!.reward!)));
   }
 	
   Future submitRewardForm() => submit(body: () async {

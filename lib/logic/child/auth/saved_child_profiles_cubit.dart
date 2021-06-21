@@ -17,7 +17,7 @@ class SavedChildProfilesCubit extends CubitBase<SavedChildProfilesData> {
   SavedChildProfilesCubit(this.authenticationBloc, ModalRoute pageRoute) : super(pageRoute);
 
   @override
-  Future loadData() => load(body: () async {
+  Future reload(_) => load(body: () async {
 	  var savedIds = _appConfigRepository.getSavedChildProfiles();
 	  var children = await _dataRepository.getUsers(ids: savedIds, fields: ['_id', 'name', 'avatar']);
 	  return SavedChildProfilesData(savedProfiles: children.map((child) => child as Child).toList());

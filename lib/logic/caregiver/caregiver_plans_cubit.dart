@@ -14,7 +14,7 @@ class CaregiverPlansCubit extends CubitBase<CaregiverPlansData> {
   CaregiverPlansCubit(ModalRoute pageRoute, this._userID) : super(pageRoute);
 
   @override
-	Future loadData() => load(body: () async {
+	Future reload(_) => load(body: () async {
 	  if (activeUser == null) return null;
     var caregiverId = _userID?.key ?? activeUser!.id;
     var plans = await _dataRepository.getPlans(caregiverId: caregiverId);

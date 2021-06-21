@@ -12,7 +12,7 @@ import '../../services/observers/notification/notification_observer.dart';
 import '../../services/observers/user/user_notifier.dart';
 
 enum StatefulOption {
-	resetSubmissionState, noAutoLoading, noDataLoading
+	noAutoLoading
 }
 
 abstract class CubitBase<CubitData extends Equatable> extends ReloadableCubit<StatefulState<CubitData>> with NotificationObserver, StatefulCubit {
@@ -24,31 +24,28 @@ abstract class CubitBase<CubitData extends Equatable> extends ReloadableCubit<St
 	@protected
 	final List<StatefulOption> options;
 	@protected
-	bool loadingForFirstTime = true;
-	@protected
 	User? get activeUser => _userNotifier.activeUser;
 
 	CubitBase(ModalRoute pageRoute, {this.options = const []}) : super(initialState: StatefulState(), route: pageRoute);
-
-	void resetSubmissionState() => emit(state.copyWith(submissionState: DataSubmissionState.notSubmitted));
 
 	@override
 	@nonVirtual
 	void onNotificationReceived(NotificationRefreshInfo info) {
 		if (notificationTypeSubscription().contains(info.type) && shouldNotificationRefresh(info))
-			loadData();
+			reload(ReloadReason.other);
 	}
 
 	@override
-	Future loadData() => Future.value(state.copyWith(loadingState: DataLoadingState.loadSuccess));
+	Future reload(_) => Future.value(state.copyWith(loadingState: DataLoadingState.loadSuccess));
 
 	bool hasOption(StatefulOption option) => options.contains(option);
 
 	@override
-  void show() {
+  void show(ReloadReason reason) {
 		if (notificationTypeSubscription().isNotEmpty)
 			_notificationService.observeNotifications(this);
-		super.show();
+		if (!hasOption(StatefulOption.noAutoLoading))
+			super.show(reason);
   }
 
 	@override

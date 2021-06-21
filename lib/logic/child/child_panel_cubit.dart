@@ -12,7 +12,7 @@ class ChildPanelCubit extends CubitBase<ChildPlansData> {
   ChildPanelCubit(ModalRoute pageRoute) : super(pageRoute);
 
   @override
-  Future loadData() => load(body: () async {
+  Future reload(_) => load(body: () async {
   	if (activeUser == null) return null;
     return ChildPlansData(await _dataAggregator.loadTodaysPlanInstances(childId: activeUser!.id!));
   });

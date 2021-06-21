@@ -22,10 +22,10 @@ class ChildRewardsCubit extends CubitBase<ChildRewardsData> {
 
 	List<Reward>? _rewards;
 
-  ChildRewardsCubit(ModalRoute pageRoute) : super(pageRoute, options: [StatefulOption.resetSubmissionState]);
+  ChildRewardsCubit(ModalRoute pageRoute) : super(pageRoute);
 
   @override
-  Future loadData() => load(body: () async {
+  Future reload(_) => load(body: () async {
 	  if (activeUser == null) return null;
 		var caregiverID = activeUser!.connections?.first;
 		if(caregiverID != null && _rewards == null)

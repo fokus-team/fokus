@@ -32,16 +32,16 @@ abstract class CubitBase<CubitData extends Equatable> extends ReloadableCubit<St
 	@nonVirtual
 	void onNotificationReceived(NotificationRefreshInfo info) {
 		if (notificationTypeSubscription().contains(info.type) && shouldNotificationRefresh(info))
-			reload(ReloadReason.other);
+			reload(ReloadableReason.other);
 	}
 
 	@override
-	Future reload(_) => Future.value(state.copyWith(loadingState: DataLoadingState.loadSuccess));
+	Future reload(_) => Future.value(state.copyWith(loadingState: OperationState.success));
 
 	bool hasOption(StatefulOption option) => options.contains(option);
 
 	@override
-  void show(ReloadReason reason) {
+  void show(ReloadableReason reason) {
 		if (notificationTypeSubscription().isNotEmpty)
 			_notificationService.observeNotifications(this);
 		if (!hasOption(StatefulOption.noAutoLoading))
@@ -49,5 +49,5 @@ abstract class CubitBase<CubitData extends Equatable> extends ReloadableCubit<St
   }
 
 	@override
-	void hide() => _notificationService.removeNotificationObserver(this);
+	void hide(_) => _notificationService.removeNotificationObserver(this);
 }

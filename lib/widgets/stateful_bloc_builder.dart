@@ -9,10 +9,10 @@ import 'general/app_loader.dart';
 
 class SubmitPopConfig {
 	final int count;
-	final DataSubmissionState moment;
+	final OperationState moment;
 
-	SubmitPopConfig({this.count = 1, this.moment = DataSubmissionState.submissionInProgress});
-	SubmitPopConfig.onSubmitted({this.count = 1}) : moment = DataSubmissionState.submissionSuccess;
+	SubmitPopConfig({this.count = 1, this.moment = OperationState.inProgress});
+	SubmitPopConfig.onSubmitted({this.count = 1}) : moment = OperationState.success;
 }
 
 class StatefulBlocBuilder<CubitType extends CubitBase<CubitData>, CubitData extends Equatable> extends StatelessWidget {

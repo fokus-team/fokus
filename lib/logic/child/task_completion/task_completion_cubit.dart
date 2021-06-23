@@ -41,7 +41,7 @@ class TaskCompletionCubit extends CubitBase<TaskCompletionData> {
 	TaskCompletionCubit(this.params, ModalRoute pageRoute) : _taskInstanceId = params.taskId, super(pageRoute);
 
 	@override
-	Future reload(ReloadReason reason) => load(
+	Future reload(ReloadableReason reason) => load(
 		initialState: TaskCompletionData(uiPlan: params.planInstance),
 		body: () async {
 			_taskInstance = (await _dataRepository.getTaskInstance(taskInstanceId: _taskInstanceId))!;
@@ -54,7 +54,7 @@ class TaskCompletionCubit extends CubitBase<TaskCompletionData> {
 			var uiTaskInstance = UITaskInstance(instance: _taskInstance, task: _task);
 			var planInstance = await _dataAggregator.loadPlanInstance(planInstance: _planInstance, plan: _plan);
 
-			if (reason != ReloadReason.push && _taskInstance.status!.completed! && (_taskInstance.status!.state == TaskState.evaluated || _taskInstance.status!.state == TaskState.rejected)) {
+			if (reason != ReloadableReason.push && _taskInstance.status!.completed! && (_taskInstance.status!.state == TaskState.evaluated || _taskInstance.status!.state == TaskState.rejected)) {
 				if(_taskInstance.status!.state == TaskState.evaluated)
 					return TaskCompletionData.finished(uiTask: uiTaskInstance,  uiPlan: planInstance);
 				else

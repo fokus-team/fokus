@@ -1,36 +1,68 @@
 import 'package:equatable/equatable.dart';
 
-enum DataSubmissionState {
-	notSubmitted, submissionInProgress, submissionSuccess, submissionFailure
+/// States a loading or submission operation could be in
+enum OperationState {
+	/// Operation has not yet been started
+  notStarted,
+	/// Operation is currently ongoing
+  inProgress,
+	/// Operation finished successfully
+  success,
+	/// Operation was not finished due to an error
+  failure,
 }
 
-enum DataLoadingState {
-	notLoaded, loadingInProgress, loadSuccess, loadFailure
-}
+/// State used by the stateful bloc extension
+///
+/// In addition to user provided [data] that would normally be the whole state
+/// it tracks both [loadingState] and [submissionState] in a generalized way.
+class StatefulState<Data> extends Equatable {
+	/// User provided state data
+  final Data? data;
+  /// Current data loading state
+  final OperationState loadingState;
+  /// Current data submission state
+  final OperationState submissionState;
 
-class StatefulState<CubitData> extends Equatable {
-	final CubitData? data;
-	final DataLoadingState loadingState;
-	final DataSubmissionState submissionState;
+  /// Returns if the data is not yet loaded
+  bool get notLoaded => loadingState == OperationState.notStarted;
+  /// Returns if the data is currently being loaded
+  bool get beingLoaded => loadingState == OperationState.inProgress;
+  /// Returns if the data was loaded successfully
+  bool get loaded => loadingState == OperationState.success;
+  /// Returns if the data was not loaded due a failure
+  bool get loadFailed => loadingState == OperationState.failure;
+  /// Returns if the data is not yet submitted
+  bool get notSubmitted => submissionState == OperationState.notStarted;
+  /// Returns if the data is currently being submitted
+  bool get beingSubmitted => submissionState == OperationState.inProgress;
+  /// Returns if the data was submitted successfully
+  bool get submitted => submissionState == OperationState.success;
+  /// Returns if the data was not submitted due a failure
+  bool get submitFailed => submissionState == OperationState.failure;
 
-	bool get notLoaded => loadingState == DataLoadingState.notLoaded;
-	bool get beingLoaded => loadingState == DataLoadingState.loadingInProgress;
-	bool get loaded => loadingState == DataLoadingState.loadSuccess;
-	bool get loadFailed => loadingState == DataLoadingState.loadFailure;
-	bool get notSubmitted => submissionState == DataSubmissionState.notSubmitted;
-	bool get beingSubmitted => submissionState == DataSubmissionState.submissionInProgress;
-	bool get submitted => submissionState == DataSubmissionState.submissionSuccess;
+  /// Creates an instance of Stateful State
+  ///
+  /// By default the [data] is not present - neither loaded nor submitted.
+  StatefulState({
+    this.data,
+    this.loadingState = OperationState.notStarted,
+    this.submissionState = OperationState.notStarted,
+  });
 
-	StatefulState({this.data, this.loadingState = DataLoadingState.notLoaded, this.submissionState = DataSubmissionState.notSubmitted});
+  /// Standard state copying method
+  StatefulState<Data> copyWith({
+    Data? data,
+    OperationState? loadingState,
+    OperationState? submissionState,
+  }) {
+    return StatefulState(
+      data: data ?? this.data,
+      loadingState: loadingState ?? this.loadingState,
+      submissionState: submissionState ?? this.submissionState,
+    );
+  }
 
-	StatefulState<CubitData> copyWith({CubitData? data, DataLoadingState? loadingState, DataSubmissionState? submissionState}) {
-		return StatefulState(
-			data: data ?? this.data,
-			loadingState: loadingState ?? this.loadingState,
-			submissionState: submissionState ?? this.submissionState,
-		);
-	}
-
-	@override
-	List<Object?> get props => [data, loadingState, submissionState];
+  @override
+  List<Object?> get props => [data, loadingState, submissionState];
 }

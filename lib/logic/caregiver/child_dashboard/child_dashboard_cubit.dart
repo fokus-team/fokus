@@ -27,7 +27,7 @@ class ChildDashboardCubit extends CubitBase<ChildDashboardData> {
 			  super(pageRoute);
 
   @override
-  Future reload(ReloadReason reason) => load(body: () async {
+  Future reload(ReloadableReason reason) => load(body: () async {
 	  _plansCubit.child = _childCard.child;
 	  _rewardsCubit.child = _childCard.child;
 	  _achievementsCubit.child = _childCard.child;
@@ -37,7 +37,7 @@ class ChildDashboardCubit extends CubitBase<ChildDashboardData> {
 	  return ChildDashboardData(childCard: _childCard);
   });
 
-  Future loadTab(int tabIndex, ReloadReason reason) {
+  Future loadTab(int tabIndex, ReloadableReason reason) {
   	var cubit = _tabCubits[tabIndex.clamp(0, 3)];
   	return cubit.reload(reason);
   }

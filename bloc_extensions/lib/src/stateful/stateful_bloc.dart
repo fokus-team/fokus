@@ -3,9 +3,19 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 
+import 'stateful_base.dart';
 import 'stateful_state.dart';
 
+/// A bloc that abstracts and standardizes loading and submission operations
+///
+/// {@template stateful_description}
+/// It provides a uniform state fields that can be acted upon by widgets
+/// as well as [load] and [submit] method wrappers that set them.
+/// {@endtemplate}
 mixin StatefulBloc<Event, Data> on Bloc<Event, StatefulState<Data>> {
+  /// {@template stateful_data}
+  /// The current data - short form for `state.data`
+  /// {@endtemplate}
   @protected
   Data? get data => state.data;
 
@@ -15,19 +25,12 @@ mixin StatefulBloc<Event, Data> on Bloc<Event, StatefulState<Data>> {
     Data? initialState,
   }) async* {
     if (state.beingLoaded) return;
-    yield state.copyWith(
-      loadingState: OperationState.inProgress,
-      data: initialState,
+    yield* execute(
+      state: state,
+      type: OperationType.loading,
+      body: body,
+      initialState: initialState,
     );
-    try {
-      yield state.copyWith(
-        data: await body(),
-        loadingState: OperationState.success,
-      );
-    } on Exception {
-      yield state.copyWith(loadingState: OperationState.failure);
-      rethrow;
-    }
   }
 
   @protected
@@ -35,20 +38,12 @@ mixin StatefulBloc<Event, Data> on Bloc<Event, StatefulState<Data>> {
     required FutureOr<Data?> Function() body,
     Data? initialState,
   }) async* {
-    if (!state.notSubmitted) return;
-    yield state.copyWith(
-      submissionState: OperationState.inProgress,
-      data: initialState,
+    if (state.beingSubmitted) return;
+    yield* execute(
+      state: state,
+      type: OperationType.submission,
+      body: body,
+      initialState: initialState,
     );
-    try {
-      yield state.copyWith(
-        data: await body(),
-        submissionState: OperationState.success,
-      );
-    } on Exception {
-      yield state.copyWith(
-          submissionState: OperationState.failure);
-      rethrow;
-    }
   }
 }

@@ -3,9 +3,14 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 
+import 'stateful_base.dart';
 import 'stateful_state.dart';
 
+/// A cubit that abstracts and standardizes loading and submission operations
+///
+/// {@macro stateful_description}
 mixin StatefulCubit<Data> on Cubit<StatefulState<Data>> {
+  /// {@macro stateful_data}
   @protected
   Data? get data => state.data;
 
@@ -18,19 +23,12 @@ mixin StatefulCubit<Data> on Cubit<StatefulState<Data>> {
     Data? initialState,
   }) async {
     if (state.beingLoaded) return;
-    emit(state.copyWith(
-      loadingState: OperationState.inProgress,
-      data: initialState,
-    ));
-    try {
-      emit(state.copyWith(
-        data: await body(),
-        loadingState: OperationState.success,
-      ));
-    } on Exception {
-      emit(state.copyWith(loadingState: OperationState.failure));
-      rethrow;
-    }
+    return execute(
+      state: state,
+      type: OperationType.loading,
+      body: body,
+      initialState: initialState,
+    ).forEach(emit);
   }
 
   @protected
@@ -39,20 +37,11 @@ mixin StatefulCubit<Data> on Cubit<StatefulState<Data>> {
     Data? initialState,
   }) async {
     if (state.beingSubmitted) return;
-    emit(state.copyWith(
-      submissionState: OperationState.inProgress,
-      data: initialState,
-    ));
-    try {
-      emit(state.copyWith(
-        data: await body(),
-        submissionState: OperationState.success,
-      ));
-    } on Exception {
-      emit(state.copyWith(
-        submissionState: OperationState.failure,
-      ));
-      rethrow;
-    }
+    return execute(
+      state: state,
+      type: OperationType.submission,
+      body: body,
+      initialState: initialState,
+    ).forEach(emit);
   }
 }

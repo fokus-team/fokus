@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-/// States a loading or submission operation could be in
+/// Possible states of a loading or submission operation
 enum OperationState {
 	/// Operation has not yet been started
   notStarted,
@@ -10,6 +10,14 @@ enum OperationState {
   success,
 	/// Operation was not finished due to an error
   failure,
+}
+
+/// Tracked operation types
+enum OperationType {
+  /// Loading operation
+  loading,
+  /// Submission operation
+  submission,
 }
 
 /// State used by the stateful bloc extension

@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:bloc_extensions/bloc_extensions.dart';
 import 'package:flutter/widgets.dart';
 import 'package:meta/meta.dart';
 
@@ -9,6 +10,22 @@ import 'reloadable_base.dart';
 /// {@endtemplate}
 ///
 /// {@macro reloadable_description}
+///
+/// Example usage:
+/// ```dart
+/// class PageCubit extends ReloadableCubit<PageState> {
+///   @override
+///   final RouteObserver routeObserver;
+///
+///   PageCubit(this.routeObserver, ModalRoute route) : super(
+///     initialState: PageState(),
+///     route: route,
+///   );
+///
+///   @override
+///   Future reload(ReloadableReason reason) {...}
+/// }
+/// ```
 abstract class ReloadableCubit<State> extends Cubit<State> with ReloadableBase {
   /// {@macro reloadable_cubit}
   ///

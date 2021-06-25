@@ -2,13 +2,16 @@ import 'package:equatable/equatable.dart';
 
 /// Possible states of a loading or submission operation
 enum OperationState {
-	/// Operation has not yet been started
+  /// Operation has not yet been started
   notStarted,
-	/// Operation is currently ongoing
+
+  /// Operation is currently ongoing
   inProgress,
-	/// Operation finished successfully
+
+  /// Operation finished successfully
   success,
-	/// Operation was not finished due to an error
+
+  /// Operation was not finished due to an error
   failure,
 }
 
@@ -16,36 +19,49 @@ enum OperationState {
 enum OperationType {
   /// Loading operation
   loading,
+
   /// Submission operation
   submission,
 }
 
 /// State used by the stateful bloc extension
 ///
-/// In addition to user provided [data] that would normally be the whole state
-/// it tracks both [loadingState] and [submissionState] in a generalized way.
+/// {@template stateful_state}
+/// It's designed to be a seamless, flexible extension
+/// of a user provided [Data] state type by embedding it along
+/// with two standardized statuses that track loading and submission.
+/// {@endtemplate}
 class StatefulState<Data> extends Equatable {
-	/// User provided state data
+  /// User provided state data
   final Data? data;
+
   /// Current data loading state
   final OperationState loadingState;
+
   /// Current data submission state
   final OperationState submissionState;
 
   /// Returns if the data is not yet loaded
   bool get notLoaded => loadingState == OperationState.notStarted;
+
   /// Returns if the data is currently being loaded
   bool get beingLoaded => loadingState == OperationState.inProgress;
+
   /// Returns if the data was loaded successfully
   bool get loaded => loadingState == OperationState.success;
+
   /// Returns if the data was not loaded due a failure
   bool get loadFailed => loadingState == OperationState.failure;
+
   /// Returns if the data is not yet submitted
   bool get notSubmitted => submissionState == OperationState.notStarted;
+
   /// Returns if the data is currently being submitted
   bool get beingSubmitted => submissionState == OperationState.inProgress;
+
   /// Returns if the data was submitted successfully
   bool get submitted => submissionState == OperationState.success;
+
   /// Returns if the data was not submitted due a failure
   bool get submitFailed => submissionState == OperationState.failure;
 

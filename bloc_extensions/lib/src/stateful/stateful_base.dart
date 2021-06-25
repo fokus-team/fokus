@@ -7,26 +7,28 @@ Stream<StatefulState<Data>> execute<Data>({
   required StatefulState<Data> state,
   required OperationType type,
   required FutureOr<Data?> Function() body,
+  required void Function(Object, StackTrace) onError,
   Data? initialState,
 }) async* {
-  OperationState? filter(OperationState state, OperationType byType) =>
+  OperationState? set(OperationState state, OperationType byType) =>
       byType == type ? state : null;
   yield state.copyWith(
     data: initialState,
-    loadingState: filter(OperationState.inProgress, OperationType.loading),
-    submissionState: filter(OperationState.inProgress, OperationType.submission),
+    loadingState: set(OperationState.inProgress, OperationType.loading),
+    submissionState: set(OperationState.inProgress, OperationType.submission),
   );
   try {
     yield state.copyWith(
       data: await body(),
-      loadingState: filter(OperationState.success, OperationType.loading),
-      submissionState: filter(OperationState.success, OperationType.submission),
+      loadingState: set(OperationState.success, OperationType.loading),
+      submissionState: set(OperationState.success, OperationType.submission),
     );
-  } on Exception {
+    // ignore: avoid_catches_without_on_clauses
+  } catch (error, stackTrace) {
     yield state.copyWith(
-      loadingState: filter(OperationState.failure, OperationType.loading),
-      submissionState: filter(OperationState.failure, OperationType.submission),
+      loadingState: set(OperationState.failure, OperationType.loading),
+      submissionState: set(OperationState.failure, OperationType.submission),
     );
-    rethrow;
+    onError(error, stackTrace);
   }
 }

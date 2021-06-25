@@ -1,7 +1,6 @@
 name: bloc_extensions
-description: Set of extensions for Bloc library
-version: 0.0.1
-homepage:
+description: Collection of Bloc library extensions implementing commonly used patterns
+version: 0.1.0
 
 environment:
   sdk: ">=2.12.0 <3.0.0"

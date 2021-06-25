@@ -8,11 +8,32 @@ import 'reloadable_base.dart';
 /// {@endtemplate}
 ///
 /// {@template reloadable_description}
-/// In addition to triggering data loading when created
-/// it allows to easily reload any required information
-/// whenever the next page in the navigator stack is popped.
-/// To do this a [RouteObserver] and a [ModalRoute] must be provided.
+/// Solves the issue of outdated content when user loads back the page.
+/// Automatically triggers data loading when first created
+/// and whenever the next page in the navigator stack is popped.
+/// It works by integrating with Flutters route observer subscription mechanism.
 /// {@endtemplate}
+///
+/// Example usage:
+/// ```dart
+/// class PageBloc extends ReloadableBloc<PageEvent, PageState> {
+///   @override
+///   final RouteObserver routeObserver;
+///
+///   PageBloc(this.routeObserver, ModalRoute route) : super(
+///     initialState: PageState(),
+///     route: route,
+///   );
+///
+///   @override
+///   Event reloadEvent(ReloadableReason reason) => ReloadEvent(reason);
+///
+///   @override
+///   Stream<PageEvent> mapEventToState(PageEvent event) async* {
+///     if (event is ReloadEvent) {...}
+///   }
+/// }
+/// ```
 abstract class ReloadableBloc<Event, State> extends Bloc<Event, State>
     with ReloadableBase {
   /// {@macro reloadable_bloc}

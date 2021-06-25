@@ -36,11 +36,11 @@ class Instrumentator implements UserObserver {
 	}
 
 	void runAppGuarded(Widget app) {
-		Bloc.observer = FokusBlocObserver();
-		_setupLogger();
-		_setupCrashlytics();
-
 		runZonedGuarded<Future<void>>(() async => runApp(app), (dynamic error, StackTrace stackTrace) async {
+      Bloc.observer = FokusBlocObserver();
+      _setupLogger();
+      _setupCrashlytics();
+
 			if (await _handleError(error, stackTrace))
 				return;
 			_logger.severe('', error, stackTrace);
@@ -87,8 +87,10 @@ class Instrumentator implements UserObserver {
 	Future<bool> _handleError(dynamic error, StackTrace stackTrace) async {
 		await _routeObserver.navigatorInitialized;
 		if (_navigatorKey.currentState?.context != null) {
-			if (error is BlocUnhandledErrorException)
-				error = error.error;
+			if (error is BlocUnhandledErrorException) {
+        stackTrace = error.stackTrace;
+        error = error.error;
+      }
 			if (error is! SocketException) { // ignore database disconnected socket exception
 				var errorType = error is NoDbConnection ? AppErrorType.noConnectionError : AppErrorType.unknownError;
 				_navigateToErrorPage(errorType);
@@ -123,11 +125,11 @@ class Instrumentator implements UserObserver {
 }
 
 class FokusBlocObserver extends BlocObserver {
-	final Logger _logger = Logger('FokusBlocObserver');
-
 	@override
+  // ignore: must_call_super
   void onError(BlocBase cubit, Object error, StackTrace stackTrace) {
-		_logger.severe('Cubit ${cubit.runtimeType} exception unhandled', error, stackTrace);
-		super.onError(cubit, error, stackTrace);
+	  // Ensure all bloc & stateful exceptions are eventually passed
+    // through the global handling loop with page redirection
+    throw BlocUnhandledErrorException(cubit, error, stackTrace);
   }
 }

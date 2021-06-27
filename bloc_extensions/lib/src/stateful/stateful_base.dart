@@ -12,7 +12,7 @@ Stream<StatefulState<Data>> execute<Data>({
 }) async* {
   OperationState? set(OperationState state, OperationType byType) =>
       byType == type ? state : null;
-  yield state.copyWith(
+  yield state = state.copyWith(
     data: initialState,
     loadingState: set(OperationState.inProgress, OperationType.loading),
     submissionState: set(OperationState.inProgress, OperationType.submission),

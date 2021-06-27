@@ -20,13 +20,11 @@ import 'stateful_state.dart';
 /// ```
 mixin StatefulCubit<Data> on Cubit<StatefulState<Data>> {
   /// {@macro stateful_data}
-  @protected
   Data? get data => state.data;
 
   /// Emits a state with passed [data] emulating the [emit] of a normal [Cubit]
   ///
   /// Short form for `emit(state.copyWith(data: data))`.
-  @protected
   void emitData(Data data) => emit(state.copyWith(data: data));
 
   /// {@macro stateful_load}

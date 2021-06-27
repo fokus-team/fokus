@@ -43,7 +43,6 @@ mixin StatefulBloc<Event, Data> on Bloc<Event, StatefulState<Data>> {
   /// {@template stateful_data}
   /// The current `state.data`
   /// {@endtemplate}
-  @protected
   Data? get data => state.data;
 
   /// {@template stateful_load}

@@ -1,7 +1,7 @@
-import 'package:bloc_extensions/bloc_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:stateful_bloc/stateful_bloc.dart';
 
 import '../../../logic/caregiver/forms/badge_form_cubit.dart';
 import '../../../model/ui/form/badge_form_model.dart';

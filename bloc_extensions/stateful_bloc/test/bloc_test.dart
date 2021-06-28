@@ -1,5 +1,5 @@
-import 'package:bloc_extensions/src/stateful/stateful_state.dart';
-import 'package:flutter_test/flutter_test.dart';
+import 'package:stateful_bloc/src/stateful_state.dart';
+import 'package:test/test.dart';
 
 import 'models.dart';
 import 'utils.dart';

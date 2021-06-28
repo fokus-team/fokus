@@ -1,4 +1,4 @@
-import 'package:bloc_extensions/bloc_extensions.dart';
+import 'package:stateful_bloc/stateful_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';

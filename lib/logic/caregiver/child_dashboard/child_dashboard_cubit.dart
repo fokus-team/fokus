@@ -1,6 +1,6 @@
-import 'package:bloc_extensions/bloc_extensions.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
+import 'package:reloadable_bloc/reloadable_bloc.dart';
 
 import '../../../model/db/user/child.dart';
 import '../../../model/navigation/child_dashboard_params.dart';

@@ -1,6 +1,6 @@
-name: bloc_extensions
-description: Collection of Bloc library extensions implementing commonly used patterns
-version: 0.1.0
+name: reloadable_bloc
+description: An extension to the bloc state management library which automatically triggers state reloading
+version: 1.0.0
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
@@ -10,7 +10,6 @@ dependencies:
   flutter:
     sdk: flutter
 
-  bloc: ^7.0.0
   flutter_bloc: ^7.0.1
 
   equatable: ^2.0.0

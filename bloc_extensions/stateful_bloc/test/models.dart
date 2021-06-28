@@ -1,7 +1,6 @@
 import 'package:bloc/bloc.dart';
-import 'package:bloc_extensions/bloc_extensions.dart';
-import 'package:bloc_extensions/src/stateful/stateful_state.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:stateful_bloc/stateful_bloc.dart';
 
 enum Data { initial, loaded }
 enum Event { load, simpleLoad, submit }

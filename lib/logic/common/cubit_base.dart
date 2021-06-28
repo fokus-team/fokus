@@ -2,7 +2,8 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart';
 import 'package:meta/meta.dart';
-import 'package:bloc_extensions/bloc_extensions.dart';
+import 'package:stateful_bloc/stateful_bloc.dart';
+import 'package:reloadable_bloc/reloadable_bloc.dart';
 
 import '../../model/db/user/user.dart';
 import '../../model/notification/notification_refresh_info.dart';

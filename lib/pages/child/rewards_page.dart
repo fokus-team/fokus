@@ -1,7 +1,7 @@
-import 'package:bloc_extensions/bloc_extensions.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:stateful_bloc/stateful_bloc.dart';
 
 import '../../logic/child/child_rewards_cubit.dart';
 import '../../utils/ui/dialog_utils.dart';

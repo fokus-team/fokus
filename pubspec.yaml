@@ -23,8 +23,10 @@ dependencies:
     # Modules
     fokus_auth:
         path: fokus_auth
-    bloc_extensions:
-        path: bloc_extensions
+    stateful_bloc:
+        path: bloc_extensions/stateful_bloc
+    reloadable_bloc:
+        path: bloc_extensions/reloadable_bloc
 
     mongo_dart:
         git:

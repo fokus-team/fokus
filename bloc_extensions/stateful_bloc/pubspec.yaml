@@ -1,0 +1,16 @@
+name: stateful_bloc
+description: An extension to the bloc state management library which simplifies common state transitions
+version: 1.0.0
+
+environment:
+  sdk: ">=2.12.0 <3.0.0"
+
+dependencies:
+  bloc: ^7.0.0
+
+  equatable: ^2.0.0
+  meta: ^1.3.0
+
+dev_dependencies:
+  mocktail: ^0.1.2
+  effective_dart: ^1.3.1

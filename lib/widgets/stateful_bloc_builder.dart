@@ -9,10 +9,10 @@ import 'general/app_loader.dart';
 
 class SubmitPopConfig {
 	final int count;
-	final OperationState moment;
+	final ActionStatus moment;
 
-	SubmitPopConfig({this.count = 1, this.moment = OperationState.inProgress});
-	SubmitPopConfig.onSubmitted({this.count = 1}) : moment = OperationState.success;
+	SubmitPopConfig({this.count = 1, this.moment = ActionStatus.ongoing});
+	SubmitPopConfig.onSubmitted({this.count = 1}) : moment = ActionStatus.done;
 }
 
 class StatefulBlocBuilder<CubitType extends CubitBase<CubitData>, CubitData extends Equatable> extends StatelessWidget {
@@ -35,7 +35,7 @@ class StatefulBlocBuilder<CubitType extends CubitBase<CubitData>, CubitData exte
 		    return _getBuilderWidget(context, state);
 	    },
 	    listener: (context, state) {
-	    	if (popConfig != null && popConfig!.moment == state.submissionState) {
+	    	if (popConfig != null && popConfig!.moment == state.submissionStatus) {
 			    for (var i = 0; i < popConfig!.count; i++)
 				    Navigator.of(context).pop();
 		    }

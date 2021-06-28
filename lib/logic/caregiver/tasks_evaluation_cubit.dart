@@ -1,9 +1,10 @@
 import 'dart:math';
 
 import 'package:equatable/equatable.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/widgets.dart' hide Action;
 import 'package:get_it/get_it.dart';
 import 'package:mongo_dart/mongo_dart.dart';
+import 'package:stateful_bloc/stateful_bloc.dart';
 
 import '../../model/db/gamification/points.dart';
 import '../../model/db/plan/plan_instance_state.dart';
@@ -57,7 +58,7 @@ class TasksEvaluationCubit extends CubitBase<TasksEvaluationData> {
 			uiTask: taskInstance,
 			childCard: _planInstanceToChild[taskInstance.instance.planInstanceID]!,
 		)).toList();
-		return TasksEvaluationData(reports: _reports..addAll(_completedReports));
+		return Action.finish(TasksEvaluationData(reports: _reports..addAll(_completedReports)));
 	});
 
 	Future rateTask(UITaskReport report) => submit(body: () async {

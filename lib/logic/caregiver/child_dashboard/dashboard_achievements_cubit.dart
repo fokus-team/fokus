@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/widgets.dart' hide Action;
 import 'package:get_it/get_it.dart';
+import 'package:stateful_bloc/stateful_bloc.dart';
 
 import '../../../model/db/gamification/badge.dart';
 import '../../../model/db/gamification/child_badge.dart';
@@ -24,7 +25,7 @@ class DashboardAchievementsCubit extends CubitBase<DashboardAchievementsData> {
 	Future reload(_) => load(body: () async {
 		var user = activeUser as Caregiver;
 		var availableBadges = _filterBadges(user.badges!, child.badges!);
-		return DashboardAchievementsData(availableBadges: availableBadges, childBadges: child.badges!);
+		return Action.finish(DashboardAchievementsData(availableBadges: availableBadges, childBadges: child.badges!));
 	});
 
 	Future assignBadges(List<Badge> badges) => submit(body: () async {
@@ -36,7 +37,7 @@ class DashboardAchievementsCubit extends CubitBase<DashboardAchievementsData> {
 
 		var newAssignedBadges = List.of(state.data!.childBadges)..addAll(assignedBadges);
 		var newAvailableBadges = _filterBadges(state.data!.availableBadges, assignedBadges);
-		return state.data!.copyWith(availableBadges: newAvailableBadges, childBadges: newAssignedBadges);
+		return Action.finish(state.data!.copyWith(availableBadges: newAvailableBadges, childBadges: newAssignedBadges));
 	});
 
 	List<Badge> _filterBadges(List<Badge> list, List<ChildBadge> excluded) => list.where((badge) => !excluded.any((exclude) => badge == exclude)).toList();

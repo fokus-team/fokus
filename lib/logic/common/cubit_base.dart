@@ -37,7 +37,7 @@ abstract class CubitBase<CubitData extends Equatable> extends ReloadableCubit<St
 	}
 
 	@override
-	Future reload(_) => Future.value(state.copyWith(loadingState: OperationState.success));
+	Future reload(_) => Future.value(state.copyWith(loadingStatus: ActionStatus.done));
 
 	bool hasOption(StatefulOption option) => options.contains(option);
 

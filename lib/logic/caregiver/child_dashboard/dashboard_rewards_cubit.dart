@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/widgets.dart' hide Action;
 import 'package:get_it/get_it.dart';
+import 'package:stateful_bloc/stateful_bloc.dart';
 
 import '../../../model/db/gamification/reward.dart';
 import '../../../model/db/user/child.dart';
@@ -18,7 +19,7 @@ class DashboardRewardsCubit extends CubitBase<DashboardRewardsData> {
 	@override
 	Future reload(_) => load(body: () async {
 		var rewardsAdded = await _dataRepository.countRewards(caregiverId: activeUser!.id!);
-		return DashboardRewardsData(childRewards: child.rewards!, noRewardsAdded: rewardsAdded == 0);
+		return Action.finish(DashboardRewardsData(childRewards: child.rewards!, noRewardsAdded: rewardsAdded == 0));
 	});
 
 	@override

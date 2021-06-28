@@ -21,7 +21,7 @@ void main() {
     });
 
     Future testRun({
-      required OperationType type,
+      required ActionType type,
       Data? initial,
       Data? loaded,
       Object? error,
@@ -32,9 +32,9 @@ void main() {
           type: type,
           body: () {
             if (error != null) throw error;
-            return loaded;
+            return Action.finish(loaded);
           },
-          initialState: initial,
+          initialData: initial,
           onError: errorHandler.onError,
         ),
         type: type,
@@ -45,7 +45,7 @@ void main() {
       if (error == null) verifyZeroInteractions(errorHandler);
     }
 
-    void testType(OperationType type) {
+    void testType(ActionType type) {
       group('On success', () {
         test('emits correct states', () => testRun(type: type));
         test('emits initial data', () {
@@ -77,7 +77,7 @@ void main() {
       });
     }
 
-    group('Loading operation', () => testType(OperationType.loading));
-    group('Submission operation', () => testType(OperationType.submission));
+    group('Loading action', () => testType(ActionType.loading));
+    group('Submission action', () => testType(ActionType.submission));
   });
 }

@@ -13,14 +13,14 @@ void main() {
         cubit = TestCubit();
       });
 
-      void testFailCubit(OperationType type) async {
+      void testFailCubit(ActionType type) async {
         final error = Error();
         Object? expectedError;
         final cubit = FailCubit(
           error: error,
           callback: (error, _) => expectedError = error,
         );
-        type == OperationType.loading ? cubit.failLoad() : cubit.failSubmit();
+        type == ActionType.loading ? cubit.failLoad() : cubit.failSubmit();
         await expectStates(
           stream: cubit.stream,
           type: type,
@@ -31,11 +31,11 @@ void main() {
 
       test('emits correct loading states', () {
         cubit.loadData();
-        expectStates(stream: cubit.stream, type: OperationType.loading);
+        expectStates(stream: cubit.stream, type: ActionType.loading);
       });
       test('emits correct loading states', () {
         cubit.submitData();
-        expectStates(stream: cubit.stream, type: OperationType.submission);
+        expectStates(stream: cubit.stream, type: ActionType.submission);
       });
       test('emitData updates data field', () {
         var state = cubit.state;
@@ -48,10 +48,10 @@ void main() {
         expect(cubit.data, equals(Data.initial));
       });
       test('passes load errors to onError', () {
-        testFailCubit(OperationType.loading);
+        testFailCubit(ActionType.loading);
       });
       test('passes submit errors to onError', () {
-        testFailCubit(OperationType.submission);
+        testFailCubit(ActionType.submission);
       });
     });
     group('Bloc', () {
@@ -61,14 +61,14 @@ void main() {
         bloc = TestBloc();
       });
 
-      void testFailBloc(OperationType type) async {
+      void testFailBloc(ActionType type) async {
         final error = Error();
         Object? expectedError;
         final bloc = FailBloc(
           error: error,
           callback: (error, _) => expectedError = error,
         );
-        type == OperationType.loading
+        type == ActionType.loading
             ? bloc.add(Event.load)
             : bloc.add(Event.submit);
         await expectStates(
@@ -81,11 +81,11 @@ void main() {
 
       test('emits correct loading states', () {
         bloc.add(Event.load);
-        expectStates(stream: bloc.stream, type: OperationType.loading);
+        expectStates(stream: bloc.stream, type: ActionType.loading);
       });
       test('emits correct submit states', () {
         bloc.add(Event.submit);
-        expectStates(stream: bloc.stream, type: OperationType.submission);
+        expectStates(stream: bloc.stream, type: ActionType.submission);
       });
       test('data returns current data field', () async {
         expect(bloc.data, equals(null));
@@ -94,10 +94,10 @@ void main() {
         expect(bloc.data, equals(Data.loaded));
       });
       test('passes load errors to onError', () {
-        testFailBloc(OperationType.loading);
+        testFailBloc(ActionType.loading);
       });
       test('passes submit errors to onError', () {
-        testFailBloc(OperationType.submission);
+        testFailBloc(ActionType.submission);
       });
     });
   });

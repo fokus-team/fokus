@@ -5,34 +5,34 @@ import 'package:test/test.dart';
 import 'models.dart';
 
 Future expectStates({
-  required OperationType type,
+  required ActionType type,
   required Stream<StatefulState<Data>> stream,
   Data? initial,
   Data? loaded,
   bool fails = false,
 }) async {
-  final states = [
-    OperationState.inProgress,
-    fails ? OperationState.failure : OperationState.success,
+  final statuses = [
+    ActionStatus.ongoing,
+    fails ? ActionStatus.failed : ActionStatus.done,
   ];
   return expectLater(
     stream,
     emitsInOrder(statesWith(
-      loading: type == OperationType.loading ? states : null,
-      submission: type == OperationType.submission ? states : null,
+      loading: type == ActionType.loading ? statuses : null,
+      submission: type == ActionType.submission ? statuses : null,
       data: [initial, loaded ?? initial],
     )),
   );
 }
 
 Iterable<StatefulState<Data>> statesWith({
-  List<OperationState>? loading,
-  List<OperationState>? submission,
+  List<ActionStatus>? loading,
+  List<ActionStatus>? submission,
   List<Data?>? data,
 }) {
   return [0, 1].map((i) => StatefulState<Data>(
         data: data?[i],
-        loadingState: loading?[i] ?? OperationState.notStarted,
-        submissionState: submission?[i] ?? OperationState.notStarted,
+        loadingStatus: loading?[i] ?? ActionStatus.pending,
+        submissionStatus: submission?[i] ?? ActionStatus.pending,
       ));
 }

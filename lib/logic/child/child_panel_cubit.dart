@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/widgets.dart' hide Action;
 import 'package:get_it/get_it.dart';
+import 'package:stateful_bloc/stateful_bloc.dart';
 
 import '../../model/ui/plan/ui_plan_instance.dart';
 import '../../services/model_helpers/ui_data_aggregator.dart';
@@ -14,7 +15,7 @@ class ChildPanelCubit extends CubitBase<ChildPlansData> {
   @override
   Future reload(_) => load(body: () async {
   	if (activeUser == null) return null;
-    return ChildPlansData(await _dataAggregator.loadTodaysPlanInstances(childId: activeUser!.id!));
+    return Action.finish(ChildPlansData(await _dataAggregator.loadTodaysPlanInstances(childId: activeUser!.id!)));
   });
 }
 

@@ -1,7 +1,8 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Action;
 import 'package:get_it/get_it.dart';
 import 'package:mongo_dart/mongo_dart.dart';
+import 'package:stateful_bloc/stateful_bloc.dart';
 
 import '../../model/db/plan/plan.dart';
 import '../../model/db/plan/task.dart';
@@ -19,11 +20,11 @@ class PlanCubit extends CubitBase<PlanData> {
     var plan = (await _dataRepository.getPlan(id: _planId))!;
     var children = await _dataRepository.getUserNames(plan.assignedTo!);
     var tasks = await _dataRepository.getTasks(planId: _planId);
-    return PlanData(
+    return Action.finish(PlanData(
       plan: plan,
       tasks: tasks,
       children: children,
-    );
+    ));
   });
 
   Future deletePlan() => submit(body: () async {

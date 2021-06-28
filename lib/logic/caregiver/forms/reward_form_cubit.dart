@@ -1,7 +1,8 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/widgets.dart' hide Action;
 import 'package:get_it/get_it.dart';
 import 'package:mongo_dart/mongo_dart.dart';
+import 'package:stateful_bloc/stateful_bloc.dart';
 
 import '../../../model/currency_type.dart';
 import '../../../model/db/gamification/currency.dart';
@@ -23,7 +24,7 @@ class RewardFormCubit extends CubitBase<RewardFormData> {
 
   @override
 	Future reload(_) => load(
-	  initialState: RewardFormData(formType: _rewardId == null ? AppFormType.create : AppFormType.edit),
+	  initialData: RewardFormData(formType: _rewardId == null ? AppFormType.create : AppFormType.edit),
 	  body: () async {
 		  var user = activeUser as Caregiver;
 		  var currencies = user.currencies!;
@@ -32,7 +33,7 @@ class RewardFormCubit extends CubitBase<RewardFormData> {
 		    reward = Reward(cost: Points(icon: CurrencyType.diamond), limit: null);
 		  else
 		    reward = (await _dataRepository.getReward(id: _rewardId!))!;
-			return state.data!.copyWith(currencies: currencies, reward: reward);
+			return Action.finish(state.data!.copyWith(currencies: currencies, reward: reward));
 	  },
   );
 

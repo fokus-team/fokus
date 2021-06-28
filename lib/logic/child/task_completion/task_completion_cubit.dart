@@ -1,8 +1,9 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/widgets.dart' hide Action;
 import 'package:get_it/get_it.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 import 'package:reloadable_bloc/reloadable_bloc.dart';
+import 'package:stateful_bloc/stateful_bloc.dart';
 
 import '../../../model/db/date/time_date.dart';
 import '../../../model/db/date_span.dart';
@@ -42,7 +43,7 @@ class TaskCompletionCubit extends CubitBase<TaskCompletionData> {
 
 	@override
 	Future reload(ReloadableReason reason) => load(
-		initialState: TaskCompletionData(uiPlan: params.planInstance),
+		initialData: TaskCompletionData(uiPlan: params.planInstance),
 		body: () async {
 			_taskInstance = (await _dataRepository.getTaskInstance(taskInstanceId: _taskInstanceId))!;
 			_task = (await _dataRepository.getTask(taskId: _taskInstance.taskID))!;
@@ -56,9 +57,9 @@ class TaskCompletionCubit extends CubitBase<TaskCompletionData> {
 
 			if (reason != ReloadableReason.push && _taskInstance.status!.completed! && (_taskInstance.status!.state == TaskState.evaluated || _taskInstance.status!.state == TaskState.rejected)) {
 				if(_taskInstance.status!.state == TaskState.evaluated)
-					return TaskCompletionData.finished(uiTask: uiTaskInstance,  uiPlan: planInstance);
+					return Action.finish(TaskCompletionData.finished(uiTask: uiTaskInstance,  uiPlan: planInstance));
 				else
-					return TaskCompletionData.discarded(uiTask: uiTaskInstance,  uiPlan: planInstance);
+					return Action.finish(TaskCompletionData.discarded(uiTask: uiTaskInstance,  uiPlan: planInstance));
 			}
 			else {
 				if(_planInstance.state != PlanInstanceState.active) {
@@ -93,15 +94,15 @@ class TaskCompletionCubit extends CubitBase<TaskCompletionData> {
 				await Future.wait(updates);
 
 				if(isInProgress(uiTaskInstance.instance.duration))
-				  return TaskCompletionData.inProgress(uiTask: uiTaskInstance,  uiPlan: planInstance);
+				  return Action.finish(TaskCompletionData.inProgress(uiTask: uiTaskInstance,  uiPlan: planInstance));
 				else
-					return TaskCompletionData.inBreak(uiTask: uiTaskInstance,  uiPlan: planInstance);
+					return Action.finish(TaskCompletionData.inBreak(uiTask: uiTaskInstance,  uiPlan: planInstance));
 			}
 		},
 	);
 
 	Future switchToBreak() => submit(
-	  initialState: data?.copyWith(current: TaskCompletionStateType.inBreak),
+	  initialData: data?.copyWith(current: TaskCompletionStateType.inBreak),
 		body: () async {
 			_taskInstance.duration!.last = _taskInstance.duration!.last.end();
 			_taskInstance.breaks!.add(DateSpan(from: TimeDate.now()));
@@ -109,12 +110,12 @@ class TaskCompletionCubit extends CubitBase<TaskCompletionData> {
 			var uiTaskInstance = UITaskInstance(instance: _taskInstance, task: _task);
 			_analyticsService.logTaskPaused(_taskInstance);
 			var planInstance = await _dataAggregator.loadPlanInstance(planInstance: _planInstance, plan: _plan);
-			return data!.copyWith(taskInstance: uiTaskInstance, planInstance: planInstance);
+			return Action.finish(data!.copyWith(taskInstance: uiTaskInstance, planInstance: planInstance));
 		},
 	);
 
 	Future switchToProgress() => submit(
-	  initialState: data?.copyWith(current: TaskCompletionStateType.inProgress),
+	  initialData: data?.copyWith(current: TaskCompletionStateType.inProgress),
 		body: () async {
 			_taskInstance.breaks!.last = _taskInstance.breaks!.last.end();
 			_taskInstance.duration!.add(DateSpan(from: TimeDate.now()));
@@ -122,36 +123,36 @@ class TaskCompletionCubit extends CubitBase<TaskCompletionData> {
 			var uiTaskInstance = UITaskInstance(instance: _taskInstance, task: _task);
 			_analyticsService.logTaskResumed(_taskInstance);
 			var planInstance = await _dataAggregator.loadPlanInstance(planInstance: _planInstance, plan: _plan);
-			return data!.copyWith(taskInstance: uiTaskInstance, planInstance: planInstance);
+			return Action.finish(data!.copyWith(taskInstance: uiTaskInstance, planInstance: planInstance));
 		},
 	);
 
 	Future markAsFinished() => submit(
-	  initialState: data?.copyWith(current: TaskCompletionStateType.finished),
+	  initialData: data?.copyWith(current: TaskCompletionStateType.finished),
 		body: () async {
 	    _notificationService.sendTaskFinishedNotification(_planInstance.id!, _task.name!, _plan.createdBy!, activeUser!, completed: true);
 		  _analyticsService.logTaskFinished(_taskInstance);
 		  var updatedTask =  await _onCompletion(TaskState.notEvaluated);
 			var planInstance = await _dataAggregator.loadPlanInstance(planInstance: _planInstance, plan: _plan);
-	    return data!.copyWith(taskInstance: updatedTask, planInstance: planInstance);
+	    return Action.finish(data!.copyWith(taskInstance: updatedTask, planInstance: planInstance));
 		},
 	);
 
 	Future markAsDiscarded() => submit(
-	  initialState: data?.copyWith(current: TaskCompletionStateType.discarded),
+	  initialData: data?.copyWith(current: TaskCompletionStateType.discarded),
 		body: () async {
 			_notificationService.sendTaskFinishedNotification(_planInstance.id!, _task.name!, _plan.createdBy!, activeUser!, completed: false);
 			_analyticsService.logTaskNotFinished(_taskInstance);
 			var updatedTask =  await _onCompletion(TaskState.rejected);
 			var planInstance = await _dataAggregator.loadPlanInstance(planInstance: _planInstance, plan: _plan);
-			return data!.copyWith(taskInstance: updatedTask, planInstance: planInstance);
+			return Action.finish(data!.copyWith(taskInstance: updatedTask, planInstance: planInstance));
 		},
 	);
 
 	void updateChecks(int index, MapEntry<String, bool> subtask) => submit(body: () async {
   	_taskInstance.subtasks![index] = subtask;
 		await _dataRepository.updateTaskInstanceFields(_taskInstance.id!, subtasks: _taskInstance.subtasks);
-		return data!.copyWith(taskInstance: UITaskInstance(instance: _taskInstance, task: _task));
+		return Action.finish(data!.copyWith(taskInstance: UITaskInstance(instance: _taskInstance, task: _task)));
 	});
 
 	Future<UITaskInstance> _onCompletion(TaskState state) async {

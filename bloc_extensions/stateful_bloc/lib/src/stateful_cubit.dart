@@ -32,16 +32,16 @@ mixin StatefulCubit<Data> on Cubit<StatefulState<Data>> {
   /// {@macro stateful_flow}
   @protected
   Future load({
-    required FutureOr<Data?> Function() body,
-    Data? initialState,
+    required FutureOr<Action<Data>?> Function() body,
+    Data? initialData,
   }) async {
     if (state.beingLoaded) return;
     return execute(
       state: state,
-      type: OperationType.loading,
+      type: ActionType.loading,
       body: body,
       onError: onError,
-      initialState: initialState,
+      initialData: initialData,
     ).forEach(emit);
   }
 
@@ -50,16 +50,16 @@ mixin StatefulCubit<Data> on Cubit<StatefulState<Data>> {
   /// {@macro stateful_flow}
   @protected
   Future submit({
-    required FutureOr<Data?> Function() body,
-    Data? initialState,
+    required FutureOr<Action<Data>?> Function() body,
+    Data? initialData,
   }) async {
     if (state.beingSubmitted) return;
     return execute(
       state: state,
-      type: OperationType.submission,
+      type: ActionType.submission,
       body: body,
       onError: onError,
-      initialState: initialState,
+      initialData: initialData,
     ).forEach(emit);
   }
 }

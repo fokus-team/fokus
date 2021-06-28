@@ -1,7 +1,8 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/widgets.dart' hide Action;
 import 'package:get_it/get_it.dart';
 import 'package:mongo_dart/mongo_dart.dart';
+import 'package:stateful_bloc/stateful_bloc.dart';
 
 import '../../model/db/plan/plan_instance.dart';
 import '../../model/db/plan/plan_instance_state.dart';
@@ -39,7 +40,7 @@ class PlanInstanceCubit extends CubitBase<PlanInstanceData> {
 
   @override
 	Future reload(_) => load(
-	  initialState: PlanInstanceData(uiPlan: uiPlan),
+	  initialData: PlanInstanceData(uiPlan: uiPlan),
 	  body: () async {
 		  _planInstance = (await _dataRepository.getPlanInstance(id: uiPlan.instance.id))!;
 		  if(_planInstance.taskInstances == null || _planInstance.taskInstances!.isEmpty)
@@ -48,7 +49,7 @@ class PlanInstanceCubit extends CubitBase<PlanInstanceData> {
 		  var allTasksInstances = await _dataRepository.getTaskInstances(planInstanceId: uiPlan.instance.id);
 
 		  var uiInstances = await _taskInstancesService.mapToUIModels(allTasksInstances);
-		  return PlanInstanceData(tasks: uiInstances, uiPlan: uiPlan);
+		  return Action.finish(PlanInstanceData(tasks: uiInstances, uiPlan: uiPlan));
 	  },
   );
 
@@ -113,7 +114,7 @@ class PlanInstanceCubit extends CubitBase<PlanInstanceData> {
 
 		Future.wait(updates);
 		uiPlan = await _dataAggregator.loadPlanInstance(planInstanceId: _planInstance.id);
-		return PlanInstanceData(tasks: uiInstances, uiPlan: uiPlan);
+		return Action.finish(PlanInstanceData(tasks: uiInstances, uiPlan: uiPlan));
 	});
 }
 

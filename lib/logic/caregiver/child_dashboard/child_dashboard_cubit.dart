@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/widgets.dart' hide Action;
 import 'package:reloadable_bloc/reloadable_bloc.dart';
+import 'package:stateful_bloc/stateful_bloc.dart';
 
 import '../../../model/db/user/child.dart';
 import '../../../model/navigation/child_dashboard_params.dart';
@@ -34,7 +35,7 @@ class ChildDashboardCubit extends CubitBase<ChildDashboardData> {
 	  loadTab((_initialTab + 1) % 3, reason);
 	  loadTab((_initialTab + 2) % 3, reason);
 	  await loadTab(_initialTab, reason);
-	  return ChildDashboardData(childCard: _childCard);
+	  return Action.finish(ChildDashboardData(childCard: _childCard));
   });
 
   Future loadTab(int tabIndex, ReloadableReason reason) {
@@ -45,9 +46,9 @@ class ChildDashboardCubit extends CubitBase<ChildDashboardData> {
 	Future onNameDialogClosed(Future<String?> result) => submit(body: () async {
   	var value = await result;
 		if (value == null)
-			return null;
+			return Action.cancel();
 		var childCard = state.data!.childCard;
-		return ChildDashboardData(childCard: childCard.copyWith(child: Child.copyFrom(childCard.child, name: value)));
+		return Action.finish(ChildDashboardData(childCard: childCard.copyWith(child: Child.copyFrom(childCard.child, name: value))));
 	});
 }
 

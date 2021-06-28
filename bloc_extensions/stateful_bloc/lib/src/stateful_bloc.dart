@@ -20,8 +20,8 @@ import 'stateful_state.dart';
 /// * wrapping your logic with [load] / [submit]
 ///
 /// you can react to the current status in your widgets
-/// (Like showing a loading indicator on [OperationState.inProgress]
-/// or an error message on [OperationState.failure]).
+/// (Like showing a loading indicator on [ActionStatus.ongoing]
+/// or an error message on [ActionStatus.failed]).
 /// Your state is accessible in [StatefulState.data].
 /// {@endtemplate}
 ///
@@ -51,27 +51,27 @@ mixin StatefulBloc<Event, Data> on Bloc<Event, StatefulState<Data>> {
   /// How it works:
   /// {@endtemplate}
   /// {@template stateful_flow}
-  /// 1. [OperationState.inProgress] status is set
-  /// along with the `initialState` (if its provided)
+  /// 1. [ActionStatus.ongoing] status is set
+  /// along with the `initialData` (if its provided)
   /// 2. User provided `data` function is executed
   /// 3. Depending on the outcome:
-  ///     * If it completes successfully [OperationState.success] status
+  ///     * If it completes successfully [ActionStatus.done] status
   ///     is set along with the returned loaded data (if its provided)
-  ///     * If anything is thrown [OperationState.failure] status
+  ///     * If anything is thrown [ActionStatus.failed] status
   ///     is set and the details are forwarded to [onError]
   /// {@endtemplate}
   @protected
   Stream<StatefulState<Data>> load({
-    required FutureOr<Data?> Function() body,
-    Data? initialState,
+    required FutureOr<Action<Data>?> Function() body,
+    Data? initialData,
   }) async* {
     if (state.beingLoaded) return;
     yield* execute(
       state: state,
-      type: OperationType.loading,
+      type: ActionType.loading,
       body: body,
       onError: onError,
-      initialState: initialState,
+      initialData: initialData,
     );
   }
 
@@ -83,16 +83,16 @@ mixin StatefulBloc<Event, Data> on Bloc<Event, StatefulState<Data>> {
   /// {@macro stateful_flow}
   @protected
   Stream<StatefulState<Data>> submit({
-    required FutureOr<Data?> Function() body,
-    Data? initialState,
+    required FutureOr<Action<Data>?> Function() body,
+    Data? initialData,
   }) async* {
     if (state.beingSubmitted) return;
     yield* execute(
       state: state,
-      type: OperationType.submission,
+      type: ActionType.submission,
       body: body,
       onError: onError,
-      initialState: initialState,
+      initialData: initialData,
     );
   }
 }

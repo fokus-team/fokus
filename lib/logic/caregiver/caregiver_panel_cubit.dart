@@ -1,7 +1,8 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/widgets.dart' hide Action;
 import 'package:get_it/get_it.dart';
 import 'package:mongo_dart/mongo_dart.dart';
+import 'package:stateful_bloc/stateful_bloc.dart';
 
 import '../../model/db/user/caregiver.dart';
 import '../../model/db/user/child.dart';
@@ -27,7 +28,7 @@ class CaregiverPanelCubit extends CubitBase<CaregiverPanelData> {
 	  Map<ObjectId, String>? friends;
 	  if (_activeUser.friends != null && _activeUser.friends!.isNotEmpty)
 		  friends = await _dataRepository.getUserNames(_activeUser.friends!);
-	  return CaregiverPanelData(uiChildren, friends);
+	  return Action.finish(CaregiverPanelData(uiChildren, friends));
   });
 
 	@override

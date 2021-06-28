@@ -12,8 +12,8 @@ class ErrorHandler extends Mock {
 class TestCubit extends Cubit<StatefulState<Data>> with StatefulCubit {
   TestCubit() : super(StatefulState());
 
-  Future loadData() => load(body: () {});
-  Future submitData() => submit(body: () {});
+  Future loadData() => load(body: () => Action.finish());
+  Future submitData() => submit(body: () => Action.finish());
 }
 
 class TestBloc extends Bloc<Event, StatefulState<Data>> with StatefulBloc {

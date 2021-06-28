@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/widgets.dart' hide Action;
 import 'package:get_it/get_it.dart';
+import 'package:stateful_bloc/stateful_bloc.dart';
 
 import '../../model/db/gamification/currency.dart';
 import '../../model/db/user/caregiver.dart';
@@ -16,17 +17,17 @@ class CaregiverCurrenciesCubit extends CubitBase<CaregiverCurrenciesData> {
 
 	@override
   Future reload(_) => load(body: () async {
-		return CaregiverCurrenciesData(currencies: (activeUser! as Caregiver).currencies ?? []);
+		return Action.finish(CaregiverCurrenciesData(currencies: (activeUser! as Caregiver).currencies ?? []));
   });
 
 	Future updateCurrencies(List<Currency> currencyList) => submit(
-	  initialState: CaregiverCurrenciesData(currencies: currencyList),
+	  initialData: CaregiverCurrenciesData(currencies: currencyList),
 		body: () async {
 			var user = activeUser! as Caregiver;
 			_authBloc.add(AuthenticationActiveUserUpdated(Caregiver.copyFrom(user, currencies: currencyList)));
 			var currencies = currencyList.map((currency) => Currency(type: currency.type, name: currency.name)).toList();
 			await _dataRepository.updateCurrencies(user.id!, currencies);
-			return CaregiverCurrenciesData(currencies: currencyList);
+			return Action.finish(CaregiverCurrenciesData(currencies: currencyList));
 		},
 	);
 }

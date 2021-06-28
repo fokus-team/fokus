@@ -1,8 +1,9 @@
 import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/widgets.dart' hide Action;
 import 'package:get_it/get_it.dart';
 import 'package:mongo_dart/mongo_dart.dart';
+import 'package:stateful_bloc/stateful_bloc.dart';
 
 import '../../model/db/date/time_date.dart';
 import '../../model/db/gamification/child_reward.dart';
@@ -30,7 +31,7 @@ class ChildRewardsCubit extends CubitBase<ChildRewardsData> {
 		var caregiverID = activeUser!.connections?.first;
 		if(caregiverID != null && _rewards == null)
 			_rewards = await _dataRepository.getRewards(caregiverId: caregiverID);
-	  return _refreshRewardState();
+	  return Action.finish(_refreshRewardState());
   });
 
 	Future claimReward(Reward reward) => submit(body: () async {
@@ -52,7 +53,7 @@ class ChildRewardsCubit extends CubitBase<ChildRewardsData> {
 			_analyticsService.logRewardBought(reward);
 			await _notificationService.sendRewardBoughtNotification(model.id!, model.name!, user.connections!.first, user);
 		}
-		return _refreshRewardState();
+    return Action.finish(_refreshRewardState());
 	});
 
 	ChildRewardsData _refreshRewardState() {

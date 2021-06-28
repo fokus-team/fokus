@@ -1,7 +1,8 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/widgets.dart' hide Action;
 import 'package:get_it/get_it.dart';
 import 'package:mongo_dart/mongo_dart.dart';
+import 'package:stateful_bloc/stateful_bloc.dart';
 
 import '../../../model/db/date/date.dart';
 import '../../../model/db/plan/plan.dart';
@@ -36,12 +37,12 @@ class DashboardPlansCubit extends CubitBase<DashboardPlansData> {
 	    var toDate = plan.repeatability!.range?.to;
 	    return toDate == null || toDate >= Date.now();
 	  }).toList();
-	  return DashboardPlansData(
+	  return Action.finish(DashboardPlansData(
 		  childPlans: data[0] as List<UIPlanInstance>,
 		  availablePlans: _availablePlans,
 		  unratedTasks: (data[1] as int) > 0,
 		  noPlansAdded: (data[2] as int) == 0
-	  );
+	  ));
   });
 
 	Future assignPlans(List<ObjectId?> ids) => submit(body: () async {
@@ -67,7 +68,7 @@ class DashboardPlansCubit extends CubitBase<DashboardPlansData> {
 		var newPlans = state.data!.availablePlans.map((plan) => plan.copyWith(assignedTo: updateAssigned(plan))).toList();
 		var childPlans = List<UIPlanInstance>.of(state.data!.childPlans)
 			..addAll(await _dataAggregator.getUIPlanInstances(plans: assignedPlans, instances: results[2]));
-		return state.data!.copyWith(availablePlans: newPlans, childPlans: childPlans);
+		return Action.finish(state.data!.copyWith(availablePlans: newPlans, childPlans: childPlans));
 	});
 }
 

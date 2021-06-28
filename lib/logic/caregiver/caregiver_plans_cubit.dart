@@ -1,7 +1,8 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/widgets.dart' hide Action;
 import 'package:get_it/get_it.dart';
 import 'package:mongo_dart/mongo_dart.dart';
+import 'package:stateful_bloc/stateful_bloc.dart';
 
 import '../../model/db/plan/plan.dart';
 import '../../services/data/data_repository.dart';
@@ -18,7 +19,7 @@ class CaregiverPlansCubit extends CubitBase<CaregiverPlansData> {
 	  if (activeUser == null) return null;
     var caregiverId = _userID?.key ?? activeUser!.id;
     var plans = await _dataRepository.getPlans(caregiverId: caregiverId);
-		return CaregiverPlansData(plans);
+		return Action.finish(CaregiverPlansData(plans));
   });
 }
 

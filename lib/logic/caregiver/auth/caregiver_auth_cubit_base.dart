@@ -1,28 +1,29 @@
-import 'package:bloc/bloc.dart';
+import 'package:flutter/widgets.dart' hide Action;
 import 'package:fokus_auth/fokus_auth.dart';
-import 'package:formz/formz.dart';
 import 'package:get_it/get_it.dart';
 import 'package:meta/meta.dart';
+import 'package:stateful_bloc/stateful_bloc.dart';
 
-import 'caregiver_auth_state_base.dart';
+import '../../common/cubit_base.dart';
+import 'caregiver_auth_data_base.dart';
 
-class CaregiverAuthCubitBase<State extends CaregiverAuthStateBase> extends Cubit<State> {
+abstract class CaregiverAuthCubitBase<Data extends CaregiverAuthDataBase> extends CubitBase<Data> {
 	@protected
 	final AuthenticationProvider authenticationProvider = GetIt.I<AuthenticationProvider>();
 
-  CaregiverAuthCubitBase(State state) : super(state);
+  CaregiverAuthCubitBase(ModalRoute pageRoute, Data data) : super(pageRoute, initialData: data);
 
-	Future<void> logInWithGoogle() async {
-		if (state.status != FormzStatus.pure)
-			return;
-		emit(state.copyWith(status: FormzStatus.submissionInProgress, authMethod: AuthMethod.google) as State);
-		try {
-			var result = await authenticationProvider.signInWithGoogle() == GoogleSignInOutcome.successful;
-			emit((result ? state.copyWith(status: FormzStatus.submissionSuccess) : state.copyWith(status: FormzStatus.pure, authMethod: null)) as State);
-		} on SignInFailure catch (e) {
-			emit(state.copyWith(status: FormzStatus.submissionFailure, signInError: e.reason) as State);
-		} on Exception {
-			emit(state.copyWith(status: FormzStatus.submissionFailure) as State);
-		}
-	}
+  Future<void> signInWithGoogle() => submit(
+    initialData: data!.copyWith(authMethod: AuthMethod.google) as Data,
+    body: () async {
+      try {
+        var result = await authenticationProvider.signInWithGoogle() == GoogleSignInOutcome.successful;
+        return result ? Action.finish() : Action.cancel(data!.copyWith(authMethod: null) as Data);
+      } on SignInFailure catch (e) {
+        return Action.fail(data!.copyWith(signInError: e.reason) as Data);
+      } on Exception {
+        return Action.fail();
+      }
+    },
+  );
 }

@@ -4,10 +4,12 @@ import '../../services/app_locales.dart';
 
 class AuthButton extends StatelessWidget {
 	final UIButton button;
+	final bool disabled;
 	final bool isGoogleButton;
 
-  const AuthButton({required this.button, this.isGoogleButton = false});
-  const AuthButton.google(UIButton button) : this(button: button, isGoogleButton: true);
+  const AuthButton({required this.button, this.isGoogleButton = false, this.disabled = false});
+  const AuthButton.google({required UIButton button, bool disabled = false}) :
+        this(button: button, isGoogleButton: true, disabled: disabled);
 
   @override
   Widget build(BuildContext context) {
@@ -43,14 +45,15 @@ class AuthButton extends StatelessWidget {
 							style: TextButton.styleFrom(
 								padding: EdgeInsets.zero,
 								onSurface: Colors.grey,
-								backgroundColor: isGoogleButton ? Color.fromARGB(255, 66, 133, 244) : button.color
+								backgroundColor: isGoogleButton ? _googleColor : button.color
 							),
 							onPressed: button.action != null ? () => button.action!() : null,
-
 						)
 					)
 				)
 			]
 		);
   }
+
+  Color get _googleColor => disabled ? Colors.grey : Color.fromARGB(255, 66, 133, 244);
 }

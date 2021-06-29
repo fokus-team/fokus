@@ -16,7 +16,7 @@ enum StatefulOption {
 	noAutoLoading
 }
 
-abstract class CubitBase<CubitData extends Equatable> extends ReloadableCubit<StatefulState<CubitData>> with NotificationObserver, StatefulCubit {
+abstract class CubitBase<Data extends Equatable> extends ReloadableCubit<StatefulState<Data>> with NotificationObserver, StatefulCubit {
 	@override
 	final routeObserver = GetIt.I<AppRouteObserver>();
 	final NotificationService _notificationService = GetIt.I<NotificationService>();
@@ -27,7 +27,8 @@ abstract class CubitBase<CubitData extends Equatable> extends ReloadableCubit<St
 	@protected
 	User? get activeUser => _userNotifier.activeUser;
 
-	CubitBase(ModalRoute pageRoute, {this.options = const []}) : super(initialState: StatefulState(), route: pageRoute);
+	CubitBase(ModalRoute pageRoute, {this.options = const [], Data? initialData})
+      : super(initialState: StatefulState(data: initialData), route: pageRoute);
 
 	@override
 	@nonVirtual

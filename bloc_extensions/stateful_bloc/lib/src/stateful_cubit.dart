@@ -13,8 +13,11 @@ import 'stateful_state.dart';
 /// Example usage:
 /// ```dart
 /// class PageCubit extends Cubit<StatefulState<PageData>> with StatefulCubit {
+///   PageCubit() : super(StatefulState());
+///
 ///   void loadPage() => load(body: () {
-///     return PageData(...);
+///     // data loading
+///     return Action.finish(PageData(/* data */));
 ///   });
 /// }
 /// ```

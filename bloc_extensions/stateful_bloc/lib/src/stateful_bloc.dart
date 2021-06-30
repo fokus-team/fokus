@@ -20,7 +20,7 @@ import 'stateful_state.dart';
 /// * wrapping your logic with [load] / [submit]
 ///
 /// you can react to the current status in your widgets
-/// (Like showing a loading indicator on [ActionStatus.ongoing]
+/// (like showing a loading indicator on [ActionStatus.ongoing]
 /// or an error message on [ActionStatus.failed]).
 /// Your state is accessible in [StatefulState.data].
 /// {@endtemplate}
@@ -29,11 +29,14 @@ import 'stateful_state.dart';
 /// ```dart
 /// class PageBloc extends Bloc<PageEvent, StatefulState<PageData>>
 ///     with StatefulBloc {
+///   PageBloc() : super(StatefulState());
+///
 ///   @override
 ///   Stream<StatefulState> mapEventToState(PageEvent event) async* {
 ///     if (event is LoadEvent) {
 ///       yield* load(body: () {
-///         return PageData(...);
+///         // data loading
+///         return Action.finish(PageData(/* data */));
 ///       });
 ///     }
 ///   }
@@ -46,19 +49,24 @@ mixin StatefulBloc<Event, Data> on Bloc<Event, StatefulState<Data>> {
   Data? get data => state.data;
 
   /// {@template stateful_load}
-  /// Wrapper for a user defined loading logic that emits its status
+  /// Wrapper for a user defined loading logic that handles state setting
   ///
   /// How it works:
   /// {@endtemplate}
   /// {@template stateful_flow}
-  /// 1. [ActionStatus.ongoing] status is set
-  /// along with the `initialData` (if its provided)
-  /// 2. User provided `data` function is executed
-  /// 3. Depending on the outcome:
-  ///     * If it completes successfully [ActionStatus.done] status
-  ///     is set along with the returned loaded data (if its provided)
-  ///     * If anything is thrown [ActionStatus.failed] status
-  ///     is set and the details are forwarded to [onError]
+  /// 1. If the status is already set to [ActionStatus.ongoing] it returns
+  /// immediately, otherwise [ActionStatus.ongoing] status is set
+  /// along with the `initialData` (if provided)
+  /// 2. User provided `body` function is executed
+  /// 3. Upon completion the [Action.data] is set (if provided) along
+  /// with the final status determined by the [Action] constructor:
+  ///     * [Action.finish] sets [ActionStatus.done]
+  ///     (default if no value is returned)
+  ///     * [Action.fail] sets [ActionStatus.failed]
+  ///     * [Action.cancel] sets [ActionStatus.canceled]
+  ///
+  /// If anything is thrown from `body` a [ActionStatus.failed]
+  /// status is set and the details are forwarded to [onError]
   /// {@endtemplate}
   @protected
   Stream<StatefulState<Data>> load({
@@ -76,7 +84,7 @@ mixin StatefulBloc<Event, Data> on Bloc<Event, StatefulState<Data>> {
   }
 
   /// {@template stateful_submit}
-  /// Wrapper for a user defined submission logic that emits its status
+  /// Wrapper for a user defined submission logic that handles state setting
   ///
   /// How it works:
   /// {@endtemplate}

@@ -1,3 +1,4 @@
+import 'package:stateful_bloc/src/stateful_base.dart';
 import 'package:stateful_bloc/src/stateful_state.dart';
 import 'package:test/test.dart';
 
@@ -24,7 +25,7 @@ void main() {
         await expectStates(
           stream: cubit.stream,
           type: type,
-          fails: true,
+          result: Action.fail(),
         );
         expect(expectedError, error);
       }
@@ -74,7 +75,7 @@ void main() {
         await expectStates(
           stream: bloc.stream,
           type: type,
-          fails: true,
+          result: Action.fail(),
         );
         expect(expectedError, error);
       }

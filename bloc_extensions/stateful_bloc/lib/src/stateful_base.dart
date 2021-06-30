@@ -11,13 +11,13 @@ class Action<Data> {
   final Data? data;
 
   /// Indicates the action successfully finished
-  Action.finish([this.data]) : status = ActionStatus.done;
+  const Action.finish([this.data]) : status = ActionStatus.done;
 
   /// Indicates the action failed
-  Action.fail([this.data]) : status = ActionStatus.failed;
+  const Action.fail([this.data]) : status = ActionStatus.failed;
 
   /// Indicates the action was canceled
-  Action.cancel([this.data]) : status = ActionStatus.canceled;
+  const Action.cancel([this.data]) : status = ActionStatus.canceled;
 }
 
 /// Executes a stateful action

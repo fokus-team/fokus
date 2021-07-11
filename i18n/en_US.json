@@ -175,7 +175,7 @@
 				"header": {
 					"title": "Child details",
 					"childCode": "Child code",
-					"assignPlanButton": "Manage plans",
+					"assignPlanButton": "Assign plans",
 					"assignPlanTitle": "Choose plans to assign",
 					"assignBadgeButton": "Award badge",
 					"assignBadgeTitle": "Choose badges to award",
@@ -253,8 +253,6 @@
 				"step": "Step {NUM_STEP}",
 				"stepOneTitle": "Plan parameters",
 				"stepTwoTitle": "Task list",
-				"createPlanButton": "Create plan",
-				"savePlanButton": "Save plan",
 				"addTaskButton": "Add task",
 				"editTaskButton": "Edit task",
 				"removeTaskButton": "Remove task",
@@ -380,9 +378,6 @@
 			"rewardForm": {
 				"addRewardTitle": "Add reward",
 				"editRewardTitle": "Edit reward",
-				"addRewardButton": "Add reward",
-				"saveRewardButton": "Save reward",
-				"removeRewardButton": "Remove reward",
 				"removeRewardTitle": "Remove reward",
 				"removeRewardText": "Are you sure you want to remove this reward?",
 				"fields": {
@@ -414,7 +409,6 @@
 			},
 			"badgeForm": {
 				"addBadgeTitle": "Add badge",
-				"addBadgeButton": "Add badge",
 				"fields": {
 					"badgeName": {
 						"label": "Badge name",
@@ -691,7 +685,8 @@
 		"signOut": "Sign out",
 		"return": "Return",
 		"copyCode": "Copy code",
-		"contactUs":  "Contact us"
+		"contactUs":  "Contact us",
+		"save": "Save"
 	},
 	"authentication": {
 		"name": "First name",

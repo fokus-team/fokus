@@ -175,7 +175,7 @@
 				"header": {
 					"title": "Szczegóły dziecka",
 					"childCode": "Kod dziecka",
-					"assignPlanButton": "Zarządzaj planami",
+					"assignPlanButton": "Przypisz plany",
 					"assignPlanTitle": "Wybierz plany do przypisania",
 					"assignBadgeButton": "Przyznaj odznakę",
 					"assignBadgeTitle": "Wybierz odznaki do przyznania",
@@ -253,8 +253,6 @@
 				"step": "Krok {NUM_STEP}",
 				"stepOneTitle": "Parametry planu",
 				"stepTwoTitle": "Lista zadań",
-				"createPlanButton": "Stwórz plan",
-				"savePlanButton": "Zapisz plan",
 				"addTaskButton": "Dodaj zadanie",
 				"editTaskButton": "Edytuj zadanie",
 				"removeTaskButton": "Usuń zadanie",
@@ -380,9 +378,6 @@
 			"rewardForm": {
 				"addRewardTitle": "Dodaj nagrodę",
 				"editRewardTitle": "Edytuj nagrodę",
-				"addRewardButton": "Dodaj nagodę",
-				"saveRewardButton": "Zapisz nagodę",
-				"removeRewardButton": "Usuń nagodę",
 				"removeRewardTitle": "Usuń nagrodę",
 				"removeRewardText": "Na pewno chcesz usunąć tą nagrodę?",
 				"fields": {
@@ -414,7 +409,6 @@
 			},
 			"badgeForm": {
 				"addBadgeTitle": "Dodaj odznakę",
-				"addBadgeButton": "Dodaj odznakę",
 				"fields": {
 					"badgeName": {
 						"label": "Nazwa odznaki",
@@ -691,7 +685,8 @@
 		"signOut": "Wyloguj się",
 		"return": "Powrót",
 		"copyCode": "Skopiuj kod",
-		"contactUs":  "Napisz do nas"
+		"contactUs":  "Napisz do nas",
+		"save": "Zapisz"
 	},
 	"authentication": {
 		"name": "Imię",

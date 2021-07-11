@@ -223,9 +223,17 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 	}
 
 	Widget _buildFloatingButtonPicker<T>({
-		required String buttonLabel, IconData? buttonIcon, String? disabledDialogTitle, String? disabledDialogText,
-		String? pickerTitle, List<T>? pickedValues, required List<T> options,
-		required Widget Function(BuildContext, S2MultiState<T>, S2Choice<T>) builder, required Function(List<T>) onChange, required Function(T) getName
+		required String buttonLabel,
+    IconData? buttonIcon,
+    String? disabledDialogTitle,
+    String? disabledDialogText,
+		String? pickerTitle,
+    List<T>? pickedValues,
+    bool isLoading = false,
+    required List<T> options,
+		required Widget Function(BuildContext, S2MultiState<T>, S2Choice<T>) builder,
+    required Function(List<T>) onChange,
+    required Function(T) getName
 	}) {
 		var buttonDisabled = options.isEmpty;
 		return SmartSelect<T>.multiple(
@@ -248,6 +256,15 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 				useConfirm: true,
 			),
 			tileBuilder: (context, selectState) {
+        void Function()? action;
+        if (!isLoading)
+          action = () => buttonDisabled ?
+          showBasicDialog(context,
+            GeneralDialog.discard(
+              title: disabledDialogTitle!,
+              content: disabledDialogText
+            )
+          ) : selectState.showModal();
 				return FloatingActionButton.extended(
 					heroTag: null,
 					materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -255,19 +272,14 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 					elevation: 4.0,
 					icon: Icon(buttonIcon),
 					label: Text(buttonLabel),
-					onPressed: () => buttonDisabled ?
-						showBasicDialog(context,
-							GeneralDialog.discard(
-								title: disabledDialogTitle!,
-								content: disabledDialogText
-							)
-						) : selectState.showModal()
+					onPressed: action,
 				);
 			}
 		);
 	}
 
 	Widget _buildPlanSelect([List<Plan> availablePlans = const []]) {
+	  var cubit = context.read<DashboardPlansCubit>();
 		return _buildFloatingButtonPicker<Plan>(
 			buttonLabel: AppLocales.of(context).translate('$_pageKey.header.assignPlanButton'),
 			buttonIcon: Icons.description,
@@ -276,8 +288,9 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 			pickerTitle: AppLocales.of(context).translate('$_pageKey.header.assignPlanTitle'),
 			pickedValues: availablePlans.where((element) => element.assignedTo!.contains(_childCard.child.id)).toList(),
 			options: availablePlans,
-			onChange: (List<Plan>? selected) => context.read<DashboardPlansCubit>().assignPlans(selected == null ? [] : selected.map((plan) => plan.id).toList()),
+			onChange: (List<Plan>? selected) => cubit.assignPlans(selected == null ? [] : selected.map((plan) => plan.id).toList()),
 			getName: (plan) => plan.name,
+      isLoading: cubit.state.beingLoaded,
 			builder: (context, selectState, choice) {
 				return Theme(
 					data: ThemeData(textTheme: Theme.of(context).textTheme),
@@ -301,6 +314,7 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 	}
 
 	Widget _buildBadgeSelect([List<Badge> availableBadges = const []]) {
+    var cubit = context.read<DashboardAchievementsCubit>();
 		return _buildFloatingButtonPicker<Badge>(
 			buttonLabel: AppLocales.of(context).translate('$_pageKey.header.assignBadgeButton'),
 			buttonIcon: Icons.star,
@@ -309,8 +323,9 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 			pickerTitle: AppLocales.of(context).translate('$_pageKey.header.assignBadgeTitle'),
 			pickedValues: [],
 			options: availableBadges,
-			onChange: (List<Badge>? selected) => context.read<DashboardAchievementsCubit>().assignBadges(selected ?? []),
+			onChange: (List<Badge>? selected) => cubit.assignBadges(selected ?? []),
 			getName: (badge) => badge.name,
+      isLoading: cubit.state.beingLoaded,
 			builder: (context, selectState, choice) {
 				return Theme(
 					data: ThemeData(textTheme: Theme.of(context).textTheme),

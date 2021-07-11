@@ -281,7 +281,7 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 										style: TextButton.styleFrom(
 											primary: AppColors.mainBackgroundColor
 										),
-										child: Text(AppLocales.of(context).translate('$_pageKey.${widget.isCreateMode ? 'createPlanButton' : 'savePlanButton'}'))
+										child: Text(AppLocales.of(context).translate('actions.save'))
 									)
 								]
 							)

@@ -91,7 +91,7 @@ class _CaregiverRewardFormPageState extends State<CaregiverRewardFormPage> {
 								context.read<RewardFormCubit>().submitRewardForm();
 						},
 						child: Text(
-							AppLocales.of(context).translate(_formType == AppFormType.create ? '$_pageKey.addRewardButton' : '$_pageKey.saveRewardButton'),
+							AppLocales.of(context).translate('actions.save'),
 							style: Theme.of(context).textTheme.button?.copyWith(color: AppColors.mainBackgroundColor)
 						)
 					)
@@ -103,6 +103,7 @@ class _CaregiverRewardFormPageState extends State<CaregiverRewardFormPage> {
 	Widget _buildFormFields() {
 		return StatefulBlocBuilder<RewardFormCubit, RewardFormData>(
 			listener: (context, state) {
+        setState(() => _formType = context.read<RewardFormCubit>().state.data!.formType);
 				if (state.submitted)
 					showSuccessSnackbar(context, 'page.caregiverSection.awards.content.reward${_formType == AppFormType.create ? 'Added' : 'Updated'}Text');
 				else if (state.loaded && !state.data!.wasDataChanged)
@@ -127,7 +128,6 @@ class _CaregiverRewardFormPageState extends State<CaregiverRewardFormPage> {
 	}
 
 	Widget _buildForm([RewardFormData? state]) {
-		_formType = context.watch<RewardFormCubit>().state.data!.formType;
 		return ListView(
 			shrinkWrap: true,
 			children: <Widget>[

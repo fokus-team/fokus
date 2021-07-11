@@ -109,7 +109,7 @@ class _CaregiverBadgeFormPageState extends State<CaregiverBadgeFormPage> {
 					TextButton(
 						onPressed: () => saveBadge(context),
 						child: Text(
-							AppLocales.of(context).translate('$_pageKey.addBadgeButton'),
+							AppLocales.of(context).translate('actions.save'),
 							style: Theme.of(context).textTheme.button?.copyWith(color: AppColors.mainBackgroundColor)
 						)
 					)

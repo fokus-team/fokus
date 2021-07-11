@@ -263,10 +263,7 @@ class _TaskFormPageState extends State<TaskFormPage> {
 																? "newTaskDialog"
 																: "none12345235",
 														child: Text(
-																AppLocales.of(context).translate(
-																		'$_pageKeyPlanForm.${formModeIsCreate()
-																				? 'addTaskButton'
-																				: 'saveTaskButton'}'),
+																AppLocales.of(context).translate('actions.save'),
 																style: Theme
 																		.of(context)
 																		.textTheme

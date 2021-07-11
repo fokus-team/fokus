@@ -6,7 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus_auth/fokus_auth.dart';
 import 'package:get_it/get_it.dart';
-import 'package:round_spot/round_spot.dart' as round_spot;
+import 'package:round_spot/round_spot.dart' as rs;
 
 import '../logic/common/auth_bloc/authentication_bloc.dart';
 import '../services/analytics_service.dart';
@@ -75,12 +75,12 @@ void bootstrapApplication({required Widget app}) async {
 
 Future<Widget> initializeRoundSpot({required Widget child}) async {
 	var configMap = (await GetIt.I.getAsync<RemoteConfigProvider>()).roundSpotConfig;
-	var config = configMap.isNotEmpty ? round_spot.Config.fromJson(json.decode(configMap)) : round_spot.Config();
+	var config = configMap.isNotEmpty ? rs.Config.fromJson(json.decode(configMap)) : rs.Config();
 
-	return round_spot.initialize(
+	return rs.initialize(
 		child: child,
 		config: config,
 		dataCallback: GetIt.I<RemoteStorageProvider>().uploadRSData,
-		loggingLevel: foundation.kReleaseMode ? round_spot.LogLevel.off : round_spot.LogLevel.warning
+		loggingLevel: foundation.kReleaseMode ? rs.LogLevel.off : rs.LogLevel.warning
 	);
 }

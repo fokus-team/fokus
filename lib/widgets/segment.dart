@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:round_spot/round_spot.dart' as round_spot;
+import 'package:round_spot/round_spot.dart' as rs;
 
 import '../model/ui/ui_button.dart';
 import '../services/app_locales.dart';
@@ -119,7 +119,7 @@ class AppSegments extends StatelessWidget {
 	}
 
 	Widget _buildList() {
-		return round_spot.Detector(
+		return rs.Detector(
 			areaID: 'main-scroll-area',
 			child: ListView(
 				padding: EdgeInsets.zero,

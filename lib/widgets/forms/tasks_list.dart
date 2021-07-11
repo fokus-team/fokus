@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorderable_list.dart';
-import 'package:round_spot/round_spot.dart' as round_spot;
+import 'package:round_spot/round_spot.dart' as rs;
 
 import '../../logic/caregiver/forms/plan/plan_form_cubit.dart';
 import '../../model/navigation/task_form_params.dart';
@@ -52,7 +52,7 @@ class TaskListState extends State<TaskList> with TickerProviderStateMixin {
 			children: [
 				Positioned.fill(
 					bottom: bottomBarHeight,
-					child: round_spot.Detector(
+					child: rs.Detector(
 						areaID: 'plan-form-tasks',
 					  child: ListView(
 					  	physics: inReorder ? NeverScrollableScrollPhysics() : BouncingScrollPhysics(),

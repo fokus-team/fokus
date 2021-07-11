@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:round_spot/round_spot.dart' as round_spot;
+import 'package:round_spot/round_spot.dart' as rs;
 
 import '../model/db/user/user.dart';
 import '../model/ui/app_page.dart';
@@ -65,7 +65,7 @@ class AppNavigationBar extends StatefulWidget {
 class _AppNavigationBarState extends State<AppNavigationBar> {
 	@override
 	Widget build(BuildContext context) {
-		return round_spot.Detector(
+		return rs.Detector(
 			areaID: 'bottom-nav-bar',
 			cumulative: true,
 			child: BottomNavigationBar(

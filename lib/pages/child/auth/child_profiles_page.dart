@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:round_spot/round_spot.dart' as round_spot;
+import 'package:round_spot/round_spot.dart' as rs;
 
 import '../../../logic/child/auth/saved_child_profiles_cubit.dart';
 import '../../../model/ui/app_page.dart';
@@ -54,7 +54,7 @@ class ChildProfilesPage extends StatelessWidget {
 					if (state != null && state.savedProfiles.isNotEmpty)
 						Material(
 							type: MaterialType.transparency,
-							child: round_spot.Detector(
+							child: rs.Detector(
 								areaID: 'child-profiles',
 							  child: ListView(
 							  	padding: EdgeInsets.symmetric(vertical: 10.0),

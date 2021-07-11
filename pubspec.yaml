@@ -58,10 +58,7 @@ dependencies:
     # Services
     shared_preferences: ^2.0.3
     googleapis: ^3.0.0
-    round_spot:
-        git:
-            url: https://github.com/stasgora/round-spot.git
-            ref: data-output
+    round_spot: ^0.5.0
 
     # Infra
     equatable: ^2.0.0

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fokus_auth/fokus_auth.dart';
 import 'package:intl/intl.dart';
-import 'package:round_spot/round_spot.dart' as round_spot;
+import 'package:round_spot/round_spot.dart' as rs;
 import 'package:smart_select/smart_select.dart';
 import 'package:stateful_bloc/stateful_bloc.dart';
 
@@ -106,7 +106,7 @@ class _CaregiverChildDashboardPageState extends State<CaregiverChildDashboardPag
 
 	Widget _buildTab<CubitType extends CubitBase<CubitData>, CubitData extends Equatable>(List<Widget> Function(CubitData) content, int index) {
 		return StatefulBlocBuilder<CubitType, CubitData>(
-			builder: (context, state) => round_spot.Detector(
+			builder: (context, state) => rs.Detector(
 				areaID: '$index',
 				child: ListView(
 					padding: EdgeInsets.zero,

@@ -1,6 +1,6 @@
 import 'package:enum_to_string/enum_to_string.dart';
 import 'package:flutter/material.dart';
-import 'package:round_spot/round_spot.dart' as round_spot;
+import 'package:round_spot/round_spot.dart' as rs;
 
 import '../../logic/child/task_completion/task_completion_cubit.dart';
 import '../../utils/ui/theme_config.dart';
@@ -32,7 +32,7 @@ class SlidingCardState extends State<SlidingCard> with SingleTickerProviderState
     		},
     		child: Padding(
     			padding: const EdgeInsets.only(left: 20.0, right: 20.0, bottom: 0, top: 0),
-    			child: round_spot.Detector(
+    			child: rs.Detector(
 				    areaID: 'task-card-${EnumToString.convertToString(widget.cardType)}',
     			  child: ListView(
     			  	shrinkWrap: false,

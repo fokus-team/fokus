@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mongo_dart/mongo_dart.dart' as mongo;
-import 'package:round_spot/round_spot.dart' as round_spot;
+import 'package:round_spot/round_spot.dart' as rs;
 import 'package:smart_select/smart_select.dart';
 
 import '../../logic/caregiver/forms/plan/plan_form_cubit.dart';
@@ -66,7 +66,7 @@ class _PlanFormState extends State<PlanForm> {
 			children: [
 				Positioned.fill(
 					bottom: AppBoxProperties.standardBottomNavHeight,
-					child: round_spot.Detector(
+					child: rs.Detector(
 						areaID: 'plan-form-params',
 					  child: ListView(
 					  	shrinkWrap: true,

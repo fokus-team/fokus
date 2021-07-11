@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:round_spot/round_spot.dart' as round_spot;
+import 'package:round_spot/round_spot.dart' as rs;
 
 import '../../logic/caregiver/caregiver_friends_cubit.dart';
 import '../../logic/child/child_rewards_cubit.dart';
@@ -25,7 +25,7 @@ import 'snackbar_utils.dart';
 void showBasicDialog(BuildContext context, GeneralDialog dialog) {
 	showDialog(
 		context: context,
-		builder: (context) => round_spot.Detector(
+		builder: (context) => rs.Detector(
 			areaID: AppPopup.general.name,
 			child: dialog,
 		),
@@ -40,7 +40,7 @@ void showHelpDialog(BuildContext context, String helpPage) {
         offset: Offset(0.0, a1.value),
         child: Opacity(
           opacity: a1.value,
-          child: round_spot.Detector(
+          child: rs.Detector(
 	          areaID: AppPopup.help.name,
 						child: HelpDialog(helpPage: helpPage)
           ),
@@ -65,7 +65,7 @@ Future<bool?> showExitFormDialog(BuildContext context, bool isSystemPop, bool is
 	FocusManager.instance.primaryFocus?.unfocus();
 	return showDialog<bool>(
 		context: context,
-		builder: (c) => round_spot.Detector(
+		builder: (c) => rs.Detector(
 			areaID: AppPopup.formExit.name,
 			child: AlertDialog(
 				title: Text(AppLocales.of(context).translate('alert.unsavedProgressTitle')),
@@ -117,7 +117,7 @@ void showUserCodeDialog(BuildContext context, String title, String code) {
 void showAboutAppDialog(BuildContext context) {
 	showDialog(
 		context: context,
-		builder: (context) => round_spot.Detector(
+		builder: (context) => rs.Detector(
 			areaID: AppPopup.aboutApp.name,
 			child: AboutAppDialog(),
 		),
@@ -129,7 +129,7 @@ Future<String?> showNameEditDialog(BuildContext context, User user) {
 	return showDialog(
 		context: context,
 		builder: (_) => forwardCubit(
-			round_spot.Detector(
+			rs.Detector(
 				areaID: AppPopup.nameEdit.name,
 				child: NameEditDialog(user.role!),
 			),
@@ -144,7 +144,7 @@ void showPasswordChangeDialog(BuildContext context, {PasswordChangeCubit? cubit,
 		context: context,
 		barrierDismissible: dismissible,
 		builder: (_) => cubit == null ? forwardCubit(
-			round_spot.Detector(
+			rs.Detector(
 				areaID: AppPopup.passwordChange.name,
 				child: PasswordChangeDialog(),
 			),
@@ -158,7 +158,7 @@ Future showAccountDeleteDialog(BuildContext context, User user) {
 	return showDialog(
 		context: context,
 		builder: (_) => forwardCubit(
-			round_spot.Detector(
+			rs.Detector(
 				areaID: AppPopup.accountDelete.name,
 				child: AccountDeleteDialog(user.role!),
 			),
@@ -172,7 +172,7 @@ Future showAddFriendDialog(BuildContext context) {
 	return showDialog(
 		context: context,
 		builder: (_) => forwardCubit(
-			round_spot.Detector(
+			rs.Detector(
 				areaID: AppPopup.addFriend.name,
 				child: AddFriendDialog(),
 			),
@@ -185,7 +185,7 @@ Future showAddFriendDialog(BuildContext context) {
 void showCurrencyEditDialog(BuildContext context, Function(String?) callback, {String? initialValue}) {
 	showDialog(
 		context: context,
-		builder: (context) => round_spot.Detector(
+		builder: (context) => rs.Detector(
 			areaID: AppPopup.currencyEdit.name,
 			child: CurrencyEditDialog(callback: callback, initialValue: initialValue),
 		),
@@ -197,7 +197,7 @@ void showRewardDialog(BuildContext context, Reward reward, {void Function()? cla
 	showDialog(
 		context: context,
 		builder: (_) => tryForwardCubit<ChildRewardsCubit>(
-			round_spot.Detector(
+			rs.Detector(
 				areaID: AppPopup.reward.name,
 				child: RewardDialog(reward: reward, claimFeedback: claimFeedback),
 			),
@@ -210,7 +210,7 @@ void showRewardDialog(BuildContext context, Reward reward, {void Function()? cla
 void showBadgeDialog(BuildContext context, Badge badge, {bool showHeader = true}) {
 	showDialog(
 		context: context,
-		builder: (context) => round_spot.Detector(
+		builder: (context) => rs.Detector(
 			areaID: AppPopup.badge.name,
 			child: BadgeDialog(badge: badge, showHeader: showHeader),
 		),

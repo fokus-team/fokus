@@ -8,7 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mongo_dart/mongo_dart.dart' as mongo;
-import 'package:round_spot/round_spot.dart' as round_spot;
+import 'package:round_spot/round_spot.dart' as rs;
 
 import 'logic/caregiver/auth/sign_in/caregiver_sign_in_cubit.dart';
 import 'logic/caregiver/auth/sign_up/caregiver_sign_up_cubit.dart';
@@ -131,7 +131,7 @@ class _FokusAppState extends State<FokusApp> implements CurrentLocaleObserver {
 			navigatorObservers: [
 				widget.routeObserver,
 				widget.pageObserver,
-				round_spot.Observer()
+				rs.Observer()
 			],
 			initialRoute: AppPage.loadingPage.name,
 			routes: _createRoutes(),

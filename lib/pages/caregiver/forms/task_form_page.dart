@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_picker/flutter_picker.dart';
 import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorderable_list.dart';
-import 'package:round_spot/round_spot.dart' as round_spot;
+import 'package:round_spot/round_spot.dart' as rs;
 
 import '../../../model/currency_type.dart';
 import '../../../model/db/gamification/currency.dart';
@@ -284,7 +284,7 @@ class _TaskFormPageState extends State<TaskFormPage> {
 	}
 
 	Widget buildFormFields() {
-		return round_spot.Detector(
+		return rs.Detector(
 			areaID: 'task-form',
 		  child: ListView(
 		  	physics: inReorder ? NeverScrollableScrollPhysics() : BouncingScrollPhysics(),

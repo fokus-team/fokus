@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:round_spot/round_spot.dart' as round_spot;
+import 'package:round_spot/round_spot.dart' as rs;
 
 import '../../logic/caregiver/tasks_evaluation_cubit.dart';
 import '../../model/ui/plan/ui_task_report.dart';
@@ -112,7 +112,7 @@ class _CaregiverRatingPageState extends State<CaregiverRatingPage> {
 					),
 				SizedBox(height: 8.0),
 				Expanded(
-					child: round_spot.Detector.custom(
+					child: rs.Detector.custom(
 						areaID: 'rating-cards',
 						scrollAxis: Axis.horizontal,
 						child: CarouselSlider(
